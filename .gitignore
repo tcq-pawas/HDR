@@ -14,4 +14,3 @@ media
 .venv
 env/
 venv/
-static/
