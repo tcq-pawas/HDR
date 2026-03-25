@@ -1,0 +1,92 @@
+from django.db import models
+from django.contrib.auth.models import User
+from Apps.PublicPage.models import Property
+
+
+class CustomerProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='customer_profile')
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    profile_picture = models.ImageField(upload_to='customer_profiles/', blank=True, null=True)
+    preferred_contact_method = models.CharField(
+        max_length=20,
+        choices=[('email', 'Email'), ('phone', 'Phone'), ('both', 'Both')],
+        default='email'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s Customer Profile"
+
+
+class Inquiry(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('in_progress', 'In Progress'),
+        ('resolved', 'Resolved'),
+        ('closed', 'Closed'),
+    ]
+    
+    customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='inquiries')
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='customer_inquiries', blank=True, null=True)
+    subject = models.CharField(max_length=200)
+    message = models.TextField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    priority = models.CharField(
+        max_length=20,
+        choices=[('low', 'Low'), ('medium', 'Medium'), ('high', 'High')],
+        default='medium'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    resolved_at = models.DateTimeField(blank=True, null=True)
+
+    def __str__(self):
+        return f"Inquiry from {self.customer.username}: {self.subject}"
+
+
+class SavedProperty(models.Model):
+    customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='saved_properties')
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='saved_by')
+    saved_at = models.DateTimeField(auto_now_add=True)
+    notes = models.TextField(blank=True, null=True)
+
+    class Meta:
+        unique_together = ['customer', 'property']
+
+    def __str__(self):
+        return f"{self.customer.username} saved {self.property.title}"
+
+
+class PropertyViewing(models.Model):
+    STATUS_CHOICES = [
+        ('scheduled', 'Scheduled'),
+        ('completed', 'Completed'),
+        ('cancelled', 'Cancelled'),
+        ('no_show', 'No Show'),
+    ]
+    
+    customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='property_viewings')
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='viewings')
+    scheduled_date = models.DateTimeField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='scheduled')
+    notes = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Viewing of {self.property.title} by {self.customer.username}"
+
+
+class CustomerFeedback(models.Model):
+    RATING_CHOICES = [(i, str(i)) for i in range(1, 6)]
+    
+    customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='feedback')
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='feedback', blank=True, null=True)
+    rating = models.IntegerField(choices=RATING_CHOICES)
+    comment = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        property_name = self.property.title if self.property else "General"
+        return f"Feedback for {property_name} by {self.customer.username}"

@@ -20,10 +20,32 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # Smart dashboard entry point (must be first) - role-aware universal entry point
+    path('dashboard/', include('Apps.Administration.smart_dashboard_urls')),
+    
+    # Authentication (must be first)
+    path('auth/', include(('Apps.Administration.auth_urls', 'auth'), namespace='auth')),
+    
+    # Admin interface (Django admin)
+    path('django-admin/', admin.site.urls),
+    
+    # Public-facing pages (view-only)
     path('', include('Apps.PublicPage.urls')),
+    
+    # Role-based dashboards (with unique prefixes and strict access control)
+    path('customer/', include(('Apps.Customer.urls', 'customer'), namespace='customer')),
+    path('investor/', include(('Apps.Investor.urls', 'investor'), namespace='investor')),
+    path('admin-dashboard/', include(('Apps.Administration.urls', 'admin_dash'), namespace='admin_dash')),
+    
+    # API endpoints with role-based filtering
+    path('api/customer/', include(('Apps.Customer.urls', 'api_customer'), namespace='api_customer')),
+    path('api/investor/', include(('Apps.Investor.urls', 'api_investor'), namespace='api_investor')),
+    path('api/admin/', include(('Apps.Administration.urls', 'api_admin'), namespace='api_admin')),
+    path('api-auth/', include('rest_framework.urls')),
 ]
 
+# Custom error handlers for unauthorized access
+handler403 = 'Apps.Administration.auth_views.unauthorized_access'
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

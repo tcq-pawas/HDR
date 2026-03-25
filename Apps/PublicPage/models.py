@@ -13,18 +13,75 @@ class Property(models.Model):
         ('Luxury', 'Luxury Properties'),
         ('Plots', 'Plots / Land'),
     )
+    
+    # Basic public information
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True, blank=True)
     price = models.DecimalField(max_digits=12, decimal_places=2)
     location = models.CharField(max_length=200)
-    description = models.TextField()
     property_type = models.CharField(max_length=10, choices=PROPERTY_TYPES, default='sale')
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='Apartments')
+    
+    # Limited public description
+    public_description = models.TextField(
+        help_text="Brief description shown to public visitors (max 200 characters)",
+        max_length=200
+    )
+    
+    # Detailed information (only visible to authenticated users)
+    description = models.TextField(
+        help_text="Full description only visible to authenticated users"
+    )
+    
+    # Property details (public)
     bedrooms = models.PositiveIntegerField()
     bathrooms = models.PositiveIntegerField()
     area_sqft = models.PositiveIntegerField()
+    
+    # Investment details (authenticated users only)
+    investment_opportunity = models.BooleanField(default=False)
+    expected_roi = models.DecimalField(
+        max_digits=5, 
+        decimal_places=2, 
+        null=True, 
+        blank=True,
+        help_text="Expected ROI percentage (investors only)"
+    )
+    minimum_investment = models.DecimalField(
+        max_digits=12, 
+        decimal_places=2, 
+        null=True, 
+        blank=True,
+        help_text="Minimum investment amount (investors only)"
+    )
+    
+    # Visibility controls
+    is_active = models.BooleanField(default=True)
     is_featured = models.BooleanField(default=False)
+    show_to_public = models.BooleanField(
+        default=True,
+        help_text="Show property to unauthenticated visitors"
+    )
+    requires_authentication = models.BooleanField(
+        default=False,
+        help_text="Require authentication to view full details"
+    )
+    
+    # Access control
+    allowed_roles = models.CharField(
+        max_length=20,
+        choices=[
+            ('all', 'All Users'),
+            ('customer', 'Customers Only'),
+            ('investor', 'Investors Only'),
+            ('admin', 'Admin Only'),
+        ],
+        default='all',
+        help_text="Roles that can access this property"
+    )
+    
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -33,6 +90,68 @@ class Property(models.Model):
 
     def __str__(self):
         return self.title
+
+    def can_view_public(self):
+        """Check if property can be viewed by unauthenticated users"""
+        return self.is_active and self.show_to_public
+
+    def can_access_by_role(self, user):
+        """Check if user can access this property based on role"""
+        if not self.is_active:
+            return False
+        
+        if self.allowed_roles == 'all':
+            return True
+        
+        if not user.is_authenticated:
+            return False
+        
+        from Apps.Administration.auth_utils import get_user_role
+        user_role = get_user_role(user)
+        
+        return user_role == self.allowed_roles
+
+    def get_public_data(self):
+        """Get data that should be visible to public users"""
+        return {
+            'id': self.id,
+            'title': self.title,
+            'slug': self.slug,
+            'price': self.price,
+            'location': self.location,
+            'property_type': self.property_type,
+            'category': self.category,
+            'public_description': self.public_description,
+            'bedrooms': self.bedrooms,
+            'bathrooms': self.bathrooms,
+            'area_sqft': self.area_sqft,
+            'is_featured': self.is_featured,
+        }
+
+    def get_authenticated_data(self, user):
+        """Get data for authenticated users based on their role"""
+        if not self.can_access_by_role(user):
+            return self.get_public_data()
+        
+        base_data = self.get_public_data()
+        base_data.update({
+            'description': self.description,
+            'investment_opportunity': self.investment_opportunity,
+            'created_at': self.created_at,
+            'updated_at': self.updated_at,
+        })
+        
+        # Add investment details for investors
+        from Apps.Administration.auth_utils import get_user_role
+        user_role = get_user_role(user)
+        
+        if user_role == 'investor' and self.investment_opportunity:
+            base_data.update({
+                'expected_roi': self.expected_roi,
+                'minimum_investment': self.minimum_investment,
+            })
+        
+        return base_data
 
 class PropertyImage(models.Model):
     IMAGE_CATEGORIES = (

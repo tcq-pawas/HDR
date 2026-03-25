@@ -1,0 +1,42 @@
+from django.urls import path
+from . import views
+from .dashboard_views import (
+    AdminDashboardView, UserManagementView, InquiryManagementView,
+    InvestmentManagementView, SystemSettingsView, ReportsView, ActivityLogView
+)
+
+app_name = 'admin_dash'
+
+urlpatterns = [
+    # Dashboard (strict admin-only access)
+    path('dashboard/', AdminDashboardView.as_view(), name='dashboard'),
+    path('users/', UserManagementView.as_view(), name='user-management-page'),
+    path('inquiries/', InquiryManagementView.as_view(), name='inquiry-management-page'),
+    path('investments/', InvestmentManagementView.as_view(), name='investment-management-page'),
+    path('settings/', SystemSettingsView.as_view(), name='system-settings-page'),
+    path('reports/', ReportsView.as_view(), name='reports-page'),
+    path('activity/', ActivityLogView.as_view(), name='activity-page'),
+    
+    # API endpoints (admin-only access)
+    path('api/profile/', views.AdminProfileView.as_view(), name='profile'),
+    path('api/settings/', views.SystemSettingsListCreateView.as_view(), name='settings-list'),
+    path('api/settings/<int:pk>/', views.SystemSettingsDetailView.as_view(), name='settings-detail'),
+    path('api/widgets/', views.DashboardWidgetListCreateView.as_view(), name='widget-list'),
+    path('api/widgets/<int:pk>/', views.DashboardWidgetDetailView.as_view(), name='widget-detail'),
+    path('api/permissions/', views.UserPermissionListCreateView.as_view(), name='permission-list'),
+    path('api/permissions/<int:pk>/', views.UserPermissionDetailView.as_view(), name='permission-detail'),
+    path('api/activity/', views.ActivityLogListView.as_view(), name='activity-list'),
+    path('api/backups/', views.SystemBackupListCreateView.as_view(), name='backup-list'),
+    path('api/backups/<int:pk>/', views.SystemBackupDetailView.as_view(), name='backup-detail'),
+    path('api/maintenance/', views.SystemMaintenanceListCreateView.as_view(), name='maintenance-list'),
+    path('api/maintenance/<int:pk>/', views.SystemMaintenanceDetailView.as_view(), name='maintenance-detail'),
+    path('api/reports/', views.ReportListCreateView.as_view(), name='report-list'),
+    path('api/reports/<int:pk>/', views.ReportDetailView.as_view(), name='report-detail'),
+    path('api/generated-reports/', views.GeneratedReportListView.as_view(), name='generated-report-list'),
+    path('api/notifications/', views.NotificationListCreateView.as_view(), name='notification-list'),
+    path('api/notifications/<int:pk>/', views.NotificationDetailView.as_view(), name='notification-detail'),
+    path('api/metrics/', views.SystemMetricsListCreateView.as_view(), name='metrics-list'),
+    path('api/users/', views.user_management, name='user-management'),
+    path('api/log-activity/', views.log_activity, name='log-activity'),
+    path('api/dashboard/', views.admin_dashboard, name='dashboard-data'),
+]
