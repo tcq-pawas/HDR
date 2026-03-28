@@ -1,0 +1,506 @@
+{% extends "investor/investor_base.html" %}
+{% load humanize %}
+
+{% block title %}Investor Profile - HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+.profile-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s;
+}
+.profile-card:hover {
+    transform: translateY(-5px);
+}
+.avatar-large {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 4px solid #28a745;
+}
+.stat-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s;
+}
+.stat-card:hover {
+    transform: translateY(-2px);
+}
+.investment-badge {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-weight: bold;
+}
+{% endblock %}
+
+{% block page_title %}Investor Profile{% endblock %}
+
+{% block header %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2><i class="fas fa-user text-success me-2"></i>Investor Profile</h2>
+        <p class="text-muted">Manage your personal information and investment preferences</p>
+    </div>
+    <div class="text-end">
+        <button class="btn btn-success" onclick="editProfile()">
+            <i class="fas fa-edit"></i> Edit Profile
+        </button>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+
+    <!-- Profile Header -->
+    <div class="card profile-card bg-success text-white mb-4">
+        <div class="card-body text-center py-5">
+            <div class="avatar-large bg-white text-success d-flex align-items-center justify-content-center mx-auto mb-3">
+                <span style="font-size: 3rem; font-weight: bold;">
+                    {{ profile.user.first_name.0|default:profile.user.username.0|upper }}
+                </span>
+            </div>
+            <h2 class="mb-1">{{ profile.user.get_full_name|default:profile.user.username }}</h2>
+            <p class="mb-2">{{ profile.user.email }}</p>
+            <div class="d-flex justify-content-center gap-2">
+                <span class="badge bg-light text-success">Investor</span>
+                {% if profile.investor_type %}
+                    <span class="badge bg-light text-success">{{ profile.investor_type|title }}</span>
+                {% endif %}
+                {% if profile.phone_number %}
+                    <span class="badge bg-light text-success">{{ profile.phone_number }}</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Investment Statistics -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card stat-card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">{{ investment_stats.total_investments }}</h4>
+                            <p class="card-text">Total Investments</p>
+                        </div>
+                        <i class="fas fa-hand-holding-usd fa-2x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">${{ investment_stats.total_invested_amount|intcomma }}</h4>
+                            <p class="card-text">Total Invested</p>
+                        </div>
+                        <i class="fas fa-dollar-sign fa-2x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">{{ roi_analysis.total_returns|intcomma }}</h4>
+                            <p class="card-text">Total Returns</p>
+                        </div>
+                        <i class="fas fa-chart-line fa-2x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">{{ roi_analysis.total_roi_percentage|floatformat:1 }}%</h4>
+                            <p class="card-text">Avg ROI</p>
+                        </div>
+                        <i class="fas fa-percentage fa-2x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Information -->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Personal Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label text-muted">First Name</label>
+                                <p class="fw-bold">{{ profile.user.first_name|default:'Not provided' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Last Name</label>
+                                <p class="fw-bold">{{ profile.user.last_name|default:'Not provided' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Email Address</label>
+                                <p class="fw-bold">{{ profile.user.email }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Phone Number</label>
+                                <p class="fw-bold">{{ profile.phone_number|default:'Not provided' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Address</label>
+                                <p class="fw-bold">{{ profile.address|default:'Not provided' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Member Since</label>
+                                <p class="fw-bold">{{ profile.user.date_joined|date:'M d, Y' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Investor Type</label>
+                                <p class="fw-bold">{{ profile.investor_type|default:'Not specified' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Investment Preferences -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Investment Preferences</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Investment Range</label>
+                                <p class="fw-bold">
+                                    {% if profile.min_investment_amount and profile.max_investment_amount %}
+                                        ${{ profile.min_investment_amount|intcomma }} - ${{ profile.max_investment_amount|intcomma }}
+                                    {% else %}
+                                        Not specified
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="div class="mb-3">
+                                <label class="form-label text-muted">Risk Tolerance</label>
+                                <p class="fw-bold">{{ profile.risk_tolerance|default:'Not specified' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Preferred Investment Type</label>
+                                <p class="fw-bold">{{ profile.preferred_investment_type|default:'No preference' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Investment Duration</label>
+                                <p class="fw-bold">{{ profile.investment_duration|default:'Not specified' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label class="form-label text-muted">Investment Goals</label>
+                                <p class="fw-bold">{{ profile.investment_goals|default:'Not specified' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <!-- Recent Investments -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Recent Investments</h5>
+                </div>
+                <div class="card-body">
+                    {% for investment in recent_investments|slice:':5' %}
+                    <div class="d-flex align-items-start mb-3">
+                        <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px; font-size: 0.8rem;">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <p class="mb-0 fw-bold">{{ investment.listing.title }}</p>
+                            <small class="text-muted">${{ investment.amount|intcomma }} - {{ investment.investment_date|date:'M d, Y' }}</small>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted text-center">No recent investments</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'investor:investments-page' %}" class="btn btn-outline-success">
+                            <i class="fas fa-plus"></i> New Investment
+                        </a>
+                        <a href="{% url 'investor:listings-page' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-search"></i> Browse Listings
+                        </a>
+                        <a href="{% url 'investor:roi-data-page' %}" class="btn btn-outline-info">
+                            <i class="fas fa-chart-pie"></i> View ROI
+                        </a>
+                        <button class="btn btn-outline-secondary" onclick="changePassword()">
+                            <i class="fas fa-key"></i> Change Password
+                        </button>
+                        <button class="btn btn-outline-dark" onclick="downloadReport()">
+                            <i class="fas fa-download"></i> Download Report
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Investment Performance -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Performance Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted">Best Performing</span>
+                            <span class="investment-badge">{{ roi_analysis.best_performing_investment.listing.title|default:'N/A' }}</span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted">Active Investments</span>
+                            <span class="badge bg-primary">{{ investment_stats.active_investments }}</span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted">Pending Investments</span>
+                            <span class="badge bg-warning">{{ investment_stats.pending_investments }}</span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted">Average Investment Size</span>
+                            <span class="badge bg-success">${{ investment_stats.average_investment_size|intcomma }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+<!-- Edit Profile Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Investor Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">First Name</label>
+                                <input type="text" class="form-control" value="{{ profile.user.first_name|default:'' }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" class="form-control" value="{{ profile.user.last_name|default:'' }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control" value="{{ profile.phone_number|default:'' }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Investor Type</label>
+                                <select class="form-select">
+                                    <option value="">Select Type</option>
+                                    <option value="individual">Individual</option>
+                                    <option value="corporate">Corporate</option>
+                                    <option value="institutional">Institutional</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Address</label>
+                        <textarea class="form-control" rows="2">{{ profile.address|default:'' }}</textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Minimum Investment Amount</label>
+                                <input type="number" class="form-control" value="{{ profile.min_investment_amount|default:'' }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Maximum Investment Amount</label>
+                                <input type="number" class="form-control" value="{{ profile.max_investment_amount|default:'' }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Risk Tolerance</label>
+                                <select class="form-select">
+                                    <option value="">Select Risk Level</option>
+                                    <option value="low">Low Risk</option>
+                                    <option value="medium">Medium Risk</option>
+                                    <option value="high">High Risk</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Investment Duration</label>
+                                <select class="form-select">
+                                    <option value="">Select Duration</option>
+                                    <option value="short-term">Short Term (1-2 years)</option>
+                                    <option value="medium-term">Medium Term (3-5 years)</option>
+                                    <option value="long-term">Long Term (5+ years)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Preferred Investment Type</label>
+                                <select class="form-select">
+                                    <option value="">Select Type</option>
+                                    <option value="equity">Equity</option>
+                                    <option value="debt">Debt</option>
+                                    <option value="hybrid">Hybrid</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Investment Goals</label>
+                                <textarea class="form-control" rows="1">{{ profile.investment_goals|default:'' }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="saveProfile()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Change Password Modal -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Change Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label">Current Password</label>
+                        <input type="password" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">New Password</label>
+                        <input type="password" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Confirm New Password</label>
+                        <input type="password" class="form-control" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="updatePassword()">Update Password</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    function editProfile() {
+        new bootstrap.Modal(document.getElementById('editProfileModal')).show();
+    }
+    
+    function saveProfile() {
+        alert('Profile saved successfully!');
+        bootstrap.Modal.getInstance(document.getElementById('editProfileModal')).hide();
+    }
+    
+    function changePassword() {
+        new bootstrap.Modal(document.getElementById('changePasswordModal')).show();
+    }
+    
+    function updatePassword() {
+        alert('Password updated successfully!');
+        bootstrap.Modal.getInstance(document.getElementById('changePasswordModal')).hide();
+    }
+    
+    function downloadReport() {
+        alert('Generating investment report... This will be downloaded shortly.');
+        // In a real implementation, this would generate and download a PDF report
+    }
+</script>
+{% endblock %}

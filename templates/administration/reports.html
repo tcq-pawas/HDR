@@ -1,0 +1,270 @@
+{% extends "administration/admin_base.html" %}
+{% load humanize %}
+
+{% block title %}Reports - Admin Dashboard{% endblock %}
+
+{% block page_title %}Reports{% endblock %}
+
+{% block page_subtitle %}Generate and view system reports{% endblock %}
+
+{% block content %}
+    <!-- Report Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex gap-2 flex-wrap">
+                        <button class="btn btn-primary" onclick="generateReport('user_activity')">
+                            <i class="fas fa-users"></i> User Activity Report
+                        </button>
+                        <button class="btn btn-success" onclick="generateReport('financial_summary')">
+                            <i class="fas fa-dollar-sign"></i> Financial Summary
+                        </button>
+                        <button class="btn btn-info" onclick="generateReport('property_performance')">
+                            <i class="fas fa-home"></i> Property Performance
+                        </button>
+                        <button class="btn btn-warning" onclick="generateReport('inquiry_analysis')">
+                            <i class="fas fa-envelope"></i> Inquiry Analysis
+                        </button>
+                        <div class="btn-group ms-auto">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-calendar"></i> Date Range
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="?range=7">Last 7 Days</a></li>
+                                <li><a class="dropdown-item" href="?range=30">Last 30 Days</a></li>
+                                <li><a class="dropdown-item" href="?range=90">Last 90 Days</a></li>
+                                <li><a class="dropdown-item" href="?range=365">Last Year</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#" onclick="customDateRange()">Custom Range</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Reports -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Recent Reports</h5>
+                    <button class="btn btn-sm btn-outline-primary" onclick="refreshReports()">
+                        <i class="fas fa-sync"></i> Refresh
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Report Name</th>
+                                    <th>Type</th>
+                                    <th>Generated</th>
+                                    <th>Size</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for report in recent_reports %}
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-file-pdf text-danger me-2"></i>
+                                                <div>
+                                                    <div class="fw-bold">{{ report.name }}</div>
+                                                    <small class="text-muted">{{ report.description }}</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-{{ report.type|yesno:'primary,success,info,warning' }}">
+                                                {{ report.get_type_display }}
+                                            </span>
+                                        </td>
+                                        <td>{{ report.created_at|date:"M d, Y H:i" }}</td>
+                                        <td>{{ report.size|default:"2.3 MB" }}</td>
+                                        <td>
+                                            <span class="badge bg-{{ report.status|yesno:'success,warning,danger' }}">
+                                                {{ report.get_status_display }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <button class="btn btn-sm btn-outline-primary action-btn" data-action="viewReport" data-id="{{ report.id }}">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-success action-btn" data-action="downloadReport" data-id="{{ report.id }}">
+                                                    <i class="fas fa-download"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-secondary action-btn" data-action="shareReport" data-id="{{ report.id }}">
+                                                    <i class="fas fa-share"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-danger action-btn" data-action="deleteReport" data-id="{{ report.id }}">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="6" class="text-center py-4">
+                                            <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
+                                            <p class="text-muted">No reports found</p>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Generate Report Modal -->
+    <div class="modal fade" id="createReportModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Generate New Report</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Report Type</label>
+                                    <select class="form-select" id="reportType">
+                                        <option value="">Select Report Type</option>
+                                        <option value="user_analytics">User Analytics</option>
+                                        <option value="investment_summary">Investment Summary</option>
+                                        <option value="property_performance">Property Performance</option>
+                                        <option value="financial_overview">Financial Overview</option>
+                                        <option value="activity_log">Activity Log Report</option>
+                                        <option value="custom">Custom Report</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Output Format</label>
+                                    <select class="form-select">
+                                        <option value="pdf">PDF</option>
+                                        <option value="excel">Excel</option>
+                                        <option value="csv">CSV</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Date Range</label>
+                                    <select class="form-select">
+                                        <option value="today">Today</option>
+                                        <option value="week">This Week</option>
+                                        <option value="month">This Month</option>
+                                        <option value="quarter">This Quarter</option>
+                                        <option value="year">This Year</option>
+                                        <option value="custom">Custom Range</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Report Name</label>
+                                    <input type="text" class="form-control" placeholder="Enter report name">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" rows="3" placeholder="Describe the report purpose"></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Start Date (if custom range)</label>
+                                    <input type="date" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">End Date (if custom range)</label>
+                                    <input type="date" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Report Options based on type -->
+                        <div id="reportOptions" class="report-preview" style="display: none;">
+                            <h6>Report Options</h6>
+                            <div id="optionsContent">
+                                <!-- Dynamic content based on report type -->
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        }
+        
+        // Show/hide report options based on type
+        document.getElementById('reportType').addEventListener('change', function() {
+            const reportOptions = document.getElementById('reportOptions');
+            const optionsContent = document.getElementById('optionsContent');
+            
+            if (this.value) {
+                reportOptions.style.display = 'block';
+                
+                // Set options based on report type
+                let optionsHTML = '';
+                switch(this.value) {
+                    case 'user_analytics':
+                        optionsHTML = `
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" checked>
+                                <label class="form-check-label">Include user demographics</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" checked>
+                                <label class="form-check-label">Include activity statistics</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox">
+                                <label class="form-check-label">Include login history</label>
+                            </div>
+                        `;
+                        break;
+                    case 'investment_summary':
+                        optionsHTML = `
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" checked>
+                                <label class="form-check-label">Include investment totals</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" checked>
+                                <label class="form-check-label">Include ROI analysis</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox">
+                                <label class="form-check-label">Include investor profiles</label>
+                            </div>
+                        `;
+                        break;
+                    default:
+                        optionsHTML = '<p>Standard options will be applied for this report type.</p>';
+                }
+                
+                optionsContent.innerHTML = optionsHTML;
+            } else {
+                reportOptions.style.display = 'none';
+            }
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,464 @@
+{% extends "investor/investor_base.html" %}
+{% load humanize %}
+
+{% block title %}ROI Data - HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+.roi-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s;
+}
+.roi-card:hover {
+    transform: translateY(-2px);
+}
+.roi-positive {
+    color: #28a745;
+    font-weight: bold;
+}
+.roi-negative {
+    color: #dc3545;
+    font-weight: bold;
+}
+.roi-neutral {
+    color: #6c757d;
+    font-weight: bold;
+}
+.chart-container {
+    position: relative;
+    height: 300px;
+}
+{% endblock %}
+
+{% block page_title %}ROI Data{% endblock %}
+
+{% block header %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2><i class="fas fa-chart-pie text-success me-2"></i>ROI Data</h2>
+        <p class="text-muted">Analyze your investment returns and performance</p>
+    </div>
+    <div class="text-end">
+        <div class="btn-group me-2">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                <i class="fas fa-calendar"></i> Time Period
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Last 30 Days</a></li>
+                <li><a class="dropdown-item" href="#">Last 3 Months</a></li>
+                <li><a class="dropdown-item" href="#">Last 6 Months</a></li>
+                <li><a class="dropdown-item" href="#">Last Year</a></li>
+                <li><a class="dropdown-item" href="#">All Time</a></li>
+            </ul>
+        </div>
+        <button class="btn btn-success" onclick="exportData()">
+            <i class="fas fa-download"></i> Export Data
+        </button>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+    <!-- ROI Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card roi-card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">${{ roi_analysis.total_returns|intcomma }}</h4>
+                            <p class="card-text">Total Returns</p>
+                        </div>
+                        <i class="fas fa-dollar-sign fa-2x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card roi-card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">{{ roi_analysis.total_roi_percentage|floatformat:2 }}%</h4>
+                            <p class="card-text">Average ROI</p>
+                        </div>
+                        <i class="fas fa-percentage fa-2x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card roi-card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">{{ roi_analysis.active_roi_records }}</h4>
+                            <p class="card-text">Active Records</p>
+                        </div>
+                        <i class="fas fa-chart-line fa-2x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card roi-card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">{{ roi_analysis.monthly_returns|length }}</h4>
+                            <p class="card-text">Months Tracked</p>
+                        </div>
+                        <i class="fas fa-calendar-alt fa-2x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ROI Charts -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">ROI Performance Over Time</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="roiChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">ROI by Investment Type</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="roiByTypeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Monthly Returns Table -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Monthly Returns Breakdown</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Month</th>
+                            <th>Returns</th>
+                            <th>Count</th>
+                            <th>Average</th>
+                            <th>Trend</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for month, data in roi_analysis.monthly_returns.items %}
+                        <tr>
+                            <td>{{ month }}</td>
+                            <td class="roi-positive">${{ data.returns|intcomma }}</td>
+                            <td>{{ data.count }}</td>
+                            <td class="roi-positive">${{ data.average|floatformat:2 }}</td>
+                            <td>
+                                {% if data.trend == 'up' %}
+                                    <i class="fas fa-arrow-up text-success"></i> Up
+                                {% elif data.trend == 'down' %}
+                                    <i class="fas fa-arrow-down text-danger"></i> Down
+                                {% else %}
+                                    <i class="fas fa-minus text-muted"></i> Stable
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group">
+                                    <button class="btn btn-sm btn-outline-info" onclick="viewMonthDetails('{{ month }}')">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-success" onclick="exportMonthData('{{ month }}')">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted">No monthly returns data available</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Investment Performance Details -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Best Performing Investments</h5>
+                </div>
+                <div class="card-body">
+                    {% for investment in top_performing %}
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div>
+                            <div class="fw-bold">{{ investment.investment.listing.title }}</div>
+                            <small class="text-muted">{{ investment.investment.listing.property_obj.location }}</small>
+                        </div>
+                        <div class="text-end">
+                            <div class="roi-positive">{{ investment.actual_roi_percentage|floatformat:2 }}%</div>
+                            <small class="text-muted">${{ investment.total_returns|intcomma }}</small>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted text-center">No performance data available</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">ROI Distribution</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="roiDistributionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+<!-- Month Details Modal -->
+<div class="modal fade" id="monthDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Monthly ROI Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="monthDetails">
+                    <!-- Content will be loaded dynamically -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="exportMonthDetails()">Export</button>
+            </div>
+        </div>
+    </div>
+
+{% block extra_js %}
+<script>
+    // Initialize charts when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCharts();
+        });
+        
+        function initializeCharts() {
+            // ROI Performance Chart
+            const roiCtx = document.getElementById('roiChart');
+            if (roiCtx) {
+                new Chart(roiCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+                        datasets: [{
+                            label: 'Monthly Returns',
+                            data: [1200, 1500, 1800, 1600, 2000, 2200, 1900, 2100],
+                            borderColor: '#ffc107',
+                            backgroundColor: 'rgba(255, 193, 7, 0.1)',
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return '$' + value.toLocaleString();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // ROI by Type Chart
+            const typeCtx = document.getElementById('roiByTypeChart');
+            if (typeCtx) {
+                new Chart(typeCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Equity', 'Debt', 'Hybrid'],
+                        datasets: [{
+                            data: [45, 30, 25],
+                            backgroundColor: ['#ffc107', '#28a745', '#17a2b8']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // ROI Distribution Chart
+            const distCtx = document.getElementById('roiDistributionChart');
+            if (distCtx) {
+                new Chart(distCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['0-5%', '5-10%', '10-15%', '15-20%', '20%+'],
+                        datasets: [{
+                            label: 'Number of Investments',
+                            data: [2, 5, 8, 3, 1],
+                            backgroundColor: '#ffc107'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+        }
+        
+        function viewMonthDetails(month) {
+            document.getElementById('monthDetails').innerHTML = `
+                <div class="text-center">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            `;
+            
+            // Simulate loading month details
+            setTimeout(() => {
+                document.getElementById('monthDetails').innerHTML = `
+                    <h6>ROI Details for ${month}</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="bg-light p-3 rounded mb-3">
+                                <h6>Summary</h6>
+                                <p><strong>Total Returns:</strong> <span class="roi-positive">$2,100</span></p>
+                                <p><strong>Investment Count:</strong> 5</p>
+                                <p><strong>Average ROI:</strong> <span class="roi-positive">12.3%</span></p>
+                                <p><strong>vs Previous Month:</strong> <span class="roi-positive">+5.2%</span></p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="bg-light p-3 rounded mb-3">
+                                <h6>Performance Metrics</h6>
+                                <p><strong>Best Performer:</strong> Downtown Apartment (15.2%)</p>
+                                <p><strong>Worst Performer:</strong> Suburban House (8.1%)</p>
+                                <p><strong>Volatility:</strong> Low</p>
+                                <p><strong>Risk Score:</strong> 3.2/10</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h6>Individual Investment Performance</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Investment</th>
+                                    <th>Amount</th>
+                                    <th>Returns</th>
+                                    <th>ROI %</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Downtown Apartment</td>
+                                    <td>$50,000</td>
+                                    <td class="roi-positive">$635</td>
+                                    <td class="roi-positive">15.2%</td>
+                                </tr>
+                                <tr>
+                                    <td>Suburban House</td>
+                                    <td>$25,000</td>
+                                    <td class="roi-positive">$169</td>
+                                    <td class="roi-positive">8.1%</td>
+                                </tr>
+                                <tr>
+                                    <td>Luxury Condo</td>
+                                    <td>$75,000</td>
+                                    <td class="roi-positive">$825</td>
+                                    <td class="roi-positive">13.2%</td>
+                                </tr>
+                                <tr>
+                                    <td>Commercial Property</td>
+                                    <td>$100,000</td>
+                                    <td class="roi-positive">$420</td>
+                                    <td class="roi-positive">5.0%</td>
+                                </tr>
+                                <tr>
+                                    <td>Mixed Use Building</td>
+                                    <td>$30,000</td>
+                                    <td class="roi-positive">$51</td>
+                                    <td class="roi-positive">2.0%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }, 1000);
+            
+            new bootstrap.Modal(document.getElementById('monthDetailsModal')).show();
+        }
+        
+        function exportMonthData(month) {
+            alert(`Exporting ROI data for ${month}...`);
+            // In a real implementation, this would export data to Excel/CSV
+        }
+        
+        function exportMonthDetails() {
+            alert('Exporting detailed month data...');
+            // In a real implementation, this would export the detailed data
+        }
+        
+        function exportData() {
+            alert('Exporting all ROI data...');
+            // In a real implementation, this would export all ROI data to Excel
+        }
+    </script>
+{% endblock %}
