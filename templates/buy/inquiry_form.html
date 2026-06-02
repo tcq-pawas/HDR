@@ -1,0 +1,41 @@
+{% extends "public/base.html" %}
+
+{% block title %}Property Inquiry | HeyDay Realty{% endblock %}
+
+{% block content %}
+<div class="container py-5" style="margin-top: 120px; min-height: 75vh;">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+                <div class="card-header bg-dark text-white p-4">
+                    <h2 class="h4 fw-bold mb-0">Contact Agency</h2>
+                    <p class="small text-muted mb-0">Ask a question or request a private tour for this project.</p>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="{{ form.name.id_for_label }}" class="form-label fw-semibold">Your Name</label>
+                            {{ form.name }}
+                            <div class="text-danger small">{{ form.name.errors }}</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ form.email.id_for_label }}" class="form-label fw-semibold">Email Address</label>
+                            {{ form.email }}
+                            <div class="text-danger small">{{ form.email.errors }}</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ form.message.id_for_label }}" class="form-label fw-semibold">Message</label>
+                            {{ form.message }}
+                            <div class="text-danger small">{{ form.message.errors }}</div>
+                        </div>
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary rounded-pill px-5">Submit Inquiry</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

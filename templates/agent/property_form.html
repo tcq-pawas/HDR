@@ -1,0 +1,344 @@
+{% extends "public/base.html" %}
+{% load static %}
+
+{% block title %}{{ title }} | HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-blue: #0599E3;
+        --primary-orange: #fa9114;
+        --secondary-orange: #f98b13;
+        --text-color: #555555;
+        --border-color: #e0e0e0;
+    }
+
+    .form-container {
+        max-width: 1000px;
+        margin: 100px auto 0;
+        padding: 2rem;
+    }
+
+    .form-header {
+        margin-bottom: 2rem;
+        border-bottom: 2px solid var(--border-color);
+        padding-bottom: 1rem;
+    }
+
+    .form-header h1 {
+        font-size: 1.8rem;
+        color: #333;
+        margin: 0;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .form-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-section {
+        margin-bottom: 2rem;
+    }
+
+    .form-section h3 {
+        font-size: 1.1rem;
+        color: #333;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid var(--primary-orange);
+        font-weight: 700;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group label {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 0.75rem;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 3px rgba(5, 153, 227, 0.1);
+    }
+
+    .form-group textarea {
+        resize: vertical;
+        min-height: 120px;
+    }
+
+    .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .checkbox-group input {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+    }
+
+    .checkbox-group label {
+        margin: 0;
+        cursor: pointer;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 2px solid var(--border-color);
+    }
+
+    .submit-btn, .cancel-btn {
+        padding: 0.75rem 2rem;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        font-weight: 700;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+
+    .submit-btn {
+        background: linear-gradient(135deg, var(--primary-orange), var(--secondary-orange));
+        color: white;
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(250, 145, 20, 0.3);
+    }
+
+    .cancel-btn {
+        background: #f0f0f0;
+        color: var(--text-color);
+        border: 1px solid var(--border-color);
+    }
+
+    .cancel-btn:hover {
+        background: #e0e0e0;
+    }
+
+    .error-message {
+        color: #dc3545;
+        font-size: 0.8rem;
+        margin-top: 0.3rem;
+    }
+
+    .field-required::after {
+        content: " *";
+        color: #dc3545;
+    }
+
+    @media (max-width: 768px) {
+        .form-container {
+            padding: 1rem;
+        }
+
+        .form-card {
+            padding: 1.5rem;
+        }
+
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .submit-btn, .cancel-btn {
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <!-- Header -->
+    <div class="form-header">
+        <h1>{{ title }}</h1>
+    </div>
+
+    <!-- Form -->
+    <form method="post" class="form-card" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Basic Information -->
+        <div class="form-section">
+            <h3>Basic Information</h3>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.title.id_for_label }}" class="field-required">Title</label>
+                    {{ form.title }}
+                    {% if form.title.errors %}<div class="error-message">{{ form.title.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.property_type.id_for_label }}" class="field-required">Property Type</label>
+                    {{ form.property_type }}
+                    {% if form.property_type.errors %}<div class="error-message">{{ form.property_type.errors }}</div>{% endif %}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.category.id_for_label }}" class="field-required">Category</label>
+                    {{ form.category }}
+                    {% if form.category.errors %}<div class="error-message">{{ form.category.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.location.id_for_label }}" class="field-required">Location</label>
+                    {{ form.location }}
+                    {% if form.location.errors %}<div class="error-message">{{ form.location.errors }}</div>{% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Pricing -->
+        <div class="form-section">
+            <h3>Pricing</h3>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.price.id_for_label }}" class="field-required">Price (₹)</label>
+                    {{ form.price }}
+                    {% if form.price.errors %}<div class="error-message">{{ form.price.errors }}</div>{% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Property Details -->
+        <div class="form-section">
+            <h3>Property Details</h3>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.bedrooms.id_for_label }}" class="field-required">Bedrooms</label>
+                    {{ form.bedrooms }}
+                    {% if form.bedrooms.errors %}<div class="error-message">{{ form.bedrooms.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.bathrooms.id_for_label }}" class="field-required">Bathrooms</label>
+                    {{ form.bathrooms }}
+                    {% if form.bathrooms.errors %}<div class="error-message">{{ form.bathrooms.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.area_sqft.id_for_label }}" class="field-required">Area (Sq Ft)</label>
+                    {{ form.area_sqft }}
+                    {% if form.area_sqft.errors %}<div class="error-message">{{ form.area_sqft.errors }}</div>{% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Descriptions -->
+        <div class="form-section">
+            <h3>Descriptions</h3>
+
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label for="{{ form.public_description.id_for_label }}" class="field-required">Public Description</label>
+                <small style="color: #999; margin-bottom: 0.5rem; display: block;">Brief description shown to all visitors (max 200 characters)</small>
+                {{ form.public_description }}
+                {% if form.public_description.errors %}<div class="error-message">{{ form.public_description.errors }}</div>{% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.description.id_for_label }}" class="field-required">Full Description</label>
+                <small style="color: #999; margin-bottom: 0.5rem; display: block;">Detailed description only visible to authenticated users</small>
+                {{ form.description }}
+                {% if form.description.errors %}<div class="error-message">{{ form.description.errors }}</div>{% endif %}
+            </div>
+        </div>
+
+        <!-- Investment Opportunity -->
+        <div class="form-section">
+            <h3>Investment Opportunity</h3>
+
+            <div class="checkbox-group">
+                {{ form.investment_opportunity }}
+                <label for="{{ form.investment_opportunity.id_for_label }}">This is an investment opportunity</label>
+            </div>
+
+            <div class="form-row" id="investment-fields" style="display: none;">
+                <div class="form-group">
+                    <label for="{{ form.expected_roi.id_for_label }}">Expected ROI (%)</label>
+                    {{ form.expected_roi }}
+                    {% if form.expected_roi.errors %}<div class="error-message">{{ form.expected_roi.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.minimum_investment.id_for_label }}">Minimum Investment (₹)</label>
+                    {{ form.minimum_investment }}
+                    {% if form.minimum_investment.errors %}<div class="error-message">{{ form.minimum_investment.errors }}</div>{% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+            <button type="submit" class="submit-btn">
+                <i class="bi bi-check-circle"></i> {% if title|stringformat:'s'|slice:':3' == 'Add' %}Create Property{% else %}Update Property{% endif %}
+            </button>
+            <a href="{% url 'agent:property_list' %}" class="cancel-btn">
+                <i class="bi bi-x-circle"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Toggle investment fields
+    const investmentCheckbox = document.getElementById('{{ form.investment_opportunity.id_for_label }}');
+    const investmentFields = document.getElementById('investment-fields');
+
+    function toggleInvestmentFields() {
+        if (investmentCheckbox.checked) {
+            investmentFields.style.display = 'grid';
+        } else {
+            investmentFields.style.display = 'none';
+        }
+    }
+
+    investmentCheckbox.addEventListener('change', toggleInvestmentFields);
+    
+    // Initialize on page load
+    if (investmentCheckbox) {
+        toggleInvestmentFields();
+    }
+</script>
+{% endblock %}

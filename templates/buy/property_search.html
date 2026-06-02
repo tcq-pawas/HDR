@@ -1,0 +1,894 @@
+{% extends "public/base.html" %}
+{% load static %}
+
+{% block title %}Buy Farmland & Agricultural Land | HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-blue: #0599E3;
+        --primary-orange: #fa9114;
+        --secondary-orange: #f98b13;
+        --text-color: #555555;
+        --border-color: #e0e0e0;
+    }
+
+    /* Page Layout */
+    .buy-page-wrapper {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        margin-top: 80px;
+    }
+
+    /* Filter Bar - Sticky */
+    .sticky-filter-bar {
+        background: white;
+        border-bottom: 1px solid var(--border-color);
+        padding: 1rem 0;
+        position: sticky;
+        top: 80px;
+        z-index: 99;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .filter-container {
+        display: flex;
+        gap: 0.75rem;
+        overflow-x: auto;
+        padding: 0.5rem 0;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .filter-container::-webkit-scrollbar {
+        display: none;
+    }
+
+    .filter-group {
+        flex: 0 0 auto;
+        min-width: 180px;
+    }
+
+    .filter-group label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #666;
+        display: block;
+        margin-bottom: 0.3rem;
+        text-transform: uppercase;
+    }
+
+    .filter-group select,
+    .filter-group input {
+        width: 100%;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        background-color: white;
+    }
+
+    .filter-group select:focus,
+    .filter-group input:focus {
+        outline: none;
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 3px rgba(5, 153, 227, 0.1);
+    }
+
+    .clear-filters-btn {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: flex-end;
+        min-width: 120px;
+    }
+
+    .clear-filters-btn button {
+        width: 100%;
+        padding: 0.5rem 0.75rem;
+        background: #f0f0f0;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--text-color);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .clear-filters-btn button:hover {
+        background: #e0e0e0;
+        border-color: #999;
+    }
+
+    /* Split Layout - Map and Listing */
+    .buy-content-wrapper {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+        flex: 1;
+        overflow: hidden;
+    }
+
+    /* Left Side - Map Section */
+    .map-section {
+        background: #f5f5f5;
+        position: relative;
+        border-right: 1px solid var(--border-color);
+        min-height: 600px;
+    }
+
+    .map-container {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #e8f0f8, #f0f5ff);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        font-family: 'Outfit', sans-serif;
+    }
+
+    .map-placeholder {
+        text-align: center;
+        color: var(--text-color);
+    }
+
+    .map-placeholder h3 {
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+        color: #333;
+    }
+
+    /* Map Controls */
+    .map-controls {
+        position: absolute;
+        right: 1.5rem;
+        top: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        z-index: 10;
+    }
+
+    .map-control-btn {
+        width: 40px;
+        height: 40px;
+        background: white;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .map-control-btn:hover {
+        background: var(--primary-blue);
+        color: white;
+        border-color: var(--primary-blue);
+    }
+
+    /* Right Side - Listing Section */
+    .listing-section {
+        display: flex;
+        flex-direction: column;
+        background: white;
+        overflow-y: auto;
+        max-height: calc(100vh - 80px - 100px);
+    }
+
+    .listing-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid var(--border-color);
+        background: white;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .listing-header h1 {
+        font-size: 1.5rem;
+        margin: 0 0 1rem 0;
+        color: #333;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .listing-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .breadcrumb {
+        font-size: 0.875rem;
+        color: #999;
+        margin: 0;
+    }
+
+    .breadcrumb a {
+        color: var(--primary-blue);
+        text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+        text-decoration: underline;
+    }
+
+    .results-count {
+        font-weight: 600;
+        color: var(--primary-blue);
+        font-size: 0.95rem;
+    }
+
+    .sort-control {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .sort-control select {
+        padding: 0.4rem 0.6rem;
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        background: white;
+    }
+
+    /* Property Cards Grid */
+    .properties-grid {
+        padding: 1.5rem;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        flex: 1;
+    }
+
+    .property-card {
+        background: white;
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        gap: 1rem;
+    }
+
+    .property-card:hover {
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        border-color: var(--primary-blue);
+    }
+
+    /* Property Image Carousel */
+    .property-image-carousel {
+        position: relative;
+        background: #f5f5f5;
+        border-radius: 8px;
+        overflow: hidden;
+        height: 200px;
+    }
+
+    .carousel-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .property-card:hover .carousel-image {
+        transform: scale(1.05);
+    }
+
+    .carousel-controls {
+        position: absolute;
+        bottom: 0.75rem;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 0.4rem;
+        z-index: 5;
+    }
+
+    .carousel-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .carousel-dot.active {
+        background: white;
+        width: 20px;
+        border-radius: 3px;
+    }
+
+    .wishlist-btn {
+        position: absolute;
+        top: 0.75rem;
+        right: 0.75rem;
+        width: 36px;
+        height: 36px;
+        background: white;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        z-index: 10;
+    }
+
+    .wishlist-btn:hover {
+        background: var(--primary-orange);
+        color: white;
+        transform: scale(1.1);
+    }
+
+    .wishlist-btn.saved {
+        background: var(--primary-orange);
+        color: white;
+    }
+
+    /* Property Info Section */
+    .property-info {
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .property-header {
+        margin-bottom: 1rem;
+    }
+
+    .property-price {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--primary-orange);
+        margin-bottom: 0.3rem;
+        font-family: 'Outfit', sans-serif;
+    }
+
+    .property-price-total {
+        font-size: 0.85rem;
+        color: #666;
+        background: #f0f8ff;
+        padding: 0.3rem 0.6rem;
+        border-radius: 4px;
+        display: inline-block;
+        font-weight: 500;
+    }
+
+    .property-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        margin: 1rem 0;
+        font-size: 0.875rem;
+        color: var(--text-color);
+    }
+
+    .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .detail-item strong {
+        color: #333;
+        min-width: 50px;
+    }
+
+    .property-location {
+        font-size: 0.875rem;
+        color: #999;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+    /* Action Buttons */
+    .property-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 0.5rem;
+    }
+
+    .action-btn {
+        padding: 0.5rem;
+        border: 1px solid var(--border-color);
+        background: white;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.3rem;
+    }
+
+    .action-btn:hover {
+        border-color: var(--primary-blue);
+        color: var(--primary-blue);
+    }
+
+    .action-btn-primary {
+        background: var(--primary-blue);
+        color: white;
+        border-color: var(--primary-blue);
+    }
+
+    .action-btn-primary:hover {
+        background: #0477c2;
+        border-color: #0477c2;
+    }
+
+    .action-btn-icon {
+        font-size: 1rem;
+    }
+
+    /* Empty State */
+    .empty-state {
+        padding: 3rem 1.5rem;
+        text-align: center;
+        color: var(--text-color);
+    }
+
+    .empty-state h3 {
+        font-size: 1.2rem;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-state p {
+        color: #999;
+        margin-bottom: 1.5rem;
+    }
+
+    .empty-state-btn {
+        padding: 0.6rem 1.2rem;
+        background: var(--primary-blue);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+
+    .empty-state-btn:hover {
+        background: #0477c2;
+    }
+
+    /* Pagination */
+    .pagination-wrapper {
+        padding: 1.5rem;
+        border-top: 1px solid var(--border-color);
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .page-link {
+        padding: 0.5rem 0.75rem;
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        color: var(--primary-blue);
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .page-link:hover {
+        background: var(--primary-blue);
+        color: white;
+    }
+
+    .page-link.active {
+        background: var(--primary-blue);
+        color: white;
+        border-color: var(--primary-blue);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+        .buy-content-wrapper {
+            grid-template-columns: 1fr;
+        }
+
+        .map-section {
+            border-right: none;
+            border-bottom: 1px solid var(--border-color);
+            min-height: 400px;
+        }
+
+        .property-card {
+            grid-template-columns: 180px 1fr;
+            gap: 0.75rem;
+        }
+
+        .property-image-carousel {
+            height: 160px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .filter-group {
+            min-width: 140px;
+        }
+
+        .property-card {
+            grid-template-columns: 150px 1fr;
+            gap: 0.5rem;
+        }
+
+        .property-info {
+            padding: 0.75rem;
+        }
+
+        .property-actions {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .listing-controls {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .sort-control {
+            width: 100%;
+        }
+
+        .sort-control select {
+            flex: 1;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="buy-page-wrapper">
+    <!-- Sticky Filter Bar -->
+    <div class="sticky-filter-bar">
+        <div class="container-fluid">
+            <form method="get" class="filter-container">
+                <!-- Location Search -->
+                <div class="filter-group">
+                    <label>Location</label>
+                    <input type="text" name="location" placeholder="Search locations..." value="{{ filters.location }}">
+                </div>
+
+                <!-- Price Range -->
+                <div class="filter-group">
+                    <label>Price</label>
+                    <select name="price_range">
+                        <option value="">All Prices</option>
+                        <option value="under_10_lac" {% if filters.price_range == 'under_10_lac' %}selected{% endif %}>Under ₹10 Lac</option>
+                        <option value="10_50_lac" {% if filters.price_range == '10_50_lac' %}selected{% endif %}>₹10 Lac - ₹50 Lac</option>
+                        <option value="50_lac_1cr" {% if filters.price_range == '50_lac_1cr' %}selected{% endif %}>₹50 Lac - ₹1 Cr</option>
+                        <option value="1cr_10cr" {% if filters.price_range == '1cr_10cr' %}selected{% endif %}>₹1 Cr - ₹10 Cr</option>
+                        <option value="above_10cr" {% if filters.price_range == 'above_10cr' %}selected{% endif %}>Above ₹10 Cr</option>
+                    </select>
+                </div>
+
+                <!-- Property Type -->
+                <div class="filter-group">
+                    <label>Type</label>
+                    <select name="property_type">
+                        <option value="">All Types</option>
+                        <option value="Agricultural" {% if filters.property_type == 'Agricultural' %}selected{% endif %}>Agricultural</option>
+                        <option value="Residential" {% if filters.property_type == 'Residential' %}selected{% endif %}>Residential</option>
+                        <option value="Commercial" {% if filters.property_type == 'Commercial' %}selected{% endif %}>Commercial</option>
+                        <option value="Farm Land" {% if filters.property_type == 'Farm Land' %}selected{% endif %}>Farm Land</option>
+                        <option value="Plot" {% if filters.property_type == 'Plot' %}selected{% endif %}>Plot</option>
+                    </select>
+                </div>
+
+                <!-- Area Range -->
+                <div class="filter-group">
+                    <label>Area</label>
+                    <select name="area_range">
+                        <option value="">All Areas</option>
+                        <option value="1-5" {% if filters.area_range == '1-5' %}selected{% endif %}>1-5</option>
+                        <option value="5-10" {% if filters.area_range == '5-10' %}selected{% endif %}>5-10</option>
+                        <option value="10-20" {% if filters.area_range == '10-20' %}selected{% endif %}>10-20</option>
+                        <option value="20-50" {% if filters.area_range == '20-50' %}selected{% endif %}>20-50</option>
+                        <option value="50+" {% if filters.area_range == '50+' %}selected{% endif %}>50+</option>
+                    </select>
+                </div>
+
+                <!-- Area Unit -->
+                <div class="filter-group">
+                    <label>Unit</label>
+                    <select name="area_unit">
+                        <option value="Acre" {% if filters.area_unit == 'Acre' %}selected{% endif %}>Acre</option>
+                        <option value="Bigha" {% if filters.area_unit == 'Bigha' %}selected{% endif %}>Bigha</option>
+                        <option value="Hectare" {% if filters.area_unit == 'Hectare' %}selected{% endif %}>Hectare</option>
+                        <option value="Sq Ft" {% if filters.area_unit == 'Sq Ft' %}selected{% endif %}>Sq Ft</option>
+                        <option value="Sq Yard" {% if filters.area_unit == 'Sq Yard' %}selected{% endif %}>Sq Yard</option>
+                    </select>
+                </div>
+
+                <!-- Status Filter -->
+                <div class="filter-group">
+                    <label>Status</label>
+                    <select name="status">
+                        <option value="">All Status</option>
+                        <option value="Active" {% if filters.status == 'Active' %}selected{% endif %}>Active</option>
+                        <option value="Available" {% if filters.status == 'Available' %}selected{% endif %}>Available</option>
+                        <option value="Sold" {% if filters.status == 'Sold' %}selected{% endif %}>Sold</option>
+                    </select>
+                </div>
+
+                <!-- Sale By -->
+                <div class="filter-group">
+                    <label>Sale By</label>
+                    <select name="sale_by">
+                        <option value="">All</option>
+                        <option value="Owner" {% if filters.sale_by == 'Owner' %}selected{% endif %}>Owner</option>
+                        <option value="Agent" {% if filters.sale_by == 'Agent' %}selected{% endif %}>Agent</option>
+                        <option value="Builder" {% if filters.sale_by == 'Builder' %}selected{% endif %}>Builder</option>
+                    </select>
+                </div>
+
+                <!-- Clear Filters Button -->
+                <div class="clear-filters-btn">
+                    <button type="reset" onclick="window.location.href='{% url 'buy:property_search' %}'">
+                        <i class="bi bi-x-circle"></i> Clear
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Content - Split Layout -->
+    <div class="buy-content-wrapper">
+        <!-- Left Side: Map Section -->
+        <div class="map-section">
+            <div class="map-container">
+                <div class="map-placeholder">
+                    <h3>Interactive Map</h3>
+                    <p style="font-size: 0.9rem; color: #999; margin-top: 0.5rem;">
+                        Mapbox/Google Map Integration<br>
+                        Property markers with prices
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Map Controls -->
+            <div class="map-controls">
+                <button class="map-control-btn" title="Zoom In">
+                    <i class="bi bi-plus-lg"></i>
+                </button>
+                <button class="map-control-btn" title="Zoom Out">
+                    <i class="bi bi-dash-lg"></i>
+                </button>
+                <button class="map-control-btn" title="Toggle Layers">
+                    <i class="bi bi-layers"></i>
+                </button>
+                <button class="map-control-btn" title="Expand Map">
+                    <i class="bi bi-fullscreen"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Right Side: Listing Section -->
+        <div class="listing-section">
+            <!-- Header -->
+            <div class="listing-header">
+                <h1>Farmland and Agriculture Land for Sale</h1>
+                
+                <div class="listing-controls">
+                    <div class="breadcrumb">
+                        <a href="{% url 'public:home' %}">Home</a> > <span>Map</span>
+                    </div>
+                    <div class="results-count">
+                        {{ total_results }} Results
+                    </div>
+                    <div class="sort-control">
+                        <label for="sort" style="margin: 0;">Sort by:</label>
+                        <form method="get" style="display: inline;">
+                            <input type="hidden" name="location" value="{{ filters.location }}">
+                            <input type="hidden" name="price_range" value="{{ filters.price_range }}">
+                            <input type="hidden" name="property_type" value="{{ filters.property_type }}">
+                            <input type="hidden" name="area_range" value="{{ filters.area_range }}">
+                            <input type="hidden" name="area_unit" value="{{ filters.area_unit }}">
+                            <input type="hidden" name="status" value="{{ filters.status }}">
+                            <input type="hidden" name="sale_by" value="{{ filters.sale_by }}">
+                            <select name="sort_by" id="sort" onchange="this.form.submit()">
+                                <option value="-created_at" {% if filters.sort_by == '-created_at' %}selected{% endif %}>Latest</option>
+                                <option value="price" {% if filters.sort_by == 'price' %}selected{% endif %}>Price: Low to High</option>
+                                <option value="-price" {% if filters.sort_by == '-price' %}selected{% endif %}>Price: High to Low</option>
+                                <option value="area_sqft" {% if filters.sort_by == 'area_sqft' %}selected{% endif %}>Area: Low to High</option>
+                                <option value="-area_sqft" {% if filters.sort_by == '-area_sqft' %}selected{% endif %}>Area: High to Low</option>
+                            </select>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Properties Grid -->
+            {% if properties %}
+                <div class="properties-grid">
+                    {% for property in properties %}
+                        <div class="property-card" data-property-id="{{ property.id }}">
+                            <!-- Image Carousel -->
+                            <div class="property-image-carousel">
+                                {% if property.images.all %}
+                                    <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}" class="carousel-image">
+                                    {% if property.images.count > 1 %}
+                                        <div class="carousel-controls">
+                                            {% for image in property.images.all %}
+                                                <div class="carousel-dot {% if forloop.first %}active{% endif %}"></div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                {% else %}
+                                    <div style="width: 100%; height: 100%; background: #e0e0e0; display: flex; align-items: center; justify-content: center; color: #999;">
+                                        <i class="bi bi-image" style="font-size: 2rem;"></i>
+                                    </div>
+                                {% endif %}
+
+                                <!-- Wishlist Button -->
+                                {% if user.is_authenticated %}
+                                    <form method="post" style="display: inline;" action="{% url 'buy:save_property' property.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="wishlist-btn {% if is_saved %}saved{% endif %}" title="Add to Wishlist">
+                                            <i class="bi bi-heart-fill"></i>
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    <button class="wishlist-btn" title="Login to save" onclick="alert('Please login to save properties')">
+                                        <i class="bi bi-heart"></i>
+                                    </button>
+                                {% endif %}
+                            </div>
+
+                            <!-- Property Info -->
+                            <div class="property-info">
+                                <div>
+                                    <div class="property-price">
+                                        ₹{{ property.price|floatformat:0 }}
+                                    </div>
+                                    <div class="property-price-total">
+                                        Total: ₹{{ property.price|floatformat:0 }}
+                                    </div>
+
+                                    <!-- Location -->
+                                    <div class="property-location">
+                                        <i class="bi bi-geo-alt"></i> {{ property.location }}
+                                    </div>
+
+                                    <!-- Details -->
+                                    <div class="property-details">
+                                        <div class="detail-item">
+                                            <strong>Area:</strong> {{ property.area_sqft }} Sq Ft
+                                        </div>
+                                        <div class="detail-item">
+                                            <strong>Type:</strong> {{ property.category }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="property-actions">
+                                    <button class="action-btn" title="Share">
+                                        <i class="bi bi-share action-btn-icon"></i> Share
+                                    </button>
+                                    <button class="action-btn" title="Wishlist">
+                                        <i class="bi bi-heart action-btn-icon"></i>
+                                    </button>
+                                    <a href="{% url 'buy:property_detail' property.id %}" class="action-btn action-btn-primary">
+                                        Details
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Pagination -->
+                {% if page_obj.has_other_pages %}
+                    <div class="pagination-wrapper">
+                        {% if page_obj.has_previous %}
+                            <a href="?page=1" class="page-link"><i class="bi bi-chevron-double-left"></i></a>
+                            <a href="?page={{ page_obj.previous_page_number }}" class="page-link"><i class="bi bi-chevron-left"></i></a>
+                        {% endif %}
+
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <span class="page-link active">{{ num }}</span>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <a href="?page={{ num }}" class="page-link">{{ num }}</a>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                            <a href="?page={{ page_obj.next_page_number }}" class="page-link"><i class="bi bi-chevron-right"></i></a>
+                            <a href="?page={{ page_obj.paginator.num_pages }}" class="page-link"><i class="bi bi-chevron-double-right"></i></a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% else %}
+                <!-- Empty State -->
+                <div class="empty-state">
+                    <h3>No Properties Found</h3>
+                    <p>Try adjusting your filters or search terms to find properties.</p>
+                    <a href="{% url 'buy:property_search' %}" class="empty-state-btn">Clear All Filters</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+    // Carousel functionality
+    document.querySelectorAll('.property-card').forEach(card => {
+        const dots = card.querySelectorAll('.carousel-dot');
+        const images = card.querySelectorAll('.carousel-image');
+        let currentIndex = 0;
+
+        if (dots.length > 1) {
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    currentIndex = index;
+                    updateCarousel();
+                });
+            });
+
+            function updateCarousel() {
+                images.forEach(img => img.style.display = 'none');
+                dots.forEach(dot => dot.classList.remove('active'));
+                
+                images[currentIndex].style.display = 'block';
+                dots[currentIndex].classList.add('active');
+            }
+        }
+    });
+
+    // Share functionality
+    document.querySelectorAll('.action-btn').forEach(btn => {
+        if (btn.innerText.includes('Share')) {
+            btn.addEventListener('click', function() {
+                const title = this.closest('.property-card').querySelector('.property-location').innerText;
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'Check out this property',
+                        text: title,
+                        url: window.location.href
+                    });
+                } else {
+                    alert('Share this property!');
+                }
+            });
+        }
+    });
+
+    // Map controls
+    document.querySelectorAll('.map-control-btn').forEach((btn, index) => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (index === 0) alert('Zoom In');
+            else if (index === 1) alert('Zoom Out');
+            else if (index === 2) alert('Toggle Layers');
+            else if (index === 3) alert('Expand Map');
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,102 @@
+{% extends "public/base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}My Properties | HeyDay Realty{% endblock %}
+
+{% block content %}
+<div class="container py-5" style="margin-top: 100px; min-height: 80vh;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h2 text-dark fw-bold mb-0">My Property Listings</h1>
+            <p class="text-muted mb-0">Manage your properties and track their approval status.</p>
+        </div>
+        <a href="{% url 'sell:property_create' %}" class="btn btn-primary rounded-pill px-4">
+            <i class="bi bi-plus-lg me-2"></i>Add Property
+        </a>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm mb-4" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if properties %}
+        <div class="row g-4">
+            {% for property in properties %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="card border-0 shadow-sm h-100 rounded-3 overflow-hidden">
+                        <div class="position-relative" style="height: 200px; background: #eee;">
+                            {% if property.images.first %}
+                                <img src="{{ property.images.first.image.url }}" class="w-100 h-100 object-fit-cover" alt="{{ property.title }}">
+                            {% else %}
+                                <div class="w-100 h-100 d-flex flex-column justify-content-center align-items-center text-muted">
+                                    <i class="bi bi-image fs-1 mb-2"></i>
+                                    <span>No Image Uploaded</span>
+                                </div>
+                            {% endif %}
+                            
+                            <!-- Status Badge -->
+                            <div class="position-absolute top-0 start-0 p-3">
+                                {% if property.status == 'approved' %}
+                                    <span class="badge bg-success shadow-sm px-3 py-2">Approved</span>
+                                {% elif property.status == 'rejected' %}
+                                    <span class="badge bg-danger shadow-sm px-3 py-2">Rejected</span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark shadow-sm px-3 py-2">Pending Approval</span>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Price Badge -->
+                            <div class="position-absolute bottom-0 end-0 p-3">
+                                <span class="badge bg-dark fs-6 shadow-sm px-3 py-2">${{ property.price|intcomma }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="card-body p-4 d-flex flex-column">
+                            <span class="text-uppercase text-primary small fw-bold mb-1">{{ property.get_property_type_display }}</span>
+                            <h5 class="card-title text-dark fw-bold mb-2">{{ property.title }}</h5>
+                            <p class="text-muted small mb-3"><i class="bi bi-geo-alt-fill text-primary me-2"></i>{{ property.location }}</p>
+                            
+                            <div class="d-flex justify-content-between text-muted small py-2 my-2 border-top border-bottom">
+                                <span><i class="bi bi-aspect-ratio me-1"></i>{{ property.area_sqft }} sqft</span>
+                                <span><i class="bi bi-door-closed me-1"></i>{{ property.bedrooms }} Bed</span>
+                                <span><i class="bi bi-water me-1"></i>{{ property.bathrooms }} Bath</span>
+                            </div>
+                            
+                            <p class="text-muted small flex-grow-1">{{ property.public_description|truncatechars:100 }}</p>
+                            
+                            <div class="d-flex gap-2 mt-3 pt-2">
+                                <a href="{% url 'sell:property_detail' property.pk %}" class="btn btn-outline-secondary btn-sm flex-grow-1 rounded-pill">
+                                    <i class="bi bi-eye me-1"></i>View
+                                </a>
+                                <a href="{% url 'sell:property_update' property.pk %}" class="btn btn-outline-primary btn-sm flex-grow-1 rounded-pill">
+                                    <i class="bi bi-pencil me-1"></i>Edit
+                                </a>
+                                <a href="{% url 'sell:property_delete' property.pk %}" class="btn btn-outline-danger btn-sm rounded-pill px-3">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="card border-0 shadow-sm py-5 text-center rounded-3">
+            <div class="card-body py-5">
+                <i class="bi bi-house-door-fill text-muted display-1 mb-4"></i>
+                <h3 class="fw-bold text-dark mb-2">No Property Listings Yet</h3>
+                <p class="text-muted w-50 mx-auto mb-4">You have not created any property listings yet. Click the button below to publish your first property listing for sale or rent.</p>
+                <a href="{% url 'sell:property_create' %}" class="btn btn-primary rounded-pill px-4 py-2">
+                    <i class="bi bi-plus-lg me-2"></i>List Your First Property
+                </a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

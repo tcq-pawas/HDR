@@ -1,0 +1,32 @@
+{% extends "public/base.html" %}
+
+{% block title %}Delete Property Listing | HeyDay Realty{% endblock %}
+
+{% block content %}
+<div class="container py-5" style="margin-top: 150px; min-height: 70vh;">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm rounded-3 overflow-hidden text-center">
+                <div class="card-header bg-danger text-white p-4">
+                    <i class="bi bi-exclamation-triangle display-4 mb-2 d-block"></i>
+                    <h2 class="h4 fw-bold mb-0">Confirm Deletion</h2>
+                </div>
+                <div class="card-body p-4">
+                    <p class="text-muted fs-5 mb-4">
+                        Are you sure you want to permanently delete the listing for <strong>"{{ property.title }}"</strong>?
+                        This action cannot be undone and all associated images will be deleted.
+                    </p>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-center gap-3">
+                            <a href="{% url 'sell:property_list' %}" class="btn btn-light rounded-pill px-4">Cancel</a>
+                            <button type="submit" class="btn btn-danger rounded-pill px-5">Yes, Delete permanently</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

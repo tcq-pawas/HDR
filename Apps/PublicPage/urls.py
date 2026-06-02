@@ -21,8 +21,6 @@ urlpatterns = [
     path('about/', views.about, name='about'),
     path('contact/', views.contact, name='contact'),
     path('gallery/', views.media_page, name='media'),
-    path('nri/', views.nri_page, name='nri'),
-    path('career/', views.career_page, name='career'),
     
     # API endpoints
     path('api/', include(router.urls)),

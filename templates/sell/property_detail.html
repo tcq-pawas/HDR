@@ -1,0 +1,165 @@
+{% extends "public/base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{ property.title }} | Seller View | HeyDay Realty{% endblock %}
+
+{% block content %}
+<div class="container py-5" style="margin-top: 100px; min-height: 80vh;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <a href="{% url 'sell:property_list' %}" class="btn btn-link text-decoration-none p-0 mb-2">
+                <i class="bi bi-chevron-left me-1"></i>Back to My Listings
+            </a>
+            <h1 class="h2 text-dark fw-bold mb-0">{{ property.title }}</h1>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'sell:property_update' property.pk %}" class="btn btn-outline-primary rounded-pill px-4">
+                <i class="bi bi-pencil me-1"></i>Edit
+            </a>
+            <a href="{% url 'sell:property_delete' property.pk %}" class="btn btn-outline-danger rounded-pill px-4">
+                <i class="bi bi-trash me-1"></i>Delete
+            </a>
+        </div>
+    </div>
+
+    <!-- Status & Info Banner -->
+    <div class="card border-0 shadow-sm mb-4 rounded-3 bg-light">
+        <div class="card-body p-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <div>
+                <span class="text-muted small">Approval Status:</span>
+                {% if property.status == 'approved' %}
+                    <span class="badge bg-success fs-6 ms-2 px-3 py-2">Approved</span>
+                {% elif property.status == 'rejected' %}
+                    <span class="badge bg-danger fs-6 ms-2 px-3 py-2">Rejected</span>
+                {% else %}
+                    <span class="badge bg-warning text-dark fs-6 ms-2 px-3 py-2">Pending Approval</span>
+                {% endif %}
+            </div>
+            
+            <div class="d-flex gap-4">
+                <div class="text-end">
+                    <span class="text-muted small d-block">Price:</span>
+                    <strong class="fs-4 text-primary">${{ property.price|intcomma }}</strong>
+                </div>
+                <div class="text-end">
+                    <span class="text-muted small d-block">Type:</span>
+                    <strong class="fs-4 text-dark">{{ property.get_property_type_display }}</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Main Details -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-3 overflow-hidden mb-4">
+                <!-- Image Gallery -->
+                {% if images %}
+                    <div id="propertyGallery" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner" style="height: 450px;">
+                            {% for img in images %}
+                                <div class="carousel-item {% if forloop.first %}active{% endif %} h-100">
+                                    <img src="{{ img.image.url }}" class="w-100 h-100 object-fit-cover" alt="Property Image">
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {% if images.count > 1 %}
+                            <button class="carousel-control-prev" type="button" data-bs-target="#propertyGallery" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon rounded-circle p-2 bg-dark" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#propertyGallery" data-bs-slide="next">
+                                <span class="carousel-control-next-icon rounded-circle p-2 bg-dark" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="bg-light d-flex flex-column justify-content-center align-items-center text-muted" style="height: 350px;">
+                        <i class="bi bi-image fs-1 mb-2"></i>
+                        <span>No images uploaded for this listing.</span>
+                    </div>
+                {% endif %}
+
+                <!-- Description & Details -->
+                <div class="card-body p-4">
+                    <h3 class="h4 fw-bold text-dark mb-3">Property Description</h3>
+                    <p class="text-muted" style="line-height: 1.8;">{{ property.description|linebreaksbr }}</p>
+                    
+                    <h3 class="h4 fw-bold text-dark mt-4 mb-3">Public Summary</h3>
+                    <p class="text-muted bg-light p-3 rounded" style="line-height: 1.6;">{{ property.public_description }}</p>
+                    
+                    <h3 class="h5 fw-bold text-dark mt-4 mb-3">Property Specifications</h3>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="p-3 border rounded text-center">
+                                <i class="bi bi-aspect-ratio text-primary fs-3 mb-2 d-block"></i>
+                                <span class="text-muted small">Total Area</span>
+                                <strong class="d-block text-dark mt-1">{{ property.area_sqft }} sqft</strong>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-3 border rounded text-center">
+                                <i class="bi bi-door-closed text-primary fs-3 mb-2 d-block"></i>
+                                <span class="text-muted small">Bedrooms</span>
+                                <strong class="d-block text-dark mt-1">{{ property.bedrooms }} Beds</strong>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-3 border rounded text-center">
+                                <i class="bi bi-water text-primary fs-3 mb-2 d-block"></i>
+                                <span class="text-muted small">Bathrooms</span>
+                                <strong class="d-block text-dark mt-1">{{ property.bathrooms }} Baths</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar / Investment Details -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-3 p-4 mb-4">
+                <h4 class="h5 fw-bold text-dark border-bottom pb-2 mb-3">Listing Details</h4>
+                <ul class="list-unstyled mb-0">
+                    <li class="d-flex justify-content-between py-2 border-bottom">
+                        <span class="text-muted">Category:</span>
+                        <strong class="text-dark">{{ property.get_category_display }}</strong>
+                    </li>
+                    <li class="d-flex justify-content-between py-2 border-bottom">
+                        <span class="text-muted">Type:</span>
+                        <strong class="text-dark">{{ property.get_property_type_display }}</strong>
+                    </li>
+                    <li class="d-flex justify-content-between py-2 border-bottom">
+                        <span class="text-muted">Listed On:</span>
+                        <strong class="text-dark">{{ property.created_at|date:"M d, Y" }}</strong>
+                    </li>
+                    <li class="d-flex justify-content-between py-2">
+                        <span class="text-muted">Last Updated:</span>
+                        <strong class="text-dark">{{ property.updated_at|date:"M d, Y" }}</strong>
+                    </li>
+                </ul>
+            </div>
+
+            {% if property.investment_opportunity %}
+                <div class="card border-0 shadow-sm rounded-3 p-4 bg-dark text-white">
+                    <h4 class="h5 fw-bold text-white border-bottom border-secondary pb-2 mb-3">
+                        <i class="bi bi-graph-up-arrow text-primary me-2"></i>Investment Analysis
+                    </h4>
+                    <ul class="list-unstyled mb-0">
+                        <li class="d-flex justify-content-between py-2 border-bottom border-secondary">
+                            <span class="text-muted">ROI %:</span>
+                            <strong class="text-primary fs-5">{{ property.expected_roi }}%</strong>
+                        </li>
+                        <li class="d-flex justify-content-between py-2">
+                            <span class="text-muted">Min Investment:</span>
+                            <strong class="text-white">${{ property.minimum_investment|intcomma }}</strong>
+                        </li>
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

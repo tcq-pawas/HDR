@@ -1,0 +1,323 @@
+{% extends "public/base.html" %}
+{% load static %}
+
+{% block title %}Edit {{ property.title }} | HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-blue: #0599E3;
+        --primary-orange: #fa9114;
+        --secondary-orange: #f98b13;
+        --text-color: #555555;
+        --border-color: #e0e0e0;
+    }
+
+    .edit-container {
+        max-width: 1200px;
+        margin: 100px auto 0;
+        padding: 2rem;
+    }
+
+    .edit-header {
+        margin-bottom: 2rem;
+        border-bottom: 2px solid var(--border-color);
+        padding-bottom: 1rem;
+    }
+
+    .edit-header h1 {
+        font-size: 1.8rem;
+        color: #333;
+        margin: 0;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .edit-content {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 2rem;
+    }
+
+    .form-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .images-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .section-title {
+        font-size: 1.1rem;
+        color: #333;
+        margin-bottom: 1.5rem;
+        font-weight: 700;
+        border-bottom: 2px solid var(--primary-orange);
+        padding-bottom: 0.75rem;
+    }
+
+    .image-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .image-item {
+        position: relative;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .image-item img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        display: block;
+    }
+
+    .image-delete-btn {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background: rgba(255, 0, 0, 0.8);
+        color: white;
+        border: none;
+        width: 30px;
+        height: 30px;
+        border-radius: 0 0 0 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .image-delete-btn:hover {
+        background: rgba(255, 0, 0, 1);
+    }
+
+    .upload-form {
+        background: #f9f9f9;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 2px dashed var(--border-color);
+        text-align: center;
+    }
+
+    .upload-form input {
+        margin-bottom: 1rem;
+    }
+
+    .upload-btn {
+        background: var(--primary-orange);
+        color: white;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .upload-btn:hover {
+        background: var(--secondary-orange);
+    }
+
+    @media (max-width: 992px) {
+        .edit-content {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="edit-container">
+    <!-- Header -->
+    <div class="edit-header">
+        <h1>Edit Property: {{ property.title }}</h1>
+    </div>
+
+    <!-- Content Grid -->
+    <div class="edit-content">
+        <!-- Left: Form -->
+        <div>
+            <form method="post" class="form-card">
+                {% csrf_token %}
+
+                <div class="form-section" style="margin-bottom: 2rem;">
+                    <h3 class="section-title">Property Details</h3>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+                        <div class="form-group">
+                            <label>Title</label>
+                            {{ form.title }}
+                        </div>
+                        <div class="form-group">
+                            <label>Property Type</label>
+                            {{ form.property_type }}
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+                        <div class="form-group">
+                            <label>Category</label>
+                            {{ form.category }}
+                        </div>
+                        <div class="form-group">
+                            <label>Location</label>
+                            {{ form.location }}
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 1.5rem;">
+                        <div class="form-group">
+                            <label>Price (₹)</label>
+                            {{ form.price }}
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+                        <div class="form-group">
+                            <label>Bedrooms</label>
+                            {{ form.bedrooms }}
+                        </div>
+                        <div class="form-group">
+                            <label>Bathrooms</label>
+                            {{ form.bathrooms }}
+                        </div>
+                        <div class="form-group">
+                            <label>Area (Sq Ft)</label>
+                            {{ form.area_sqft }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section" style="margin-bottom: 2rem;">
+                    <h3 class="section-title">Descriptions</h3>
+
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label>Public Description</label>
+                        {{ form.public_description }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Full Description</label>
+                        {{ form.description }}
+                    </div>
+                </div>
+
+                <div class="form-section" style="margin-bottom: 2rem;">
+                    <h3 class="section-title">Investment Details</h3>
+
+                    <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; align-items: center;">
+                        {{ form.investment_opportunity }}
+                        <label for="{{ form.investment_opportunity.id_for_label }}">This is an investment opportunity</label>
+                    </div>
+
+                    {% if form.investment_opportunity.value %}
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                            <div class="form-group">
+                                <label>Expected ROI (%)</label>
+                                {{ form.expected_roi }}
+                            </div>
+                            <div class="form-group">
+                                <label>Minimum Investment (₹)</label>
+                                {{ form.minimum_investment }}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 2rem; border-top: 2px solid var(--border-color); padding-top: 2rem;">
+                    <button type="submit" style="background: linear-gradient(135deg, var(--primary-orange), var(--secondary-orange)); color: white; padding: 0.75rem 2rem; border: none; border-radius: 6px; cursor: pointer; font-weight: 700;">
+                        <i class="bi bi-check-circle"></i> Update Property
+                    </button>
+                    <a href="{% url 'agent:property_list' %}" style="background: #f0f0f0; color: var(--text-color); padding: 0.75rem 2rem; border: 1px solid var(--border-color); border-radius: 6px; text-decoration: none; font-weight: 700;">
+                        <i class="bi bi-x-circle"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Right: Images -->
+        <div>
+            <div class="images-card">
+                <h3 class="section-title">Property Images</h3>
+
+                {% if images %}
+                    <div class="image-grid">
+                        {% for image in images %}
+                            <div class="image-item">
+                                <img src="{{ image.image.url }}" alt="Property Image">
+                                <form method="post" action="{% url 'agent:delete_image' image.id %}" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="image-delete-btn" onclick="return confirm('Delete this image?');">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p style="color: #999; text-align: center; padding: 1rem 0;">No images uploaded yet</p>
+                {% endif %}
+
+                <div class="upload-form">
+                    <form method="post" action="{% url 'agent:upload_image' property.id %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <label style="display: block; margin-bottom: 1rem; font-weight: 600;">Upload New Image</label>
+                        <input type="file" name="image" accept="image/*" required style="display: block; margin-bottom: 0.5rem;">
+                        <select name="category" required style="display: block; width: 100%; margin-bottom: 1rem; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px;">
+                            <option value="">Select Category</option>
+                            <option value="General">General</option>
+                            <option value="Interiors">Interiors</option>
+                            <option value="Amenities">Amenities</option>
+                            <option value="Neighborhood">Neighborhood / Lifestyle</option>
+                        </select>
+                        <button type="submit" class="upload-btn">
+                            <i class="bi bi-cloud-upload"></i> Upload Image
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group label {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 0.75rem;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.9rem;
+    }
+
+    .form-group textarea {
+        resize: vertical;
+        min-height: 120px;
+    }
+</style>
+{% endblock %}

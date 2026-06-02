@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from django.contrib.auth.models import User
 
 class Property(models.Model):
     PROPERTY_TYPES = (
@@ -21,6 +22,14 @@ class Property(models.Model):
     location = models.CharField(max_length=200)
     property_type = models.CharField(max_length=10, choices=PROPERTY_TYPES, default='sale')
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='Apartments')
+    
+    # Seller and Status for Approval Workflow
+    seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name='seller_properties', null=True, blank=True)
+    status = models.CharField(
+        max_length=20,
+        choices=[('pending', 'Pending'), ('approved', 'Approved'), ('rejected', 'Rejected')],
+        default='pending'
+    )
     
     # Limited public description
     public_description = models.TextField(

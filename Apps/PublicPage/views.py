@@ -5,7 +5,7 @@ from .models import Property, PropertyInquiry, PropertyImage
 
 def home(request):
     featured_properties = Property.objects.filter(is_featured=True).order_by('-created_at')[:6]
-    return render(request, 'publicpage/home.html', {
+    return render(request, 'public/home.html', {
         'featured_properties': featured_properties
     })
 
@@ -23,7 +23,7 @@ def property_list(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     
-    return render(request, 'publicpage/property_list.html', {
+    return render(request, 'public/property_list.html', {
         'page_obj': page_obj,
         'query': query
     })
@@ -44,30 +44,24 @@ def property_detail(request, slug):
         )
         return redirect('public:property_detail', slug=slug)
 
-    return render(request, 'publicpage/property_detail.html', {
+    return render(request, 'public/property_detail.html', {
         'property': property_obj
     })
 
 def about(request):
-    return render(request, 'publicpage/about.html')
+    return render(request, 'public/about.html')
 
 def contact(request):
     if request.method == 'POST':
         # Handle contact form logic (e.g. send email)
         pass
-    return render(request, 'publicpage/contact.html')
+    return render(request, 'public/contact.html')
 
 def media_page(request):
     images = PropertyImage.objects.select_related('property').all().order_by('-id')
     categories = PropertyImage.IMAGE_CATEGORIES
     
-    return render(request, 'publicpage/media.html', {
+    return render(request, 'public/media.html', {
         'images': images,
         'categories': categories
     })
-
-def nri_page(request):
-    return render(request, 'publicpage/nri.html')
-
-def career_page(request):
-    return render(request, 'publicpage/career.html')

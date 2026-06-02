@@ -30,13 +30,13 @@ class InvestmentListingListView(generics.ListAPIView):
     serializer_class = InvestmentListingSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['investment_type', 'status', 'property__property_type']
-    search_fields = ['title', 'description', 'property__title', 'property__location']
+    filterset_fields = ['investment_type', 'status', 'property_obj__property_type']
+    search_fields = ['title', 'description', 'property_obj__title', 'property_obj__location']
     ordering_fields = ['created_at', 'expected_roi_percentage', 'total_investment_needed']
     ordering = ['-created_at']
 
     def get_queryset(self):
-        return InvestmentListing.objects.filter(status='active').select_related('property')
+        return InvestmentListing.objects.filter(status='active').select_related('property_obj')
 
 
 class InvestmentListingDetailView(generics.RetrieveAPIView):
@@ -44,7 +44,7 @@ class InvestmentListingDetailView(generics.RetrieveAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return InvestmentListing.objects.select_related('property')
+        return InvestmentListing.objects.select_related('property_obj')
 
 
 class InvestmentListCreateView(generics.ListCreateAPIView):
@@ -52,7 +52,7 @@ class InvestmentListCreateView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         return Investment.objects.filter(investor=self.request.user).select_related(
-            'listing', 'listing__property'
+            'listing', 'listing__property_obj'
         ).order_by('-investment_date')
 
     def get_serializer_class(self):
@@ -71,7 +71,7 @@ class InvestmentDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Investment.objects.filter(investor=self.request.user).select_related(
-            'listing', 'listing__property'
+            'listing', 'listing__property_obj'
         )
 
 
@@ -172,7 +172,7 @@ def investment_dashboard(request):
     
     # Recent investments
     recent_investments = investments.select_related(
-        'listing', 'listing__property'
+        'listing', 'listing__property_obj'
     ).order_by('-investment_date')[:5]
     
     # ROI data
@@ -202,7 +202,7 @@ def featured_investments(request):
     listings = InvestmentListing.objects.filter(
         featured=True,
         status='active'
-    ).select_related('property').order_by('-created_at')
+    ).select_related('property_obj').order_by('-created_at')
     
     serializer = InvestmentListingSerializer(listings, many=True)
     return Response(serializer.data)

@@ -1,0 +1,626 @@
+{% extends "public/base.html" %}
+{% load static %}
+
+{% block title %}{{ property.title }} | HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-blue: #0599E3;
+        --primary-orange: #fa9114;
+        --secondary-orange: #f98b13;
+        --text-color: #555555;
+        --border-color: #e0e0e0;
+    }
+
+    .property-detail-wrapper {
+        min-height: 100vh;
+        background: #f9f9f9;
+        padding: 2rem 0;
+        margin-top: 80px;
+    }
+
+    .property-detail-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb-nav {
+        font-size: 0.875rem;
+        margin-bottom: 2rem;
+        padding: 0 1rem;
+    }
+
+    .breadcrumb-nav a {
+        color: var(--primary-blue);
+        text-decoration: none;
+    }
+
+    .breadcrumb-nav a:hover {
+        text-decoration: underline;
+    }
+
+    /* Image Gallery Section */
+    .gallery-section {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .main-image-container {
+        position: relative;
+        background: #f5f5f5;
+        overflow: hidden;
+    }
+
+    .main-image {
+        width: 100%;
+        height: 500px;
+        object-fit: cover;
+        display: block;
+    }
+
+    .image-navigation {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 1rem;
+        z-index: 5;
+    }
+
+    .image-nav-btn {
+        width: 45px;
+        height: 45px;
+        background: rgba(255, 255, 255, 0.9);
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .image-nav-btn:hover {
+        background: white;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .wishlist-heart {
+        position: absolute;
+        top: 1.5rem;
+        right: 1.5rem;
+        width: 50px;
+        height: 50px;
+        background: white;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .wishlist-heart:hover {
+        background: var(--primary-orange);
+        color: white;
+        transform: scale(1.1);
+    }
+
+    .wishlist-heart.saved {
+        background: var(--primary-orange);
+        color: white;
+    }
+
+    .thumbnail-gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        gap: 0.75rem;
+        padding: 1rem;
+        background: #f9f9f9;
+    }
+
+    .thumbnail {
+        aspect-ratio: 1;
+        object-fit: cover;
+        border-radius: 6px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+    }
+
+    .thumbnail:hover,
+    .thumbnail.active {
+        border-color: var(--primary-blue);
+        transform: scale(0.95);
+    }
+
+    /* Property Info Grid */
+    .property-info-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    /* Left Column - Main Info */
+    .property-details-section {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .property-title {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        color: #333;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .property-price-section {
+        padding: 1.5rem;
+        background: linear-gradient(135deg, rgba(5, 153, 227, 0.1), rgba(250, 145, 20, 0.1));
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        border-left: 4px solid var(--primary-orange);
+    }
+
+    .price-display {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary-orange);
+        margin-bottom: 0.5rem;
+    }
+
+    .price-total {
+        font-size: 1rem;
+        color: var(--text-color);
+    }
+
+    .details-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .detail-card {
+        padding: 1.5rem;
+        background: #f9f9f9;
+        border-radius: 8px;
+        border-left: 3px solid var(--primary-blue);
+    }
+
+    .detail-label {
+        font-size: 0.8rem;
+        color: #999;
+        text-transform: uppercase;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .detail-value {
+        font-size: 1.25rem;
+        color: #333;
+        font-weight: 600;
+    }
+
+    .description-section {
+        margin-bottom: 2rem;
+    }
+
+    .section-title {
+        font-size: 1.3rem;
+        color: #333;
+        margin-bottom: 1rem;
+        font-weight: 700;
+        border-bottom: 2px solid var(--primary-orange);
+        padding-bottom: 0.75rem;
+    }
+
+    .description-text {
+        color: var(--text-color);
+        line-height: 1.8;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Right Column - Sidebar */
+    .property-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .sidebar-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .agent-card {
+        text-align: center;
+    }
+
+    .agent-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary-blue), var(--primary-orange));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2rem;
+        margin: 0 auto 1rem;
+    }
+
+    .agent-name {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+
+    .agent-title {
+        font-size: 0.85rem;
+        color: #999;
+        margin-bottom: 1rem;
+    }
+
+    .contact-info-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-top: 1rem;
+        text-align: left;
+    }
+
+    .contact-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 0.9rem;
+        color: var(--text-color);
+    }
+
+    .contact-item i {
+        color: var(--primary-blue);
+        font-size: 1.1rem;
+    }
+
+    /* Inquiry Form */
+    .inquiry-form-section {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .inquiry-form-section h3 {
+        font-size: 1.2rem;
+        color: #333;
+        margin-bottom: 1.5rem;
+        font-weight: 700;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        font-family: 'Outfit', sans-serif;
+        transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 3px rgba(5, 153, 227, 0.1);
+    }
+
+    .form-group textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 1rem;
+        background: linear-gradient(135deg, var(--primary-orange), var(--secondary-orange));
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(250, 145, 20, 0.3);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+        .property-info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .details-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .main-image {
+            height: 400px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .property-detail-wrapper {
+            padding: 1rem 0;
+        }
+
+        .property-title {
+            font-size: 1.5rem;
+        }
+
+        .price-display {
+            font-size: 2rem;
+        }
+
+        .main-image {
+            height: 300px;
+        }
+
+        .thumbnail-gallery {
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+        }
+
+        .property-details-section,
+        .sidebar-card {
+            padding: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="property-detail-wrapper">
+    <div class="property-detail-container">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb-nav">
+            <a href="{% url 'public:home' %}">Home</a> > 
+            <a href="{% url 'buy:property_search' %}">Buy Property</a> > 
+            <span>{{ property.title }}</span>
+        </div>
+
+        <!-- Image Gallery -->
+        <div class="gallery-section">
+            <div class="main-image-container">
+                {% if property.images.all %}
+                    <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}" class="main-image" id="mainImage">
+                    
+                    {% if property.images.count > 1 %}
+                        <div class="image-navigation">
+                            <button class="image-nav-btn" onclick="prevImage()">&lt;</button>
+                            <button class="image-nav-btn" onclick="nextImage()">&gt;</button>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <div style="width: 100%; height: 500px; background: #f5f5f5; display: flex; align-items: center; justify-content: center; color: #999;">
+                        <i class="bi bi-image" style="font-size: 4rem;"></i>
+                    </div>
+                {% endif %}
+
+                <!-- Wishlist Button -->
+                {% if user.is_authenticated %}
+                    <form method="post" style="display: inline;" action="{% url 'buy:save_property' property.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="wishlist-heart {% if is_saved %}saved{% endif %}" title="Add to Wishlist">
+                            <i class="bi bi-heart-fill"></i>
+                        </button>
+                    </form>
+                {% else %}
+                    <button class="wishlist-heart" title="Login to save" onclick="alert('Please login to save properties')">
+                        <i class="bi bi-heart"></i>
+                    </button>
+                {% endif %}
+            </div>
+
+            <!-- Thumbnail Gallery -->
+            {% if property.images.count > 1 %}
+                <div class="thumbnail-gallery">
+                    {% for image in property.images.all %}
+                        <img src="{{ image.image.url }}" 
+                             alt="Thumbnail" 
+                             class="thumbnail {% if forloop.first %}active{% endif %}"
+                             onclick="changeImage(this.src, {{ forloop.counter0 }})">
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Content Grid -->
+        <div class="property-info-grid">
+            <!-- Left Column -->
+            <div>
+                <!-- Property Details -->
+                <div class="property-details-section">
+                    <h1 class="property-title">{{ property.title }}</h1>
+
+                    <!-- Price Section -->
+                    <div class="property-price-section">
+                        <div class="price-display">₹{{ property.price|floatformat:0 }}</div>
+                        <div class="price-total">Total Price: ₹{{ property.price|floatformat:0 }}</div>
+                    </div>
+
+                    <!-- Key Details -->
+                    <div class="details-grid">
+                        <div class="detail-card">
+                            <div class="detail-label">Area</div>
+                            <div class="detail-value">{{ property.area_sqft }} Sq Ft</div>
+                        </div>
+                        <div class="detail-card">
+                            <div class="detail-label">Property Type</div>
+                            <div class="detail-value">{{ property.category }}</div>
+                        </div>
+                        <div class="detail-card">
+                            <div class="detail-label">Bedrooms</div>
+                            <div class="detail-value">{{ property.bedrooms }}</div>
+                        </div>
+                        <div class="detail-card">
+                            <div class="detail-label">Bathrooms</div>
+                            <div class="detail-value">{{ property.bathrooms }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Location -->
+                    <div style="margin-bottom: 2rem;">
+                        <p style="color: #666; font-size: 1rem;">
+                            <i class="bi bi-geo-alt" style="color: var(--primary-blue); margin-right: 0.5rem;"></i>
+                            {{ property.location }}
+                        </p>
+                    </div>
+
+                    <!-- Description -->
+                    {% if property.public_description %}
+                        <div class="description-section">
+                            <h3 class="section-title">About Property</h3>
+                            <p class="description-text">{{ property.public_description }}</p>
+                        </div>
+                    {% endif %}
+
+                    <!-- Full Description -->
+                    {% if property.description %}
+                        <div class="description-section">
+                            <h3 class="section-title">Full Details</h3>
+                            <p class="description-text">{{ property.description }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Right Column - Sidebar -->
+            <div class="property-sidebar">
+                <!-- Agent Card -->
+                <div class="sidebar-card agent-card">
+                    <div class="agent-avatar">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                    <div class="agent-name">HeyDay Realty</div>
+                    <div class="agent-title">Property Agent</div>
+                    <div class="contact-info-list">
+                        <div class="contact-item">
+                            <i class="bi bi-telephone-fill"></i>
+                            <span>+91 9506688688</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="bi bi-envelope-fill"></i>
+                            <span>info@heydayrealty.in</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Inquiry Form -->
+                <div class="inquiry-form-section">
+                    <h3>Send Inquiry</h3>
+                    <form method="post" action="{% url 'buy:send_inquiry' property.id %}">
+                        {% csrf_token %}
+                        
+                        <div class="form-group">
+                            <label for="{{ form.name.id_for_label }}">Your Name</label>
+                            {{ form.name }}
+                            {% if form.name.errors %}
+                                <small style="color: #dc3545;">{{ form.name.errors }}</small>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.email.id_for_label }}">Email Address</label>
+                            {{ form.email }}
+                            {% if form.email.errors %}
+                                <small style="color: #dc3545;">{{ form.email.errors }}</small>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.message.id_for_label }}">Message</label>
+                            {{ form.message }}
+                            {% if form.message.errors %}
+                                <small style="color: #dc3545;">{{ form.message.errors }}</small>
+                            {% endif %}
+                        </div>
+
+                        <button type="submit" class="submit-btn">Submit Inquiry</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentImageIndex = 0;
+    const images = document.querySelectorAll('.thumbnail');
+    const totalImages = images.length;
+
+    function changeImage(src, index) {
+        document.getElementById('mainImage').src = src;
+        currentImageIndex = index;
+        
+        // Update active thumbnail
+        document.querySelectorAll('.thumbnail').forEach((thumb, i) => {
+            thumb.classList.toggle('active', i === index);
+        });
+    }
+
+    function nextImage() {
+        if (images.length > 0) {
+            currentImageIndex = (currentImageIndex + 1) % images.length;
+            changeImage(images[currentImageIndex].src, currentImageIndex);
+        }
+    }
+
+    function prevImage() {
+        if (images.length > 0) {
+            currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+            changeImage(images[currentImageIndex].src, currentImageIndex);
+        }
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextImage();
+        if (e.key === 'ArrowLeft') prevImage();
+    });
+</script>
+{% endblock %}

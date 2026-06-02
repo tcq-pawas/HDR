@@ -32,6 +32,13 @@ urlpatterns = [
     # Public-facing pages (view-only)
     path('', include('Apps.PublicPage.urls')),
     
+    # Buy and Sell modules
+    path('buy/', include(('Apps.buy.urls', 'buy'), namespace='buy')),
+    path('sell/', include(('Apps.sell.urls', 'sell'), namespace='sell')),
+    
+    # Agent Dashboard
+    path('agent/', include(('Apps.Agent.urls', 'agent'), namespace='agent')),
+    
     # Role-based dashboards (with unique prefixes and strict access control)
     path('customer/', include(('Apps.Customer.urls', 'customer'), namespace='customer')),
     path('investor/', include(('Apps.Investor.urls', 'investor'), namespace='investor')),

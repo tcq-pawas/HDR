@@ -1,0 +1,296 @@
+{% extends "public/base.html" %}
+{% load static %}
+
+{% block title %}My Properties | HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-blue: #0599E3;
+        --primary-orange: #fa9114;
+        --secondary-orange: #f98b13;
+        --text-color: #555555;
+        --border-color: #e0e0e0;
+    }
+
+    .properties-container {
+        max-width: 1200px;
+        margin: 100px auto 0;
+        padding: 2rem;
+    }
+
+    .properties-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        border-bottom: 2px solid var(--border-color);
+        padding-bottom: 1rem;
+    }
+
+    .properties-header h1 {
+        font-size: 1.8rem;
+        color: #333;
+        margin: 0;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .add-property-btn {
+        background: var(--primary-orange);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 700;
+        transition: all 0.3s ease;
+    }
+
+    .add-property-btn:hover {
+        background: var(--secondary-orange);
+    }
+
+    .filter-section {
+        margin-bottom: 2rem;
+        display: flex;
+        gap: 1rem;
+    }
+
+    .filter-select {
+        padding: 0.5rem 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        font-size: 0.9rem;
+    }
+
+    .properties-table {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th {
+        background: #f9f9f9;
+        padding: 1rem;
+        text-align: left;
+        font-weight: 700;
+        color: #333;
+        border-bottom: 2px solid var(--border-color);
+    }
+
+    td {
+        padding: 1rem;
+        border-bottom: 1px solid var(--border-color);
+        color: var(--text-color);
+    }
+
+    tbody tr:hover {
+        background: #f9f9f9;
+    }
+
+    .property-title {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .status-pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .status-approved {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .status-sold {
+        background: #d1ecf1;
+        color: #0c5460;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .action-btn {
+        padding: 0.4rem 0.8rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-decoration: none;
+        border: 1px solid var(--border-color);
+        transition: all 0.3s ease;
+    }
+
+    .action-btn.edit {
+        color: var(--primary-blue);
+        border-color: var(--primary-blue);
+    }
+
+    .action-btn.edit:hover {
+        background: rgba(5, 153, 227, 0.1);
+    }
+
+    .action-btn.delete {
+        color: #e74c3c;
+        border-color: #e74c3c;
+    }
+
+    .action-btn.delete:hover {
+        background: rgba(231, 76, 60, 0.1);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .empty-state-icon {
+        font-size: 3rem;
+        color: #ddd;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state h3 {
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-state p {
+        color: #999;
+        margin-bottom: 1.5rem;
+    }
+
+    .empty-state a {
+        background: var(--primary-orange);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 700;
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+
+    .empty-state a:hover {
+        background: var(--secondary-orange);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="properties-container">
+    <!-- Header -->
+    <div class="properties-header">
+        <h1>My Properties</h1>
+        <a href="{% url 'agent:property_add' %}" class="add-property-btn">
+            <i class="bi bi-plus-circle"></i> Add New Property
+        </a>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="filter-section">
+        <form method="get" style="display: flex; gap: 1rem;">
+            <select name="status" class="filter-select" onchange="this.form.submit()">
+                <option value="">All Status</option>
+                <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+                <option value="approved" {% if status_filter == 'approved' %}selected{% endif %}>Approved</option>
+                <option value="sold" {% if status_filter == 'sold' %}selected{% endif %}>Sold</option>
+            </select>
+        </form>
+    </div>
+
+    <!-- Properties Table -->
+    {% if properties %}
+        <div class="properties-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Location</th>
+                        <th>Price</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for property in properties %}
+                        <tr>
+                            <td class="property-title">{{ property.title|truncatewords:5 }}</td>
+                            <td>{{ property.location }}</td>
+                            <td>₹{{ property.price|floatformat:0 }}</td>
+                            <td>{{ property.category }}</td>
+                            <td>
+                                <span class="status-badge status-{{ property.status }}">
+                                    {{ property.get_status_display }}
+                                </span>
+                            </td>
+                            <td>{{ property.created_at|date:"M d, Y" }}</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="{% url 'agent:property_edit' property.id %}" class="action-btn edit">Edit</a>
+                                    <a href="{% url 'agent:property_delete' property.id %}" class="action-btn delete">Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+            <div style="text-align: center; margin-top: 2rem;">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1" style="padding: 0.5rem 0.75rem; margin: 0.25rem; text-decoration: none; border: 1px solid var(--border-color); border-radius: 4px;">First</a>
+                    <a href="?page={{ page_obj.previous_page_number }}" style="padding: 0.5rem 0.75rem; margin: 0.25rem; text-decoration: none; border: 1px solid var(--border-color); border-radius: 4px;">Previous</a>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <span style="padding: 0.5rem 0.75rem; margin: 0.25rem; background: var(--primary-orange); color: white; border-radius: 4px;">{{ num }}</span>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <a href="?page={{ num }}" style="padding: 0.5rem 0.75rem; margin: 0.25rem; text-decoration: none; border: 1px solid var(--border-color); border-radius: 4px;">{{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" style="padding: 0.5rem 0.75rem; margin: 0.25rem; text-decoration: none; border: 1px solid var(--border-color); border-radius: 4px;">Next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}" style="padding: 0.5rem 0.75rem; margin: 0.25rem; text-decoration: none; border: 1px solid var(--border-color); border-radius: 4px;">Last</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% else %}
+        <!-- Empty State -->
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <i class="bi bi-houses"></i>
+            </div>
+            <h3>No Properties Yet</h3>
+            <p>You haven't added any properties yet. Start by creating your first property listing!</p>
+            <a href="{% url 'agent:property_add' %}">
+                <i class="bi bi-plus-circle"></i> Add Your First Property
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

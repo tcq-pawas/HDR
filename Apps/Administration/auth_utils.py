@@ -8,7 +8,7 @@ from functools import wraps
 
 def get_user_role(user):
     """Get the primary role of a user based on their group membership"""
-    if not user.is_authenticated:
+    if not user.is_authenticated or not user.pk:
         return None
     
     # Check in order of priority: admin > investor > customer
