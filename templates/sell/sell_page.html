@@ -5,13 +5,7 @@
 
 {% block extra_css %}
 <style>
-    :root {
-        --primary-blue: #0599E3;
-        --primary-orange: #fa9114;
-        --secondary-orange: #f98b13;
-        --text-color: #555555;
-        --border-color: #e0e0e0;
-    }
+
 
     /* Hero Section */
     .sell-hero {
@@ -311,29 +305,16 @@
 </style>
 {% endblock %}
 
-{% block content %}
-<!-- Hero Section -->
-<div class="sell-hero">
-    <div class="container">
-        <div class="sell-hero-content">
-            <div class="sell-hero-left">
-                <h1>SELL YOUR LAND WITH CONFIDENCE</h1>
-                <p>We make selling your property simple, transparent, and rewarding. With our trusted platform and expert agents, your property gets the exposure it deserves.</p>
-                <ul style="list-style: none; padding: 0;">
-                    <li style="margin-bottom: 0.75rem; color: var(--text-color);"><i class="bi bi-check-circle-fill" style="color: var(--primary-orange); margin-right: 0.5rem;"></i> Quick and easy listing process</li>
-                    <li style="margin-bottom: 0.75rem; color: var(--text-color);"><i class="bi bi-check-circle-fill" style="color: var(--primary-orange); margin-right: 0.5rem;"></i> Connect with verified buyers</li>
-                    <li style="margin-bottom: 0.75rem; color: var(--text-color);"><i class="bi bi-check-circle-fill" style="color: var(--primary-orange); margin-right: 0.5rem;"></i> Full support from start to finish</li>
-                    <li style="color: var(--text-color);"><i class="bi bi-check-circle-fill" style="color: var(--primary-orange); margin-right: 0.5rem;"></i> Best deals for your property</li>
-                </ul>
-            </div>
-            <div class="sell-hero-right">
-                <div class="sell-hero-image">
-                    <i class="bi bi-house-check"></i>
-                </div>
-            </div>
-        </div>
+{% block inner_hero %}
+<section class="inner-hero" style="background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');">
+    <div class="inner-hero-content">
+        <h1 class="inner-hero-title">Sell Property</h1>
+        <p class="inner-hero-quote">"Turn your property into opportunity"</p>
     </div>
-</div>
+</section>
+{% endblock %}
+
+{% block content %}
 
 <!-- Get Started Section -->
 <div class="get-started-section">

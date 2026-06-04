@@ -1,17 +1,16 @@
 {% extends 'public/base.html' %}
 {% load static %}
-{% block hero_image %}https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1600&q=80{% endblock %}
-{% block hero_title %}About HeyDay Realty{% endblock %}
-{% block hero_subtitle %}Our journey and mission{% endblock %}
+
+{% block inner_hero %}
+<section class="inner-hero" style="background-image: url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');">
+    <div class="inner-hero-content">
+        <h1 class="inner-hero-title">About Us</h1>
+        <p class="inner-hero-quote">"Building trust through excellence"</p>
+    </div>
+</section>
+{% endblock %}
 
 {% block content %}
-<!-- Header -->
-<div class="bg-light py-5 text-center">
-    <div class="container">
-        <h1 class="fw-bold mb-3">About Us</h1>
-        <p class="text-muted lead">Learn more about our journey and mission.</p>
-    </div>
-</div>
 
 <section class="py-5 bg-white">
     <div class="container">

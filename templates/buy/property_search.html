@@ -5,13 +5,6 @@
 
 {% block extra_css %}
 <style>
-    :root {
-        --primary-blue: #0599E3;
-        --primary-orange: #fa9114;
-        --secondary-orange: #f98b13;
-        --text-color: #555555;
-        --border-color: #e0e0e0;
-    }
 
     /* Page Layout */
     .buy-page-wrapper {
@@ -560,6 +553,15 @@
         }
     }
 </style>
+{% endblock %}
+
+{% block inner_hero %}
+<section class="inner-hero" style="background-image: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');">
+    <div class="inner-hero-content">
+        <h1 class="inner-hero-title">Buy Property</h1>
+        <p class="inner-hero-quote">"Invest in your future with the perfect property"</p>
+    </div>
+</section>
 {% endblock %}
 
 {% block content %}
