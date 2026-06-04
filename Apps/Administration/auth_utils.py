@@ -11,24 +11,26 @@ def get_user_role(user):
     if not user.is_authenticated or not user.pk:
         return None
     
-    # Check in order of priority: admin > investor > customer
+    # Check in order of priority: admin > investor > customer > agent
     if user.is_superuser or user.groups.filter(name='admin').exists():
         return 'admin'
     elif user.groups.filter(name='investor').exists():
         return 'investor'
     elif user.groups.filter(name='customer').exists():
         return 'customer'
+    elif user.groups.filter(name='agent').exists():
+        return 'agent'
     else:
         return None
 
 
 def assign_user_group(user, role):
     """Assign user to appropriate group based on role"""
-    if role not in ['customer', 'investor', 'admin']:
-        raise ValueError("Role must be one of: customer, investor, admin")
+    if role not in ['customer', 'investor', 'admin', 'agent']:
+        raise ValueError("Role must be one of: customer, investor, admin, agent")
     
     # Remove from all role groups first
-    role_groups = Group.objects.filter(name__in=['customer', 'investor', 'admin'])
+    role_groups = Group.objects.filter(name__in=['customer', 'investor', 'admin', 'agent'])
     user.groups.remove(*role_groups)
     
     # Add to the specified group
@@ -83,6 +85,8 @@ def get_role_based_redirect_url(user):
         return reverse('investor:dashboard')
     elif role == 'customer':
         return reverse('customer:dashboard')
+    elif role == 'agent':
+        return reverse('agent:dashboard')
     else:
         return reverse('auth:unauthorized')  # Fallback to unauthorized page
 
