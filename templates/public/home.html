@@ -47,7 +47,7 @@
                         <p class="text-muted small mb-3"><i class="bi bi-aspect-ratio text-primary"></i> 2400 sqft | Road Access</p>
                         <div class="d-flex justify-content-between align-items-center">
                             <span class="land-price">$125,000</span>
-                            <a href="#" class="btn btn-sm btn-primary">View Details</a>
+                            <a href="{% url 'buy:property_search' %}" class="btn btn-sm btn-primary">View Details</a>
                         </div>
                     </div>
                 </div>
@@ -62,7 +62,7 @@
                         <p class="text-muted small mb-3"><i class="bi bi-aspect-ratio text-primary"></i> 5000 sqft | Main Road</p>
                         <div class="d-flex justify-content-between align-items-center">
                             <span class="land-price">$350,000</span>
-                            <a href="#" class="btn btn-sm btn-primary">View Details</a>
+                            <a href="{% url 'buy:property_search' %}" class="btn btn-sm btn-primary">View Details</a>
                         </div>
                     </div>
                 </div>
@@ -77,7 +77,7 @@
                         <p class="text-muted small mb-3"><i class="bi bi-aspect-ratio text-primary"></i> 2 Acres | Water Access</p>
                         <div class="d-flex justify-content-between align-items-center">
                             <span class="land-price">$180,000</span>
-                            <a href="#" class="btn btn-sm btn-primary">View Details</a>
+                            <a href="{% url 'buy:property_search' %}" class="btn btn-sm btn-primary">View Details</a>
                         </div>
                     </div>
                 </div>
@@ -92,7 +92,7 @@
                         <p class="text-muted small mb-3"><i class="bi bi-aspect-ratio text-primary"></i> 1800 sqft | High ROI</p>
                         <div class="d-flex justify-content-between align-items-center">
                             <span class="land-price">$95,000</span>
-                            <a href="#" class="btn btn-sm btn-primary">View Details</a>
+                            <a href="{% url 'buy:property_search' %}" class="btn btn-sm btn-primary">View Details</a>
                         </div>
                     </div>
                 </div>
@@ -313,7 +313,7 @@
                                 property.location }}</p>
                             <div class="d-flex justify-content-between align-items-center mt-3">
                                 <span class="h5 fw-bold text-accent mb-0">${{ property.price }}</span>
-                                <a href="{% url 'public:property_detail' property.slug %}"
+                                <a href="/buy/{{ property.pk }}/"
                                     class="btn btn-sm btn-primary">Details</a>
                             </div>
                         </div>
