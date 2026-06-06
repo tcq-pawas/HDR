@@ -1,83 +1,44 @@
-{% extends "public/base.html" %}
+{% extends "agent/agent_base.html" %}
 {% load static %}
 
 {% block title %}Property Inquiries | HeyDay Realty{% endblock %}
 
 {% block extra_css %}
 <style>
-    :root {
-        --primary-blue: #0599E3;
-        --primary-orange: #fa9114;
-        --secondary-orange: #f98b13;
-        --text-color: #555555;
-        --border-color: #e0e0e0;
-    }
-
     .inquiries-container {
-        max-width: 1200px;
-        margin: 100px auto 0;
-        padding: 2rem;
+        max-width: 100%;
+        padding: 0;
     }
 
-    .inquiries-header {
+    .page-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 2rem;
-        border-bottom: 2px solid var(--border-color);
+        margin-bottom: 1.5rem;
         padding-bottom: 1rem;
+        border-bottom: 1px solid #e2e8f0;
     }
 
-    .inquiries-header h1 {
-        font-size: 1.8rem;
-        color: #333;
+    .page-header h1 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1e293b;
         margin: 0;
-        font-family: 'Playfair Display', serif;
-    }
-
-    .inquiries-table {
-        background: white;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        overflow: hidden;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    th {
-        background: #f9f9f9;
-        padding: 1rem;
-        text-align: left;
-        font-weight: 700;
-        color: #333;
-        border-bottom: 2px solid var(--border-color);
-    }
-
-    td {
-        padding: 1rem;
-        border-bottom: 1px solid var(--border-color);
-        color: var(--text-color);
-    }
-
-    tbody tr:hover {
-        background: #f9f9f9;
     }
 
     .inquiry-card {
         background: white;
         padding: 1.5rem;
         border-radius: 8px;
-        border-left: 4px solid var(--primary-orange);
+        border-left: 4px solid #1E73BE;
         margin-bottom: 1rem;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
 
     .inquiry-card h4 {
         margin: 0 0 0.5rem 0;
-        color: #333;
+        color: #1e293b;
+        font-size: 1.1rem;
     }
 
     .inquiry-detail {
@@ -85,40 +46,67 @@
         justify-content: space-between;
         align-items: center;
         margin-bottom: 0.5rem;
-        color: #666;
+        color: #64748b;
         font-size: 0.9rem;
     }
 
     .inquiry-message {
-        background: #f9f9f9;
+        background: #f8fafc;
         padding: 1rem;
         border-radius: 6px;
         margin-top: 1rem;
-        color: var(--text-color);
+        color: #64748b;
         line-height: 1.6;
     }
 
     .empty-state {
         text-align: center;
-        padding: 3rem;
+        padding: 4rem 2rem;
         background: white;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
 
     .empty-state-icon {
         font-size: 3rem;
-        color: #ddd;
+        color: #cbd5e1;
         margin-bottom: 1rem;
     }
 
     .empty-state h3 {
-        color: #333;
+        color: #1e293b;
         margin-bottom: 0.5rem;
+        font-size: 1.25rem;
     }
 
     .empty-state p {
-        color: #999;
+        color: #64748b;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .pagination a, .pagination span {
+        padding: 0.5rem 0.75rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 4px;
+        text-decoration: none;
+        color: #64748b;
+        font-size: 0.9rem;
+    }
+
+    .pagination a:hover {
+        background: #f8fafc;
+    }
+
+    .pagination span.current {
+        background: #1E73BE;
+        color: white;
+        border-color: #1E73BE;
     }
 </style>
 {% endblock %}
@@ -126,9 +114,9 @@
 {% block content %}
 <div class="inquiries-container">
     <!-- Header -->
-    <div class="inquiries-header">
+    <div class="page-header">
         <h1>Property Inquiries</h1>
-        <span style="background: var(--primary-orange); color: white; padding: 0.5rem 1rem; border-radius: 20px; font-weight: 700;">
+        <span style="background: #1E73BE; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600;">
             {{ page_obj.paginator.count }} Total
         </span>
     </div>
@@ -166,23 +154,23 @@
 
         <!-- Pagination -->
         {% if page_obj.has_other_pages %}
-            <div style="text-align: center; margin-top: 2rem;">
+            <div class="pagination">
                 {% if page_obj.has_previous %}
-                    <a href="?page=1" style="padding: 0.5rem 0.75rem; margin: 0.25rem; text-decoration: none; border: 1px solid var(--border-color); border-radius: 4px;">First</a>
-                    <a href="?page={{ page_obj.previous_page_number }}" style="padding: 0.5rem 0.75rem; margin: 0.25rem; text-decoration: none; border: 1px solid var(--border-color); border-radius: 4px;">Previous</a>
+                    <a href="?page=1">First</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
                 {% endif %}
 
                 {% for num in page_obj.paginator.page_range %}
                     {% if page_obj.number == num %}
-                        <span style="padding: 0.5rem 0.75rem; margin: 0.25rem; background: var(--primary-orange); color: white; border-radius: 4px;">{{ num }}</span>
+                        <span class="current">{{ num }}</span>
                     {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                        <a href="?page={{ num }}" style="padding: 0.5rem 0.75rem; margin: 0.25rem; text-decoration: none; border: 1px solid var(--border-color); border-radius: 4px;">{{ num }}</a>
+                        <a href="?page={{ num }}">{{ num }}</a>
                     {% endif %}
                 {% endfor %}
 
                 {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}" style="padding: 0.5rem 0.75rem; margin: 0.25rem; text-decoration: none; border: 1px solid var(--border-color); border-radius: 4px;">Next</a>
-                    <a href="?page={{ page_obj.paginator.num_pages }}" style="padding: 0.5rem 0.75rem; margin: 0.25rem; text-decoration: none; border: 1px solid var(--border-color); border-radius: 4px;">Last</a>
+                    <a href="?page={{ page_obj.next_page_number }}">Next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
                 {% endif %}
             </div>
         {% endif %}

@@ -1,71 +1,64 @@
-{% extends "public/base.html" %}
+{% extends "agent/agent_base.html" %}
 {% load static %}
 
 {% block title %}My Properties | HeyDay Realty{% endblock %}
 
 {% block extra_css %}
 <style>
-    :root {
-        --primary-blue: #0599E3;
-        --primary-orange: #fa9114;
-        --secondary-orange: #f98b13;
-        --text-color: #555555;
-        --border-color: #e0e0e0;
-    }
-
-    .properties-container {
-        max-width: 1200px;
-        margin: 100px auto 0;
-        padding: 2rem;
-    }
-
-    .properties-header {
+    .page-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 2rem;
-        border-bottom: 2px solid var(--border-color);
+        margin-bottom: 1.5rem;
         padding-bottom: 1rem;
+        border-bottom: 1px solid #e2e8f0;
     }
 
-    .properties-header h1 {
-        font-size: 1.8rem;
-        color: #333;
+    .page-header h1 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1e293b;
         margin: 0;
-        font-family: 'Playfair Display', serif;
     }
 
     .add-property-btn {
-        background: var(--primary-orange);
+        background: #1E73BE;
         color: white;
-        padding: 0.75rem 1.5rem;
+        padding: 0.6rem 1.2rem;
         border-radius: 6px;
         text-decoration: none;
-        font-weight: 700;
-        transition: all 0.3s ease;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
     }
 
     .add-property-btn:hover {
-        background: var(--secondary-orange);
+        background: #155a9e;
     }
 
     .filter-section {
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
         display: flex;
         gap: 1rem;
+        align-items: center;
     }
 
     .filter-select {
         padding: 0.5rem 1rem;
-        border: 1px solid var(--border-color);
+        border: 1px solid #e2e8f0;
         border-radius: 6px;
         font-size: 0.9rem;
+        background: white;
+        color: #475569;
     }
 
     .properties-table {
         background: white;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         overflow: hidden;
     }
 
@@ -75,50 +68,59 @@
     }
 
     th {
-        background: #f9f9f9;
+        background: #f8fafc;
         padding: 1rem;
         text-align: left;
-        font-weight: 700;
-        color: #333;
-        border-bottom: 2px solid var(--border-color);
+        font-weight: 600;
+        color: #475569;
+        border-bottom: 1px solid #e2e8f0;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
     td {
         padding: 1rem;
-        border-bottom: 1px solid var(--border-color);
-        color: var(--text-color);
+        border-bottom: 1px solid #e2e8f0;
+        color: #64748b;
+        font-size: 0.9rem;
     }
 
     tbody tr:hover {
-        background: #f9f9f9;
+        background: #f8fafc;
     }
 
     .property-title {
         font-weight: 600;
-        color: #333;
+        color: #1e293b;
     }
 
     .status-badge {
         display: inline-block;
-        padding: 0.4rem 0.8rem;
+        padding: 0.35rem 0.75rem;
         border-radius: 20px;
-        font-size: 0.8rem;
+        font-size: 0.75rem;
         font-weight: 600;
     }
 
     .status-pending {
-        background: #fff3cd;
-        color: #856404;
+        background: #fef3c7;
+        color: #92400e;
     }
 
     .status-approved {
-        background: #d4edda;
-        color: #155724;
+        background: #d1fae5;
+        color: #065f46;
     }
 
     .status-sold {
-        background: #d1ecf1;
-        color: #0c5460;
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+    .status-rejected {
+        background: #fee2e2;
+        color: #991b1b;
     }
 
     .action-buttons {
@@ -132,65 +134,97 @@
         font-size: 0.8rem;
         font-weight: 600;
         text-decoration: none;
-        border: 1px solid var(--border-color);
-        transition: all 0.3s ease;
+        border: 1px solid #e2e8f0;
+        transition: all 0.2s ease;
+        background: white;
     }
 
     .action-btn.edit {
-        color: var(--primary-blue);
-        border-color: var(--primary-blue);
+        color: #1E73BE;
+        border-color: #1E73BE;
     }
 
     .action-btn.edit:hover {
-        background: rgba(5, 153, 227, 0.1);
+        background: #1E73BE;
+        color: white;
     }
 
     .action-btn.delete {
-        color: #e74c3c;
-        border-color: #e74c3c;
+        color: #ef4444;
+        border-color: #ef4444;
     }
 
     .action-btn.delete:hover {
-        background: rgba(231, 76, 60, 0.1);
+        background: #ef4444;
+        color: white;
     }
 
     .empty-state {
         text-align: center;
-        padding: 3rem;
+        padding: 4rem 2rem;
         background: white;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
 
     .empty-state-icon {
         font-size: 3rem;
-        color: #ddd;
+        color: #cbd5e1;
         margin-bottom: 1rem;
     }
 
     .empty-state h3 {
-        color: #333;
+        color: #1e293b;
         margin-bottom: 0.5rem;
+        font-size: 1.25rem;
     }
 
     .empty-state p {
-        color: #999;
+        color: #64748b;
         margin-bottom: 1.5rem;
     }
 
     .empty-state a {
-        background: var(--primary-orange);
+        background: #1E73BE;
         color: white;
         padding: 0.75rem 1.5rem;
         border-radius: 6px;
         text-decoration: none;
-        font-weight: 700;
-        display: inline-block;
-        transition: all 0.3s ease;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.2s ease;
     }
 
     .empty-state a:hover {
-        background: var(--secondary-orange);
+        background: #155a9e;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .pagination a, .pagination span {
+        padding: 0.5rem 0.75rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 4px;
+        text-decoration: none;
+        color: #64748b;
+        font-size: 0.9rem;
+    }
+
+    .pagination a:hover {
+        background: #f8fafc;
+    }
+
+    .pagination span.current {
+        background: #1E73BE;
+        color: white;
+        border-color: #1E73BE;
     }
 </style>
 {% endblock %}
@@ -198,10 +232,10 @@
 {% block content %}
 <div class="properties-container">
     <!-- Header -->
-    <div class="properties-header">
+    <div class="page-header">
         <h1>My Properties</h1>
         <a href="{% url 'agent:property_add' %}" class="add-property-btn">
-            <i class="bi bi-plus-circle"></i> Add New Property
+            <i class="bi bi-plus-lg"></i> Add New Property
         </a>
     </div>
 
@@ -259,23 +293,23 @@
 
         <!-- Pagination -->
         {% if page_obj.has_other_pages %}
-            <div style="text-align: center; margin-top: 2rem;">
+            <div class="pagination">
                 {% if page_obj.has_previous %}
-                    <a href="?page=1" style="padding: 0.5rem 0.75rem; margin: 0.25rem; text-decoration: none; border: 1px solid var(--border-color); border-radius: 4px;">First</a>
-                    <a href="?page={{ page_obj.previous_page_number }}" style="padding: 0.5rem 0.75rem; margin: 0.25rem; text-decoration: none; border: 1px solid var(--border-color); border-radius: 4px;">Previous</a>
+                    <a href="?page=1">First</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
                 {% endif %}
 
                 {% for num in page_obj.paginator.page_range %}
                     {% if page_obj.number == num %}
-                        <span style="padding: 0.5rem 0.75rem; margin: 0.25rem; background: var(--primary-orange); color: white; border-radius: 4px;">{{ num }}</span>
+                        <span class="current">{{ num }}</span>
                     {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                        <a href="?page={{ num }}" style="padding: 0.5rem 0.75rem; margin: 0.25rem; text-decoration: none; border: 1px solid var(--border-color); border-radius: 4px;">{{ num }}</a>
+                        <a href="?page={{ num }}">{{ num }}</a>
                     {% endif %}
                 {% endfor %}
 
                 {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}" style="padding: 0.5rem 0.75rem; margin: 0.25rem; text-decoration: none; border: 1px solid var(--border-color); border-radius: 4px;">Next</a>
-                    <a href="?page={{ page_obj.paginator.num_pages }}" style="padding: 0.5rem 0.75rem; margin: 0.25rem; text-decoration: none; border: 1px solid var(--border-color); border-radius: 4px;">Last</a>
+                    <a href="?page={{ page_obj.next_page_number }}">Next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
                 {% endif %}
             </div>
         {% endif %}
@@ -288,7 +322,7 @@
             <h3>No Properties Yet</h3>
             <p>You haven't added any properties yet. Start by creating your first property listing!</p>
             <a href="{% url 'agent:property_add' %}">
-                <i class="bi bi-plus-circle"></i> Add Your First Property
+                <i class="bi bi-plus-lg"></i> Add Your First Property
             </a>
         </div>
     {% endif %}

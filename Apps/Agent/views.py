@@ -6,14 +6,20 @@ from django.http import JsonResponse
 from django.db.models import Q, Count
 from django.views.decorators.http import require_http_methods
 from django.utils.text import slugify
+from django.core.exceptions import PermissionDenied
 
 from Apps.PublicPage.models import Property, PropertyImage
+from Apps.Administration.auth_utils import get_user_role
 from .models import AgentProfile, PropertyInquiry
 from .forms import PropertyForm, PropertyImageForm, AgentProfileForm
 
 
 @login_required
 def dashboard(request):
+    # Check if user is an agent
+    user_role = get_user_role(request.user)
+    if user_role != 'agent':
+        raise PermissionDenied("Access denied. This page is only accessible to agents.")
     """Agent/Seller Dashboard - Overview"""
     try:
         agent_profile = request.user.agent_profile
@@ -59,6 +65,10 @@ def dashboard(request):
 
 @login_required
 def property_list(request):
+    # Check if user is an agent
+    user_role = get_user_role(request.user)
+    if user_role != 'agent':
+        raise PermissionDenied("Access denied. This page is only accessible to agents.")
     """List all properties created by the agent"""
     properties = Property.objects.filter(seller=request.user).order_by('-created_at')
     
@@ -83,6 +93,10 @@ def property_list(request):
 
 @login_required
 def property_add(request):
+    # Check if user is an agent
+    user_role = get_user_role(request.user)
+    if user_role != 'agent':
+        raise PermissionDenied("Access denied. This page is only accessible to agents.")
     """Add a new property"""
     if request.method == 'POST':
         form = PropertyForm(request.POST)
@@ -110,6 +124,10 @@ def property_add(request):
 
 @login_required
 def property_edit(request, pk):
+    # Check if user is an agent
+    user_role = get_user_role(request.user)
+    if user_role != 'agent':
+        raise PermissionDenied("Access denied. This page is only accessible to agents.")
     """Edit an existing property"""
     property_obj = get_object_or_404(Property, pk=pk, seller=request.user)
     
@@ -139,6 +157,10 @@ def property_edit(request, pk):
 
 @login_required
 def property_delete(request, pk):
+    # Check if user is an agent
+    user_role = get_user_role(request.user)
+    if user_role != 'agent':
+        raise PermissionDenied("Access denied. This page is only accessible to agents.")
     """Delete a property"""
     property_obj = get_object_or_404(Property, pk=pk, seller=request.user)
     
@@ -157,6 +179,10 @@ def property_delete(request, pk):
 
 @login_required
 def upload_property_image(request, pk):
+    # Check if user is an agent
+    user_role = get_user_role(request.user)
+    if user_role != 'agent':
+        raise PermissionDenied("Access denied. This page is only accessible to agents.")
     """Upload images for a property"""
     property_obj = get_object_or_404(Property, pk=pk, seller=request.user)
     
@@ -182,6 +208,10 @@ def upload_property_image(request, pk):
 @login_required
 @require_http_methods(["POST"])
 def delete_property_image(request, image_id):
+    # Check if user is an agent
+    user_role = get_user_role(request.user)
+    if user_role != 'agent':
+        raise PermissionDenied("Access denied. This page is only accessible to agents.")
     """Delete a property image"""
     image = get_object_or_404(PropertyImage, id=image_id, property__seller=request.user)
     property_id = image.property.id
@@ -192,6 +222,10 @@ def delete_property_image(request, image_id):
 
 @login_required
 def property_inquiries(request):
+    # Check if user is an agent
+    user_role = get_user_role(request.user)
+    if user_role != 'agent':
+        raise PermissionDenied("Access denied. This page is only accessible to agents.")
     """View inquiries for all agent's properties"""
     inquiries = PropertyInquiry.objects.filter(
         property__seller=request.user
@@ -218,6 +252,10 @@ def property_inquiries(request):
 
 @login_required
 def profile(request):
+    # Check if user is an agent
+    user_role = get_user_role(request.user)
+    if user_role != 'agent':
+        raise PermissionDenied("Access denied. This page is only accessible to agents.")
     """Agent profile management"""
     agent_profile, created = AgentProfile.objects.get_or_create(user=request.user)
     
@@ -243,3 +281,61 @@ def profile(request):
     }
     
     return render(request, 'agent/profile.html', context)
+
+
+@login_required
+def leads(request):
+    # Check if user is an agent
+    user_role = get_user_role(request.user)
+    if user_role != 'agent':
+        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    """Leads management page"""
+    # Get all inquiries as leads
+    inquiries = PropertyInquiry.objects.filter(
+        property__seller=request.user
+    ).select_related('property').order_by('-created_at')
+    
+    context = {
+        'inquiries': inquiries,
+    }
+    
+    return render(request, 'agent/leads.html', context)
+
+
+@login_required
+def site_visits(request):
+    # Check if user is an agent
+    user_role = get_user_role(request.user)
+    if user_role != 'agent':
+        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    """Site visits management page"""
+    # Placeholder for site visits functionality
+    context = {}
+    
+    return render(request, 'agent/site_visits.html', context)
+
+
+@login_required
+def reports(request):
+    # Check if user is an agent
+    user_role = get_user_role(request.user)
+    if user_role != 'agent':
+        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    """Reports and analytics page"""
+    # Placeholder for reports functionality
+    context = {}
+    
+    return render(request, 'agent/reports.html', context)
+
+
+@login_required
+def settings(request):
+    # Check if user is an agent
+    user_role = get_user_role(request.user)
+    if user_role != 'agent':
+        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    """Settings page"""
+    # Placeholder for settings functionality
+    context = {}
+    
+    return render(request, 'agent/settings.html', context)

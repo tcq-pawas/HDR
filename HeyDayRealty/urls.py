@@ -30,7 +30,7 @@ urlpatterns = [
     path('django-admin/', admin.site.urls),
     
     # Public-facing pages (view-only)
-    path('', include('Apps.PublicPage.urls')),
+    path('', include(('Apps.PublicPage.urls', 'public'), namespace='public')),
     
     # Buy and Sell modules
     path('buy/', include(('Apps.buy.urls', 'buy'), namespace='buy')),

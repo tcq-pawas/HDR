@@ -1,469 +1,558 @@
-{% extends "public/base.html" %}
+{% extends "agent/agent_base.html" %}
 {% load static %}
 
 {% block title %}Agent Dashboard | HeyDay Realty{% endblock %}
 
-{% block extra_css %}
-<style>
-    :root {
-        --primary-blue: #0599E3;
-        --primary-orange: #fa9114;
-        --secondary-orange: #f98b13;
-        --text-color: #555555;
-        --border-color: #e0e0e0;
-    }
-
-    .dashboard-wrapper {
-        display: grid;
-        grid-template-columns: 250px 1fr;
-        min-height: 100vh;
-        gap: 0;
-    }
-
-    /* Sidebar */
-    .dashboard-sidebar {
-        background: #2c3e50;
-        color: white;
-        padding: 2rem 0;
-        position: fixed;
-        width: 250px;
-        height: 100vh;
-        overflow-y: auto;
-        margin-top: 80px;
-    }
-
-    .sidebar-logo {
-        padding: 1.5rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        margin-bottom: 1rem;
-        text-align: center;
-    }
-
-    .sidebar-logo h4 {
-        margin: 0;
-        font-size: 1.1rem;
-        font-weight: 700;
-    }
-
-    .sidebar-menu {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-
-    .sidebar-menu li {
-        margin: 0;
-    }
-
-    .sidebar-menu a {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 1rem 1.5rem;
-        color: rgba(255, 255, 255, 0.8);
-        text-decoration: none;
-        transition: all 0.3s ease;
-        border-left: 3px solid transparent;
-    }
-
-    .sidebar-menu a:hover,
-    .sidebar-menu a.active {
-        background: rgba(5, 153, 227, 0.2);
-        color: white;
-        border-left-color: var(--primary-orange);
-    }
-
-    .sidebar-menu i {
-        font-size: 1.1rem;
-        width: 20px;
-    }
-
-    .sidebar-logout {
-        position: absolute;
-        bottom: 2rem;
-        width: 100%;
-        padding: 0 1.5rem;
-    }
-
-    .sidebar-logout a {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        padding: 0.75rem 1rem;
-        background: #e74c3c;
-        color: white;
-        border-radius: 6px;
-        text-decoration: none;
-        transition: all 0.3s ease;
-    }
-
-    .sidebar-logout a:hover {
-        background: #c0392b;
-    }
-
-    /* Main Content */
-    .dashboard-main {
-        margin-left: 250px;
-        padding: 2rem;
-        background: #f9f9f9;
-        margin-top: 80px;
-    }
-
-    .dashboard-header {
-        margin-bottom: 2rem;
-    }
-
-    .dashboard-header h1 {
-        font-size: 2rem;
-        color: #333;
-        margin-bottom: 0.5rem;
-        font-family: 'Playfair Display', serif;
-    }
-
-    .dashboard-header p {
-        color: var(--text-color);
-    }
-
-    /* Stats Grid */
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1.5rem;
-        margin-bottom: 3rem;
-    }
-
-    .stat-card {
-        background: white;
-        padding: 2rem;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        border-left: 4px solid var(--primary-blue);
-        transition: all 0.3s ease;
-    }
-
-    .stat-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .stat-card.orange {
-        border-left-color: var(--primary-orange);
-    }
-
-    .stat-card.green {
-        border-left-color: #27ae60;
-    }
-
-    .stat-card.red {
-        border-left-color: #e74c3c;
-    }
-
-    .stat-value {
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: var(--primary-blue);
-        margin-bottom: 0.5rem;
-    }
-
-    .stat-card.orange .stat-value {
-        color: var(--primary-orange);
-    }
-
-    .stat-card.green .stat-value {
-        color: #27ae60;
-    }
-
-    .stat-card.red .stat-value {
-        color: #e74c3c;
-    }
-
-    .stat-label {
-        color: var(--text-color);
-        font-size: 0.95rem;
-        font-weight: 600;
-    }
-
-    /* Section */
-    .dashboard-section {
-        background: white;
-        padding: 2rem;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        margin-bottom: 2rem;
-    }
-
-    .section-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1.5rem;
-        border-bottom: 2px solid var(--border-color);
-        padding-bottom: 1rem;
-    }
-
-    .section-header h2 {
-        font-size: 1.3rem;
-        color: #333;
-        margin: 0;
-        font-weight: 700;
-    }
-
-    .section-header a {
-        background: var(--primary-orange);
-        color: white;
-        padding: 0.5rem 1rem;
-        border-radius: 6px;
-        text-decoration: none;
-        transition: all 0.3s ease;
-    }
-
-    .section-header a:hover {
-        background: var(--secondary-orange);
-    }
-
-    /* Table */
-    .table-responsive {
-        overflow-x: auto;
-    }
-
-    .dashboard-table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .dashboard-table th {
-        background: #f9f9f9;
-        padding: 1rem;
-        text-align: left;
-        font-weight: 700;
-        color: #333;
-        border-bottom: 2px solid var(--border-color);
-    }
-
-    .dashboard-table td {
-        padding: 1rem;
-        border-bottom: 1px solid var(--border-color);
-        color: var(--text-color);
-    }
-
-    .dashboard-table tbody tr:hover {
-        background: #f9f9f9;
-    }
-
-    .status-badge {
-        display: inline-block;
-        padding: 0.4rem 0.8rem;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        text-align: center;
-    }
-
-    .status-pending {
-        background: #fff3cd;
-        color: #856404;
-    }
-
-    .status-approved {
-        background: #d4edda;
-        color: #155724;
-    }
-
-    .status-sold {
-        background: #d1ecf1;
-        color: #0c5460;
-    }
-
-    .status-rejected {
-        background: #f8d7da;
-        color: #721c24;
-    }
-
-    /* Responsive */
-    @media (max-width: 992px) {
-        .dashboard-wrapper {
-            grid-template-columns: 1fr;
-        }
-
-        .dashboard-sidebar {
-            position: relative;
-            width: 100%;
-            height: auto;
-            margin-top: 80px;
-        }
-
-        .dashboard-main {
-            margin-left: 0;
-            margin-top: 0;
-        }
-
-        .sidebar-logout {
-            position: static;
-            margin-top: 1rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 1rem;
-        }
-
-        .stats-grid {
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        }
-    }
-
-    @media (max-width: 768px) {
-        .dashboard-main {
-            padding: 1rem;
-        }
-
-        .stats-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .section-header {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 1rem;
-        }
-
-        .dashboard-table {
-            font-size: 0.9rem;
-        }
-
-        .dashboard-table th,
-        .dashboard-table td {
-            padding: 0.75rem;
-        }
-    }
-</style>
-{% endblock %}
-
 {% block content %}
-<div class="dashboard-wrapper">
-    <!-- Sidebar -->
-    <aside class="dashboard-sidebar">
-        <div class="sidebar-logo">
-            <h4>Agent Portal</h4>
-        </div>
-        <ul class="sidebar-menu">
-            <li><a href="{% url 'agent:dashboard' %}" class="active"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
-            <li><a href="{% url 'agent:property_list' %}"><i class="bi bi-houses"></i> My Properties</a></li>
-            <li><a href="{% url 'agent:property_add' %}"><i class="bi bi-plus-circle"></i> Add Property</a></li>
-            <li><a href="{% url 'agent:inquiries' %}"><i class="bi bi-chat-dots"></i> Inquiries <span style="background: var(--primary-orange); padding: 0.2rem 0.5rem; border-radius: 10px; font-size: 0.75rem;">{{ stats.unread_inquiries }}</span></a></li>
-            <li><a href="{% url 'agent:profile' %}"><i class="bi bi-person"></i> Profile</a></li>
-        </ul>
-        <div class="sidebar-logout">
-            <a href="{% url 'auth:logout' %}"><i class="bi bi-box-arrow-right"></i> Logout</a>
-        </div>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="dashboard-main">
-        <!-- Header -->
-        <div class="dashboard-header">
-            <h1>Welcome, {{ user.first_name|default:user.username }}!</h1>
-            <p>Here's an overview of your properties and activities</p>
-        </div>
-
-        <!-- Stats Grid -->
-        <div class="stats-grid">
-            <div class="stat-card">
+<!-- Dashboard Overview -->
+<div class="dashboard-cards">
+    <div class="stat-card">
+        <div class="stat-card-header">
+            <div>
                 <div class="stat-value">{{ stats.total_properties }}</div>
                 <div class="stat-label">Total Properties</div>
             </div>
-            <div class="stat-card orange">
-                <div class="stat-value">{{ stats.active_properties }}</div>
-                <div class="stat-label">Active Properties</div>
+            <div class="stat-icon blue">
+                <i class="bi bi-building"></i>
             </div>
-            <div class="stat-card">
+        </div>
+        <div class="stat-trend positive">
+            <i class="bi bi-arrow-up"></i>
+            <span>12% from last month</span>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-header">
+            <div>
+                <div class="stat-value">{{ stats.active_properties }}</div>
+                <div class="stat-label">Active Listings</div>
+            </div>
+            <div class="stat-icon orange">
+                <i class="bi bi-check-circle"></i>
+            </div>
+        </div>
+        <div class="stat-trend positive">
+            <i class="bi bi-arrow-up"></i>
+            <span>8% from last month</span>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-header">
+            <div>
                 <div class="stat-value">{{ stats.pending_approval }}</div>
                 <div class="stat-label">Pending Approval</div>
             </div>
-            <div class="stat-card green">
-                <div class="stat-value">{{ stats.approved_properties }}</div>
-                <div class="stat-label">Approved Properties</div>
+            <div class="stat-icon purple">
+                <i class="bi bi-clock"></i>
             </div>
-            <div class="stat-card red">
+        </div>
+        <div class="stat-trend negative">
+            <i class="bi bi-arrow-down"></i>
+            <span>3% from last month</span>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-header">
+            <div>
                 <div class="stat-value">{{ stats.sold_properties }}</div>
                 <div class="stat-label">Sold Properties</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-value">{{ stats.total_inquiries }}</div>
-                <div class="stat-label">Total Inquiries</div>
+            <div class="stat-icon green">
+                <i class="bi bi-cash"></i>
             </div>
         </div>
+        <div class="stat-trend positive">
+            <i class="bi bi-arrow-up"></i>
+            <span>15% from last month</span>
+        </div>
+    </div>
 
-        <!-- Recent Properties -->
-        {% if recent_properties %}
-            <div class="dashboard-section">
-                <div class="section-header">
-                    <h2>Recent Properties</h2>
-                    <a href="{% url 'agent:property_list' %}">View All</a>
-                </div>
-                <div class="table-responsive">
-                    <table class="dashboard-table">
-                        <thead>
-                            <tr>
-                                <th>Title</th>
-                                <th>Location</th>
-                                <th>Price</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for property in recent_properties %}
-                                <tr>
-                                    <td><strong>{{ property.title|truncatewords:5 }}</strong></td>
-                                    <td>{{ property.location }}</td>
-                                    <td>₹{{ property.price|floatformat:0 }}</td>
-                                    <td><span class="status-badge status-{{ property.status }}">{{ property.get_status_display }}</span></td>
-                                    <td>
-                                        <a href="{% url 'agent:property_edit' property.id %}" style="color: var(--primary-blue); text-decoration: none; margin-right: 0.5rem;">Edit</a>
-                                        <a href="{% url 'agent:property_delete' property.id %}" style="color: #e74c3c; text-decoration: none;">Delete</a>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+    <div class="stat-card">
+        <div class="stat-card-header">
+            <div>
+                <div class="stat-value">{{ stats.total_inquiries }}</div>
+                <div class="stat-label">Total Leads</div>
             </div>
-        {% endif %}
+            <div class="stat-icon blue">
+                <i class="bi bi-people"></i>
+            </div>
+        </div>
+        <div class="stat-trend positive">
+            <i class="bi bi-arrow-up"></i>
+            <span>20% from last month</span>
+        </div>
+    </div>
 
-        <!-- Recent Inquiries -->
-        {% if recent_inquiries %}
-            <div class="dashboard-section">
-                <div class="section-header">
-                    <h2>Recent Inquiries</h2>
-                    <a href="{% url 'agent:inquiries' %}">View All</a>
-                </div>
-                <div class="table-responsive">
-                    <table class="dashboard-table">
-                        <thead>
-                            <tr>
-                                <th>Property</th>
-                                <th>From</th>
-                                <th>Email</th>
-                                <th>Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for inquiry in recent_inquiries %}
-                                <tr>
-                                    <td><strong>{{ inquiry.property.title|truncatewords:3 }}</strong></td>
-                                    <td>{{ inquiry.name }}</td>
-                                    <td>{{ inquiry.email }}</td>
-                                    <td>{{ inquiry.created_at|date:"M d, Y" }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+    <div class="stat-card">
+        <div class="stat-card-header">
+            <div>
+                <div class="stat-value">{{ stats.unread_inquiries }}</div>
+                <div class="stat-label">Today's Inquiries</div>
             </div>
-        {% else %}
-            <div class="dashboard-section">
-                <p style="text-align: center; color: #999; padding: 2rem;">No inquiries yet. Once you add properties, inquiries from interested buyers will appear here.</p>
+            <div class="stat-icon red">
+                <i class="bi bi-envelope"></i>
             </div>
-        {% endif %}
-    </main>
+        </div>
+        <div class="stat-trend positive">
+            <i class="bi bi-arrow-up"></i>
+            <span>5 new today</span>
+        </div>
+    </div>
 </div>
+
+<!-- Quick Actions -->
+<div class="quick-actions">
+    <h3 class="section-title">Quick Actions</h3>
+    <div class="quick-actions-grid">
+        <a href="{% url 'agent:property_add' %}" class="quick-action-card">
+            <div class="quick-action-icon">
+                <i class="bi bi-plus-lg"></i>
+            </div>
+            <span class="quick-action-text">Add Property</span>
+        </a>
+        <a href="{% url 'agent:property_add' %}" class="quick-action-card">
+            <div class="quick-action-icon">
+                <i class="bi bi-map"></i>
+            </div>
+            <span class="quick-action-text">Add Land Listing</span>
+        </a>
+        <a href="#" class="quick-action-card">
+            <div class="quick-action-icon">
+                <i class="bi bi-calendar-check"></i>
+            </div>
+            <span class="quick-action-text">Schedule Site Visit</span>
+        </a>
+        <a href="#" class="quick-action-card">
+            <div class="quick-action-icon">
+                <i class="bi bi-file-earmark"></i>
+            </div>
+            <span class="quick-action-text">Upload Documents</span>
+        </a>
+        <a href="#" class="quick-action-card">
+            <div class="quick-action-icon">
+                <i class="bi bi-people"></i>
+            </div>
+            <span class="quick-action-text">Manage Leads</span>
+        </a>
+    </div>
+</div>
+
+<!-- Recent Leads -->
+<div class="content-section">
+    <div class="section-header">
+        <h2>Recent Leads</h2>
+        <a href="#" class="view-all-link">View All →</a>
+    </div>
+    
+    <!-- Table Controls -->
+    <div class="table-controls" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+        <div style="display: flex; gap: 8px; flex: 1; min-width: 200px;">
+            <div class="search-box" style="flex: 1;">
+                <i class="bi bi-search"></i>
+                <input type="text" id="leadsSearch" placeholder="Search leads..." class="search-input" onkeyup="searchTable('leadsTable', 'leadsSearch')">
+            </div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+            <select class="form-select form-select-sm" style="width: auto;">
+                <option value="">All Status</option>
+                <option value="new">New</option>
+                <option value="contacted">Contacted</option>
+                <option value="scheduled">Site Visit Scheduled</option>
+                <option value="negotiation">Negotiation</option>
+                <option value="converted">Converted</option>
+            </select>
+            <button class="btn btn-outline-secondary btn-sm" onclick="exportTableToCSV('leadsTable', 'leads.csv')">
+                <i class="bi bi-download"></i> Export
+            </button>
+        </div>
+    </div>
+    
+    <div class="table-responsive">
+        <table class="data-table" id="leadsTable">
+            <thead>
+                <tr>
+                    <th style="cursor: pointer;" onclick="sortTable('leadsTable', 0)">Lead Name <i class="bi bi-arrow-down-up" style="font-size: 10px;"></i></th>
+                    <th style="cursor: pointer;" onclick="sortTable('leadsTable', 1)">Phone <i class="bi bi-arrow-down-up" style="font-size: 10px;"></i></th>
+                    <th>Property Interest</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th style="cursor: pointer;" onclick="sortTable('leadsTable', 5)">Created Date <i class="bi bi-arrow-down-up" style="font-size: 10px;"></i></th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if recent_inquiries %}
+                    {% for inquiry in recent_inquiries %}
+                        <tr>
+                            <td><strong>{{ inquiry.name }}</strong></td>
+                            <td>{{ inquiry.phone|default:"N/A" }}</td>
+                            <td>{{ inquiry.property.title|truncatewords:3 }}</td>
+                            <td>{{ inquiry.property.location|default:"N/A" }}</td>
+                            <td><span class="status-badge status-new">New</span></td>
+                            <td>{{ inquiry.created_at|date:"M d, Y" }}</td>
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <button class="action-btn action-btn-view" title="View">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    <button class="action-btn action-btn-edit" title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="action-btn action-btn-call" title="Call">
+                                        <i class="bi bi-telephone"></i>
+                                    </button>
+                                    <button class="action-btn action-btn-whatsapp" title="WhatsApp">
+                                        <i class="bi bi-whatsapp"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="7">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">
+                                    <i class="bi bi-people"></i>
+                                </div>
+                                <h3>No Leads Yet</h3>
+                                <p>Leads will appear here when buyers show interest</p>
+                            </div>
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Pagination -->
+    <div class="table-pagination" style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
+        <div style="font-size: 13px; color: #64748b;">
+            Showing 1 to {{ recent_inquiries|length }} of {{ recent_inquiries|length }} entries
+        </div>
+        <nav>
+            <ul class="pagination pagination-sm mb-0">
+                <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<!-- Property Management -->
+<div class="content-section">
+    <div class="section-header">
+        <h2>Property Management</h2>
+        <a href="{% url 'agent:property_list' %}" class="view-all-link">View All →</a>
+    </div>
+    
+    <!-- Table Controls -->
+    <div class="table-controls" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+        <div style="display: flex; gap: 8px; flex: 1; min-width: 200px;">
+            <div class="search-box" style="flex: 1;">
+                <i class="bi bi-search"></i>
+                <input type="text" id="propertiesSearch" placeholder="Search properties..." class="search-input" onkeyup="searchTable('propertiesTable', 'propertiesSearch')">
+            </div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+            <select class="form-select form-select-sm" style="width: auto;">
+                <option value="">All Status</option>
+                <option value="pending">Pending</option>
+                <option value="approved">Approved</option>
+                <option value="sold">Sold</option>
+                <option value="rejected">Rejected</option>
+            </select>
+            <select class="form-select form-select-sm" style="width: auto;">
+                <option value="">All Types</option>
+                <option value="residential">Residential Plot</option>
+                <option value="farm">Farm Land</option>
+                <option value="agricultural">Agricultural Land</option>
+                <option value="commercial">Commercial</option>
+            </select>
+            <button class="btn btn-outline-secondary btn-sm" onclick="exportTableToCSV('propertiesTable', 'properties.csv')">
+                <i class="bi bi-download"></i> Export
+            </button>
+        </div>
+    </div>
+    
+    <!-- Bulk Actions -->
+    <div class="bulk-actions" style="display: none; padding: 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 13px; color: #64748b;"><strong>0</strong> properties selected</span>
+            <div style="display: flex; gap: 8px;">
+                <button class="btn btn-outline-primary btn-sm">Mark as Sold</button>
+                <button class="btn btn-outline-secondary btn-sm">Delete Selected</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="table-responsive">
+        <table class="data-table" id="propertiesTable">
+            <thead>
+                <tr>
+                    <th style="width: 40px;"><input type="checkbox" class="form-check-input" onchange="toggleAllCheckboxes(this)"></th>
+                    <th style="cursor: pointer;" onclick="sortTable('propertiesTable', 2)">Title <i class="bi bi-arrow-down-up" style="font-size: 10px;"></i></th>
+                    <th>Type</th>
+                    <th style="cursor: pointer;" onclick="sortTable('propertiesTable', 4)">Location <i class="bi bi-arrow-down-up" style="font-size: 10px;"></i></th>
+                    <th style="cursor: pointer;" onclick="sortTable('propertiesTable', 5)">Price <i class="bi bi-arrow-down-up" style="font-size: 10px;"></i></th>
+                    <th>Status</th>
+                    <th style="cursor: pointer;" onclick="sortTable('propertiesTable', 7)">Views <i class="bi bi-arrow-down-up" style="font-size: 10px;"></i></th>
+                    <th style="cursor: pointer;" onclick="sortTable('propertiesTable', 8)">Leads <i class="bi bi-arrow-down-up" style="font-size: 10px;"></i></th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if recent_properties %}
+                    {% for property in recent_properties %}
+                        <tr>
+                            <td><input type="checkbox" class="form-check-input property-checkbox" onchange="updateBulkActions()"></td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    {% if property.images.first %}
+                                        <div class="property-image-cell" style="width: 48px; height: 48px;">
+                                            <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}">
+                                        </div>
+                                    {% else %}
+                                        <div class="property-image-cell" style="width: 48px; height: 48px;">
+                                            <i class="bi bi-image" style="font-size: 20px; color: #ccc;"></i>
+                                        </div>
+                                    {% endif %}
+                                    <div>
+                                        <div style="font-weight: 600; font-size: 13px;">{{ property.title|truncatewords:3 }}</div>
+                                        <div style="font-size: 11px; color: #94a3b8;">#{{ property.id }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ property.property_type|default:"Land" }}</td>
+                            <td>{{ property.location }}</td>
+                            <td>₹{{ property.price|floatformat:0 }}</td>
+                            <td><span class="status-badge status-{{ property.status }}">{{ property.get_status_display }}</span></td>
+                            <td>{{ property.view_count|default:0 }}</td>
+                            <td>{{ property.leads_count|default:0 }}</td>
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <a href="{% url 'agent:property_edit' property.id %}" class="action-btn action-btn-edit" title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="{% url 'agent:property_delete' property.id %}" class="action-btn action-btn-delete" title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                    <button class="action-btn action-btn-view" title="Preview">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    <button class="action-btn action-btn-call" title="Mark Sold">
+                                        <i class="bi bi-check-circle"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="9">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">
+                                    <i class="bi bi-building"></i>
+                                </div>
+                                <h3>No Properties Yet</h3>
+                                <p>Start by adding your first property listing</p>
+                                <a href="{% url 'agent:property_add' %}" class="btn btn-primary">
+                                    <i class="bi bi-plus-lg"></i> Add Your First Property
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Pagination -->
+    <div class="table-pagination" style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
+        <div style="font-size: 13px; color: #64748b;">
+            Showing 1 to {{ recent_properties|length }} of {{ recent_properties|length }} entries
+        </div>
+        <nav>
+            <ul class="pagination pagination-sm mb-0">
+                <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<!-- Site Visits & Recent Inquiries -->
+<div class="charts-grid">
+    <!-- Site Visit Management -->
+    <div class="content-section">
+        <div class="section-header">
+            <h2>Upcoming Site Visits</h2>
+            <a href="#" class="view-all-link">View All →</a>
+        </div>
+        <div id="siteVisitsList">
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    <i class="bi bi-calendar-event"></i>
+                </div>
+                <h3>No Upcoming Visits</h3>
+                <p>Scheduled site visits will appear here</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Inquiries -->
+    <div class="content-section">
+        <div class="section-header">
+            <h2>Recent Inquiries</h2>
+            <a href="{% url 'agent:inquiries' %}" class="view-all-link">View All →</a>
+        </div>
+        {% if recent_inquiries %}
+            {% for inquiry in recent_inquiries|slice:":5" %}
+                <div class="inquiry-item" style="padding: 12px 0; border-bottom: 1px solid #e2e8f0;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                        <div style="font-weight: 600; color: #1e293b;">{{ inquiry.name }}</div>
+                        <div style="font-size: 11px; color: #94a3b8;">{{ inquiry.created_at|date:"M d, Y" }}</div>
+                    </div>
+                    <div style="color: #64748b; font-size: 12px; margin-bottom: 4px;">{{ inquiry.property.title|truncatewords:3 }}</div>
+                    <div style="color: #1E73BE; font-size: 12px;">{{ inquiry.email }}</div>
+                    <div style="margin-top: 8px;">
+                        <button class="action-btn action-btn-view" style="font-size: 11px; padding: 4px 8px;">
+                            <i class="bi bi-reply"></i> Reply
+                        </button>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    <i class="bi bi-chat-dots"></i>
+                </div>
+                <h3>No Inquiries Yet</h3>
+                <p>Inquiries will appear here when buyers contact you</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Analytics Section -->
+<div class="content-section">
+    <div class="section-header">
+        <h2>Analytics Overview</h2>
+        <div>
+            <select class="form-select form-select-sm" style="width: auto; display: inline-block;">
+                <option>Last 7 Days</option>
+                <option>Last 30 Days</option>
+                <option>Last 90 Days</option>
+                <option>This Year</option>
+            </select>
+        </div>
+    </div>
+    <div class="charts-grid">
+        <div class="chart-card">
+            <h4 style="font-size: 14px; font-weight: 600; margin-bottom: 16px;">Property Views</h4>
+            <div class="chart-container">
+                <canvas id="propertyViewsChart"></canvas>
+            </div>
+        </div>
+        <div class="chart-card">
+            <h4 style="font-size: 14px; font-weight: 600; margin-bottom: 16px;">Lead Generation</h4>
+            <div class="chart-container">
+                <canvas id="leadGenerationChart"></canvas>
+            </div>
+        </div>
+        <div class="chart-card">
+            <h4 style="font-size: 14px; font-weight: 600; margin-bottom: 16px;">Monthly Listings</h4>
+            <div class="chart-container">
+                <canvas id="monthlyListingsChart"></canvas>
+            </div>
+        </div>
+        <div class="chart-card">
+            <h4 style="font-size: 14px; font-weight: 600; margin-bottom: 16px;">Conversion Rate</h4>
+            <div class="chart-container">
+                <canvas id="conversionRateChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Land Performance Section -->
+<div class="content-section">
+    <div class="section-header">
+        <h2>Land Performance</h2>
+        <a href="#" class="view-all-link">View Detailed Report →</a>
+    </div>
+    <div class="charts-grid">
+        <div class="chart-card">
+            <h4 style="font-size: 14px; font-weight: 600; margin-bottom: 16px;">Top Viewed Lands</h4>
+            <div style="margin-top: 12px;">
+                {% if recent_properties|slice:":5" %}
+                    {% for property in recent_properties|slice:":5" %}
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
+                            <div style="flex: 1;">
+                                <div style="font-weight: 500; font-size: 13px; color: #1e293b;">{{ property.title|truncatewords:3 }}</div>
+                                <div style="font-size: 11px; color: #64748b;">{{ property.location }}</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-weight: 600; font-size: 14px; color: #1E73BE;">{{ property.view_count|default:0 }}</div>
+                                <div style="font-size: 10px; color: #94a3b8;">views</div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p style="text-align: center; color: #94a3b8; padding: 20px;">No data available</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="chart-card">
+            <h4 style="font-size: 14px; font-weight: 600; margin-bottom: 16px;">Land Type Performance</h4>
+            <div class="chart-container" style="height: 200px;">
+                <canvas id="landTypeChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Initialize Land Type Chart
+document.addEventListener('DOMContentLoaded', function() {
+    const landTypeCtx = document.getElementById('landTypeChart');
+    if (landTypeCtx) {
+        new Chart(landTypeCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Residential Plots', 'Farm Lands', 'Agricultural Lands', 'Commercial'],
+                datasets: [{
+                    data: [40, 30, 20, 10],
+                    backgroundColor: ['#1E73BE', '#F7941D', '#10b981', '#8b5cf6']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: {
+                                size: 11
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+});
+</script>
 {% endblock %}

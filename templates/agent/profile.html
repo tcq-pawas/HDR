@@ -1,42 +1,33 @@
-{% extends "public/base.html" %}
+{% extends "agent/agent_base.html" %}
 {% load static %}
 
 {% block title %}Agent Profile | HeyDay Realty{% endblock %}
 
 {% block extra_css %}
 <style>
-    :root {
-        --primary-blue: #0599E3;
-        --primary-orange: #fa9114;
-        --secondary-orange: #f98b13;
-        --text-color: #555555;
-        --border-color: #e0e0e0;
-    }
-
     .profile-container {
-        max-width: 900px;
-        margin: 100px auto 0;
-        padding: 2rem;
+        max-width: 100%;
+        padding: 0;
     }
 
-    .profile-header {
-        margin-bottom: 2rem;
-        border-bottom: 2px solid var(--border-color);
+    .page-header {
+        margin-bottom: 1.5rem;
         padding-bottom: 1rem;
+        border-bottom: 1px solid #e2e8f0;
     }
 
-    .profile-header h1 {
-        font-size: 1.8rem;
-        color: #333;
+    .page-header h1 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1e293b;
         margin: 0;
-        font-family: 'Playfair Display', serif;
     }
 
     .profile-card {
         background: white;
         padding: 2rem;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
 
     .form-section {
@@ -45,11 +36,11 @@
 
     .section-title {
         font-size: 1.1rem;
-        color: #333;
+        color: #1e293b;
         margin-bottom: 1.5rem;
         padding-bottom: 0.75rem;
-        border-bottom: 2px solid var(--primary-orange);
-        font-weight: 700;
+        border-bottom: 2px solid #1E73BE;
+        font-weight: 600;
     }
 
     .form-row {
@@ -66,7 +57,7 @@
 
     .form-group label {
         font-weight: 600;
-        color: #333;
+        color: #475569;
         margin-bottom: 0.5rem;
         font-size: 0.9rem;
     }
@@ -74,18 +65,19 @@
     .form-group input,
     .form-group textarea {
         padding: 0.75rem;
-        border: 1px solid var(--border-color);
+        border: 1px solid #e2e8f0;
         border-radius: 6px;
-        font-family: 'Outfit', sans-serif;
         font-size: 0.9rem;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
+        background: white;
+        color: #475569;
     }
 
     .form-group input:focus,
     .form-group textarea:focus {
         outline: none;
-        border-color: var(--primary-blue);
-        box-shadow: 0 0 0 3px rgba(5, 153, 227, 0.1);
+        border-color: #1E73BE;
+        box-shadow: 0 0 0 3px rgba(30, 115, 190, 0.1);
     }
 
     .form-group textarea {
@@ -105,11 +97,11 @@
         width: 150px;
         height: 150px;
         border-radius: 10px;
-        background: #f9f9f9;
+        background: #f8fafc;
         display: flex;
         align-items: center;
         justify-content: center;
-        border: 2px solid var(--border-color);
+        border: 2px solid #e2e8f0;
         overflow: hidden;
     }
 
@@ -128,7 +120,7 @@
         gap: 1rem;
         margin-top: 2rem;
         padding-top: 2rem;
-        border-top: 2px solid var(--border-color);
+        border-top: 1px solid #e2e8f0;
     }
 
     .submit-btn, .cancel-btn {
@@ -136,38 +128,33 @@
         border: none;
         border-radius: 6px;
         font-size: 0.95rem;
-        font-weight: 700;
+        font-weight: 600;
         cursor: pointer;
         text-decoration: none;
         display: inline-block;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
     }
 
     .submit-btn {
-        background: linear-gradient(135deg, var(--primary-orange), var(--secondary-orange));
+        background: #1E73BE;
         color: white;
     }
 
     .submit-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(250, 145, 20, 0.3);
+        background: #155a9e;
     }
 
     .cancel-btn {
-        background: #f0f0f0;
-        color: var(--text-color);
-        border: 1px solid var(--border-color);
+        background: #f1f5f9;
+        color: #64748b;
+        border: 1px solid #e2e8f0;
     }
 
     .cancel-btn:hover {
-        background: #e0e0e0;
+        background: #e2e8f0;
     }
 
     @media (max-width: 768px) {
-        .profile-container {
-            padding: 1rem;
-        }
-
         .profile-card {
             padding: 1.5rem;
         }
@@ -192,7 +179,7 @@
 {% block content %}
 <div class="profile-container">
     <!-- Header -->
-    <div class="profile-header">
+    <div class="page-header">
         <h1>Agent Profile</h1>
     </div>
 

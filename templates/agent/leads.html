@@ -1,0 +1,181 @@
+{% extends "agent/agent_base.html" %}
+{% load static %}
+
+{% block title %}Leads Management | HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+<style>
+    .leads-container {
+        max-width: 100%;
+        padding: 0;
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .page-header h1 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin: 0;
+    }
+
+    .leads-table {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th {
+        background: #f8fafc;
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+        color: #475569;
+        border-bottom: 1px solid #e2e8f0;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    td {
+        padding: 1rem;
+        border-bottom: 1px solid #e2e8f0;
+        color: #64748b;
+        font-size: 0.9rem;
+    }
+
+    tbody tr:hover {
+        background: #f8fafc;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 0.35rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .status-new {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+    .status-contacted {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .status-scheduled {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .status-negotiation {
+        background: #e9d5ff;
+        color: #6b21a8;
+    }
+
+    .status-converted {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .action-btn {
+        padding: 0.4rem 0.8rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-decoration: none;
+        border: 1px solid #e2e8f0;
+        transition: all 0.2s ease;
+        background: white;
+    }
+
+    .action-btn:hover {
+        background: #f8fafc;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .empty-state-icon {
+        font-size: 3rem;
+        color: #cbd5e1;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state h3 {
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+        font-size: 1.25rem;
+    }
+
+    .empty-state p {
+        color: #64748b;
+        margin-bottom: 1.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="leads-container">
+    <!-- Header -->
+    <div class="page-header">
+        <h1>Leads Management</h1>
+    </div>
+
+    <!-- Leads Table -->
+    <div class="leads-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Lead Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Property Interest</th>
+                    <th>Status</th>
+                    <th>Created Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="7">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <i class="bi bi-people"></i>
+                            </div>
+                            <h3>No Leads Yet</h3>
+                            <p>Leads will appear here when buyers show interest in your properties.</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

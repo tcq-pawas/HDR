@@ -20,4 +20,16 @@ urlpatterns = [
     
     # Inquiries
     path('inquiries/', views.property_inquiries, name='inquiries'),
+    
+    # Leads
+    path('leads/', views.leads, name='leads'),
+    
+    # Site Visits
+    path('site-visits/', views.site_visits, name='site_visits'),
+    
+    # Reports
+    path('reports/', views.reports, name='reports'),
+    
+    # Settings
+    path('settings/', views.settings, name='settings'),
 ]
