@@ -90,7 +90,6 @@ class InvestorMeetingSerializer(serializers.ModelSerializer):
         read_only_fields = ['created_at', 'updated_at']
 
 
-# Create serializers
 class CreateInvestmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Investment

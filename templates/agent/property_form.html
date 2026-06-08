@@ -156,6 +156,17 @@
         color: #ef4444;
     }
 
+    .conditional-section {
+        display: none;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+    }
+
+    .conditional-section.active {
+        display: block;
+        opacity: 1;
+    }
+
     @media (max-width: 768px) {
         .form-card {
             padding: 1.5rem;
@@ -219,38 +230,440 @@
             </div>
         </div>
 
-        <!-- Pricing -->
-        <div class="form-section">
-            <h3>Pricing</h3>
+        <!-- Land-Specific Fields -->
+        <div class="form-section conditional-section" id="land-section">
+            <h3>Land Details</h3>
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="{{ form.price.id_for_label }}" class="field-required">Price (₹)</label>
-                    {{ form.price }}
-                    {% if form.price.errors %}<div class="error-message">{{ form.price.errors }}</div>{% endif %}
+                    <label for="{{ form.plot_number.id_for_label }}">Plot Number</label>
+                    {{ form.plot_number }}
+                    {% if form.plot_number.errors %}<div class="error-message">{{ form.plot_number.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.khasra_number.id_for_label }}">Khasra Number</label>
+                    {{ form.khasra_number }}
+                    {% if form.khasra_number.errors %}<div class="error-message">{{ form.khasra_number.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.khata_number.id_for_label }}">Khata Number</label>
+                    {{ form.khata_number }}
+                    {% if form.khata_number.errors %}<div class="error-message">{{ form.khata_number.errors }}</div>{% endif %}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.registry_number.id_for_label }}">Registry Number</label>
+                    {{ form.registry_number }}
+                    {% if form.registry_number.errors %}<div class="error-message">{{ form.registry_number.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.total_area.id_for_label }}">Total Area</label>
+                    {{ form.total_area }}
+                    {% if form.total_area.errors %}<div class="error-message">{{ form.total_area.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.area_unit.id_for_label }}">Area Unit</label>
+                    {{ form.area_unit }}
+                    {% if form.area_unit.errors %}<div class="error-message">{{ form.area_unit.errors }}</div>{% endif %}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.front_width.id_for_label }}">Front Width (ft)</label>
+                    {{ form.front_width }}
+                    {% if form.front_width.errors %}<div class="error-message">{{ form.front_width.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.plot_depth.id_for_label }}">Plot Depth (ft)</label>
+                    {{ form.plot_depth }}
+                    {% if form.plot_depth.errors %}<div class="error-message">{{ form.plot_depth.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.road_width.id_for_label }}">Road Width (ft)</label>
+                    {{ form.road_width }}
+                    {% if form.road_width.errors %}<div class="error-message">{{ form.road_width.errors }}</div>{% endif %}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.facing_direction.id_for_label }}">Facing Direction</label>
+                    {{ form.facing_direction }}
+                    {% if form.facing_direction.errors %}<div class="error-message">{{ form.facing_direction.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.land_category.id_for_label }}">Land Category</label>
+                    {{ form.land_category }}
+                    {% if form.land_category.errors %}<div class="error-message">{{ form.land_category.errors }}</div>{% endif %}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="checkbox-group">
+                    {{ form.corner_plot }}
+                    <label for="{{ form.corner_plot.id_for_label }}">Corner Plot</label>
+                </div>
+                <div class="checkbox-group">
+                    {{ form.electricity_availability }}
+                    <label for="{{ form.electricity_availability.id_for_label }}">Electricity Available</label>
+                </div>
+                <div class="checkbox-group">
+                    {{ form.water_availability }}
+                    <label for="{{ form.water_availability.id_for_label }}">Water Available</label>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="checkbox-group">
+                    {{ form.sewer_availability }}
+                    <label for="{{ form.sewer_availability.id_for_label }}">Sewer Available</label>
+                </div>
+                <div class="checkbox-group">
+                    {{ form.boundary_wall }}
+                    <label for="{{ form.boundary_wall.id_for_label }}">Boundary Wall</label>
+                </div>
+                <div class="checkbox-group">
+                    {{ form.irrigation_facility }}
+                    <label for="{{ form.irrigation_facility.id_for_label }}">Irrigation Facility</label>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label for="{{ form.nearby_facilities.id_for_label }}">Nearby Facilities & Distances</label>
+                {{ form.nearby_facilities }}
+                {% if form.nearby_facilities.errors %}<div class="error-message">{{ form.nearby_facilities.errors }}</div>{% endif %}
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.google_map_location.id_for_label }}">Google Map Location URL</label>
+                    {{ form.google_map_location }}
+                    {% if form.google_map_location.errors %}<div class="error-message">{{ form.google_map_location.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.latitude.id_for_label }}">Latitude</label>
+                    {{ form.latitude }}
+                    {% if form.latitude.errors %}<div class="error-message">{{ form.latitude.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.longitude.id_for_label }}">Longitude</label>
+                    {{ form.longitude }}
+                    {% if form.longitude.errors %}<div class="error-message">{{ form.longitude.errors }}</div>{% endif %}
                 </div>
             </div>
         </div>
 
-        <!-- Property Details -->
-        <div class="form-section">
-            <h3>Property Details</h3>
+        <!-- House/Villa-Specific Fields -->
+        <div class="form-section conditional-section" id="house-section">
+            <h3>House/Villa Details</h3>
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="{{ form.bedrooms.id_for_label }}" class="field-required">Bedrooms</label>
+                    <label for="{{ form.bhk_configuration.id_for_label }}">BHK Configuration</label>
+                    {{ form.bhk_configuration }}
+                    {% if form.bhk_configuration.errors %}<div class="error-message">{{ form.bhk_configuration.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.bedrooms.id_for_label }}">Bedrooms</label>
                     {{ form.bedrooms }}
                     {% if form.bedrooms.errors %}<div class="error-message">{{ form.bedrooms.errors }}</div>{% endif %}
                 </div>
                 <div class="form-group">
-                    <label for="{{ form.bathrooms.id_for_label }}" class="field-required">Bathrooms</label>
+                    <label for="{{ form.bathrooms.id_for_label }}">Bathrooms</label>
                     {{ form.bathrooms }}
                     {% if form.bathrooms.errors %}<div class="error-message">{{ form.bathrooms.errors }}</div>{% endif %}
                 </div>
+            </div>
+
+            <div class="form-row">
                 <div class="form-group">
-                    <label for="{{ form.area_sqft.id_for_label }}" class="field-required">Area (Sq Ft)</label>
-                    {{ form.area_sqft }}
-                    {% if form.area_sqft.errors %}<div class="error-message">{{ form.area_sqft.errors }}</div>{% endif %}
+                    <label for="{{ form.balconies.id_for_label }}">Balconies</label>
+                    {{ form.balconies }}
+                    {% if form.balconies.errors %}<div class="error-message">{{ form.balconies.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.number_of_floors.id_for_label }}">Number of Floors</label>
+                    {{ form.number_of_floors }}
+                    {% if form.number_of_floors.errors %}<div class="error-message">{{ form.number_of_floors.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.property_age.id_for_label }}">Property Age (years)</label>
+                    {{ form.property_age }}
+                    {% if form.property_age.errors %}<div class="error-message">{{ form.property_age.errors }}</div>{% endif %}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.plot_area.id_for_label }}">Plot Area (sq.ft)</label>
+                    {{ form.plot_area }}
+                    {% if form.plot_area.errors %}<div class="error-message">{{ form.plot_area.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.built_up_area.id_for_label }}">Built-up Area (sq.ft)</label>
+                    {{ form.built_up_area }}
+                    {% if form.built_up_area.errors %}<div class="error-message">{{ form.built_up_area.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.carpet_area.id_for_label }}">Carpet Area (sq.ft)</label>
+                    {{ form.carpet_area }}
+                    {% if form.carpet_area.errors %}<div class="error-message">{{ form.carpet_area.errors }}</div>{% endif %}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.furnishing_status.id_for_label }}">Furnishing Status</label>
+                    {{ form.furnishing_status }}
+                    {% if form.furnishing_status.errors %}<div class="error-message">{{ form.furnishing_status.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.possession_status.id_for_label }}">Possession Status</label>
+                    {{ form.possession_status }}
+                    {% if form.possession_status.errors %}<div class="error-message">{{ form.possession_status.errors }}</div>{% endif %}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="checkbox-group">
+                    {{ form.parking_availability }}
+                    <label for="{{ form.parking_availability.id_for_label }}">Parking Available</label>
+                </div>
+                <div class="checkbox-group">
+                    {{ form.garden }}
+                    <label for="{{ form.garden.id_for_label }}">Garden</label>
+                </div>
+                <div class="checkbox-group">
+                    {{ form.terrace }}
+                    <label for="{{ form.terrace.id_for_label }}">Terrace</label>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="checkbox-group">
+                    {{ form.modular_kitchen }}
+                    <label for="{{ form.modular_kitchen.id_for_label }}">Modular Kitchen</label>
+                </div>
+                <div class="checkbox-group">
+                    {{ form.store_room }}
+                    <label for="{{ form.store_room.id_for_label }}">Store Room</label>
+                </div>
+                <div class="checkbox-group">
+                    {{ form.power_backup }}
+                    <label for="{{ form.power_backup.id_for_label }}">Power Backup</label>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="checkbox-group">
+                    {{ form.cctv }}
+                    <label for="{{ form.cctv.id_for_label }}">CCTV</label>
+                </div>
+                <div class="checkbox-group">
+                    {{ form.security }}
+                    <label for="{{ form.security.id_for_label }}">Security</label>
+                </div>
+                <div class="checkbox-group">
+                    {{ form.club_house_access }}
+                    <label for="{{ form.club_house_access.id_for_label }}">Club House Access</label>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="checkbox-group">
+                    {{ form.swimming_pool }}
+                    <label for="{{ form.swimming_pool.id_for_label }}">Swimming Pool</label>
+                </div>
+                <div class="checkbox-group">
+                    {{ form.gym }}
+                    <label for="{{ form.gym.id_for_label }}">Gym</label>
+                </div>
+                <div class="checkbox-group">
+                    {{ form.smart_home_features }}
+                    <label for="{{ form.smart_home_features.id_for_label }}">Smart Home Features</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pricing Management -->
+        <div class="form-section">
+            <h3>Pricing Details</h3>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.price.id_for_label }}" class="field-required">Total Price (₹)</label>
+                    {{ form.price }}
+                    {% if form.price.errors %}<div class="error-message">{{ form.price.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.price_per_sqft.id_for_label }}">Price Per Sq.ft</label>
+                    {{ form.price_per_sqft }}
+                    {% if form.price_per_sqft.errors %}<div class="error-message">{{ form.price_per_sqft.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.booking_amount.id_for_label }}">Booking Amount</label>
+                    {{ form.booking_amount }}
+                    {% if form.booking_amount.errors %}<div class="error-message">{{ form.booking_amount.errors }}</div>{% endif %}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="checkbox-group">
+                    {{ form.negotiable }}
+                    <label for="{{ form.negotiable.id_for_label }}">Negotiable</label>
+                </div>
+                <div class="checkbox-group">
+                    {{ form.emi_availability }}
+                    <label for="{{ form.emi_availability.id_for_label }}">EMI Available</label>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.maintenance_charges.id_for_label }}">Maintenance Charges (monthly)</label>
+                    {{ form.maintenance_charges }}
+                    {% if form.maintenance_charges.errors %}<div class="error-message">{{ form.maintenance_charges.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.down_payment.id_for_label }}">Down Payment</label>
+                    {{ form.down_payment }}
+                    {% if form.down_payment.errors %}<div class="error-message">{{ form.down_payment.errors }}</div>{% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Location Management -->
+        <div class="form-section">
+            <h3>Location Details</h3>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.state.id_for_label }}">State</label>
+                    {{ form.state }}
+                    {% if form.state.errors %}<div class="error-message">{{ form.state.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.district.id_for_label }}">District</label>
+                    {{ form.district }}
+                    {% if form.district.errors %}<div class="error-message">{{ form.district.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.city.id_for_label }}">City</label>
+                    {{ form.city }}
+                    {% if form.city.errors %}<div class="error-message">{{ form.city.errors }}</div>{% endif %}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.locality.id_for_label }}">Locality</label>
+                    {{ form.locality }}
+                    {% if form.locality.errors %}<div class="error-message">{{ form.locality.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.landmark.id_for_label }}">Landmark</label>
+                    {{ form.landmark }}
+                    {% if form.landmark.errors %}<div class="error-message">{{ form.landmark.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.pincode.id_for_label }}">Pincode</label>
+                    {{ form.pincode }}
+                    {% if form.pincode.errors %}<div class="error-message">{{ form.pincode.errors }}</div>{% endif %}
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label for="{{ form.full_address.id_for_label }}">Full Address</label>
+                {{ form.full_address }}
+                {% if form.full_address.errors %}<div class="error-message">{{ form.full_address.errors }}</div>{% endif %}
+            </div>
+        </div>
+
+        <!-- Media Management -->
+        <div class="form-section">
+            <h3>Media & Documents</h3>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.featured_image.id_for_label }}">Featured Image</label>
+                    {{ form.featured_image }}
+                    {% if form.featured_image.errors %}<div class="error-message">{{ form.featured_image.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.floor_plan.id_for_label }}">Floor Plan</label>
+                    {{ form.floor_plan }}
+                    {% if form.floor_plan.errors %}<div class="error-message">{{ form.floor_plan.errors }}</div>{% endif %}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.property_video.id_for_label }}">Property Video</label>
+                    {{ form.property_video }}
+                    {% if form.property_video.errors %}<div class="error-message">{{ form.property_video.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.drone_video.id_for_label }}">Drone Video</label>
+                    {{ form.drone_video }}
+                    {% if form.drone_video.errors %}<div class="error-message">{{ form.drone_video.errors }}</div>{% endif %}
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label for="{{ form.virtual_tour_360.id_for_label }}">360° Virtual Tour URL</label>
+                {{ form.virtual_tour_360 }}
+                {% if form.virtual_tour_360.errors %}<div class="error-message">{{ form.virtual_tour_360.errors }}</div>{% endif %}
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.registry_copy.id_for_label }}">Registry Copy</label>
+                    {{ form.registry_copy }}
+                    {% if form.registry_copy.errors %}<div class="error-message">{{ form.registry_copy.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.sale_deed.id_for_label }}">Sale Deed</label>
+                    {{ form.sale_deed }}
+                    {% if form.sale_deed.errors %}<div class="error-message">{{ form.sale_deed.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.mutation.id_for_label }}">Mutation Document</label>
+                    {{ form.mutation }}
+                    {% if form.mutation.errors %}<div class="error-message">{{ form.mutation.errors }}</div>{% endif %}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.building_approval.id_for_label }}">Building Approval</label>
+                    {{ form.building_approval }}
+                    {% if form.building_approval.errors %}<div class="error-message">{{ form.building_approval.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.completion_certificate.id_for_label }}">Completion Certificate</label>
+                    {{ form.completion_certificate }}
+                    {% if form.completion_certificate.errors %}<div class="error-message">{{ form.completion_certificate.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.noc.id_for_label }}">NOC Document</label>
+                    {{ form.noc }}
+                    {% if form.noc.errors %}<div class="error-message">{{ form.noc.errors }}</div>{% endif %}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.layout_plan.id_for_label }}">Layout Plan</label>
+                    {{ form.layout_plan }}
+                    {% if form.layout_plan.errors %}<div class="error-message">{{ form.layout_plan.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.property_brochure.id_for_label }}">Property Brochure (PDF)</label>
+                    {{ form.property_brochure }}
+                    {% if form.property_brochure.errors %}<div class="error-message">{{ form.property_brochure.errors }}</div>{% endif %}
                 </div>
             </div>
         </div>
@@ -297,6 +710,50 @@
             </div>
         </div>
 
+        <!-- Analytics & CRM -->
+        <div class="form-section">
+            <h3>Analytics & CRM</h3>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.property_owner.id_for_label }}">Property Owner Name</label>
+                    {{ form.property_owner }}
+                    {% if form.property_owner.errors %}<div class="error-message">{{ form.property_owner.errors }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.source_tracking.id_for_label }}">Source Tracking</label>
+                    {{ form.source_tracking }}
+                    {% if form.source_tracking.errors %}<div class="error-message">{{ form.source_tracking.errors }}</div>{% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Visibility Settings -->
+        <div class="form-section">
+            <h3>Visibility Settings</h3>
+
+            <div class="form-row">
+                <div class="checkbox-group">
+                    {{ form.is_featured }}
+                    <label for="{{ form.is_featured.id_for_label }}">Featured Property</label>
+                </div>
+                <div class="checkbox-group">
+                    {{ form.show_to_public }}
+                    <label for="{{ form.show_to_public.id_for_label }}">Show to Public</label>
+                </div>
+                <div class="checkbox-group">
+                    {{ form.requires_authentication }}
+                    <label for="{{ form.requires_authentication.id_for_label }}">Require Authentication</label>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label for="{{ form.allowed_roles.id_for_label }}">Allowed Roles</label>
+                {{ form.allowed_roles }}
+                {% if form.allowed_roles.errors %}<div class="error-message">{{ form.allowed_roles.errors }}</div>{% endif %}
+            </div>
+        </div>
+
         <!-- Form Actions -->
         <div class="form-actions">
             <button type="submit" class="submit-btn">
@@ -328,5 +785,57 @@
     if (investmentCheckbox) {
         toggleInvestmentFields();
     }
+
+    // Toggle property type specific fields
+    const categoryField = document.getElementById('{{ form.category.id_for_label }}');
+    const landSection = document.getElementById('land-section');
+    const houseSection = document.getElementById('house-section');
+
+    function togglePropertyTypeFields() {
+        const category = categoryField.value;
+        
+        // Hide all sections first with smooth transition
+        landSection.classList.remove('active');
+        houseSection.classList.remove('active');
+        
+        // Show relevant section based on category
+        setTimeout(() => {
+            if (category === 'Plots') {
+                landSection.classList.add('active');
+            } else {
+                houseSection.classList.add('active');
+            }
+        }, 50);
+    }
+
+    // Use the property_type from context to determine which section to show initially
+    const initialPropertyType = '{{ property_type|default:"" }}';
+    
+    function initializePropertyTypeFields() {
+        // Show relevant section based on initial property_type from URL
+        if (initialPropertyType === 'land') {
+            landSection.classList.add('active');
+        } else if (initialPropertyType === 'house') {
+            houseSection.classList.add('active');
+        } else {
+            // If editing, check the category field
+            if (categoryField) {
+                const category = categoryField.value;
+                if (category === 'Plots') {
+                    landSection.classList.add('active');
+                } else {
+                    houseSection.classList.add('active');
+                }
+            }
+        }
+    }
+
+    // Listen for category field changes
+    if (categoryField) {
+        categoryField.addEventListener('change', togglePropertyTypeFields);
+    }
+    
+    // Initialize on page load
+    initializePropertyTypeFields();
 </script>
 {% endblock %}

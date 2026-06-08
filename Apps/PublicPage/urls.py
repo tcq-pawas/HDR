@@ -8,7 +8,6 @@ from .public_views import (
 
 app_name = 'public'
 
-# API Router
 router = DefaultRouter()
 router.register(r'properties', PublicPropertyViewSet, basename='property-api')
 router.register(r'images', PropertyImageViewSet, basename='property-image-api')

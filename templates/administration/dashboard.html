@@ -3,243 +3,1104 @@
 
 {% block title %}Admin Dashboard - HeyDay Realty{% endblock %}
 
-{% block page_title %}Admin Dashboard{% endblock %}
+{% block page_title %}Welcome Back, Admin 👋{% endblock %}
 
-{% block page_subtitle %}Welcome back! Here's what's happening with your system today.{% endblock %}
+{% block page_subtitle %}Manage users, properties, investments, leads, and business operations from a single dashboard.{% endblock %}
 
 {% block content %}
-    <!-- System Stats -->
-    <div class="row mb-4">
-        <div class="col-md-3 mb-3">
-            <div class="card stat-card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="stat-icon bg-primary text-white me-3">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <div>
-                            <h3 class="mb-0">{{ system_stats.total_users|default:"0" }}</h3>
-                            <p class="text-muted mb-0">Total Users</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-3">
-            <div class="card stat-card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="stat-icon bg-success text-white me-3">
-                            <i class="fas fa-dollar-sign"></i>
-                        </div>
-                        <div>
-                            <h3 class="mb-0">${{ system_stats.total_investments|default:"0"|intcomma }}</h3>
-                            <p class="text-muted mb-0">Total Investments</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-3">
-            <div class="card stat-card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="stat-icon bg-info text-white me-3">
-                            <i class="fas fa-envelope"></i>
-                        </div>
-                        <div>
-                            <h3 class="mb-0">{{ system_stats.pending_inquiries|default:"0" }}</h3>
-                            <p class="text-muted mb-0">Pending Inquiries</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-3">
-            <div class="card stat-card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="stat-icon bg-warning text-white me-3">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                        <div>
-                            <h3 class="mb-0">{{ system_stats.active_properties|default:"0" }}</h3>
-                            <p class="text-muted mb-0">Active Properties</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<style>
+    .kpi-card {
+        background: var(--surface);
+        border-radius: var(--radius);
+        padding: 24px;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-md);
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+    
+    .kpi-card:hover {
+        box-shadow: var(--shadow-lg);
+        transform: translateY(-4px);
+    }
+    
+    .kpi-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: var(--radius-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 16px;
+    }
+    
+    .kpi-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+        font-family: 'Poppins', sans-serif;
+    }
+    
+    .kpi-label {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-bottom: 12px;
+    }
+    
+    .kpi-trend {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+    
+    .kpi-trend.positive {
+        color: var(--success);
+    }
+    
+    .kpi-trend.negative {
+        color: var(--danger);
+    }
+    
+    .quick-action-card {
+        background: var(--surface);
+        border-radius: var(--radius);
+        padding: 20px;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-md);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: var(--text-primary);
+        display: block;
+        height: 100%;
+    }
+    
+    .quick-action-card:hover {
+        box-shadow: var(--shadow-lg);
+        transform: translateY(-4px);
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+    
+    .quick-action-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: var(--radius-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        color: white;
+    }
+    
+    .quick-action-title {
+        font-weight: 600;
+        font-size: 0.95rem;
+        margin-bottom: 4px;
+        font-family: 'Poppins', sans-serif;
+    }
+    
+    .quick-action-desc {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+    }
+    
+    .chart-container {
+        position: relative;
+        height: 300px;
+    }
+    
+    .activity-timeline {
+        position: relative;
+        padding-left: 20px;
+    }
+    
+    .activity-timeline::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: var(--border);
+    }
+    
+    .activity-item {
+        position: relative;
+        padding-bottom: 20px;
+    }
+    
+    .activity-item::before {
+        content: '';
+        position: absolute;
+        left: -24px;
+        top: 4px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--primary);
+        border: 2px solid var(--surface);
+    }
+    
+    .property-card {
+        background: var(--surface);
+        border-radius: var(--radius);
+        overflow: hidden;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-md);
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+    
+    .property-card:hover {
+        box-shadow: var(--shadow-lg);
+        transform: translateY(-4px);
+    }
+    
+    .property-image {
+        height: 160px;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 3rem;
+    }
+    
+    .property-details {
+        padding: 16px;
+    }
+    
+    .property-name {
+        font-weight: 600;
+        font-size: 1rem;
+        margin-bottom: 8px;
+        font-family: 'Poppins', sans-serif;
+        color: var(--text-primary);
+    }
+    
+    .property-location {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin-bottom: 12px;
+    }
+    
+    .property-price {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--primary);
+        font-family: 'Poppins', sans-serif;
+    }
+    
+    .system-health-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--border);
+    }
+    
+    .system-health-item:last-child {
+        border-bottom: none;
+    }
+    
+    .health-status {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .health-indicator {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+    }
+    
+    .health-indicator.online {
+        background: var(--success);
+    }
+    
+    .health-indicator.warning {
+        background: var(--warning);
+    }
+    
+    .health-indicator.offline {
+        background: var(--danger);
+    }
+    
+    .mini-chart {
+        height: 60px;
+    }
+    
+    .welcome-header {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        border-radius: var(--radius);
+        padding: 32px;
+        color: white;
+        margin-bottom: 32px;
+        box-shadow: var(--shadow-lg);
+    }
+    
+    .welcome-header h2 {
+        color: white;
+        margin-bottom: 8px;
+    }
+    
+    .welcome-header p {
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 0;
+    }
+    
+    .header-actions {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
+    
+    .header-btn {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        padding: 8px 16px;
+        border-radius: var(--radius-sm);
+        transition: all 0.3s ease;
+    }
+    
+    .header-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        color: white;
+    }
+    
+    .date-badge {
+        background: rgba(255, 255, 255, 0.15);
+        padding: 8px 16px;
+        border-radius: var(--radius-sm);
+        font-size: 0.9rem;
+    }
+</style>
 
-    <!-- Quick Actions -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Quick Actions</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-3 mb-3">
-                            <a href="{% url 'admin_dash:user-management-page' %}" class="btn btn-outline-primary w-100">
-                                <i class="fas fa-users me-2"></i>User Management
-                            </a>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <a href="{% url 'admin_dash:inquiry-management-page' %}" class="btn btn-outline-success w-100">
-                                <i class="fas fa-envelope me-2"></i>Inquiries
-                            </a>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <a href="{% url 'admin_dash:investment-management-page' %}" class="btn btn-outline-info w-100">
-                                <i class="fas fa-chart-line me-2"></i>Investments
-                            </a>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <a href="{% url 'admin_dash:reports-page' %}" class="btn btn-outline-warning w-100">
-                                <i class="fas fa-file-alt me-2"></i>Generate Reports
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Charts and Recent Activity -->
-    <div class="row">
+<!-- Welcome Header -->
+<div class="welcome-header">
+    <div class="row align-items-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">User Distribution</h5>
-                </div>
-                <div class="card-body">
-                    <canvas id="userChart" width="400" height="200"></canvas>
-                </div>
-            </div>
+            <h2>Welcome Back, Admin 👋</h2>
+            <p>Manage users, properties, investments, leads, and business operations from a single dashboard.</p>
         </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Recent Activity</h5>
+        <div class="col-md-4 text-md-end">
+            <div class="header-actions justify-content-md-end">
+                <div class="date-badge">
+                    <i class="far fa-calendar-alt me-2"></i>{{ current_date|date:"l, d F Y" }}
                 </div>
-                <div class="card-body">
-                    <div class="list-group list-group-flush">
-                        <div class="list-group-item d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="mb-1">New user registration</h6>
-                                <small class="text-muted">John Doe joined</small>
-                            </div>
-                            <small class="text-muted">2 min ago</small>
-                        </div>
-                        <div class="list-group-item d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="mb-1">New investment</h6>
-                                <small class="text-muted">$50,000 investment received</small>
-                            </div>
-                            <small class="text-muted">15 min ago</small>
-                        </div>
-                        <div class="list-group-item d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="mb-1">New inquiry</h6>
-                                <small class="text-muted">Property information request</small>
-                            </div>
-                            <small class="text-muted">1 hour ago</small>
-                        </div>
-                    </div>
-                </div>
+                <button class="header-btn">
+                    <i class="fas fa-bell"></i>
+                </button>
+                <button class="header-btn">
+                    <i class="fas fa-cog"></i>
+                </button>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- System Status -->
-    <div class="row mt-4">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">System Status</h5>
+<!-- KPI Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+        <div class="kpi-card">
+            <div class="kpi-icon" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="kpi-value">{{ system_stats.total_users|default:"0"|intcomma }}</div>
+            <div class="kpi-label">Total Users</div>
+            <div class="kpi-trend positive">
+                <i class="fas fa-arrow-up"></i>
+                <span>{{ growth_metrics.user_growth|default:0 }}%</span>
+                <span style="color: var(--text-secondary); font-weight: 400; margin-left: 4px;">vs last month</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+        <div class="kpi-card">
+            <div class="kpi-icon stat-icon-success">
+                <i class="fas fa-user-tie"></i>
+            </div>
+            <div class="kpi-value">{{ system_stats.agent_count|default:"0"|intcomma }}</div>
+            <div class="kpi-label">Total Agents</div>
+            <div class="kpi-trend positive">
+                <i class="fas fa-arrow-up"></i>
+                <span>12%</span>
+                <span style="color: var(--text-secondary); font-weight: 400; margin-left: 4px;">vs last month</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+        <div class="kpi-card">
+            <div class="kpi-icon stat-icon-info">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="kpi-value">{{ system_stats.total_customers|default:"0"|intcomma }}</div>
+            <div class="kpi-label">Total Customers</div>
+            <div class="kpi-trend positive">
+                <i class="fas fa-arrow-up"></i>
+                <span>8%</span>
+                <span style="color: var(--text-secondary); font-weight: 400; margin-left: 4px;">vs last month</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+        <div class="kpi-card">
+            <div class="kpi-icon stat-icon-warning">
+                <i class="fas fa-briefcase"></i>
+            </div>
+            <div class="kpi-value">{{ system_stats.total_investors|default:"0"|intcomma }}</div>
+            <div class="kpi-label">Total Investors</div>
+            <div class="kpi-trend positive">
+                <i class="fas fa-arrow-up"></i>
+                <span>15%</span>
+                <span style="color: var(--text-secondary); font-weight: 400; margin-left: 4px;">vs last month</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+        <div class="kpi-card">
+            <div class="kpi-icon" style="background: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);">
+                <i class="fas fa-building"></i>
+            </div>
+            <div class="kpi-value">{{ system_stats.total_properties|default:"0"|intcomma }}</div>
+            <div class="kpi-label">Total Properties</div>
+            <div class="kpi-trend positive">
+                <i class="fas fa-arrow-up"></i>
+                <span>5%</span>
+                <span style="color: var(--text-secondary); font-weight: 400; margin-left: 4px;">vs last month</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+        <div class="kpi-card">
+            <div class="kpi-icon stat-icon-success">
+                <i class="fas fa-home"></i>
+            </div>
+            <div class="kpi-value">{{ property_analytics.active_properties|default:"0"|intcomma }}</div>
+            <div class="kpi-label">Active Listings</div>
+            <div class="kpi-trend positive">
+                <i class="fas fa-arrow-up"></i>
+                <span>3%</span>
+                <span style="color: var(--text-secondary); font-weight: 400; margin-left: 4px;">vs last month</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+        <div class="kpi-card">
+            <div class="kpi-icon stat-icon-info">
+                <i class="fas fa-dollar-sign"></i>
+            </div>
+            <div class="kpi-value">${{ business_metrics.total_investment_amount|default:0|intcomma }}</div>
+            <div class="kpi-label">Total Investments</div>
+            <div class="kpi-trend positive">
+                <i class="fas fa-arrow-up"></i>
+                <span>{{ growth_metrics.investment_growth|default:0 }}%</span>
+                <span style="color: var(--text-secondary); font-weight: 400; margin-left: 4px;">vs last month</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+        <div class="kpi-card">
+            <div class="kpi-icon stat-icon-warning">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="kpi-value">${{ sales_analytics.monthly_investments|default:0|intcomma }}</div>
+            <div class="kpi-label">Monthly Revenue</div>
+            <div class="kpi-trend positive">
+                <i class="fas fa-arrow-up"></i>
+                <span>18%</span>
+                <span style="color: var(--text-secondary); font-weight: 400; margin-left: 4px;">vs last month</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+        <div class="kpi-card">
+            <div class="kpi-icon stat-icon-danger">
+                <i class="fas fa-envelope"></i>
+            </div>
+            <div class="kpi-value">{{ business_metrics.pending_inquiries|default:"0"|intcomma }}</div>
+            <div class="kpi-label">Total Inquiries</div>
+            <div class="kpi-trend positive">
+                <i class="fas fa-arrow-up"></i>
+                <span>22%</span>
+                <span style="color: var(--text-secondary); font-weight: 400; margin-left: 4px;">vs last month</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+        <div class="kpi-card">
+            <div class="kpi-icon" style="background: linear-gradient(135deg, #EC4899 0%, #F472B6 100%);">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="kpi-value">{{ business_metrics.pending_inquiries|default:"0"|intcomma }}</div>
+            <div class="kpi-label">Pending Approvals</div>
+            <div class="kpi-trend negative">
+                <i class="fas fa-arrow-down"></i>
+                <span>5%</span>
+                <span style="color: var(--text-secondary); font-weight: 400; margin-left: 4px;">vs last month</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mb-4">
+    <div class="col-12">
+        <h5 class="mb-3" style="font-family: 'Poppins', sans-serif; font-weight: 600;">Quick Actions</h5>
+    </div>
+    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3">
+        <a href="{% url 'admin_dash:user-management-page' %}" class="quick-action-card">
+            <div class="quick-action-icon">
+                <i class="fas fa-user-plus"></i>
+            </div>
+            <div class="quick-action-title">Add User</div>
+            <div class="quick-action-desc">Create new user account</div>
+        </a>
+    </div>
+    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3">
+        <a href="#" class="quick-action-card">
+            <div class="quick-action-icon" style="background: linear-gradient(135deg, var(--success) 0%, #34D399 100%);">
+                <i class="fas fa-building"></i>
+            </div>
+            <div class="quick-action-title">Add Property</div>
+            <div class="quick-action-desc">List new property</div>
+        </a>
+    </div>
+    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3">
+        <a href="#" class="quick-action-card">
+            <div class="quick-action-icon" style="background: linear-gradient(135deg, var(--info) 0%, #60A5FA 100%);">
+                <i class="fas fa-user-tie"></i>
+            </div>
+            <div class="quick-action-title">Create Agent</div>
+            <div class="quick-action-desc">Add new agent</div>
+        </a>
+    </div>
+    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3">
+        <a href="#" class="quick-action-card">
+            <div class="quick-action-icon" style="background: linear-gradient(135deg, var(--warning) 0%, #FBBF24 100%);">
+                <i class="fas fa-briefcase"></i>
+            </div>
+            <div class="quick-action-title">Add Investor</div>
+            <div class="quick-action-desc">Register investor</div>
+        </a>
+    </div>
+    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3">
+        <a href="#" class="quick-action-card">
+            <div class="quick-action-icon" style="background: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);">
+                <i class="fas fa-handshake"></i>
+            </div>
+            <div class="quick-action-title">Assign Property</div>
+            <div class="quick-action-desc">Assign to agent</div>
+        </a>
+    </div>
+    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3">
+        <a href="{% url 'admin_dash:inquiry-management-page' %}" class="quick-action-card">
+            <div class="quick-action-icon" style="background: linear-gradient(135deg, #EC4899 0%, #F472B6 100%);">
+                <i class="fas fa-eye"></i>
+            </div>
+            <div class="quick-action-title">View Leads</div>
+            <div class="quick-action-desc">Manage inquiries</div>
+        </a>
+    </div>
+    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3">
+        <a href="{% url 'admin_dash:reports-page' %}" class="quick-action-card">
+            <div class="quick-action-icon" style="background: linear-gradient(135deg, #06B6D4 0%, #22D3EE 100%);">
+                <i class="fas fa-file-alt"></i>
+            </div>
+            <div class="quick-action-title">Generate Report</div>
+            <div class="quick-action-desc">Create analytics</div>
+        </a>
+    </div>
+    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3">
+        <a href="#" class="quick-action-card">
+            <div class="quick-action-icon" style="background: linear-gradient(135deg, #F97316 0%, #FB923C 100%);">
+                <i class="fas fa-file-upload"></i>
+            </div>
+            <div class="quick-action-title">Upload Document</div>
+            <div class="quick-action-desc">Manage files</div>
+        </a>
+    </div>
+</div>
+
+<!-- Analytics Section -->
+<div class="row mb-4">
+    <div class="col-xl-8 col-lg-7 mb-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">User Growth Overview</h5>
+                <div class="btn-group btn-group-sm">
+                    <button class="btn btn-outline-primary active">Daily</button>
+                    <button class="btn btn-outline-primary">Weekly</button>
+                    <button class="btn btn-outline-primary">Monthly</button>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="d-flex align-items-center mb-3">
-                                <div class="bg-success rounded-circle me-3" style="width: 12px; height: 12px;"></div>
-                                <span>Database: Online</span>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="userGrowthChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4 col-lg-5 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Property Status</h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="propertyStatusChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-xl-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Investment Analytics</h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="investmentChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Lead Analytics</h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="leadChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- User Distribution & Recent Activities -->
+<div class="row mb-4">
+    <div class="col-xl-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">User Distribution</h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="userDistributionChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Recent Activities</h5>
+            </div>
+            <div class="card-body">
+                <div class="activity-timeline">
+                    {% for activity in recent_activities %}
+                    <div class="activity-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="fw-semibold" style="font-family: 'Poppins', sans-serif;">{{ activity.action }}</div>
+                                <div class="small text-muted">{{ activity.description|default:"" }}</div>
                             </div>
-                            <div class="d-flex align-items-center mb-3">
-                                <div class="bg-success rounded-circle me-3" style="width: 12px; height: 12px;"></div>
-                                <span>API Server: Online</span>
-                            </div>
+                            <small class="text-muted">{{ activity.timestamp|timesince }} ago</small>
                         </div>
-                        <div class="col-md-4">
-                            <div class="d-flex align-items-center mb-3">
-                                <div class="bg-success rounded-circle me-3" style="width: 12px; height: 12px;"></div>
-                                <span>Email Service: Online</span>
-                            </div>
-                            <div class="d-flex align-items-center mb-3">
-                                <div class="bg-warning rounded-circle me-3" style="width: 12px; height: 12px;"></div>
-                                <span>Storage: 85% Used</span>
-                            </div>
+                    </div>
+                    {% empty %}
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-history fa-2x mb-2"></i>
+                        <p>No recent activities</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Property Overview -->
+<div class="row mb-4">
+    <div class="col-12 mb-3">
+        <h5 style="font-family: 'Poppins', sans-serif; font-weight: 600;">Property Overview</h5>
+    </div>
+    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+        <div class="property-card">
+            <div class="property-image">
+                <i class="fas fa-building"></i>
+            </div>
+            <div class="property-details">
+                <div class="property-name">Luxury Villa</div>
+                <div class="property-location"><i class="fas fa-map-marker-alt me-1"></i>Beverly Hills, CA</div>
+                <div class="property-price">$2,500,000</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+        <div class="property-card">
+            <div class="property-image" style="background: linear-gradient(135deg, var(--success) 0%, #34D399 100%);">
+                <i class="fas fa-home"></i>
+            </div>
+            <div class="property-details">
+                <div class="property-name">Modern Apartment</div>
+                <div class="property-location"><i class="fas fa-map-marker-alt me-1"></i>Manhattan, NY</div>
+                <div class="property-price">$1,200,000</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+        <div class="property-card">
+            <div class="property-image" style="background: linear-gradient(135deg, var(--warning) 0%, #FBBF24 100%);">
+                <i class="fas fa-warehouse"></i>
+            </div>
+            <div class="property-details">
+                <div class="property-name">Commercial Space</div>
+                <div class="property-location"><i class="fas fa-map-marker-alt me-1"></i>Chicago, IL</div>
+                <div class="property-price">$850,000</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+        <div class="property-card">
+            <div class="property-image" style="background: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);">
+                <i class="fas fa-hotel"></i>
+            </div>
+            <div class="property-details">
+                <div class="property-name">Beach House</div>
+                <div class="property-location"><i class="fas fa-map-marker-alt me-1"></i>Miami, FL</div>
+                <div class="property-price">$3,200,000</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Lead Management & Investment Summary -->
+<div class="row mb-4">
+    <div class="col-xl-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Lead Management</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6 mb-4">
+                        <div class="text-center">
+                            <div class="display-6 fw-bold" style="color: var(--primary); font-family: 'Poppins', sans-serif;">{{ customer_engagement.inquiries_this_month|default:0 }}</div>
+                            <div class="text-muted small">New Leads</div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="d-flex align-items-center mb-3">
-                                <div class="bg-success rounded-circle me-3" style="width: 12px; height: 12px;"></div>
-                                <span>Backup: Completed</span>
+                    </div>
+                    <div class="col-6 mb-4">
+                        <div class="text-center">
+                            <div class="display-6 fw-bold" style="color: var(--warning); font-family: 'Poppins', sans-serif;">{{ business_metrics.pending_inquiries|default:0 }}</div>
+                            <div class="text-muted small">Follow-ups Due</div>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-4">
+                        <div class="text-center">
+                            <div class="display-6 fw-bold" style="color: var(--info); font-family: 'Poppins', sans-serif;">{{ business_metrics.scheduled_viewings|default:0 }}</div>
+                            <div class="text-muted small">Site Visits Scheduled</div>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-4">
+                        <div class="text-center">
+                            <div class="display-6 fw-bold" style="color: var(--success); font-family: 'Poppins', sans-serif;">{{ customer_engagement.conversion_rate|default:0 }}%</div>
+                            <div class="text-muted small">Conversion Rate</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-container" style="height: 150px;">
+                    <canvas id="conversionChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Investment Summary</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <div class="kpi-label">Total Investments</div>
+                        <div class="kpi-value" style="font-size: 1.5rem;">${{ business_metrics.total_investment_amount|default:0|intcomma }}</div>
+                    </div>
+                    <div class="col-6">
+                        <div class="kpi-label">Active Investors</div>
+                        <div class="kpi-value" style="font-size: 1.5rem;">{{ business_metrics.active_investments|default:0 }}</div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <div class="kpi-label">Monthly ROI</div>
+                        <div class="kpi-value" style="font-size: 1.5rem; color: var(--success);">+12.5%</div>
+                    </div>
+                    <div class="col-6">
+                        <div class="kpi-label">Pending Returns</div>
+                        <div class="kpi-value" style="font-size: 1.5rem;">$45,000</div>
+                    </div>
+                </div>
+                <div class="chart-container" style="height: 120px;">
+                    <canvas id="roiChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- System Health -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">System Health</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="system-health-item">
+                            <div class="health-status">
+                                <div class="health-indicator online"></div>
+                                <span>Database Status</span>
                             </div>
-                            <div class="d-flex align-items-center mb-3">
-                                <div class="bg-info rounded-circle me-3" style="width: 12px; height: 12px;"></div>
-                                <span>Uptime: 99.9%</span>
+                            <span class="badge bg-success">Online</span>
+                        </div>
+                        <div class="system-health-item">
+                            <div class="health-status">
+                                <div class="health-indicator online"></div>
+                                <span>Server Load</span>
                             </div>
+                            <span class="badge bg-success">23%</span>
+                        </div>
+                        <div class="system-health-item">
+                            <div class="health-status">
+                                <div class="health-indicator online"></div>
+                                <span>API Status</span>
+                            </div>
+                            <span class="badge bg-success">Operational</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="system-health-item">
+                            <div class="health-status">
+                                <div class="health-indicator warning"></div>
+                                <span>Storage Usage</span>
+                            </div>
+                            <span class="badge bg-warning">78%</span>
+                        </div>
+                        <div class="progress mb-3" style="height: 8px;">
+                            <div class="progress-bar" style="width: 78%;"></div>
+                        </div>
+                        <div class="system-health-item">
+                            <div class="health-status">
+                                <div class="health-indicator online"></div>
+                                <span>Email Service</span>
+                            </div>
+                            <span class="badge bg-success">Online</span>
+                        </div>
+                        <div class="system-health-item">
+                            <div class="health-status">
+                                <div class="health-indicator online"></div>
+                                <span>Backup Status</span>
+                            </div>
+                            <span class="badge bg-success">Completed</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="system-health-item">
+                            <div class="health-status">
+                                <div class="health-indicator online"></div>
+                                <span>Uptime</span>
+                            </div>
+                            <span class="badge bg-info">99.9%</span>
+                        </div>
+                        <div class="system-health-item">
+                            <div class="health-status">
+                                <div class="health-indicator online"></div>
+                                <span>Response Time</span>
+                            </div>
+                            <span class="badge bg-success">45ms</span>
+                        </div>
+                        <div class="system-health-item">
+                            <div class="health-status">
+                                <div class="health-indicator online"></div>
+                                <span>Last Backup</span>
+                            </div>
+                            <span class="badge bg-success">2 hours ago</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Data from Django template - using JSON serialization for lint-friendliness
-    const chartData = JSON.parse('{{ chart_data|safe|default:"{\"customerCount\":150,\"investorCount\":75,\"adminCount\":5}" }}');
-
-    // User Distribution Chart
-    const ctx = document.getElementById('userChart').getContext('2d');
-    const userChart = new Chart(ctx, {
-        type: 'bar',
+    // Chart.js Configuration
+    Chart.defaults.font.family = 'Inter';
+    Chart.defaults.color = '#64748B';
+    
+    // User Growth Chart
+    const userGrowthCtx = document.getElementById('userGrowthChart').getContext('2d');
+    new Chart(userGrowthCtx, {
+        type: 'line',
         data: {
-            labels: ['Customers', 'Investors', 'Admins'],
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
             datasets: [{
-                label: 'User Count',
-                data: [chartData.customerCount, chartData.investorCount, chartData.adminCount],
-                backgroundColor: [
-                    'rgba(54, 162, 235, 0.8)',
-                    'rgba(75, 192, 192, 0.8)',
-                    'rgba(255, 99, 132, 0.8)'
-                ],
-                borderColor: [
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(255, 99, 132, 1)'
-                ],
-                borderWidth: 1
+                label: 'Users',
+                data: [65, 78, 90, 110, 125, 150],
+                borderColor: '#0F766E',
+                backgroundColor: 'rgba(15, 118, 110, 0.1)',
+                fill: true,
+                tension: 0.4
+            }, {
+                label: 'Agents',
+                data: [20, 25, 30, 35, 40, 45],
+                borderColor: '#10B981',
+                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                fill: true,
+                tension: 0.4
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                }
+            },
             scales: {
                 y: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    grid: {
+                        color: '#E2E8F0'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
                 }
             }
         }
     });
-
-    function refreshDashboard() {
-        window.location.reload();
-    }
+    
+    // Property Status Chart
+    const propertyStatusCtx = document.getElementById('propertyStatusChart').getContext('2d');
+    new Chart(propertyStatusCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Available', 'Reserved', 'Sold'],
+            datasets: [{
+                data: [45, 25, 30],
+                backgroundColor: ['#0F766E', '#F59E0B', '#10B981'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            },
+            cutout: '70%'
+        }
+    });
+    
+    // Investment Chart
+    const investmentCtx = document.getElementById('investmentChart').getContext('2d');
+    new Chart(investmentCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'Investments ($)',
+                data: [50000, 75000, 60000, 90000, 85000, 120000],
+                backgroundColor: '#0F766E',
+                borderRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: '#E2E8F0'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+    
+    // Lead Chart
+    const leadCtx = document.getElementById('leadChart').getContext('2d');
+    new Chart(leadCtx, {
+        type: 'bar',
+        data: {
+            labels: ['New Leads', 'Converted', 'Lost'],
+            datasets: [{
+                label: 'Count',
+                data: [150, 45, 30],
+                backgroundColor: ['#0F766E', '#10B981', '#EF4444'],
+                borderRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: '#E2E8F0'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+    
+    // User Distribution Chart
+    const userDistributionCtx = document.getElementById('userDistributionChart').getContext('2d');
+    new Chart(userDistributionCtx, {
+        type: 'pie',
+        data: {
+            labels: ['Customers', 'Investors', 'Agents', 'Admins'],
+            datasets: [{
+                data: [150, 75, 45, 5],
+                backgroundColor: ['#0F766E', '#10B981', '#F59E0B', '#3B82F6'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+    
+    // Conversion Chart
+    const conversionCtx = document.getElementById('conversionChart').getContext('2d');
+    new Chart(conversionCtx, {
+        type: 'line',
+        data: {
+            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+            datasets: [{
+                label: 'Conversion Rate',
+                data: [25, 30, 28, 35],
+                borderColor: '#10B981',
+                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: '#E2E8F0'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+    
+    // ROI Chart
+    const roiCtx = document.getElementById('roiChart').getContext('2d');
+    new Chart(roiCtx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'ROI %',
+                data: [8, 10, 9, 11, 12, 12.5],
+                borderColor: '#F59E0B',
+                backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: '#E2E8F0'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
 </script>
 {% endblock %}

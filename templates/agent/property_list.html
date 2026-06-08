@@ -234,7 +234,7 @@
     <!-- Header -->
     <div class="page-header">
         <h1>My Properties</h1>
-        <a href="{% url 'agent:property_add' %}" class="add-property-btn">
+        <a href="{% url 'agent:property_type_select' %}" class="add-property-btn">
             <i class="bi bi-plus-lg"></i> Add New Property
         </a>
     </div>
@@ -321,7 +321,7 @@
             </div>
             <h3>No Properties Yet</h3>
             <p>You haven't added any properties yet. Start by creating your first property listing!</p>
-            <a href="{% url 'agent:property_add' %}">
+            <a href="{% url 'agent:property_type_select' %}">
                 <i class="bi bi-plus-lg"></i> Add Your First Property
             </a>
         </div>

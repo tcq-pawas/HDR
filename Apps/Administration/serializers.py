@@ -127,7 +127,6 @@ class SystemMetricsSerializer(serializers.ModelSerializer):
         read_only_fields = ['recorded_at']
 
 
-# Create serializers
 class CreateSystemSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = SystemSettings

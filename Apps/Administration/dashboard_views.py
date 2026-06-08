@@ -20,6 +20,10 @@ class AdminDashboardView(AdminDashboardMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
+        # Current date and last login
+        context['current_date'] = date.today()
+        context['last_login'] = self.request.user.last_login if self.request.user.is_authenticated else timezone.now()
+        
         # System overview statistics
         context['system_stats'] = {
             'total_users': User.objects.count(),
@@ -28,6 +32,7 @@ class AdminDashboardView(AdminDashboardMixin, TemplateView):
             'total_properties': Property.objects.count(),
             'total_investments': Investment.objects.count(),
             'total_investment_listings': InvestmentListing.objects.count(),
+            'agent_count': User.objects.filter(groups__name='agent').count(),
         }
         
         # Business metrics and analytics
@@ -58,6 +63,9 @@ class AdminDashboardView(AdminDashboardMixin, TemplateView):
         context['property_analytics'] = {
             'active_properties': Property.objects.filter(is_active=True).count(),
             'featured_properties': Property.objects.filter(is_featured=True).count(),
+            'available_properties': Property.objects.filter(status='available').count(),
+            'reserved_properties': Property.objects.filter(status='reserved').count(),
+            'sold_properties': Property.objects.filter(status='sold').count(),
             'properties_by_type': Property.objects.values('property_type').annotate(
                 count=Count('id')
             ).order_by('-count'),
@@ -82,7 +90,7 @@ class AdminDashboardView(AdminDashboardMixin, TemplateView):
         # User distribution by role with percentages
         total_users = User.objects.count()
         user_distribution = []
-        for role_name in ['admin', 'investor', 'customer']:
+        for role_name in ['admin', 'investor', 'customer', 'agent']:
             count = User.objects.filter(groups__name=role_name).count()
             percentage = (count / total_users * 100) if total_users > 0 else 0
             user_distribution.append({
@@ -128,6 +136,29 @@ class AdminDashboardView(AdminDashboardMixin, TemplateView):
         
         # Growth metrics (month-over-month)
         context['growth_metrics'] = self._calculate_growth_metrics()
+        
+        # Lead analytics
+        context['lead_analytics'] = {
+            'new_leads': Inquiry.objects.filter(
+                created_at__gte=thirty_days_ago
+            ).count(),
+            'converted_leads': Inquiry.objects.filter(
+                status='converted',
+                created_at__gte=thirty_days_ago
+            ).count(),
+            'lost_leads': Inquiry.objects.filter(
+                status='lost',
+                created_at__gte=thirty_days_ago
+            ).count(),
+        }
+        
+        # Chart data for JavaScript
+        context['chart_data'] = {
+            'customerCount': CustomerProfile.objects.count(),
+            'investorCount': InvestorProfile.objects.count(),
+            'adminCount': User.objects.filter(groups__name='admin').count(),
+            'agentCount': User.objects.filter(groups__name='agent').count(),
+        }
         
         return context
     
@@ -188,11 +219,26 @@ class UserManagementView(AdminDashboardMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
-        context['users'] = User.objects.select_related(
+        users = User.objects.select_related(
             'customer_profile', 'investor_profile', 'admin_profile'
         ).order_by('-date_joined')
         
-        context['groups'] = ['customer', 'investor', 'admin']
+        # Add role information to each user
+        users_with_roles = []
+        for user in users:
+            user.role = get_user_role(user)
+            users_with_roles.append(user)
+        
+        context['users'] = users_with_roles
+        context['total_users'] = users.count()
+        context['groups'] = ['customer', 'investor', 'admin', 'agent']
+        
+        # Add role counts
+        context['customer_count'] = User.objects.filter(groups__name='customer').count()
+        context['investor_count'] = User.objects.filter(groups__name='investor').count()
+        context['admin_count'] = User.objects.filter(groups__name='admin').count()
+        context['agent_count'] = User.objects.filter(groups__name='agent').count()
+        context['active_users_count'] = User.objects.filter(is_active=True).count()
         
         return context
 

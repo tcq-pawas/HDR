@@ -18,7 +18,7 @@
         </div>
         <div class="stat-trend positive">
             <i class="bi bi-arrow-up"></i>
-            <span>12% from last month</span>
+            <span>Assigned to you</span>
         </div>
     </div>
 
@@ -26,7 +26,7 @@
         <div class="stat-card-header">
             <div>
                 <div class="stat-value">{{ stats.active_properties }}</div>
-                <div class="stat-label">Active Listings</div>
+                <div class="stat-label">Active Properties</div>
             </div>
             <div class="stat-icon orange">
                 <i class="bi bi-check-circle"></i>
@@ -34,46 +34,14 @@
         </div>
         <div class="stat-trend positive">
             <i class="bi bi-arrow-up"></i>
-            <span>8% from last month</span>
+            <span>Currently active</span>
         </div>
     </div>
 
     <div class="stat-card">
         <div class="stat-card-header">
             <div>
-                <div class="stat-value">{{ stats.pending_approval }}</div>
-                <div class="stat-label">Pending Approval</div>
-            </div>
-            <div class="stat-icon purple">
-                <i class="bi bi-clock"></i>
-            </div>
-        </div>
-        <div class="stat-trend negative">
-            <i class="bi bi-arrow-down"></i>
-            <span>3% from last month</span>
-        </div>
-    </div>
-
-    <div class="stat-card">
-        <div class="stat-card-header">
-            <div>
-                <div class="stat-value">{{ stats.sold_properties }}</div>
-                <div class="stat-label">Sold Properties</div>
-            </div>
-            <div class="stat-icon green">
-                <i class="bi bi-cash"></i>
-            </div>
-        </div>
-        <div class="stat-trend positive">
-            <i class="bi bi-arrow-up"></i>
-            <span>15% from last month</span>
-        </div>
-    </div>
-
-    <div class="stat-card">
-        <div class="stat-card-header">
-            <div>
-                <div class="stat-value">{{ stats.total_inquiries }}</div>
+                <div class="stat-value">{{ stats.total_leads }}</div>
                 <div class="stat-label">Total Leads</div>
             </div>
             <div class="stat-icon blue">
@@ -82,23 +50,103 @@
         </div>
         <div class="stat-trend positive">
             <i class="bi bi-arrow-up"></i>
-            <span>20% from last month</span>
+            <span>All time leads</span>
         </div>
     </div>
 
     <div class="stat-card">
         <div class="stat-card-header">
             <div>
-                <div class="stat-value">{{ stats.unread_inquiries }}</div>
-                <div class="stat-label">Today's Inquiries</div>
+                <div class="stat-value">{{ stats.new_leads_today }}</div>
+                <div class="stat-label">New Leads Today</div>
             </div>
             <div class="stat-icon red">
-                <i class="bi bi-envelope"></i>
+                <i class="bi bi-person-plus"></i>
             </div>
         </div>
         <div class="stat-trend positive">
             <i class="bi bi-arrow-up"></i>
-            <span>5 new today</span>
+            <span>Today only</span>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-header">
+            <div>
+                <div class="stat-value">{{ stats.scheduled_visits }}</div>
+                <div class="stat-label">Scheduled Visits</div>
+            </div>
+            <div class="stat-icon purple">
+                <i class="bi bi-calendar-event"></i>
+            </div>
+        </div>
+        <div class="stat-trend positive">
+            <i class="bi bi-arrow-up"></i>
+            <span>Upcoming visits</span>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-header">
+            <div>
+                <div class="stat-value">{{ stats.bookings_this_month }}</div>
+                <div class="stat-label">Bookings This Month</div>
+            </div>
+            <div class="stat-icon green">
+                <i class="bi bi-cash-stack"></i>
+            </div>
+        </div>
+        <div class="stat-trend positive">
+            <i class="bi bi-arrow-up"></i>
+            <span>This month</span>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-header">
+            <div>
+                <div class="stat-value">₹{{ stats.total_sales|floatformat:0 }}</div>
+                <div class="stat-label">Total Sales</div>
+            </div>
+            <div class="stat-icon green">
+                <i class="bi bi-currency-dollar"></i>
+            </div>
+        </div>
+        <div class="stat-trend positive">
+            <i class="bi bi-arrow-up"></i>
+            <span>Completed sales</span>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-header">
+            <div>
+                <div class="stat-value">₹{{ stats.commission_earned|floatformat:0 }}</div>
+                <div class="stat-label">Commission Earned</div>
+            </div>
+            <div class="stat-icon blue">
+                <i class="bi bi-wallet2"></i>
+            </div>
+        </div>
+        <div class="stat-trend positive">
+            <i class="bi bi-arrow-up"></i>
+            <span>Paid commissions</span>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-header">
+            <div>
+                <div class="stat-value">₹{{ stats.pending_commission|floatformat:0 }}</div>
+                <div class="stat-label">Pending Commission</div>
+            </div>
+            <div class="stat-icon orange">
+                <i class="bi bi-clock-history"></i>
+            </div>
+        </div>
+        <div class="stat-trend neutral">
+            <i class="bi bi-dash"></i>
+            <span>Awaiting payment</span>
         </div>
     </div>
 </div>
@@ -107,13 +155,13 @@
 <div class="quick-actions">
     <h3 class="section-title">Quick Actions</h3>
     <div class="quick-actions-grid">
-        <a href="{% url 'agent:property_add' %}" class="quick-action-card">
+        <a href="{% url 'agent:property_type_select' %}" class="quick-action-card">
             <div class="quick-action-icon">
                 <i class="bi bi-plus-lg"></i>
             </div>
             <span class="quick-action-text">Add Property</span>
         </a>
-        <a href="{% url 'agent:property_add' %}" class="quick-action-card">
+        <a href="{% url 'agent:property_type_select' %}" class="quick-action-card">
             <div class="quick-action-icon">
                 <i class="bi bi-map"></i>
             </div>
@@ -362,7 +410,7 @@
                                 </div>
                                 <h3>No Properties Yet</h3>
                                 <p>Start by adding your first property listing</p>
-                                <a href="{% url 'agent:property_add' %}" class="btn btn-primary">
+                                <a href="{% url 'agent:property_type_select' %}" class="btn btn-primary">
                                     <i class="bi bi-plus-lg"></i> Add Your First Property
                                 </a>
                             </div>
@@ -409,21 +457,21 @@
         </div>
     </div>
 
-    <!-- Recent Inquiries -->
+    <!-- Recent Leads -->
     <div class="content-section">
         <div class="section-header">
-            <h2>Recent Inquiries</h2>
-            <a href="{% url 'agent:inquiries' %}" class="view-all-link">View All →</a>
+            <h2>Recent Leads</h2>
+            <a href="{% url 'agent:lead_list' %}" class="view-all-link">View All →</a>
         </div>
-        {% if recent_inquiries %}
-            {% for inquiry in recent_inquiries|slice:":5" %}
+        {% if recent_leads %}
+            {% for lead in recent_leads|slice:":5" %}
                 <div class="inquiry-item" style="padding: 12px 0; border-bottom: 1px solid #e2e8f0;">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
-                        <div style="font-weight: 600; color: #1e293b;">{{ inquiry.name }}</div>
-                        <div style="font-size: 11px; color: #94a3b8;">{{ inquiry.created_at|date:"M d, Y" }}</div>
+                        <div style="font-weight: 600; color: #1e293b;">{{ lead.name }}</div>
+                        <div style="font-size: 11px; color: #94a3b8;">{{ lead.created_at|date:"M d, Y" }}</div>
                     </div>
-                    <div style="color: #64748b; font-size: 12px; margin-bottom: 4px;">{{ inquiry.property.title|truncatewords:3 }}</div>
-                    <div style="color: #1E73BE; font-size: 12px;">{{ inquiry.email }}</div>
+                    <div style="color: #64748b; font-size: 12px; margin-bottom: 4px;">{{ lead.property.title|truncatewords:3 }}</div>
+                    <div style="color: #1E73BE; font-size: 12px;">{{ lead.email }}</div>
                     <div style="margin-top: 8px;">
                         <button class="action-btn action-btn-view" style="font-size: 11px; padding: 4px 8px;">
                             <i class="bi bi-reply"></i> Reply
@@ -436,8 +484,8 @@
                 <div class="empty-state-icon">
                     <i class="bi bi-chat-dots"></i>
                 </div>
-                <h3>No Inquiries Yet</h3>
-                <p>Inquiries will appear here when buyers contact you</p>
+                <h3>No Leads Yet</h3>
+                <p>Leads will appear here when buyers contact you</p>
             </div>
         {% endif %}
     </div>

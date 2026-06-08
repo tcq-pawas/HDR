@@ -1,6 +1,5 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
-from django.db import models
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -46,9 +45,10 @@ class PublicPropertyViewSet(viewsets.ReadOnlyModelViewSet):
             user_role = get_user_role(request.user)
             if user_role:
                 # Filter by allowed roles
+                from django.db.models import Q
                 queryset = queryset.filter(
-                    models.Q(allowed_roles='all') | 
-                    models.Q(allowed_roles=user_role)
+                    Q(allowed_roles='all') | 
+                    Q(allowed_roles=user_role)
                 )
             else:
                 # Authenticated user without specific role

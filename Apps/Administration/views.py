@@ -33,7 +33,6 @@ class AdminProfileView(generics.RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
-        # Only admin users can access admin profiles
         from .auth_utils import get_user_role
         if get_user_role(self.request.user) != 'admin':
             from rest_framework.exceptions import PermissionDenied
@@ -471,15 +470,8 @@ def user_management(request):
             'last_login': user.last_login,
         }
         
-        # Add profile information if exists
-        if hasattr(user, 'customer_profile'):
-            user_info['profile_type'] = 'customer'
-        elif hasattr(user, 'investor_profile'):
-            user_info['profile_type'] = 'investor'
-        elif hasattr(user, 'admin_profile'):
-            user_info['profile_type'] = 'admin'
-        else:
-            user_info['profile_type'] = None
+        # Add role information based on group membership
+        user_info['role'] = get_user_role(user)
             
         user_data.append(user_info)
     

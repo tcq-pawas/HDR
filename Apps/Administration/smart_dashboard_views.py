@@ -92,3 +92,10 @@ class InvestorDashboardMixin(RoleBasedDashboardMixin):
     
     def has_role_access(self, user_role):
         return user_role == 'investor'
+
+
+class AgentDashboardMixin(RoleBasedDashboardMixin):
+    """Mixin for agent-only dashboard access"""
+    
+    def has_role_access(self, user_role):
+        return user_role == 'agent'

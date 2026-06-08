@@ -168,9 +168,9 @@ REST_FRAMEWORK = {
 }
 
 # Authentication Settings
-LOGIN_URL = '/login/'
+LOGIN_URL = '/auth/login/'
 LOGIN_REDIRECT_URL = '/dashboard/'  # Smart dashboard will redirect based on role
-LOGOUT_REDIRECT_URL = '/login/'
+LOGOUT_REDIRECT_URL = '/auth/login/'
 
 # Role-based authentication
 AUTHENTICATION_BACKENDS = [

@@ -110,6 +110,46 @@ def has_role_permission(user, required_role):
     return user_role == required_role
 
 
+def agent_required(view_func):
+    """
+    Decorator to ensure user is an agent
+    Usage: @agent_required
+    """
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            from django.contrib.auth.decorators import login_required
+            return login_required(view_func)(request, *args, **kwargs)
+        
+        user_role = get_user_role(request.user)
+        if user_role != 'agent':
+            from django.core.exceptions import PermissionDenied
+            raise PermissionDenied("Access denied. This page is only accessible to agents.")
+        
+        return view_func(request, *args, **kwargs)
+    return wrapper
+
+
+def admin_required_api(view_func):
+    """
+    Decorator for API views to ensure user is an admin
+    Usage: @admin_required_api
+    """
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            from rest_framework.exceptions import AuthenticationFailed
+            raise AuthenticationFailed("Authentication required.")
+        
+        user_role = get_user_role(request.user)
+        if user_role != 'admin':
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("Admin access required.")
+        
+        return view_func(request, *args, **kwargs)
+    return wrapper
+
+
 class RoleRequiredMixin:
     """Mixin to enforce role-based access in class-based views"""
     required_roles = None

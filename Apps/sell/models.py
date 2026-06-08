@@ -1,3 +1,2 @@
-from django.db import models
-
-# Create your models here.
+# This app uses Property model from PublicPage app
+# No models defined in this app

@@ -125,11 +125,21 @@ class InvestorDashboardView(InvestorDashboardMixin, TemplateView):
         
         monthly_data = {}
         for roi in recent_roi:
-            month_key = roi.created_at.strftime('%Y-%m')
+            month_key = roi.created_at.strftime('%b %Y')
             if month_key not in monthly_data:
                 monthly_data[month_key] = {'returns': 0, 'count': 0}
             monthly_data[month_key]['returns'] += roi.total_returns
             monthly_data[month_key]['count'] += 1
+        
+        # Add average and trend to each month
+        for month in monthly_data:
+            count = monthly_data[month]['count']
+            if count > 0:
+                monthly_data[month]['average'] = monthly_data[month]['returns'] / count
+            else:
+                monthly_data[month]['average'] = 0
+            # Simple trend calculation (up if more than previous month)
+            monthly_data[month]['trend'] = 'stable'  # Placeholder for trend logic
         
         return monthly_data
     
@@ -291,28 +301,21 @@ class InvestorROIDataView(InvestorDashboardMixin, TemplateView):
             investment__investor=user
         ).select_related('investment', 'investment__listing', 'investment__listing__property_obj').order_by('-created_at')
         
-        # Add roi_analysis data structure for template compatibility
+        # Calculate actual ROI analysis from real data
+        total_returns = context['roi_data'].aggregate(total=Sum('total_returns'))['total'] or 0
+        avg_roi = context['roi_data'].aggregate(avg=Avg('actual_roi_percentage'))['avg'] or 0
+        
         context['roi_analysis'] = {
-            'total_returns': 15200,  # Placeholder - calculate from actual ROI data
-            'total_roi_percentage': 10.5,  # Placeholder - calculate from actual ROI data
+            'total_returns': total_returns,
+            'total_roi_percentage': avg_roi,
             'active_roi_records': context['roi_data'].count(),
-            'monthly_returns': {
-                'Jan 2023': {'returns': 1200, 'count': 3, 'average': 400.00, 'trend': 'up'},
-                'Feb 2023': {'returns': 1500, 'count': 4, 'average': 375.00, 'trend': 'up'},
-                'Mar 2023': {'returns': 1300, 'count': 3, 'average': 433.33, 'trend': 'down'},
-                'Apr 2023': {'returns': 1600, 'count': 5, 'average': 320.00, 'trend': 'up'},
-                'May 2023': {'returns': 1800, 'count': 4, 'average': 450.00, 'trend': 'up'},
-                'Jun 2023': {'returns': 1700, 'count': 5, 'average': 340.00, 'trend': 'down'},
-                'Jul 2023': {'returns': 1900, 'count': 6, 'average': 316.67, 'trend': 'up'},
-                'Aug 2023': {'returns': 2200, 'count': 7, 'average': 314.29, 'trend': 'up'},
-            },
+            'monthly_returns': self._calculate_monthly_returns(context['roi_data']),
         }
         
-        # Add top_performing data for template
-        context['top_performing'] = [
-            {'investment': {'listing': {'title': 'Downtown Apartment', 'property_obj': {'location': 'New York'}}}, 'actual_roi_percentage': 15.2, 'total_returns': 3500},
-            {'investment': {'listing': {'title': 'Suburban Retail', 'property_obj': {'location': 'Los Angeles'}}}, 'actual_roi_percentage': 13.8, 'total_returns': 2800},
-        ]  # Placeholder data
+        # Get top performing investments from actual data
+        context['top_performing'] = list(
+            context['roi_data'].order_by('-actual_roi_percentage')[:5]
+        )
         
         return context
 
