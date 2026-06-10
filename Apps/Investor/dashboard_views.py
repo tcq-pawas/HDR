@@ -318,6 +318,31 @@ class InvestorROIDataView(InvestorDashboardMixin, TemplateView):
         )
         
         return context
+    
+    def _calculate_monthly_returns(self, roi_data):
+        """Calculate monthly returns for the last 6 months"""
+        six_months_ago = timezone.now() - timedelta(days=180)
+        recent_roi = roi_data.filter(created_at__gte=six_months_ago)
+        
+        monthly_data = {}
+        for roi in recent_roi:
+            month_key = roi.created_at.strftime('%b %Y')
+            if month_key not in monthly_data:
+                monthly_data[month_key] = {'returns': 0, 'count': 0}
+            monthly_data[month_key]['returns'] += roi.total_returns
+            monthly_data[month_key]['count'] += 1
+        
+        # Add average and trend to each month
+        for month in monthly_data:
+            count = monthly_data[month]['count']
+            if count > 0:
+                monthly_data[month]['average'] = monthly_data[month]['returns'] / count
+            else:
+                monthly_data[month]['average'] = 0
+            # Simple trend calculation (up if more than previous month)
+            monthly_data[month]['trend'] = 'stable'  # Placeholder for trend logic
+        
+        return monthly_data
 
 
 class InvestorDocumentsView(InvestorDashboardMixin, TemplateView):

@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum, Count, Avg, Q, F
 from django.utils import timezone
 from datetime import timedelta, date
+from decimal import Decimal
 from Apps.Administration.smart_dashboard_views import CustomerDashboardMixin
 from Apps.Administration.auth_utils import get_user_role, role_required
 from .models import CustomerProfile, Inquiry, SavedProperty, PropertyViewing
@@ -121,9 +122,9 @@ class CustomerDashboardView(CustomerDashboardMixin, TemplateView):
         )['avg_price'] or 0
         
         price_ranges = {
-            'min_price': avg_price * 0.8,
-            'avg_price': avg_price,
-            'max_price': avg_price * 1.2,
+            'min_price': float(avg_price) * 0.8 if avg_price else 0,
+            'avg_price': float(avg_price) if avg_price else 0,
+            'max_price': float(avg_price) * 1.2 if avg_price else 0,
         }
         
         return {
@@ -296,7 +297,7 @@ class CustomerDashboardView(CustomerDashboardMixin, TemplateView):
             is_active=True,
             location__in=preferred_locations,
             property_type__in=preferred_types,
-            price__lte=avg_price * 1.2  # Allow 20% above average
+            price__lte=float(avg_price) * 1.2 if avg_price else 0  # Allow 20% above average
         ).exclude(
             id__in=saved_properties.values_list('property_id', flat=True)
         ).values('id', 'title', 'price', 'location', 'property_type', 'area_sqft')[:4]
