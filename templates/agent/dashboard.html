@@ -4,596 +4,1547 @@
 {% block title %}Agent Dashboard | HeyDay Realty{% endblock %}
 
 {% block content %}
-<!-- Dashboard Overview -->
-<div class="dashboard-cards">
-    <div class="stat-card">
-        <div class="stat-card-header">
-            <div>
-                <div class="stat-value">{{ stats.total_properties }}</div>
-                <div class="stat-label">Total Properties</div>
+<!-- Dashboard Header -->
+<div class="dashboard-header">
+    <div class="header-left">
+        <h1 class="page-title">Dashboard</h1>
+        <p class="welcome-message">Welcome back, {{ user.first_name|default:user.username }}! Here's what's happening with your business today.</p>
+    </div>
+    <div class="header-center">
+        <div class="header-search">
+            <i class="bi bi-search"></i>
+            <input type="text" placeholder="Search properties, leads, inquiries..." class="header-search-input">
+        </div>
+    </div>
+    <div class="header-right">
+        <button class="header-icon-btn">
+            <i class="bi bi-bell"></i>
+            <span class="header-badge">3</span>
+        </button>
+        <button class="header-icon-btn">
+            <i class="bi bi-envelope"></i>
+            <span class="header-badge header-badge-green">5</span>
+        </button>
+        <a href="{% url 'agent:property_type_select' %}" class="btn-add-property">
+            <i class="bi bi-plus-lg"></i> Add Property
+        </a>
+        <div class="header-profile">
+            <div class="profile-avatar">
+                {% if agent_profile.profile_image %}
+                    <img src="{{ agent_profile.profile_image.url }}" alt="Profile">
+                {% else %}
+                    <span>{{ user.first_name|default:user.username|slice:":1"|upper }}</span>
+                {% endif %}
             </div>
-            <div class="stat-icon blue">
-                <i class="bi bi-building"></i>
+            <div class="profile-info">
+                <span class="profile-name">{{ user.first_name|default:user.username }}</span>
+                <span class="profile-role">Agent</span>
             </div>
         </div>
-        <div class="stat-trend positive">
-            <i class="bi bi-arrow-up"></i>
-            <span>Assigned to you</span>
+    </div>
+</div>
+
+<!-- KPI Statistics Cards -->
+<div class="kpi-cards-grid">
+    <div class="kpi-card kpi-card-teal">
+        <div class="kpi-card-icon">
+            <i class="bi bi-building"></i>
+        </div>
+        <div class="kpi-card-content">
+            <div class="kpi-value">{{ stats.total_properties }}</div>
+            <div class="kpi-label">Total Properties</div>
+            <div class="kpi-trend positive">
+                <i class="bi bi-arrow-up"></i>
+                <span>12.5% from last month</span>
+            </div>
+        </div>
+        <div class="kpi-mini-chart">
+            <canvas id="miniChart1"></canvas>
         </div>
     </div>
 
-    <div class="stat-card">
-        <div class="stat-card-header">
-            <div>
-                <div class="stat-value">{{ stats.active_properties }}</div>
-                <div class="stat-label">Active Properties</div>
-            </div>
-            <div class="stat-icon orange">
-                <i class="bi bi-check-circle"></i>
+    <div class="kpi-card kpi-card-emerald">
+        <div class="kpi-card-icon">
+            <i class="bi bi-check-circle"></i>
+        </div>
+        <div class="kpi-card-content">
+            <div class="kpi-value">{{ stats.active_properties }}</div>
+            <div class="kpi-label">Active Properties</div>
+            <div class="kpi-trend positive">
+                <i class="bi bi-arrow-up"></i>
+                <span>8.2% from last month</span>
             </div>
         </div>
-        <div class="stat-trend positive">
-            <i class="bi bi-arrow-up"></i>
-            <span>Currently active</span>
-        </div>
-    </div>
-
-    <div class="stat-card">
-        <div class="stat-card-header">
-            <div>
-                <div class="stat-value">{{ stats.total_leads }}</div>
-                <div class="stat-label">Total Leads</div>
-            </div>
-            <div class="stat-icon blue">
-                <i class="bi bi-people"></i>
-            </div>
-        </div>
-        <div class="stat-trend positive">
-            <i class="bi bi-arrow-up"></i>
-            <span>All time leads</span>
+        <div class="kpi-mini-chart">
+            <canvas id="miniChart2"></canvas>
         </div>
     </div>
 
-    <div class="stat-card">
-        <div class="stat-card-header">
-            <div>
-                <div class="stat-value">{{ stats.new_leads_today }}</div>
-                <div class="stat-label">New Leads Today</div>
-            </div>
-            <div class="stat-icon red">
-                <i class="bi bi-person-plus"></i>
+    <div class="kpi-card kpi-card-blue">
+        <div class="kpi-card-icon">
+            <i class="bi bi-people"></i>
+        </div>
+        <div class="kpi-card-content">
+            <div class="kpi-value">{{ stats.total_leads }}</div>
+            <div class="kpi-label">Total Leads</div>
+            <div class="kpi-trend positive">
+                <i class="bi bi-arrow-up"></i>
+                <span>18.7% from last month</span>
             </div>
         </div>
-        <div class="stat-trend positive">
-            <i class="bi bi-arrow-up"></i>
-            <span>Today only</span>
-        </div>
-    </div>
-
-    <div class="stat-card">
-        <div class="stat-card-header">
-            <div>
-                <div class="stat-value">{{ stats.scheduled_visits }}</div>
-                <div class="stat-label">Scheduled Visits</div>
-            </div>
-            <div class="stat-icon purple">
-                <i class="bi bi-calendar-event"></i>
-            </div>
-        </div>
-        <div class="stat-trend positive">
-            <i class="bi bi-arrow-up"></i>
-            <span>Upcoming visits</span>
+        <div class="kpi-mini-chart">
+            <canvas id="miniChart3"></canvas>
         </div>
     </div>
 
-    <div class="stat-card">
-        <div class="stat-card-header">
-            <div>
-                <div class="stat-value">{{ stats.bookings_this_month }}</div>
-                <div class="stat-label">Bookings This Month</div>
-            </div>
-            <div class="stat-icon green">
-                <i class="bi bi-cash-stack"></i>
+    <div class="kpi-card kpi-card-rose">
+        <div class="kpi-card-icon">
+            <i class="bi bi-person-plus"></i>
+        </div>
+        <div class="kpi-card-content">
+            <div class="kpi-value">{{ stats.new_leads_today }}</div>
+            <div class="kpi-label">New Leads Today</div>
+            <div class="kpi-trend positive">
+                <i class="bi bi-arrow-up"></i>
+                <span>21.2% from yesterday</span>
             </div>
         </div>
-        <div class="stat-trend positive">
-            <i class="bi bi-arrow-up"></i>
-            <span>This month</span>
-        </div>
-    </div>
-
-    <div class="stat-card">
-        <div class="stat-card-header">
-            <div>
-                <div class="stat-value">₹{{ stats.total_sales|floatformat:0 }}</div>
-                <div class="stat-label">Total Sales</div>
-            </div>
-            <div class="stat-icon green">
-                <i class="bi bi-currency-dollar"></i>
-            </div>
-        </div>
-        <div class="stat-trend positive">
-            <i class="bi bi-arrow-up"></i>
-            <span>Completed sales</span>
+        <div class="kpi-mini-chart">
+            <canvas id="miniChart4"></canvas>
         </div>
     </div>
 
-    <div class="stat-card">
-        <div class="stat-card-header">
-            <div>
-                <div class="stat-value">₹{{ stats.commission_earned|floatformat:0 }}</div>
-                <div class="stat-label">Commission Earned</div>
-            </div>
-            <div class="stat-icon blue">
-                <i class="bi bi-wallet2"></i>
+    <div class="kpi-card kpi-card-purple">
+        <div class="kpi-card-icon">
+            <i class="bi bi-calendar-event"></i>
+        </div>
+        <div class="kpi-card-content">
+            <div class="kpi-value">{{ stats.scheduled_visits }}</div>
+            <div class="kpi-label">Scheduled Visits</div>
+            <div class="kpi-trend positive">
+                <i class="bi bi-arrow-up"></i>
+                <span>9.1% from last month</span>
             </div>
         </div>
-        <div class="stat-trend positive">
-            <i class="bi bi-arrow-up"></i>
-            <span>Paid commissions</span>
+        <div class="kpi-mini-chart">
+            <canvas id="miniChart5"></canvas>
         </div>
     </div>
 
-    <div class="stat-card">
-        <div class="stat-card-header">
-            <div>
-                <div class="stat-value">₹{{ stats.pending_commission|floatformat:0 }}</div>
-                <div class="stat-label">Pending Commission</div>
-            </div>
-            <div class="stat-icon orange">
-                <i class="bi bi-clock-history"></i>
+    <div class="kpi-card kpi-card-green">
+        <div class="kpi-card-icon">
+            <i class="bi bi-briefcase"></i>
+        </div>
+        <div class="kpi-card-content">
+            <div class="kpi-value">{{ stats.bookings_this_month }}</div>
+            <div class="kpi-label">Bookings This Month</div>
+            <div class="kpi-trend positive">
+                <i class="bi bi-arrow-up"></i>
+                <span>15.4% from last month</span>
             </div>
         </div>
-        <div class="stat-trend neutral">
-            <i class="bi bi-dash"></i>
-            <span>Awaiting payment</span>
+        <div class="kpi-mini-chart">
+            <canvas id="miniChart6"></canvas>
+        </div>
+    </div>
+
+    <div class="kpi-card kpi-card-indigo">
+        <div class="kpi-card-icon">
+            <i class="bi bi-currency-dollar"></i>
+        </div>
+        <div class="kpi-card-content">
+            <div class="kpi-value">₹{{ stats.total_sales|floatformat:0 }}</div>
+            <div class="kpi-label">Total Sales</div>
+            <div class="kpi-trend positive">
+                <i class="bi bi-arrow-up"></i>
+                <span>16.3% from last month</span>
+            </div>
+        </div>
+        <div class="kpi-mini-chart">
+            <canvas id="miniChart7"></canvas>
+        </div>
+    </div>
+
+    <div class="kpi-card kpi-card-cyan">
+        <div class="kpi-card-icon">
+            <i class="bi bi-wallet2"></i>
+        </div>
+        <div class="kpi-card-content">
+            <div class="kpi-value">₹{{ stats.commission_earned|floatformat:0 }}</div>
+            <div class="kpi-label">Total Commission</div>
+            <div class="kpi-trend positive">
+                <i class="bi bi-arrow-up"></i>
+                <span>14.6% from last month</span>
+            </div>
+        </div>
+        <div class="kpi-mini-chart">
+            <canvas id="miniChart8"></canvas>
+        </div>
+    </div>
+
+    <div class="kpi-card kpi-card-amber">
+        <div class="kpi-card-icon">
+            <i class="bi bi-pie-chart"></i>
+        </div>
+        <div class="kpi-card-content">
+            <div class="kpi-value">₹{{ stats.pending_commission|floatformat:0 }}</div>
+            <div class="kpi-label">Pending Commission</div>
+            <div class="kpi-trend neutral">
+                <i class="bi bi-dash"></i>
+                <span>Pending payment</span>
+            </div>
+        </div>
+        <div class="kpi-mini-chart">
+            <canvas id="miniChart9"></canvas>
+        </div>
+    </div>
+
+    <div class="kpi-card kpi-card-teal">
+        <div class="kpi-card-icon">
+            <i class="bi bi-cash"></i>
+        </div>
+        <div class="kpi-card-content">
+            <div class="kpi-value">₹{{ stats.commission_earned|floatformat:0 }}</div>
+            <div class="kpi-label">Paid Commission</div>
+            <div class="kpi-trend positive">
+                <i class="bi bi-arrow-up"></i>
+                <span>20.1% from last month</span>
+            </div>
+        </div>
+        <div class="kpi-mini-chart">
+            <canvas id="miniChart10"></canvas>
         </div>
     </div>
 </div>
 
 <!-- Quick Actions -->
-<div class="quick-actions">
-    <h3 class="section-title">Quick Actions</h3>
+<div class="quick-actions-section">
     <div class="quick-actions-grid">
-        <a href="{% url 'agent:property_type_select' %}" class="quick-action-card">
-            <div class="quick-action-icon">
+        <a href="{% url 'agent:property_type_select' %}" class="action-card action-card-teal">
+            <div class="action-card-icon">
                 <i class="bi bi-plus-lg"></i>
             </div>
-            <span class="quick-action-text">Add Property</span>
-        </a>
-        <a href="{% url 'agent:property_type_select' %}" class="quick-action-card">
-            <div class="quick-action-icon">
-                <i class="bi bi-map"></i>
+            <div class="action-card-content">
+                <span class="action-card-title">Add Property</span>
+                <span class="action-card-subtitle">Create new listing</span>
             </div>
-            <span class="quick-action-text">Add Land Listing</span>
+            <i class="bi bi-arrow-right action-card-arrow"></i>
         </a>
-        <a href="#" class="quick-action-card">
-            <div class="quick-action-icon">
+        <a href="{% url 'agent:property_type_select' %}" class="action-card action-card-emerald">
+            <div class="action-card-icon">
+                <i class="bi bi-layers"></i>
+            </div>
+            <div class="action-card-content">
+                <span class="action-card-title">Add Unit Listing</span>
+                <span class="action-card-subtitle">List your units</span>
+            </div>
+            <i class="bi bi-arrow-right action-card-arrow"></i>
+        </a>
+        <a href="{% url 'agent:site_visit_add' %}" class="action-card action-card-purple">
+            <div class="action-card-icon">
                 <i class="bi bi-calendar-check"></i>
             </div>
-            <span class="quick-action-text">Schedule Site Visit</span>
+            <div class="action-card-content">
+                <span class="action-card-title">Schedule Site Visit</span>
+                <span class="action-card-subtitle">Book a visit</span>
+            </div>
+            <i class="bi bi-arrow-right action-card-arrow"></i>
         </a>
-        <a href="#" class="quick-action-card">
-            <div class="quick-action-icon">
+        <a href="{% url 'agent:document_add' %}" class="action-card action-card-blue">
+            <div class="action-card-icon">
                 <i class="bi bi-file-earmark"></i>
             </div>
-            <span class="quick-action-text">Upload Documents</span>
+            <div class="action-card-content">
+                <span class="action-card-title">Upload Documents</span>
+                <span class="action-card-subtitle">Manage files</span>
+            </div>
+            <i class="bi bi-arrow-right action-card-arrow"></i>
         </a>
-        <a href="#" class="quick-action-card">
-            <div class="quick-action-icon">
+        <a href="{% url 'agent:lead_list' %}" class="action-card action-card-rose">
+            <div class="action-card-icon">
                 <i class="bi bi-people"></i>
             </div>
-            <span class="quick-action-text">Manage Leads</span>
+            <div class="action-card-content">
+                <span class="action-card-title">Manage Leads</span>
+                <span class="action-card-subtitle">Track prospects</span>
+            </div>
+            <i class="bi bi-arrow-right action-card-arrow"></i>
         </a>
     </div>
 </div>
 
-<!-- Recent Leads -->
-<div class="content-section">
-    <div class="section-header">
-        <h2>Recent Leads</h2>
-        <a href="#" class="view-all-link">View All →</a>
-    </div>
-    
-    <!-- Table Controls -->
-    <div class="table-controls" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
-        <div style="display: flex; gap: 8px; flex: 1; min-width: 200px;">
-            <div class="search-box" style="flex: 1;">
-                <i class="bi bi-search"></i>
-                <input type="text" id="leadsSearch" placeholder="Search leads..." class="search-input" onkeyup="searchTable('leadsTable', 'leadsSearch')">
+<!-- Main Content Grid -->
+<div class="dashboard-main-grid">
+    <!-- Left Column - Leads -->
+    <div class="dashboard-left-column">
+        <!-- Lead Management Section -->
+        <div class="leads-section">
+            <div class="leads-header">
+                <div class="leads-title">
+                    <h2>Recent Leads</h2>
+                    <a href="{% url 'agent:lead_list' %}" class="view-all-link">View All</a>
+                </div>
+                <div class="leads-controls">
+                    <div class="leads-search">
+                        <i class="bi bi-search"></i>
+                        <input type="text" placeholder="Search leads..." class="leads-search-input">
+                    </div>
+                    <select class="leads-filter">
+                        <option value="">All Status</option>
+                        <option value="new">New</option>
+                        <option value="contacted">Contacted</option>
+                        <option value="interested">Interested</option>
+                        <option value="site_visit">Site Visit</option>
+                        <option value="proposal">Proposal</option>
+                    </select>
+                    <button class="leads-export">
+                        <i class="bi bi-download"></i> Export
+                    </button>
+                </div>
             </div>
-        </div>
-        <div style="display: flex; gap: 8px;">
-            <select class="form-select form-select-sm" style="width: auto;">
-                <option value="">All Status</option>
-                <option value="new">New</option>
-                <option value="contacted">Contacted</option>
-                <option value="scheduled">Site Visit Scheduled</option>
-                <option value="negotiation">Negotiation</option>
-                <option value="converted">Converted</option>
-            </select>
-            <button class="btn btn-outline-secondary btn-sm" onclick="exportTableToCSV('leadsTable', 'leads.csv')">
-                <i class="bi bi-download"></i> Export
-            </button>
-        </div>
-    </div>
-    
-    <div class="table-responsive">
-        <table class="data-table" id="leadsTable">
-            <thead>
-                <tr>
-                    <th style="cursor: pointer;" onclick="sortTable('leadsTable', 0)">Lead Name <i class="bi bi-arrow-down-up" style="font-size: 10px;"></i></th>
-                    <th style="cursor: pointer;" onclick="sortTable('leadsTable', 1)">Phone <i class="bi bi-arrow-down-up" style="font-size: 10px;"></i></th>
-                    <th>Property Interest</th>
-                    <th>Location</th>
-                    <th>Status</th>
-                    <th style="cursor: pointer;" onclick="sortTable('leadsTable', 5)">Created Date <i class="bi bi-arrow-down-up" style="font-size: 10px;"></i></th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% if recent_inquiries %}
-                    {% for inquiry in recent_inquiries %}
+            <div class="leads-table-container">
+                <table class="leads-table">
+                    <thead>
                         <tr>
-                            <td><strong>{{ inquiry.name }}</strong></td>
-                            <td>{{ inquiry.phone|default:"N/A" }}</td>
-                            <td>{{ inquiry.property.title|truncatewords:3 }}</td>
-                            <td>{{ inquiry.property.location|default:"N/A" }}</td>
-                            <td><span class="status-badge status-new">New</span></td>
-                            <td>{{ inquiry.created_at|date:"M d, Y" }}</td>
-                            <td>
-                                <div class="d-flex gap-2">
-                                    <button class="action-btn action-btn-view" title="View">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
-                                    <button class="action-btn action-btn-edit" title="Edit">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
-                                    <button class="action-btn action-btn-call" title="Call">
-                                        <i class="bi bi-telephone"></i>
-                                    </button>
-                                    <button class="action-btn action-btn-whatsapp" title="WhatsApp">
-                                        <i class="bi bi-whatsapp"></i>
-                                    </button>
-                                </div>
-                            </td>
+                            <th>Lead Name</th>
+                            <th>Phone</th>
+                            <th>Property Interest</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th>Created Date</th>
+                            <th>Actions</th>
                         </tr>
-                    {% endfor %}
-                {% else %}
-                    <tr>
-                        <td colspan="7">
-                            <div class="empty-state">
-                                <div class="empty-state-icon">
-                                    <i class="bi bi-people"></i>
-                                </div>
-                                <h3>No Leads Yet</h3>
-                                <p>Leads will appear here when buyers show interest</p>
-                            </div>
-                        </td>
-                    </tr>
-                {% endif %}
-            </tbody>
-        </table>
-    </div>
-    
-    <!-- Pagination -->
-    <div class="table-pagination" style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
-        <div style="font-size: 13px; color: #64748b;">
-            Showing 1 to {{ recent_inquiries|length }} of {{ recent_inquiries|length }} entries
-        </div>
-        <nav>
-            <ul class="pagination pagination-sm mb-0">
-                <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">Next</a></li>
-            </ul>
-        </nav>
-    </div>
-</div>
-
-<!-- Property Management -->
-<div class="content-section">
-    <div class="section-header">
-        <h2>Property Management</h2>
-        <a href="{% url 'agent:property_list' %}" class="view-all-link">View All →</a>
-    </div>
-    
-    <!-- Table Controls -->
-    <div class="table-controls" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
-        <div style="display: flex; gap: 8px; flex: 1; min-width: 200px;">
-            <div class="search-box" style="flex: 1;">
-                <i class="bi bi-search"></i>
-                <input type="text" id="propertiesSearch" placeholder="Search properties..." class="search-input" onkeyup="searchTable('propertiesTable', 'propertiesSearch')">
-            </div>
-        </div>
-        <div style="display: flex; gap: 8px;">
-            <select class="form-select form-select-sm" style="width: auto;">
-                <option value="">All Status</option>
-                <option value="pending">Pending</option>
-                <option value="approved">Approved</option>
-                <option value="sold">Sold</option>
-                <option value="rejected">Rejected</option>
-            </select>
-            <select class="form-select form-select-sm" style="width: auto;">
-                <option value="">All Types</option>
-                <option value="residential">Residential Plot</option>
-                <option value="farm">Farm Land</option>
-                <option value="agricultural">Agricultural Land</option>
-                <option value="commercial">Commercial</option>
-            </select>
-            <button class="btn btn-outline-secondary btn-sm" onclick="exportTableToCSV('propertiesTable', 'properties.csv')">
-                <i class="bi bi-download"></i> Export
-            </button>
-        </div>
-    </div>
-    
-    <!-- Bulk Actions -->
-    <div class="bulk-actions" style="display: none; padding: 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 16px;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-size: 13px; color: #64748b;"><strong>0</strong> properties selected</span>
-            <div style="display: flex; gap: 8px;">
-                <button class="btn btn-outline-primary btn-sm">Mark as Sold</button>
-                <button class="btn btn-outline-secondary btn-sm">Delete Selected</button>
-            </div>
-        </div>
-    </div>
-    
-    <div class="table-responsive">
-        <table class="data-table" id="propertiesTable">
-            <thead>
-                <tr>
-                    <th style="width: 40px;"><input type="checkbox" class="form-check-input" onchange="toggleAllCheckboxes(this)"></th>
-                    <th style="cursor: pointer;" onclick="sortTable('propertiesTable', 2)">Title <i class="bi bi-arrow-down-up" style="font-size: 10px;"></i></th>
-                    <th>Type</th>
-                    <th style="cursor: pointer;" onclick="sortTable('propertiesTable', 4)">Location <i class="bi bi-arrow-down-up" style="font-size: 10px;"></i></th>
-                    <th style="cursor: pointer;" onclick="sortTable('propertiesTable', 5)">Price <i class="bi bi-arrow-down-up" style="font-size: 10px;"></i></th>
-                    <th>Status</th>
-                    <th style="cursor: pointer;" onclick="sortTable('propertiesTable', 7)">Views <i class="bi bi-arrow-down-up" style="font-size: 10px;"></i></th>
-                    <th style="cursor: pointer;" onclick="sortTable('propertiesTable', 8)">Leads <i class="bi bi-arrow-down-up" style="font-size: 10px;"></i></th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% if recent_properties %}
-                    {% for property in recent_properties %}
-                        <tr>
-                            <td><input type="checkbox" class="form-check-input property-checkbox" onchange="updateBulkActions()"></td>
-                            <td>
-                                <div style="display: flex; align-items: center; gap: 12px;">
-                                    {% if property.images.first %}
-                                        <div class="property-image-cell" style="width: 48px; height: 48px;">
-                                            <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}">
+                    </thead>
+                    <tbody>
+                        {% if recent_leads %}
+                            {% for lead in recent_leads|slice:":5" %}
+                                <tr>
+                                    <td><strong>{{ lead.name }}</strong></td>
+                                    <td>{{ lead.phone|default:"N/A" }}</td>
+                                    <td>{{ lead.property.title|truncatewords:3 }}</td>
+                                    <td>{{ lead.property.location|default:"N/A" }}</td>
+                                    <td><span class="status-badge status-new">New</span></td>
+                                    <td>{{ lead.created_at|date:"M d, Y" }}</td>
+                                    <td>
+                                        <div class="leads-actions">
+                                            <button class="leads-action-btn" title="Call">
+                                                <i class="bi bi-telephone"></i>
+                                            </button>
+                                            <button class="leads-action-btn" title="Email">
+                                                <i class="bi bi-envelope"></i>
+                                            </button>
+                                            <button class="leads-action-btn" title="More">
+                                                <i class="bi bi-three-dots"></i>
+                                            </button>
                                         </div>
-                                    {% else %}
-                                        <div class="property-image-cell" style="width: 48px; height: 48px;">
-                                            <i class="bi bi-image" style="font-size: 20px; color: #ccc;"></i>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="7">
+                                    <div class="empty-state">
+                                        <div class="empty-state-icon">
+                                            <i class="bi bi-people"></i>
                                         </div>
-                                    {% endif %}
-                                    <div>
-                                        <div style="font-weight: 600; font-size: 13px;">{{ property.title|truncatewords:3 }}</div>
-                                        <div style="font-size: 11px; color: #94a3b8;">#{{ property.id }}</div>
+                                        <h3>No Leads Yet</h3>
+                                        <p>Leads will appear here when buyers show interest in your properties</p>
+                                        <a href="{% url 'agent:property_list' %}" class="btn btn-primary">
+                                            <i class="bi bi-plus-lg"></i> Add Property to Get Leads
+                                        </a>
                                     </div>
-                                </div>
-                            </td>
-                            <td>{{ property.property_type|default:"Land" }}</td>
-                            <td>{{ property.location }}</td>
-                            <td>₹{{ property.price|floatformat:0 }}</td>
-                            <td><span class="status-badge status-{{ property.status }}">{{ property.get_status_display }}</span></td>
-                            <td>{{ property.view_count|default:0 }}</td>
-                            <td>{{ property.leads_count|default:0 }}</td>
-                            <td>
-                                <div class="d-flex gap-2">
-                                    <a href="{% url 'agent:property_edit' property.id %}" class="action-btn action-btn-edit" title="Edit">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
-                                    <a href="{% url 'agent:property_delete' property.id %}" class="action-btn action-btn-delete" title="Delete">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
-                                    <button class="action-btn action-btn-view" title="Preview">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
-                                    <button class="action-btn action-btn-call" title="Mark Sold">
-                                        <i class="bi bi-check-circle"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                {% else %}
-                    <tr>
-                        <td colspan="9">
-                            <div class="empty-state">
-                                <div class="empty-state-icon">
-                                    <i class="bi bi-building"></i>
-                                </div>
-                                <h3>No Properties Yet</h3>
-                                <p>Start by adding your first property listing</p>
-                                <a href="{% url 'agent:property_type_select' %}" class="btn btn-primary">
-                                    <i class="bi bi-plus-lg"></i> Add Your First Property
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                {% endif %}
-            </tbody>
-        </table>
-    </div>
-    
-    <!-- Pagination -->
-    <div class="table-pagination" style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
-        <div style="font-size: 13px; color: #64748b;">
-            Showing 1 to {{ recent_properties|length }} of {{ recent_properties|length }} entries
-        </div>
-        <nav>
-            <ul class="pagination pagination-sm mb-0">
-                <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">Next</a></li>
-            </ul>
-        </nav>
-    </div>
-</div>
-
-<!-- Site Visits & Recent Inquiries -->
-<div class="charts-grid">
-    <!-- Site Visit Management -->
-    <div class="content-section">
-        <div class="section-header">
-            <h2>Upcoming Site Visits</h2>
-            <a href="#" class="view-all-link">View All →</a>
-        </div>
-        <div id="siteVisitsList">
-            <div class="empty-state">
-                <div class="empty-state-icon">
-                    <i class="bi bi-calendar-event"></i>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="leads-pagination">
+                <span class="pagination-info">Showing 1 to {{ recent_leads|length|default:0 }} of {{ stats.total_leads }} leads</span>
+                <div class="pagination-controls">
+                    <button class="pagination-btn pagination-btn-prev" disabled>Previous</button>
+                    <button class="pagination-btn pagination-btn-active">1</button>
+                    <button class="pagination-btn">2</button>
+                    <button class="pagination-btn">3</button>
+                    <button class="pagination-btn">4</button>
+                    <button class="pagination-btn">5</button>
+                    <button class="pagination-btn pagination-btn-next">Next</button>
                 </div>
-                <h3>No Upcoming Visits</h3>
-                <p>Scheduled site visits will appear here</p>
             </div>
         </div>
     </div>
 
-    <!-- Recent Leads -->
-    <div class="content-section">
-        <div class="section-header">
-            <h2>Recent Leads</h2>
-            <a href="{% url 'agent:lead_list' %}" class="view-all-link">View All →</a>
+    <!-- Right Column - Analytics -->
+    <div class="dashboard-right-column">
+        <!-- Lead Overview Widget -->
+        <div class="analytics-widget">
+            <div class="analytics-widget-header">
+                <h3>Lead Overview</h3>
+                <a href="{% url 'agent:lead_list' %}" class="view-all-link">View All</a>
+            </div>
+            <div class="lead-overview-chart">
+                <canvas id="leadOverviewChart"></canvas>
+                <div class="chart-center-text">
+                    <div class="chart-center-value">{{ stats.total_leads }}</div>
+                    <div class="chart-center-label">Total Leads</div>
+                </div>
+            </div>
+            <div class="analytics-legend">
+                <div class="analytics-legend-item">
+                    <span class="legend-dot legend-dot-new"></span>
+                    <span class="legend-label">New</span>
+                    <span class="legend-value">{{ stats.new_leads_today }} (13.9%)</span>
+                </div>
+                <div class="analytics-legend-item">
+                    <span class="legend-dot legend-dot-contacted"></span>
+                    <span class="legend-label">Contacted</span>
+                    <span class="legend-value">65 (26.5%)</span>
+                </div>
+                <div class="analytics-legend-item">
+                    <span class="legend-dot legend-dot-interested"></span>
+                    <span class="legend-label">Interested</span>
+                    <span class="legend-value">58 (23.7%)</span>
+                </div>
+                <div class="analytics-legend-item">
+                    <span class="legend-dot legend-dot-visit"></span>
+                    <span class="legend-label">Site Visit</span>
+                    <span class="legend-value">45 (18.4%)</span>
+                </div>
+                <div class="analytics-legend-item">
+                    <span class="legend-dot legend-dot-proposal"></span>
+                    <span class="legend-label">Proposal</span>
+                    <span class="legend-value">43 (17.6%)</span>
+                </div>
+            </div>
         </div>
-        {% if recent_leads %}
-            {% for lead in recent_leads|slice:":5" %}
-                <div class="inquiry-item" style="padding: 12px 0; border-bottom: 1px solid #e2e8f0;">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
-                        <div style="font-weight: 600; color: #1e293b;">{{ lead.name }}</div>
-                        <div style="font-size: 11px; color: #94a3b8;">{{ lead.created_at|date:"M d, Y" }}</div>
+
+        <!-- Property Overview Widget -->
+        <div class="analytics-widget">
+            <div class="analytics-widget-header">
+                <h3>Property Overview</h3>
+            </div>
+            <div class="property-stats-grid">
+                <div class="property-stat-item property-stat-total">
+                    <div class="property-stat-icon">
+                        <i class="bi bi-building"></i>
                     </div>
-                    <div style="color: #64748b; font-size: 12px; margin-bottom: 4px;">{{ lead.property.title|truncatewords:3 }}</div>
-                    <div style="color: #1E73BE; font-size: 12px;">{{ lead.email }}</div>
-                    <div style="margin-top: 8px;">
-                        <button class="action-btn action-btn-view" style="font-size: 11px; padding: 4px 8px;">
-                            <i class="bi bi-reply"></i> Reply
-                        </button>
+                    <div class="property-stat-content">
+                        <div class="property-stat-value">{{ stats.total_properties }}</div>
+                        <div class="property-stat-label">Total Properties</div>
                     </div>
                 </div>
-            {% endfor %}
-        {% else %}
-            <div class="empty-state">
-                <div class="empty-state-icon">
-                    <i class="bi bi-chat-dots"></i>
+                <div class="property-stat-item property-stat-active">
+                    <div class="property-stat-icon">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+                    <div class="property-stat-content">
+                        <div class="property-stat-value">{{ stats.active_properties }}</div>
+                        <div class="property-stat-label">Active</div>
+                    </div>
                 </div>
-                <h3>No Leads Yet</h3>
-                <p>Leads will appear here when buyers contact you</p>
+                <div class="property-stat-item property-stat-sold">
+                    <div class="property-stat-icon">
+                        <i class="bi bi-cash"></i>
+                    </div>
+                    <div class="property-stat-content">
+                        <div class="property-stat-value">{{ stats.sold_properties|default:0 }}</div>
+                        <div class="property-stat-label">Sold</div>
+                    </div>
+                </div>
+                <div class="property-stat-item property-stat-upcoming">
+                    <div class="property-stat-icon">
+                        <i class="bi bi-clock"></i>
+                    </div>
+                    <div class="property-stat-content">
+                        <div class="property-stat-value">{{ stats.pending_approval|default:0 }}</div>
+                        <div class="property-stat-label">Pending</div>
+                    </div>
+                </div>
             </div>
-        {% endif %}
-    </div>
-</div>
+        </div>
 
-<!-- Analytics Section -->
-<div class="content-section">
-    <div class="section-header">
-        <h2>Analytics Overview</h2>
-        <div>
-            <select class="form-select form-select-sm" style="width: auto; display: inline-block;">
-                <option>Last 7 Days</option>
-                <option>Last 30 Days</option>
-                <option>Last 90 Days</option>
-                <option>This Year</option>
-            </select>
-        </div>
-    </div>
-    <div class="charts-grid">
-        <div class="chart-card">
-            <h4 style="font-size: 14px; font-weight: 600; margin-bottom: 16px;">Property Views</h4>
-            <div class="chart-container">
-                <canvas id="propertyViewsChart"></canvas>
+        <!-- Today's Site Visits Widget -->
+        <div class="analytics-widget">
+            <div class="analytics-widget-header">
+                <h3>Today's Site Visits</h3>
+                <span class="analytics-badge">{{ upcoming_visits|length }} visits</span>
             </div>
-        </div>
-        <div class="chart-card">
-            <h4 style="font-size: 14px; font-weight: 600; margin-bottom: 16px;">Lead Generation</h4>
-            <div class="chart-container">
-                <canvas id="leadGenerationChart"></canvas>
-            </div>
-        </div>
-        <div class="chart-card">
-            <h4 style="font-size: 14px; font-weight: 600; margin-bottom: 16px;">Monthly Listings</h4>
-            <div class="chart-container">
-                <canvas id="monthlyListingsChart"></canvas>
-            </div>
-        </div>
-        <div class="chart-card">
-            <h4 style="font-size: 14px; font-weight: 600; margin-bottom: 16px;">Conversion Rate</h4>
-            <div class="chart-container">
-                <canvas id="conversionRateChart"></canvas>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Land Performance Section -->
-<div class="content-section">
-    <div class="section-header">
-        <h2>Land Performance</h2>
-        <a href="#" class="view-all-link">View Detailed Report →</a>
-    </div>
-    <div class="charts-grid">
-        <div class="chart-card">
-            <h4 style="font-size: 14px; font-weight: 600; margin-bottom: 16px;">Top Viewed Lands</h4>
-            <div style="margin-top: 12px;">
-                {% if recent_properties|slice:":5" %}
-                    {% for property in recent_properties|slice:":5" %}
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
-                            <div style="flex: 1;">
-                                <div style="font-weight: 500; font-size: 13px; color: #1e293b;">{{ property.title|truncatewords:3 }}</div>
-                                <div style="font-size: 11px; color: #64748b;">{{ property.location }}</div>
+            <div class="site-visits-list">
+                {% if upcoming_visits %}
+                    {% for visit in upcoming_visits|slice:":5" %}
+                        <div class="site-visit-item">
+                            <div class="site-visit-time">
+                                <span class="visit-hour">{{ visit.scheduled_date|date:"H:i" }}</span>
+                                <span class="visit-ampm">{{ visit.scheduled_date|date:"A" }}</span>
                             </div>
-                            <div style="text-align: right;">
-                                <div style="font-weight: 600; font-size: 14px; color: #1E73BE;">{{ property.view_count|default:0 }}</div>
-                                <div style="font-size: 10px; color: #94a3b8;">views</div>
+                            <div class="site-visit-info">
+                                <div class="visit-customer">{{ visit.lead.name }}</div>
+                                <div class="visit-property">{{ visit.property.title|truncatewords:2 }}</div>
                             </div>
+                            <button class="site-visit-contact-btn">
+                                <i class="bi bi-telephone"></i>
+                            </button>
                         </div>
                     {% endfor %}
                 {% else %}
-                    <p style="text-align: center; color: #94a3b8; padding: 20px;">No data available</p>
+                    <div class="site-visits-empty">
+                        <i class="bi bi-calendar-x"></i>
+                        <p>No site visits scheduled for today</p>
+                    </div>
                 {% endif %}
             </div>
-        </div>
-        <div class="chart-card">
-            <h4 style="font-size: 14px; font-weight: 600; margin-bottom: 16px;">Land Type Performance</h4>
-            <div class="chart-container" style="height: 200px;">
-                <canvas id="landTypeChart"></canvas>
+            <div class="analytics-widget-footer">
+                <a href="{% url 'agent:site_visit_list' %}" class="view-all-link">View All Visits →</a>
             </div>
         </div>
     </div>
 </div>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Hide base template header for dashboard */
+.agent-header {
+    display: none !important;
+}
+
+.agent-layout {
+    margin-top: 0 !important;
+    padding: 0 !important;
+}
+
+.agent-main {
+    margin-left: 260px !important;
+    padding: 24px !important;
+    margin-top: 0 !important;
+}
+
+.main-content {
+    padding: 0 !important;
+}
+
+/* Dashboard Header */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding: 20px 24px;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.header-left {
+    display: flex;
+    flex-direction: column;
+}
+
+.page-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 4px 0;
+}
+
+.welcome-message {
+    font-size: 13px;
+    color: #64748b;
+    margin: 0;
+}
+
+.header-center {
+    flex: 1;
+    max-width: 400px;
+    margin: 0 24px;
+}
+
+.header-search {
+    display: flex;
+    align-items: center;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 8px 12px;
+    width: 100%;
+}
+
+.header-search i {
+    color: #94a3b8;
+    font-size: 14px;
+    margin-right: 8px;
+}
+
+.header-search-input {
+    border: none;
+    background: transparent;
+    padding: 0;
+    font-size: 13px;
+    outline: none;
+    width: 100%;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.header-icon-btn:hover {
+    background: #f8fafc;
+}
+
+.header-icon-btn i {
+    color: #64748b;
+    font-size: 16px;
+}
+
+.header-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 600;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #EF4444;
+}
+
+.header-badge-green {
+    background: #10B981;
+}
+
+.btn-add-property {
+    background: #F59E0B;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-add-property:hover {
+    background: #D97706;
+    transform: translateY(-1px);
+}
+
+.header-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px 8px 8px;
+    border-radius: 8px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+}
+
+.profile-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0F766E, #10B981);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 14px;
+    overflow: hidden;
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-avatar span {
+    font-size: 14px;
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.profile-role {
+    font-size: 11px;
+    color: #64748b;
+}
+
+/* KPI Cards Grid */
+.kpi-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.kpi-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.kpi-card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    margin-bottom: 12px;
+}
+
+.kpi-card-teal .kpi-card-icon { background: linear-gradient(135deg, rgba(15, 118, 110, 0.1), rgba(16, 185, 129, 0.1)); color: #0F766E; }
+.kpi-card-emerald .kpi-card-icon { background: linear-gradient(135deg, rgba(5, 150, 105, 0.1), rgba(16, 185, 129, 0.1)); color: #059669; }
+.kpi-card-blue .kpi-card-icon { background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(59, 130, 246, 0.1)); color: #2563EB; }
+.kpi-card-rose .kpi-card-icon { background: linear-gradient(135deg, rgba(225, 29, 72, 0.1), rgba(244, 63, 94, 0.1)); color: #E11D48; }
+.kpi-card-purple .kpi-card-icon { background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(139, 92, 246, 0.1)); color: #7C3AED; }
+.kpi-card-green .kpi-card-icon { background: linear-gradient(135deg, rgba(5, 150, 105, 0.1), rgba(16, 185, 129, 0.1)); color: #059669; }
+.kpi-card-indigo .kpi-card-icon { background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(99, 102, 241, 0.1)); color: #4F46E5; }
+.kpi-card-cyan .kpi-card-icon { background: linear-gradient(135deg, rgba(8, 145, 178, 0.1), rgba(6, 182, 212, 0.1)); color: #0891B2; }
+.kpi-card-amber .kpi-card-icon { background: linear-gradient(135deg, rgba(217, 119, 6, 0.1), rgba(245, 158, 11, 0.1)); color: #D97706; }
+
+.kpi-card-content {
+    margin-bottom: 12px;
+}
+
+.kpi-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 4px;
+}
+
+.kpi-label {
+    font-size: 12px;
+    color: #64748b;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.kpi-trend {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.kpi-trend.positive { color: #10B981; }
+.kpi-trend.neutral { color: #64748b; }
+
+.kpi-mini-chart {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    width: 80px;
+    height: 40px;
+    opacity: 0.6;
+}
+
+/* Quick Actions Section */
+.quick-actions-section {
+    margin-bottom: 24px;
+}
+
+.quick-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.action-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.action-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.action-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.15);
+}
+
+.action-card-teal { background: linear-gradient(135deg, rgba(15, 118, 110, 0.05), rgba(16, 185, 129, 0.05)); border: 1px solid rgba(15, 118, 110, 0.2); }
+.action-card-emerald { background: linear-gradient(135deg, rgba(5, 150, 105, 0.05), rgba(16, 185, 129, 0.05)); border: 1px solid rgba(5, 150, 105, 0.2); }
+.action-card-purple { background: linear-gradient(135deg, rgba(124, 58, 237, 0.05), rgba(139, 92, 246, 0.05)); border: 1px solid rgba(124, 58, 237, 0.2); }
+.action-card-blue { background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(59, 130, 246, 0.05)); border: 1px solid rgba(37, 99, 235, 0.2); }
+.action-card-rose { background: linear-gradient(135deg, rgba(225, 29, 72, 0.05), rgba(244, 63, 94, 0.05)); border: 1px solid rgba(225, 29, 72, 0.2); }
+
+.action-card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+.action-card-teal .action-card-icon { background: #0F766E; color: white; }
+.action-card-emerald .action-card-icon { background: #059669; color: white; }
+.action-card-purple .action-card-icon { background: #7C3AED; color: white; }
+.action-card-blue .action-card-icon { background: #2563EB; color: white; }
+.action-card-rose .action-card-icon { background: #E11D48; color: white; }
+
+.action-card-content {
+    flex: 1;
+}
+
+.action-card-title {
+    display: block;
+    font-weight: 600;
+    font-size: 14px;
+    color: #1e293b;
+    margin-bottom: 2px;
+}
+
+.action-card-subtitle {
+    display: block;
+    font-size: 12px;
+    color: #64748b;
+}
+
+.action-card-arrow {
+    color: #94a3b8;
+    transition: all 0.3s ease;
+}
+
+.action-card:hover .action-card-arrow {
+    color: #0F766E;
+    transform: translateX(4px);
+}
+
+/* Dashboard Main Grid */
+.dashboard-main-grid {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 24px;
+}
+
+.dashboard-left-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Leads Section */
+.leads-section {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.leads-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e2e8f0;
+    background: #f8fafc;
+}
+
+.leads-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.leads-title h2 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+}
+
+.view-all-link {
+    font-size: 13px;
+    color: #0F766E;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.view-all-link:hover {
+    text-decoration: underline;
+}
+
+.leads-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.leads-search {
+    display: flex;
+    align-items: center;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 6px 10px;
+}
+
+.leads-search i {
+    color: #94a3b8;
+    font-size: 12px;
+    margin-right: 6px;
+}
+
+.leads-search-input {
+    border: none;
+    background: transparent;
+    padding: 0;
+    font-size: 12px;
+    outline: none;
+    width: 150px;
+}
+
+.leads-filter {
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 12px;
+    background: white;
+    color: #1e293b;
+    outline: none;
+    cursor: pointer;
+}
+
+.leads-export {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.3s ease;
+}
+
+.leads-export:hover {
+    background: #f8fafc;
+}
+
+.leads-table-container {
+    overflow-x: auto;
+}
+
+.leads-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.leads-table thead {
+    background: #f8fafc;
+}
+
+.leads-table th {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.leads-table td {
+    padding: 12px 16px;
+    font-size: 13px;
+    color: #1e293b;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.leads-table tr:hover {
+    background: #f8fafc;
+}
+
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-new {
+    background: rgba(15, 118, 110, 0.1);
+    color: #0F766E;
+}
+
+.status-contacted {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10B981;
+}
+
+.status-interested {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3B82F6;
+}
+
+.status-site_visit {
+    background: rgba(139, 92, 246, 0.1);
+    color: #8B5CF6;
+}
+
+.status-proposal {
+    background: rgba(245, 158, 11, 0.1);
+    color: #F59E0B;
+}
+
+.leads-actions {
+    display: flex;
+    gap: 4px;
+}
+
+.leads-action-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.leads-action-btn:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+}
+
+.leads-action-btn i {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.leads-pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    border-top: 1px solid #e2e8f0;
+    background: #f8fafc;
+}
+
+.pagination-info {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.pagination-controls {
+    display: flex;
+    gap: 4px;
+}
+
+.pagination-btn {
+    padding: 6px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    background: white;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background: #f8fafc;
+}
+
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pagination-btn-active {
+    background: #0F766E;
+    color: white;
+    border-color: #0F766E;
+}
+
+/* Analytics Widget */
+.analytics-widget {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.analytics-widget-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e2e8f0;
+    background: #f8fafc;
+}
+
+.analytics-widget-header h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+}
+
+.analytics-badge {
+    background: linear-gradient(135deg, #0F766E, #10B981);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.lead-overview-chart {
+    position: relative;
+    padding: 24px;
+    height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chart-center-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.chart-center-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1e293b;
+    line-height: 1;
+}
+
+.chart-center-label {
+    font-size: 12px;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+.analytics-legend {
+    padding: 16px 24px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.analytics-legend-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.analytics-legend-item:last-child {
+    border-bottom: none;
+}
+
+.legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.legend-dot-new { background: #0F766E; }
+.legend-dot-contacted { background: #10B981; }
+.legend-dot-interested { background: #3B82F6; }
+.legend-dot-visit { background: #8B5CF6; }
+.legend-dot-proposal { background: #F59E0B; }
+
+.legend-label {
+    font-size: 12px;
+    color: #64748b;
+    flex: 1;
+}
+
+.legend-value {
+    font-size: 12px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+/* Property Stats Grid */
+.property-stats-grid {
+    padding: 20px 24px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.property-stat-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 8px;
+    background: #f8fafc;
+}
+
+.property-stat-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
+
+.property-stat-total .property-stat-icon { background: rgba(15, 118, 110, 0.1); color: #0F766E; }
+.property-stat-active .property-stat-icon { background: rgba(16, 185, 129, 0.1); color: #10B981; }
+.property-stat-sold .property-stat-icon { background: rgba(59, 130, 246, 0.1); color: #3B82F6; }
+.property-stat-upcoming .property-stat-icon { background: rgba(245, 158, 11, 0.1); color: #F59E0B; }
+
+.property-stat-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.property-stat-label {
+    font-size: 10px;
+    color: #64748b;
+    text-transform: uppercase;
+}
+
+/* Site Visits List */
+.site-visits-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.site-visit-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 24px;
+    border-bottom: 1px solid #f1f5f9;
+    transition: all 0.3s ease;
+}
+
+.site-visit-item:hover {
+    background: #f8fafc;
+}
+
+.site-visit-time {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(135deg, #0F766E, #10B981);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 10px;
+    min-width: 60px;
+}
+
+.visit-hour {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.visit-ampm {
+    font-size: 10px;
+    opacity: 0.9;
+}
+
+.site-visit-info {
+    flex: 1;
+}
+
+.visit-customer {
+    font-weight: 600;
+    font-size: 14px;
+    color: #1e293b;
+    margin-bottom: 4px;
+}
+
+.visit-property {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.site-visit-contact-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: none;
+    background: rgba(15, 118, 110, 0.1);
+    color: #0F766E;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.site-visit-contact-btn:hover {
+    background: #0F766E;
+    color: white;
+}
+
+.site-visits-empty {
+    text-align: center;
+    padding: 48px 24px;
+    color: #94a3b8;
+}
+
+.site-visits-empty i {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.analytics-widget-footer {
+    padding: 16px 24px;
+    border-top: 1px solid #e2e8f0;
+    background: #f8fafc;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 48px 24px;
+}
+
+.empty-state-icon {
+    font-size: 48px;
+    color: #cbd5e1;
+    margin-bottom: 16px;
+}
+
+.empty-state h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 8px;
+}
+
+.empty-state p {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 16px;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .dashboard-main-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .dashboard-right-column {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+    
+    .header-center {
+        margin: 0;
+        width: 100%;
+    }
+    
+    .header-right {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+    
+    .header-search {
+        width: 100%;
+    }
+    
+    .kpi-cards-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+    
+    .quick-actions-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .leads-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .leads-controls {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+    
+    .leads-search-input {
+        width: 100%;
+    }
+}
+</style>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-// Initialize Land Type Chart
 document.addEventListener('DOMContentLoaded', function() {
-    const landTypeCtx = document.getElementById('landTypeChart');
-    if (landTypeCtx) {
-        new Chart(landTypeCtx, {
+    // Initialize mini charts
+    initMiniCharts();
+    
+    // Initialize lead overview chart
+    initLeadOverviewChart();
+});
+
+// Initialize Mini Charts
+function initMiniCharts() {
+    const miniCharts = [
+        { id: 'miniChart1', color: '#0F766E' },
+        { id: 'miniChart2', color: '#10B981' },
+        { id: 'miniChart3', color: '#3B82F6' },
+        { id: 'miniChart4', color: '#F43F5E' },
+        { id: 'miniChart5', color: '#8B5CF6' },
+        { id: 'miniChart6', color: '#10B981' },
+        { id: 'miniChart7', color: '#4F46E5' },
+        { id: 'miniChart8', color: '#0891B2' },
+        { id: 'miniChart9', color: '#F59E0B' },
+        { id: 'miniChart10', color: '#0F766E' }
+    ];
+    
+    miniCharts.forEach(chart => {
+        const ctx = document.getElementById(chart.id);
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['', '', '', '', '', ''],
+                    datasets: [{
+                        data: [Math.random() * 10, Math.random() * 10, Math.random() * 10, Math.random() * 10, Math.random() * 10, Math.random() * 10],
+                        borderColor: chart.color,
+                        backgroundColor: chart.color + '20',
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 2,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: { display: false },
+                        y: { display: false }
+                    }
+                }
+            });
+        }
+    });
+}
+
+// Initialize Lead Overview Chart
+function initLeadOverviewChart() {
+    const ctx = document.getElementById('leadOverviewChart');
+    if (ctx) {
+        new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: ['Residential Plots', 'Farm Lands', 'Agricultural Lands', 'Commercial'],
+                labels: ['New', 'Contacted', 'Interested', 'Site Visit', 'Proposal'],
                 datasets: [{
-                    data: [40, 30, 20, 10],
-                    backgroundColor: ['#1E73BE', '#F7941D', '#10b981', '#8b5cf6']
+                    data: [34, 65, 58, 45, 43],
+                    backgroundColor: ['#0F766E', '#10B981', '#3B82F6', '#8B5CF6', '#F59E0B'],
+                    borderWidth: 0,
+                    cutout: '75%'
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            font: {
-                                size: 11
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((context.raw / total) * 100).toFixed(1);
+                                return context.label + ': ' + context.raw + ' (' + percentage + '%)';
                             }
                         }
                     }
@@ -601,6 +1552,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-});
+}
 </script>
 {% endblock %}

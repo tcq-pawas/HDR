@@ -1,0 +1,596 @@
+{% extends 'administration/admin_base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Review Property - {{ property.title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Page Header with Action Buttons -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-2">
+                            <li class="breadcrumb-item"><a href="{% url 'admin_dash:property-review' %}">Property Review</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">{{ property.title }}</li>
+                        </ol>
+                    </nav>
+                    <h1 class="h3 mb-2">{{ property.title }}</h1>
+                    <p class="text-muted mb-0">Property ID: #{{ property.id }} | Submitted by: {{ property.seller.username }}</p>
+                </div>
+                <div class="d-flex gap-2">
+                    {% if property.status == 'pending' or property.status == 'rejected' %}
+                        <button class="btn btn-success" onclick="approveProperty({{ property.id }})">
+                            <i class="fas fa-check-circle me-2"></i>Approve Property
+                        </button>
+                        <button class="btn btn-danger" onclick="showRejectModal({{ property.id }})">
+                            <i class="fas fa-times-circle me-2"></i>Reject Property
+                        </button>
+                    {% elif property.status == 'approved' %}
+                        <span class="badge bg-success fs-6 p-3">
+                            <i class="fas fa-check-circle me-2"></i>Approved
+                        </span>
+                    {% elif property.status == 'rejected' %}
+                        <span class="badge bg-danger fs-6 p-3">
+                            <i class="fas fa-times-circle me-2"></i>Rejected
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Banner -->
+    {% if property.status == 'pending' %}
+        <div class="alert alert-warning d-flex align-items-center mb-4" role="alert">
+            <i class="fas fa-exclamation-triangle me-3 fa-lg"></i>
+            <div>
+                <strong>Pending Review</strong> - This property is awaiting admin approval
+            </div>
+        </div>
+    {% elif property.status == 'approved' %}
+        <div class="alert alert-success d-flex align-items-center mb-4" role="alert">
+            <i class="fas fa-check-circle me-3 fa-lg"></i>
+            <div>
+                <strong>Approved</strong> - This property is visible on the website
+            </div>
+        </div>
+    {% elif property.status == 'rejected' %}
+        <div class="alert alert-danger d-flex align-items-center mb-4" role="alert">
+            <i class="fas fa-times-circle me-3 fa-lg"></i>
+            <div>
+                <strong>Rejected</strong> - This property has been rejected
+                {% if latest_review and latest_review.rejection_reason %}
+                    <br><small>Reason: {{ latest_review.rejection_reason }}</small>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="row">
+        <!-- Left Column - Property Details -->
+        <div class="col-lg-8">
+            <!-- Featured Image -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Featured Image</h5>
+                    {% if property.featured_image %}
+                        <img src="{{ property.featured_image.url }}" alt="{{ property.title }}" class="img-fluid rounded w-100" style="max-height: 400px; object-fit: cover;">
+                    {% else %}
+                        <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 400px;">
+                            <i class="fas fa-image fa-3x text-muted"></i>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Basic Information -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0">Basic Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Property Title</label>
+                            <p class="mb-0 fw-semibold">{{ property.title }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Property Type</label>
+                            <p class="mb-0 fw-semibold">{{ property.get_property_type_display }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Category</label>
+                            <p class="mb-0 fw-semibold">{{ property.get_category_display }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Status</label>
+                            <p class="mb-0 fw-semibold">{{ property.get_status_display }}</p>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label class="text-muted small">Description</label>
+                            <p class="mb-0">{{ property.description }}</p>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label class="text-muted small">Public Description</label>
+                            <p class="mb-0">{{ property.public_description }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pricing Information -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0">Pricing Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Property Price</label>
+                            <p class="mb-0 fw-semibold fs-5">₹{{ property.price|intcomma }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Price per Sq.ft</label>
+                            <p class="mb-0 fw-semibold">
+                                {% if property.price_per_sqft %}₹{{ property.price_per_sqft|intcomma }}{% else %}-{% endif %}
+                            </p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Area</label>
+                            <p class="mb-0 fw-semibold">
+                                {% if property.area_sqft %}{{ property.area_sqft|intcomma }} sq.ft{% elif property.total_area %}{{ property.total_area|intcomma }} {{ property.get_area_unit_display }}{% else %}-{% endif %}
+                            </p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Area Unit</label>
+                            <p class="mb-0 fw-semibold">{{ property.get_area_unit_display|default:"-" }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Negotiable</label>
+                            <p class="mb-0 fw-semibold">
+                                {% if property.negotiable %}<i class="fas fa-check text-success"></i> Yes{% else %}<i class="fas fa-times text-danger"></i> No{% endif %}
+                            </p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Booking Amount</label>
+                            <p class="mb-0 fw-semibold">
+                                {% if property.booking_amount %}₹{{ property.booking_amount|intcomma }}{% else %}-{% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Location Information -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0">Location Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Address</label>
+                            <p class="mb-0 fw-semibold">{{ property.full_address|default:property.location }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">City</label>
+                            <p class="mb-0 fw-semibold">{{ property.city|default:"-" }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">State</label>
+                            <p class="mb-0 fw-semibold">{{ property.state|default:"-" }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">District</label>
+                            <p class="mb-0 fw-semibold">{{ property.district|default:"-" }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Locality</label>
+                            <p class="mb-0 fw-semibold">{{ property.locality|default:"-" }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Pincode</label>
+                            <p class="mb-0 fw-semibold">{{ property.pincode|default:"-" }}</p>
+                        </div>
+                        {% if property.google_map_location %}
+                        <div class="col-12 mb-3">
+                            <label class="text-muted small">Google Map Location</label>
+                            <p class="mb-0">
+                                <a href="{{ property.google_map_location }}" target="_blank" class="text-primary">
+                                    <i class="fas fa-map-marker-alt me-1"></i>View on Map
+                                </a>
+                            </p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Media Gallery -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0">Media Gallery</h5>
+                </div>
+                <div class="card-body">
+                    <!-- Property Images -->
+                    {% if property_images %}
+                        <h6 class="mb-3">Property Images</h6>
+                        <div class="row g-3 mb-4">
+                            {% for image in property_images %}
+                                <div class="col-md-4 col-sm-6">
+                                    <div class="position-relative">
+                                        <img src="{{ image.image.url }}" alt="Property Image" class="img-fluid rounded" style="height: 200px; width: 100%; object-fit: cover;">
+                                        <span class="position-absolute top-0 end-0 badge bg-dark m-2">{{ image.get_category_display }}</span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted mb-3">No additional images uploaded</p>
+                    {% endif %}
+
+                    <!-- Videos -->
+                    <h6 class="mb-3">Videos</h6>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Property Video</label>
+                            {% if property.property_video %}
+                                <video controls class="w-100 rounded" style="max-height: 200px;">
+                                    <source src="{{ property.property_video.url }}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            {% else %}
+                                <p class="text-muted">No video uploaded</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Drone Video</label>
+                            {% if property.drone_video %}
+                                <video controls class="w-100 rounded" style="max-height: 200px;">
+                                    <source src="{{ property.drone_video.url }}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            {% else %}
+                                <p class="text-muted">No drone video uploaded</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Floor Plan -->
+                    {% if property.floor_plan %}
+                        <h6 class="mb-3 mt-4">Floor Plan</h6>
+                        <img src="{{ property.floor_plan.url }}" alt="Floor Plan" class="img-fluid rounded w-100">
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Documents -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0">Documents</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Registry Copy</label>
+                            <p class="mb-0">
+                                {% if property.registry_copy %}
+                                    <a href="{{ property.registry_copy.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-file-pdf me-1"></i>View Document
+                                    </a>
+                                {% else %}
+                                    <span class="text-muted">Not uploaded</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Sale Deed</label>
+                            <p class="mb-0">
+                                {% if property.sale_deed %}
+                                    <a href="{{ property.sale_deed.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-file-pdf me-1"></i>View Document
+                                    </a>
+                                {% else %}
+                                    <span class="text-muted">Not uploaded</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">NOC</label>
+                            <p class="mb-0">
+                                {% if property.noc %}
+                                    <a href="{{ property.noc.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-file-pdf me-1"></i>View Document
+                                    </a>
+                                {% else %}
+                                    <span class="text-muted">Not uploaded</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Layout Plan</label>
+                            <p class="mb-0">
+                                {% if property.layout_plan %}
+                                    <a href="{{ property.layout_plan.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-file-pdf me-1"></i>View Document
+                                    </a>
+                                {% else %}
+                                    <span class="text-muted">Not uploaded</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Building Approval</label>
+                            <p class="mb-0">
+                                {% if property.building_approval %}
+                                    <a href="{{ property.building_approval.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-file-pdf me-1"></i>View Document
+                                    </a>
+                                {% else %}
+                                    <span class="text-muted">Not uploaded</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Property Brochure</label>
+                            <p class="mb-0">
+                                {% if property.property_brochure %}
+                                    <a href="{{ property.property_brochure.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-file-pdf me-1"></i>View Document
+                                    </a>
+                                {% else %}
+                                    <span class="text-muted">Not uploaded</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column - Agent & Review Info -->
+        <div class="col-lg-4">
+            <!-- Agent Information -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0">Agent Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        {% if agent_profile and agent_profile.profile_image %}
+                            <img src="{{ agent_profile.profile_image.url }}" alt="{{ property.seller.username }}" class="rounded-circle me-3" style="width: 60px; height: 60px; object-fit: cover;">
+                        {% else %}
+                            <div class="bg-light rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                                <i class="fas fa-user text-muted"></i>
+                            </div>
+                        {% endif %}
+                        <div>
+                            <h6 class="mb-0">{{ property.seller.get_full_name|default:property.seller.username }}</h6>
+                            <small class="text-muted">{{ property.seller.email }}</small>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-muted small">Submission Date</label>
+                        <p class="mb-0 fw-semibold">{{ property.created_at|date:"F d, Y H:i" }}</p>
+                    </div>
+                    {% if agent_profile %}
+                        <div class="mb-3">
+                            <label class="text-muted small">Company</label>
+                            <p class="mb-0 fw-semibold">{{ agent_profile.company_name|default:"-" }}</p>
+                        </div>
+                        <div class="mb-3">
+                            <label class="text-muted small">Phone</label>
+                            <p class="mb-0 fw-semibold">{{ agent_profile.phone|default:"-" }}</p>
+                        </div>
+                        <div class="mb-3">
+                            <label class="text-muted small">Employee ID</label>
+                            <p class="mb-0 fw-semibold">{{ agent_profile.employee_id|default:"-" }}</p>
+                        </div>
+                        <div class="mb-3">
+                            <label class="text-muted small">Territory</label>
+                            <p class="mb-0 fw-semibold">{{ agent_profile.territory|default:"-" }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Review History -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0">Review History</h5>
+                </div>
+                <div class="card-body">
+                    {% if review_history %}
+                        <div class="timeline">
+                            {% for review in review_history %}
+                                <div class="mb-3 pb-3 {% if not forloop.last %}border-bottom{% endif %}">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <span class="badge 
+                                            {% if review.status == 'approved' %}bg-success
+                                            {% elif review.status == 'rejected' %}bg-danger
+                                            {% else %}bg-warning{% endif %}">
+                                            {{ review.get_status_display }}
+                                        </span>
+                                        <small class="text-muted">{{ review.reviewed_at|date:"M d, Y H:i" }}</small>
+                                    </div>
+                                    <p class="mb-1 small"><strong>Reviewed by:</strong> {{ review.reviewed_by.username }}</p>
+                                    {% if review.rejection_reason %}
+                                        <p class="mb-1 small"><strong>Rejection Reason:</strong> {{ review.rejection_reason }}</p>
+                                    {% endif %}
+                                    {% if review.review_notes %}
+                                        <p class="mb-0 small"><strong>Notes:</strong> {{ review.review_notes }}</p>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted mb-0">No review history yet</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Property Features -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0">Property Features</h5>
+                </div>
+                <div class="card-body">
+                    {% if property.bedrooms %}
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Bedrooms</span>
+                            <span class="fw-semibold">{{ property.bedrooms }}</span>
+                        </div>
+                    {% endif %}
+                    {% if property.bathrooms %}
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Bathrooms</span>
+                            <span class="fw-semibold">{{ property.bathrooms }}</span>
+                        </div>
+                    {% endif %}
+                    {% if property.bhk_configuration %}
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">BHK Configuration</span>
+                            <span class="fw-semibold">{{ property.bhk_configuration }}</span>
+                        </div>
+                    {% endif %}
+                    {% if property.possession_status %}
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Possession Status</span>
+                            <span class="fw-semibold">{{ property.get_possession_status_display }}</span>
+                        </div>
+                    {% endif %}
+                    {% if property.furnishing_status %}
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Furnishing</span>
+                            <span class="fw-semibold">{{ property.get_furnishing_status_display }}</span>
+                        </div>
+                    {% endif %}
+                    {% if property.property_age %}
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Property Age</span>
+                            <span class="fw-semibold">{{ property.property_age }} years</span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reject Modal -->
+<div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="rejectModalLabel">Reject Property</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="rejectForm">
+                    <input type="hidden" id="rejectPropertyId" name="property_id">
+                    <div class="mb-3">
+                        <label for="rejectionReason" class="form-label fw-semibold">Rejection Reason <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="rejectionReason" name="rejection_reason" rows="4" required placeholder="Please provide a reason for rejection..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="reviewNotes" class="form-label fw-semibold">Review Notes (Optional)</label>
+                        <textarea class="form-control" id="reviewNotes" name="review_notes" rows="3" placeholder="Additional notes for the agent..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" onclick="submitRejection()">Reject Property</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function approveProperty(propertyId) {
+    if (!confirm('Are you sure you want to approve this property?')) {
+        return;
+    }
+    
+    fetch(`/admin-dashboard/api/properties/${propertyId}/approve/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Property approved successfully!');
+            location.reload();
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        alert('Error approving property: ' + error);
+    });
+}
+
+function showRejectModal(propertyId) {
+    document.getElementById('rejectPropertyId').value = propertyId;
+    var modal = new bootstrap.Modal(document.getElementById('rejectModal'));
+    modal.show();
+}
+
+function submitRejection() {
+    const propertyId = document.getElementById('rejectPropertyId').value;
+    const rejectionReason = document.getElementById('rejectionReason').value;
+    const reviewNotes = document.getElementById('reviewNotes').value;
+    
+    if (!rejectionReason.trim()) {
+        alert('Please provide a rejection reason');
+        return;
+    }
+    
+    fetch(`/admin-dashboard/api/properties/${propertyId}/reject/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({
+            rejection_reason: rejectionReason,
+            review_notes: reviewNotes
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Property rejected successfully!');
+            location.reload();
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        alert('Error rejecting property: ' + error);
+    });
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+{% endblock %}

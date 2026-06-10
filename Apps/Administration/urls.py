@@ -2,7 +2,8 @@ from django.urls import path
 from . import views
 from .dashboard_views import (
     AdminDashboardView, UserManagementView, InquiryManagementView,
-    InvestmentManagementView, SystemSettingsView, ReportsView, ActivityLogView
+    InvestmentManagementView, SystemSettingsView, ReportsView, ActivityLogView,
+    UserProfileView, PropertyReviewCenterView, PropertyReviewDetailPageView
 )
 
 app_name = 'admin_dash'
@@ -11,11 +12,16 @@ urlpatterns = [
     # Dashboard (strict admin-only access)
     path('dashboard/', AdminDashboardView.as_view(), name='dashboard'),
     path('users/', UserManagementView.as_view(), name='user-management-page'),
+    path('users/<int:user_id>/', UserProfileView.as_view(), name='user-profile'),
     path('inquiries/', InquiryManagementView.as_view(), name='inquiry-management-page'),
     path('investments/', InvestmentManagementView.as_view(), name='investment-management-page'),
     path('settings/', SystemSettingsView.as_view(), name='system-settings-page'),
     path('reports/', ReportsView.as_view(), name='reports-page'),
     path('activity/', ActivityLogView.as_view(), name='activity-page'),
+    
+    # Property Review System
+    path('property-review/', PropertyReviewCenterView.as_view(), name='property-review'),
+    path('property-review/<int:property_id>/', PropertyReviewDetailPageView.as_view(), name='property-review-detail'),
     
     # API endpoints (admin-only access)
     path('api/profile/', views.AdminProfileView.as_view(), name='profile'),
@@ -37,6 +43,19 @@ urlpatterns = [
     path('api/notifications/<int:pk>/', views.NotificationDetailView.as_view(), name='notification-detail'),
     path('api/metrics/', views.SystemMetricsListCreateView.as_view(), name='metrics-list'),
     path('api/users/', views.user_management, name='user-management'),
+    path('api/users/<int:user_id>/edit/', views.edit_user, name='user-edit'),
+    path('api/users/<int:user_id>/suspend/', views.suspend_user, name='user-suspend'),
+    path('api/users/<int:user_id>/activate/', views.activate_user, name='user-activate'),
+    path('api/users/<int:user_id>/reset-password/', views.reset_password, name='user-reset-password'),
+    path('api/users/<int:user_id>/change-role/', views.change_role, name='user-change-role'),
+    path('api/users/<int:user_id>/delete/', views.delete_user, name='user-delete'),
     path('api/log-activity/', views.log_activity, name='log-activity'),
     path('api/dashboard/', views.admin_dashboard, name='dashboard-data'),
+    
+    # Property Review API endpoints
+    path('api/properties/', views.PropertyReviewListView.as_view(), name='property-review-list'),
+    path('api/properties/<int:pk>/', views.PropertyReviewDetailView.as_view(), name='property-review-detail-api'),
+    path('api/properties/<int:property_id>/approve/', views.approve_property, name='property-approve'),
+    path('api/properties/<int:property_id>/reject/', views.reject_property, name='property-reject'),
+    path('api/properties/stats/', views.property_review_stats, name='property-review-stats'),
 ]

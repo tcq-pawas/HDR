@@ -3,8 +3,9 @@ from django.contrib.auth.models import User, Group
 from .models import (
     AdminProfile, SystemSettings, DashboardWidget, UserPermission,
     ActivityLog, SystemBackup, SystemMaintenance, Report, GeneratedReport,
-    Notification, SystemMetrics
+    Notification, SystemMetrics, PropertyReview
 )
+from Apps.PublicPage.models import Property
 
 
 class AdminProfileSerializer(serializers.ModelSerializer):
@@ -176,3 +177,142 @@ class CreateSystemMetricsSerializer(serializers.ModelSerializer):
     class Meta:
         model = SystemMetrics
         fields = ['metric_name', 'metric_value', 'metric_unit', 'category']
+
+
+class PropertyReviewSerializer(serializers.ModelSerializer):
+    property_title = serializers.CharField(source='property.title', read_only=True)
+    property_id = serializers.IntegerField(source='property.id', read_only=True)
+    reviewed_by_name = serializers.CharField(source='reviewed_by.username', read_only=True)
+    seller_name = serializers.CharField(source='property.seller.username', read_only=True)
+    
+    class Meta:
+        model = PropertyReview
+        fields = ['id', 'property', 'property_title', 'property_id', 'reviewed_by',
+                 'reviewed_by_name', 'status', 'rejection_reason', 'review_notes',
+                 'reviewed_at', 'updated_at', 'previous_review', 'seller_name']
+        read_only_fields = ['reviewed_at', 'updated_at', 'reviewed_by']
+
+
+class PropertyListSerializer(serializers.ModelSerializer):
+    seller_name = serializers.CharField(source='seller.username', read_only=True)
+    property_type_display = serializers.CharField(source='get_property_type_display', read_only=True)
+    category_display = serializers.CharField(source='get_category_display', read_only=True)
+    status_display = serializers.CharField(source='get_status_display', read_only=True)
+    featured_image_url = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Property
+        fields = ['id', 'title', 'slug', 'price', 'location', 'property_type', 
+                 'property_type_display', 'category', 'category_display', 'status',
+                 'status_display', 'seller', 'seller_name', 'featured_image',
+                 'featured_image_url', 'created_at', 'updated_at']
+        read_only_fields = ['created_at', 'updated_at']
+    
+    def get_featured_image_url(self, obj):
+        if obj.featured_image:
+            return obj.featured_image.url
+        return None
+
+
+class PropertyDetailSerializer(serializers.ModelSerializer):
+    seller_name = serializers.CharField(source='seller.username', read_only=True)
+    seller_email = serializers.CharField(source='seller.email', read_only=True)
+    assigned_agent_name = serializers.CharField(source='assigned_agent.username', read_only=True, allow_null=True)
+    property_type_display = serializers.CharField(source='get_property_type_display', read_only=True)
+    category_display = serializers.CharField(source='get_category_display', read_only=True)
+    status_display = serializers.CharField(source='get_status_display', read_only=True)
+    area_unit_display = serializers.CharField(source='get_area_unit_display', read_only=True, allow_null=True)
+    facing_display = serializers.CharField(source='get_facing_direction_display', read_only=True, allow_null=True)
+    land_category_display = serializers.CharField(source='get_land_category_display', read_only=True, allow_null=True)
+    furnishing_display = serializers.CharField(source='get_furnishing_status_display', read_only=True, allow_null=True)
+    possession_display = serializers.CharField(source='get_possession_status_display', read_only=True, allow_null=True)
+    featured_image_url = serializers.SerializerMethodField()
+    property_video_url = serializers.SerializerMethodField()
+    drone_video_url = serializers.SerializerMethodField()
+    floor_plan_url = serializers.SerializerMethodField()
+    registry_copy_url = serializers.SerializerMethodField()
+    sale_deed_url = serializers.SerializerMethodField()
+    mutation_url = serializers.SerializerMethodField()
+    building_approval_url = serializers.SerializerMethodField()
+    completion_certificate_url = serializers.SerializerMethodField()
+    noc_url = serializers.SerializerMethodField()
+    layout_plan_url = serializers.SerializerMethodField()
+    property_brochure_url = serializers.SerializerMethodField()
+    images = serializers.SerializerMethodField()
+    latest_review = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Property
+        fields = '__all__'
+        read_only_fields = ['created_at', 'updated_at', 'created_by', 'last_updated_by']
+    
+    def get_featured_image_url(self, obj):
+        if obj.featured_image:
+            return obj.featured_image.url
+        return None
+    
+    def get_property_video_url(self, obj):
+        if obj.property_video:
+            return obj.property_video.url
+        return None
+    
+    def get_drone_video_url(self, obj):
+        if obj.drone_video:
+            return obj.drone_video.url
+        return None
+    
+    def get_floor_plan_url(self, obj):
+        if obj.floor_plan:
+            return obj.floor_plan.url
+        return None
+    
+    def get_registry_copy_url(self, obj):
+        if obj.registry_copy:
+            return obj.registry_copy.url
+        return None
+    
+    def get_sale_deed_url(self, obj):
+        if obj.sale_deed:
+            return obj.sale_deed.url
+        return None
+    
+    def get_mutation_url(self, obj):
+        if obj.mutation:
+            return obj.mutation.url
+        return None
+    
+    def get_building_approval_url(self, obj):
+        if obj.building_approval:
+            return obj.building_approval.url
+        return None
+    
+    def get_completion_certificate_url(self, obj):
+        if obj.completion_certificate:
+            return obj.completion_certificate.url
+        return None
+    
+    def get_noc_url(self, obj):
+        if obj.noc:
+            return obj.noc.url
+        return None
+    
+    def get_layout_plan_url(self, obj):
+        if obj.layout_plan:
+            return obj.layout_plan.url
+        return None
+    
+    def get_property_brochure_url(self, obj):
+        if obj.property_brochure:
+            return obj.property_brochure.url
+        return None
+    
+    def get_images(self, obj):
+        from Apps.PublicPage.models import PropertyImage
+        images = PropertyImage.objects.filter(property=obj)
+        return [{'id': img.id, 'image': img.image.url, 'category': img.category} for img in images if img.image]
+    
+    def get_latest_review(self, obj):
+        review = obj.reviews.first()
+        if review:
+            return PropertyReviewSerializer(review).data
+        return None

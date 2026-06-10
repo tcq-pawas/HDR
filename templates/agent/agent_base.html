@@ -151,16 +151,11 @@
                             </a>
                         </li>
 
-                        <li class="nav-item nav-item-has-submenu">
-                            <a href="#" class="nav-link submenu-toggle {% if request.resolver_match.url_name in 'property_list property_add property_edit' %}active{% endif %}">
+                        <li class="nav-item">
+                            <a href="{% url 'agent:property_list' %}" class="nav-link {% if request.resolver_match.url_name in 'property_list property_add property_edit property_type_select' %}active{% endif %}">
                                 <i class="bi bi-houses"></i>
                                 <span>Properties</span>
-                                <i class="bi bi-chevron-down submenu-arrow"></i>
                             </a>
-                            <ul class="submenu">
-                                <li><a href="{% url 'agent:property_list' %}" class="{% if request.resolver_match.url_name == 'property_list' %}active{% endif %}">All Properties</a></li>
-                                <li><a href="{% url 'agent:property_type_select' %}" class="{% if request.resolver_match.url_name == 'property_type_select' %}active{% endif %}">Add Property</a></li>
-                            </ul>
                         </li>
 
                         <li class="nav-item">
@@ -177,16 +172,11 @@
                             </a>
                         </li>
 
-                        <li class="nav-item nav-item-has-submenu">
-                            <a href="#" class="nav-link submenu-toggle {% if request.resolver_match.url_name in 'booking_list booking_add booking_detail' %}active{% endif %}">
+                        <li class="nav-item">
+                            <a href="{% url 'agent:booking_list' %}" class="nav-link {% if request.resolver_match.url_name in 'booking_list booking_add booking_detail' %}active{% endif %}">
                                 <i class="bi bi-cash-stack"></i>
                                 <span>Bookings</span>
-                                <i class="bi bi-chevron-down submenu-arrow"></i>
                             </a>
-                            <ul class="submenu">
-                                <li><a href="{% url 'agent:booking_list' %}" class="{% if request.resolver_match.url_name == 'booking_list' %}active{% endif %}">All Bookings</a></li>
-                                <li><a href="{% url 'agent:booking_add' %}" class="{% if request.resolver_match.url_name == 'booking_add' %}active{% endif %}">New Booking</a></li>
-                            </ul>
                         </li>
 
                         <li class="nav-item">
@@ -196,40 +186,25 @@
                             </a>
                         </li>
 
-                        <li class="nav-item nav-item-has-submenu">
-                            <a href="#" class="nav-link submenu-toggle {% if request.resolver_match.url_name in 'customer_list customer_detail' %}active{% endif %}">
+                        <li class="nav-item">
+                            <a href="{% url 'agent:customer_list' %}" class="nav-link {% if request.resolver_match.url_name in 'customer_list customer_detail' %}active{% endif %}">
                                 <i class="bi bi-person-lines-fill"></i>
                                 <span>Customers</span>
-                                <i class="bi bi-chevron-down submenu-arrow"></i>
                             </a>
-                            <ul class="submenu">
-                                <li><a href="{% url 'agent:customer_list' %}" class="{% if request.resolver_match.url_name == 'customer_list' %}active{% endif %}">All Customers</a></li>
-                            </ul>
                         </li>
 
-                        <li class="nav-item nav-item-has-submenu">
-                            <a href="#" class="nav-link submenu-toggle {% if request.resolver_match.url_name in 'document_list document_add' %}active{% endif %}">
+                        <li class="nav-item">
+                            <a href="{% url 'agent:document_list' %}" class="nav-link {% if request.resolver_match.url_name in 'document_list document_add' %}active{% endif %}">
                                 <i class="bi bi-file-earmark"></i>
                                 <span>Documents</span>
-                                <i class="bi bi-chevron-down submenu-arrow"></i>
                             </a>
-                            <ul class="submenu">
-                                <li><a href="{% url 'agent:document_list' %}" class="{% if request.resolver_match.url_name == 'document_list' %}active{% endif %}">All Documents</a></li>
-                                <li><a href="{% url 'agent:document_add' %}" class="{% if request.resolver_match.url_name == 'document_add' %}active{% endif %}">Upload Document</a></li>
-                            </ul>
                         </li>
 
-                        <li class="nav-item nav-item-has-submenu">
-                            <a href="#" class="nav-link submenu-toggle {% if request.resolver_match.url_name in 'communication_list communication_send message_template_list' %}active{% endif %}">
+                        <li class="nav-item">
+                            <a href="{% url 'agent:communication_list' %}" class="nav-link {% if request.resolver_match.url_name in 'communication_list communication_send message_template_list' %}active{% endif %}">
                                 <i class="bi bi-chat-dots"></i>
                                 <span>Communication</span>
-                                <i class="bi bi-chevron-down submenu-arrow"></i>
                             </a>
-                            <ul class="submenu">
-                                <li><a href="{% url 'agent:communication_list' %}" class="{% if request.resolver_match.url_name == 'communication_list' %}active{% endif %}">History</a></li>
-                                <li><a href="{% url 'agent:communication_send' %}" class="{% if request.resolver_match.url_name == 'communication_send' %}active{% endif %}">Send Message</a></li>
-                                <li><a href="{% url 'agent:message_template_list' %}" class="{% if request.resolver_match.url_name == 'message_template_list' %}active{% endif %}">Templates</a></li>
-                            </ul>
                         </li>
 
                         <li class="nav-item">

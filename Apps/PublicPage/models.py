@@ -41,6 +41,98 @@ class Property(models.Model):
         ('industrial', 'Industrial'),
     )
     
+    # Agricultural Land Categories
+    AGRI_LAND_CATEGORY_CHOICES = (
+        ('agricultural_land', 'Agricultural Land'),
+        ('farmland', 'Farmland'),
+        ('plantation_land', 'Plantation Land'),
+        ('organic_farming_land', 'Organic Farming Land'),
+        ('agro_investment_land', 'Agro Investment Land'),
+    )
+    
+    # Land Status
+    LAND_STATUS_CHOICES = (
+        ('available', 'Available'),
+        ('reserved', 'Reserved'),
+        ('sold', 'Sold'),
+        ('under_verification', 'Under Verification'),
+    )
+    
+    # Area Units for Agricultural Land
+    AGRI_AREA_UNIT_CHOICES = (
+        ('acre', 'Acre'),
+        ('bigha', 'Bigha'),
+        ('hectare', 'Hectare'),
+        ('guntha', 'Guntha'),
+        ('sq_yard', 'Sq Yard'),
+        ('sq_meter', 'Sq Meter'),
+    )
+    
+    # Ownership Type
+    OWNERSHIP_TYPE_CHOICES = (
+        ('individual', 'Individual'),
+        ('joint_ownership', 'Joint Ownership'),
+        ('company', 'Company'),
+        ('trust', 'Trust'),
+    )
+    
+    # Legal Status
+    LEGAL_STATUS_CHOICES = (
+        ('clear_title', 'Clear Title'),
+        ('under_verification', 'Under Verification'),
+        ('litigation', 'Litigation'),
+    )
+    
+    # Soil Type
+    SOIL_TYPE_CHOICES = (
+        ('black_soil', 'Black Soil'),
+        ('red_soil', 'Red Soil'),
+        ('alluvial_soil', 'Alluvial Soil'),
+        ('sandy_soil', 'Sandy Soil'),
+        ('mixed_soil', 'Mixed Soil'),
+    )
+    
+    # Land Shape
+    LAND_SHAPE_CHOICES = (
+        ('square', 'Square'),
+        ('rectangle', 'Rectangle'),
+        ('irregular', 'Irregular'),
+    )
+    
+    # Land Level
+    LAND_LEVEL_CHOICES = (
+        ('flat', 'Flat'),
+        ('semi_flat', 'Semi Flat'),
+        ('hilly', 'Hilly'),
+    )
+    
+    # Crop Suitability
+    CROP_SUITABILITY_CHOICES = (
+        ('wheat', 'Wheat'),
+        ('rice', 'Rice'),
+        ('sugarcane', 'Sugarcane'),
+        ('vegetables', 'Vegetables'),
+        ('fruits', 'Fruits'),
+        ('mixed_farming', 'Mixed Farming'),
+    )
+    
+    # Current Usage
+    CURRENT_USAGE_CHOICES = (
+        ('farming', 'Farming'),
+        ('plantation', 'Plantation'),
+        ('dairy', 'Dairy'),
+        ('agro_investment', 'Agro Investment'),
+        ('vacant_land', 'Vacant Land'),
+    )
+    
+    # Investment Type
+    INVESTMENT_TYPE_CHOICES = (
+        ('agriculture', 'Agriculture'),
+        ('long_term_investment', 'Long-Term Investment'),
+        ('plantation', 'Plantation'),
+        ('agro_business', 'Agro Business'),
+    )
+    
     FURNISHING_CHOICES = (
         ('unfurnished', 'Unfurnished'),
         ('semi_furnished', 'Semi-Furnished'),
@@ -125,6 +217,63 @@ class Property(models.Model):
     latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True, help_text="Latitude")
     longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True, help_text="Longitude")
     
+    # ==================== Agricultural Land-Specific Fields ====================
+    # Land Information
+    land_code = models.CharField(max_length=50, null=True, blank=True, unique=True, help_text="Auto-generated Land Code")
+    agri_land_category = models.CharField(max_length=30, choices=AGRI_LAND_CATEGORY_CHOICES, null=True, blank=True, help_text="Agricultural Land Category")
+    land_status = models.CharField(max_length=20, choices=LAND_STATUS_CHOICES, default='available', help_text="Land Status")
+    
+    # Land Ownership Information
+    owner_name = models.CharField(max_length=200, null=True, blank=True, help_text="Owner Name")
+    owner_mobile = models.CharField(max_length=20, null=True, blank=True, help_text="Owner Mobile")
+    owner_email = models.EmailField(null=True, blank=True, help_text="Owner Email")
+    ownership_type = models.CharField(max_length=20, choices=OWNERSHIP_TYPE_CHOICES, null=True, blank=True, help_text="Ownership Type")
+    
+    # Revenue & Legal Information
+    revenue_village = models.CharField(max_length=200, null=True, blank=True, help_text="Revenue Village")
+    tehsil = models.CharField(max_length=200, null=True, blank=True, help_text="Tehsil")
+    legal_status = models.CharField(max_length=20, choices=LEGAL_STATUS_CHOICES, null=True, blank=True, help_text="Legal Status")
+    
+    # Land Characteristics
+    soil_type = models.CharField(max_length=20, choices=SOIL_TYPE_CHOICES, null=True, blank=True, help_text="Soil Type")
+    land_shape = models.CharField(max_length=20, choices=LAND_SHAPE_CHOICES, null=True, blank=True, help_text="Land Shape")
+    land_level = models.CharField(max_length=20, choices=LAND_LEVEL_CHOICES, null=True, blank=True, help_text="Land Level")
+    boundary_available = models.BooleanField(default=False, help_text="Boundary Available")
+    fencing_available = models.BooleanField(default=False, help_text="Fencing Available")
+    
+    # Agricultural Features
+    borewell_available = models.BooleanField(default=False, help_text="Borewell Available")
+    canal_water = models.BooleanField(default=False, help_text="Canal Water")
+    tube_well = models.BooleanField(default=False, help_text="Tube Well")
+    rainwater_harvesting = models.BooleanField(default=False, help_text="Rainwater Harvesting")
+    crop_suitability = models.CharField(max_length=20, choices=CROP_SUITABILITY_CHOICES, null=True, blank=True, help_text="Crop Suitability")
+    current_usage = models.CharField(max_length=20, choices=CURRENT_USAGE_CHOICES, null=True, blank=True, help_text="Current Usage")
+    
+    # Accessibility
+    road_connectivity = models.CharField(max_length=200, null=True, blank=True, help_text="Road Connectivity")
+    highway_distance = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, help_text="Highway Distance (km)")
+    nearest_village_distance = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, help_text="Nearest Village Distance (km)")
+    market_distance = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, help_text="Market Distance (km)")
+    railway_station_distance = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, help_text="Railway Station Distance (km)")
+    airport_distance = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, help_text="Airport Distance (km)")
+    
+    # Utilities
+    solar_facility = models.BooleanField(default=False, help_text="Solar Facility")
+    farm_house_available = models.BooleanField(default=False, help_text="Farm House Available")
+    storage_facility = models.BooleanField(default=False, help_text="Storage Facility")
+    
+    # Investment Information
+    price_per_acre = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True, help_text="Price Per Acre")
+    total_land_price = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True, help_text="Total Land Price")
+    appreciation_potential = models.CharField(max_length=200, null=True, blank=True, help_text="Appreciation Potential")
+    investment_type = models.CharField(max_length=30, choices=INVESTMENT_TYPE_CHOICES, null=True, blank=True, help_text="Investment Type")
+    
+    # SEO & Marketing
+    seo_title = models.CharField(max_length=200, null=True, blank=True, help_text="SEO Title")
+    seo_description = models.TextField(null=True, blank=True, help_text="SEO Description")
+    keywords = models.CharField(max_length=500, null=True, blank=True, help_text="Keywords (comma-separated)")
+    property_highlights = models.TextField(null=True, blank=True, help_text="Property Highlights")
+    
     # ==================== House/Villa-Specific Fields ====================
     bhk_configuration = models.CharField(max_length=20, null=True, blank=True, help_text="BHK Configuration (e.g., 2BHK, 3BHK)")
     balconies = models.PositiveIntegerField(null=True, blank=True, help_text="Number of Balconies")
@@ -177,6 +326,8 @@ class Property(models.Model):
     state = models.CharField(max_length=100, null=True, blank=True, help_text="State")
     district = models.CharField(max_length=100, null=True, blank=True, help_text="District")
     city = models.CharField(max_length=100, null=True, blank=True, help_text="City")
+    tehsil = models.CharField(max_length=200, null=True, blank=True, help_text="Tehsil")
+    village = models.CharField(max_length=200, null=True, blank=True, help_text="Village")
     locality = models.CharField(max_length=200, null=True, blank=True, help_text="Locality")
     landmark = models.CharField(max_length=200, null=True, blank=True, help_text="Landmark")
     full_address = models.TextField(null=True, blank=True, help_text="Full Address")

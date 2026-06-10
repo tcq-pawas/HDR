@@ -2,7 +2,7 @@ from rest_framework import generics, permissions, status, filters
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-from django.db.models import Count, Sum, Avg
+from django.db.models import Count, Sum, Avg, Q
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend
@@ -11,7 +11,7 @@ from .auth_utils import role_required
 from .models import (
     AdminProfile, SystemSettings, DashboardWidget, UserPermission,
     ActivityLog, SystemBackup, SystemMaintenance, Report, GeneratedReport,
-    Notification, SystemMetrics
+    Notification, SystemMetrics, PropertyReview
 )
 from Apps.Customer.models import CustomerProfile, Inquiry, SavedProperty
 from Apps.Investor.models import Investment, InvestmentListing, InvestorProfile
@@ -20,7 +20,8 @@ from .serializers import (
     AdminProfileSerializer, SystemSettingsSerializer, DashboardWidgetSerializer,
     UserPermissionSerializer, ActivityLogSerializer, SystemBackupSerializer,
     SystemMaintenanceSerializer, ReportSerializer, GeneratedReportSerializer,
-    NotificationSerializer, SystemMetricsSerializer,
+    NotificationSerializer, SystemMetricsSerializer, PropertyReviewSerializer,
+    PropertyListSerializer, PropertyDetailSerializer,
     CreateSystemSettingsSerializer, CreateDashboardWidgetSerializer,
     CreateUserPermissionSerializer, CreateSystemBackupSerializer,
     CreateSystemMaintenanceSerializer, CreateReportSerializer,
@@ -507,3 +508,501 @@ def log_activity(request):
     )
     
     return Response(ActivityLogSerializer(activity).data, status=status.HTTP_201_CREATED)
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def edit_user(request, user_id):
+    # Only admin users can edit users
+    from .auth_utils import get_user_role
+    if get_user_role(request.user) != 'admin':
+        from rest_framework.exceptions import PermissionDenied
+        raise PermissionDenied("Admin access required.")
+    
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return Response({'success': False, 'message': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    # Update user fields
+    user.first_name = request.data.get('first_name', user.first_name)
+    user.last_name = request.data.get('last_name', user.last_name)
+    user.username = request.data.get('username', user.username)
+    user.email = request.data.get('email', user.email)
+    
+    # Update phone number if it exists in the model
+    if hasattr(user, 'phone_number'):
+        user.phone_number = request.data.get('phone_number', user.phone_number)
+    
+    # Update status
+    is_active = request.data.get('is_active')
+    if is_active is not None:
+        user.is_active = is_active == 'true'
+    
+    # Update email verified if it exists
+    if hasattr(user, 'email_verified'):
+        email_verified = request.data.get('email_verified')
+        if email_verified is not None:
+            user.email_verified = email_verified == 'true'
+    
+    # Update 2FA if it exists
+    if hasattr(user, 'two_factor_enabled'):
+        two_factor_enabled = request.data.get('two_factor_enabled')
+        if two_factor_enabled is not None:
+            user.two_factor_enabled = two_factor_enabled == 'true'
+    
+    # Update role
+    new_role = request.data.get('role')
+    if new_role:
+        from .auth_utils import assign_user_group
+        assign_user_group(user, new_role)
+    
+    user.save()
+    
+    # Log the activity
+    ActivityLog.objects.create(
+        user=request.user,
+        action_type='update',
+        module='user_management',
+        description=f'Updated user {user.username}',
+        ip_address=request.META.get('REMOTE_ADDR'),
+        user_agent=request.META.get('HTTP_USER_AGENT')
+    )
+    
+    return Response({'success': True, 'message': 'User updated successfully'})
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def suspend_user(request, user_id):
+    # Only admin users can suspend users
+    from .auth_utils import get_user_role
+    if get_user_role(request.user) != 'admin':
+        from rest_framework.exceptions import PermissionDenied
+        raise PermissionDenied("Admin access required.")
+    
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return Response({'success': False, 'message': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    user.is_active = False
+    user.save()
+    
+    # Log the activity
+    ActivityLog.objects.create(
+        user=request.user,
+        action_type='suspend',
+        module='user_management',
+        description=f'Suspended user {user.username}',
+        ip_address=request.META.get('REMOTE_ADDR'),
+        user_agent=request.META.get('HTTP_USER_AGENT')
+    )
+    
+    return Response({'success': True, 'message': 'User suspended successfully'})
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def activate_user(request, user_id):
+    # Only admin users can activate users
+    from .auth_utils import get_user_role
+    if get_user_role(request.user) != 'admin':
+        from rest_framework.exceptions import PermissionDenied
+        raise PermissionDenied("Admin access required.")
+    
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return Response({'success': False, 'message': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    user.is_active = True
+    user.save()
+    
+    # Log the activity
+    ActivityLog.objects.create(
+        user=request.user,
+        action_type='activate',
+        module='user_management',
+        description=f'Activated user {user.username}',
+        ip_address=request.META.get('REMOTE_ADDR'),
+        user_agent=request.META.get('HTTP_USER_AGENT')
+    )
+    
+    return Response({'success': True, 'message': 'User activated successfully'})
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def reset_password(request, user_id):
+    # Only admin users can reset passwords
+    from .auth_utils import get_user_role
+    if get_user_role(request.user) != 'admin':
+        from rest_framework.exceptions import PermissionDenied
+        raise PermissionDenied("Admin access required.")
+    
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return Response({'success': False, 'message': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    # Generate a random password
+    from django.contrib.auth.hashers import make_password
+    import secrets
+    import string
+    new_password = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(12))
+    user.password = make_password(new_password)
+    user.save()
+    
+    # Log the activity
+    ActivityLog.objects.create(
+        user=request.user,
+        action_type='reset_password',
+        module='user_management',
+        description=f'Reset password for user {user.username}',
+        ip_address=request.META.get('REMOTE_ADDR'),
+        user_agent=request.META.get('HTTP_USER_AGENT')
+    )
+    
+    return Response({'success': True, 'message': f'Password reset successfully. New password: {new_password}'})
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def change_role(request, user_id):
+    # Only admin users can change roles
+    from .auth_utils import get_user_role
+    if get_user_role(request.user) != 'admin':
+        from rest_framework.exceptions import PermissionDenied
+        raise PermissionDenied("Admin access required.")
+    
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return Response({'success': False, 'message': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    new_role = request.data.get('new_role')
+    if not new_role:
+        return Response({'success': False, 'message': 'New role is required'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    from .auth_utils import assign_user_group
+    assign_user_group(user, new_role)
+    
+    # Log the activity
+    ActivityLog.objects.create(
+        user=request.user,
+        action_type='change_role',
+        module='user_management',
+        description=f'Changed role for user {user.username} to {new_role}',
+        ip_address=request.META.get('REMOTE_ADDR'),
+        user_agent=request.META.get('HTTP_USER_AGENT')
+    )
+    
+    return Response({'success': True, 'message': 'User role changed successfully'})
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def delete_user(request, user_id):
+    # Only admin users can delete users
+    from .auth_utils import get_user_role
+    if get_user_role(request.user) != 'admin':
+        from rest_framework.exceptions import PermissionDenied
+        raise PermissionDenied("Admin access required.")
+    
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return Response({'success': False, 'message': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    # Prevent deleting yourself
+    if user.id == request.user.id:
+        return Response({'success': False, 'message': 'You cannot delete your own account'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    username = user.username
+    user.delete()
+    
+    # Log the activity
+    ActivityLog.objects.create(
+        user=request.user,
+        action_type='delete',
+        module='user_management',
+        description=f'Deleted user {username}',
+        ip_address=request.META.get('REMOTE_ADDR'),
+        user_agent=request.META.get('HTTP_USER_AGENT')
+    )
+    
+    return Response({'success': True, 'message': 'User deleted successfully'})
+
+
+# ==================== Property Review Views ====================
+
+class PropertyReviewListView(generics.ListAPIView):
+    """List all properties for admin review with filtering"""
+    serializer_class = PropertyListSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['status', 'property_type', 'category', 'seller']
+    search_fields = ['title', 'location', 'seller__username']
+    ordering_fields = ['created_at', 'updated_at', 'price', 'title']
+    ordering = ['-created_at']
+
+    def get_queryset(self):
+        # Only admin users can access property review
+        from .auth_utils import get_user_role
+        if get_user_role(self.request.user) != 'admin':
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("Admin access required.")
+        
+        queryset = Property.objects.select_related('seller', 'assigned_agent').all()
+        
+        # Apply status filter from query params
+        status_filter = self.request.query_params.get('status')
+        if status_filter:
+            queryset = queryset.filter(status=status_filter)
+        
+        # Apply property type filter
+        property_type = self.request.query_params.get('property_type')
+        if property_type:
+            queryset = queryset.filter(property_type=property_type)
+        
+        # Apply category filter
+        category = self.request.query_params.get('category')
+        if category:
+            queryset = queryset.filter(category=category)
+        
+        # Apply agent filter
+        seller_id = self.request.query_params.get('seller')
+        if seller_id:
+            queryset = queryset.filter(seller_id=seller_id)
+        
+        # Apply date range filter
+        date_from = self.request.query_params.get('date_from')
+        date_to = self.request.query_params.get('date_to')
+        if date_from:
+            queryset = queryset.filter(created_at__gte=date_from)
+        if date_to:
+            queryset = queryset.filter(created_at__lte=date_to)
+        
+        return queryset
+
+
+class PropertyReviewDetailView(generics.RetrieveAPIView):
+    """Get detailed property information for review"""
+    serializer_class = PropertyDetailSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Property.objects.select_related('seller', 'assigned_agent', 'created_by', 'last_updated_by')
+
+    def get_object(self):
+        obj = super().get_object()
+        # Only admin users can access property review details
+        from .auth_utils import get_user_role
+        if get_user_role(self.request.user) != 'admin':
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("Admin access required.")
+        return obj
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def approve_property(request, property_id):
+    """Approve a property listing"""
+    from .auth_utils import get_user_role
+    if get_user_role(request.user) != 'admin':
+        from rest_framework.exceptions import PermissionDenied
+        raise PermissionDenied("Admin access required.")
+    
+    try:
+        property_obj = Property.objects.get(id=property_id)
+    except Property.DoesNotExist:
+        return Response({'success': False, 'message': 'Property not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    # Update property status
+    property_obj.status = 'approved'
+    property_obj.save()
+    
+    # Create or update review record
+    review, created = PropertyReview.objects.get_or_create(
+        property=property_obj,
+        defaults={
+            'reviewed_by': request.user,
+            'status': 'approved',
+            'review_notes': request.data.get('review_notes', '')
+        }
+    )
+    
+    if not created:
+        review.reviewed_by = request.user
+        review.status = 'approved'
+        review.review_notes = request.data.get('review_notes', '')
+        review.rejection_reason = None
+        review.save()
+    
+    # Log the activity
+    ActivityLog.objects.create(
+        user=request.user,
+        action_type='update',
+        module='property_review',
+        description=f'Approved property: {property_obj.title}',
+        ip_address=request.META.get('REMOTE_ADDR'),
+        user_agent=request.META.get('HTTP_USER_AGENT')
+    )
+    
+    # Send notification to the agent (seller)
+    try:
+        Notification.objects.create(
+            title=f'Property Approved: {property_obj.title}',
+            message=f'Your property "{property_obj.title}" has been approved and is now visible on the website.',
+            notification_type='success',
+            is_global=False,
+            created_by=request.user,
+        )
+        notification = Notification.objects.latest('created_at')
+        notification.target_users.add(property_obj.seller)
+    except Exception as e:
+        # Log notification error but don't fail the approval
+        pass
+    
+    return Response({
+        'success': True,
+        'message': 'Property approved successfully',
+        'property_id': property_obj.id,
+        'status': 'approved'
+    })
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def reject_property(request, property_id):
+    """Reject a property listing with reason"""
+    from .auth_utils import get_user_role
+    if get_user_role(request.user) != 'admin':
+        from rest_framework.exceptions import PermissionDenied
+        raise PermissionDenied("Admin access required.")
+    
+    rejection_reason = request.data.get('rejection_reason')
+    if not rejection_reason:
+        return Response(
+            {'success': False, 'message': 'Rejection reason is required'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    try:
+        property_obj = Property.objects.get(id=property_id)
+    except Property.DoesNotExist:
+        return Response({'success': False, 'message': 'Property not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    # Update property status
+    property_obj.status = 'rejected'
+    property_obj.save()
+    
+    # Create or update review record
+    review, created = PropertyReview.objects.get_or_create(
+        property=property_obj,
+        defaults={
+            'reviewed_by': request.user,
+            'status': 'rejected',
+            'rejection_reason': rejection_reason,
+            'review_notes': request.data.get('review_notes', '')
+        }
+    )
+    
+    if not created:
+        review.reviewed_by = request.user
+        review.status = 'rejected'
+        review.rejection_reason = rejection_reason
+        review.review_notes = request.data.get('review_notes', '')
+        review.save()
+    
+    # Log the activity
+    ActivityLog.objects.create(
+        user=request.user,
+        action_type='update',
+        module='property_review',
+        description=f'Rejected property: {property_obj.title}. Reason: {rejection_reason}',
+        ip_address=request.META.get('REMOTE_ADDR'),
+        user_agent=request.META.get('HTTP_USER_AGENT')
+    )
+    
+    # Send notification to the agent (seller)
+    try:
+        Notification.objects.create(
+            title=f'Property Rejected: {property_obj.title}',
+            message=f'Your property "{property_obj.title}" has been rejected. Reason: {rejection_reason}. Please update and resubmit.',
+            notification_type='warning',
+            is_global=False,
+            created_by=request.user,
+        )
+        notification = Notification.objects.latest('created_at')
+        notification.target_users.add(property_obj.seller)
+    except Exception as e:
+        # Log notification error but don't fail the rejection
+        pass
+    
+    return Response({
+        'success': True,
+        'message': 'Property rejected successfully',
+        'property_id': property_obj.id,
+        'status': 'rejected',
+        'rejection_reason': rejection_reason
+    })
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def property_review_stats(request):
+    """Get property review statistics for admin dashboard"""
+    from .auth_utils import get_user_role
+    if get_user_role(request.user) != 'admin':
+        from rest_framework.exceptions import PermissionDenied
+        raise PermissionDenied("Admin access required.")
+    
+    total_properties = Property.objects.count()
+    pending_review = Property.objects.filter(status='pending').count()
+    approved_properties = Property.objects.filter(status='approved').count()
+    rejected_properties = Property.objects.filter(status='rejected').count()
+    
+    # Properties needing review (pending + resubmitted)
+    needing_review = Property.objects.filter(
+        status__in=['pending', 'rejected']
+    ).count()
+    
+    # Recent submissions
+    recent_submissions = Property.objects.select_related('seller').order_by('-created_at')[:10]
+    
+    # Properties by status
+    properties_by_status = Property.objects.values('status').annotate(
+        count=Count('id')
+    ).order_by('-count')
+    
+    # Properties by type
+    properties_by_type = Property.objects.values('property_type').annotate(
+        count=Count('id')
+    ).order_by('-count')
+    
+    # Properties by category
+    properties_by_category = Property.objects.values('category').annotate(
+        count=Count('id')
+    ).order_by('-count')
+    
+    # Recent reviews
+    recent_reviews = PropertyReview.objects.select_related(
+        'property', 'reviewed_by', 'property__seller'
+    ).order_by('-reviewed_at')[:10]
+    
+    data = {
+        'summary': {
+            'total_properties': total_properties,
+            'pending_review': pending_review,
+            'approved_properties': approved_properties,
+            'rejected_properties': rejected_properties,
+            'needing_review': needing_review,
+        },
+        'recent_submissions': PropertyListSerializer(recent_submissions, many=True).data,
+        'properties_by_status': list(properties_by_status),
+        'properties_by_type': list(properties_by_type),
+        'properties_by_category': list(properties_by_category),
+        'recent_reviews': PropertyReviewSerializer(recent_reviews, many=True).data,
+    }
+    
+    return Response(data)

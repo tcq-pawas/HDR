@@ -179,6 +179,180 @@ class PropertyForm(forms.ModelForm):
         }
 
 
+class AgriculturalLandForm(forms.ModelForm):
+    """Form specifically for Agricultural Land properties"""
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set required fields for agricultural land
+        self.fields['title'].required = True
+        self.fields['agri_land_category'].required = True
+        self.fields['total_area'].required = True
+        self.fields['area_unit'].required = True
+        self.fields['state'].required = True
+        self.fields['district'].required = True
+        self.fields['tehsil'].required = True
+        self.fields['village'].required = False  # Will be added to model
+        self.fields['pincode'].required = True
+    
+    class Meta:
+        model = Property
+        fields = [
+            # Basic Information
+            'title', 'property_type', 'category', 'public_description', 'description',
+            # Land Information
+            'land_code', 'agri_land_category', 'land_status',
+            # Area Information
+            'total_area', 'area_unit',
+            # Land Ownership Information
+            'owner_name', 'owner_mobile', 'owner_email', 'ownership_type',
+            # Revenue & Legal Information
+            'khasra_number', 'khata_number', 'plot_number', 'registry_number',
+            'revenue_village', 'tehsil', 'district', 'state', 'legal_status',
+            # Land Characteristics
+            'soil_type', 'land_shape', 'land_level', 'boundary_available', 'fencing_available',
+            # Agricultural Features
+            'irrigation_facility', 'borewell_available', 'canal_water', 'tube_well',
+            'rainwater_harvesting', 'crop_suitability', 'current_usage',
+            # Accessibility
+            'road_connectivity', 'road_width', 'highway_distance',
+            'nearest_village_distance', 'market_distance',
+            'railway_station_distance', 'airport_distance',
+            # Utilities
+            'electricity_availability', 'water_availability',
+            'solar_facility', 'farm_house_available', 'storage_facility',
+            # Location
+            'state', 'district', 'tehsil', 'village', 'pincode', 'full_address',
+            'google_map_location', 'latitude', 'longitude',
+            # Investment Information
+            'price', 'price_per_acre', 'total_land_price', 'negotiable',
+            'expected_roi', 'appreciation_potential', 'investment_type',
+            # Media
+            'featured_image', 'property_video', 'drone_video', 'virtual_tour_360',
+            # Documents
+            'registry_copy', 'sale_deed', 'layout_plan', 'property_brochure',
+            # SEO & Marketing
+            'seo_title', 'seo_description', 'keywords', 'property_highlights',
+            # Visibility
+            'is_featured', 'show_to_public', 'requires_authentication', 'allowed_roles',
+        ]
+        widgets = {
+            # Basic Information
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Land Title'}),
+            'property_type': forms.Select(attrs={'class': 'form-select'}),
+            'category': forms.Select(attrs={'class': 'form-select'}),
+            'public_description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Brief public description (max 200 characters)', 'maxlength': '200'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 5, 'placeholder': 'Full description'}),
+            # Land Information
+            'land_code': forms.TextInput(attrs={'class': 'form-control', 'readonly': 'readonly', 'placeholder': 'Auto-generated'}),
+            'agri_land_category': forms.Select(attrs={'class': 'form-select'}),
+            'land_status': forms.Select(attrs={'class': 'form-select'}),
+            # Area Information
+            'total_area': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Total Area', 'step': '0.01', 'id': 'total_area_input'}),
+            'area_unit': forms.Select(attrs={'class': 'form-select', 'id': 'area_unit_select'}),
+            # Land Ownership Information
+            'owner_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Owner Name'}),
+            'owner_mobile': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Owner Mobile'}),
+            'owner_email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Owner Email'}),
+            'ownership_type': forms.Select(attrs={'class': 'form-select'}),
+            # Revenue & Legal Information
+            'khasra_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Khasra Number'}),
+            'khata_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Khata Number'}),
+            'plot_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Plot Number'}),
+            'registry_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Registry Number'}),
+            'revenue_village': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Revenue Village'}),
+            'tehsil': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Tehsil'}),
+            'district': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'District'}),
+            'state': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'State'}),
+            'legal_status': forms.Select(attrs={'class': 'form-select'}),
+            # Land Characteristics
+            'soil_type': forms.Select(attrs={'class': 'form-select'}),
+            'land_shape': forms.Select(attrs={'class': 'form-select'}),
+            'land_level': forms.Select(attrs={'class': 'form-select'}),
+            'boundary_available': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'fencing_available': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            # Agricultural Features
+            'irrigation_facility': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'borewell_available': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'canal_water': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'tube_well': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'rainwater_harvesting': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'crop_suitability': forms.Select(attrs={'class': 'form-select'}),
+            'current_usage': forms.Select(attrs={'class': 'form-select'}),
+            # Accessibility
+            'road_connectivity': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Road Connectivity'}),
+            'road_width': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Road Width (ft)', 'step': '0.01'}),
+            'highway_distance': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Highway Distance (km)', 'step': '0.01'}),
+            'nearest_village_distance': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Nearest Village Distance (km)', 'step': '0.01'}),
+            'market_distance': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Market Distance (km)', 'step': '0.01'}),
+            'railway_station_distance': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Railway Station Distance (km)', 'step': '0.01'}),
+            'airport_distance': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Airport Distance (km)', 'step': '0.01'}),
+            # Utilities
+            'electricity_availability': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'water_availability': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'solar_facility': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'farm_house_available': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'storage_facility': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            # Location
+            'state': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'State'}),
+            'district': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'District'}),
+            'tehsil': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Tehsil'}),
+            'village': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Village'}),
+            'pincode': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Pincode'}),
+            'full_address': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Full Address'}),
+            'google_map_location': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'Google Map Location URL'}),
+            'latitude': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Latitude', 'step': '0.000001'}),
+            'longitude': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Longitude', 'step': '0.000001'}),
+            # Investment Information
+            'price': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Total Price (₹)', 'step': '0.01'}),
+            'price_per_acre': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Price Per Acre (₹)', 'step': '0.01'}),
+            'total_land_price': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Total Land Price (₹)', 'step': '0.01'}),
+            'negotiable': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'expected_roi': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Expected ROI %', 'step': '0.01'}),
+            'appreciation_potential': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Appreciation Potential'}),
+            'investment_type': forms.Select(attrs={'class': 'form-select'}),
+            # Media
+            'featured_image': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
+            'property_video': forms.FileInput(attrs={'class': 'form-control', 'accept': 'video/*'}),
+            'drone_video': forms.FileInput(attrs={'class': 'form-control', 'accept': 'video/*'}),
+            'virtual_tour_360': forms.URLInput(attrs={'class': 'form-control', 'placeholder': '360° Virtual Tour URL'}),
+            # Documents
+            'registry_copy': forms.FileInput(attrs={'class': 'form-control', 'accept': 'application/pdf'}),
+            'sale_deed': forms.FileInput(attrs={'class': 'form-control', 'accept': 'application/pdf'}),
+            'layout_plan': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/*,application/pdf'}),
+            'property_brochure': forms.FileInput(attrs={'class': 'form-control', 'accept': 'application/pdf'}),
+            # SEO & Marketing
+            'seo_title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'SEO Title'}),
+            'seo_description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'SEO Description'}),
+            'keywords': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Keywords (comma-separated)'}),
+            'property_highlights': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Property Highlights'}),
+            # Visibility
+            'is_featured': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'show_to_public': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'requires_authentication': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'allowed_roles': forms.Select(attrs={'class': 'form-select'}),
+        }
+    
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        # Auto-generate land code if not provided
+        if not instance.land_code:
+            from datetime import datetime
+            import random
+            prefix = 'AGRI'
+            timestamp = datetime.now().strftime('%Y%m%d')
+            random_num = random.randint(1000, 9999)
+            instance.land_code = f'{prefix}-{timestamp}-{random_num}'
+        
+        # Set property type and category for agricultural land
+        instance.property_type = 'sale'
+        instance.category = 'Plots'
+        
+        if commit:
+            instance.save()
+        return instance
+
+
 class AgentProfileForm(forms.ModelForm):
     """Form for updating agent profile"""
     

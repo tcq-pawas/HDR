@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, Sum, Avg, Q
@@ -7,7 +7,7 @@ from django.utils import timezone
 from datetime import timedelta, date
 from Apps.Administration.smart_dashboard_views import AdminDashboardMixin
 from Apps.Administration.auth_utils import get_user_role, role_required
-from Apps.Administration.models import ActivityLog, SystemMetrics, UserPermission
+from Apps.Administration.models import ActivityLog, SystemMetrics, UserPermission, PropertyReview
 from Apps.Customer.models import CustomerProfile, Inquiry, SavedProperty, PropertyViewing
 from Apps.Investor.models import InvestorProfile, Investment, InvestmentListing, ROIData
 from Apps.PublicPage.models import Property
@@ -33,6 +33,15 @@ class AdminDashboardView(AdminDashboardMixin, TemplateView):
             'total_investments': Investment.objects.count(),
             'total_investment_listings': InvestmentListing.objects.count(),
             'agent_count': User.objects.filter(groups__name='agent').count(),
+        }
+        
+        # Property review statistics
+        context['property_review_stats'] = {
+            'total_submitted': Property.objects.count(),
+            'pending_review': Property.objects.filter(status='pending').count(),
+            'approved_properties': Property.objects.filter(status='approved').count(),
+            'rejected_properties': Property.objects.filter(status='rejected').count(),
+            'needing_review': Property.objects.filter(status__in=['pending', 'rejected']).count(),
         }
         
         # Business metrics and analytics
@@ -76,6 +85,11 @@ class AdminDashboardView(AdminDashboardMixin, TemplateView):
         
         # Recent activities
         context['recent_activities'] = ActivityLog.objects.select_related('user').order_by('-timestamp')[:10]
+        
+        # Recent property submissions needing review
+        context['pending_properties'] = Property.objects.select_related('seller').filter(
+            status='pending'
+        ).order_by('-created_at')[:5]
         
         # Recent inquiries with full details
         context['recent_inquiries'] = Inquiry.objects.select_related(
@@ -314,5 +328,190 @@ class ActivityLogView(AdminDashboardMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         
         context['activities'] = ActivityLog.objects.select_related('user').order_by('-timestamp')
+        
+        return context
+
+
+class UserProfileView(AdminDashboardMixin, TemplateView):
+    """User profile view for admins with strict access control"""
+    template_name = 'administration/user_profile.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_id = kwargs.get('user_id')
+        
+        # Get the user
+        user = get_object_or_404(User, id=user_id)
+        user.role = get_user_role(user)
+        context['user'] = user
+        
+        # Recent activities for this user
+        context['recent_activities'] = ActivityLog.objects.filter(
+            user=user
+        ).order_by('-timestamp')[:10]
+        
+        # Login history (mock data for now - in real implementation, this would come from a login log model)
+        context['login_history'] = []
+        
+        # Role-specific data
+        if user.role == 'customer':
+            try:
+                customer_profile = CustomerProfile.objects.get(user=user)
+                context['customer_data'] = {
+                    'purchased_properties': 0,  # Would come from property purchase tracking
+                    'saved_properties': SavedProperty.objects.filter(customer=user).count(),
+                    'inquiries': Inquiry.objects.filter(customer=user).count(),
+                    'documents': 0,  # Would come from a document model
+                }
+            except CustomerProfile.DoesNotExist:
+                context['customer_data'] = {
+                    'purchased_properties': 0,
+                    'saved_properties': 0,
+                    'inquiries': 0,
+                    'documents': 0,
+                }
+        
+        elif user.role == 'investor':
+            try:
+                investor_profile = InvestorProfile.objects.get(user=user)
+                investments = Investment.objects.filter(investor=user)
+                context['investor_data'] = {
+                    'total_investments': investments.aggregate(total=Sum('amount'))['total'] or 0,
+                    'roi': ROIData.objects.filter(investment__investor=user).aggregate(
+                        avg_roi=Avg('actual_roi_percentage')
+                    )['avg_roi'] or 0,
+                    'investment_count': investments.count(),
+                    'documents': 0,  # Would come from a document model
+                }
+            except InvestorProfile.DoesNotExist:
+                context['investor_data'] = {
+                    'total_investments': 0,
+                    'roi': 0,
+                    'investment_count': 0,
+                    'documents': 0,
+                }
+        
+        elif user.role == 'agent':
+            context['agent_data'] = {
+                'assigned_properties': Property.objects.filter(assigned_agent=user).count(),
+                'leads': 0,  # Would come from agent-specific lead tracking
+                'customers': 0,  # Would come from agent-specific customer tracking
+                'commission': 0,  # Would come from commission calculations
+            }
+        
+        elif user.role == 'admin':
+            context['admin_data'] = {
+                'permissions': UserPermission.objects.filter(user=user).values_list('permission_level', flat=True),
+                'activity_logs': ActivityLog.objects.filter(user=user).order_by('-timestamp')[:5],
+            }
+        
+        return context
+
+
+class PropertyReviewCenterView(AdminDashboardMixin, TemplateView):
+    """Property Review Center for admins with strict access control"""
+    template_name = 'administration/property_review.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Get all properties with review status
+        properties = Property.objects.select_related('seller', 'assigned_agent').order_by('-created_at')
+        
+        # Apply filters
+        status_filter = self.request.GET.get('status')
+        if status_filter:
+            properties = properties.filter(status=status_filter)
+        
+        property_type = self.request.GET.get('property_type')
+        if property_type:
+            properties = properties.filter(property_type=property_type)
+        
+        category = self.request.GET.get('category')
+        if category:
+            properties = properties.filter(category=category)
+        
+        seller_id = self.request.GET.get('seller')
+        if seller_id:
+            properties = properties.filter(seller_id=seller_id)
+        
+        context['properties'] = properties
+        context['total_properties'] = properties.count()
+        
+        # Statistics
+        context['stats'] = {
+            'total_submitted': Property.objects.count(),
+            'pending_review': Property.objects.filter(status='pending').count(),
+            'approved': Property.objects.filter(status='approved').count(),
+            'rejected': Property.objects.filter(status='rejected').count(),
+            'needing_review': Property.objects.filter(status__in=['pending', 'rejected']).count(),
+        }
+        
+        # Filter options
+        context['status_choices'] = [
+            ('', 'All Status'),
+            ('pending', 'Pending Review'),
+            ('approved', 'Approved'),
+            ('rejected', 'Rejected'),
+        ]
+        
+        context['property_type_choices'] = [
+            ('', 'All Types'),
+            ('sale', 'For Sale'),
+            ('rent', 'For Rent'),
+        ]
+        
+        context['category_choices'] = [
+            ('', 'All Categories'),
+            ('Apartments', 'Apartments / Condos'),
+            ('Villas', 'Villas / Independent Houses'),
+            ('Commercial', 'Commercial Properties'),
+            ('Luxury', 'Luxury Properties'),
+            ('Plots', 'Plots / Land'),
+        ]
+        
+        # Get all agents for filter
+        context['agents'] = User.objects.filter(groups__name='agent').order_by('username')
+        
+        return context
+
+
+class PropertyReviewDetailPageView(AdminDashboardMixin, TemplateView):
+    """Detailed property review page for admins"""
+    template_name = 'administration/property_review_detail.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        property_id = kwargs.get('property_id')
+        
+        # Get the property with all related data
+        property_obj = get_object_or_404(
+            Property.objects.select_related(
+                'seller', 'assigned_agent', 'created_by', 'last_updated_by'
+            ),
+            id=property_id
+        )
+        
+        context['property'] = property_obj
+        
+        # Get property images
+        from Apps.PublicPage.models import PropertyImage
+        context['property_images'] = PropertyImage.objects.filter(property=property_obj)
+        
+        # Get review history
+        context['review_history'] = PropertyReview.objects.filter(
+            property=property_obj
+        ).select_related('reviewed_by').order_by('-reviewed_at')
+        
+        # Get latest review
+        latest_review = context['review_history'].first()
+        context['latest_review'] = latest_review
+        
+        # Get agent profile if seller is an agent
+        try:
+            from Apps.Agent.models import AgentProfile
+            context['agent_profile'] = AgentProfile.objects.get(user=property_obj.seller)
+        except AgentProfile.DoesNotExist:
+            context['agent_profile'] = None
         
         return context

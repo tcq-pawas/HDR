@@ -248,3 +248,38 @@ class SystemMetrics(models.Model):
 
     def __str__(self):
         return f"{self.metric_name}: {self.metric_value} {self.metric_unit or ''}"
+
+
+class PropertyReview(models.Model):
+    """Track property review history and approval/rejection decisions"""
+    
+    REVIEW_STATUS_CHOICES = [
+        ('pending', 'Pending Review'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+        ('resubmitted', 'Resubmitted'),
+    ]
+    
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='reviews')
+    reviewed_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='property_reviews')
+    status = models.CharField(max_length=20, choices=REVIEW_STATUS_CHOICES, default='pending')
+    rejection_reason = models.TextField(blank=True, null=True, help_text="Reason for rejection (required if rejected)")
+    review_notes = models.TextField(blank=True, null=True, help_text="Admin notes during review")
+    reviewed_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    # Track resubmission workflow
+    previous_review = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='resubmissions')
+    
+    class Meta:
+        verbose_name = "Property Review"
+        verbose_name_plural = "Property Reviews"
+        ordering = ['-reviewed_at']
+        indexes = [
+            models.Index(fields=['property', '-reviewed_at']),
+            models.Index(fields=['status', '-reviewed_at']),
+            models.Index(fields=['reviewed_by', '-reviewed_at']),
+        ]
+    
+    def __str__(self):
+        return f"Review for {self.property.title} - {self.status}"

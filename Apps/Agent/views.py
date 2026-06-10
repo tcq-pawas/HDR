@@ -17,7 +17,7 @@ from .models import (
     Booking, Installment, Commission, Document, Communication, MessageTemplate
 )
 from .forms import (
-    PropertyForm, AgentProfileForm, LeadForm,
+    PropertyForm, AgriculturalLandForm, AgentProfileForm, LeadForm,
     LeadFollowUpForm, SiteVisitForm, BookingForm, InstallmentForm,
     CommissionForm, DocumentForm, CommunicationForm, MessageTemplateForm
 )
@@ -154,7 +154,12 @@ def property_add(request, property_type):
         raise PermissionDenied("Access denied. This page is only accessible to agents.")
     """Add a new property"""
     if request.method == 'POST':
-        form = PropertyForm(request.POST, request.FILES)
+        # Use AgriculturalLandForm for land properties
+        if property_type == 'land':
+            form = AgriculturalLandForm(request.POST, request.FILES)
+        else:
+            form = PropertyForm(request.POST, request.FILES)
+        
         if form.is_valid():
             property_obj = form.save(commit=False)
             property_obj.seller = request.user
@@ -177,9 +182,12 @@ def property_add(request, property_type):
             messages.success(request, "Property created successfully! It's pending admin approval.")
             return redirect('agent:property_edit', pk=property_obj.id)
     else:
-        # Set initial category based on property_type
-        initial_category = 'Plots' if property_type == 'land' else 'Apartments'
-        form = PropertyForm(initial={'property_type': 'sale', 'category': initial_category})
+        # Use appropriate form based on property_type
+        if property_type == 'land':
+            form = AgriculturalLandForm()
+        else:
+            initial_category = 'Apartments' if property_type == 'house' else 'Plots'
+            form = PropertyForm(initial={'property_type': 'sale', 'category': initial_category})
     
     context = {
         'form': form,
@@ -187,7 +195,11 @@ def property_add(request, property_type):
         'title': f'Add {property_type.title()}'
     }
     
-    return render(request, 'agent/property_form.html', context)
+    # Use different template for agricultural land
+    if property_type == 'land':
+        return render(request, 'agent/agricultural_land_form.html', context)
+    else:
+        return render(request, 'agent/property_form.html', context)
 
 
 @login_required
@@ -206,7 +218,12 @@ def property_edit(request, pk):
         property_type = 'house'
     
     if request.method == 'POST':
-        form = PropertyForm(request.POST, request.FILES, instance=property_obj)
+        # Use AgriculturalLandForm for land properties
+        if property_type == 'land':
+            form = AgriculturalLandForm(request.POST, request.FILES, instance=property_obj)
+        else:
+            form = PropertyForm(request.POST, request.FILES, instance=property_obj)
+        
         if form.is_valid():
             property_obj = form.save(commit=False)
             property_obj.last_updated_by = request.user
@@ -214,7 +231,11 @@ def property_edit(request, pk):
             messages.success(request, "Property updated successfully!")
             return redirect('agent:property_list')
     else:
-        form = PropertyForm(instance=property_obj)
+        # Use appropriate form based on property_type
+        if property_type == 'land':
+            form = AgriculturalLandForm(instance=property_obj)
+        else:
+            form = PropertyForm(instance=property_obj)
     
     # Get property images
     images = property_obj.images.all()
@@ -227,7 +248,11 @@ def property_edit(request, pk):
         'title': f'Edit Property - {property_obj.title}'
     }
     
-    return render(request, 'agent/property_form.html', context)
+    # Use different template for agricultural land
+    if property_type == 'land':
+        return render(request, 'agent/agricultural_land_form.html', context)
+    else:
+        return render(request, 'agent/property_form.html', context)
 
 
 @login_required
