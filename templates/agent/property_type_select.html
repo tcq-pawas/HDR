@@ -41,35 +41,8 @@
     </div>
 </div>
 
-<style>
-    .property-type-card {
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        border: 2px solid #e2e8f0;
-        border-radius: 12px;
-        cursor: pointer;
-        height: 100%;
-    }
-    
-    .property-type-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        border-color: #3b82f6;
-    }
-    
-    .property-type-icon {
-        font-size: 4rem;
-        color: #3b82f6;
-        margin-bottom: 1rem;
-    }
-    
-    .property-type-card h3 {
-        color: #1e293b;
-        margin-bottom: 0.5rem;
-    }
-    
-    .property-type-card p {
-        color: #64748b;
-        margin-bottom: 1rem;
-    }
-</style>
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/agent/property_type_select.css' %}">
+{% endblock %}
 {% endblock %}
