@@ -2,72 +2,188 @@
 {% load static %}
 
 {% block inner_hero %}
-<section class="inner-hero" style="background-image: url('https://images.unsplash.com/photo-1550691722-7b3b5dfb5f9c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');">
+
+<section class="inner-hero"
+    style="background-image: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80');">
     <div class="inner-hero-content">
-        <h1 class="inner-hero-title">Contact Us</h1>
-        <p class="inner-hero-quote">"We're here to help you"</p>
+        <h1 class="inner-hero-title">Contact HeyDay Realty</h1>
+        <p class="inner-hero-quote">
+            Let's discuss your farmland investment goals
+        </p>
     </div>
 </section>
 {% endblock %}
 
 {% block content %}
 
+<!-- Contact Info -->
+
+<section class="py-5 bg-light">
+    <div class="container">
+
+```
+    <div class="text-center mb-5">
+        <h2 class="fw-bold">Get In Touch</h2>
+        <p class="text-muted">
+            Our team is here to help you explore verified farmland investment opportunities.
+        </p>
+    </div>
+
+    <div class="row text-center">
+
+        <div class="col-md-3 mb-4">
+            <div class="card border-0 shadow-sm h-100 p-4 rounded-4">
+                <h5 class="fw-bold">Phone</h5>
+                <p class="mb-0">+1 234 567 8900</p>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card border-0 shadow-sm h-100 p-4 rounded-4">
+                <h5 class="fw-bold">Email</h5>
+                <p class="mb-0">info@heydayrealty.in</p>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card border-0 shadow-sm h-100 p-4 rounded-4">
+                <h5 class="fw-bold">Office Hours</h5>
+                <p class="mb-0">Mon - Sat<br>9:00 AM - 7:00 PM</p>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card border-0 shadow-sm h-100 p-4 rounded-4">
+                <h5 class="fw-bold">Office Location</h5>
+                <p class="mb-0">123 Real Estate Blvd.<br>City, Country</p>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+```
+
+</section>
+
+<!-- Contact Form -->
+
 <section class="py-5">
     <div class="container">
 
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="card border-0 shadow-lg">
-                    <div class="card-body p-5">
-                        <form method="POST">
-                            {% csrf_token %}
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <label class="form-label">First Name</label>
-                                    <input type="text" class="form-control" placeholder="John" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Last Name</label>
-                                    <input type="text" class="form-control" placeholder="Doe" required>
-                                </div>
-                                <div class="col-12">
-                                    <label class="form-label">Email Address</label>
-                                    <input type="email" class="form-control" placeholder="john@example.com" required>
-                                </div>
-                                <div class="col-12">
-                                    <label class="form-label">Subject</label>
-                                    <input type="text" class="form-control" placeholder="Inquiry about..." required>
-                                </div>
-                                <div class="col-12">
-                                    <label class="form-label">Message</label>
-                                    <textarea class="form-control" rows="5" placeholder="How can we help you?"
-                                        required></textarea>
-                                </div>
-                                <div class="col-12 text-center mt-4">
-                                    <button type="submit" class="btn btn-primary btn-lg px-5">Send Message</button>
-                                </div>
-                            </div>
-                        </form>
+```
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8">
+
+            <div class="card border-0 shadow-lg rounded-4">
+                <div class="card-body p-5">
+
+                    <div class="text-center mb-4">
+                        <h3 class="fw-bold">Request a Call Back</h3>
+                        <p class="text-muted">
+                            Tell us about your investment requirements and our team will get in touch.
+                        </p>
                     </div>
+
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <div class="row g-3">
+
+                            <div class="col-md-6">
+                                <label class="form-label">Full Name</label>
+                                <input type="text"
+                                    class="form-control"
+                                    placeholder="Enter your full name"
+                                    required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Phone Number</label>
+                                <input type="text"
+                                    class="form-control"
+                                    placeholder="Enter your phone number"
+                                    required>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">Email Address</label>
+                                <input type="email"
+                                    class="form-control"
+                                    placeholder="Enter your email address">
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">Investment Budget</label>
+                                <select class="form-control">
+                                    <option>Select Budget Range</option>
+                                    <option>Below ₹5 Lakh</option>
+                                    <option>₹5 Lakh - ₹10 Lakh</option>
+                                    <option>₹10 Lakh - ₹25 Lakh</option>
+                                    <option>₹25 Lakh+</option>
+                                </select>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">Message</label>
+                                <textarea class="form-control"
+                                    rows="5"
+                                    placeholder="Tell us about your investment requirements"></textarea>
+                            </div>
+
+                            <div class="col-12 text-center mt-4">
+                                <button type="submit"
+                                    class="btn btn-warning btn-lg px-5">
+                                    Request a Call Back
+                                </button>
+                            </div>
+
+                        </div>
+
+                    </form>
+
                 </div>
             </div>
+
         </div>
 
-        <!-- Google Maps -->
-        <div class="mt-5">
-            <div class="rounded-3 shadow-sm border overflow-hidden">
-                <iframe 
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3561.3082633412605!2d83.37546060000001!3d26.798311500000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399145b795d2cae9%3A0x98b3202d1e49fd25!2sHeyDay%20Realty%20Private%20Limited!5e0!3m2!1sen!2sin!4v1770203420984!5m2!1sen!2sin" 
-                    width="100%" 
-                    height="450" 
-                    style="border:0;" 
-                    allowfullscreen="" 
-                    loading="lazy" 
-                    referrerpolicy="no-referrer-when-downgrade"
-                    class="w-100">
-                </iframe>
-            </div>
-        </div>
     </div>
+
+</div>
+```
+
 </section>
+
+<!-- Map Section -->
+
+<section class="pb-5">
+    <div class="container">
+
+```
+    <div class="text-center mb-4">
+        <h2 class="fw-bold">Visit Our Office</h2>
+        <p class="text-muted">
+            Schedule a meeting or site visit with our team.
+        </p>
+    </div>
+
+    <div class="rounded-4 shadow overflow-hidden">
+
+        <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3561.3082633412605!2d83.37546060000001!3d26.798311500000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399145b795d2cae9%3A0x98b3202d1e49fd25!2sHeyDay%20Realty%20Private%20Limited!5e0!3m2!1sen!2sin!4v1770203420984!5m2!1sen!2sin"
+            width="100%"
+            height="450"
+            style="border:0;"
+            allowfullscreen=""
+            loading="lazy">
+        </iframe>
+
+    </div>
+
+</div>
+```
+
+</section>
+
 {% endblock %}

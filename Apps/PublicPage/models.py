@@ -7,13 +7,21 @@ class Property(models.Model):
         ('sale', 'For Sale'),
         ('rent', 'For Rent'),
     )
+    # CATEGORY_CHOICES = (
+    #     ('Apartments', 'Apartments / Condos'),
+    #     ('Villas', 'Villas / Independent Houses'),
+    #     ('Commercial', 'Commercial Properties'),
+    #     ('Luxury', 'Luxury Properties'),
+    #     ('Plots', 'Plots / Land'),
+    # )
+
     CATEGORY_CHOICES = (
-        ('Apartments', 'Apartments / Condos'),
-        ('Villas', 'Villas / Independent Houses'),
-        ('Commercial', 'Commercial Properties'),
-        ('Luxury', 'Luxury Properties'),
-        ('Plots', 'Plots / Land'),
-    )
+    ('Managed Farmland', 'Managed Farmland'),
+    ('Agricultural Land', 'Agricultural Land'),
+    ('Farm Plots', 'Farm Plots'),
+    ('Weekend Farm', 'Weekend Farm'),
+    ('Investment Farmland', 'Investment Farmland'),
+)
     
     AREA_UNIT_CHOICES = (
         ('sqft', 'Sq.ft'),

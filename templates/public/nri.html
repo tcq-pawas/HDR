@@ -1,0 +1,110 @@
+{% extends 'public/base.html' %}
+{% load static %}
+{% block hero_image %}https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1600&q=80{% endblock %}
+{% block hero_title %}NRI Services{% endblock %}
+{% block hero_subtitle %}Connecting NRIs with premium properties{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<section class="py-5 bg-primary text-white text-center">
+    <div class="container">
+        <h1 class="fw-bold display-4">NRI Farmland Investment Services</h1>
+<p class="lead">
+    Secure and transparent farmland investment opportunities for Non-Resident Indians.
+</p>
+    </div>
+</section>
+
+<!-- Content -->
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center mb-5">
+            <div class="col-md-6">
+    <img src="{% static 'images/farmhouse.png' %}"
+         class="img-fluid rounded shadow"
+         alt="Farmland Investment">
+</div>
+            <div class="col-md-6 ps-md-5">
+                <h3 class="fw-bold mb-3">
+    Own Verified Farmland in India From Anywhere in the World
+</h3>
+               <p class="text-muted">
+    HeyDay Realty helps NRIs invest in professionally managed farmland projects across India. From project selection and documentation to ownership support and investment guidance, our team assists you throughout the process.
+</p>
+                <ul class="list-unstyled mt-4">
+                    <li class="mb-2">
+    <i class="bi bi-check-circle-fill text-primary me-2"></i>
+    Verified Land Documentation
+</li>
+
+<li class="mb-2">
+    <i class="bi bi-check-circle-fill text-primary me-2"></i>
+    Remote Investment Assistance
+</li>
+
+<li class="mb-2">
+    <i class="bi bi-check-circle-fill text-primary me-2"></i>
+    Plantation & Project Management Support
+</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row text-center mt-5">
+            <div class="col-12 mb-4">
+                <h3 class="fw-bold">Long-Term Appreciation</h3>
+<p class="text-muted center mx-auto" style="max-width:700px;">
+    Farmland offers long-term appreciation potential, portfolio diversification and ownership of a tangible asset backed by growing agricultural demand.
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="p-4 border rounded bg-light h-100">
+                    <h5 class="fw-bold">
+    Long-Term Appreciation
+</h5>
+
+<p class="small text-muted">
+    Quality farmland has historically shown strong long-term value growth.
+</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-4 border rounded bg-light h-100">
+                    <h5 class="fw-bold">
+    Agricultural Asset Ownership
+</h5>
+
+<p class="small text-muted">
+    Invest in real land assets instead of purely financial instruments.
+</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-4 border rounded bg-light h-100">
+                    <h5 class="fw-bold">
+    Managed Investment Opportunities
+</h5>
+
+<p class="small text-muted">
+    Participate in projects supported by professional planning and management.
+</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="py-5 bg-light text-center">
+    <div class="container">
+        <h3 class="fw-bold mb-3">
+    Start Your Farmland Investment Journey
+</h3>
+
+<p class="text-muted mb-4">
+    Connect with our team to explore verified farmland opportunities designed for NRI investors.
+</p>
+        <a href="{% url 'public:contact' %}" class="btn btn-primary btn-lg">Explore Farmland Opportunities</a>
+    </div>
+</section>
+{% endblock %}

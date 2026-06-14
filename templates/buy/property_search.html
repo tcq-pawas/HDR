@@ -15,83 +15,102 @@
     }
 
     /* Filter Bar - Sticky */
-    .sticky-filter-bar {
-        background: white;
-        border-bottom: 1px solid var(--border-color);
-        padding: 1rem 0;
-        position: sticky;
-        top: 80px;
-        z-index: 99;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
+    .sticky-filter-bar{
+    position:sticky;
+    top:80px;
+    z-index:100;
+    padding:16px 0;
+    background:rgba(255,255,255,.95);
+    backdrop-filter:blur(18px);
+    border-bottom:1px solid rgba(0,0,0,.06);
+    box-shadow:
+        0 8px 30px rgba(0,0,0,.06),
+        0 1px 0 rgba(255,255,255,.7) inset;
+}
 
-    .filter-container {
-        display: flex;
-        gap: 0.75rem;
-        overflow-x: auto;
-        padding: 0.5rem 0;
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-    }
+ .filter-container{
+    display:flex;
+    align-items:flex-end;
+    gap:14px;
+    overflow-x:auto;
+    padding:8px 4px;
+    scrollbar-width:none;
+}
 
     .filter-container::-webkit-scrollbar {
         display: none;
     }
 
     .filter-group {
-        flex: 0 0 auto;
-        min-width: 180px;
+        min-width:190px;
+        flex-shrink:0;
     }
 
     .filter-group label {
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: #666;
-        display: block;
-        margin-bottom: 0.3rem;
-        text-transform: uppercase;
+        display:block;
+    margin-bottom:8px;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.8px;
+    text-transform:uppercase;
+    color:#6b7280;
     }
 
     .filter-group select,
     .filter-group input {
-        width: 100%;
-        padding: 0.5rem 0.75rem;
-        font-size: 0.875rem;
-        border: 1px solid var(--border-color);
-        border-radius: 6px;
-        background-color: white;
+        width:100%;
+    height:52px;
+    padding:0 16px;
+    border:1px solid #E5E7EB;
+    border-radius:14px;
+    background:#fff;
+    font-size:14px;
+    font-weight:500;
+    color:#111827;
+    transition:.25s ease;
+    box-shadow:0 2px 8px rgba(0,0,0,.03);
     }
 
-    .filter-group select:focus,
-    .filter-group input:focus {
-        outline: none;
-        border-color: var(--primary-blue);
-        box-shadow: 0 0 0 3px rgba(5, 153, 227, 0.1);
+    .filter-group input:hover,
+    .filter-group select:hover{
+        border-color:#cfd6de;
     }
 
-    .clear-filters-btn {
-        flex: 0 0 auto;
-        display: flex;
-        align-items: flex-end;
-        min-width: 120px;
+    .filter-group input:focus,
+    .filter-group select:focus{
+        border-color:#1E73BE;
+        box-shadow:
+            0 0 0 4px rgba(30,115,190,.12),
+            0 8px 20px rgba(30,115,190,.08);
     }
 
-    .clear-filters-btn button {
-        width: 100%;
-        padding: 0.5rem 0.75rem;
-        background: #f0f0f0;
-        border: 1px solid var(--border-color);
-        border-radius: 6px;
-        font-size: 0.875rem;
-        font-weight: 600;
-        color: var(--text-color);
-        cursor: pointer;
-        transition: all 0.3s ease;
+    /* Clear Button */
+
+    .clear-filters-btn{
+        min-width:140px;
+        flex-shrink:0;
     }
 
-    .clear-filters-btn button:hover {
-        background: #e0e0e0;
-        border-color: #999;
+    .clear-filters-btn button{
+        height:52px;
+        width:100%;
+        border:none;
+        border-radius:14px;
+        background:#081A2D;
+        color:#fff;
+        font-weight:700;
+        letter-spacing:.3px;
+        transition:.3s ease;
+    }
+
+    .clear-filters-btn button:hover{
+        transform:translateY(-2px);
+        background:#10263d;
+        box-shadow:0 12px 24px rgba(8,26,45,.25);
+    }
+
+    .clear-filters-btn i{
+        margin-right:6px;
     }
 
     /* Split Layout - Map and Listing */
@@ -245,7 +264,7 @@
     .property-card {
         background: white;
         border: 1px solid var(--border-color);
-        border-radius: 10px;
+        border-radius: 18px;
         overflow: hidden;
         transition: all 0.3s ease;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -255,7 +274,8 @@
     }
 
     .property-card:hover {
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        transform: translateY(-4px);
+        box-shadow: 0 20px 40px rgba(0,0,0,.12);
         border-color: var(--primary-blue);
     }
 
@@ -336,7 +356,7 @@
 
     /* Property Info Section */
     .property-info {
-        padding: 1rem;
+        padding: 1.5rem;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -367,7 +387,7 @@
     .property-details {
         display: flex;
         flex-direction: column;
-        gap: 0.4rem;
+        gap: 0.75rem;
         margin: 1rem 0;
         font-size: 0.875rem;
         color: var(--text-color);
@@ -552,6 +572,58 @@
             flex: 1;
         }
     }
+
+    .map-container img{
+    transition: transform .5s ease;
+}
+
+.map-container:hover img{
+    transform: scale(1.05);
+}
+
+.filter-group select:not([value=""]),
+.filter-group input:not(:placeholder-shown){
+    border-color:#D4A24C;
+}
+
+/* =====================================
+   MOBILE
+===================================== */
+
+@media(max-width:768px){
+
+    .sticky-filter-bar{
+        padding:12px 0;
+        top:70px;
+    }
+
+    .filter-container{
+        gap:10px;
+        padding-bottom:4px;
+        scroll-snap-type:x mandatory;
+    }
+
+    .filter-group{
+        min-width:165px;
+        scroll-snap-align:start;
+    }
+
+    .filter-group input,
+    .filter-group select{
+        height:48px;
+        border-radius:12px;
+        font-size:13px;
+    }
+
+    .clear-filters-btn{
+        min-width:130px;
+    }
+
+    .clear-filters-btn button{
+        height:48px;
+    }
+
+}
 </style>
 {% endblock %}
 
@@ -651,7 +723,10 @@
 
                 <!-- Clear Filters Button -->
                 <div class="clear-filters-btn">
-                    <button type="reset" onclick="window.location.href='{% url 'buy:property_search' %}'">
+                    <!-- <button 
+                        type="reset" 
+                        onclick="window.location.href='{% url 'buy:property_search' %}'"> -->
+                        <button type="reset" onclick="window.location.href='/buy/'">
                         <i class="bi bi-x-circle"></i> Clear
                     </button>
                 </div>
@@ -663,7 +738,7 @@
     <div class="buy-content-wrapper">
         <!-- Left Side: Map Section -->
         <div class="map-section">
-            <div class="map-container">
+            <!-- <div class="map-container">
                 <div class="map-placeholder">
                     <h3>Interactive Map</h3>
                     <p style="font-size: 0.9rem; color: #999; margin-top: 0.5rem;">
@@ -671,6 +746,11 @@
                         Property markers with prices
                     </p>
                 </div>
+            </div> -->
+            <div class="map-container">
+                <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=80"
+                        alt="Farmland View"
+                        style="width:100%;height:100%;object-fit:cover;">
             </div>
             
             <!-- Map Controls -->
@@ -764,6 +844,9 @@
 
                             <!-- Property Info -->
                             <div class="property-info">
+                                <h3 class="property-title">
+                                    {{ property.title }}
+                                </h3>
                                 <div>
                                     <div class="property-price">
                                         ₹{{ property.price|floatformat:0 }}
@@ -778,13 +861,41 @@
                                     </div>
 
                                     <!-- Details -->
-                                    <div class="property-details">
+                                    <!-- <div class="property-details">
                                         <div class="detail-item">
                                             <strong>Area:</strong> {{ property.area_sqft }} Sq Ft
                                         </div>
                                         <div class="detail-item">
                                             <strong>Type:</strong> {{ property.category }}
                                         </div>
+                                    </div> -->
+                                    <div class="property-details">
+
+                                        <div class="detail-item">
+                                            🌱 <strong>Project:</strong>
+                                            {{ property.project_size_acre|default:"N/A" }}
+                                        </div>
+
+                                        <div class="detail-item">
+                                            📏 <strong>Plot:</strong>
+                                            {{ property.plot_sizes|default:"N/A" }}
+                                        </div>
+
+                                        <div class="detail-item">
+                                            💧 <strong>Water:</strong>
+                                            {{ property.water_source|default:"N/A" }}
+                                        </div>
+
+                                        <div class="detail-item">
+                                            🛣 <strong>Road:</strong>
+                                            {{ property.road_access|default:"N/A" }}
+                                        </div>
+
+                                        <div class="detail-item">
+                                            ✅ <strong>Registry:</strong>
+                                            {{ property.registry_status|default:"Available" }}
+                                        </div>
+
                                     </div>
                                 </div>
 
@@ -883,13 +994,13 @@
     });
 
     // Map controls
-    document.querySelectorAll('.map-control-btn').forEach((btn, index) => {
+    document.querySelectorAll('.map-control-btn').forEach((btn) => {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
-            if (index === 0) alert('Zoom In');
-            else if (index === 1) alert('Zoom Out');
-            else if (index === 2) alert('Toggle Layers');
-            else if (index === 3) alert('Expand Map');
+            // if (index === 0) alert('Zoom In');
+            // else if (index === 1) alert('Zoom Out');
+            // else if (index === 2) alert('Toggle Layers');
+            // else if (index === 3) alert('Expand Map');
         });
     });
 </script>
