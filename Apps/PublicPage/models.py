@@ -184,6 +184,27 @@ class Property(models.Model):
     bedrooms = models.PositiveIntegerField(null=True, blank=True)
     bathrooms = models.PositiveIntegerField(null=True, blank=True)
     area_sqft = models.PositiveIntegerField(null=True, blank=True)
+    project_highlights = models.TextField(
+    blank=True,
+    help_text="One highlight per line"
+)
+
+    # Farmland Details
+    project_size_acre = models.CharField(max_length=100, blank=True)
+
+    plot_sizes = models.CharField(
+        max_length=200,
+        blank=True,
+        help_text="Example: 5000 Sq Ft - 1 Acre"
+    )
+
+    water_source = models.CharField(max_length=200, blank=True)
+    road_access = models.CharField(max_length=200, blank=True)
+    soil_type = models.CharField(max_length=200, blank=True)
+    plantation_type = models.CharField(max_length=200, blank=True)
+    registry_status = models.CharField(max_length=100, blank=True)
+    google_map_link = models.URLField(blank=True)
+    farmhouse_available = models.BooleanField(default=False)
     
     # Investment details (authenticated users only)
     investment_opportunity = models.BooleanField(default=False)
