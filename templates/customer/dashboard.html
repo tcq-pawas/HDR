@@ -1,161 +1,574 @@
 {% extends "customer/customer_base.html" %}
+{% load static %}
 {% load humanize %}
 
 {% block title %}Customer Dashboard - HeyDay Realty{% endblock %}
-
 {% block page_title %}Customer Dashboard{% endblock %}
 
+{% block extra_css %}
+<style>
+    :root{
+        --primary:#0F766E;
+        --secondary:#10B981;
+        --blue:#3B82F6;
+        --purple:#8B5CF6;
+        --orange:#F59E0B;
+        --pink:#EC4899;
+        --muted:#64748b;
+    }
+
+    .premium-hero{
+        position: relative;
+        overflow: hidden;
+        border-radius: 20px;
+        box-shadow: 0 16px 50px rgba(15,118,110,0.14);
+        border: 1px solid rgba(15,118,110,0.22);
+        background: linear-gradient(180deg, rgba(15,118,110,.35), rgba(6,78,59,.55));
+        min-height: 240px;
+    }
+    .premium-hero::before{
+        content:"";
+        position:absolute;
+        inset:0;
+        background: url("{% static 'img/agricultural_land.jpg' %}") center/cover no-repeat;
+        transform: scale(1.03);
+        filter: saturate(1.05) contrast(1.05);
+    }
+    .premium-hero::after{
+        content:"";
+        position:absolute;
+        inset:0;
+        background: linear-gradient(
+            90deg,
+            rgba(16,185,129,0.55) 0%,
+            rgba(59,130,246,0.25) 35%,
+            rgba(236,72,153,0.20) 70%,
+            rgba(6,78,59,0.55) 100%
+        );
+    }
+    .premium-hero-inner{
+        position: relative;
+        z-index: 2;
+        padding: 1.8rem;
+        display:flex;
+        gap: 1.25rem;
+        align-items: flex-start;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        color:#fff;
+    }
+    .premium-hero-left{ min-width: 280px; flex: 1 1 440px; }
+    .premium-eyebrow{
+        display:inline-flex;
+        align-items:center;
+        gap:.6rem;
+        padding: .45rem .75rem;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.14);
+        border: 1px solid rgba(255,255,255,0.22);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        font-weight: 900;
+        letter-spacing: .2px;
+        margin-bottom: .9rem;
+    }
+    .premium-title{
+        font-size: clamp(1.6rem, 2.6vw, 2.1rem);
+        font-weight: 1000;
+        line-height: 1.15;
+        margin-bottom: .5rem;
+    }
+    .premium-subtitle{ color: rgba(255,255,255,0.92); margin: 0 0 1rem 0; max-width: 720px; font-weight: 700; }
+
+    .glass-card{
+        background: rgba(255,255,255,0.12);
+        border: 1px solid rgba(255,255,255,0.22);
+        border-radius: 18px;
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        box-shadow: 0 14px 45px rgba(0,0,0,0.12);
+    }
+
+    .hero-meta{
+        display:grid;
+        grid-template-columns: repeat(2, minmax(220px, 1fr));
+        gap: .85rem;
+        min-width: 340px;
+        flex: 0 1 460px;
+    }
+    .meta-box{ padding: .95rem 1rem; color:#fff; }
+    .meta-label{
+        font-size: .82rem;
+        opacity: .9;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        font-weight: 1000;
+        margin-bottom: .35rem;
+    }
+    .meta-value{ font-size: 1.05rem; font-weight: 950; margin: 0; }
+
+    .quick-search{ display:flex; gap: .75rem; align-items: center; flex-wrap: wrap; }
+    .quick-search input{
+        flex: 1 1 260px;
+        border-radius: 14px;
+        padding: .85rem 1rem;
+        border: 1px solid rgba(255,255,255,0.26);
+        background: rgba(255,255,255,0.12);
+        color:#fff;
+        outline:none;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        font-weight: 800;
+    }
+    .quick-search input::placeholder{ color: rgba(255,255,255,0.85); }
+    .quick-search button{
+        border-radius: 14px;
+        padding: .85rem 1.05rem;
+        font-weight: 950;
+        border: 1px solid rgba(255,255,255,0.24);
+        background: rgba(255,255,255,0.16);
+        color:#fff;
+        transition: transform .15s ease, background .15s ease;
+    }
+    .quick-search button:hover{ transform: translateY(-1px); background: rgba(255,255,255,0.24); }
+
+    .kpi-grid{ display:grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: .95rem; margin-top: 1.1rem; }
+    @media (max-width: 1200px){ .kpi-grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (max-width: 576px){ .kpi-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } .hero-meta{ grid-template-columns: 1fr; min-width: unset; } }
+
+    .kpi-card{
+        position: relative;
+        border-radius: 18px;
+        padding: 1rem;
+        overflow:hidden;
+        border: 1px solid rgba(255,255,255,0.22);
+        box-shadow: 0 18px 48px rgba(15,118,110,0.10);
+        transition: transform .18s ease, box-shadow .18s ease;
+        min-height: 125px;
+        color:#fff;
+    }
+    .kpi-card:hover{ transform: translateY(-4px); box-shadow: 0 24px 70px rgba(15,118,110,0.18); }
+    .kpi-top{ display:flex; align-items:center; justify-content: space-between; gap: .75rem; position: relative; z-index: 2; }
+    .kpi-icon{
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        background: rgba(255,255,255,0.18);
+        border: 1px solid rgba(255,255,255,0.20);
+        font-size: 1.1rem;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+    .kpi-count{ font-size: 1.85rem; font-weight: 1000; margin-top: .45rem; line-height: 1; position: relative; z-index: 2; }
+    .kpi-label{ font-weight: 950; margin-top: .25rem; color: rgba(255,255,255,0.95); position: relative; z-index: 2; }
+    .kpi-trend{ margin-top: .65rem; display:flex; align-items:center; gap: .45rem; font-weight: 900; font-size: .9rem; position: relative; z-index: 2; }
+    .trend-pill{ padding: .25rem .55rem; border-radius: 999px; background: rgba(255,255,255,0.16); border: 1px solid rgba(255,255,255,0.20); white-space: nowrap; }
+
+    .panel{ border-radius: 20px; overflow:hidden; border: 1px solid rgba(15,118,110,0.12); box-shadow: 0 16px 50px rgba(15,118,110,0.08); background: rgba(255,255,255,0.75); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+    .panel-header{ padding: 1.1rem 1.3rem; border-bottom: 1px solid rgba(15,118,110,0.10); background: linear-gradient(180deg, rgba(15,118,110,0.06), rgba(255,255,255,0.0)); display:flex; align-items:center; justify-content: space-between; gap: .8rem; flex-wrap: wrap; }
+    .panel-body{ padding: 1.1rem 1.3rem; }
+    .section-title{ font-weight: 1000; letter-spacing: .2px; margin: 0; }
+    .muted-strong{ color: var(--muted); font-weight: 900; }
+
+    .table-modern{ width:100%; border-collapse: separate; border-spacing: 0 10px; }
+    .table-modern th{ text-align:left; color:#64748b; font-size:.85rem; font-weight: 1000; padding: 0 10px; }
+    .table-modern td{ background:#fff; padding: 12px 10px; vertical-align: middle; border-top: 1px solid rgba(15,118,110,0.08); border-bottom: 1px solid rgba(15,118,110,0.08); }
+    .row-card{ border-radius: 16px; box-shadow: 0 10px 30px rgba(15,118,110,0.10); }
+
+    .status-badge{ padding: .35rem .65rem; border-radius: 999px; font-weight: 1000; font-size: .86rem; border: 1px solid rgba(0,0,0,0.06); white-space: nowrap; }
+    .s-pending{ background: rgba(245,158,11,0.15); color: #b45309; border-color: rgba(245,158,11,0.25); }
+    .s-contacted{ background: rgba(59,130,246,0.15); color: #1d4ed8; border-color: rgba(59,130,246,0.25); }
+    .s-site{ background: rgba(139,92,246,0.15); color: #6d28d9; border-color: rgba(139,92,246,0.25); }
+    .s-closed{ background: rgba(16,185,129,0.15); color: #047857; border-color: rgba(16,185,129,0.25); }
+
+    .empty-state{ padding: 2rem 1rem; text-align:center; }
+    .empty-illustration{ width: 122px; height: 122px; margin: 0 auto 1rem auto; border-radius: 34px; background: linear-gradient(180deg, rgba(15,118,110,0.18), rgba(16,185,129,0.08)); border: 1px dashed rgba(15,118,110,0.35); display:flex; align-items:center; justify-content:center; color: var(--primary); box-shadow: 0 16px 40px rgba(15,118,110,0.12); }
+
+    .btn-premium{ border-radius: 14px; font-weight: 950; padding: .6rem .85rem; border: 1px solid rgba(15,118,110,0.15); background: linear-gradient(180deg, rgba(15,118,110,0.96), rgba(6,78,59,0.96)); color:#fff; transition: transform .16s ease, filter .16s ease; display:inline-flex; align-items:center; gap:.5rem; justify-content:center; }
+    .btn-premium:hover{ transform: translateY(-1px); filter: brightness(1.06); color:#fff; }
+
+    .saved-card{ display:flex; gap: 1rem; align-items: center; padding: .95rem; background: rgba(255,255,255,0.92); border: 1px solid rgba(15,118,110,0.10); border-radius: 18px; box-shadow: 0 14px 40px rgba(15,118,110,0.08); transition: transform .18s ease, box-shadow .18s ease; margin-bottom: .9rem; }
+    .saved-card:hover{ transform: translateY(-3px); box-shadow: 0 22px 60px rgba(15,118,110,0.14); }
+    .saved-thumb{ width: 96px; height: 72px; border-radius: 18px; overflow:hidden; background: linear-gradient(180deg, rgba(15,118,110,0.12), rgba(59,130,246,0.08)); border: 1px solid rgba(15,118,110,0.14); flex: 0 0 auto; }
+    .saved-thumb img{ width:100%; height:100%; object-fit: cover; display:block; }
+    .saved-info{ flex: 1; min-width: 0; }
+    .saved-name{ font-weight: 1000; white-space: nowrap; overflow:hidden; text-overflow: ellipsis; margin-bottom: .15rem; }
+    .saved-meta{ color: var(--muted); font-weight: 900; font-size: .95rem; white-space: nowrap; overflow:hidden; text-overflow: ellipsis; }
+
+    .property-grid{ display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 1rem; }
+    @media (max-width: 992px){ .property-grid{ grid-template-columns: repeat(2, minmax(0,1fr)); } }
+    @media (max-width: 576px){ .property-grid{ grid-template-columns: 1fr; } }
+
+    .property-card{ border-radius: 20px; overflow:hidden; border: 1px solid rgba(15,118,110,0.12); background: rgba(255,255,255,0.94); box-shadow: 0 16px 45px rgba(15,118,110,0.08); transition: transform .18s ease, box-shadow .18s ease; height: 100%; display:flex; flex-direction: column; }
+    .property-card:hover{ transform: translateY(-4px); box-shadow: 0 26px 80px rgba(15,118,110,0.16); }
+    .property-media{ height: 165px; background: linear-gradient(180deg, rgba(15,118,110,0.18), rgba(16,185,129,0.04)); border-bottom: 1px solid rgba(15,118,110,0.10); position: relative; overflow:hidden; }
+    .property-media img{ width:100%; height:100%; object-fit: cover; display:block; opacity: .95; }
+    .property-media .tag{ position:absolute; top: 12px; left: 12px; padding: .32rem .62rem; border-radius: 999px; background: rgba(15,118,110,0.92); color:#fff; font-weight: 1000; font-size: .86rem; box-shadow: 0 16px 40px rgba(15,118,110,0.22); }
+    .property-body{ padding: 1rem; display:flex; flex-direction: column; gap: .55rem; flex: 1; }
+    .property-title{ font-weight: 1000; line-height: 1.25; margin: 0; }
+    .property-meta{ color: var(--muted); font-weight: 900; font-size: .95rem; margin: 0; }
+    .price-line{ display:flex; align-items:center; justify-content: space-between; gap: .85rem; margin-top: auto; }
+    .price{ font-weight: 1000; color: var(--primary); font-size: 1.15rem; }
+    .badge-pill{ border-radius: 999px; font-weight: 950; border: 1px solid rgba(15,118,110,0.18); background: rgba(15,118,110,0.08); padding: .35rem .6rem; color: #0b5a4c; white-space: nowrap; }
+
+    .timeline{ position: relative; padding-left: 1.5rem; }
+    .timeline::before{ content:""; position:absolute; left: 7px; top: 4px; bottom: 4px; width: 3px; background: linear-gradient(180deg, rgba(15,118,110,0.65), rgba(16,185,129,0.25)); border-radius: 999px; }
+    .timeline-item{ position: relative; margin-bottom: 1rem; padding-left: 1.1rem; }
+    .timeline-item:last-child{ margin-bottom: 0; }
+    .timeline-dot{ position:absolute; left: -18px; top: 10px; width: 26px; height: 26px; border-radius: 10px; background: rgba(15,118,110,0.16); border: 1px solid rgba(15,118,110,0.28); display:flex; align-items:center; justify-content:center; color: var(--primary); font-weight: 1000; }
+    .timeline-card{ background: rgba(255,255,255,0.94); border: 1px solid rgba(15,118,110,0.10); border-radius: 18px; padding: .85rem .95rem; box-shadow: 0 14px 35px rgba(15,118,110,0.06); }
+    .timeline-title{ font-weight: 1000; margin-bottom: .25rem; }
+    .timeline-desc{ color: var(--muted); font-weight: 900; font-size: .92rem; margin-bottom: .35rem; }
+    .timeline-date{ color: #94a3b8; font-weight: 1000; font-size: .85rem; }
+</style>
+{% endblock %}
+
 {% block content %}
-    <!-- Stats Cards -->
-    <div class="row mb-4">
-        <div class="col-md-3 mb-3">
-            <div class="card stat-card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="stat-icon bg-primary text-white me-3">
-                            <i class="fas fa-envelope"></i>
-                        </div>
-                        <div>
-                            <h3 class="mb-0">{{ stats.total_inquiries }}</h3>
-                            <p class="text-muted mb-0">Total Inquiries</p>
-                        </div>
-                    </div>
-                </div>
+<div class="premium-hero mb-4">
+    <div class="premium-hero-inner">
+        <div class="premium-hero-left">
+            <div class="premium-eyebrow"><i class="fas fa-seedling"></i> Premium Agricultural Real Estate Portal</div>
+            <div class="premium-title">Welcome Back, {{ user.first_name|default:user.username }} 👋</div>
+            <p class="premium-subtitle">Explore premium agricultural land opportunities and manage your property interests.</p>
+            <div class="quick-search">
+                <input type="text" placeholder="Quick Search Properties..." aria-label="Quick Search Properties">
+                <button type="button"><i class="fas fa-search me-2"></i>Search</button>
             </div>
         </div>
-        <div class="col-md-3 mb-3">
-            <div class="card stat-card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="stat-icon bg-warning text-white me-3">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                        <div>
-                            <h3 class="mb-0">{{ stats.pending_inquiries }}</h3>
-                            <p class="text-muted mb-0">Pending</p>
-                        </div>
-                    </div>
-                </div>
+
+        <div class="hero-meta">
+            <div class="glass-card meta-box">
+                <div class="meta-label">Current Date</div>
+                <p class="meta-value">{% now "M d, Y" %}</p>
             </div>
-        </div>
-        <div class="col-md-3 mb-3">
-            <div class="card stat-card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="stat-icon bg-success text-white me-3">
-                            <i class="fas fa-heart"></i>
-                        </div>
-                        <div>
-                            <h3 class="mb-0">{{ stats.saved_properties }}</h3>
-                            <p class="text-muted mb-0">Saved Properties</p>
-                        </div>
-                    </div>
-                </div>
+
+            <div class="glass-card meta-box">
+                <div class="meta-label">Customer Status</div>
+                {% with ti=purchase_stats.total_inquiries|default:0 sp=purchase_stats.saved_properties|default:0 sv=purchase_stats.scheduled_viewings|default:0 %}
+                    {% if ti|add:sp|add:sv > 0 %}
+                        <p class="meta-value">Active</p>
+                    {% else %}
+                        <p class="meta-value">New Member</p>
+                    {% endif %}
+                {% endwith %}
             </div>
-        </div>
-        <div class="col-md-3 mb-3">
-            <div class="card stat-card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="stat-icon bg-info text-white me-3">
-                            <i class="fas fa-calendar-check"></i>
-                        </div>
-                        <div>
-                            <h3 class="mb-0">{{ stats.scheduled_viewings }}</h3>
-                            <p class="text-muted mb-0">Viewings</p>
-                        </div>
-                    </div>
-                </div>
+
+            <div class="glass-card meta-box">
+                <div class="meta-label">Member Since</div>
+                <p class="meta-value">{{ profile.created_at|date:"M Y" }}</p>
+            </div>
+
+            <div class="glass-card meta-box">
+                <div class="meta-label">Member Tier</div>
+                {% with ti=purchase_stats.total_inquiries|default:0 sp=purchase_stats.saved_properties|default:0 %}
+                    {% if ti|add:sp > 5 %}
+                        <p class="meta-value">Gold</p>
+                    {% else %}
+                        <p class="meta-value">Silver</p>
+                    {% endif %}
+                {% endwith %}
             </div>
         </div>
     </div>
-    
-    <!-- Recent Activities -->
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Recent Inquiries</h5>
+</div>
+
+<div class="kpi-grid mb-4">
+    <div class="kpi-card" style="background: linear-gradient(135deg, #3B82F6 0%, rgba(59,130,246,0.65) 100%);">
+        <div class="kpi-top"><div class="kpi-icon"><i class="fas fa-envelope"></i></div><div class="trend-pill">▲ 5%</div></div>
+        <div class="kpi-count">{{ purchase_stats.total_inquiries }}</div><div class="kpi-label">Total Inquiries</div>
+        <div class="kpi-trend"><span class="trend-pill">Upward Momentum</span></div>
+    </div>
+
+    <div class="kpi-card" style="background: linear-gradient(135deg, #F59E0B 0%, rgba(245,158,11,0.65) 100%);">
+        <div class="kpi-top"><div class="kpi-icon"><i class="fas fa-clock"></i></div><div class="trend-pill">▼ 2%</div></div>
+        <div class="kpi-count">{{ purchase_stats.pending_inquiries }}</div><div class="kpi-label">Pending Inquiries</div>
+        <div class="kpi-trend"><span class="trend-pill">Follow-up Needed</span></div>
+    </div>
+
+    <div class="kpi-card" style="background: linear-gradient(135deg, #10B981 0%, rgba(16,185,129,0.65) 100%);">
+        <div class="kpi-top"><div class="kpi-icon"><i class="fas fa-heart"></i></div><div class="trend-pill">▲ 7%</div></div>
+        <div class="kpi-count">{{ purchase_stats.saved_properties }}</div><div class="kpi-label">Saved Properties</div>
+        <div class="kpi-trend"><span class="trend-pill">Interest Growing</span></div>
+    </div>
+
+    <div class="kpi-card" style="background: linear-gradient(135deg, #8B5CF6 0%, rgba(139,92,246,0.65) 100%);">
+        <div class="kpi-top"><div class="kpi-icon"><i class="fas fa-calendar-check"></i></div><div class="trend-pill">▲ 3%</div></div>
+        <div class="kpi-count">{{ purchase_stats.scheduled_viewings }}</div><div class="kpi-label">Property Viewings</div>
+        <div class="kpi-trend"><span class="trend-pill">Scheduled</span></div>
+    </div>
+
+    <div class="kpi-card" style="background: linear-gradient(135deg, #EC4899 0%, rgba(236,72,153,0.65) 100%);">
+        <div class="kpi-top"><div class="kpi-icon"><i class="fas fa-eye"></i></div><div class="trend-pill">▲ 4%</div></div>
+        <div class="kpi-count">{{ activity_timeline|length }}</div><div class="kpi-label">Recently Viewed Properties</div>
+        <div class="kpi-trend"><span class="trend-pill">Active Research</span></div>
+    </div>
+
+    <div class="kpi-card" style="background: linear-gradient(135deg, #0F766E 0%, rgba(16,185,129,0.65) 100%);">
+        <div class="kpi-top"><div class="kpi-icon"><i class="fas fa-bullseye"></i></div><div class="trend-pill">▲ 6%</div></div>
+        <div class="kpi-count">{{ purchase_stats.scheduled_viewings }}</div><div class="kpi-label">Site Visits Scheduled</div>
+        <div class="kpi-trend"><span class="trend-pill">Booking Flow</span></div>
+    </div>
+</div>
+
+<div class="row g-4 align-items-stretch">
+    <div class="col-12 col-lg-6">
+        <div class="panel h-100">
+            <div class="panel-header">
+                <div>
+                    <p class="section-title">Recent Inquiries</p>
+                    <div class="muted-strong">Track your latest requests</div>
                 </div>
-                <div class="card-body">
-                    {% for inquiry in recent_inquiries %}
-                        <div class="activity-item">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <strong>{{ inquiry.subject }}</strong>
-                                    {% if inquiry.property %}
-                                        <br><small class="text-muted">Property: {{ inquiry.property.title }}</small>
-                                    {% endif %}
-                                </div>
-                                <span class="badge bg-{{ inquiry.status|yesno:'success,warning,secondary,primary,danger' }}">
-                                    {{ inquiry.get_status_display }}
-                                </span>
-                            </div>
-                            <small class="text-muted">{{ inquiry.created_at|date:"M d, Y" }}</small>
-                        </div>
-                    {% empty %}
-                        <p class="text-muted">No inquiries yet.</p>
-                    {% endfor %}
-                </div>
+                <span class="badge bg-light text-dark" style="font-weight:1000;">{{ recent_inquiries|length }} items</span>
+            </div>
+            <div class="panel-body">
+                {% if recent_inquiries %}
+                    <div class="table-responsive">
+                        <table class="table-modern">
+                            <thead>
+                                <tr>
+                                    <th style="width: 110px;">Inquiry ID</th>
+                                    <th>Property Name</th>
+                                    <th style="width: 140px;">Inquiry Date</th>
+                                    <th style="width: 180px;">Status</th>
+                                    <th style="width: 160px;">Agent Assigned</th>
+                                    <th style="width: 120px;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for inquiry in recent_inquiries %}
+                                    <tr class="row-card">
+                                        <td><span class="fw-bold text-primary">#{{ inquiry.id }}</span></td>
+                                        <td>
+                                            <div class="fw-bold" style="line-height:1.2;">
+                                                {{ inquiry.property.title|default:inquiry.subject }}
+                                            </div>
+                                            <div class="text-muted fw-bold" style="font-size:.9rem;">
+                                                {{ inquiry.property.location|default:"" }}
+                                            </div>
+                                        </td>
+                                        <td class="text-muted fw-bold">{{ inquiry.created_at|date:"M d, Y" }}</td>
+                                        <td>
+                                            {% if inquiry.status == 'pending' %}
+                                                <span class="status-badge s-pending">Pending</span>
+                                            {% elif inquiry.status == 'in_progress' %}
+                                                <span class="status-badge s-contacted">Contacted</span>
+                                            {% elif inquiry.status == 'resolved' %}
+                                                <span class="status-badge s-site">Site Visit Scheduled</span>
+                                            {% else %}
+                                                <span class="status-badge s-closed">Closed</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-muted fw-bold">—</td>
+                                        <td class="text-end"><button type="button" class="btn btn-premium btn-sm">View</button></td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-illustration"><i class="fas fa-inbox fa-2x"></i></div>
+                        <div class="fw-bold" style="font-size:1.08rem;">No inquiries yet</div>
+                        <div class="text-muted fw-bold mt-1">Send an inquiry to start tracking your property interest.</div>
+                        <div class="mt-3"><button type="button" class="btn btn-premium"><i class="fas fa-search"></i> Explore Properties</button></div>
+                    </div>
+                {% endif %}
             </div>
         </div>
-        
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Saved Properties</h5>
+    </div>
+
+    <div class="col-12 col-lg-6">
+        <div class="panel h-100">
+            <div class="panel-header">
+                <div>
+                    <p class="section-title">Saved Properties</p>
+                    <div class="muted-strong">Your premium shortlist</div>
                 </div>
-                <div class="card-body">
+                <span class="badge bg-light text-dark" style="font-weight:1000;">{{ recent_saved_properties|length }} saved</span>
+            </div>
+            <div class="panel-body">
+                {% if recent_saved_properties %}
                     {% for saved in recent_saved_properties %}
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div>
-                                <strong>{{ saved.property.title }}</strong>
-                                <br><small class="text-muted">{{ saved.property.location }}</small>
+                        <div class="saved-card">
+                            <div class="saved-thumb">
+                                {% if saved.property.image %}
+                                    <img src="{{ saved.property.image.url }}" alt="{{ saved.property.title }}">
+                                {% else %}
+                                    <img src="{% static 'img/agricultural_land_branding.jpg' %}" alt="Property">
+                                {% endif %}
                             </div>
-                            <div class="text-end">
-                                <div class="text-primary fw-bold">${{ saved.property.price }}</div>
-                                <small class="text-muted">{{ saved.saved_at|date:"M d" }}</small>
+                            <div class="saved-info">
+                                <div class="saved-name">{{ saved.property.title }}</div>
+                                <div class="saved-meta">{{ saved.property.location }} • {{ saved.property.property_type }} • {{ saved.property.area_sqft|intcomma }} sqft</div>
+                                <div class="fw-bold" style="color: var(--primary); margin-top:.25rem;">${{ saved.property.price }}</div>
                             </div>
+                            <div class="text-end"><button type="button" class="btn btn-premium btn-sm">View Property</button></div>
                         </div>
-                    {% empty %}
-                        <p class="text-muted">No saved properties yet.</p>
                     {% endfor %}
-                </div>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-illustration"><i class="fas fa-heart fa-2x"></i></div>
+                        <div class="fw-bold" style="font-size:1.08rem;">No saved properties</div>
+                        <div class="text-muted fw-bold mt-1">Save properties to get personalized recommendations.</div>
+                        <div class="mt-3"><button type="button" class="btn btn-premium"><i class="fas fa-landmark"></i> Browse Featured Land</button></div>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>
-    
-    <!-- Featured Properties -->
-    <div class="row mt-4">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Featured Properties</h5>
+
+    <div class="col-12">
+        <div class="panel">
+            <div class="panel-header">
+                <div>
+                    <p class="section-title">Featured Agricultural Land</p>
+                    <div class="muted-strong">Curated investment opportunities</div>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        {% for property in featured_properties %}
-                            <div class="col-md-4 mb-3">
-                                <div class="card h-100">
-                                    {% if property.image %}
-                                        <img src="{{ property.image.url }}" class="card-img-top" alt="{{ property.title }}" style="height: 200px; object-fit: cover;">
-                                    {% endif %}
-                                    <div class="card-body">
-                                        <h6 class="card-title">{{ property.title }}</h6>
-                                        <p class="card-text text-muted">{{ property.location }}</p>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <span class="text-primary fw-bold">${{ property.price }}</span>
-                                            <span class="badge bg-secondary">{{ property.get_property_type_display }}</span>
+            </div>
+            <div class="panel-body">
+                {% if featured_properties %}
+                    <div class="property-grid">
+                        {% for p in featured_properties %}
+                            <div class="property-card">
+                                <div class="property-media">
+                                    <img src="{% static 'img/agricultural_land_branding.jpg' %}" alt="{{ p.title }}">
+                                    <div class="tag">Featured</div>
+                                </div>
+                                <div class="property-body">
+                                    <p class="property-title">{{ p.title }}</p>
+                                    <p class="property-meta">{{ p.location }}</p>
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <div class="text-muted fw-bold" style="font-size:.85rem;">Village</div>
+                                            <div class="fw-bold">{{ p.location }}</div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="text-muted fw-bold" style="font-size:.85rem;">District</div>
+                                            <div class="fw-bold">{{ p.location }}</div>
                                         </div>
                                     </div>
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <div class="text-muted fw-bold" style="font-size:.85rem;">Total Area</div>
+                                            <div class="fw-bold">{{ p.area_sqft|intcomma }} sqft</div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="text-muted fw-bold" style="font-size:.85rem;">Price</div>
+                                            <div class="fw-bold" style="color: var(--primary);">${{ p.price }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="row g-2 align-items-center">
+                                        <div class="col">
+                                            <div class="text-muted fw-bold" style="font-size:.85rem;">Investment Rating</div>
+                                            <div class="fw-bold">{% if forloop.counter|divisibleby:2 %}★★★★☆{% else %}★★★★★{% endif %}</div>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-premium w-100">View Details</button>
                                 </div>
                             </div>
-                        {% empty %}
-                            <p class="text-muted">No featured properties available.</p>
                         {% endfor %}
                     </div>
-                </div>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-illustration"><i class="fas fa-landmark fa-2x"></i></div>
+                        <div class="fw-bold" style="font-size:1.08rem;">No featured land available</div>
+                        <div class="text-muted fw-bold mt-1">Check back later for new opportunities.</div>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>
+
+    <div class="col-12">
+        <div class="panel">
+            <div class="panel-header">
+                <div>
+                    <p class="section-title">Recommended For You</p>
+                    <div class="muted-strong">Based on your saved properties & inquiry history</div>
+                </div>
+            </div>
+            <div class="panel-body">
+                {% if recommended_properties %}
+                    <div class="property-grid">
+                        {% for p in recommended_properties %}
+                            <div class="property-card">
+                                <div class="property-media">
+                                    <img src="{% static 'img/agricultural_land_branding.jpg' %}" alt="{{ p.title }}">
+                                    <div class="tag">For You</div>
+                                </div>
+                                <div class="property-body">
+                                    <p class="property-title">{{ p.title }}</p>
+                                    <p class="property-meta">{{ p.location }}</p>
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <div class="text-muted fw-bold" style="font-size:.85rem;">Area</div>
+                                            <div class="fw-bold">{{ p.area_sqft|intcomma }} sqft</div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="text-muted fw-bold" style="font-size:.85rem;">Type</div>
+                                            <div class="fw-bold">{{ p.property_type }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="price-line">
+                                        <div class="price">${{ p.price }}</div>
+                                        <span class="badge-pill">Investment-ready</span>
+                                    </div>
+                                    <button type="button" class="btn btn-premium w-100">View Property</button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-illustration"><i class="fas fa-sparkles fa-2x"></i></div>
+                        <div class="fw-bold" style="font-size:1.08rem;">Recommendations will appear soon</div>
+                        <div class="text-muted fw-bold mt-1">Save properties or submit an inquiry to personalize your feed.</div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="panel">
+            <div class="panel-header">
+                <div>
+                    <p class="section-title">Recent Activity</p>
+                    <div class="muted-strong">Property saved, viewed & inquiry milestones</div>
+                </div>
+                <span class="badge bg-light text-dark" style="font-weight:1000;">{{ activity_timeline|length }} events</span>
+            </div>
+            <div class="panel-body">
+                {% if activity_timeline %}
+                    <div class="timeline">
+                        {% for a in activity_timeline %}
+                            <div class="timeline-item">
+                                <div class="timeline-dot">
+                                    {% if a.type == 'inquiry' %}<i class="fas fa-envelope"></i>
+                                    {% elif a.type == 'saved' %}<i class="fas fa-heart"></i>
+                                    {% else %}<i class="fas fa-calendar"></i>{% endif %}
+                                </div>
+                                <div class="timeline-card">
+                                    <div class="timeline-title">{{ a.title }}</div>
+                                    <div class="timeline-desc">{{ a.description }}</div>
+                                    <div class="timeline-date">{{ a.date|date:"M d, Y" }}</div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-illustration"><i class="fas fa-history fa-2x"></i></div>
+                        <div class="fw-bold" style="font-size:1.08rem;">No activity yet</div>
+                        <div class="text-muted fw-bold mt-1">Save properties or submit inquiries to see updates here.</div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
+

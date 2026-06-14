@@ -1,10 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum, Count, Avg, Q, F
 from django.utils import timezone
 from datetime import timedelta, date
 from decimal import Decimal
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from django.contrib.auth.models import User
 from Apps.Administration.smart_dashboard_views import CustomerDashboardMixin
 from Apps.Administration.auth_utils import get_user_role, role_required
 from .models import CustomerProfile, Inquiry, SavedProperty, PropertyViewing
@@ -353,13 +357,99 @@ class CustomerSavedPropertiesView(CustomerDashboardMixin, TemplateView):
 class CustomerViewingsView(CustomerDashboardMixin, TemplateView):
     """Customer property viewings view with strict access control"""
     template_name = 'customer/viewings.html'
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
-        
+
         context['viewings'] = PropertyViewing.objects.filter(
             customer=user
         ).select_related('property').order_by('-scheduled_date')
-        
+
         return context
+
+
+@require_POST
+def update_profile(request):
+    """Handle profile update via POST request"""
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'error': 'Not authenticated'}, status=401)
+
+    try:
+        profile, created = CustomerProfile.objects.get_or_create(user=request.user)
+
+        # Handle field-specific updates
+        field = request.POST.get('field')
+        value = request.POST.get('value')
+
+        if field and value:
+            # Handle single field update
+            if field == 'full_name':
+                name_parts = value.split(' ', 1)
+                request.user.first_name = name_parts[0] if len(name_parts) > 0 else ''
+                request.user.last_name = name_parts[1] if len(name_parts) > 1 else ''
+                request.user.save()
+            elif field == 'phone':
+                profile.phone = value
+            elif field == 'contact_method':
+                profile.preferred_contact_method = value
+            profile.save()
+            return JsonResponse({'success': True, 'message': 'Field updated successfully'})
+
+        # Update user fields
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        if first_name:
+            request.user.first_name = first_name
+        if last_name:
+            request.user.last_name = last_name
+        request.user.save()
+
+        # Update profile fields
+        phone = request.POST.get('phone')
+        preferred_contact_method = request.POST.get('preferred_contact_method')
+
+        if phone:
+            profile.phone = phone
+        if preferred_contact_method:
+            profile.preferred_contact_method = preferred_contact_method
+
+        # Handle profile picture upload
+        if 'profile_picture' in request.FILES:
+            profile.profile_picture = request.FILES['profile_picture']
+
+        profile.save()
+
+        return JsonResponse({'success': True, 'message': 'Profile updated successfully'})
+
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+@require_POST
+def change_password(request):
+    """Handle password change via POST request"""
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'error': 'Not authenticated'}, status=401)
+
+    try:
+        current_password = request.POST.get('current_password')
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+
+        if not request.user.check_password(current_password):
+            return JsonResponse({'success': False, 'error': 'Current password is incorrect'}, status=400)
+
+        if new_password != confirm_password:
+            return JsonResponse({'success': False, 'error': 'New passwords do not match'}, status=400)
+
+        if len(new_password) < 8:
+            return JsonResponse({'success': False, 'error': 'Password must be at least 8 characters'}, status=400)
+
+        request.user.set_password(new_password)
+        request.user.save()
+
+        return JsonResponse({'success': True, 'message': 'Password changed successfully'})
+
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)

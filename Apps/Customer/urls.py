@@ -2,7 +2,8 @@ from django.urls import path
 from . import views
 from .dashboard_views import (
     CustomerDashboardView, CustomerProfileView, CustomerInquiriesView,
-    CustomerSavedPropertiesView, CustomerViewingsView
+    CustomerSavedPropertiesView, CustomerViewingsView,
+    update_profile, change_password
 )
 
 app_name = 'customer'
@@ -14,7 +15,11 @@ urlpatterns = [
     path('inquiries/', CustomerInquiriesView.as_view(), name='inquiries-page'),
     path('saved-properties/', CustomerSavedPropertiesView.as_view(), name='saved-properties-page'),
     path('viewings/', CustomerViewingsView.as_view(), name='viewings-page'),
-    
+
+    # Form submission endpoints
+    path('update-profile/', update_profile, name='update-profile'),
+    path('change-password/', change_password, name='change-password'),
+
     # API endpoints
     path('api/profile/', views.CustomerProfileView.as_view(), name='profile'),
     path('api/inquiries/', views.InquiryListCreateView.as_view(), name='inquiry-list'),

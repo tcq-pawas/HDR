@@ -6,248 +6,905 @@
 {% block page_title %}My Profile{% endblock %}
 
 {% block content %}
-    <!-- Profile Header -->
-    <div class="card profile-card bg-primary text-white mb-4">
-        <div class="card-body text-center py-5">
-            <div class="avatar-large bg-white text-primary d-flex align-items-center justify-content-center mx-auto mb-3">
-                <span style="font-size: 3rem; font-weight: bold;">
-                    {{ profile.user.first_name.0|default:profile.user.username.0|upper }}
-                </span>
+<style>
+    :root{
+        --primary:#0F766E;
+        --secondary:#10B981;
+        --purple:#8B5CF6;
+        --blue:#3B82F6;
+        --pink:#EC4899;
+        --bg:#F8FAFC;
+        --card:#FFFFFF;
+        --radius:20px;
+        --shadow: 0 12px 30px rgba(15, 118, 110, 0.12);
+        --shadow-soft: 0 8px 20px rgba(2, 6, 23, 0.06);
+    }
+
+    .profile-wrap{
+        background: var(--bg);
+        padding: 1.25rem 0;
+    }
+
+    /* Premium banner */
+    .profile-banner{
+        background: linear-gradient(135deg, rgba(15,118,110,0.95), rgba(16,185,129,0.95));
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 1.75rem;
+        position: relative;
+        overflow: hidden;
+        color: white;
+    }
+    .profile-banner::before{
+        content:"";
+        position:absolute;
+        inset:-40%;
+        background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.18), transparent 55%);
+        transform: rotate(12deg);
+        pointer-events:none;
+    }
+
+    .glass{
+        background: rgba(255,255,255,0.10);
+        border: 1px solid rgba(255,255,255,0.18);
+        backdrop-filter: blur(10px);
+        border-radius: calc(var(--radius) - 6px);
+        padding: 1rem;
+    }
+
+    .avatar-shell{
+        width: 92px;
+        height: 92px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.18);
+        padding: 6px;
+        border: 1px solid rgba(255,255,255,0.25);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+    }
+    .avatar-shell img{
+        width:100%;
+        height:100%;
+        border-radius:50%;
+        object-fit:cover;
+        background: #fff;
+    }
+    .avatar-fallback{
+        width:100%;
+        height:100%;
+        border-radius:50%;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-weight: 800;
+        font-size: 2rem;
+        color: rgba(255,255,255,0.95);
+        background: linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.08));
+    }
+
+    .kpi-card{
+        background: var(--card);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-soft);
+        border: 1px solid rgba(15,118,110,0.08);
+        padding: 1rem 1.15rem;
+        transition: transform .18s ease, box-shadow .18s ease;
+        position: relative;
+        overflow:hidden;
+        min-height: 96px;
+    }
+    .kpi-card:hover{
+        transform: translateY(-4px);
+        box-shadow: var(--shadow);
+    }
+    .kpi-icon{
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        color:white;
+        margin-bottom:.6rem;
+        background: linear-gradient(135deg, rgba(0,0,0,0.08), rgba(0,0,0,0));
+    }
+    .kpi-value{
+        font-weight: 850;
+        font-size: 1.55rem;
+        letter-spacing: -0.02em;
+        color: #0B1220;
+        margin-bottom: .15rem;
+    }
+    .kpi-label{
+        color: rgba(11,18,32,0.65);
+        font-weight: 600;
+        font-size: .92rem;
+    }
+    .kpi-pill{
+        position:absolute;
+        right:-18px;
+        top:-18px;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        opacity: .12;
+        pointer-events:none;
+    }
+
+    /* Personal info */
+    .section-card{
+        background: var(--card);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-soft);
+        border: 1px solid rgba(2, 6, 23, 0.06);
+        padding: 1.25rem;
+        margin-bottom: 1.25rem;
+    }
+    .section-title-premium{
+        font-weight: 900;
+        letter-spacing: -0.02em;
+        color: #0B1220;
+        display:flex;
+        align-items:center;
+        gap:.75rem;
+        margin-bottom: .95rem;
+    }
+    .section-title-premium i{
+        width: 40px;
+        height: 40px;
+        border-radius: 14px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        color:white;
+        background: linear-gradient(135deg, rgba(15,118,110,0.95), rgba(16,185,129,0.95));
+    }
+
+    .info-grid .info-item{
+        background: rgba(15,118,110,0.04);
+        border: 1px solid rgba(15,118,110,0.10);
+        border-radius: 16px;
+        padding: .95rem;
+        display:flex;
+        gap: .75rem;
+        align-items:flex-start;
+        min-height: 86px;
+        position: relative;
+    }
+    .info-grid .info-item .icon{
+        width: 40px;
+        height: 40px;
+        border-radius: 14px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        color:white;
+        flex-shrink:0;
+        background: linear-gradient(135deg, rgba(15,118,110,0.95), rgba(16,185,129,0.95));
+    }
+    .info-grid .info-item .label{
+        font-weight: 750;
+        color: rgba(11,18,32,0.65);
+        font-size:.9rem;
+        margin-bottom:.25rem;
+    }
+    .info-grid .info-item .value{
+        font-weight: 820;
+        color:#0B1220;
+        font-size: 1.02rem;
+        word-break: break-word;
+    }
+    .info-grid .edit-btn{
+        position:absolute;
+        right: 10px;
+        top: 10px;
+        width: 34px;
+        height: 34px;
+        border-radius: 14px;
+        box-shadow: none;
+    }
+
+    /* Timeline + widgets */
+    .timeline{
+        padding: .35rem 0;
+    }
+    .timeline-item{
+        position: relative;
+        padding: 0 0 1rem 1.35rem;
+        margin-bottom:.65rem;
+    }
+    .timeline-item::before{
+        content:"";
+        position:absolute;
+        left:0;
+        top: 0.25rem;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--secondary), var(--blue));
+        box-shadow: 0 6px 14px rgba(16,185,129,0.25);
+    }
+    .timeline-item::after{
+        content:"";
+        position:absolute;
+        left:5px;
+        top: 1.05rem;
+        width: 2px;
+        height: calc(100% - 1.05rem);
+        background: linear-gradient(180deg, rgba(16,185,129,0.55), rgba(59,130,246,0));
+    }
+    .timeline-item:last-child::after{ display:none; }
+
+    .timeline-date{
+        color: rgba(11,18,32,0.55);
+        font-weight: 750;
+        font-size: .82rem;
+        margin-bottom: .15rem;
+    }
+    .timeline-title{
+        font-weight: 900;
+        color:#0B1220;
+        margin-bottom: .2rem;
+        font-size: .98rem;
+    }
+    .timeline-desc{
+        color: rgba(11,18,32,0.65);
+        font-weight: 600;
+        font-size: .92rem;
+    }
+
+    .widget{
+        background: var(--card);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-soft);
+        border: 1px solid rgba(2, 6, 23, 0.06);
+        padding: 1.25rem;
+    }
+
+    .widget-grid .w-item{
+        border-radius: 16px;
+        border: 1px solid rgba(59,130,246,0.12);
+        background: rgba(59,130,246,0.04);
+        padding: .95rem;
+        min-height: 84px;
+    }
+    .widget-grid .w-item .w-label{
+        color: rgba(11,18,32,0.62);
+        font-weight: 800;
+        font-size: .88rem;
+        margin-bottom: .25rem;
+        display:flex;
+        align-items:center;
+        gap:.5rem;
+    }
+    .widget-grid .w-item .w-value{
+        font-weight: 950;
+        color:#0B1220;
+        font-size: 1.12rem;
+    }
+    .widget-grid .w-item i{ color: var(--blue); }
+
+    .edit-profile-btn{
+        background: rgba(255,255,255,0.16);
+        border: 1px solid rgba(255,255,255,0.28);
+        color: #fff;
+        border-radius: 16px;
+        padding: .7rem 1rem;
+        font-weight: 800;
+        display:flex;
+        gap:.6rem;
+        align-items:center;
+        transition: transform .18s ease, background .18s ease;
+        cursor:pointer;
+        white-space: nowrap;
+    }
+    .edit-profile-btn:hover{
+        transform: translateY(-2px);
+        background: rgba(255,255,255,0.22);
+    }
+
+    /* Responsive */
+    @media (max-width: 991px){
+        .kpi-card{ min-height: 92px; }
+    }
+    @media (max-width: 768px){
+        .profile-banner{ padding: 1.2rem; }
+        .avatar-shell{ width: 78px; height: 78px; }
+    }
+</style>
+
+<div class="profile-wrap">
+    <!-- Profile Banner -->
+    <div class="profile-banner mb-3">
+        <div class="row align-items-center g-3" style="position:relative; z-index:1;">
+            <div class="col-lg-8">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="avatar-shell">
+                        {% if profile.profile_picture and profile.profile_picture.url %}
+                            <img src="{{ profile.profile_picture.url }}" alt="Profile">
+                        {% else %}
+                            <div class="avatar-fallback">
+                                {{ profile.user.first_name.0|default:profile.user.username.0|upper }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <h2 class="m-0" style="font-weight: 950; letter-spacing:-0.02em;">
+                            {{ profile.user.get_full_name|default:profile.user.username }}
+                        </h2>
+                        <div class="d-flex gap-2 flex-wrap mt-1">
+                            <span class="d-inline-flex align-items-center glass" style="padding:.55rem .75rem;">
+                                <i class="fas fa-envelope me-2"></i>
+                                <span style="font-weight:800;">{{ profile.user.email }}</span>
+                            </span>
+                            <span class="d-inline-flex align-items-center glass" style="padding:.55rem .75rem;">
+                                <i class="fas fa-phone me-2"></i>
+                                <span style="font-weight:800;">{{ profile.phone|default:'Not set' }}</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <h2 class="mb-1">{{ profile.user.get_full_name|default:profile.user.username }}</h2>
-            <p class="mb-2">{{ profile.user.email }}</p>
-            <div class="d-flex justify-content-center gap-2">
-                <span class="badge bg-light text-primary">Customer</span>
-                {% if profile.phone_number %}
-                    <span class="badge bg-light text-primary">{{ profile.phone_number }}</span>
-                {% endif %}
+
+            <div class="col-lg-4 text-lg-end">
+                <button class="edit-profile-btn justify-content-lg-end" onclick="openDrawer('profile')">
+                    <i class="fas fa-pen"></i> Edit Profile
+                </button>
+
+                <div class="d-flex justify-content-lg-end gap-3 mt-3 flex-wrap">
+                    <div class="glass" style="min-width: 210px;">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <div style="font-weight:800; opacity:.9; font-size:.9rem;">Member Since</div>
+                                <div style="font-weight:950; font-size:1.05rem;">
+                                    {{ profile.created_at|date:'M Y' }}
+                                </div>
+                            </div>
+                            <div style="width: 40px; height: 40px; border-radius: 16px; background: rgba(255,255,255,0.18); display:flex; align-items:center; justify-content:center;">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass" style="min-width: 210px;">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <div style="font-weight:800; opacity:.9; font-size:.9rem;">Last Login</div>
+                                <div style="font-weight:950; font-size:1.05rem;">
+                                    {% if user.last_login %}{{ user.last_login|naturaltime }}{% else %}N/A{% endif %}
+                                </div>
+                            </div>
+                            <div style="width: 40px; height: 40px; border-radius: 16px; background: rgba(255,255,255,0.18); display:flex; align-items:center; justify-content:center;">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass" style="min-width: 210px;">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <div style="font-weight:800; opacity:.9; font-size:.9rem;">Account Status</div>
+                                <div style="font-weight:950; font-size:1.05rem;">
+                                    {% if user.is_active %}Active{% else %}Inactive{% endif %}
+                                </div>
+                            </div>
+                            <div style="width: 40px; height: 40px; border-radius: 16px; background: rgba(255,255,255,0.18); display:flex; align-items:center; justify-content:center;">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Profile Information -->
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Personal Information</h5>
+    <!-- KPI Cards -->
+    <div class="row g-3 mb-3">
+        <div class="col-xl-3 col-md-6">
+            <div class="kpi-card">
+                <div class="kpi-pill" style="background: radial-gradient(circle, var(--purple), transparent);"></div>
+                <div class="kpi-icon" style="background: linear-gradient(135deg, rgba(139,92,246,1), rgba(59,130,246,1));">
+                    <i class="fas fa-calendar-alt"></i>
                 </div>
-                <div class="card-body">
-                    <div class="mb-3">
-                        <label class="form-label">Full Name</label>
-                        <input type="text" class="form-control" value="{{ profile.user.get_full_name|default:'' }}" readonly>
+                <div class="kpi-value">{{ profile.created_at|date:'M Y' }}</div>
+                <div class="kpi-label">Member Since</div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="kpi-card">
+                <div class="kpi-pill" style="background: radial-gradient(circle, var(--pink), transparent);"></div>
+                <div class="kpi-icon" style="background: linear-gradient(135deg, rgba(236,72,153,1), rgba(245,158,11,0.85));">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="kpi-value">{% if user.last_login %}{{ user.last_login|naturaltime }}{% else %}N/A{% endif %}</div>
+                <div class="kpi-label">Last Login</div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="kpi-card">
+                <div class="kpi-pill" style="background: radial-gradient(circle, var(--secondary), transparent);"></div>
+                <div class="kpi-icon" style="background: linear-gradient(135deg, rgba(16,185,129,1), rgba(15,118,110,1));">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="kpi-value">
+                    {% if user.is_active %}Active{% else %}Inactive{% endif %}
+                </div>
+                <div class="kpi-label">Account Status</div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="kpi-card">
+                <div class="kpi-pill" style="background: radial-gradient(circle, var(--blue), transparent);"></div>
+                <div class="kpi-icon" style="background: linear-gradient(135deg, rgba(59,130,246,1), rgba(16,185,129,0.9));">
+                    <i class="fas fa-home"></i>
+                </div>
+                <div class="kpi-value">12</div>
+                <div class="kpi-label">Saved Properties</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <!-- Personal Information -->
+        <div class="col-lg-7">
+            <div class="section-card">
+                <div class="section-title-premium">
+                    <i class="fas fa-user"></i>
+                    Personal Information
+                </div>
+
+                <div class="info-grid row g-3">
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <div class="icon"><i class="fas fa-id-card"></i></div>
+                            <div>
+                                <div class="label">Full Name</div>
+                                <div class="value" data-field="full_name">{{ profile.user.get_full_name|default:'Not set' }}</div>
+                            </div>
+                            <button class="btn btn-link edit-btn" style="color:#0F766E; text-decoration:none;" onclick="openFieldEdit('full_name')">
+                                <i class="fas fa-pen"></i>
+                            </button>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Email Address</label>
-                        <input type="email" class="form-control" value="{{ profile.user.email }}" readonly>
+
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <div class="icon"><i class="fas fa-envelope"></i></div>
+                            <div>
+                                <div class="label">Email Address</div>
+                                <div class="value" data-field="email">{{ profile.user.email }}</div>
+                            </div>
+                            <button class="btn btn-link edit-btn" style="color:#0F766E; text-decoration:none;" onclick="openFieldEdit('email')">
+                                <i class="fas fa-pen"></i>
+                            </button>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Phone Number</label>
-                        <input type="tel" class="form-control" value="{{ profile.phone_number|default:'' }}" readonly>
+
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <div class="icon"><i class="fas fa-phone"></i></div>
+                            <div>
+                                <div class="label">Phone Number</div>
+                                <div class="value" data-field="phone">{{ profile.phone|default:'Not set' }}</div>
+                            </div>
+                            <button class="btn btn-link edit-btn" style="color:#0F766E; text-decoration:none;" onclick="openFieldEdit('phone')">
+                                <i class="fas fa-pen"></i>
+                            </button>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Address</label>
-                        <input type="text" class="form-control" value="{{ profile.address|default:'' }}" readonly>
+
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <div class="icon"><i class="fas fa-bullseye"></i></div>
+                            <div>
+                                <div class="label">Preferred Contact</div>
+                                <div class="value" data-field="contact_method">{{ profile.get_preferred_contact_method_display|default:'Not set' }}</div>
+                            </div>
+                            <button class="btn btn-link edit-btn" style="color:#0F766E; text-decoration:none;" onclick="openFieldEdit('contact_method')">
+                                <i class="fas fa-pen"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Property Preferences</h5>
+
+        <!-- Recent Activity + Saved Properties -->
+        <div class="col-lg-5">
+            <div class="section-card">
+                <div class="section-title-premium">
+                    <i class="fas fa-history" style="background: linear-gradient(135deg, rgba(59,130,246,1), rgba(236,72,153,1));"></i>
+                    Recent Activity
                 </div>
-                <div class="card-body">
-                    <div class="mb-3">
-                        <label class="form-label">Preferred Property Type</label>
-                        <input type="text" class="form-control" value="{{ profile.preferred_property_type|default:'Not specified' }}" readonly>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">Today</div>
+                        <div class="timeline-title">Profile Updated</div>
+                        <div class="timeline-desc">Changed phone number</div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Preferred Location</label>
-                        <input type="text" class="form-control" value="{{ profile.preferred_location|default:'Not specified' }}" readonly>
+                    <div class="timeline-item">
+                        <div class="timeline-date">Yesterday</div>
+                        <div class="timeline-title">Property Saved</div>
+                        <div class="timeline-desc">Added “Luxury Villa” to saved properties</div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">Minimum Budget</label>
-                                <input type="text" class="form-control" value="${{ profile.min_budget|default:'Not specified' }}" readonly>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">Maximum Budget</label>
-                                <input type="text" class="form-control" value="${{ profile.max_budget|default:'Not specified' }}" readonly>
-                            </div>
-                        </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2 days ago</div>
+                        <div class="timeline-title">Login Activity</div>
+                        <div class="timeline-desc">Signed in from a new device</div>
                     </div>
-                    <div class="mb-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="emailNotifications" {% if profile.email_notifications %}checked{% endif %} disabled>
-                            <label class="form-check-label" for="emailNotifications">
-                                Email notifications enabled
-                            </label>
-                        </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">1 week ago</div>
+                        <div class="timeline-title">Password Changes</div>
+                        <div class="timeline-desc">Security update completed</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="widget mt-3">
+                <div class="section-title-premium" style="margin-bottom: .9rem;">
+                    <i class="fas fa-star" style="background: linear-gradient(135deg, rgba(139,92,246,1), rgba(59,130,246,1));"></i>
+                    Saved Properties Overview
+                </div>
+
+                <div class="widget-grid row g-3">
+                    <div class="col-md-6 w-item">
+                        <div class="w-label"><i class="fas fa-layer-group"></i> Total Saved</div>
+                        <div class="w-value">12</div>
+                    </div>
+                    <div class="col-md-6 w-item">
+                        <div class="w-label"><i class="fas fa-eye"></i> Recently Viewed</div>
+                        <div class="w-value">3</div>
+                    </div>
+                    <div class="col-md-6 w-item">
+                        <div class="w-label"><i class="fas fa-compass"></i> Interests</div>
+                        <div class="w-value">Villa</div>
+                    </div>
+                    <div class="col-md-6 w-item">
+                        <div class="w-label"><i class="fas fa-heart"></i> Favourite Locations</div>
+                        <div class="w-value">Chennai</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Action Buttons -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex gap-2">
-                        <button class="btn btn-primary" onclick="editProfile()">
-                            <i class="fas fa-edit"></i> Edit Profile
-                        </button>
-                        <button class="btn btn-warning" onclick="changePassword()">
-                            <i class="fas fa-key"></i> Change Password
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+<!-- Drawer/Slide-over for Field Editing -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+    <div class="drawer-header">
+        <h4 class="mb-0" id="drawerTitle">Edit Field</h4>
+        <button class="btn btn-link text-decoration-none" onclick="closeDrawer()">
+            <i class="fas fa-times fa-lg"></i>
+        </button>
     </div>
+    <div class="drawer-body" id="drawerBody">
+        <!-- Dynamic content will be loaded here -->
+    </div>
+</div>
 
-    <!-- Edit Profile Modal -->
-    <div class="modal fade" id="editProfileModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit Profile</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+<!-- Profile Picture Upload Modal -->
+<div class="modal fade" id="profilePictureModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-white mb-0">Update Profile Picture</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <div class="profile-upload-container mx-auto mb-4" style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden; border: 4px solid #667eea; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3); position: relative;">
+                    {% if profile.profile_picture %}
+                        <img src="{{ profile.profile_picture.url }}" alt="Current Profile Picture" class="w-100 h-100" style="object-fit: cover;" id="modalProfileImage">
+                    {% else %}
+                        <div class="w-100 h-100 bg-light text-primary d-flex align-items-center justify-content-center">
+                            <i class="fas fa-user fa-3x"></i>
+                        </div>
+                    {% endif %}
+                    <label for="modalProfilePicture" class="position-absolute bottom-0 end-0 m-2" style="cursor: pointer; background: #667eea; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);">
+                        <i class="fas fa-camera"></i>
+                    </label>
+                    <input type="file" id="modalProfilePicture" class="d-none" accept="image/*" onchange="previewModalProfileImage(event)">
                 </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">First Name</label>
-                                    <input type="text" class="form-control" value="{{ profile.user.first_name|default:'' }}">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Last Name</label>
-                                    <input type="text" class="form-control" value="{{ profile.user.last_name|default:'' }}">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Phone Number</label>
-                            <input type="tel" class="form-control" value="{{ profile.phone_number|default:'' }}">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Address</label>
-                            <textarea class="form-control" rows="2">{{ profile.address|default:'' }}</textarea>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Preferred Property Type</label>
-                                    <select class="form-select">
-                                        <option value="">Select Type</option>
-                                        <option value="apartment">Apartment</option>
-                                        <option value="house">House</option>
-                                        <option value="condo">Condo</option>
-                                        <option value="villa">Villa</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Preferred Location</label>
-                                    <input type="text" class="form-control" value="{{ profile.preferred_location|default:'' }}">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Minimum Budget</label>
-                                    <input type="number" class="form-control" value="{{ profile.min_budget|default:'' }}">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Maximum Budget</label>
-                                    <input type="number" class="form-control" value="{{ profile.max_budget|default:'' }}">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="emailNotifications" {% if profile.email_notifications %}checked{% endif %}>
-                                <label class="form-check-label" for="emailNotifications">
-                                    Enable email notifications
-                                </label>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
+                <p class="text-muted mb-4">Click the camera icon to upload a new profile picture</p>
+                <div class="d-flex gap-2 justify-content-center">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" onclick="saveProfile()">Save Changes</button>
+                    <button type="button" class="btn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: white;" onclick="uploadProfilePicture()">
+                        <i class="fas fa-upload me-2"></i>Upload Picture
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Change Password Modal -->
-    <div class="modal fade" id="changePasswordModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Change Password</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="mb-3">
-                            <label class="form-label">Current Password</label>
-                            <input type="password" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">New Password</label>
-                            <input type="password" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Confirm New Password</label>
-                            <input type="password" class="form-control" required>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" onclick="updatePassword()">Update Password</button>
-                </div>
-            </div>
-        </div>
-    </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-    function editProfile() {
-        new bootstrap.Modal(document.getElementById('editProfileModal')).show();
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
     }
-    
-    function saveProfile() {
-        alert('Profile saved successfully!');
-        bootstrap.Modal.getInstance(document.getElementById('editProfileModal')).hide();
+
+    // Drawer Functions
+    function openDrawer(type) {
+        const drawer = document.getElementById('drawer');
+        const overlay = document.getElementById('drawerOverlay');
+        const title = document.getElementById('drawerTitle');
+        const body = document.getElementById('drawerBody');
+
+        let content = '';
+        let drawerTitle = '';
+
+        switch(type) {
+            case 'profile':
+                drawerTitle = 'Edit Profile';
+                content = `
+                    <form id="editProfileForm">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">First Name</label>
+                            <input type="text" name="first_name" class="form-control" value="{{ profile.user.first_name|default:'' }}" style="border-radius: 12px; border: 1px solid #e5e7eb; padding: 0.75rem 1rem;">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Last Name</label>
+                            <input type="text" name="last_name" class="form-control" value="{{ profile.user.last_name|default:'' }}" style="border-radius: 12px; border: 1px solid #e5e7eb; padding: 0.75rem 1rem;">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Phone Number</label>
+                            <input type="tel" name="phone" class="form-control" value="{{ profile.phone|default:'' }}" style="border-radius: 12px; border: 1px solid #e5e7eb; padding: 0.75rem 1rem;">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Preferred Contact Method</label>
+                            <select name="preferred_contact_method" class="form-select" style="border-radius: 12px; border: 1px solid #e5e7eb; padding: 0.75rem 1rem;">
+                                <option value="email" {% if profile.preferred_contact_method == 'email' %}selected{% endif %}>Email</option>
+                                <option value="phone" {% if profile.preferred_contact_method == 'phone' %}selected{% endif %}>Phone</option>
+                                <option value="both" {% if profile.preferred_contact_method == 'both' %}selected{% endif %}>Both</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn w-100" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: white; border-radius: 12px; padding: 0.75rem 1rem;">
+                            <i class="fas fa-save me-2"></i>Save Changes
+                        </button>
+                    </form>
+                `;
+                break;
+            default:
+                drawerTitle = 'Edit';
+                content = '<p>Feature coming soon</p>';
+        }
+
+        title.textContent = drawerTitle;
+        body.innerHTML = content;
+        drawer.classList.add('active');
+        overlay.classList.add('active');
+
+        // Attach event listeners to forms
+        if (type === 'profile') {
+            document.getElementById('editProfileForm').addEventListener('submit', handleProfileUpdate);
+        }
     }
-    
-    function changePassword() {
-        new bootstrap.Modal(document.getElementById('changePasswordModal')).show();
+
+    function closeDrawer() {
+        document.getElementById('drawer').classList.remove('active');
+        document.getElementById('drawerOverlay').classList.remove('active');
     }
-    
-    function updatePassword() {
-        alert('Password updated successfully!');
-        bootstrap.Modal.getInstance(document.getElementById('changePasswordModal')).hide();
+
+    function openFieldEdit(field) {
+        const currentValue = document.querySelector(`[data-field="${field}"]`)?.textContent || '';
+        const drawer = document.getElementById('drawer');
+        const overlay = document.getElementById('drawerOverlay');
+        const title = document.getElementById('drawerTitle');
+        const body = document.getElementById('drawerBody');
+
+        let content = '';
+        let drawerTitle = '';
+
+        switch(field) {
+            case 'full_name':
+                drawerTitle = 'Edit Full Name';
+                content = `
+                    <form id="fieldEditForm">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Full Name</label>
+                            <input type="text" name="value" class="form-control" value="${currentValue}" style="border-radius: 12px; border: 1px solid #e5e7eb; padding: 0.75rem 1rem;">
+                        </div>
+                        <button type="submit" class="btn w-100" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: white; border-radius: 12px; padding: 0.75rem 1rem;">
+                            <i class="fas fa-save me-2"></i>Save
+                        </button>
+                    </form>
+                `;
+                break;
+            case 'phone':
+                drawerTitle = 'Edit Phone Number';
+                content = `
+                    <form id="fieldEditForm">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Phone Number</label>
+                            <input type="tel" name="value" class="form-control" value="${currentValue}" style="border-radius: 12px; border: 1px solid #e5e7eb; padding: 0.75rem 1rem;">
+                        </div>
+                        <button type="submit" class="btn w-100" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: white; border-radius: 12px; padding: 0.75rem 1rem;">
+                            <i class="fas fa-save me-2"></i>Save
+                        </button>
+                    </form>
+                `;
+                break;
+            case 'contact_method':
+                drawerTitle = 'Edit Contact Method';
+                content = `
+                    <form id="fieldEditForm">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Preferred Contact Method</label>
+                            <select name="value" class="form-select" style="border-radius: 12px; border: 1px solid #e5e7eb; padding: 0.75rem 1rem;">
+                                <option value="email">Email</option>
+                                <option value="phone">Phone</option>
+                                <option value="both">Both</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn w-100" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: white; border-radius: 12px; padding: 0.75rem 1rem;">
+                            <i class="fas fa-save me-2"></i>Save
+                        </button>
+                    </form>
+                `;
+                break;
+            default:
+                drawerTitle = 'Edit Field';
+                content = '<p>Feature coming soon</p>';
+        }
+
+        title.textContent = drawerTitle;
+        body.innerHTML = content;
+        drawer.classList.add('active');
+        overlay.classList.add('active');
+
+        document.getElementById('fieldEditForm').addEventListener('submit', (e) => handleFieldEdit(e, field));
     }
+
+    function handleProfileUpdate(e) {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const csrftoken = getCookie('csrftoken');
+
+        fetch('{% url "customer:update-profile" %}', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                closeDrawer();
+                location.reload();
+            } else {
+                alert('Error: ' + data.error);
+            }
+        })
+        .catch(error => {
+            alert('Error: ' + error);
+        });
+    }
+
+    function handlePasswordChange(e) {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const csrftoken = getCookie('csrftoken');
+
+        fetch('{% url "customer:change-password" %}', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                closeDrawer();
+                alert('Password updated successfully!');
+            } else {
+                alert('Error: ' + data.error);
+            }
+        })
+        .catch(error => {
+            alert('Error: ' + error);
+        });
+    }
+
+    function handleFieldEdit(e, field) {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const csrftoken = getCookie('csrftoken');
+
+        // Add field name to form data
+        formData.append('field', field);
+
+        fetch('{% url "customer:update-profile" %}', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                closeDrawer();
+                location.reload();
+            } else {
+                alert('Error: ' + data.error);
+            }
+        })
+        .catch(error => {
+            alert('Error: ' + error);
+        });
+    }
+
+    // Profile Picture Functions
+    function previewModalProfileImage(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('modalProfileImage');
+                if (img) {
+                    img.src = e.target.result;
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function uploadProfilePicture() {
+        const fileInput = document.getElementById('modalProfilePicture');
+        if (fileInput.files.length === 0) {
+            alert('Please select a file first');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('profile_picture', fileInput.files[0]);
+        const csrftoken = getCookie('csrftoken');
+
+        fetch('{% url "customer:update-profile" %}', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                bootstrap.Modal.getInstance(document.getElementById('profilePictureModal')).hide();
+                location.reload();
+            } else {
+                alert('Error: ' + data.error);
+            }
+        })
+        .catch(error => {
+            alert('Error: ' + error);
+        });
+    }
+
+    // Add click handler for profile picture
+    document.querySelector('.profile-avatar-container').addEventListener('click', function() {
+        new bootstrap.Modal(document.getElementById('profilePictureModal')).show();
+    });
+    document.querySelector('.profile-avatar-container').style.cursor = 'pointer';
 </script>
 {% endblock %}
-</body>
-</html>
