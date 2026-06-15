@@ -137,11 +137,20 @@
                 <div class="card-header" style="background: #F8FAFC; border-bottom: 1px solid #E2E8F0; border-radius: 12px 12px 0 0; padding: 16px 24px;">
                     <div class="d-flex justify-content-between align-items-center">
                         <h5 class="mb-0" style="font-weight: 600; color: #0F172A;">All Users ({{ total_users }})</h5>
-                        <div class="input-group" style="width: 300px;">
-                            <span class="input-group-text bg-light border-end-0" style="border-radius: 8px 0 0 8px; border-color: #E2E8F0;">
-                                <i class="fas fa-search text-muted"></i>
-                            </span>
-                            <input type="text" class="form-control border-start-0" id="searchInput" placeholder="Search by name or email..." onkeyup="filterUsers()" style="border-radius: 0 8px 8px 0; border-color: #E2E8F0;">
+                        <div class="d-flex gap-2">
+                            <select class="form-select" id="roleFilter" onchange="filterUsers()" style="width: 150px; border-radius: 8px; border-color: #E2E8F0; color: #64748B;">
+                                <option value="">All Roles</option>
+                                <option value="admin">Admin</option>
+                                <option value="agent">Agent</option>
+                                <option value="investor">Investor</option>
+                                <option value="customer">Customer</option>
+                            </select>
+                            <div class="input-group" style="width: 300px;">
+                                <span class="input-group-text bg-light border-end-0" style="border-radius: 8px 0 0 8px; border-color: #E2E8F0;">
+                                    <i class="fas fa-search text-muted"></i>
+                                </span>
+                                <input type="text" class="form-control border-start-0" id="searchInput" placeholder="Search by name or email..." onkeyup="filterUsers()" style="border-radius: 0 8px 8px 0; border-color: #E2E8F0;">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -319,15 +328,21 @@
     // Search/filter users by name or email
     function filterUsers() {
         const searchInput = document.getElementById('searchInput').value.toLowerCase();
+        const roleFilter = document.getElementById('roleFilter').value.toLowerCase();
         const tableRows = document.querySelectorAll('tbody tr');
         
         tableRows.forEach(row => {
             const nameCell = row.querySelector('td:nth-child(2)');
-            if (nameCell) {
+            const roleCell = row.querySelector('td:nth-child(3)');
+            
+            if (nameCell && roleCell) {
                 const nameText = nameCell.textContent.toLowerCase();
-                const emailText = nameCell.textContent.toLowerCase();
+                const roleText = roleCell.textContent.toLowerCase();
                 
-                if (nameText.includes(searchInput) || emailText.includes(searchInput)) {
+                const matchesSearch = nameText.includes(searchInput);
+                const matchesRole = roleFilter === '' || roleText.includes(roleFilter);
+                
+                if (matchesSearch && matchesRole) {
                     row.style.display = '';
                 } else {
                     row.style.display = 'none';

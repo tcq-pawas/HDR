@@ -5,7 +5,11 @@ from django.contrib import messages
 from django.views.generic import TemplateView
 from django.urls import reverse
 from django.http import JsonResponse
+from django.core.mail import send_mail
+from django.conf import settings
 from .auth_utils import get_role_based_redirect_url, get_dashboard_context, get_user_role
+from Apps.Customer.forms import CustomerRegistrationForm
+from .forms import PartnerRegistrationForm
 
 
 class CustomLoginView(TemplateView):
@@ -33,10 +37,7 @@ class CustomLoginView(TemplateView):
                 
                 # Get user role and redirect to appropriate dashboard
                 redirect_url = get_role_based_redirect_url(user)
-                
-                # Add success message
                 role = get_user_role(user)
-                messages.success(request, f"Welcome back! Redirecting to your {role} dashboard.")
                 
                 if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                     return JsonResponse({
@@ -49,7 +50,11 @@ class CustomLoginView(TemplateView):
             else:
                 messages.error(request, "Invalid username or password.")
         else:
-            messages.error(request, "Please correct the errors below.")
+            if form.non_field_errors():
+                for error in form.non_field_errors():
+                    messages.error(request, error)
+            else:
+                messages.error(request, "Invalid username or password. Please try again.")
         
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return JsonResponse({
@@ -60,23 +65,93 @@ class CustomLoginView(TemplateView):
         return render(request, self.template_name, {'form': form})
 
 
+class CustomerRegistrationView(TemplateView):
+    """Customer registration view"""
+    template_name = 'auth/register_customer.html'
+    
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect(get_role_based_redirect_url(request.user))
+            
+        form = CustomerRegistrationForm()
+        return render(request, self.template_name, {'form': form})
+        
+    def post(self, request, *args, **kwargs):
+        form = CustomerRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect(get_role_based_redirect_url(user))
+        else:
+            messages.error(request, "Registration failed. Please correct the errors below.")
+            return render(request, self.template_name, {'form': form})
+
+
+class PartnerRegistrationView(TemplateView):
+    """Partner (Agent/Investor) registration view"""
+    template_name = 'auth/register_partner.html'
+    
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect(get_role_based_redirect_url(request.user))
+            
+        form = PartnerRegistrationForm()
+        return render(request, self.template_name, {'form': form})
+        
+    def post(self, request, *args, **kwargs):
+        form = PartnerRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            role_display = dict(PartnerRegistrationForm.ROLE_CHOICES).get(form.cleaned_data['role'])
+            
+            # Send 'Under Review' email
+            html_message = f"""
+            <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+                <div style="background: linear-gradient(135deg, #0F766E 0%, #115E59 100%); padding: 30px 20px; text-align: center;">
+                    <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700; letter-spacing: 1px;">🌱 HeyDay Realty</h1>
+                </div>
+                <div style="padding: 40px 30px; background-color: #ffffff;">
+                    <h2 style="color: #1F2937; margin-top: 0; font-size: 22px;">Account Under Review</h2>
+                    <p style="color: #4B5563; font-size: 16px; line-height: 1.6;">Hello <strong>{user.first_name}</strong>,</p>
+                    <p style="color: #4B5563; font-size: 16px; line-height: 1.6;">Thank you for registering as a <strong>{role_display}</strong> with HeyDay Realty. We are excited to have you on board!</p>
+                    <div style="background-color: #F3F4F6; border-left: 4px solid #FBBF24; padding: 15px 20px; margin: 25px 0; border-radius: 0 8px 8px 0;">
+                        <p style="color: #4B5563; font-size: 15px; margin: 0; line-height: 1.5;">Your account is currently under review by our administration team. You will receive another email with your login details once your account has been approved.</p>
+                    </div>
+                    <p style="color: #4B5563; font-size: 16px; line-height: 1.6;">Best regards,<br><strong style="color: #0F766E;">HeyDay Realty Team</strong></p>
+                </div>
+                <div style="background-color: #F9FAFB; padding: 20px; text-align: center; border-top: 1px solid #e5e7eb;">
+                    <p style="color: #9CA3AF; font-size: 13px; margin: 0;">&copy; 2026 HeyDay Realty. All rights reserved.</p>
+                </div>
+            </div>
+            """
+            send_mail(
+                subject='Account Under Review - HeyDay Realty',
+                message=f'Hello {user.first_name},\n\nThank you for registering as a {role_display} with HeyDay Realty.\n\nYour account is currently under review by our administration team. You will receive another email with your login details once your account has been approved.\n\nBest regards,\nHeyDay Realty Team',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[user.email],
+                html_message=html_message,
+                fail_silently=True,
+            )
+            
+            return render(request, 'auth/registration_pending.html', {'email': user.email})
+        else:
+            messages.error(request, "Registration failed. Please correct the errors below.")
+            return render(request, self.template_name, {'form': form})
+
+
 class CustomLogoutView(TemplateView):
     """Custom logout view"""
     template_name = 'auth/logout.html'
     
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            role = get_user_role(request.user)
             logout(request)
-            messages.info(request, f"You have been logged out from your {role} dashboard.")
         
         return render(request, self.template_name)
     
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            role = get_user_role(request.user)
             logout(request)
-            messages.info(request, f"You have been logged out from your {role} dashboard.")
         
         return redirect('login')
 
@@ -108,7 +183,6 @@ class RoleBasedDashboardView(TemplateView):
         return context
 
 
-def unauthorized_access(request, exception):
-    """Custom view for unauthorized access"""
-    from django.core.exceptions import PermissionDenied
+def unauthorized_access(request, exception=None):
+    """View for 403 Forbidden errors"""
     return render(request, 'auth/unauthorized.html', status=403)

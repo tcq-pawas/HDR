@@ -239,19 +239,33 @@ class UserManagementView(AdminDashboardMixin, TemplateView):
         
         # Add role information to each user
         users_with_roles = []
+        customer_count = 0
+        investor_count = 0
+        admin_count = 0
+        agent_count = 0
+        
         for user in users:
             user.role = get_user_role(user)
             users_with_roles.append(user)
+            
+            if user.role == 'customer':
+                customer_count += 1
+            elif user.role == 'investor':
+                investor_count += 1
+            elif user.role == 'admin':
+                admin_count += 1
+            elif user.role == 'agent':
+                agent_count += 1
         
         context['users'] = users_with_roles
         context['total_users'] = users.count()
         context['groups'] = ['customer', 'investor', 'admin', 'agent']
         
         # Add role counts
-        context['customer_count'] = User.objects.filter(groups__name='customer').count()
-        context['investor_count'] = User.objects.filter(groups__name='investor').count()
-        context['admin_count'] = User.objects.filter(groups__name='admin').count()
-        context['agent_count'] = User.objects.filter(groups__name='agent').count()
+        context['customer_count'] = customer_count
+        context['investor_count'] = investor_count
+        context['admin_count'] = admin_count
+        context['agent_count'] = agent_count
         context['active_users_count'] = User.objects.filter(is_active=True).count()
         
         return context
@@ -299,7 +313,9 @@ class SystemSettingsView(AdminDashboardMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         
         from .models import SystemSettings
-        context['settings'] = SystemSettings.objects.all().order_by('setting_key')
+        settings_qs = SystemSettings.objects.all()
+        settings_dict = {s.setting_key: s.setting_value for s in settings_qs}
+        context['settings'] = settings_dict
         
         return context
 
