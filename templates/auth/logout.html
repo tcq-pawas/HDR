@@ -37,14 +37,7 @@
             Thank you for using HeyDay Realty. You have been safely logged out of your account.
         </p>
         
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-info alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            {% endfor %}
-        {% endif %}
+
         
         <div class="d-grid gap-2">
             <a href="{% url 'auth:login' %}" class="btn btn-primary">

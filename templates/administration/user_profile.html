@@ -362,7 +362,18 @@
             <div class="profile-name">{{ user.get_full_name|default:user.username }}</div>
             <div class="profile-username">@{{ user.username }}</div>
             <div class="profile-email">{{ user.email }}</div>
-            <div class="profile-email">{{ user.phone_number|default:"No phone number" }}</div>
+            <div class="profile-email">
+                <i class="fas fa-phone fa-sm text-muted me-1"></i>
+                {% if user.customer_profile.phone %}
+                    {{ user.customer_profile.phone }}
+                {% elif user.investor_profile.phone %}
+                    {{ user.investor_profile.phone }}
+                {% elif user.agent_profile.phone %}
+                    {{ user.agent_profile.phone }}
+                {% else %}
+                    No phone number
+                {% endif %}
+            </div>
             <div class="profile-badges">
                 {% if user.role == 'admin' %}
                     <span class="role-badge" style="background: linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%); color: white;">
@@ -617,7 +628,17 @@
             </div>
             <div class="info-row">
                 <div class="info-label">Phone Number</div>
-                <div class="info-value">{{ user.phone_number|default:"Not provided" }}</div>
+                <div class="info-value">
+                    {% if user.customer_profile.phone %}
+                        {{ user.customer_profile.phone }}
+                    {% elif user.investor_profile.phone %}
+                        {{ user.investor_profile.phone }}
+                    {% elif user.agent_profile.phone %}
+                        {{ user.agent_profile.phone }}
+                    {% else %}
+                        Not provided
+                    {% endif %}
+                </div>
             </div>
             <div class="info-row">
                 <div class="info-label">Role</div>
