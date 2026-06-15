@@ -2,151 +2,260 @@
 {% load static %}
 
 {% block inner_hero %}
-<section class="inner-hero" style="background-image: url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');">
+
+<section class="inner-hero"
+    style="background-image: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80');">
     <div class="inner-hero-content">
-        <h1 class="inner-hero-title">Media Gallery</h1>
-        <p class="inner-hero-quote">"Visual stories of our properties"</p>
+        <h1 class="inner-hero-title">Farmland Media Gallery</h1>
+        <p class="inner-hero-quote">
+            Explore our projects, plantations, landscapes and investment opportunities
+        </p>
     </div>
 </section>
 {% endblock %}
 
 {% block content %}
 
+<!-- Intro Section -->
+
+<section class="py-5 bg-light">
+    <div class="container text-center">
+
+
+    <h2 class="fw-bold mb-3">
+        Explore Our Farmland Projects
+    </h2>
+
+    <p class="text-muted col-lg-8 mx-auto">
+        Browse project images, plantation developments, infrastructure,
+        amenities and surrounding landscapes from our managed farmland
+        investment opportunities.
+    </p>
+
+</div>
+
+
+</section>
+
 <!-- Gallery Section -->
+
 <section class="py-5">
     <div class="container">
-        
-        <!-- Category Navigation -->
-        <ul class="nav nav-pills justify-content-center mb-5" id="gallery-tabs">
-            <li class="nav-item">
-                <button class="nav-link active rounded-pill px-4 me-2 mb-2" data-filter="all">All</button>
-            </li>
-            <!-- Property Type Categories -->
-            <li class="nav-item">
-                <button class="nav-link rounded-pill px-4 me-2 mb-2" data-filter=".cat-prop-Apartments">Apartments</button>
-            </li>
-            <li class="nav-item">
-                <button class="nav-link rounded-pill px-4 me-2 mb-2" data-filter=".cat-prop-Villas">Villas</button>
-            </li>
-            <li class="nav-item">
-                <button class="nav-link rounded-pill px-4 me-2 mb-2" data-filter=".cat-prop-Commercial">Commercial</button>
-            </li>
-            <li class="nav-item">
-                <button class="nav-link rounded-pill px-4 me-2 mb-2" data-filter=".cat-prop-Luxury">Luxury</button>
-            </li>
-            <li class="nav-item">
-                <button class="nav-link rounded-pill px-4 me-2 mb-2" data-filter=".cat-prop-Plots">Plots</button>
-            </li>
-            <!-- Image Type Categories -->
-            <li class="nav-item">
-                <button class="nav-link rounded-pill px-4 me-2 mb-2" data-filter=".cat-img-Interiors">Interiors</button>
-            </li>
-            <li class="nav-item">
-                <button class="nav-link rounded-pill px-4 me-2 mb-2" data-filter=".cat-img-Amenities">Amenities</button>
-            </li>
-            <li class="nav-item">
-                <button class="nav-link rounded-pill px-4 me-2 mb-2" data-filter=".cat-img-Neighborhood">Neighborhood</button>
-            </li>
-        </ul>
 
-        <!-- Image Grid -->
-        <div class="row g-4" id="gallery-grid">
-            {% for image in images %}
-            <div class="col-md-4 col-sm-6 gallery-item cat-prop-{{ image.property.category }} cat-img-{{ image.category }}">
-                <div class="card border-0 shadow-sm h-100 overflow-hidden position-relative group-hover">
-                    <div class="ratio ratio-4x3">
-                        {% if image.image %}
-                        <img src="{{ image.image.url }}" class="card-img-top object-fit-cover transition-transform" alt="{{ image.property.title }}" loading="lazy">
-                        {% else %}
-                        <div class="d-flex align-items-center justify-content-center bg-secondary text-white">No Image</div>
-                        {% endif %}
-                    </div>
-                    <div class="card-img-overlay d-flex flex-column justify-content-end p-0">
-                        <div class="bg-dark bg-opacity-75 p-3 text-white transform-translate-y transition-all hover-reveal">
-                            <h6 class="fw-bold mb-1">{{ image.property.title }}</h6>
-                            <p class="small mb-0 text-white-50">
-                                {{ image.get_category_display }} 
-                                <span class="mx-1">•</span> 
-                                {{ image.property.location }}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% empty %}
-            <div class="col-12 text-center py-5">
-                <p class="text-muted">No images found in the gallery yet.</p>
-            </div>
-            {% endfor %}
-        </div>
+
+    <!-- Custom Filter Buttons -->
+    <div class="media-filters">
+
+        <button class="media-filter-btn active" data-filter="all">
+            All
+        </button>
+
+        <button class="media-filter-btn" data-filter=".cat-img-General">
+            Projects
+        </button>
+
+        <button class="media-filter-btn" data-filter=".cat-img-Interiors">
+            Plantations
+        </button>
+
+        <button class="media-filter-btn" data-filter=".cat-img-Amenities">
+            Amenities
+        </button>
+
+        <button class="media-filter-btn" data-filter=".cat-img-Neighborhood">
+            Surroundings
+        </button>
+
     </div>
+
+    <!-- Gallery Grid -->
+    <div class="row g-4">
+
+        {% for image in images %}
+
+        <div class="col-lg-4 col-md-6 gallery-item cat-img-{{ image.category }}">
+
+            <div class="card border-0 shadow rounded-4 overflow-hidden h-100 gallery-card">
+
+                {% if image.image %}
+                <img src="{{ image.image.url }}"
+                    class="gallery-image"
+                    alt="{{ image.property.title }}">
+                {% else %}
+                <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80"
+                    class="gallery-image"
+                    alt="Farmland">
+                {% endif %}
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold mb-2">
+                        {{ image.property.title }}
+                    </h5>
+
+                    <p class="text-muted small mb-3">
+                        {{ image.property.location }}
+                    </p>
+
+                    <span class="badge bg-primary">
+                        {{ image.category }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="col-12 text-center py-5">
+
+            <h3 class="fw-bold mb-3">
+                No Project Images Available Yet
+            </h3>
+
+            <p class="text-muted">
+                Farmland project images will appear here as projects are added.
+            </p>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+
 </section>
 
 <style>
-    /* Smooth Transitions */
-    .gallery-item {
-        transition: all 0.4s ease-in-out;
+
+/* ===========================
+   FILTER BUTTONS
+=========================== */
+
+.media-filters{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:15px;
+    margin-bottom:50px;
+}
+
+.media-filter-btn{
+    min-width:160px;
+    padding:14px 28px;
+    border:2px solid #D4A23A;
+    border-radius:50px;
+    background:#ffffff;
+    color:#061B38;
+    font-weight:600;
+    font-size:15px;
+    cursor:pointer;
+    transition:all .3s ease;
+}
+
+.media-filter-btn:hover{
+    background:#D4A23A;
+    color:#ffffff;
+    transform:translateY(-3px);
+    box-shadow:0 10px 25px rgba(212,162,58,.30);
+}
+
+.media-filter-btn.active{
+    background:#D4A23A;
+    color:#ffffff;
+    border-color:#D4A23A;
+    box-shadow:0 10px 25px rgba(212,162,58,.35);
+}
+
+/* ===========================
+   GALLERY CARDS
+=========================== */
+
+.gallery-card{
+    transition:all .3s ease;
+}
+
+.gallery-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 20px 40px rgba(0,0,0,.12) !important;
+}
+
+.gallery-image{
+    width:100%;
+    height:280px;
+    object-fit:cover;
+    transition:.5s;
+}
+
+.gallery-card:hover .gallery-image{
+    transform:scale(1.05);
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media(max-width:768px){
+
+    .media-filter-btn{
+        min-width:130px;
+        padding:10px 18px;
+        font-size:14px;
     }
-    
-    /* Hover Effects */
-    .group-hover:hover .card-img-top {
-        transform: scale(1.05);
+
+    .gallery-image{
+        height:220px;
     }
-    .transition-transform {
-        transition: transform 0.5s ease;
-    }
-    .bg-opacity-75 {
-        --bs-bg-opacity: 0.85;
-    }
-    
-    /* Filtering Animation Class */
-    .gallery-item.hide {
-        display: none; 
-        /* We can use opacity/transform for better animation if we use JS to add/remove classes properly */
-        opacity: 0;
-        transform: scale(0.9);
-    }
-    .gallery-item.show {
-        animation: fadeIn 0.5s forwards;
-    }
-    
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+
+}
+
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const filterButtons = document.querySelectorAll('[data-filter]');
-    const galleryItems = document.querySelectorAll('.gallery-item');
 
-    filterButtons.forEach(btn => {
-        btn.addEventListener('click', function() {
-            // Remove active class from all
-            filterButtons.forEach(b => b.classList.remove('active', 'bg-primary', 'text-white'));
-            
-            // Add active class to clicked
-            this.classList.add('active');
-            
-            const filterValue = this.getAttribute('data-filter');
-            
-            galleryItems.forEach(item => {
-                if (filterValue === 'all') {
-                    item.classList.remove('d-none');
-                    item.classList.add('show');
-                } else {
-                    if (item.classList.contains(filterValue.substring(1))) {
-                        item.classList.remove('d-none');
-                        item.classList.add('show');
-                    } else {
-                        item.classList.add('d-none');
-                        item.classList.remove('show');
-                    }
-                }
+document.addEventListener('DOMContentLoaded', function() {
+
+    const buttons = document.querySelectorAll('.media-filter-btn');
+    const items = document.querySelectorAll('.gallery-item');
+
+    buttons.forEach(button => {
+
+        button.addEventListener('click', function() {
+
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
             });
+
+            this.classList.add('active');
+
+            const filter = this.dataset.filter;
+
+            items.forEach(item => {
+
+                if(filter === 'all'){
+                    item.style.display = 'block';
+                    return;
+                }
+
+                if(item.classList.contains(filter.replace('.', ''))){
+                    item.style.display = 'block';
+                }else{
+                    item.style.display = 'none';
+                }
+
+            });
+
         });
+
     });
+
 });
+
 </script>
+
 {% endblock %}

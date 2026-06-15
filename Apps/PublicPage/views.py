@@ -65,3 +65,9 @@ def media_page(request):
         'images': images,
         'categories': categories
     })
+
+def career(request):
+    return render(request, 'public/career.html')
+
+def nri(request):
+    return render(request, 'public/nri.html')

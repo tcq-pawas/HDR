@@ -456,7 +456,8 @@
                         <img src="{{ image.image.url }}" 
                              alt="Thumbnail" 
                              class="thumbnail {% if forloop.first %}active{% endif %}"
-                             onclick="changeImage(this.src, {{ forloop.counter0 }})">
+                             data-index="{{ forloop.counter0 }}"
+                            onclick="changeImage(this.src, this.dataset.index)">
                     {% endfor %}
                 </div>
             {% endif %}
@@ -477,7 +478,40 @@
                     </div>
 
                     <!-- Key Details -->
-                    <div class="details-grid">
+                     <div class="details-grid">
+
+    <div class="detail-card">
+        <div class="detail-label">Project Size</div>
+        <div class="detail-value">{{ property.project_size_acre }}</div>
+    </div>
+
+    <div class="detail-card">
+        <div class="detail-label">Property Type</div>
+        <div class="detail-value">{{ property.category }}</div>
+    </div>
+
+    <div class="detail-card">
+        <div class="detail-label">Plot Sizes</div>
+        <div class="detail-value">{{ property.plot_sizes }}</div>
+    </div>
+
+    <div class="detail-card">
+        <div class="detail-label">Water Source</div>
+        <div class="detail-value">{{ property.water_source }}</div>
+    </div>
+
+    <div class="detail-card">
+        <div class="detail-label">Road Access</div>
+        <div class="detail-value">{{ property.road_access }}</div>
+    </div>
+
+    <div class="detail-card">
+        <div class="detail-label">Registry Status</div>
+        <div class="detail-value">{{ property.registry_status }}</div>
+    </div>
+
+</div>
+                    <!-- <div class="details-grid">
                         <div class="detail-card">
                             <div class="detail-label">Area</div>
                             <div class="detail-value">{{ property.area_sqft }} Sq Ft</div>
@@ -494,7 +528,7 @@
                             <div class="detail-label">Bathrooms</div>
                             <div class="detail-value">{{ property.bathrooms }}</div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <!-- Location -->
                     <div style="margin-bottom: 2rem;">
@@ -519,6 +553,49 @@
                             <p class="description-text">{{ property.description }}</p>
                         </div>
                     {% endif %}
+                    <div class="description-section">
+    <h3 class="section-title">Project Information</h3>
+
+    <div class="description-section">
+    <h3 class="section-title">Project Highlights</h3>
+
+    {% if property.project_highlights %}
+        <ul style="line-height:2;">
+            {% for item in property.project_highlights.splitlines %}
+                <li>✔ {{ item }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+
+<div class="description-section">
+    <h3 class="section-title">Project Location</h3>
+
+    {% if property.google_map_link %}
+        <a href="{{ property.google_map_link }}"
+           target="_blank"
+           class="submit-btn"
+           style="display:inline-block;width:auto;padding:12px 25px;text-decoration:none;">
+            View on Google Maps
+        </a>
+    {% else %}
+        <p>No map location available.</p>
+    {% endif %}
+</div>
+    <div class="details-grid">
+
+        <div class="detail-card">
+            <div class="detail-label">Soil Type</div>
+            <div class="detail-value">{{ property.soil_type }}</div>
+        </div>
+
+        <div class="detail-card">
+            <div class="detail-label">Plantation Type</div>
+            <div class="detail-value">{{ property.plantation_type }}</div>
+        </div>
+
+    </div>
+</div>
                 </div>
             </div>
 
