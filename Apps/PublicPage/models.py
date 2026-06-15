@@ -184,10 +184,6 @@ class Property(models.Model):
     bedrooms = models.PositiveIntegerField(null=True, blank=True)
     bathrooms = models.PositiveIntegerField(null=True, blank=True)
     area_sqft = models.PositiveIntegerField(null=True, blank=True)
-    project_highlights = models.TextField(
-    blank=True,
-    help_text="One highlight per line"
-)
 
     # Farmland Details
     project_size_acre = models.CharField(max_length=100, blank=True)

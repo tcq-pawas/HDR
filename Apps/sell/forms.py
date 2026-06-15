@@ -9,7 +9,7 @@ class PropertyForm(forms.ModelForm):
             'public_description', 'description', 'bedrooms', 'bathrooms', 'area_sqft',
             'project_size_acre', 'plot_sizes', 'water_source', 'road_access', 'soil_type', 
             'plantation_type','registry_status', 'google_map_link', 'farmhouse_available',
-            'investment_opportunity', 'expected_roi', 'minimum_investment', 'project_highlights',
+            'investment_opportunity', 'expected_roi', 'minimum_investment', 'property_highlights',
         ]
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter property title'}),
@@ -34,6 +34,6 @@ class PropertyForm(forms.ModelForm):
             'registry_status': forms.TextInput(attrs={'class': 'form-control'}),
             'google_map_link': forms.URLInput(attrs={'class': 'form-control'}),
             'farmhouse_available': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-            'project_highlights': forms.Textarea(attrs={'class': 'form-control','rows': 5,'placeholder': 'One highlight per line'
+            'property_highlights': forms.Textarea(attrs={'class': 'form-control','rows': 5,'placeholder': 'One highlight per line'
                 }),
                     }

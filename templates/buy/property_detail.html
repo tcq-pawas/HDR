@@ -559,9 +559,9 @@
     <div class="description-section">
     <h3 class="section-title">Project Highlights</h3>
 
-    {% if property.project_highlights %}
+    {% if property.property_highlights %}
         <ul style="line-height:2;">
-            {% for item in property.project_highlights.splitlines %}
+            {% for item in property.property_highlights.splitlines %}
                 <li>✔ {{ item }}</li>
             {% endfor %}
         </ul>
