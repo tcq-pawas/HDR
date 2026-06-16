@@ -10,7 +10,22 @@ urlpatterns = [
     path('register/partner/', PartnerRegistrationView.as_view(), name='register_partner'),
     path('logout/', CustomLogoutView.as_view(), name='logout'),
     path('unauthorized/', unauthorized_access, name='unauthorized'),
-    
+    # Password Reset Workflows
+    path('password_reset/', 
+         auth_views.PasswordResetView.as_view(
+             template_name='auth/password_reset_form.html',
+             email_template_name='auth/password_reset_email.txt',
+             html_email_template_name='auth/password_reset_email.html',
+             subject_template_name='auth/password_reset_subject.txt',
+             success_url='/auth/password_reset/done/'
+         ), 
+         name='password_reset'),
+    path('password_reset/done/', 
+         auth_views.PasswordResetDoneView.as_view(
+             template_name='auth/password_reset_done.html'
+         ), 
+         name='password_reset_done'),
+         
     # Override password reset confirm and complete to fix namespace and use custom templates
     path('reset/<uidb64>/<token>/', 
          auth_views.PasswordResetConfirmView.as_view(

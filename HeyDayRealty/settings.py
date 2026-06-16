@@ -65,6 +65,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'Apps.Administration.middleware.SessionTimeoutMiddleware',
 ]
 
 ROOT_URLCONF = 'HeyDayRealty.urls'
@@ -142,6 +143,12 @@ USE_I18N = True
 
 USE_TZ = True
 
+
+# Authentication Backends
+AUTHENTICATION_BACKENDS = [
+    'Apps.Administration.backends.EmailOrUsernameModelBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/

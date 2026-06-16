@@ -1110,3 +1110,27 @@ def test_email_settings(request):
             error_msg = 'Google SMTP Authentication Failed: You are likely using your regular Google password. Google requires you to generate a 16-digit "App Password" to use SMTP. Please go to your Google Account -> Security -> 2-Step Verification -> App Passwords to generate one.'
         return Response({'success': False, 'message': error_msg}, status=400)
 
+
+@api_view(['POST'])
+@admin_required_api
+def save_security_settings(request):
+    try:
+        from Apps.Administration.models import SystemSettings
+        
+        session_timeout = request.data.get('sessionTimeout', '30')
+        max_login_attempts = request.data.get('maxLoginAttempts', '5')
+        password_min_length = request.data.get('passwordMinLength', '8')
+        require_two_factor = 'true' if request.data.get('requireTwoFactor') else 'false'
+        password_complexity = 'true' if request.data.get('passwordComplexity') else 'false'
+        login_notifications = 'true' if request.data.get('loginNotifications') else 'false'
+        
+        SystemSettings.objects.update_or_create(setting_key='SESSION_TIMEOUT', defaults={'setting_value': str(session_timeout)})
+        SystemSettings.objects.update_or_create(setting_key='MAX_LOGIN_ATTEMPTS', defaults={'setting_value': str(max_login_attempts)})
+        SystemSettings.objects.update_or_create(setting_key='MIN_PASSWORD_LENGTH', defaults={'setting_value': str(password_min_length)})
+        SystemSettings.objects.update_or_create(setting_key='REQUIRE_TWO_FACTOR', defaults={'setting_value': require_two_factor})
+        SystemSettings.objects.update_or_create(setting_key='PASSWORD_COMPLEXITY', defaults={'setting_value': password_complexity})
+        SystemSettings.objects.update_or_create(setting_key='LOGIN_NOTIFICATIONS', defaults={'setting_value': login_notifications})
+
+        return Response({'success': True, 'message': 'Security settings saved successfully'})
+    except Exception as e:
+        return Response({'success': False, 'message': str(e)}, status=400)

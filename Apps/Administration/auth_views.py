@@ -24,15 +24,38 @@ class CustomLoginView(TemplateView):
         return render(request, self.template_name, {'form': form})
     
     def post(self, request, *args, **kwargs):
+        username = request.POST.get('username', '')
+        
+        from django.core.cache import cache
+        from Apps.Administration.models import SystemSettings
+        
+        try:
+            max_attempts_setting = SystemSettings.objects.filter(setting_key='MAX_LOGIN_ATTEMPTS').first()
+            max_attempts = int(max_attempts_setting.setting_value) if max_attempts_setting and max_attempts_setting.setting_value else 5
+        except (ValueError, AttributeError):
+            max_attempts = 5
+            
+        cache_key = f'login_attempts_{username}'
+        attempts = cache.get(cache_key, 0)
+        
+        if attempts >= max_attempts:
+            error_msg = "Maximum login attempts exceeded. Please try after 1 hour or reset your password and try again."
+            messages.error(request, error_msg)
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'errors': {'__all__': [error_msg]}})
+            
+            form = AuthenticationForm(request)
+            return render(request, self.template_name, {'form': form})
+            
         form = AuthenticationForm(request, data=request.POST)
         
         if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            
-            user = authenticate(username=username, password=password)
+            user = form.get_user()
             
             if user is not None:
+                # Clear failed attempts on successful login
+                cache.delete(cache_key)
+                
                 login(request, user)
                 
                 # Get user role and redirect to appropriate dashboard
@@ -50,16 +73,27 @@ class CustomLoginView(TemplateView):
             else:
                 messages.error(request, "Invalid username or password.")
         else:
-            if form.non_field_errors():
-                for error in form.non_field_errors():
-                    messages.error(request, error)
+            # Increment failed attempts
+            attempts += 1
+            cache.set(cache_key, attempts, timeout=3600)  # 1 hour timeout
+            
+            if attempts >= max_attempts:
+                error_msg = "Maximum login attempts exceeded. Please try after 1 hour or reset your password and try again."
+                # Clear previous messages if any
+                list(messages.get_messages(request))
+                messages.error(request, error_msg)
             else:
-                messages.error(request, "Invalid username or password. Please try again.")
+                if form.non_field_errors():
+                    for error in form.non_field_errors():
+                        messages.error(request, error)
+                else:
+                    messages.error(request, f"Invalid username or password. {max_attempts - attempts} attempts remaining.")
         
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            errors = form.errors if attempts < max_attempts else {'__all__': [error_msg]}
             return JsonResponse({
                 'success': False,
-                'errors': form.errors
+                'errors': errors
             })
         
         return render(request, self.template_name, {'form': form})

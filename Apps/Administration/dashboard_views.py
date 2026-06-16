@@ -407,7 +407,7 @@ class UserProfileView(AdminDashboardMixin, TemplateView):
                     'documents': 0,
                 }
         
-        elif user.role == 'agent':
+        elif user.role in ['agent', 'owner']:
             context['agent_data'] = {
                 'assigned_properties': Property.objects.filter(assigned_agent=user).count(),
                 'leads': 0,  # Would come from agent-specific lead tracking

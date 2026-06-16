@@ -141,6 +141,7 @@
                             <select class="form-select" id="roleFilter" onchange="filterUsers()" style="width: 150px; border-radius: 8px; border-color: #E2E8F0; color: #64748B;">
                                 <option value="">All Roles</option>
                                 <option value="admin">Admin</option>
+                                <option value="owner">Owner</option>
                                 <option value="agent">Agent</option>
                                 <option value="investor">Investor</option>
                                 <option value="customer">Customer</option>
@@ -191,6 +192,10 @@
                                             {% if user.role == 'admin' %}
                                                 <span class="badge d-inline-flex align-items-center gap-1" style="background: linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%); color: white; padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 500;">
                                                     <i class="fas fa-shield-alt"></i> Admin
+                                                </span>
+                                            {% elif user.role == 'owner' %}
+                                                <span class="badge d-inline-flex align-items-center gap-1" style="background: linear-gradient(135deg, #0284C7 0%, #38BDF8 100%); color: white; padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 500;">
+                                                    <i class="fas fa-key"></i> Owner
                                                 </span>
                                             {% elif user.role == 'agent' %}
                                                 <span class="badge d-inline-flex align-items-center gap-1" style="background: linear-gradient(135deg, #2563EB 0%, #3B82F6 100%); color: white; padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 500;">

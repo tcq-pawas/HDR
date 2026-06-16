@@ -436,9 +436,11 @@ background-repeat: no-repeat;
             font-size: 0.95rem;
         }
 
-        .alert-danger {
+        .alert-danger, .alert-error {
             background: linear-gradient(135deg, #FEE2E2, #FECACA);
             color: #991B1B;
+            border-left: 4px solid #DC2626;
+            font-weight: 500;
         }
 
         .alert-success {
@@ -654,7 +656,7 @@ background-repeat: no-repeat;
                     {% csrf_token %}
 
                     <div class="form-group">
-                        <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
+                        <label for="{{ form.username.id_for_label }}" class="form-label">Username or Email</label>
                         <div class="input-wrapper">
                             <i class="fas fa-user"></i>
                             {{ form.username }}
@@ -687,7 +689,7 @@ background-repeat: no-repeat;
                             <input type="checkbox" id="rememberMe">
                             <label for="rememberMe">Remember me</label>
                         </div>
-                        <a href="#" class="forgot-password">Forgot Password?</a>
+                        <a href="{% url 'auth:password_reset' %}" class="forgot-password">Forgot Password?</a>
                     </div>
 
                     <button type="submit" class="login-btn" id="loginBtn">

@@ -379,6 +379,10 @@
                     <span class="role-badge" style="background: linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%); color: white;">
                         <i class="fas fa-shield-alt"></i> Admin
                     </span>
+                {% elif user.role == 'owner' %}
+                    <span class="role-badge" style="background: linear-gradient(135deg, #0284C7 0%, #38BDF8 100%); color: white;">
+                        <i class="fas fa-key"></i> Owner
+                    </span>
                 {% elif user.role == 'agent' %}
                     <span class="role-badge" style="background: linear-gradient(135deg, #2563EB 0%, #3B82F6 100%); color: white;">
                         <i class="fas fa-user-tie"></i> Agent
@@ -532,7 +536,7 @@
                 <div class="kpi-label">Documents</div>
             </div>
         </div>
-    {% elif user.role == 'agent' %}
+    {% elif user.role == 'agent' or user.role == 'owner' %}
         <div class="col-6 col-md-2 mb-3">
             <div class="kpi-card">
                 <div class="kpi-icon" style="background: #E0E7FF; color: #4338CA;">
@@ -809,11 +813,11 @@
         </div>
     </div>
 </div>
-{% elif user.role == 'agent' %}
+{% elif user.role == 'agent' or user.role == 'owner' %}
 <div class="row mb-4">
     <div class="col-12">
         <div class="info-card">
-            <h5><i class="fas fa-user-tie"></i> Agent Details</h5>
+            <h5><i class="fas fa-user-tie"></i> {% if user.role == 'owner' %}Owner{% else %}Agent{% endif %} Details</h5>
             <div class="row">
                 <div class="col-md-3 mb-3">
                     <div class="kpi-card">
@@ -994,6 +998,7 @@
                             <select class="form-select" name="role" style="border-radius: 10px; border-color: #E2E8F0; padding: 12px 16px; font-size: 0.9rem;">
                                 <option value="customer" {% if user.role == 'customer' %}selected{% endif %}>Customer</option>
                                 <option value="agent" {% if user.role == 'agent' %}selected{% endif %}>Agent</option>
+                                <option value="owner" {% if user.role == 'owner' %}selected{% endif %}>Owner</option>
                                 <option value="investor" {% if user.role == 'investor' %}selected{% endif %}>Investor</option>
                                 <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin</option>
                             </select>
@@ -1045,6 +1050,7 @@
                         <select class="form-select" name="new_role" style="border-radius: 10px; border-color: #E2E8F0; padding: 12px 16px; font-size: 0.9rem;">
                             <option value="customer" {% if user.role == 'customer' %}selected{% endif %}>Customer</option>
                             <option value="agent" {% if user.role == 'agent' %}selected{% endif %}>Agent</option>
+                            <option value="owner" {% if user.role == 'owner' %}selected{% endif %}>Owner</option>
                             <option value="investor" {% if user.role == 'investor' %}selected{% endif %}>Investor</option>
                             <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin</option>
                         </select>
