@@ -7,12 +7,19 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend
 from datetime import timedelta
-from .auth_utils import role_required
+from .auth_utils import role_required, admin_required_api
 from .models import (
     AdminProfile, SystemSettings, DashboardWidget, UserPermission,
     ActivityLog, SystemBackup, SystemMaintenance, Report, GeneratedReport,
     Notification, SystemMetrics, PropertyReview
 )
+from django.core.mail import send_mail
+from django.conf import settings
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.urls import reverse
+from django.contrib.sites.shortcuts import get_current_site
 from Apps.Customer.models import CustomerProfile, Inquiry, SavedProperty
 from Apps.Investor.models import Investment, InvestmentListing, InvestorProfile
 from Apps.PublicPage.models import Property
@@ -616,8 +623,57 @@ def activate_user(request, user_id):
     except User.DoesNotExist:
         return Response({'success': False, 'message': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
     
+    was_inactive = not user.is_active
     user.is_active = True
     user.save()
+    
+    # If the user was just approved, send them the approval email with a password reset link
+    if was_inactive:
+        # Check if they are an agent or investor to verify their profile
+        if hasattr(user, 'agent_profile'):
+            user.agent_profile.is_verified = True
+            user.agent_profile.save()
+        elif hasattr(user, 'investor_profile'):
+            user.investor_profile.verified = True
+            user.investor_profile.save()
+            
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = default_token_generator.make_token(user)
+        domain = request.get_host()
+        reset_url = f"http://{domain}{reverse('auth:password_reset_confirm', kwargs={'uidb64': uid, 'token': token})}"
+        
+        html_message = f"""
+        <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+            <div style="background: linear-gradient(135deg, #0F766E 0%, #115E59 100%); padding: 30px 20px; text-align: center;">
+                <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700; letter-spacing: 1px;">🌱 HeyDay Realty</h1>
+            </div>
+            <div style="padding: 40px 30px; background-color: #ffffff;">
+                <h2 style="color: #1F2937; margin-top: 0; font-size: 22px;">Account Approved! 🎉</h2>
+                <p style="color: #4B5563; font-size: 16px; line-height: 1.6;">Hello <strong>{user.first_name}</strong>,</p>
+                <p style="color: #4B5563; font-size: 16px; line-height: 1.6;">Great news! Your account has been fully approved by our administration team.</p>
+                <p style="color: #4B5563; font-size: 16px; line-height: 1.6;">You are now ready to set up your password and access your dedicated dashboard.</p>
+                
+                <div style="text-align: center; margin: 35px 0;">
+                    <a href="{reset_url}" style="background-color: #10B981; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; display: inline-block; box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3);">Set Password & Login</a>
+                </div>
+                
+                <p style="color: #6B7280; font-size: 14px; line-height: 1.5;">If the button doesn't work, copy and paste this link into your browser:<br><a href="{reset_url}" style="color: #0F766E; word-break: break-all;">{reset_url}</a></p>
+                
+                <p style="color: #4B5563; font-size: 16px; line-height: 1.6; margin-top: 30px;">Best regards,<br><strong style="color: #0F766E;">HeyDay Realty Team</strong></p>
+            </div>
+            <div style="background-color: #F9FAFB; padding: 20px; text-align: center; border-top: 1px solid #e5e7eb;">
+                <p style="color: #9CA3AF; font-size: 13px; margin: 0;">&copy; 2026 HeyDay Realty. All rights reserved.</p>
+            </div>
+        </div>
+        """
+        send_mail(
+            subject='Account Approved - HeyDay Realty',
+            message=f'Hello {user.first_name},\n\nGreat news! Your account has been approved by the administration team.\n\nPlease click the link below to set your password and log in to your dashboard:\n{reset_url}\n\nBest regards,\nHeyDay Realty Team',
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[user.email],
+            html_message=html_message,
+            fail_silently=True,
+        )
     
     # Log the activity
     ActivityLog.objects.create(
@@ -1006,3 +1062,51 @@ def property_review_stats(request):
     }
     
     return Response(data)
+
+@api_view(['POST'])
+@admin_required_api
+def save_email_settings(request):
+    try:
+        from Apps.Administration.models import SystemSettings
+        host = request.data.get('smtpHost')
+        port = request.data.get('smtpPort')
+        username = request.data.get('smtpUsername')
+        password = request.data.get('smtpPassword')
+        
+        # We also want to support TLS, but UI doesn't have it explicitly right now, so we default to true or use port
+        use_tls = 'true' if str(port) == '587' else 'false'
+        
+        SystemSettings.objects.update_or_create(setting_key='EMAIL_HOST', defaults={'setting_value': host})
+        SystemSettings.objects.update_or_create(setting_key='EMAIL_PORT', defaults={'setting_value': port})
+        SystemSettings.objects.update_or_create(setting_key='EMAIL_HOST_USER', defaults={'setting_value': username})
+        SystemSettings.objects.update_or_create(setting_key='EMAIL_HOST_PASSWORD', defaults={'setting_value': password})
+        SystemSettings.objects.update_or_create(setting_key='EMAIL_USE_TLS', defaults={'setting_value': use_tls})
+        SystemSettings.objects.update_or_create(setting_key='DEFAULT_FROM_EMAIL', defaults={'setting_value': request.data.get('emailFrom', 'noreply@heydayrealty.com')})
+
+        return Response({'success': True, 'message': 'Email settings saved successfully'})
+    except Exception as e:
+        return Response({'success': False, 'message': str(e)}, status=400)
+
+@api_view(['POST'])
+@admin_required_api
+def test_email_settings(request):
+    try:
+        from django.core.mail import send_mail
+        from Apps.Administration.models import SystemSettings
+        
+        # Ensure latest settings are used by clearing any cached connection
+        # We can just use send_mail, which will instantiate the backend with current DB settings
+        send_mail(
+            subject='Test Email from HeyDay Realty Admin',
+            message='This is a test email to verify your SMTP settings are configured correctly.',
+            from_email=None,  # Uses DEFAULT_FROM_EMAIL
+            recipient_list=[request.user.email or request.data.get('testEmail', 'noreply@heydayrealty.com')],
+            fail_silently=False,
+        )
+        return Response({'success': True, 'message': 'Test email sent successfully!'})
+    except Exception as e:
+        error_msg = str(e)
+        if '535' in error_msg and 'Username and Password not accepted' in error_msg:
+            error_msg = 'Google SMTP Authentication Failed: You are likely using your regular Google password. Google requires you to generate a 16-digit "App Password" to use SMTP. Please go to your Google Account -> Security -> 2-Step Verification -> App Passwords to generate one.'
+        return Response({'success': False, 'message': error_msg}, status=400)
+

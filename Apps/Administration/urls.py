@@ -58,4 +58,6 @@ urlpatterns = [
     path('api/properties/<int:property_id>/approve/', views.approve_property, name='property-approve'),
     path('api/properties/<int:property_id>/reject/', views.reject_property, name='property-reject'),
     path('api/properties/stats/', views.property_review_stats, name='property-review-stats'),
+    path('api/settings/save-email/', views.save_email_settings, name='save-email-settings'),
+    path('api/settings/test-email/', views.test_email_settings, name='test-email-settings'),
 ]

@@ -24,7 +24,7 @@ from Apps.Administration.auth_utils import (
 from Apps.Administration.models import AdminProfile
 from Apps.Customer.models import CustomerProfile
 from Apps.Investor.models import InvestorProfile
-from Apps.Agent.models import AgentProfile, PropertyInquiry
+from Apps.Agent.models import AgentProfile
 from Apps.PublicPage.models import Property
 
 
