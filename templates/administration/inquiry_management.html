@@ -1,318 +1,636 @@
 {% extends "administration/admin_base.html" %}
+
 {% load humanize %}
+
+
 
 {% block title %}Inquiry Management - Admin Dashboard{% endblock %}
 
+
+
 {% block page_title %}Inquiry Management{% endblock %}
+
+
 
 {% block page_subtitle %}Manage and respond to customer inquiries{% endblock %}
 
+
+
 {% block content %}
+
     <!-- Statistics Cards -->
+
     <div class="row mb-4">
+
         <div class="col-md-3">
+
             <div class="card stat-card bg-primary text-white">
+
                 <div class="card-body">
+
                     <div class="d-flex justify-content-between">
+
                         <div>
+
                             <h4 class="card-title">{{ inquiries.count }}</h4>
+
                             <p class="card-text">Total Inquiries</p>
+
                         </div>
+
                         <i class="fas fa-envelope fa-2x opacity-75"></i>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
+
         <div class="col-md-3">
+
             <div class="card stat-card bg-success text-white">
+
                 <div class="card-body">
+
                     <div class="d-flex justify-content-between">
+
                         <div>
+
                             <h4 class="card-title">0</h4>
+
                             <p class="card-text">Responded</p>
+
                         </div>
+
                         <i class="fas fa-check-circle fa-2x opacity-75"></i>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
+
         <div class="col-md-3">
+
             <div class="card stat-card bg-warning text-white">
+
                 <div class="card-body">
+
                     <div class="d-flex justify-content-between">
+
                         <div>
+
                             <h4 class="card-title">0</h4>
+
                             <p class="card-text">Pending</p>
+
                         </div>
+
                         <i class="fas fa-clock fa-2x opacity-75"></i>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
+
         <div class="col-md-3">
+
             <div class="card stat-card bg-info text-white">
+
                 <div class="card-body">
+
                     <div class="d-flex justify-content-between">
+
                         <div>
+
                             <h4 class="card-title">0</h4>
+
                             <p class="card-text">Today</p>
+
                         </div>
+
                         <i class="fas fa-calendar-day fa-2x opacity-75"></i>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
+
+
 
     <!-- Action Buttons -->
+
     <div class="row mb-4">
+
         <div class="col-12">
+
             <div class="card">
+
                 <div class="card-body">
+
                     <div class="d-flex gap-2 flex-wrap">
+
                         <button class="btn btn-primary" onclick="respondToInquiries()">
+
                             <i class="fas fa-reply"></i> Bulk Respond
+
                         </button>
+
                         <button class="btn btn-outline-secondary" onclick="exportInquiries()">
+
                             <i class="fas fa-download"></i> Export
+
                         </button>
+
                         <div class="btn-group ms-auto">
+
                             <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+
                                 <i class="fas fa-filter"></i> Filter Status
+
                             </button>
+
                             <ul class="dropdown-menu">
+
                                 <li><a class="dropdown-item" href="?status=all">All Inquiries</a></li>
+
                                 <li><a class="dropdown-item" href="?status=pending">Pending</a></li>
+
                                 <li><a class="dropdown-item" href="?status=responded">Responded</a></li>
+
                                 <li><a class="dropdown-item" href="?status=closed">Closed</a></li>
+
                             </ul>
+
                         </div>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
+
+
 
     <!-- Inquiries Table -->
+
     <div class="row">
+
         <div class="col-12">
+
             <div class="card">
+
                 <div class="card-header">
+
                     <h5 class="mb-0">All Inquiries</h5>
+
                 </div>
+
                 <div class="card-body">
+
                     <div class="table-responsive">
+
                         <table class="table table-hover">
+
                             <thead>
+
                                 <tr>
+
                                     <th>ID</th>
+
                                     <th>Customer</th>
+
                                     <th>Subject</th>
+
                                     <th>Property</th>
+
                                     <th>Status</th>
+
                                     <th>Date</th>
+
                                     <th>Actions</th>
+
                                 </tr>
+
                             </thead>
+
                             <tbody>
+
                                 {% for inquiry in inquiries %}
+
                                     <tr>
+
                                         <td>#{{ inquiry.id }}</td>
+
                                         <td>
+
                                             <div class="d-flex align-items-center">
+
                                                 <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px; font-size: 0.8rem;">
+
                                                     {{ inquiry.user.username|first|upper }}
+
                                                 </div>
+
                                                 <div>
+
                                                     <div class="fw-bold">{{ inquiry.user.get_full_name|default:inquiry.user.username }}</div>
+
                                                     <small class="text-muted">{{ inquiry.user.email }}</small>
+
                                                 </div>
+
                                             </div>
+
                                         </td>
+
                                         <td>
+
                                             <div class="text-truncate" style="max-width: 200px;">
+
                                                 {{ inquiry.subject }}
+
                                             </div>
+
                                         </td>
+
                                         <td>
+
                                             {% if inquiry.property %}
+
                                                 <span class="badge bg-info">{{ inquiry.property.title }}</span>
+
                                             {% else %}
+
                                                 <span class="text-muted">General</span>
+
                                             {% endif %}
+
                                         </td>
+
                                         <td>
+
                                             <span class="badge bg-{{ inquiry.status|yesno:'success,warning,secondary' }}">
+
                                                 {{ inquiry.get_status_display }}
+
                                             </span>
+
                                         </td>
+
                                         <td>{{ inquiry.created_at|date:"M d, Y" }}</td>
+
                                         <td>
+
                                             <div class="btn-group" role="group">
+
                                                 <button class="btn btn-sm btn-outline-primary" onclick="viewInquiry({{ inquiry.id }})">
+
                                                     <i class="fas fa-eye"></i>
+
                                                 </button>
+
                                                 <button class="btn btn-sm btn-outline-success" onclick="respondToInquiry({{ inquiry.id }})">
+
                                                     <i class="fas fa-reply"></i>
+
                                                 </button>
+
                                                 <button class="btn btn-sm btn-outline-secondary" onclick="assignInquiry({{ inquiry.id }})">
+
                                                     <i class="fas fa-user-plus"></i>
+
                                                 </button>
+
                                                 <button class="btn btn-sm btn-outline-danger" onclick="deleteInquiry({{ inquiry.id }})">
+
                                                     <i class="fas fa-trash"></i>
+
                                                 </button>
+
                                             </div>
+
                                         </td>
+
                                     </tr>
+
                                 {% empty %}
+
                                     <tr>
+
                                         <td colspan="7" class="text-center py-4">
+
                                             <i class="fas fa-envelope fa-3x text-muted mb-3"></i>
+
                                             <p class="text-muted">No inquiries found</p>
+
                                         </td>
+
                                     </tr>
+
                                 {% endfor %}
+
                             </tbody>
+
                         </table>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
+
+
 
     <!-- Inquiry Details Modal -->
+
     <div class="modal fade" id="inquiryDetailsModal" tabindex="-1">
+
         <div class="modal-dialog modal-lg">
+
             <div class="modal-content">
+
                 <div class="modal-header">
+
                     <h5 class="modal-title">Inquiry Details</h5>
+
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
                 </div>
+
                 <div class="modal-body">
+
                     <div id="inquiryDetailsContent">
+
                         <!-- Content will be loaded dynamically -->
+
                     </div>
+
                 </div>
+
                 <div class="modal-footer">
+
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
                     <button type="button" class="btn btn-primary" onclick="respondToInquiry()">Respond</button>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
+
+
 
     <!-- Response Modal -->
+
     <div class="modal fade" id="responseModal" tabindex="-1">
+
         <div class="modal-dialog">
+
             <div class="modal-content">
+
                 <div class="modal-header">
+
                     <h5 class="modal-title">Send Response</h5>
+
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
                 </div>
+
                 <div class="modal-body">
+
                     <form id="responseForm">
+
                         <div class="mb-3">
+
                             <label for="responseMessage" class="form-label">Response Message</label>
+
                             <textarea class="form-control" id="responseMessage" rows="5" placeholder="Type your response here..." required></textarea>
+
                         </div>
+
                         <div class="mb-3">
+
                             <label for="responseTemplate" class="form-label">Use Template</label>
+
                             <select class="form-select" id="responseTemplate">
+
                                 <option value="">Select Template</option>
+
                                 <option value="general">General Response</option>
+
                                 <option value="property">Property Information</option>
+
                                 <option value="appointment">Schedule Appointment</option>
+
                                 <option value="followup">Follow Up Required</option>
+
                             </select>
+
                         </div>
+
                     </form>
+
                 </div>
+
                 <div class="modal-footer">
+
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+
                     <button type="button" class="btn btn-primary" onclick="sendResponse()">Send Response</button>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
+
 {% endblock %}
 
+
+
 {% block extra_js %}
+
 <script>
+
     function viewInquiry(inquiryId) {
+
         // Load inquiry details
+
         document.getElementById('inquiryDetailsContent').innerHTML = `
+
             <div class="text-center">
+
                 <div class="spinner-border" role="status">
+
                     <span class="visually-hidden">Loading...</span>
+
                 </div>
+
             </div>
+
         `;
+
         
+
         // Simulate loading
+
         setTimeout(() => {
+
             document.getElementById('inquiryDetailsContent').innerHTML = `
+
                 <div class="row">
+
                     <div class="col-md-6">
+
                         <h6>Inquiry Information</h6>
+
                         <p><strong>ID:</strong> #${inquiryId}</p>
+
                         <p><strong>Subject:</strong> Property Information Request</p>
+
                         <p><strong>Status:</strong> <span class="badge bg-warning">Pending</span></p>
+
                         <p><strong>Created:</strong> ${new Date().toLocaleDateString()}</p>
+
                     </div>
+
                     <div class="col-md-6">
+
                         <h6>Customer Information</h6>
+
                         <p><strong>Name:</strong> John Doe</p>
+
                         <p><strong>Email:</strong> john.doe@example.com</p>
+
                         <p><strong>Phone:</strong> +1 234 567 8900</p>
+
                     </div>
+
                 </div>
+
                 <hr>
+
                 <h6>Message</h6>
+
                 <div class="bg-light p-3 rounded">
+
                     <p>I'm interested in learning more about this property. Could you please provide additional details about the amenities and neighborhood?</p>
+
                 </div>
+
             `;
+
         }, 1000);
+
         
+
         new bootstrap.Modal(document.getElementById('inquiryDetailsModal')).show();
+
     }
+
     
+
     function respondToInquiry(inquiryId) {
+
         bootstrap.Modal.getInstance(document.getElementById('inquiryDetailsModal'))?.hide();
+
         new bootstrap.Modal(document.getElementById('responseModal')).show();
+
     }
+
     
+
     function sendResponse() {
+
         const message = document.getElementById('responseMessage').value;
+
         if (!message) {
+
             alert('Please enter a response message.');
+
             return;
+
         }
+
         
+
         alert('Response sent successfully!');
+
         bootstrap.Modal.getInstance(document.getElementById('responseModal')).hide();
+
         document.getElementById('responseForm').reset();
+
     }
+
     
+
     function assignInquiry(inquiryId) {
+
         const assignee = prompt('Enter the name of the person to assign this inquiry to:');
+
         if (assignee) {
+
             alert(`Inquiry #${inquiryId} assigned to ${assignee}`);
+
         }
+
     }
+
     
+
     function deleteInquiry(inquiryId) {
+
         if (confirm('Are you sure you want to delete this inquiry?')) {
+
             alert('Inquiry deleted successfully!');
+
         }
+
     }
+
     
+
     function respondToInquiries() {
+
         alert('Bulk response functionality would be implemented here');
+
     }
+
     
+
     function exportInquiries() {
+
         alert('Exporting inquiries data...');
+
     }
+
 </script>
+
 {% endblock %}
+
