@@ -36,14 +36,14 @@
         
         /* Sidebar styles */
         .sidebar {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            background: linear-gradient(180deg, #022C22 0%, #064E3B 50%, #065F46 100%);
             min-height: 100vh;
             color: white;
             position: fixed;
             top: 0;
             left: 0;
             z-index: 1000;
-            width: 280px;
+            width: 220px;
             overflow-y: auto;
             overflow-x: hidden;
             transform: translateX(0);
@@ -54,7 +54,7 @@
         }
         .sidebar .nav-link {
             color: rgba(255, 255, 255, 0.8);
-            border-radius: 8px;
+            border-radius: 12px;
             margin: 2px 0;
             transition: all 0.3s;
             padding: 12px 20px;
@@ -62,13 +62,14 @@
         .sidebar .nav-link:hover,
         .sidebar .nav-link.active {
             color: white;
-            background-color: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
         }
         /* Main content area */
         .main-content {
-            margin-left: 280px;
+            margin-left: 220px;
             min-height: 100vh;
-            width: calc(100% - 280px);
+            width: calc(100% - 220px);
             overflow-x: hidden;
             overflow-y: auto;
             display: flex;
@@ -332,7 +333,9 @@
             }
         }
         
+
         {% block extra_css %}{% endblock %}
+
     </style>
     {% block extra_head %}{% endblock %}
 </head>
