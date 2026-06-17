@@ -98,4 +98,4 @@ class AgentDashboardMixin(RoleBasedDashboardMixin):
     """Mixin for agent-only dashboard access"""
     
     def has_role_access(self, user_role):
-        return user_role == 'agent'
+        return user_role in ['agent', 'owner']

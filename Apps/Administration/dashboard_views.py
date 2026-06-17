@@ -243,6 +243,7 @@ class UserManagementView(AdminDashboardMixin, TemplateView):
         investor_count = 0
         admin_count = 0
         agent_count = 0
+        owner_count = 0
         
         for user in users:
             user.role = get_user_role(user)
@@ -256,16 +257,19 @@ class UserManagementView(AdminDashboardMixin, TemplateView):
                 admin_count += 1
             elif user.role == 'agent':
                 agent_count += 1
+            elif user.role == 'owner':
+                owner_count += 1
         
         context['users'] = users_with_roles
         context['total_users'] = users.count()
-        context['groups'] = ['customer', 'investor', 'admin', 'agent']
+        context['groups'] = ['customer', 'investor', 'admin', 'agent', 'owner']
         
         # Add role counts
         context['customer_count'] = customer_count
         context['investor_count'] = investor_count
         context['admin_count'] = admin_count
         context['agent_count'] = agent_count
+        context['owner_count'] = owner_count
         context['active_users_count'] = User.objects.filter(is_active=True).count()
         
         return context
@@ -407,7 +411,7 @@ class UserProfileView(AdminDashboardMixin, TemplateView):
                     'documents': 0,
                 }
         
-        elif user.role == 'agent':
+        elif user.role in ['agent', 'owner']:
             context['agent_data'] = {
                 'assigned_properties': Property.objects.filter(assigned_agent=user).count(),
                 'leads': 0,  # Would come from agent-specific lead tracking
