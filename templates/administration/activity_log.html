@@ -13,42 +13,31 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <form class="row g-3">
-                        <div class="col-md-3">
+                    <form class="row g-3" method="GET" id="filterForm">
+                        <div class="col-md-4">
                             <label class="form-label">Date Range</label>
-                            <select class="form-select">
-                                <option value="">All Time</option>
-                                <option value="today">Today</option>
-                                <option value="week">Last 7 Days</option>
-                                <option value="month">Last 30 Days</option>
-                                <option value="custom">Custom Range</option>
+                            <select class="form-select" name="date_range" onchange="document.getElementById('filterForm').submit();">
+                                <option value="" {% if request.GET.date_range == "" %}selected{% endif %}>All Time</option>
+                                <option value="today" {% if request.GET.date_range == "today" %}selected{% endif %}>Today</option>
+                                <option value="week" {% if request.GET.date_range == "week" %}selected{% endif %}>Last 7 Days</option>
+                                <option value="month" {% if request.GET.date_range == "month" %}selected{% endif %}>Last 30 Days</option>
                             </select>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <label class="form-label">User Type</label>
-                            <select class="form-select">
-                                <option value="">All Users</option>
-                                <option value="admin">Admins</option>
-                                <option value="customer">Customers</option>
-                                <option value="investor">Investors</option>
+                            <select class="form-select" name="user_type" onchange="document.getElementById('filterForm').submit();">
+                                <option value="" {% if request.GET.user_type == "" %}selected{% endif %}>All Users</option>
+                                <option value="admin" {% if request.GET.user_type == "admin" %}selected{% endif %}>Admins</option>
+                                <option value="customer" {% if request.GET.user_type == "customer" %}selected{% endif %}>Customers</option>
+                                <option value="investor" {% if request.GET.user_type == "investor" %}selected{% endif %}>Investors</option>
+                                <option value="agent" {% if request.GET.user_type == "agent" %}selected{% endif %}>Agents</option>
                             </select>
                         </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Activity Type</label>
-                            <select class="form-select">
-                                <option value="">All Activities</option>
-                                <option value="login">Login/Logout</option>
-                                <option value="create">Create</option>
-                                <option value="update">Update</option>
-                                <option value="delete">Delete</option>
-                                <option value="view">View</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <label class="form-label">Search</label>
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Search activities...">
-                                <button class="btn btn-primary" type="button">
+                                <input type="text" class="form-control" name="search" value="{{ request.GET.search|default:'' }}" placeholder="Search user by email or name...">
+                                <button class="btn btn-primary" type="submit">
                                     <i class="fas fa-search"></i>
                                 </button>
                             </div>
@@ -61,54 +50,41 @@
 
     <!-- Statistics Cards -->
     <div class="row mb-4">
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="card stat-card bg-primary text-white">
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <div>
-                            <h4 class="card-title">{{ total_activities|default:"1,234" }}</h4>
-                            <p class="card-text">Total Activities</p>
-                        </div>
-                        <i class="fas fa-list fa-2x opacity-75"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card stat-card bg-success text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h4 class="card-title">{{ today_activities|default:"45" }}</h4>
-                            <p class="card-text">Today's Activities</p>
-                        </div>
-                        <i class="fas fa-calendar-day fa-2x opacity-75"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card stat-card bg-warning text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h4 class="card-title">{{ active_users|default:"23" }}</h4>
-                            <p class="card-text">Active Users</p>
+                            <h4 class="card-title">{{ total_users|default:"0" }}</h4>
+                            <p class="card-text">Total Users</p>
                         </div>
                         <i class="fas fa-users fa-2x opacity-75"></i>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card stat-card bg-info text-white">
+        <div class="col-md-4">
+            <div class="card stat-card bg-success text-white">
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <div>
-                            <h4 class="card-title">{{ failed_logins|default:"3" }}</h4>
-                            <p class="card-text">Failed Logins</p>
+                            <h4 class="card-title">{{ active_users|default:"0" }}</h4>
+                            <p class="card-text">Active Users</p>
                         </div>
-                        <i class="fas fa-exclamation-triangle fa-2x opacity-75"></i>
+                        <i class="fas fa-user-check fa-2x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card stat-card bg-danger text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="card-title">{{ inactive_users|default:"0" }}</h4>
+                            <p class="card-text">Inactive Users</p>
+                        </div>
+                        <i class="fas fa-user-times fa-2x opacity-75"></i>
                     </div>
                 </div>
             </div>
@@ -136,13 +112,10 @@
                             <thead>
                                 <tr>
                                     <th><input type="checkbox" class="form-check-input"></th>
-                                    <th>Timestamp</th>
                                     <th>User</th>
-                                    <th>Action</th>
-                                    <th>Details</th>
+                                    <th>Location</th>
                                     <th>IP Address</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
+                                    <th>Login Date</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -150,57 +123,29 @@
                                     <tr>
                                         <td><input type="checkbox" class="form-check-input"></td>
                                         <td>
-                                            <div>
-                                                <div class="fw-bold">{{ activity.timestamp|date:"M d, Y" }}</div>
-                                                <small class="text-muted">{{ activity.timestamp|time:"H:i:s" }}</small>
-                                            </div>
-                                        </td>
-                                        <td>
                                             <div class="d-flex align-items-center">
                                                 <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px; font-size: 0.8rem;">
                                                     {{ activity.user.username|first|upper }}
                                                 </div>
                                                 <div>
-                                                    <div class="fw-bold">{{ activity.user.username }}</div>
-                                                    <small class="text-muted">{{ activity.user.get_role_display }}</small>
+                                                    <div class="fw-bold">{{ activity.user.get_full_name|default:activity.user.username }}</div>
+                                                    <small class="text-muted">{{ activity.user.email }}</small>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <span class="badge bg-{{ activity.action|yesno:'success,info,warning,danger,primary' }}">
-                                                {{ activity.get_action_display }}
-                                            </span>
+                                            {{ activity.parsed_location|default:"N/A" }}
                                         </td>
                                         <td>
-                                            <div>
-                                                <div class="fw-bold">{{ activity.description }}</div>
-                                                <small class="text-muted">{{ activity.object_type }}: {{ activity.object_id }}</small>
-                                            </div>
+                                            <code class="small">{{ activity.ip_address|default:"N/A" }}</code>
                                         </td>
                                         <td>
-                                            <code class="small">{{ activity.ip_address }}</code>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-{{ activity.status|yesno:'success,danger' }}">
-                                                {{ activity.get_status_display }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <div class="btn-group" role="group">
-                                                <button class="btn btn-sm btn-outline-primary action-btn" data-action="viewActivity" data-id="{{ activity.id }}">
-                                                    <i class="fas fa-eye"></i>
-                                                </button>
-                                                {% if activity.can_revert %}
-                                                    <button class="btn btn-sm btn-outline-warning action-btn" data-action="revertActivity" data-id="{{ activity.id }}">
-                                                        <i class="fas fa-undo"></i>
-                                                    </button>
-                                                {% endif %}
-                                            </div>
+                                            {{ activity.timestamp|date:"M d, Y h:i A" }}
                                         </td>
                                     </tr>
                                 {% empty %}
                                     <tr>
-                                        <td colspan="8" class="text-center py-4">
+                                        <td colspan="5" class="text-center py-4">
                                             <i class="fas fa-history fa-3x text-muted mb-3"></i>
                                             <p class="text-muted">No activities found</p>
                                         </td>
@@ -213,15 +158,33 @@
                     <!-- Pagination -->
                     <nav class="mt-3">
                         <ul class="pagination justify-content-center">
-                            <li class="page-item disabled">
-                                <a class="page-link" href="#" tabindex="-1">Previous</a>
-                            </li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">Next</a>
-                            </li>
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">Previous</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">Previous</span>
+                                </li>
+                            {% endif %}
+                            
+                            {% for num in page_obj.paginator.page_range %}
+                                {% if page_obj.number == num %}
+                                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ num }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">Next</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">Next</span>
+                                </li>
+                            {% endif %}
                         </ul>
                     </nav>
                 </div>

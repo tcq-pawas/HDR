@@ -189,10 +189,6 @@ LOGIN_URL = '/auth/login/'
 LOGIN_REDIRECT_URL = '/dashboard/'  # Smart dashboard will redirect based on role
 LOGOUT_REDIRECT_URL = '/auth/login/'
 
-# Role-based authentication
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-]
 
 # Email settings
 EMAIL_BACKEND = 'Apps.Administration.email_backend.SystemSettingsEmailBackend'

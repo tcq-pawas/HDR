@@ -702,11 +702,12 @@ def reset_password(request, user_id):
     except User.DoesNotExist:
         return Response({'success': False, 'message': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
     
-    # Generate a random password
+    # Update to the new password
+    new_password = request.data.get('new_password')
+    if not new_password:
+        return Response({'success': False, 'message': 'New password is required'}, status=status.HTTP_400_BAD_REQUEST)
+        
     from django.contrib.auth.hashers import make_password
-    import secrets
-    import string
-    new_password = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(12))
     user.password = make_password(new_password)
     user.save()
     
@@ -720,7 +721,7 @@ def reset_password(request, user_id):
         user_agent=request.META.get('HTTP_USER_AGENT')
     )
     
-    return Response({'success': True, 'message': f'Password reset successfully. New password: {new_password}'})
+    return Response({'success': True, 'message': 'Password reset successfully!'})
 
 
 @api_view(['POST'])

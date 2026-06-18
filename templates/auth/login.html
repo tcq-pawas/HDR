@@ -749,14 +749,58 @@ background-repeat: no-repeat;
         }
 
         // Handle form submission
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        const loginForm = document.getElementById('loginForm');
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent immediate submission
+            
             const loginText = document.querySelector('.login-text');
             const loginSpinner = document.querySelector('.login-spinner');
             const submitBtn = document.getElementById('loginBtn');
             
+            // Show loading state
             loginText.classList.add('d-none');
             loginSpinner.classList.remove('d-none');
             submitBtn.disabled = true;
+
+            // Function to finally submit the form
+            const submitFormWithLocation = (locationObj) => {
+                if (locationObj) {
+                    const latInput = document.createElement('input');
+                    latInput.type = 'hidden';
+                    latInput.name = 'latitude';
+                    latInput.value = locationObj.lat;
+                    loginForm.appendChild(latInput);
+                    
+                    const lngInput = document.createElement('input');
+                    lngInput.type = 'hidden';
+                    lngInput.name = 'longitude';
+                    lngInput.value = locationObj.lng;
+                    loginForm.appendChild(lngInput);
+                }
+                loginForm.submit();
+            };
+
+            // Request location on submit
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        // Success: user allowed location
+                        submitFormWithLocation({
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        });
+                    },
+                    function(error) {
+                        // Error or denied: submit anyway without location
+                        console.log("Location access denied or error:", error);
+                        submitFormWithLocation(null);
+                    },
+                    { timeout: 10000 } // Don't wait forever (10 seconds max)
+                );
+            } else {
+                // Geolocation not supported
+                submitFormWithLocation(null);
+            }
         });
     </script>
 </body>

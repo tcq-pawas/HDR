@@ -58,6 +58,35 @@ class CustomLoginView(TemplateView):
                 
                 login(request, user)
                 
+                # Log login activity and location
+                lat = request.POST.get('latitude')
+                lng = request.POST.get('longitude')
+                description = "User logged in."
+                if lat and lng:
+                    location_str = f"Latitude {lat}, Longitude {lng}"
+                    try:
+                        import urllib.request
+                        import json
+                        url = f"https://nominatim.openstreetmap.org/reverse?format=json&lat={lat}&lon={lng}"
+                        req = urllib.request.Request(url, headers={'User-Agent': 'HeyDayRealty/1.0'})
+                        with urllib.request.urlopen(req, timeout=3) as response:
+                            data = json.loads(response.read().decode())
+                            if 'display_name' in data:
+                                location_str = data['display_name']
+                    except Exception:
+                        pass
+                    description += f" Location: {location_str}"
+                
+                from Apps.Administration.models import ActivityLog
+                ActivityLog.objects.create(
+                    user=user,
+                    action_type='login',
+                    module='authentication',
+                    description=description,
+                    ip_address=request.META.get('REMOTE_ADDR'),
+                    user_agent=request.META.get('HTTP_USER_AGENT', '')
+                )
+                
                 # Get user role and redirect to appropriate dashboard
                 redirect_url = get_role_based_redirect_url(user)
                 role = get_user_role(user)
