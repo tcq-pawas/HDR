@@ -5,150 +5,85 @@
 {% block hero_subtitle %}Build your career with HeyDay Realty{% endblock %}
 
 {% block content %}
-<!-- Header -->
-<div class="bg-dark text-white py-5 text-center">
-    <div class="container">
-        <h1 class="fw-bold mb-3 text-white">
-    Build Your Career With HeyDay Realty
-</h1>
 
-<p class="lead mb-0 text-light">
-    Join a growing team focused on farmland investments, agricultural projects and long-term wealth creation.
-</p>
+<!-- Header -->
+<section class="why" style="background: var(--forest); padding: 80px 0; text-align: center;">
+    <div class="section-inner">
+        <h1 class="section-title" style="color: white; font-size: 3.2rem;">Build Your Career With HeyDay Realty</h1>
+        <p class="section-sub" style="color: rgba(255,255,255,0.8); max-width: 700px; margin: 0 auto; font-size: 1.2rem;">
+            Join a growing team focused on farmland investments, agricultural projects and long-term wealth creation.
+        </p>
     </div>
-</div>
+</section>
 
 <!-- Values -->
-<section class="py-5">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold">Our Core Values</h2>
+<section class="why" style="background: var(--white); padding-top: 80px;">
+    <div class="section-inner">
+        <div class="why-header">
+            <div class="section-label">Our Core Values</div>
+            <h2 class="section-title">What drives us</h2>
         </div>
-        <div class="row text-center">
-            <div class="col-md-4 mb-4">
-                <div class="mb-3"><i class="bi bi-people-fill display-4 text-primary"></i></div>
-                <h5 class="fw-bold">Collaboration</h5>
-                <p class="text-muted small">We believe in the power of teamwork.</p>
+        <div class="invest-grid">
+            <div class="invest-card" style="text-align: center;">
+                <div class="invest-icon" style="margin: 0 auto 20px; background: var(--mint);">🤝</div>
+                <h3>Collaboration</h3>
+                <p>We believe in the power of teamwork.</p>
             </div>
-            <div class="col-md-4 mb-4">
-                <div class="mb-3"><i class="bi bi-trophy-fill display-4 text-primary"></i></div>
-                <h5 class="fw-bold">Excellence</h5>
-                <p class="text-muted small">We strive for the best in everything we do.</p>
+            <div class="invest-card" style="text-align: center;">
+                <div class="invest-icon" style="margin: 0 auto 20px; background: var(--mint);">🏆</div>
+                <h3>Excellence</h3>
+                <p>We strive for the best in everything we do.</p>
             </div>
-            <div class="col-md-4 mb-4">
-                <div class="mb-3"><i class="bi bi-heart-fill display-4 text-primary"></i></div>
-                <h5 class="fw-bold">Passion</h5>
-                <p class="text-muted small">We love what we do and it shows.</p>
+            <div class="invest-card" style="text-align: center;">
+                <div class="invest-icon" style="margin: 0 auto 20px; background: var(--mint);">❤️</div>
+                <h3>Passion</h3>
+                <p>We love what we do and it shows.</p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Open Positions -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <h3 class="fw-bold mb-4">Open Positions</h3>
-        <div class="list-group shadow-sm">
-
-    <a href="#" class="list-group-item list-group-item-action p-4 border-0 mb-2 rounded">
-
-        <div class="d-flex justify-content-between">
-
-            <h5 class="fw-bold text-primary">
-                Farmland Investment Advisor
-            </h5>
-
-            <small>Full Time</small>
-
+<section class="why" style="background: var(--pale);">
+    <div class="section-inner">
+        <div class="why-header">
+            <div class="section-label">Join Our Team</div>
+            <h2 class="section-title">Open Positions</h2>
         </div>
-
-        <p class="mb-1 text-muted">
-            Help investors identify and evaluate farmland investment opportunities.
-        </p>
-
-        <small>Location: India</small>
-
-    </a>
-
-    <a href="#" class="list-group-item list-group-item-action p-4 border-0 mb-2 rounded">
-
-        <div class="d-flex justify-content-between">
-
-            <h5 class="fw-bold text-primary">
-                Business Development Executive
-            </h5>
-
-            <small>Full Time</small>
-
+        <div class="listings-grid" style="grid-template-columns: 1fr; gap: 20px;">
+            <div class="listing-card" style="padding: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                <div>
+                    <h3 style="font-family: var(--font-heading); font-size: 1.3rem; color: var(--forest);">Farmland Investment Advisor</h3>
+                    <p style="color: var(--text-muted);">Help investors identify and evaluate farmland investment opportunities.</p>
+                    <span style="background: var(--gold-light); color: #92600A; padding: 2px 12px; border-radius: 50px; font-size: 0.8rem;">Full Time</span>
+                    <span style="margin-left: 12px; color: var(--text-muted); font-size: 0.9rem;">📍 India</span>
+                </div>
+                <a href="#" class="btn-detail">Apply Now</a>
+            </div>
+            <div class="listing-card" style="padding: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                <div>
+                    <h3 style="font-family: var(--font-heading); font-size: 1.3rem; color: var(--forest);">Business Development Executive</h3>
+                    <p style="color: var(--text-muted);">Build partnerships and expand farmland project opportunities.</p>
+                    <span style="background: var(--gold-light); color: #92600A; padding: 2px 12px; border-radius: 50px; font-size: 0.8rem;">Full Time</span>
+                    <span style="margin-left: 12px; color: var(--text-muted); font-size: 0.9rem;">📍 Hybrid</span>
+                </div>
+                <a href="#" class="btn-detail">Apply Now</a>
+            </div>
+            <div class="listing-card" style="padding: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                <div>
+                    <h3 style="font-family: var(--font-heading); font-size: 1.3rem; color: var(--forest);">Digital Marketing Executive</h3>
+                    <p style="color: var(--text-muted);">Manage campaigns, content and investor lead generation initiatives.</p>
+                    <span style="background: var(--gold-light); color: #92600A; padding: 2px 12px; border-radius: 50px; font-size: 0.8rem;">Remote</span>
+                    <span style="margin-left: 12px; color: var(--text-muted); font-size: 0.9rem;">📍 Remote</span>
+                </div>
+                <a href="#" class="btn-detail">Apply Now</a>
+            </div>
         </div>
-
-        <p class="mb-1 text-muted">
-            Build partnerships and expand farmland project opportunities.
-        </p>
-
-        <small>Location: Hybrid</small>
-
-    </a>
-
-    <a href="#" class="list-group-item list-group-item-action p-4 border-0 rounded">
-
-        <div class="d-flex justify-content-between">
-
-            <h5 class="fw-bold text-primary">
-                Digital Marketing Executive
-            </h5>
-
-            <small>Remote</small>
-
-        </div>
-
-        <p class="mb-1 text-muted">
-            Manage campaigns, content and investor lead generation initiatives.
-        </p>
-
-        <small>Location: Remote</small>
-
-    </a>
-
-</div>
-        <!-- <div class="list-group shadow-sm">
-            <a href="#" class="list-group-item list-group-item-action p-4 border-0 mb-1 rounded">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1 fw-bold text-primary">Senior Real Estate Agent</h5>
-                    <small class="text-muted">Full-time</small>
-                </div>
-                <p class="mb-1 text-muted">We are looking for an experienced agent to lead our sales team...</p>
-                <small>Location: New York</small>
-            </a>
-            <a href="#" class="list-group-item list-group-item-action p-4 border-0 mb-1 rounded">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1 fw-bold text-primary">Digital Marketing Specialist</h5>
-                    <small class="text-muted">Remote</small>
-                </div>
-                <p class="mb-1 text-muted">Manage our online presence and lead generation campaigns...</p>
-                <small>Location: Remote</small>
-            </a>
-            <a href="#" class="list-group-item list-group-item-action p-4 border-0 rounded">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1 fw-bold text-primary">Administrative Assistant</h5>
-                    <small class="text-muted">Part-time</small>
-                </div>
-                <p class="mb-1 text-muted">Support our team with daily operations and client management...</p>
-                <small>Location: New York</small>
-            </a>
-        </div> -->
-        <div class="text-center mt-5">
-           <p class="text-muted">
-    Interested in working with us?
-
-    Share your profile and our team will contact you when a suitable opportunity becomes available.
-</p>
-
-<a href="{% url 'public:contact' %}"
-   class="btn btn-primary px-4">
-    Contact Us
-</a>
+        <div style="text-align: center; margin-top: 48px;">
+            <p style="color: var(--text-muted);">Interested in working with us? Share your profile and our team will contact you when a suitable opportunity becomes available.</p>
+            <a href="{% url 'public:contact' %}" class="btn-cta-primary" style="display: inline-block;">Contact Us</a>
         </div>
     </div>
 </section>
+
 {% endblock %}

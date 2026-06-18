@@ -5,7 +5,6 @@
 
 {% block extra_css %}
 <style>
-
     /* Page Layout */
     .buy-page-wrapper {
         display: flex;
@@ -14,106 +13,86 @@
         margin-top: 80px;
     }
 
-    /* Filter Bar - Sticky */
-    .sticky-filter-bar{
-    position:sticky;
-    top:80px;
-    z-index:100;
-    padding:16px 0;
-    background:rgba(255,255,255,.95);
-    backdrop-filter:blur(18px);
-    border-bottom:1px solid rgba(0,0,0,.06);
-    box-shadow:
-        0 8px 30px rgba(0,0,0,.06),
-        0 1px 0 rgba(255,255,255,.7) inset;
-}
-
- .filter-container{
-    display:flex;
-    align-items:flex-end;
-    gap:14px;
-    overflow-x:auto;
-    padding:8px 4px;
-    scrollbar-width:none;
-}
-
-    .filter-container::-webkit-scrollbar {
-        display: none;
+    /* Filter Bar */
+    .sticky-filter-bar {
+        position: sticky;
+        top: 80px;
+        z-index: 100;
+        padding: 16px 0;
+        background: rgba(255,255,255,0.95);
+        backdrop-filter: blur(18px);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 8px 30px rgba(27,67,50,0.06);
     }
-
+    .filter-container {
+        display: flex;
+        align-items: flex-end;
+        gap: 14px;
+        overflow-x: auto;
+        padding: 8px 4px;
+        scrollbar-width: none;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+    .filter-container::-webkit-scrollbar { display: none; }
     .filter-group {
-        min-width:190px;
-        flex-shrink:0;
+        min-width: 170px;
+        flex-shrink: 0;
     }
-
     .filter-group label {
-        display:block;
-    margin-bottom:8px;
-    font-size:11px;
-    font-weight:700;
-    letter-spacing:.8px;
-    text-transform:uppercase;
-    color:#6b7280;
+        display: block;
+        margin-bottom: 6px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: var(--text-muted);
     }
-
     .filter-group select,
     .filter-group input {
-        width:100%;
-    height:52px;
-    padding:0 16px;
-    border:1px solid #E5E7EB;
-    border-radius:14px;
-    background:#fff;
-    font-size:14px;
-    font-weight:500;
-    color:#111827;
-    transition:.25s ease;
-    box-shadow:0 2px 8px rgba(0,0,0,.03);
+        width: 100%;
+        height: 48px;
+        padding: 0 14px;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: var(--white);
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-dark);
+        transition: 0.25s ease;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    .filter-group select:focus,
+    .filter-group input:focus {
+        border-color: var(--gold);
+        box-shadow: 0 0 0 4px rgba(233,166,42,0.12);
+    }
+    .clear-filters-btn {
+        min-width: 120px;
+        flex-shrink: 0;
+    }
+    .clear-filters-btn button {
+        height: 48px;
+        width: 100%;
+        border: none;
+        border-radius: 14px;
+        background: var(--forest);
+        color: var(--white);
+        font-weight: 700;
+        transition: 0.3s ease;
+        cursor: pointer;
+    }
+    .clear-filters-btn button:hover {
+        transform: translateY(-2px);
+        background: var(--emerald);
+        box-shadow: 0 12px 24px rgba(27,67,50,0.25);
+    }
+    .clear-filters-btn i {
+        margin-right: 6px;
     }
 
-    .filter-group input:hover,
-    .filter-group select:hover{
-        border-color:#cfd6de;
-    }
-
-    .filter-group input:focus,
-    .filter-group select:focus{
-        border-color:#1E73BE;
-        box-shadow:
-            0 0 0 4px rgba(30,115,190,.12),
-            0 8px 20px rgba(30,115,190,.08);
-    }
-
-    /* Clear Button */
-
-    .clear-filters-btn{
-        min-width:140px;
-        flex-shrink:0;
-    }
-
-    .clear-filters-btn button{
-        height:52px;
-        width:100%;
-        border:none;
-        border-radius:14px;
-        background:#081A2D;
-        color:#fff;
-        font-weight:700;
-        letter-spacing:.3px;
-        transition:.3s ease;
-    }
-
-    .clear-filters-btn button:hover{
-        transform:translateY(-2px);
-        background:#10263d;
-        box-shadow:0 12px 24px rgba(8,26,45,.25);
-    }
-
-    .clear-filters-btn i{
-        margin-right:6px;
-    }
-
-    /* Split Layout - Map and Listing */
+    /* Split Layout */
     .buy-content-wrapper {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -122,37 +101,27 @@
         overflow: hidden;
     }
 
-    /* Left Side - Map Section */
+    /* Map Section */
     .map-section {
-        background: #f5f5f5;
+        background: var(--pale);
         position: relative;
-        border-right: 1px solid var(--border-color);
+        border-right: 1px solid var(--border);
         min-height: 600px;
     }
-
     .map-container {
         width: 100%;
         height: 100%;
-        background: linear-gradient(135deg, #e8f0f8, #f0f5ff);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        font-family: 'Outfit', sans-serif;
+        overflow: hidden;
     }
-
-    .map-placeholder {
-        text-align: center;
-        color: var(--text-color);
+    .map-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
     }
-
-    .map-placeholder h3 {
-        font-size: 1.25rem;
-        margin-bottom: 0.5rem;
-        color: #333;
+    .map-container:hover img {
+        transform: scale(1.05);
     }
-
-    /* Map Controls */
     .map-controls {
         position: absolute;
         right: 1.5rem;
@@ -162,53 +131,46 @@
         gap: 0.5rem;
         z-index: 10;
     }
-
     .map-control-btn {
         width: 40px;
         height: 40px;
-        background: white;
-        border: 1px solid var(--border-color);
-        border-radius: 6px;
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 10px;
         cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
         font-size: 1.1rem;
         transition: all 0.3s ease;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        color: var(--forest);
     }
-
     .map-control-btn:hover {
-        background: var(--primary-blue);
-        color: white;
-        border-color: var(--primary-blue);
+        background: var(--gold);
+        color: var(--white);
+        border-color: var(--gold);
     }
 
-    /* Right Side - Listing Section */
+    /* Listing Section */
     .listing-section {
         display: flex;
         flex-direction: column;
-        background: white;
+        background: var(--white);
         overflow-y: auto;
         max-height: calc(100vh - 80px - 100px);
     }
-
     .listing-header {
         padding: 1.5rem;
-        border-bottom: 1px solid var(--border-color);
-        background: white;
+        border-bottom: 1px solid var(--border);
+        background: var(--white);
         position: sticky;
         top: 0;
         z-index: 10;
     }
-
     .listing-header h1 {
+        font-family: var(--font-heading);
         font-size: 1.5rem;
+        color: var(--forest);
         margin: 0 0 1rem 0;
-        color: #333;
-        font-family: 'Playfair Display', serif;
     }
-
     .listing-controls {
         display: flex;
         justify-content: space-between;
@@ -216,40 +178,35 @@
         gap: 1rem;
         flex-wrap: wrap;
     }
-
     .breadcrumb {
-        font-size: 0.875rem;
-        color: #999;
-        margin: 0;
+        font-size: 0.85rem;
+        color: var(--text-muted);
     }
-
     .breadcrumb a {
-        color: var(--primary-blue);
+        color: var(--emerald);
         text-decoration: none;
     }
-
     .breadcrumb a:hover {
-        text-decoration: underline;
+        color: var(--gold);
     }
-
     .results-count {
         font-weight: 600;
-        color: var(--primary-blue);
+        color: var(--emerald);
         font-size: 0.95rem;
     }
-
     .sort-control {
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        font-size: 0.875rem;
+        font-size: 0.85rem;
     }
-
     .sort-control select {
-        padding: 0.4rem 0.6rem;
-        border: 1px solid var(--border-color);
-        border-radius: 4px;
-        background: white;
+        padding: 0.4rem 0.8rem;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: var(--white);
+        font-weight: 500;
+        color: var(--text-dark);
     }
 
     /* Property Cards Grid */
@@ -260,45 +217,38 @@
         gap: 1.5rem;
         flex: 1;
     }
-
     .property-card {
-        background: white;
-        border: 1px solid var(--border-color);
-        border-radius: 18px;
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 20px;
         overflow: hidden;
         transition: all 0.3s ease;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         display: grid;
-        grid-template-columns: 220px 1fr;
+        grid-template-columns: 200px 1fr;
         gap: 1rem;
     }
-
     .property-card:hover {
         transform: translateY(-4px);
-        box-shadow: 0 20px 40px rgba(0,0,0,.12);
-        border-color: var(--primary-blue);
+        box-shadow: 0 20px 40px rgba(27,67,50,0.1);
+        border-color: var(--gold);
     }
-
-    /* Property Image Carousel */
     .property-image-carousel {
         position: relative;
-        background: #f5f5f5;
-        border-radius: 8px;
+        background: var(--pale);
+        border-radius: 16px;
         overflow: hidden;
         height: 200px;
     }
-
     .carousel-image {
         width: 100%;
         height: 100%;
         object-fit: cover;
         transition: transform 0.3s ease;
     }
-
     .property-card:hover .carousel-image {
         transform: scale(1.05);
     }
-
     .carousel-controls {
         position: absolute;
         bottom: 0.75rem;
@@ -308,29 +258,26 @@
         gap: 0.4rem;
         z-index: 5;
     }
-
     .carousel-dot {
         width: 6px;
         height: 6px;
         border-radius: 50%;
-        background: rgba(255, 255, 255, 0.5);
+        background: rgba(255,255,255,0.5);
         cursor: pointer;
         transition: all 0.3s ease;
     }
-
     .carousel-dot.active {
-        background: white;
+        background: var(--gold);
         width: 20px;
         border-radius: 3px;
     }
-
     .wishlist-btn {
         position: absolute;
         top: 0.75rem;
         right: 0.75rem;
         width: 36px;
         height: 36px;
-        background: white;
+        background: var(--white);
         border: none;
         border-radius: 50%;
         cursor: pointer;
@@ -339,92 +286,84 @@
         align-items: center;
         justify-content: center;
         transition: all 0.3s ease;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         z-index: 10;
+        color: var(--text-muted);
     }
-
     .wishlist-btn:hover {
-        background: var(--primary-orange);
-        color: white;
+        background: var(--gold);
+        color: var(--white);
         transform: scale(1.1);
     }
-
     .wishlist-btn.saved {
-        background: var(--primary-orange);
-        color: white;
+        background: var(--gold);
+        color: var(--white);
     }
 
-    /* Property Info Section */
     .property-info {
-        padding: 1.5rem;
+        padding: 1.25rem 1.25rem 1.25rem 0;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
     }
-
-    .property-header {
-        margin-bottom: 1rem;
+    .property-title {
+        font-family: var(--font-heading);
+        font-size: 1.2rem;
+        color: var(--forest);
+        margin-bottom: 0.5rem;
+        font-weight: 700;
     }
-
     .property-price {
         font-size: 1.3rem;
         font-weight: 700;
-        color: var(--primary-orange);
-        margin-bottom: 0.3rem;
-        font-family: 'Outfit', sans-serif;
+        color: var(--gold);
+        margin-bottom: 0.2rem;
     }
-
     .property-price-total {
         font-size: 0.85rem;
-        color: #666;
-        background: #f0f8ff;
-        padding: 0.3rem 0.6rem;
-        border-radius: 4px;
+        color: var(--text-muted);
+        background: var(--pale);
+        padding: 0.2rem 0.6rem;
+        border-radius: 6px;
         display: inline-block;
-        font-weight: 500;
     }
-
-    .property-details {
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-        margin: 1rem 0;
-        font-size: 0.875rem;
-        color: var(--text-color);
-    }
-
-    .detail-item {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    .detail-item strong {
-        color: #333;
-        min-width: 50px;
-    }
-
     .property-location {
-        font-size: 0.875rem;
-        color: #999;
-        margin-bottom: 0.5rem;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin: 0.5rem 0;
         display: flex;
         align-items: center;
         gap: 0.3rem;
     }
-
-    /* Action Buttons */
+    .property-details {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.3rem 0.8rem;
+        margin: 0.5rem 0;
+        font-size: 0.85rem;
+        color: var(--text-mid);
+    }
+    .property-details .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+    .property-details .detail-item strong {
+        color: var(--forest);
+        font-weight: 600;
+        min-width: 50px;
+    }
     .property-actions {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
         gap: 0.5rem;
+        margin-top: 0.5rem;
     }
-
     .action-btn {
         padding: 0.5rem;
-        border: 1px solid var(--border-color);
-        background: white;
-        border-radius: 6px;
+        border: 1px solid var(--border);
+        background: var(--white);
+        border-radius: 10px;
         cursor: pointer;
         font-size: 0.8rem;
         font-weight: 600;
@@ -434,24 +373,22 @@
         align-items: center;
         justify-content: center;
         gap: 0.3rem;
+        color: var(--text-mid);
     }
-
     .action-btn:hover {
-        border-color: var(--primary-blue);
-        color: var(--primary-blue);
+        border-color: var(--gold);
+        color: var(--gold);
     }
-
     .action-btn-primary {
-        background: var(--primary-blue);
-        color: white;
-        border-color: var(--primary-blue);
+        background: var(--forest);
+        color: var(--white);
+        border-color: var(--forest);
     }
-
     .action-btn-primary:hover {
-        background: #0477c2;
-        border-color: #0477c2;
+        background: var(--emerald);
+        border-color: var(--emerald);
+        color: var(--white);
     }
-
     .action-btn-icon {
         font-size: 1rem;
     }
@@ -460,177 +397,115 @@
     .empty-state {
         padding: 3rem 1.5rem;
         text-align: center;
-        color: var(--text-color);
+        color: var(--text-muted);
     }
-
     .empty-state h3 {
-        font-size: 1.2rem;
-        color: #333;
+        font-family: var(--font-heading);
+        font-size: 1.5rem;
+        color: var(--forest);
         margin-bottom: 0.5rem;
     }
-
-    .empty-state p {
-        color: #999;
-        margin-bottom: 1.5rem;
-    }
-
     .empty-state-btn {
         padding: 0.6rem 1.2rem;
-        background: var(--primary-blue);
-        color: white;
+        background: var(--gold);
+        color: var(--forest);
         border: none;
-        border-radius: 6px;
+        border-radius: 50px;
         cursor: pointer;
         text-decoration: none;
         display: inline-block;
+        font-weight: 700;
         transition: all 0.3s ease;
     }
-
     .empty-state-btn:hover {
-        background: #0477c2;
+        background: #d4931f;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(233,166,42,0.3);
     }
 
     /* Pagination */
     .pagination-wrapper {
         padding: 1.5rem;
-        border-top: 1px solid var(--border-color);
+        border-top: 1px solid var(--border);
         display: flex;
         justify-content: center;
         gap: 0.5rem;
     }
-
     .page-link {
         padding: 0.5rem 0.75rem;
-        border: 1px solid var(--border-color);
-        border-radius: 4px;
-        color: var(--primary-blue);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: var(--emerald);
         text-decoration: none;
         transition: all 0.3s ease;
+        background: var(--white);
     }
-
     .page-link:hover {
-        background: var(--primary-blue);
-        color: white;
+        background: var(--gold);
+        color: var(--white);
+        border-color: var(--gold);
     }
-
     .page-link.active {
-        background: var(--primary-blue);
-        color: white;
-        border-color: var(--primary-blue);
+        background: var(--gold);
+        color: var(--white);
+        border-color: var(--gold);
     }
 
-    /* Responsive Design */
+    /* Responsive */
     @media (max-width: 1200px) {
         .buy-content-wrapper {
             grid-template-columns: 1fr;
         }
-
         .map-section {
             border-right: none;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border);
             min-height: 400px;
         }
-
         .property-card {
-            grid-template-columns: 180px 1fr;
-            gap: 0.75rem;
+            grid-template-columns: 160px 1fr;
         }
-
         .property-image-carousel {
             height: 160px;
         }
     }
-
     @media (max-width: 768px) {
         .filter-group {
             min-width: 140px;
         }
-
         .property-card {
-            grid-template-columns: 150px 1fr;
-            gap: 0.5rem;
+            grid-template-columns: 1fr;
+            gap: 0;
         }
-
         .property-info {
-            padding: 0.75rem;
+            padding: 1rem;
         }
-
         .property-actions {
             grid-template-columns: 1fr 1fr;
         }
-
         .listing-controls {
             flex-direction: column;
             align-items: flex-start;
         }
-
         .sort-control {
             width: 100%;
         }
-
         .sort-control select {
             flex: 1;
         }
+        .property-details {
+            grid-template-columns: 1fr;
+        }
+        .map-section {
+            min-height: 300px;
+        }
     }
-
-    .map-container img{
-    transition: transform .5s ease;
-}
-
-.map-container:hover img{
-    transform: scale(1.05);
-}
-
-.filter-group select:not([value=""]),
-.filter-group input:not(:placeholder-shown){
-    border-color:#D4A24C;
-}
-
-/* =====================================
-   MOBILE
-===================================== */
-
-@media(max-width:768px){
-
-    .sticky-filter-bar{
-        padding:12px 0;
-        top:70px;
-    }
-
-    .filter-container{
-        gap:10px;
-        padding-bottom:4px;
-        scroll-snap-type:x mandatory;
-    }
-
-    .filter-group{
-        min-width:165px;
-        scroll-snap-align:start;
-    }
-
-    .filter-group input,
-    .filter-group select{
-        height:48px;
-        border-radius:12px;
-        font-size:13px;
-    }
-
-    .clear-filters-btn{
-        min-width:130px;
-    }
-
-    .clear-filters-btn button{
-        height:48px;
-    }
-
-}
 </style>
 {% endblock %}
 
 {% block inner_hero %}
-<section class="inner-hero" style="background-image: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');">
+<section class="inner-hero" style="background-image: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80');">
     <div class="inner-hero-content">
-        <h1 class="inner-hero-title">Buy Property</h1>
+        <h1 class="inner-hero-title">Buy Farmland & Agricultural Land</h1>
         <p class="inner-hero-quote">"Invest in your future with the perfect property"</p>
     </div>
 </section>
@@ -640,15 +515,14 @@
 <div class="buy-page-wrapper">
     <!-- Sticky Filter Bar -->
     <div class="sticky-filter-bar">
-        <div class="container-fluid">
-            <form method="get" class="filter-container">
-                <!-- Location Search -->
+        <div class="filter-container">
+            <form method="get" class="filter-container" style="padding:0; gap:14px; width:100%; max-width:1400px; margin:0 auto;">
+                <!-- Location -->
                 <div class="filter-group">
                     <label>Location</label>
                     <input type="text" name="location" placeholder="Search locations..." value="{{ filters.location }}">
                 </div>
-
-                <!-- Price Range -->
+                <!-- Price -->
                 <div class="filter-group">
                     <label>Price</label>
                     <select name="price_range">
@@ -660,8 +534,7 @@
                         <option value="above_10cr" {% if filters.price_range == 'above_10cr' %}selected{% endif %}>Above ₹10 Cr</option>
                     </select>
                 </div>
-
-                <!-- Property Type -->
+                <!-- Type -->
                 <div class="filter-group">
                     <label>Type</label>
                     <select name="property_type">
@@ -673,8 +546,7 @@
                         <option value="Plot" {% if filters.property_type == 'Plot' %}selected{% endif %}>Plot</option>
                     </select>
                 </div>
-
-                <!-- Area Range -->
+                <!-- Area -->
                 <div class="filter-group">
                     <label>Area</label>
                     <select name="area_range">
@@ -686,8 +558,7 @@
                         <option value="50+" {% if filters.area_range == '50+' %}selected{% endif %}>50+</option>
                     </select>
                 </div>
-
-                <!-- Area Unit -->
+                <!-- Unit -->
                 <div class="filter-group">
                     <label>Unit</label>
                     <select name="area_unit">
@@ -698,8 +569,7 @@
                         <option value="Sq Yard" {% if filters.area_unit == 'Sq Yard' %}selected{% endif %}>Sq Yard</option>
                     </select>
                 </div>
-
-                <!-- Status Filter -->
+                <!-- Status -->
                 <div class="filter-group">
                     <label>Status</label>
                     <select name="status">
@@ -709,7 +579,6 @@
                         <option value="Sold" {% if filters.status == 'Sold' %}selected{% endif %}>Sold</option>
                     </select>
                 </div>
-
                 <!-- Sale By -->
                 <div class="filter-group">
                     <label>Sale By</label>
@@ -720,13 +589,10 @@
                         <option value="Builder" {% if filters.sale_by == 'Builder' %}selected{% endif %}>Builder</option>
                     </select>
                 </div>
-
-                <!-- Clear Filters Button -->
+                <!-- Clear -->
                 <div class="clear-filters-btn">
-                    <!-- <button 
-                        type="reset" 
-                        onclick="window.location.href='{% url 'buy:property_search' %}'"> -->
-                        <button type="reset" onclick="window.location.href='/buy/'">
+                    <!-- FIX: use double quotes inside the url tag to avoid conflict -->
+                    <button type="reset" onclick="window.location.href='{% url "buy:property_search" %}'">
                         <i class="bi bi-x-circle"></i> Clear
                     </button>
                 </div>
@@ -734,65 +600,38 @@
         </div>
     </div>
 
-    <!-- Main Content - Split Layout -->
+    <!-- Main Content -->
     <div class="buy-content-wrapper">
-        <!-- Left Side: Map Section -->
+        <!-- Map Section -->
         <div class="map-section">
-            <!-- <div class="map-container">
-                <div class="map-placeholder">
-                    <h3>Interactive Map</h3>
-                    <p style="font-size: 0.9rem; color: #999; margin-top: 0.5rem;">
-                        Mapbox/Google Map Integration<br>
-                        Property markers with prices
-                    </p>
-                </div>
-            </div> -->
             <div class="map-container">
-                <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=80"
-                        alt="Farmland View"
-                        style="width:100%;height:100%;object-fit:cover;">
+                <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=80" alt="Farmland Map View">
             </div>
-            
-            <!-- Map Controls -->
             <div class="map-controls">
-                <button class="map-control-btn" title="Zoom In">
-                    <i class="bi bi-plus-lg"></i>
-                </button>
-                <button class="map-control-btn" title="Zoom Out">
-                    <i class="bi bi-dash-lg"></i>
-                </button>
-                <button class="map-control-btn" title="Toggle Layers">
-                    <i class="bi bi-layers"></i>
-                </button>
-                <button class="map-control-btn" title="Expand Map">
-                    <i class="bi bi-fullscreen"></i>
-                </button>
+                <button class="map-control-btn" title="Zoom In"><i class="bi bi-plus-lg"></i></button>
+                <button class="map-control-btn" title="Zoom Out"><i class="bi bi-dash-lg"></i></button>
+                <button class="map-control-btn" title="Layers"><i class="bi bi-layers"></i></button>
+                <button class="map-control-btn" title="Fullscreen"><i class="bi bi-fullscreen"></i></button>
             </div>
         </div>
 
-        <!-- Right Side: Listing Section -->
+        <!-- Listing Section -->
         <div class="listing-section">
-            <!-- Header -->
             <div class="listing-header">
                 <h1>Farmland and Agriculture Land for Sale</h1>
-                
                 <div class="listing-controls">
                     <div class="breadcrumb">
-                        <a href="{% url 'public:home' %}">Home</a> > <span>Map</span>
+                        <a href="{% url 'public:home' %}">Home</a> &gt; <span>Map</span>
                     </div>
-                    <div class="results-count">
-                        {{ total_results }} Results
-                    </div>
+                    <div class="results-count">{{ total_results }} Results</div>
                     <div class="sort-control">
-                        <label for="sort" style="margin: 0;">Sort by:</label>
-                        <form method="get" style="display: inline;">
-                            <input type="hidden" name="location" value="{{ filters.location }}">
-                            <input type="hidden" name="price_range" value="{{ filters.price_range }}">
-                            <input type="hidden" name="property_type" value="{{ filters.property_type }}">
-                            <input type="hidden" name="area_range" value="{{ filters.area_range }}">
-                            <input type="hidden" name="area_unit" value="{{ filters.area_unit }}">
-                            <input type="hidden" name="status" value="{{ filters.status }}">
-                            <input type="hidden" name="sale_by" value="{{ filters.sale_by }}">
+                        <label for="sort" style="margin:0;">Sort by:</label>
+                        <form method="get" style="display:inline;">
+                            {% for key, value in filters.items %}
+                                {% if key != 'sort_by' %}
+                                    <input type="hidden" name="{{ key }}" value="{{ value }}">
+                                {% endif %}
+                            {% endfor %}
                             <select name="sort_by" id="sort" onchange="this.form.submit()">
                                 <option value="-created_at" {% if filters.sort_by == '-created_at' %}selected{% endif %}>Latest</option>
                                 <option value="price" {% if filters.sort_by == 'price' %}selected{% endif %}>Price: Low to High</option>
@@ -810,7 +649,6 @@
                 <div class="properties-grid">
                     {% for property in properties %}
                         <div class="property-card" data-property-id="{{ property.id }}">
-                            <!-- Image Carousel -->
                             <div class="property-image-carousel">
                                 {% if property.images.all %}
                                     <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}" class="carousel-image">
@@ -822,16 +660,16 @@
                                         </div>
                                     {% endif %}
                                 {% else %}
-                                    <div style="width: 100%; height: 100%; background: #e0e0e0; display: flex; align-items: center; justify-content: center; color: #999;">
-                                        <i class="bi bi-image" style="font-size: 2rem;"></i>
+                                    <div style="width:100%; height:100%; background:var(--pale); display:flex; align-items:center; justify-content:center; color:var(--text-muted);">
+                                        <i class="bi bi-image" style="font-size:2rem;"></i>
                                     </div>
                                 {% endif %}
 
-                                <!-- Wishlist Button -->
+                                <!-- Wishlist -->
                                 {% if user.is_authenticated %}
-                                    <form method="post" style="display: inline;" action="{% url 'buy:save_property' property.id %}">
+                                    <form method="post" style="display:inline;" action="{% url 'buy:save_property' property.id %}">
                                         {% csrf_token %}
-                                        <button type="submit" class="wishlist-btn {% if is_saved %}saved{% endif %}" title="Add to Wishlist">
+                                        <button type="submit" class="wishlist-btn" title="Add to Wishlist">
                                             <i class="bi bi-heart-fill"></i>
                                         </button>
                                     </form>
@@ -842,74 +680,26 @@
                                 {% endif %}
                             </div>
 
-                            <!-- Property Info -->
                             <div class="property-info">
-                                <h3 class="property-title">
-                                    {{ property.title }}
-                                </h3>
+                                <h3 class="property-title">{{ property.title }}</h3>
                                 <div>
-                                    <div class="property-price">
-                                        ₹{{ property.price|floatformat:0 }}
-                                    </div>
-                                    <div class="property-price-total">
-                                        Total: ₹{{ property.price|floatformat:0 }}
-                                    </div>
-
-                                    <!-- Location -->
+                                    <div class="property-price">₹{{ property.price|floatformat:0 }}</div>
+                                    <div class="property-price-total">Total: ₹{{ property.price|floatformat:0 }}</div>
                                     <div class="property-location">
                                         <i class="bi bi-geo-alt"></i> {{ property.location }}
                                     </div>
-
-                                    <!-- Details -->
-                                    <!-- <div class="property-details">
-                                        <div class="detail-item">
-                                            <strong>Area:</strong> {{ property.area_sqft }} Sq Ft
-                                        </div>
-                                        <div class="detail-item">
-                                            <strong>Type:</strong> {{ property.category }}
-                                        </div>
-                                    </div> -->
                                     <div class="property-details">
-
-                                        <div class="detail-item">
-                                            🌱 <strong>Project:</strong>
-                                            {{ property.project_size_acre|default:"N/A" }}
-                                        </div>
-
-                                        <div class="detail-item">
-                                            📏 <strong>Plot:</strong>
-                                            {{ property.plot_sizes|default:"N/A" }}
-                                        </div>
-
-                                        <div class="detail-item">
-                                            💧 <strong>Water:</strong>
-                                            {{ property.water_source|default:"N/A" }}
-                                        </div>
-
-                                        <div class="detail-item">
-                                            🛣 <strong>Road:</strong>
-                                            {{ property.road_access|default:"N/A" }}
-                                        </div>
-
-                                        <div class="detail-item">
-                                            ✅ <strong>Registry:</strong>
-                                            {{ property.registry_status|default:"Available" }}
-                                        </div>
-
+                                        <div class="detail-item"><strong>🌱 Project:</strong> {{ property.project_size_acre|default:"N/A" }}</div>
+                                        <div class="detail-item"><strong>📏 Plot:</strong> {{ property.plot_sizes|default:"N/A" }}</div>
+                                        <div class="detail-item"><strong>💧 Water:</strong> {{ property.water_source|default:"N/A" }}</div>
+                                        <div class="detail-item"><strong>🛣 Road:</strong> {{ property.road_access|default:"N/A" }}</div>
+                                        <div class="detail-item"><strong>✅ Registry:</strong> {{ property.registry_status|default:"Available" }}</div>
                                     </div>
                                 </div>
-
-                                <!-- Action Buttons -->
                                 <div class="property-actions">
-                                    <button class="action-btn" title="Share">
-                                        <i class="bi bi-share action-btn-icon"></i> Share
-                                    </button>
-                                    <button class="action-btn" title="Wishlist">
-                                        <i class="bi bi-heart action-btn-icon"></i>
-                                    </button>
-                                    <a href="{% url 'buy:property_detail' property.id %}" class="action-btn action-btn-primary">
-                                        Details
-                                    </a>
+                                    <button class="action-btn" title="Share"><i class="bi bi-share action-btn-icon"></i> Share</button>
+                                    <button class="action-btn" title="Wishlist"><i class="bi bi-heart action-btn-icon"></i></button>
+                                    <a href="{% url 'buy:property_detail' property.id %}" class="action-btn action-btn-primary">Details</a>
                                 </div>
                             </div>
                         </div>
@@ -923,7 +713,6 @@
                             <a href="?page=1" class="page-link"><i class="bi bi-chevron-double-left"></i></a>
                             <a href="?page={{ page_obj.previous_page_number }}" class="page-link"><i class="bi bi-chevron-left"></i></a>
                         {% endif %}
-
                         {% for num in page_obj.paginator.page_range %}
                             {% if page_obj.number == num %}
                                 <span class="page-link active">{{ num }}</span>
@@ -931,7 +720,6 @@
                                 <a href="?page={{ num }}" class="page-link">{{ num }}</a>
                             {% endif %}
                         {% endfor %}
-
                         {% if page_obj.has_next %}
                             <a href="?page={{ page_obj.next_page_number }}" class="page-link"><i class="bi bi-chevron-right"></i></a>
                             <a href="?page={{ page_obj.paginator.num_pages }}" class="page-link"><i class="bi bi-chevron-double-right"></i></a>
@@ -939,7 +727,6 @@
                     </div>
                 {% endif %}
             {% else %}
-                <!-- Empty State -->
                 <div class="empty-state">
                     <h3>No Properties Found</h3>
                     <p>Try adjusting your filters or search terms to find properties.</p>
@@ -956,52 +743,31 @@
         const dots = card.querySelectorAll('.carousel-dot');
         const images = card.querySelectorAll('.carousel-image');
         let currentIndex = 0;
-
         if (dots.length > 1) {
             dots.forEach((dot, index) => {
                 dot.addEventListener('click', () => {
                     currentIndex = index;
-                    updateCarousel();
+                    images.forEach(img => img.style.display = 'none');
+                    dots.forEach(d => d.classList.remove('active'));
+                    images[currentIndex].style.display = 'block';
+                    dots[currentIndex].classList.add('active');
                 });
             });
-
-            function updateCarousel() {
-                images.forEach(img => img.style.display = 'none');
-                dots.forEach(dot => dot.classList.remove('active'));
-                
-                images[currentIndex].style.display = 'block';
-                dots[currentIndex].classList.add('active');
-            }
         }
     });
 
-    // Share functionality
+    // Share
     document.querySelectorAll('.action-btn').forEach(btn => {
         if (btn.innerText.includes('Share')) {
             btn.addEventListener('click', function() {
-                const title = this.closest('.property-card').querySelector('.property-location').innerText;
+                const title = this.closest('.property-card').querySelector('.property-title').innerText;
                 if (navigator.share) {
-                    navigator.share({
-                        title: 'Check out this property',
-                        text: title,
-                        url: window.location.href
-                    });
+                    navigator.share({ title: 'Check out this property', text: title, url: window.location.href });
                 } else {
                     alert('Share this property!');
                 }
             });
         }
-    });
-
-    // Map controls
-    document.querySelectorAll('.map-control-btn').forEach((btn) => {
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            // if (index === 0) alert('Zoom In');
-            // else if (index === 1) alert('Zoom Out');
-            // else if (index === 2) alert('Toggle Layers');
-            // else if (index === 3) alert('Expand Map');
-        });
     });
 </script>
 {% endblock %}
