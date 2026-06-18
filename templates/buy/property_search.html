@@ -225,9 +225,15 @@
         transition: all 0.3s ease;
         box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         display: grid;
-        grid-template-columns: 200px 1fr;
-        gap: 1rem;
+        grid-template-columns:220px 1fr;
+        align-items:start;
+        gap:20px;
     }
+    .property-image-carousel{
+    width:220px;
+    height:220px;
+    flex-shrink:0;
+}
     .property-card:hover {
         transform: translateY(-4px);
         box-shadow: 0 20px 40px rgba(27,67,50,0.1);
@@ -301,10 +307,11 @@
     }
 
     .property-info {
-        padding: 1.25rem 1.25rem 1.25rem 0;
+        padding: 1.25rem;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        justify-content: flex-start;
+        gap: 12px;
     }
     .property-title {
         font-family: var(--font-heading);
@@ -356,9 +363,14 @@
     .property-actions {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
-        gap: 0.5rem;
-        margin-top: 0.5rem;
+        gap:10px;
+    margin-top:15px;
     }
+    .property-main-content{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
     .action-btn {
         padding: 0.5rem;
         border: 1px solid var(--border);
@@ -664,7 +676,7 @@
                                         <i class="bi bi-image" style="font-size:2rem;"></i>
                                     </div>
                                 {% endif %}
-
+                                
                                 <!-- Wishlist -->
                                 {% if user.is_authenticated %}
                                     <form method="post" style="display:inline;" action="{% url 'buy:save_property' property.id %}">
@@ -681,8 +693,8 @@
                             </div>
 
                             <div class="property-info">
-                                <h3 class="property-title">{{ property.title }}</h3>
-                                <div>
+                                <div class="property-main-content">
+                                    <h3 class="property-title">{{ property.title }}</h3>
                                     <div class="property-price">₹{{ property.price|floatformat:0 }}</div>
                                     <div class="property-price-total">Total: ₹{{ property.price|floatformat:0 }}</div>
                                     <div class="property-location">
@@ -690,7 +702,7 @@
                                     </div>
                                     <div class="property-details">
                                         <div class="detail-item"><strong>🌱 Project:</strong> {{ property.project_size_acre|default:"N/A" }}</div>
-                                        <div class="detail-item"><strong>📏 Plot:</strong> {{ property.plot_sizes|default:"N/A" }}</div>
+                                        <div class="detail-item"><strong>🌾 Plot:</strong> {{ property.plot_sizes|default:"N/A" }}</div>
                                         <div class="detail-item"><strong>💧 Water:</strong> {{ property.water_source|default:"N/A" }}</div>
                                         <div class="detail-item"><strong>🛣 Road:</strong> {{ property.road_access|default:"N/A" }}</div>
                                         <div class="detail-item"><strong>✅ Registry:</strong> {{ property.registry_status|default:"Available" }}</div>
@@ -700,6 +712,7 @@
                                     <button class="action-btn" title="Share"><i class="bi bi-share action-btn-icon"></i> Share</button>
                                     <button class="action-btn" title="Wishlist"><i class="bi bi-heart action-btn-icon"></i></button>
                                     <a href="{% url 'buy:property_detail' property.id %}" class="action-btn action-btn-primary">Details</a>
+                                </div>
                                 </div>
                             </div>
                         </div>

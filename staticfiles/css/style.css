@@ -9,7 +9,7 @@
     --pale: #7BBF96;
     --gold: #E9A62A;
     --gold-light: #FEF3C7;
-    --white: #9DD4B0;
+    --white: #DDF2E4;
     --text-dark: #0D2B1D;
     --text-mid: #2D5742;
     --text-muted: #6B8C75;
@@ -2845,7 +2845,7 @@ section { padding: 88px 48px; }
     margin: 0 auto;color: var(--text-muted);}
 
 .contact-block {
-    background-color: #9DD4B0;
+    background-color: #DDF2E4;
     border-radius: 20px;
     border: 1px solid var(--border);
     transition: all .3s;
@@ -2857,8 +2857,14 @@ section { padding: 88px 48px; }
     gap: 20px;
 }
 
+.why-invest-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
 .whycard{
-    background: #9dd4b0 !important;
+    background: #DDF2E4 !important;
 }
 .invest-card {
     background: var(--white);
@@ -3180,7 +3186,7 @@ footer {
     .hero { padding: 0 20px; }
     .trust-inner { grid-template-columns: 1fr; transform: translateY(0); margin-top: 20px; }
     .trust-item { border-right: none; border-bottom: 1px solid var(--border); }
-    .invest-grid, .listings-grid, .invest-opp-grid, .testi-grid, .footer-top { grid-template-columns: 1fr; }
+    .invest-grid, .why-invest-grid, .listings-grid, .invest-opp-grid, .testi-grid, .footer-top { grid-template-columns: 1fr; }
     .lifestyle-grid { grid-template-columns: 1fr; }
     .cta-inner { flex-direction: column; text-align: center; padding: 48px 24px; }
     .cta-title { font-size: 32px; }
