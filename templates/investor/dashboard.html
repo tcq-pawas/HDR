@@ -1,21 +1,15 @@
+{% extends "investor/investor_base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HeyDay Realty Investor Dashboard</title>
 
+{% block title %}Investor Dashboard - HeyDay Realty{% endblock %}
+
+{% block extra_css %}
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
-
 <style>
 body{
     background:#f4f6f9;
     font-family:Inter,sans-serif;
-}
-.sidebar-bg{
-    background:linear-gradient(180deg,#014737,#032e24);
 }
 .hero-banner{
     background:
@@ -28,257 +22,189 @@ body{
     box-shadow:0 4px 20px rgba(0,0,0,.08);
 }
 </style>
+{% endblock %}
 
-</head>
-<body>
+{% block page_title %}Investor Dashboard{% endblock %}
 
-<div class="flex min-h-screen">
-
-    <!-- Sidebar -->
-    <aside class="w-64 sidebar-bg text-white fixed left-0 top-0 bottom-0">
-
-        <div class="p-6 border-b border-white/10">
-            <h2 class="font-bold text-2xl">HeyDay Realty</h2>
-            <p class="text-sm text-white/70">Investor Portal</p>
+{% block header %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2>Investor Dashboard</h2>
+        <p class="text-muted">Welcome back, {{ user.first_name|default:user.username }}! 👋</p>
+    </div>
+    <div class="text-end">
+        <div class="d-flex align-items-center gap-3">
+            <div class="position-relative">
+                <i class="fas fa-bell text-xl"></i>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 10px; padding: 4px 6px;">3</span>
+            </div>
+            <span class="badge bg-success">Investor</span>
         </div>
+    </div>
+</div>
+{% endblock %}
 
-        <div class="p-6 text-center">
+{% block content %}
 
-            <div class="w-20 h-20 bg-white rounded-full mx-auto flex items-center justify-center text-3xl font-bold text-green-700">
-                IT
+<!-- Hero Banner -->
+<section class="hero-banner rounded-3 overflow-hidden mb-4 d-flex align-items-center justify-content-between px-5 text-white" style="height: 200px;">
+
+    <div>
+        <h2 class="fw-bold" style="font-size: 2.5rem;">
+            Welcome Back, {{ user.first_name|default:user.username }}!
+        </h2>
+
+        <p class="mt-2" style="font-size: 1.1rem;">
+            Monitor your agricultural land portfolio and investment performance.
+        </p>
+    </div>
+
+    <div class="bg-dark bg-opacity-30 rounded-3 p-4" style="width: 500px; backdrop-filter: blur(10px);">
+
+        <div class="row g-3">
+
+            <div class="col-3">
+                <p class="small mb-1">Portfolio Value</p>
+                <h3 class="fw-bold fs-4">
+                    ₹2.5Cr
+                </h3>
             </div>
 
-            <h4 class="mt-4 font-semibold">
-                investor_test
-            </h4>
-
-            <p class="text-white/70 text-sm">
-                Investor
-            </p>
-
-        </div>
-
-        <nav class="px-4 mt-4 space-y-2">
-
-            <a href="#" class="flex items-center gap-3 bg-green-700 rounded-xl px-4 py-3">
-                <i class="fas fa-chart-line"></i>
-                Dashboard
-            </a>
-
-            <a href="#" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl">
-                <i class="fas fa-user"></i>
-                Profile
-            </a>
-
-            <a href="#" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl">
-                <i class="fas fa-wallet"></i>
-                My Investments
-            </a>
-
-            <a href="#" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl">
-                <i class="fas fa-list"></i>
-                Available Listings
-            </a>
-
-            <a href="#" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl">
-                <i class="fas fa-chart-pie"></i>
-                ROI Data
-            </a>
-
-            <a href="#" class="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl">
-                <i class="fas fa-file"></i>
-                Documents
-            </a>
-
-        </nav>
-
-        <div class="absolute bottom-6 left-6">
-            <button class="flex items-center gap-2">
-                <i class="fas fa-sign-out-alt"></i>
-                Logout
-            </button>
-        </div>
-
-    </aside>
-
-    <!-- Main Content -->
-    <main class="ml-64 flex-1 p-8">
-
-        <!-- Header -->
-        <div class="flex justify-between items-center">
-
-            <div>
-                <h1 class="text-4xl font-bold text-gray-900">
-                    Investor Dashboard
-                </h1>
-
-                <p class="text-gray-600 mt-2">
-                    Welcome back, investor_test! 👋
-                </p>
+            <div class="col-3">
+                <p class="small mb-1">Total Profit</p>
+                <h3 class="fw-bold fs-4">
+                    ₹48.75L
+                </h3>
             </div>
 
-            <div class="flex items-center gap-6">
+            <div class="col-3">
+                <p class="small mb-1">ROI</p>
+                <h3 class="fw-bold fs-4 text-success">
+                    38.5%
+                </h3>
+            </div>
 
-                <div class="relative">
-                    <i class="fas fa-bell text-xl"></i>
-                    <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-                        3
-                    </span>
-                </div>
-
-                <span class="bg-green-700 text-white px-4 py-2 rounded-lg text-sm">
-                    Investor
-                </span>
-
+            <div class="col-3">
+                <p class="small mb-1">Investments</p>
+                <h3 class="fw-bold fs-4">
+                    12
+                </h3>
             </div>
 
         </div>
 
-        <!-- Hero Banner -->
-        <section class="hero-banner mt-6 rounded-3xl overflow-hidden h-52 flex items-center justify-between px-10 text-white">
+    </div>
 
-            <div>
-                <h2 class="text-5xl font-bold">
-                    Welcome Back, investor_test!
-                </h2>
+</section>
 
-                <p class="mt-3 text-lg">
-                    Monitor your agricultural land portfolio and investment performance.
-                </p>
-            </div>
+<!-- KPI Cards -->
+<div class="row g-4 mb-4">
 
-            <div class="backdrop-blur-lg bg-black/30 rounded-2xl p-6 w-[620px]">
-
-                <div class="grid grid-cols-4 gap-4">
-
-                    <div>
-                        <p class="text-sm">Portfolio Value</p>
-                        <h3 class="text-3xl font-bold">
-                            ₹2.5Cr
-                        </h3>
-                    </div>
-
-                    <div>
-                        <p class="text-sm">Total Profit</p>
-                        <h3 class="text-3xl font-bold">
-                            ₹48.75L
-                        </h3>
-                    </div>
-
-                    <div>
-                        <p class="text-sm">ROI</p>
-                        <h3 class="text-3xl font-bold text-green-300">
-                            38.5%
-                        </h3>
-                    </div>
-
-                    <div>
-                        <p class="text-sm">Investments</p>
-                        <h3 class="text-3xl font-bold">
-                            12
-                        </h3>
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-        <!-- KPI Cards -->
-        <div class="grid grid-cols-4 gap-6 mt-6">
-
-            <div class="bg-green-500 rounded-2xl text-white p-6 card-shadow">
-                <h4>Total Portfolio Value</h4>
-                <h2 class="text-4xl font-bold mt-2">₹2.5Cr</h2>
-                <p class="mt-4 text-sm">↑ 12.5% vs last month</p>
-            </div>
-
-            <div class="bg-blue-600 rounded-2xl text-white p-6 card-shadow">
-                <h4>Total ROI</h4>
-                <h2 class="text-4xl font-bold mt-2">38.5%</h2>
-                <p class="mt-4 text-sm">↑ 6.8% vs last month</p>
-            </div>
-
-            <div class="bg-cyan-500 rounded-2xl text-white p-6 card-shadow">
-                <h4>Active Investments</h4>
-                <h2 class="text-4xl font-bold mt-2">12</h2>
-                <p class="mt-4 text-sm">↑ 2 new this month</p>
-            </div>
-
-            <div class="bg-amber-500 rounded-2xl text-white p-6 card-shadow">
-                <h4>Total Profit</h4>
-                <h2 class="text-4xl font-bold mt-2">₹48.75L</h2>
-                <p class="mt-4 text-sm">↑ 15.3% vs last month</p>
-            </div>
-
+    <div class="col-md-3">
+        <div class="bg-success rounded-3 text-white p-4 card-shadow">
+            <h5>Total Portfolio Value</h5>
+            <h2 class="fw-bold mt-2 fs-2">₹2.5Cr</h2>
+            <p class="mt-3 small">↑ 12.5% vs last month</p>
         </div>
+    </div>
 
-        <!-- Analytics Section -->
-        <div class="grid grid-cols-3 gap-6 mt-6">
+    <div class="col-md-3">
+        <div class="bg-primary rounded-3 text-white p-4 card-shadow">
+            <h5>Total ROI</h5>
+            <h2 class="fw-bold mt-2 fs-2">38.5%</h2>
+            <p class="mt-3 small">↑ 6.8% vs last month</p>
+        </div>
+    </div>
 
-            <div class="col-span-2 bg-white rounded-2xl p-6 card-shadow">
+    <div class="col-md-3">
+        <div class="bg-info rounded-3 text-white p-4 card-shadow">
+            <h5>Active Investments</h5>
+            <h2 class="fw-bold mt-2 fs-2">12</h2>
+            <p class="mt-3 small">↑ 2 new this month</p>
+        </div>
+    </div>
 
-                <div class="flex justify-between">
-                    <h3 class="font-bold text-xl">
-                        Portfolio Growth
-                    </h3>
+    <div class="col-md-3">
+        <div class="bg-warning rounded-3 text-white p-4 card-shadow">
+            <h5>Total Profit</h5>
+            <h2 class="fw-bold mt-2 fs-2">₹48.75L</h2>
+            <p class="mt-3 small">↑ 15.3% vs last month</p>
+        </div>
+    </div>
 
-                    <select class="border rounded-lg px-3 py-2">
-                        <option>Last 6 Months</option>
-                    </select>
-                </div>
+</div>
 
-                <div class="h-80 flex items-center justify-center text-gray-400">
-                    Chart.js Line Chart Here
-                </div>
+<!-- Analytics Section -->
+<div class="row g-4 mb-4">
 
-            </div>
+    <div class="col-md-8">
+        <div class="bg-white rounded-3 p-4 card-shadow">
 
-            <div class="bg-white rounded-2xl p-6 card-shadow">
-
-                <h3 class="font-bold text-xl">
-                    ROI Summary
+            <div class="d-flex justify-content-between mb-4">
+                <h3 class="fw-bold">
+                    Portfolio Growth
                 </h3>
 
-                <div class="text-center mt-8">
+                <select class="form-select w-auto">
+                    <option>Last 6 Months</option>
+                </select>
+            </div>
 
-                    <div class="w-44 h-44 rounded-full border-[14px] border-green-500 mx-auto flex items-center justify-center">
-                        <div>
-                            <h2 class="text-4xl font-bold">
-                                38.5%
-                            </h2>
-                            <p>Total ROI</p>
-                        </div>
+            <div class="d-flex align-items-center justify-content-center text-muted" style="height: 320px;">
+                Chart.js Line Chart Here
+            </div>
+
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="bg-white rounded-3 p-4 card-shadow">
+
+            <h3 class="fw-bold mb-4">
+                ROI Summary
+            </h3>
+
+            <div class="text-center mt-4">
+
+                <div class="rounded-circle border border-success border-5 mx-auto d-flex align-items-center justify-content-center" style="width: 176px; height: 176px; border-width: 14px !important;">
+                    <div>
+                        <h2 class="fw-bold fs-2">
+                            38.5%
+                        </h2>
+                        <p class="small">Total ROI</p>
                     </div>
-
                 </div>
 
             </div>
 
         </div>
+    </div>
 
-        <!-- Bottom Section -->
-        <div class="grid grid-cols-3 gap-6 mt-6">
+</div>
 
-            <!-- Investments -->
-            <div class="col-span-2 bg-white rounded-2xl p-6 card-shadow">
+<!-- Bottom Section -->
+<div class="row g-4 mb-4">
 
-                <div class="flex justify-between mb-6">
-                    <h3 class="font-bold text-xl">
-                        Recent Investments
-                    </h3>
+    <!-- Investments -->
+    <div class="col-md-8">
+        <div class="bg-white rounded-3 p-4 card-shadow">
 
-                    <button class="border px-4 py-2 rounded-lg">
-                        View All
-                    </button>
-                </div>
+            <div class="d-flex justify-content-between mb-4">
+                <h3 class="fw-bold">
+                    Recent Investments
+                </h3>
 
-                <table class="w-full">
+                <button class="btn btn-outline-secondary">
+                    View All
+                </button>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table">
 
                     <thead>
-                        <tr class="border-b">
-                            <th class="text-left py-3">Property</th>
+                        <tr class="border-bottom">
+                            <th class="py-3">Property</th>
                             <th>Location</th>
                             <th>Area</th>
                             <th>ROI</th>
@@ -288,25 +214,25 @@ body{
 
                     <tbody>
 
-                        <tr class="border-b">
-                            <td class="py-4">Green Valley Farms</td>
+                        <tr class="border-bottom">
+                            <td class="py-3">Green Valley Farms</td>
                             <td>Hyderabad</td>
                             <td>5 Acre</td>
                             <td>30%</td>
                             <td>
-                                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full">
+                                <span class="badge bg-success bg-opacity-10 text-success">
                                     Active
                                 </span>
                             </td>
                         </tr>
 
-                        <tr class="border-b">
-                            <td class="py-4">River View Agriculture</td>
+                        <tr class="border-bottom">
+                            <td class="py-3">River View Agriculture</td>
                             <td>Vijayawada</td>
                             <td>10 Acre</td>
                             <td>37%</td>
                             <td>
-                                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full">
+                                <span class="badge bg-success bg-opacity-10 text-success">
                                     Active
                                 </span>
                             </td>
@@ -315,41 +241,40 @@ body{
                     </tbody>
 
                 </table>
-
             </div>
 
-            <!-- Notifications -->
-            <div class="bg-white rounded-2xl p-6 card-shadow">
+        </div>
+    </div>
 
-                <h3 class="font-bold text-xl mb-6">
-                    Notifications
-                </h3>
+    <!-- Notifications -->
+    <div class="col-md-4">
+        <div class="bg-white rounded-3 p-4 card-shadow">
 
-                <div class="space-y-4">
+            <h3 class="fw-bold mb-4">
+                Notifications
+            </h3>
 
-                    <div class="p-4 bg-gray-50 rounded-xl">
-                        Property value increased by 5.2%
-                    </div>
+            <div class="d-flex flex-column gap-3">
 
-                    <div class="p-4 bg-gray-50 rounded-xl">
-                        New investment opportunity available
-                    </div>
+                <div class="p-3 bg-light rounded-3">
+                    Property value increased by 5.2%
+                </div>
 
-                    <div class="p-4 bg-gray-50 rounded-xl">
-                        New report uploaded
-                    </div>
+                <div class="p-3 bg-light rounded-3">
+                    New investment opportunity available
+                </div>
 
+                <div class="p-3 bg-light rounded-3">
+                    New report uploaded
                 </div>
 
             </div>
 
         </div>
-
-    </main>
+    </div>
 
 </div>
 
-</body>
-</html>
+{% endblock %}
 
 
