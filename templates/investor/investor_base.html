@@ -392,9 +392,6 @@
                     <a class="nav-link {% if request.resolver_match.url_name == 'investments-page' %}active{% endif %}" href="{% url 'investor:investments-page' %}">
                         <i class="fas fa-coins me-2"></i> My Investments
                     </a>
-                    <a class="nav-link {% if request.resolver_match.url_name == 'listings-page' %}active{% endif %}" href="{% url 'investor:listings-page' %}">
-                        <i class="fas fa-list me-2"></i> Available Listings
-                    </a>
                     <a class="nav-link {% if request.resolver_match.url_name == 'roi-data-page' %}active{% endif %}" href="{% url 'investor:roi-data-page' %}">
                         <i class="fas fa-chart-pie me-2"></i> ROI Data
                     </a>

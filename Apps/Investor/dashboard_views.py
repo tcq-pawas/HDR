@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.http import Http404
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum, Count, Avg, Q, F, OuterRef
@@ -7,7 +8,7 @@ from django.utils import timezone
 from datetime import timedelta, date
 from Apps.Administration.smart_dashboard_views import InvestorDashboardMixin
 from Apps.Administration.auth_utils import get_user_role
-from .models import InvestorProfile, Investment, InvestmentListing, ROIData, InvestorDocument
+from .models import InvestorProfile, Investment, InvestmentListing, ROIData, InvestorDocument, ROIHistory
 from Apps.PublicPage.models import Property
 
 
@@ -269,26 +270,6 @@ class InvestorInvestmentsView(InvestorDashboardMixin, TemplateView):
         return context
 
 
-class InvestorListingsView(InvestorDashboardMixin, TemplateView):
-    """Investor available listings view with strict access control"""
-    template_name = 'investor/listings.html'
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        user = self.request.user
-        
-        context['listings'] = InvestmentListing.objects.filter(
-            status='active'
-        ).select_related('property_obj').annotate(
-            investor_has_invested=Count(
-                'investments', 
-                filter=Q(investments__investor=user)
-            )
-        ).order_by('-created_at')
-        
-        return context
-
-
 class InvestorROIDataView(InvestorDashboardMixin, TemplateView):
     """Investor ROI data view with strict access control"""
     template_name = 'investor/roi_data.html'
@@ -356,5 +337,311 @@ class InvestorDocumentsView(InvestorDashboardMixin, TemplateView):
         context['documents'] = InvestorDocument.objects.filter(
             investor=user
         ).order_by('-uploaded_at')
+        
+        return context
+
+
+class InvestmentDetailView(InvestorDashboardMixin, TemplateView):
+    """Investment detail view with strict access control"""
+    template_name = 'investor/investment_detail.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        investment_id = self.kwargs.get('investment_id')
+        
+        # Try to get real investment from database
+        try:
+            investment = Investment.objects.get(
+                id=investment_id,
+                investor=user
+            )
+            
+            # Get latest ROI data for this investment
+            latest_roi = ROIData.objects.filter(
+                investment=investment
+            ).order_by('-created_at').first()
+            
+            context['investment'] = investment
+            context['roi_data'] = latest_roi
+        except Investment.DoesNotExist:
+            # Return dummy data for testing purposes
+            dummy_investments = {
+                1: {
+                    'id': 1,
+                    'listing': {
+                        'title': 'Modern Downtown Apartment',
+                        'property_obj': {
+                            'title': 'Luxury Condo Complex',
+                            'location': 'Downtown Area',
+                            'property_type': 'Residential',
+                            'price': 2500000
+                        },
+                        'expected_roi_percentage': 12.5,
+                        'investment_term_months': 24,
+                        'payment_frequency': 'monthly',
+                        'total_investment_needed': 2500000,
+                        'total_invested_amount': 2000000,
+                        'investment_type': 'equity'
+                    },
+                    'amount': 50000,
+                    'investment_date': timezone.datetime(2024, 1, 15).date(),
+                    'status': 'confirmed'
+                },
+                2: {
+                    'id': 2,
+                    'listing': {
+                        'title': 'Suburban Family House',
+                        'property_obj': {
+                            'title': 'Residential Property Development',
+                            'location': 'Suburban District',
+                            'property_type': 'Residential',
+                            'price': 1800000
+                        },
+                        'expected_roi_percentage': 10.8,
+                        'investment_term_months': 18,
+                        'payment_frequency': 'monthly',
+                        'total_investment_needed': 1800000,
+                        'total_invested_amount': 1500000,
+                        'investment_type': 'debt'
+                    },
+                    'amount': 25000,
+                    'investment_date': timezone.datetime(2024, 2, 20).date(),
+                    'status': 'confirmed'
+                },
+                3: {
+                    'id': 3,
+                    'listing': {
+                        'title': 'Luxury Penthouse',
+                        'property_obj': {
+                            'title': 'High-End Residential Tower',
+                            'location': 'City Center',
+                            'property_type': 'Residential',
+                            'price': 5000000
+                        },
+                        'expected_roi_percentage': 15.2,
+                        'investment_term_months': 36,
+                        'payment_frequency': 'quarterly',
+                        'total_investment_needed': 5000000,
+                        'total_invested_amount': 4000000,
+                        'investment_type': 'equity'
+                    },
+                    'amount': 75000,
+                    'investment_date': timezone.datetime(2024, 3, 10).date(),
+                    'status': 'pending'
+                },
+                4: {
+                    'id': 4,
+                    'listing': {
+                        'title': 'Commercial Office Building',
+                        'property_obj': {
+                            'title': 'Business Park Development',
+                            'location': 'Industrial Zone',
+                            'property_type': 'Commercial',
+                            'price': 8000000
+                        },
+                        'expected_roi_percentage': 14.0,
+                        'investment_term_months': 48,
+                        'payment_frequency': 'monthly',
+                        'total_investment_needed': 8000000,
+                        'total_invested_amount': 7000000,
+                        'investment_type': 'equity'
+                    },
+                    'amount': 100000,
+                    'investment_date': timezone.datetime(2023, 12, 5).date(),
+                    'status': 'confirmed'
+                }
+            }
+            
+            investment = dummy_investments.get(investment_id)
+            if investment:
+                context['investment'] = investment
+                context['roi_data'] = None
+            else:
+                raise Http404("Investment not found")
+        
+        return context
+
+
+class InvestmentROIView(InvestorDashboardMixin, TemplateView):
+    """Investment ROI data view with strict access control"""
+    template_name = 'investor/investment_roi.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        investment_id = self.kwargs.get('investment_id')
+        
+        # Try to get real investment from database
+        try:
+            investment = Investment.objects.get(
+                id=investment_id,
+                investor=user
+            )
+            
+            # Get ROI data for this investment
+            roi_data = ROIData.objects.filter(
+                investment=investment
+            ).order_by('-created_at').first()
+            
+            # Get ROI history for this investment
+            roi_history = ROIHistory.objects.filter(
+                investment=investment
+            ).order_by('record_date')
+            
+            context['investment'] = investment
+            context['roi_data'] = roi_data
+            context['roi_history'] = roi_history
+        except Investment.DoesNotExist:
+            # Return dummy data for testing purposes
+            dummy_investments = {
+                1: {
+                    'id': 1,
+                    'listing': {
+                        'title': 'Modern Downtown Apartment',
+                        'property_obj': {
+                            'title': 'Luxury Condo Complex',
+                            'location': 'Downtown Area',
+                            'property_type': 'Residential',
+                            'price': 2500000
+                        },
+                        'expected_roi_percentage': 12.5,
+                        'investment_term_months': 24,
+                        'payment_frequency': 'monthly',
+                        'total_investment_needed': 2500000,
+                        'total_invested_amount': 2000000,
+                        'investment_type': 'equity'
+                    },
+                    'amount': 50000,
+                    'investment_date': timezone.datetime(2024, 1, 15).date(),
+                    'status': 'confirmed'
+                },
+                2: {
+                    'id': 2,
+                    'listing': {
+                        'title': 'Suburban Family House',
+                        'property_obj': {
+                            'title': 'Residential Property Development',
+                            'location': 'Suburban District',
+                            'property_type': 'Residential',
+                            'price': 1800000
+                        },
+                        'expected_roi_percentage': 10.8,
+                        'investment_term_months': 18,
+                        'payment_frequency': 'monthly',
+                        'total_investment_needed': 1800000,
+                        'total_invested_amount': 1500000,
+                        'investment_type': 'debt'
+                    },
+                    'amount': 25000,
+                    'investment_date': timezone.datetime(2024, 2, 20).date(),
+                    'status': 'confirmed'
+                },
+                3: {
+                    'id': 3,
+                    'listing': {
+                        'title': 'Luxury Penthouse',
+                        'property_obj': {
+                            'title': 'High-End Residential Tower',
+                            'location': 'City Center',
+                            'property_type': 'Residential',
+                            'price': 5000000
+                        },
+                        'expected_roi_percentage': 15.2,
+                        'investment_term_months': 36,
+                        'payment_frequency': 'quarterly',
+                        'total_investment_needed': 5000000,
+                        'total_invested_amount': 4000000,
+                        'investment_type': 'equity'
+                    },
+                    'amount': 75000,
+                    'investment_date': timezone.datetime(2024, 3, 10).date(),
+                    'status': 'pending'
+                },
+                4: {
+                    'id': 4,
+                    'listing': {
+                        'title': 'Commercial Office Building',
+                        'property_obj': {
+                            'title': 'Business Park Development',
+                            'location': 'Industrial Zone',
+                            'property_type': 'Commercial',
+                            'price': 8000000
+                        },
+                        'expected_roi_percentage': 14.0,
+                        'investment_term_months': 48,
+                        'payment_frequency': 'monthly',
+                        'total_investment_needed': 8000000,
+                        'total_invested_amount': 7000000,
+                        'investment_type': 'equity'
+                    },
+                    'amount': 100000,
+                    'investment_date': timezone.datetime(2023, 12, 5).date(),
+                    'status': 'confirmed'
+                }
+            }
+            
+            dummy_roi_data = {
+                1: {
+                    'actual_roi_percentage': 8.3,
+                    'total_returns': 4150,
+                    'investment_period_months': 8,
+                    'annualized_roi_percentage': 12.4
+                },
+                2: {
+                    'actual_roi_percentage': 6.2,
+                    'total_returns': 1550,
+                    'investment_period_months': 5,
+                    'annualized_roi_percentage': 14.9
+                },
+                4: {
+                    'actual_roi_percentage': 12.8,
+                    'total_returns': 12800,
+                    'investment_period_months': 12,
+                    'annualized_roi_percentage': 12.8
+                }
+            }
+            
+            dummy_roi_history = {
+                1: [
+                    {'record_date': timezone.datetime(2024, 1, 15).date(), 'monthly_returns': 520, 'cumulative_returns': 520, 'roi_percentage': 1.04},
+                    {'record_date': timezone.datetime(2024, 2, 15).date(), 'monthly_returns': 515, 'cumulative_returns': 1035, 'roi_percentage': 2.07},
+                    {'record_date': timezone.datetime(2024, 3, 15).date(), 'monthly_returns': 525, 'cumulative_returns': 1560, 'roi_percentage': 3.12},
+                    {'record_date': timezone.datetime(2024, 4, 15).date(), 'monthly_returns': 530, 'cumulative_returns': 2090, 'roi_percentage': 4.18},
+                    {'record_date': timezone.datetime(2024, 5, 15).date(), 'monthly_returns': 518, 'cumulative_returns': 2608, 'roi_percentage': 5.22},
+                    {'record_date': timezone.datetime(2024, 6, 15).date(), 'monthly_returns': 542, 'cumulative_returns': 3150, 'roi_percentage': 6.30},
+                    {'record_date': timezone.datetime(2024, 7, 15).date(), 'monthly_returns': 535, 'cumulative_returns': 3685, 'roi_percentage': 7.37},
+                    {'record_date': timezone.datetime(2024, 8, 15).date(), 'monthly_returns': 465, 'cumulative_returns': 4150, 'roi_percentage': 8.30}
+                ],
+                2: [
+                    {'record_date': timezone.datetime(2024, 3, 20).date(), 'monthly_returns': 310, 'cumulative_returns': 310, 'roi_percentage': 1.24},
+                    {'record_date': timezone.datetime(2024, 4, 20).date(), 'monthly_returns': 305, 'cumulative_returns': 615, 'roi_percentage': 2.46},
+                    {'record_date': timezone.datetime(2024, 5, 20).date(), 'monthly_returns': 315, 'cumulative_returns': 930, 'roi_percentage': 3.72},
+                    {'record_date': timezone.datetime(2024, 6, 20).date(), 'monthly_returns': 320, 'cumulative_returns': 1250, 'roi_percentage': 5.00},
+                    {'record_date': timezone.datetime(2024, 7, 20).date(), 'monthly_returns': 300, 'cumulative_returns': 1550, 'roi_percentage': 6.20}
+                ],
+                4: [
+                    {'record_date': timezone.datetime(2024, 1, 5).date(), 'monthly_returns': 1067, 'cumulative_returns': 1067, 'roi_percentage': 1.07},
+                    {'record_date': timezone.datetime(2024, 2, 5).date(), 'monthly_returns': 1067, 'cumulative_returns': 2134, 'roi_percentage': 2.13},
+                    {'record_date': timezone.datetime(2024, 3, 5).date(), 'monthly_returns': 1067, 'cumulative_returns': 3201, 'roi_percentage': 3.20},
+                    {'record_date': timezone.datetime(2024, 4, 5).date(), 'monthly_returns': 1067, 'cumulative_returns': 4268, 'roi_percentage': 4.27},
+                    {'record_date': timezone.datetime(2024, 5, 5).date(), 'monthly_returns': 1067, 'cumulative_returns': 5335, 'roi_percentage': 5.34},
+                    {'record_date': timezone.datetime(2024, 6, 5).date(), 'monthly_returns': 1067, 'cumulative_returns': 6402, 'roi_percentage': 6.40},
+                    {'record_date': timezone.datetime(2024, 7, 5).date(), 'monthly_returns': 1067, 'cumulative_returns': 7469, 'roi_percentage': 7.47},
+                    {'record_date': timezone.datetime(2024, 8, 5).date(), 'monthly_returns': 1067, 'cumulative_returns': 8536, 'roi_percentage': 8.54},
+                    {'record_date': timezone.datetime(2024, 9, 5).date(), 'monthly_returns': 1067, 'cumulative_returns': 9603, 'roi_percentage': 9.60},
+                    {'record_date': timezone.datetime(2024, 10, 5).date(), 'monthly_returns': 1067, 'cumulative_returns': 10670, 'roi_percentage': 10.67},
+                    {'record_date': timezone.datetime(2024, 11, 5).date(), 'monthly_returns': 1067, 'cumulative_returns': 11737, 'roi_percentage': 11.74},
+                    {'record_date': timezone.datetime(2024, 12, 5).date(), 'monthly_returns': 1063, 'cumulative_returns': 12800, 'roi_percentage': 12.80}
+                ]
+            }
+            
+            investment = dummy_investments.get(investment_id)
+            if investment:
+                context['investment'] = investment
+                context['roi_data'] = dummy_roi_data.get(investment_id)
+                context['roi_history'] = dummy_roi_history.get(investment_id, [])
+            else:
+                raise Http404("Investment not found")
         
         return context
