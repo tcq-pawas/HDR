@@ -4,271 +4,237 @@
 {% block title %}Buy Farmland & Agricultural Land | HeyDay Realty{% endblock %}
 
 {% block extra_css %}
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
-    /* Page Layout */
+    /* Minimal custom styles – everything else is Bootstrap */
     .buy-page-wrapper {
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
         margin-top: 80px;
     }
-
-    /* Filter Bar */
     .sticky-filter-bar {
         position: sticky;
         top: 80px;
         z-index: 100;
-        padding: 16px 0;
-        background: rgba(255,255,255,0.95);
-        backdrop-filter: blur(18px);
-        border-bottom: 1px solid var(--border);
-        box-shadow: 0 8px 30px rgba(27,67,50,0.06);
+        background: rgba(255,255,255,0.96);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(0,0,0,0.06);
+        box-shadow: 0 2px 20px rgba(0,0,0,0.04);
     }
-    .filter-container {
-        display: flex;
-        align-items: flex-end;
-        gap: 14px;
+    .filter-scroll {
         overflow-x: auto;
-        padding: 8px 4px;
+        flex-wrap: nowrap;
         scrollbar-width: none;
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 0 1rem;
+        -ms-overflow-style: none;
     }
-    .filter-container::-webkit-scrollbar { display: none; }
+    .filter-scroll::-webkit-scrollbar {
+        display: none;
+    }
     .filter-group {
-        min-width: 170px;
+        min-width: 150px;
         flex-shrink: 0;
     }
     .filter-group label {
-        display: block;
-        margin-bottom: 6px;
-        font-size: 11px;
+        font-size: 0.7rem;
         font-weight: 700;
-        letter-spacing: 0.8px;
+        letter-spacing: 0.5px;
         text-transform: uppercase;
-        color: var(--text-muted);
+        color: #6b7a7a;
+        margin-bottom: 4px;
     }
     .filter-group select,
     .filter-group input {
-        width: 100%;
-        height: 48px;
-        padding: 0 14px;
-        border: 1px solid var(--border);
-        border-radius: 14px;
-        background: var(--white);
-        font-size: 14px;
+        height: 42px;
+        border-radius: 10px;
+        border: 1px solid #e2e8f0;
+        background: #f8fafc;
+        font-size: 0.9rem;
         font-weight: 500;
-        color: var(--text-dark);
-        transition: 0.25s ease;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        padding: 0 12px;
+        transition: 0.2s;
     }
     .filter-group select:focus,
     .filter-group input:focus {
-        border-color: var(--gold);
-        box-shadow: 0 0 0 4px rgba(233,166,42,0.12);
+        border-color: #d4a843;
+        box-shadow: 0 0 0 3px rgba(212,168,67,0.15);
+        background: #fff;
     }
-    .clear-filters-btn {
-        min-width: 120px;
-        flex-shrink: 0;
-    }
-    .clear-filters-btn button {
-        height: 48px;
-        width: 100%;
+    .clear-btn {
+        height: 42px;
         border: none;
-        border-radius: 14px;
-        background: var(--forest);
-        color: var(--white);
+        border-radius: 10px;
+        background: #1e3b34;
+        color: #fff;
         font-weight: 700;
-        transition: 0.3s ease;
+        font-size: 0.9rem;
+        transition: 0.25s;
         cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 0 20px;
+        text-decoration: none;
     }
-    .clear-filters-btn button:hover {
-        transform: translateY(-2px);
-        background: var(--emerald);
-        box-shadow: 0 12px 24px rgba(27,67,50,0.25);
-    }
-    .clear-filters-btn i {
-        margin-right: 6px;
+    .clear-btn:hover {
+        background: #2a5a4f;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(30,59,52,0.25);
+        color: #fff;
+        text-decoration: none;
     }
 
-    /* Split Layout */
-    .buy-content-wrapper {
+    /* Map and listing container */
+    .map-listing-wrapper {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 0;
-        flex: 1;
+        height: calc(100vh - 80px - 70px);
         overflow: hidden;
     }
-
-    /* Map Section */
     .map-section {
-        background: var(--pale);
+        background: #eef3f1;
         position: relative;
-        border-right: 1px solid var(--border);
-        min-height: 600px;
+        border-right: 1px solid #e2e8f0;
+        min-height: 400px;
+        height: 100%;
     }
-    .map-container {
+    #propertyMap {
         width: 100%;
         height: 100%;
-        overflow: hidden;
-    }
-    .map-container img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.5s ease;
-    }
-    .map-container:hover img {
-        transform: scale(1.05);
+        min-height: 400px;
     }
     .map-controls {
         position: absolute;
-        right: 1.5rem;
-        top: 1.5rem;
+        right: 1.2rem;
+        top: 1.2rem;
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
         z-index: 10;
     }
     .map-control-btn {
-        width: 40px;
-        height: 40px;
-        background: var(--white);
-        border: 1px solid var(--border);
+        width: 36px;
+        height: 36px;
+        background: #fff;
+        border: 1px solid #e2e8f0;
         border-radius: 10px;
         cursor: pointer;
-        font-size: 1.1rem;
-        transition: all 0.3s ease;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-        color: var(--forest);
+        font-size: 1rem;
+        transition: all 0.2s;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        color: #1e3b34;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     .map-control-btn:hover {
-        background: var(--gold);
-        color: var(--white);
-        border-color: var(--gold);
+        background: #d4a843;
+        color: #fff;
+        border-color: #d4a843;
     }
 
-    /* Listing Section */
     .listing-section {
-        display: flex;
-        flex-direction: column;
-        background: var(--white);
         overflow-y: auto;
-        max-height: calc(100vh - 80px - 100px);
+        height: 100%;
+        background: #fff;
     }
     .listing-header {
-        padding: 1.5rem;
-        border-bottom: 1px solid var(--border);
-        background: var(--white);
+        border-bottom: 1px solid #eef3f1;
+        background: #fff;
         position: sticky;
         top: 0;
         z-index: 10;
+        padding: 1.25rem 1.5rem;
     }
     .listing-header h1 {
-        font-family: var(--font-heading);
-        font-size: 1.5rem;
-        color: var(--forest);
-        margin: 0 0 1rem 0;
-    }
-    .listing-controls {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 1rem;
-        flex-wrap: wrap;
-    }
-    .breadcrumb {
-        font-size: 0.85rem;
-        color: var(--text-muted);
-    }
-    .breadcrumb a {
-        color: var(--emerald);
-        text-decoration: none;
-    }
-    .breadcrumb a:hover {
-        color: var(--gold);
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: #1a2e2a;
+        margin: 0 0 0.75rem 0;
+        letter-spacing: -0.01em;
     }
     .results-count {
         font-weight: 600;
-        color: var(--emerald);
-        font-size: 0.95rem;
-    }
-    .sort-control {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 0.85rem;
+        color: #1e3b34;
+        background: #f1f5f4;
+        padding: 0.2rem 0.8rem;
+        border-radius: 30px;
+        font-size: 0.9rem;
     }
     .sort-control select {
-        padding: 0.4rem 0.8rem;
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        background: var(--white);
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        background: #f8fafc;
+        padding: 0.3rem 0.8rem;
+        font-size: 0.85rem;
         font-weight: 500;
-        color: var(--text-dark);
+        color: #1a2e2a;
+    }
+    /* Properties Grid – FORCE SINGLE COLUMN */
+    .properties-grid{
+        padding:1.25rem 1.5rem;
+        display:grid;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:16px;
+    }   
+
+    .property-card{
+        display:flex;
+        flex-direction:column;
+        width:100%;
+        background:#fff;
+        border:1px solid #eef3f1;
+        border-radius:16px;
+        overflow:hidden;
+        height:100%;
     }
 
-    /* Property Cards Grid */
-    .properties-grid {
-        padding: 1.5rem;
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-        flex: 1;
-    }
-    .property-card,
-.property-info{
-    height:auto !important;
-    min-height:auto !important;
-}
-    .property-card {
-        background: var(--white);
-        border: 1px solid var(--border);
-        border-radius: 20px;
-        overflow: hidden;
-        transition: all 0.3s ease;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        display: flex;
-        /* grid-template-columns:220px 1fr; */
-        align-items:flex-start;
-        gap:20px;
-        padding : 20px;
-    }
-    .property-image-carousel{
-    width:220px;
-    height:220px;
-    min-width:220px;
-    flex-shrink:0;
-}
     .property-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 20px 40px rgba(27,67,50,0.1);
-        border-color: var(--gold);
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px rgba(30,59,52,0.08);
+        border-color: #d4a843;
     }
-    .property-image-carousel {
-        position: relative;
-        background: var(--pale);
-        border-radius: 16px;
-        overflow: hidden;
-        height: 200px;
+
+    /* Image container – fixed size on desktop */
+    .property-image{
+        width:100%;
+        height:220px;
+        min-width:unset;
+        border-radius:0;
     }
-    .carousel-image {
+
+    .property-image img{
+        width:100%;
+        height:100%;
+        object-fit:cover;
+    }
+
+/* Mobile adjustment: stack vertically */
+@media(max-width:768px){
+
+    .properties-grid{
+        grid-template-columns:1fr;
+    }
+
+    .property-image{
+        height:220px;
+    }
+}
+    .property-image img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.3s ease;
+        transition: transform 0.3s;
     }
-    .property-card:hover .carousel-image {
-        transform: scale(1.05);
+    .property-card:hover .property-image img {
+        transform: scale(1.03);
     }
-    .carousel-controls {
+    .carousel-dots {
         position: absolute;
-        bottom: 0.75rem;
+        bottom: 0.6rem;
         left: 50%;
         transform: translateX(-50%);
         display: flex;
-        gap: 0.4rem;
+        gap: 0.3rem;
         z-index: 5;
     }
     .carousel-dot {
@@ -277,245 +243,153 @@
         border-radius: 50%;
         background: rgba(255,255,255,0.5);
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.25s;
     }
     .carousel-dot.active {
-        background: var(--gold);
-        width: 20px;
-        border-radius: 3px;
+        background: #d4a843;
+        width: 18px;
+        border-radius: 4px;
     }
     .wishlist-btn {
         position: absolute;
-        top: 0.75rem;
-        right: 0.75rem;
-        width: 36px;
-        height: 36px;
-        background: var(--white);
+        top: 0.6rem;
+        right: 0.6rem;
+        width: 32px;
+        height: 32px;
+        background: rgba(255,255,255,0.9);
         border: none;
         border-radius: 50%;
         cursor: pointer;
-        font-size: 1.2rem;
+        font-size: 1rem;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.3s ease;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.06);
         z-index: 10;
-        color: var(--text-muted);
+        color: #6b7a7a;
+        transition: all 0.2s;
     }
     .wishlist-btn:hover {
-        background: var(--gold);
-        color: var(--white);
-        transform: scale(1.1);
-    }
-    .wishlist-btn.saved {
-        background: var(--gold);
-        color: var(--white);
-    }
-
-    .property-info {
-        flex:1;
-        padding:0;
-        display:flex;
-        flex-direction:column;
-        gap:12px;
-    }
-    .property-title {
-        font-family: var(--font-heading);
-        font-size: 1.2rem;
-        color: var(--forest);
-        margin-bottom: 0.5rem;
-        font-weight: 700;
+        background: #d4a843;
+        color: #fff;
     }
     .property-price {
-        font-size: 1.3rem;
+        font-size: 1.25rem;
         font-weight: 700;
-        color: var(--gold);
-        margin-bottom: 0.2rem;
+        color: #d4a843;
     }
     .property-price-total {
-        font-size: 0.85rem;
-        color: var(--text-muted);
-        background: var(--pale);
-        padding: 0.2rem 0.6rem;
-        border-radius: 6px;
+        font-size: 0.75rem;
+        color: #6b7a7a;
+        background: #f1f5f4;
+        padding: 0.15rem 0.6rem;
+        border-radius: 20px;
         display: inline-block;
     }
-    .property-location {
-        font-size: 0.85rem;
-        color: var(--text-muted);
-        margin: 0.5rem 0;
-        display: flex;
-        align-items: center;
-        gap: 0.3rem;
-    }
-    .property-details {
+    .property-details-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 0.3rem 0.8rem;
-        margin: 0.5rem 0;
+        gap: 0.2rem 0.8rem;
         font-size: 0.85rem;
-        color: var(--text-mid);
+        color: #3d4f4a;
     }
-    .property-details .detail-item {
-        display: flex;
-        align-items: center;
-        gap: 0.3rem;
-    }
-    .property-details .detail-item strong {
-        color: var(--forest);
+    .property-details-grid .detail-item strong {
+        color: #1a2e2a;
         font-weight: 600;
-        min-width: 50px;
+        min-width: 40px;
+        display: inline-block;
     }
-    .property-actions {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        gap:10px;
-    margin-top:20px;
-    }
-    .property-main-content{
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-}
     .action-btn {
-        padding: 0.5rem;
-        border: 1px solid var(--border);
-        background: var(--white);
-        border-radius: 10px;
+        padding: 0.3rem 0.8rem;
+        border: 1px solid #e2e8f0;
+        background: #f8fafc;
+        border-radius: 8px;
         cursor: pointer;
         font-size: 0.8rem;
         font-weight: 600;
-        transition: all 0.3s ease;
+        transition: all 0.2s;
+        color: #3d4f4a;
         text-decoration: none;
-        display: flex;
+        display: inline-flex;
         align-items: center;
-        justify-content: center;
         gap: 0.3rem;
-        color: var(--text-mid);
     }
     .action-btn:hover {
-        border-color: var(--gold);
-        color: var(--gold);
+        border-color: #d4a843;
+        color: #d4a843;
+        background: #fdf8f0;
     }
     .action-btn-primary {
-        background: var(--forest);
-        color: var(--white);
-        border-color: var(--forest);
+        background: #1e3b34;
+        color: #fff;
+        border-color: #1e3b34;
     }
     .action-btn-primary:hover {
-        background: var(--emerald);
-        border-color: var(--emerald);
-        color: var(--white);
-    }
-    .action-btn-icon {
-        font-size: 1rem;
+        background: #2a5a4f;
+        border-color: #2a5a4f;
+        color: #fff;
     }
 
-    /* Empty State */
-    .empty-state {
-        padding: 3rem 1.5rem;
-        text-align: center;
-        color: var(--text-muted);
-    }
-    .empty-state h3 {
-        font-family: var(--font-heading);
-        font-size: 1.5rem;
-        color: var(--forest);
-        margin-bottom: 0.5rem;
-    }
-    .empty-state-btn {
-        padding: 0.6rem 1.2rem;
-        background: var(--gold);
-        color: var(--forest);
-        border: none;
-        border-radius: 50px;
-        cursor: pointer;
-        text-decoration: none;
-        display: inline-block;
-        font-weight: 700;
-        transition: all 0.3s ease;
-    }
-    .empty-state-btn:hover {
-        background: #d4931f;
-        transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(233,166,42,0.3);
-    }
-
-    /* Pagination */
     .pagination-wrapper {
-        padding: 1.5rem;
-        border-top: 1px solid var(--border);
+        padding: 1.25rem 1.5rem;
+        border-top: 1px solid #eef3f1;
         display: flex;
         justify-content: center;
-        gap: 0.5rem;
+        gap: 0.4rem;
     }
     .page-link {
-        padding: 0.5rem 0.75rem;
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        color: var(--emerald);
+        padding: 0.4rem 0.75rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        color: #1e3b34;
         text-decoration: none;
-        transition: all 0.3s ease;
-        background: var(--white);
+        transition: all 0.2s;
+        background: #fff;
+        font-weight: 500;
     }
-    .page-link:hover {
-        background: var(--gold);
-        color: var(--white);
-        border-color: var(--gold);
-    }
+    .page-link:hover,
     .page-link.active {
-        background: var(--gold);
-        color: var(--white);
-        border-color: var(--gold);
+        background: #d4a843;
+        color: #fff;
+        border-color: #d4a843;
     }
 
-    /* Responsive */
-    @media (max-width: 1200px) {
-        .buy-content-wrapper {
+    @media (max-width: 992px) {
+        .map-listing-wrapper {
             grid-template-columns: 1fr;
+            height: auto;
         }
         .map-section {
             border-right: none;
-            border-bottom: 1px solid var(--border);
-            min-height: 400px;
+            border-bottom: 1px solid #e2e8f0;
+            height: 400px;
         }
-        .property-card {
-            grid-template-columns: 160px 1fr;
-        }
-        .property-image-carousel {
+        .property-image {
+            width: 160px;
+            min-width: 160px;
             height: 160px;
         }
     }
     @media (max-width: 768px) {
-        .filter-group {
-            min-width: 140px;
-        }
         .property-card {
-            grid-template-columns: 1fr;
-            gap: 0;
-        }
-        .property-info {
-            padding: 1rem;
-        }
-        .property-actions {
-            grid-template-columns: 1fr 1fr;
-        }
-        .listing-controls {
             flex-direction: column;
-            align-items: flex-start;
         }
-        .sort-control {
+        .property-image {
             width: 100%;
+            min-width: unset;
+            height: 200px;
         }
-        .sort-control select {
-            flex: 1;
-        }
-        .property-details {
+        .property-details-grid {
             grid-template-columns: 1fr;
+        }
+        .listing-header h1 {
+            font-size: 1.1rem;
         }
         .map-section {
-            min-height: 300px;
+            height: 300px;
+        }
+        .filter-group {
+            min-width: 120px;
         }
     }
 </style>
@@ -523,9 +397,9 @@
 
 {% block inner_hero %}
 <section class="inner-hero" style="background-image: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80');">
-    <div class="inner-hero-content">
-        <h1 class="inner-hero-title">Buy Farmland & Agricultural Land</h1>
-        <p class="inner-hero-quote">"Invest in your future with the perfect property"</p>
+    <div class="inner-hero-content text-center py-5">
+        <h1 class="inner-hero-title display-4 fw-bold">Buy Farmland & Agricultural Land</h1>
+        <p class="inner-hero-quote lead">"Invest in your future with the perfect property"</p>
     </div>
 </section>
 {% endblock %}
@@ -534,17 +408,17 @@
 <div class="buy-page-wrapper">
     <!-- Sticky Filter Bar -->
     <div class="sticky-filter-bar">
-        <div class="filter-container">
-            <form method="get" class="filter-container" style="padding:0; gap:14px; width:100%; max-width:1400px; margin:0 auto;">
+        <div class="container-fluid px-3 px-lg-4">
+            <form method="get" class="filter-scroll d-flex align-items-end gap-3 py-2">
                 <!-- Location -->
                 <div class="filter-group">
                     <label>Location</label>
-                    <input type="text" name="location" placeholder="Search locations..." value="{{ filters.location }}">
+                    <input type="text" name="location" placeholder="Search locations..." value="{{ filters.location }}" class="form-control">
                 </div>
                 <!-- Price -->
                 <div class="filter-group">
                     <label>Price</label>
-                    <select name="price_range">
+                    <select name="price_range" class="form-select">
                         <option value="">All Prices</option>
                         <option value="under_10_lac" {% if filters.price_range == 'under_10_lac' %}selected{% endif %}>Under ₹10 Lac</option>
                         <option value="10_50_lac" {% if filters.price_range == '10_50_lac' %}selected{% endif %}>₹10 Lac - ₹50 Lac</option>
@@ -556,7 +430,7 @@
                 <!-- Type -->
                 <div class="filter-group">
                     <label>Type</label>
-                    <select name="property_type">
+                    <select name="property_type" class="form-select">
                         <option value="">All Types</option>
                         <option value="Agricultural" {% if filters.property_type == 'Agricultural' %}selected{% endif %}>Agricultural</option>
                         <option value="Residential" {% if filters.property_type == 'Residential' %}selected{% endif %}>Residential</option>
@@ -568,7 +442,7 @@
                 <!-- Area -->
                 <div class="filter-group">
                     <label>Area</label>
-                    <select name="area_range">
+                    <select name="area_range" class="form-select">
                         <option value="">All Areas</option>
                         <option value="1-5" {% if filters.area_range == '1-5' %}selected{% endif %}>1-5</option>
                         <option value="5-10" {% if filters.area_range == '5-10' %}selected{% endif %}>5-10</option>
@@ -580,7 +454,7 @@
                 <!-- Unit -->
                 <div class="filter-group">
                     <label>Unit</label>
-                    <select name="area_unit">
+                    <select name="area_unit" class="form-select">
                         <option value="Acre" {% if filters.area_unit == 'Acre' %}selected{% endif %}>Acre</option>
                         <option value="Bigha" {% if filters.area_unit == 'Bigha' %}selected{% endif %}>Bigha</option>
                         <option value="Hectare" {% if filters.area_unit == 'Hectare' %}selected{% endif %}>Hectare</option>
@@ -591,7 +465,7 @@
                 <!-- Status -->
                 <div class="filter-group">
                     <label>Status</label>
-                    <select name="status">
+                    <select name="status" class="form-select">
                         <option value="">All Status</option>
                         <option value="Active" {% if filters.status == 'Active' %}selected{% endif %}>Active</option>
                         <option value="Available" {% if filters.status == 'Available' %}selected{% endif %}>Available</option>
@@ -601,36 +475,33 @@
                 <!-- Sale By -->
                 <div class="filter-group">
                     <label>Sale By</label>
-                    <select name="sale_by">
+                    <select name="sale_by" class="form-select">
                         <option value="">All</option>
                         <option value="Owner" {% if filters.sale_by == 'Owner' %}selected{% endif %}>Owner</option>
                         <option value="Agent" {% if filters.sale_by == 'Agent' %}selected{% endif %}>Agent</option>
                         <option value="Builder" {% if filters.sale_by == 'Builder' %}selected{% endif %}>Builder</option>
                     </select>
                 </div>
-                <!-- Clear -->
-                <div class="clear-filters-btn">
-                    <!-- FIX: use double quotes inside the url tag to avoid conflict -->
-                    <button type="reset" onclick="window.location.href='{% url "buy:property_search" %}'">
-                        <i class="bi bi-x-circle"></i> Clear
-                    </button>
-                </div>
+                           <!-- Clear -->
+            <div class="flex-shrink-0">
+                <a href="{% url 'buy:property_search' %}" class="clear-btn text-decoration-none">
+                    <i class="bi bi-x-circle"></i> Clear
+                </a>
+            </div>
             </form>
         </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="buy-content-wrapper">
+    <!-- Map + Listing Wrapper -->
+    <div class="map-listing-wrapper">
         <!-- Map Section -->
-        <div class="map-section">
-            <div class="map-container">
-                <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=80" alt="Farmland Map View">
-            </div>
+        <div class="map-section" id="mapSection">
+            <div id="propertyMap"></div>
             <div class="map-controls">
-                <button class="map-control-btn" title="Zoom In"><i class="bi bi-plus-lg"></i></button>
-                <button class="map-control-btn" title="Zoom Out"><i class="bi bi-dash-lg"></i></button>
-                <button class="map-control-btn" title="Layers"><i class="bi bi-layers"></i></button>
-                <button class="map-control-btn" title="Fullscreen"><i class="bi bi-fullscreen"></i></button>
+                <button class="map-control-btn" id="mapZoomIn" title="Zoom In"><i class="bi bi-plus-lg"></i></button>
+                <button class="map-control-btn" id="mapZoomOut" title="Zoom Out"><i class="bi bi-dash-lg"></i></button>
+                <button class="map-control-btn" id="mapLayers" title="Layers"><i class="bi bi-layers"></i></button>
+                <button class="map-control-btn" id="mapFullscreen" title="Fullscreen"><i class="bi bi-fullscreen"></i></button>
             </div>
         </div>
 
@@ -638,20 +509,20 @@
         <div class="listing-section">
             <div class="listing-header">
                 <h1>Farmland and Agriculture Land for Sale</h1>
-                <div class="listing-controls">
-                    <div class="breadcrumb">
-                        <a href="{% url 'public:home' %}">Home</a> &gt; <span>Map</span>
+                <div class="d-flex flex-wrap align-items-center gap-3">
+                    <div class="breadcrumb mb-0">
+                        <a href="{% url 'public:home' %}" class="text-decoration-none">Home</a> &gt; <span>Map</span>
                     </div>
                     <div class="results-count">{{ total_results }} Results</div>
-                    <div class="sort-control">
-                        <label for="sort" style="margin:0;">Sort by:</label>
-                        <form method="get" style="display:inline;">
+                    <div class="sort-control ms-auto">
+                        <label for="sort" class="mb-0 me-2">Sort by:</label>
+                        <form method="get" class="d-inline">
                             {% for key, value in filters.items %}
                                 {% if key != 'sort_by' %}
                                     <input type="hidden" name="{{ key }}" value="{{ value }}">
                                 {% endif %}
                             {% endfor %}
-                            <select name="sort_by" id="sort" onchange="this.form.submit()">
+                            <select name="sort_by" id="sort" onchange="this.form.submit()" class="form-select form-select-sm d-inline-block w-auto">
                                 <option value="-created_at" {% if filters.sort_by == '-created_at' %}selected{% endif %}>Latest</option>
                                 <option value="price" {% if filters.sort_by == 'price' %}selected{% endif %}>Price: Low to High</option>
                                 <option value="-price" {% if filters.sort_by == '-price' %}selected{% endif %}>Price: High to Low</option>
@@ -668,25 +539,25 @@
                 <div class="properties-grid">
                     {% for property in properties %}
                         <div class="property-card" data-property-id="{{ property.id }}">
-                            <div class="property-image-carousel">
+                            <!-- Image Carousel -->
+                            <div class="property-image">
                                 {% if property.images.all %}
                                     <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}" class="carousel-image">
                                     {% if property.images.count > 1 %}
-                                        <div class="carousel-controls">
+                                        <div class="carousel-dots">
                                             {% for image in property.images.all %}
                                                 <div class="carousel-dot {% if forloop.first %}active{% endif %}"></div>
                                             {% endfor %}
                                         </div>
                                     {% endif %}
                                 {% else %}
-                                    <div style="width:100%; height:100%; background:var(--pale); display:flex; align-items:center; justify-content:center; color:var(--text-muted);">
-                                        <i class="bi bi-image" style="font-size:2rem;"></i>
+                                    <div class="d-flex align-items-center justify-content-center h-100 text-muted">
+                                        <i class="bi bi-image" style="font-size:2.5rem;"></i>
                                     </div>
                                 {% endif %}
-                                
                                 <!-- Wishlist -->
                                 {% if user.is_authenticated %}
-                                    <form method="post" style="display:inline;" action="{% url 'buy:save_property' property.id %}">
+                                    <form method="post" action="{% url 'buy:save_property' property.id %}" class="position-absolute" style="top:0.6rem; right:0.6rem; z-index:10;">
                                         {% csrf_token %}
                                         <button type="submit" class="wishlist-btn" title="Add to Wishlist">
                                             <i class="bi bi-heart-fill"></i>
@@ -699,15 +570,16 @@
                                 {% endif %}
                             </div>
 
-                            <div class="property-info">
-                                <div class="property-main-content">
-                                    <h3 class="property-title">{{ property.title }}</h3>
-                                    <div class="property-price">₹{{ property.price|floatformat:0 }}</div>
+                            <!-- Property Info -->
+                            <div class="flex-grow-1 d-flex flex-column">
+                                <div class="flex-grow-1">
+                                    <h3 class="property-title h5 fw-bold text-dark">{{ property.title }}</h3>
+                                    <div class="property-price">{{ property.price|floatformat:0 }}</div>
                                     <div class="property-price-total">Total: ₹{{ property.price|floatformat:0 }}</div>
-                                    <div class="property-location">
+                                    <div class="property-location text-muted small mt-1">
                                         <i class="bi bi-geo-alt"></i> {{ property.location }}
                                     </div>
-                                    <div class="property-details">
+                                    <div class="property-details-grid mt-2">
                                         <div class="detail-item"><strong>🌱 Project:</strong> {{ property.project_size_acre|default:"N/A" }}</div>
                                         <div class="detail-item"><strong>🌾 Plot:</strong> {{ property.plot_sizes|default:"N/A" }}</div>
                                         <div class="detail-item"><strong>💧 Water:</strong> {{ property.water_source|default:"N/A" }}</div>
@@ -715,11 +587,10 @@
                                         <div class="detail-item"><strong>✅ Registry:</strong> {{ property.registry_status|default:"Available" }}</div>
                                     </div>
                                 </div>
-                                <div class="property-actions">
-                                    <button class="action-btn" title="Share"><i class="bi bi-share action-btn-icon"></i> Share</button>
-                                    <button class="action-btn" title="Wishlist"><i class="bi bi-heart action-btn-icon"></i></button>
+                                <div class="property-actions d-flex gap-2 mt-3 flex-wrap">
+                                    <button class="action-btn share-btn"><i class="bi bi-share"></i> Share</button>
+                                    <button class="action-btn wishlist-action-btn"><i class="bi bi-heart"></i></button>
                                     <a href="{% url 'buy:property_detail' property.id %}" class="action-btn action-btn-primary">Details</a>
-                                </div>
                                 </div>
                             </div>
                         </div>
@@ -747,38 +618,98 @@
                     </div>
                 {% endif %}
             {% else %}
-                <div class="empty-state">
-                    <h3>No Properties Found</h3>
-                    <p>Try adjusting your filters or search terms to find properties.</p>
-                    <a href="{% url 'buy:property_search' %}" class="empty-state-btn">Clear All Filters</a>
+                <div class="empty-state text-center py-5">
+                    <h3 class="h4">No Properties Found</h3>
+                    <p class="text-muted">Try adjusting your filters or search terms to find properties.</p>
+                    <a href="{% url 'buy:property_search' %}" class="btn btn-warning fw-bold">Clear All Filters</a>
                 </div>
             {% endif %}
         </div>
     </div>
 </div>
 
+<!-- JavaScript -->
+<!-- JavaScript -->
+{{ properties_json|json_script:"properties-data" }}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-    // Carousel functionality
-    document.querySelectorAll('.property-card').forEach(card => {
-        const dots = card.querySelectorAll('.carousel-dot');
-        const images = card.querySelectorAll('.carousel-image');
-        let currentIndex = 0;
-        if (dots.length > 1) {
-            dots.forEach((dot, index) => {
-                dot.addEventListener('click', () => {
-                    currentIndex = index;
-                    images.forEach(img => img.style.display = 'none');
-                    dots.forEach(d => d.classList.remove('active'));
-                    images[currentIndex].style.display = 'block';
-                    dots[currentIndex].classList.add('active');
-                });
+    document.addEventListener('DOMContentLoaded', function() {
+        // ---- Map ----
+        const mapContainer = document.getElementById('propertyMap');
+        if (mapContainer) {
+            const map = L.map('propertyMap', {
+                center: [20.5937, 78.9629],
+                zoom: 5,
+                zoomControl: false
             });
-        }
-    });
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(map);
 
-    // Share
-    document.querySelectorAll('.action-btn').forEach(btn => {
-        if (btn.innerText.includes('Share')) {
+            // Custom controls
+            document.getElementById('mapZoomIn').addEventListener('click', (e) => { e.preventDefault(); map.zoomIn(); });
+            document.getElementById('mapZoomOut').addEventListener('click', (e) => { e.preventDefault(); map.zoomOut(); });
+            document.getElementById('mapFullscreen').addEventListener('click', (e) => {
+                e.preventDefault();
+                const el = document.getElementById('mapSection');
+                if (!document.fullscreenElement) el.requestFullscreen().catch(() => {});
+                else document.exitFullscreen();
+            });
+            document.getElementById('mapLayers').addEventListener('click', (e) => {
+                e.preventDefault();
+                alert('Layer switcher – you can integrate here.');
+            });
+
+            // Markers – safely parsed from json_script
+            let properties = [];
+            const dataScript = document.getElementById('properties-data');
+            if (dataScript) {
+                try {
+                    properties = JSON.parse(dataScript.textContent);
+                } catch (e) {
+                    properties = [];
+                }
+            }
+            if (properties && properties.length) {
+                const bounds = [];
+                properties.forEach(prop => {
+                    if (prop.lat && prop.lng) {
+                        L.marker([prop.lat, prop.lng])
+                            .addTo(map)
+                            .bindPopup(`<strong>${prop.title}</strong><br>₹${prop.price}`);
+                        bounds.push([prop.lat, prop.lng]);
+                    }
+                });
+                if (bounds.length) map.fitBounds(bounds, { padding: [50, 50] });
+            } else {
+                // Fallback marker
+                L.marker([20.5937, 78.9629]).addTo(map).bindPopup('Farmland location').openPopup();
+            }
+
+            setTimeout(() => map.invalidateSize(), 300);
+        }
+
+        // ---- Carousel dots ----
+        document.querySelectorAll('.property-card').forEach(card => {
+            const dots = card.querySelectorAll('.carousel-dot');
+            const images = card.querySelectorAll('.carousel-image');
+            if (dots.length > 1) {
+                images.forEach((img, idx) => img.style.display = idx === 0 ? 'block' : 'none');
+                dots.forEach((dot, idx) => {
+                    dot.addEventListener('click', () => {
+                        images.forEach(img => img.style.display = 'none');
+                        dots.forEach(d => d.classList.remove('active'));
+                        images[idx].style.display = 'block';
+                        dots[idx].classList.add('active');
+                    });
+                });
+            } else if (images.length === 1) {
+                images[0].style.display = 'block';
+            }
+        });
+
+        // ---- Share ----
+        document.querySelectorAll('.share-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 const title = this.closest('.property-card').querySelector('.property-title').innerText;
                 if (navigator.share) {
@@ -787,7 +718,7 @@
                     alert('Share this property!');
                 }
             });
-        }
+        });
     });
 </script>
 {% endblock %}

@@ -2900,15 +2900,20 @@ section { padding: 88px 48px; }
 .view-all:hover { gap: 10px; }
 .listings-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 24px;
 }
+
+
+
+
 .listing-card {
     background: var(--white);
     border-radius: 20px;
     overflow: hidden;
     border: 1px solid var(--border);
     transition: all .3s;
+    width: 13.8rem;
 }
 .listing-card:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(27,67,50,0.12); }
 .listing-img-wrap img { width: 100%; height: 210px; object-fit: cover; display: block; }
@@ -3347,4 +3352,164 @@ footer {
     .feature-item{
         padding:18px;
     }
+}
+/* high yield farm */
+/* Investment Opportunities carousel slides */
+.swiper-invest-opp .swiper-slide {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 0 8px;
+    box-sizing: border-box;
+}
+
+.swiper-invest-opp .opp-card {
+    height: 100%;
+    width: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--white);
+    transition: all .3s;
+}
+
+.swiper-invest-opp .opp-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(27,67,50,0.12);
+}
+
+/* Ensure the existing styles for opp-card are preserved – they already have border-radius, overflow, etc. */
+
+/* Swiper container */
+.swiper-container {
+    position: relative;
+    overflow: hidden;
+    padding: 0 10px; /* optional padding for arrows */
+}
+
+.swiper-wrapper {
+    display: flex;
+    align-items: stretch; /* all slides same height */
+}
+
+.swiper-slide {
+    height: auto; /* height determined by content */
+    display: flex;
+    flex-direction: column;
+    padding: 0 8px; /* spacing between cards */
+    box-sizing: border-box;
+}
+
+/* Cards inside swiper-slide */
+.listing-card {
+    background: var(--white);
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    transition: all .3s;
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* fill the slide height */
+    width: 100%; /* fill slide width */
+}
+
+.listing-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(27,67,50,0.12);
+}
+
+/* Navigation arrows */
+.swiper-button-next,
+.swiper-button-prev {
+    color: var(--forest);
+    background: #fff;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    box-shadow: 0 8px 20px rgba(0,0,0,.12);
+    transition: all .3s;
+}
+.swiper-button-next::after,
+.swiper-button-prev::after {
+    font-size: 22px;
+    font-weight: 700;
+}
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(0,0,0,.18);
+}
+
+/* Pagination dots */
+.swiper-pagination-bullet {
+    background: var(--border);
+    opacity: 1;
+    transition: all 0.3s;
+}
+.swiper-pagination-bullet-active {
+    background: var(--gold);
+    width: 28px;
+    border-radius: 5px;
+}
+
+/* Responsive slidesPerView is handled by Swiper JS */
+/* Custom navigation controls – below carousel */
+.carousel-nav-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-top: 30px;
+    padding: 0 10px;
+}
+
+.swiper-button-prev-custom,
+.swiper-button-next-custom {
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+    min-height: 52px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;          /* slightly rounded corners */
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+}
+
+.swiper-button-prev-custom i,
+.swiper-button-next-custom i {
+    font-size: 20px;
+    color: #1a2e2a;             /* dark arrow color */
+    line-height: 1;
+}
+
+.swiper-button-prev-custom:hover,
+.swiper-button-next-custom:hover {
+    border-color: #d4a843;
+    background: #fdf8f0;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.swiper-button-prev-custom:active,
+.swiper-button-next-custom:active {
+    transform: translateY(0);
+}
+
+/* Disabled state (if Swiper supports it, you can bind) */
+.swiper-button-prev-custom.swiper-button-disabled,
+.swiper-button-next-custom.swiper-button-disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Optional: adjust pagination dots position above buttons */
+.swiper-pagination {
+    position: relative;
+    margin-bottom: 16px;
 }
