@@ -65,6 +65,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'Apps.Administration.middleware.SessionTimeoutMiddleware',
 ]
 
 ROOT_URLCONF = 'HeyDayRealty.urls'
@@ -143,6 +144,12 @@ USE_I18N = True
 USE_TZ = True
 
 
+# Authentication Backends
+AUTHENTICATION_BACKENDS = [
+    'Apps.Administration.backends.EmailOrUsernameModelBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
@@ -182,10 +189,6 @@ LOGIN_URL = '/auth/login/'
 LOGIN_REDIRECT_URL = '/dashboard/'  # Smart dashboard will redirect based on role
 LOGOUT_REDIRECT_URL = '/auth/login/'
 
-# Role-based authentication
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-]
 
 # Email settings
 EMAIL_BACKEND = 'Apps.Administration.email_backend.SystemSettingsEmailBackend'

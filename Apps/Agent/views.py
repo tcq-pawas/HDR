@@ -27,8 +27,8 @@ from .forms import (
 def dashboard(request):
     # Check if user is an agent
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     
     """Agent/Seller Dashboard - Enhanced Overview"""
     try:
@@ -112,8 +112,8 @@ def dashboard(request):
 def property_list(request):
     # Check if user is an agent
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     """List all properties created by the agent"""
     properties = Property.objects.filter(seller=request.user).select_related('seller').order_by('-created_at')
     
@@ -140,8 +140,8 @@ def property_list(request):
 def property_type_select(request):
     """Select property type before adding"""
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     
     return render(request, 'agent/property_type_select.html')
 
@@ -150,8 +150,8 @@ def property_type_select(request):
 def property_add(request, property_type):
     # Check if user is an agent
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     """Add a new property"""
     if request.method == 'POST':
         # Use AgriculturalLandForm for land properties
@@ -206,8 +206,8 @@ def property_add(request, property_type):
 def property_edit(request, pk):
     # Check if user is an agent
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     """Edit an existing property"""
     property_obj = get_object_or_404(Property.objects.select_related('seller'), pk=pk, seller=request.user)
     
@@ -259,8 +259,8 @@ def property_edit(request, pk):
 def property_delete(request, pk):
     # Check if user is an agent
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     """Delete a property"""
     property_obj = get_object_or_404(Property.objects.select_related('seller'), pk=pk, seller=request.user)
     
@@ -281,8 +281,8 @@ def property_delete(request, pk):
 def settings(request):
     # Check if user is an agent
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     """Settings page"""
     try:
         agent_profile = request.user.agent_profile
@@ -317,8 +317,8 @@ def settings(request):
 def lead_list(request):
     """List all leads for the agent"""
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     
     leads = Lead.objects.filter(agent=request.user).select_related('property').order_by('-created_at')
     
@@ -360,8 +360,8 @@ def lead_list(request):
 def lead_add(request):
     """Add a new lead"""
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     
     if request.method == 'POST':
         form = LeadForm(request.POST)
@@ -389,8 +389,8 @@ def lead_add(request):
 def lead_detail(request, pk):
     """View lead details"""
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     
     lead = get_object_or_404(Lead.objects.select_related('property', 'agent'), pk=pk, agent=request.user)
     follow_ups = lead.follow_ups.all().order_by('-scheduled_date')
@@ -407,8 +407,8 @@ def lead_detail(request, pk):
 def lead_edit(request, pk):
     """Edit a lead"""
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     
     lead = get_object_or_404(Lead.objects.select_related('property', 'agent'), pk=pk, agent=request.user)
     
@@ -436,8 +436,8 @@ def lead_edit(request, pk):
 def lead_add_followup(request, pk):
     """Add a follow-up to a lead"""
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     
     lead = get_object_or_404(Lead.objects.select_related('agent'), pk=pk, agent=request.user)
     
@@ -466,8 +466,8 @@ def lead_add_followup(request, pk):
 def site_visit_list(request):
     """List all site visits for the agent"""
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     
     visits = SiteVisit.objects.filter(agent=request.user).select_related('property', 'lead').order_by('-scheduled_date')
     
@@ -504,8 +504,8 @@ def site_visit_list(request):
 def site_visit_add(request):
     """Schedule a new site visit"""
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     
     if request.method == 'POST':
         form = SiteVisitForm(request.POST)
@@ -534,8 +534,8 @@ def site_visit_add(request):
 def site_visit_detail(request, pk):
     """View site visit details"""
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     
     visit = get_object_or_404(SiteVisit.objects.select_related('property', 'lead', 'agent'), pk=pk, agent=request.user)
     
@@ -558,8 +558,8 @@ def site_visit_detail(request, pk):
 def site_visit_edit(request, pk):
     """Edit a site visit"""
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     
     visit = get_object_or_404(SiteVisit.objects.select_related('property', 'lead', 'agent'), pk=pk, agent=request.user)
     
@@ -588,8 +588,8 @@ def site_visit_edit(request, pk):
 def booking_list(request):
     """List all bookings for the agent"""
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     
     bookings = Booking.objects.filter(agent=request.user).select_related('property', 'lead').order_by('-booking_date')
     
@@ -616,8 +616,8 @@ def booking_list(request):
 def booking_add(request):
     """Create a new booking"""
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     
     if request.method == 'POST':
         form = BookingForm(request.POST)
@@ -645,8 +645,8 @@ def booking_add(request):
 def booking_detail(request, pk):
     """View booking details"""
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     
     booking = get_object_or_404(Booking.objects.select_related('property', 'lead', 'agent').prefetch_related('installments'), pk=pk, agent=request.user)
     installments = booking.installments.all().order_by('installment_number')
@@ -663,8 +663,8 @@ def booking_detail(request, pk):
 def booking_edit(request, pk):
     """Edit a booking"""
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     
     booking = get_object_or_404(Booking.objects.select_related('property', 'lead', 'agent'), pk=pk, agent=request.user)
     
@@ -693,8 +693,8 @@ def booking_edit(request, pk):
 def installment_add(request, booking_pk):
     """Add an installment to a booking"""
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     
     booking = get_object_or_404(Booking.objects.select_related('agent'), pk=booking_pk, agent=request.user)
     
@@ -722,8 +722,8 @@ def installment_add(request, booking_pk):
 def installment_edit(request, pk):
     """Edit an installment"""
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     
     installment = get_object_or_404(Installment.objects.select_related('booking__agent'), pk=pk, booking__agent=request.user)
     
@@ -749,8 +749,8 @@ def installment_edit(request, pk):
 def commission_list(request):
     """List all commissions for the agent"""
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     
     commissions = Commission.objects.filter(agent=request.user).select_related('booking', 'property').order_by('-created_at')
     
@@ -783,8 +783,8 @@ def commission_list(request):
 def commission_detail(request, pk):
     """View commission details"""
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     
     commission = get_object_or_404(Commission.objects.select_related('property', 'booking', 'agent'), pk=pk, agent=request.user)
     
@@ -799,8 +799,8 @@ def commission_detail(request, pk):
 def document_list(request):
     """List all documents for the agent"""
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     
     documents = Document.objects.filter(agent=request.user).select_related('property', 'booking').order_by('-uploaded_at')
     
@@ -833,8 +833,8 @@ def document_list(request):
 def document_add(request):
     """Upload a new document"""
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
@@ -863,8 +863,8 @@ def document_add(request):
 def document_delete(request, pk):
     """Delete a document"""
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     
     document = get_object_or_404(Document.objects.select_related('agent'), pk=pk, agent=request.user)
     
@@ -884,8 +884,8 @@ def document_delete(request, pk):
 def communication_list(request):
     """List all communications for the agent"""
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     
     communications = Communication.objects.filter(agent=request.user).select_related('lead', 'booking').order_by('-sent_at')
     
@@ -912,8 +912,8 @@ def communication_list(request):
 def communication_send(request):
     """Send a new communication"""
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     
     if request.method == 'POST':
         form = CommunicationForm(request.POST)
@@ -941,8 +941,8 @@ def communication_send(request):
 def message_template_list(request):
     """List all message templates for the agent"""
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     
     templates = MessageTemplate.objects.filter(agent=request.user).order_by('name')
     
@@ -957,8 +957,8 @@ def message_template_list(request):
 def message_template_add(request):
     """Create a new message template"""
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     
     if request.method == 'POST':
         form = MessageTemplateForm(request.POST)
@@ -983,8 +983,8 @@ def message_template_add(request):
 def message_template_edit(request, pk):
     """Edit a message template"""
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     
     template = get_object_or_404(MessageTemplate.objects.select_related('agent'), pk=pk, agent=request.user)
     
@@ -1012,8 +1012,8 @@ def message_template_edit(request, pk):
 def customer_list(request):
     """List all customers (from bookings and leads)"""
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     
     # Get unique customers from bookings and leads
     bookings = Booking.objects.filter(agent=request.user).values('customer_name', 'customer_phone', 'customer_email').distinct()
@@ -1056,8 +1056,8 @@ def customer_list(request):
 def customer_detail(request, phone):
     """View customer details"""
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     
     # Get customer's bookings
     bookings = Booking.objects.filter(agent=request.user, customer_phone=phone).select_related('property')
@@ -1086,8 +1086,8 @@ def customer_detail(request, phone):
 def reports(request):
     """Enhanced reports and analytics page"""
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     
     # Get date range from request
     date_range = request.GET.get('range', '30')
@@ -1138,8 +1138,8 @@ def reports(request):
 def export_report(request, report_type):
     """Export reports to CSV"""
     user_role = get_user_role(request.user)
-    if user_role != 'agent':
-        raise PermissionDenied("Access denied. This page is only accessible to agents.")
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = f'attachment; filename="{report_type}_report.csv"'

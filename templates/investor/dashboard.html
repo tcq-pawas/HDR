@@ -1,199 +1,659 @@
 {% extends "investor/investor_base.html" %}
 {% load humanize %}
+{% load static %}
 
 {% block title %}Investor Dashboard - HeyDay Realty{% endblock %}
 
-{% block page_title %}Investor Dashboard{% endblock %}
+{% block page_title %}{% endblock %}
+
+{% block extra_head %}
+<!-- TailwindCSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          primary: {
+            green: '#16A34A',
+            darkGreen: '#064E3B',
+            blue: '#2563EB',
+            teal: '#14B8A6',
+            orange: '#F59E0B'
+          }
+        }
+      }
+    }
+  }
+</script>
+
+<!-- Dependencies (React, PropTypes, Recharts, Babel) from JSDelivr -->
+<script crossorigin src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js"></script>
+<script crossorigin src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prop-types@15.8.1/prop-types.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/recharts@2.10.3/umd/Recharts.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.23.6/babel.min.js"></script>
+
+<script>
+  window.onload = function() {
+    if (typeof React === 'undefined' || typeof Babel === 'undefined') {
+      document.getElementById('investor-dashboard-root').innerHTML = '<div style="padding:20px;color:red;border:1px solid red;margin:20px;"><h3>CDN Loading Error</h3><p>Could not load React or Babel from the CDN. Please check your internet connection or disable any strict adblockers.</p></div>';
+    }
+  };
+</script>
+
+<style>
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+</style>
+{% endblock %}
+
+{% block header %}
+{% endblock %}
 
 {% block content %}
-    <!-- Stats Cards -->
-    <div class="row mb-4">
-        <div class="col-md-3 mb-3">
-            <div class="card stat-card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="stat-icon bg-success text-white me-3">
-                            <i class="fas fa-coins"></i>
-                        </div>
-                        <div>
-                            <h3 class="mb-0">{{ stats.total_investments }}</h3>
-                            <p class="text-muted mb-0">Total Investments</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-3">
-            <div class="card stat-card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="stat-icon bg-primary text-white me-3">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                        <div>
-                            <h3 class="mb-0">${{ stats.total_invested_amount|floatformat:0|intcomma }}</h3>
-                            <p class="text-muted mb-0">Total Invested</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-3">
-            <div class="card stat-card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="stat-icon bg-info text-white me-3">
-                            <i class="fas fa-check-circle"></i>
-                        </div>
-                        <div>
-                            <h3 class="mb-0">{{ stats.active_investments }}</h3>
-                            <p class="text-muted mb-0">Active</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-3">
-            <div class="card stat-card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="stat-icon bg-warning text-white me-3">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                        <div>
-                            <h3 class="mb-0">{{ stats.pending_investments }}</h3>
-                            <p class="text-muted mb-0">Pending</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Portfolio Overview -->
-    <div class="row mb-4">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Portfolio Breakdown</h5>
-                </div>
-                <div class="card-body">
-                    {% if portfolio_breakdown %}
-                        <canvas id="portfolioChart" height="100"></canvas>
-                    {% else %}
-                        <p class="text-muted">No investment data available yet.</p>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">ROI Summary</h5>
-                </div>
-                <div class="card-body text-center">
-                    <h2 class="text-success">${{ roi_summary.total_returns|floatformat:0|intcomma }}</h2>
-                    <p class="text-muted">Total Returns</p>
-                    <small class="text-muted">{{ roi_summary.active_roi_records }} active investments</small>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Recent Investments -->
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Recent Investments</h5>
-                </div>
-                <div class="card-body">
-                    {% for investment in recent_investments %}
-                        <div class="investment-item">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <strong>{{ investment.listing.title }}</strong>
-                                    <br><small class="text-muted">{{ investment.listing.property_obj.title }}</small>
-                                </div>
-                                <div class="text-end">
-                                    <div class="text-primary fw-bold">${{ investment.amount }}</div>
-                                    <span class="badge bg-{{ investment.status|yesno:'success,warning,secondary,primary,danger' }}">
-                                        {{ investment.get_status_display }}
-                                    </span>
-                                </div>
-                            </div>
-                            <small class="text-muted">{{ investment.investment_date|date:"M d, Y" }}</small>
-                        </div>
-                    {% empty %}
-                        <p class="text-muted">No investments yet.</p>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">Featured Opportunities</h5>
-                </div>
-                <div class="card-body">
-                    {% for listing in available_listings %}
-                        <div class="d-flex justify-content-between align-items-center mb-3 p-2 border rounded">
-                            <div>
-                                <h6 class="mb-1">{{ listing.title }}</h6>
-                                <small class="text-muted">{{ listing.property_obj.title }}</small>
-                                <br><small class="text-primary">Expected ROI: {{ listing.expected_roi_percentage }}%</small>
-                            </div>
-                            <div class="text-end">
-                                <div class="text-primary fw-bold">${{ listing.minimum_investment }}</div>
-                                <small class="text-muted">Min. Investment</small>
-                            </div>
-                        </div>
-                    {% empty %}
-                        <p class="text-muted">No featured opportunities available.</p>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-    </div>
+<div id="investor-dashboard-root"></div>
+
 {% endblock %}
 
 {% block extra_js %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-{{ portfolio_breakdown|json_script:"portfolio_data" }}
-{% if portfolio_breakdown %}
-<script>
-    // Portfolio Chart
-    const ctx = document.getElementById('portfolioChart').getContext('2d');
-    const portfolioData = JSON.parse(document.getElementById('portfolio_data').textContent);
-    
-    new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: portfolioData.map(function(item) { return item.investment_type || 'Unknown'; }),
-            datasets: [{
-                data: portfolioData.map(function(item) { return item.amount || 0; }),
-                backgroundColor: [
-                    '#28a745',
-                    '#17a2b8',
-                    '#ffc107',
-                    '#dc3545',
-                    '#6f42c1',
-                    '#fd7e14'
-                ],
-                borderWidth: 0
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                }
-            }
-        }
-    });
+<script type="text/babel">
+
+const userName = "{{ user.first_name|default:user.username|escapejs }}";
+
+{% verbatim %}
+console.log("Babel script started.");
+const { useState, useEffect } = React;
+const RechartsObj = window.Recharts || {};
+const { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } = RechartsObj;
+
+if (!window.Recharts) {
+  console.error("Recharts failed to load!");
+}
+
+// Mock Data
+const mockData = {
+  portfolioGrowth: [
+    { month: "Dec '23", invested: 1800000, current: 2100000 },
+    { month: "Jan '24", invested: 2000000, current: 2350000 },
+    { month: "Feb '24", invested: 2100000, current: 2500000 },
+    { month: "Mar '24", invested: 2200000, current: 2650000 },
+    { month: "Apr '24", invested: 2350000, current: 2800000 },
+    { month: "May '24", invested: 2500000, current: 2987500 }
+  ],
+  investmentDistribution: [
+    { name: 'Agricultural Land', value: 60, color: '#16A34A' },
+    { name: 'Plantation Land', value: 25, color: '#14B8A6' },
+    { name: 'Development Land', value: 15, color: '#F59E0B' }
+  ],
+  recentInvestments: [
+    { name: 'Green Valley Farms', location: 'Hyderabad, TS', area: '5 Acre', invested: 2500000, current: 3250000, roi: 30, status: 'Active' },
+    { name: 'River View Agriculture', location: 'Vijayawada, AP', area: '10 Acre', invested: 4000000, current: 5480000, roi: 37, status: 'Active' },
+    { name: 'Sunrise Farmland', location: 'Karjat, MH', area: '8 Acre', invested: 3200000, current: 4160000, roi: 30, status: 'Active' },
+    { name: 'Green Roots Estate', location: 'Bengaluru, KA', area: '6 Acre', invested: 3000000, current: 3985000, roi: 32.8, status: 'Active' }
+  ],
+  recommendedOpportunities: [
+    { name: 'Golden Fields', location: 'Shadnagar, TS', size: '15 Acre', roi: '28–32%', badge: 'Premium', image: '/static/img/land_plot_banner_2.png' },
+    { name: 'Green Horizon', location: 'Anekal, Bengaluru', size: '12 Acre', roi: '26–30%', badge: 'High Growth', image: '/static/img/land_plot_banner_2.png' }
+  ],
+  notifications: [
+    { id: 1, title: 'Property value increased for Green Valley Farms', message: 'Your investment has appreciated by 5.2%', time: '2h ago', icon: 'TrendingUp' },
+    { id: 2, title: 'New investment opportunity available', message: 'A new high-ROI plantation land listing is now available', time: '5h ago', icon: 'Star' },
+    { id: 3, title: 'Document uploaded for River View Agriculture', message: 'Your investment report for Q3 2024 is ready', time: '1d ago', icon: 'FileText' }
+  ]
+};
+
+// Icon Components
+const Icon = ({ name, size = 20, className = '' }) => {
+  const icons = {
+    Bell: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>,
+    Wallet: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/><path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z"/></svg>,
+    TrendingUp: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>,
+    Building: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect width="16" height="20" x="4" y="2" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/></svg>,
+    PieChart: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>,
+    Star: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
+    FileText: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><line x1="10" x2="8" y1="9" y2="9"/></svg>,
+    Search: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>,
+    Download: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>,
+    BarChart: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/></svg>,
+    User: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
+    ArrowUp: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m18 15-6-6-6 6"/></svg>,
+    LayoutDashboard: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>,
+    UserCircle: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M18 20a6 6 0 0 0-12 0"/><circle cx="12" cy="10" r="4"/><circle cx="12" cy="12" r="10"/></svg>,
+    LogOut: <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+  };
+  return icons[name] || icons.Bell;
+};
+
+// Sidebar Component
+const Sidebar = () => {
+  const navItems = [
+    { name: 'Dashboard', icon: 'LayoutDashboard', active: true },
+    { name: 'Profile', icon: 'UserCircle', active: false },
+    { name: 'My Investments', icon: 'Wallet', active: false },
+    { name: 'Available Listings', icon: 'Search', active: false },
+    { name: 'ROI Data', icon: 'TrendingUp', active: false },
+    { name: 'Documents', icon: 'FileText', active: false }
+  ];
+
+  return (
+    <div className="fixed left-0 top-0 h-screen w-[220px] flex flex-col" style={{ background: 'linear-gradient(180deg, #064E3B 0%, #022C22 100%)' }}>
+      <div className="p-6 border-b border-white/10">
+        <h1 className="text-white text-xl font-bold">HeyDay Realty</h1>
+        <p className="text-white/70 text-sm mt-1">Investor Portal</p>
+      </div>
+
+      <div className="p-6 border-b border-white/10">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
+            <span className="text-white font-bold text-lg">IT</span>
+          </div>
+          <div>
+            <p className="text-white font-semibold text-sm">investor_test</p>
+            <p className="text-white/70 text-xs">Investor</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex-1 p-4">
+        <nav className="space-y-2">
+          {navItems.map((item, index) => (
+            <button
+              key={index}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+                item.active 
+                  ? 'bg-green-500 text-white' 
+                  : 'text-white/70 hover:bg-white/10 hover:text-white'
+              }`}
+            >
+              <Icon name={item.icon} size={20} />
+              <span className="font-semibold text-sm">{item.name}</span>
+            </button>
+          ))}
+        </nav>
+      </div>
+
+      <div className="p-4">
+        <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-white/70 hover:bg-white/10 hover:text-white transition-all">
+          <Icon name="LogOut" size={20} />
+          <span className="font-semibold text-sm">Logout</span>
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// Page Header Component
+const PageHeader = () => (
+  <div className="flex justify-between items-center mb-6">
+    <div>
+      <h1 className="text-2xl font-bold text-gray-900">Investor Dashboard</h1>
+      <p className="text-gray-600 mt-1">Welcome back, investor_test! 👋</p>
+    </div>
+    <div className="flex items-center gap-4">
+      <div className="relative">
+        <button className="p-2 rounded-lg hover:bg-gray-100 transition">
+          <Icon name="Bell" size={24} className="text-gray-600" />
+        </button>
+        <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center">3</span>
+      </div>
+      <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-semibold">Investor</span>
+    </div>
+  </div>
+);
+
+// Hero Section Component
+const HeroSection = () => (
+  <div className="relative rounded-2xl overflow-hidden h-[160px] mb-6" style={{ 
+    background: 'linear-gradient(135deg, rgba(6, 78, 59, 0.85) 0%, rgba(2, 44, 34, 0.9) 100%), url(/static/img/agricultural_land.jpg) center/cover',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center'
+  }}>
+    <div className="p-8 flex justify-between items-center h-full">
+      <div className="text-white">
+        <h2 className="text-3xl font-bold mb-2">Welcome Back, {userName}! 🌱</h2>
+        <p className="text-white/90 text-lg">Monitor your agricultural land portfolio and investment performance.</p>
+      </div>
+      <div className="backdrop-blur-md bg-white/10 border border-white/20 rounded-xl p-5 min-w-80">
+        <div className="grid grid-cols-2 gap-4">
+          <div className="border-r border-white/20 pr-4">
+            <p className="text-white/80 text-sm font-semibold">Total Portfolio Value</p>
+            <p className="text-white text-xl font-bold">₹ 2,50,00,000</p>
+          </div>
+          <div className="border-r border-white/20 pr-4">
+            <p className="text-white/80 text-sm font-semibold">Total Profit</p>
+            <p className="text-white text-xl font-bold">₹ 48,75,000</p>
+          </div>
+          <div className="border-r border-white/20 pr-4">
+            <p className="text-white/80 text-sm font-semibold">ROI Percentage</p>
+            <p className="text-white text-xl font-bold">38.5%</p>
+          </div>
+          <div>
+            <p className="text-white/80 text-sm font-semibold">Active Investments</p>
+            <p className="text-white text-xl font-bold">12 Properties</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+// KPI Card Component
+const KPICard = ({ title, value, growth, gradient, icon }) => (
+  <div className={`rounded-2xl p-6 text-white h-[120px] ${gradient} shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1`}>
+    <div className="flex justify-between items-start h-full">
+      <div className="flex flex-col justify-between">
+        <p className="text-white/90 font-semibold text-sm">{title}</p>
+        <p className="text-3xl font-bold">{value}</p>
+        <p className="text-white/90 text-xs font-semibold flex items-center gap-1">
+          <Icon name="ArrowUp" size={12} />
+          {growth}
+        </p>
+      </div>
+      <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+        <Icon name={icon} size={24} />
+      </div>
+    </div>
+  </div>
+);
+
+// KPI Section
+const KPISection = () => (
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+    <KPICard 
+      title="Total Portfolio Value" 
+      value="₹ 2,50,00,000" 
+      growth="12.5% vs last month" 
+      gradient="bg-gradient-to-br from-green-500 to-green-600"
+      icon="Wallet"
+    />
+    <KPICard 
+      title="Total ROI" 
+      value="38.5%" 
+      growth="6.8% vs last month" 
+      gradient="bg-gradient-to-br from-blue-500 to-blue-600"
+      icon="TrendingUp"
+    />
+    <KPICard 
+      title="Active Investments" 
+      value="12 Properties" 
+      growth="2 new this month" 
+      gradient="bg-gradient-to-br from-teal-500 to-teal-600"
+      icon="Building"
+    />
+    <KPICard 
+      title="Total Profit" 
+      value="₹ 48,75,000" 
+      growth="15.3% vs last month" 
+      gradient="bg-gradient-to-br from-orange-500 to-orange-600"
+      icon="PieChart"
+    />
+  </div>
+);
+
+// Portfolio Growth Chart
+const PortfolioGrowthChart = () => (
+  <div className="bg-white rounded-2xl border border-gray-100 shadow-lg p-6">
+    <div className="flex justify-between items-center mb-6">
+      <div>
+        <h3 className="text-lg font-bold text-gray-900">Portfolio Growth</h3>
+        <p className="text-gray-600 text-sm">Investment amount trend</p>
+      </div>
+      <div className="flex items-center gap-2">
+        <span className="text-green-600 font-bold text-lg">+28.4%</span>
+        <select className="border border-gray-200 rounded-lg px-3 py-2 text-sm font-semibold text-gray-700">
+          <option>Last 6 Months</option>
+        </select>
+      </div>
+    </div>
+    <div className="h-72">
+      <ResponsiveContainer width="100%" height="100%">
+        <LineChart data={mockData.portfolioGrowth}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+          <XAxis dataKey="month" stroke="#6b7280" fontSize={12} />
+          <YAxis stroke="#6b7280" fontSize={12} tickFormatter={(value) => `₹${(value/100000).toFixed(1)}L`} />
+          <Tooltip 
+            formatter={(value) => [`₹${value.toLocaleString()}`, '']}
+            contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+          />
+          <Line type="monotone" dataKey="invested" stroke="#16A34A" strokeWidth={3} dot={{ fill: '#16A34A', strokeWidth: 2, r: 4 }} />
+          <Line type="monotone" dataKey="current" stroke="#2563EB" strokeWidth={3} dot={{ fill: '#2563EB', strokeWidth: 2, r: 4 }} />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
+  </div>
+);
+
+// ROI Summary Component
+const ROISummary = () => (
+  <div className="bg-white rounded-2xl border border-gray-100 shadow-lg p-6">
+    <div className="mb-6">
+      <h3 className="text-lg font-bold text-gray-900">ROI Summary</h3>
+      <p className="text-gray-600 text-sm">Performance overview</p>
+    </div>
+    <div className="flex flex-col items-center">
+      <div className="relative w-48 h-48 mb-6">
+        <svg viewBox="0 0 36 36" className="w-full h-full transform -rotate-90">
+          <path
+            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+            fill="none"
+            stroke="#e5e7eb"
+            strokeWidth="3"
+          />
+          <path
+            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+            fill="none"
+            stroke="#16A34A"
+            strokeWidth="3"
+            strokeDasharray={`${38.5}, 100`}
+          />
+        </svg>
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          <span className="text-4xl font-bold text-gray-900">38.5%</span>
+          <span className="text-sm font-semibold text-gray-600">Total ROI</span>
+        </div>
+      </div>
+      <div className="w-full space-y-3">
+        <div className="flex justify-between items-center py-2 border-b border-gray-100">
+          <span className="text-gray-600 font-semibold text-sm">Total Invested</span>
+          <span className="text-gray-900 font-bold">₹ 2,50,00,000</span>
+        </div>
+        <div className="flex justify-between items-center py-2 border-b border-gray-100">
+          <span className="text-gray-600 font-semibold text-sm">Current Value</span>
+          <span className="text-gray-900 font-bold">₹ 2,98,75,000</span>
+        </div>
+        <div className="flex justify-between items-center py-2 border-b border-gray-100">
+          <span className="text-gray-600 font-semibold text-sm">Total Returns</span>
+          <span className="text-gray-900 font-bold">₹ 48,75,000</span>
+        </div>
+        <div className="flex justify-between items-center py-2">
+          <span className="text-gray-600 font-semibold text-sm">Annualized ROI</span>
+          <span className="text-gray-900 font-bold">26.7%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+// Investment Distribution Component
+const InvestmentDistribution = () => (
+  <div className="bg-white rounded-2xl border border-gray-100 shadow-lg p-6">
+    <div className="mb-6">
+      <h3 className="text-lg font-bold text-gray-900">Investment Distribution</h3>
+      <p className="text-gray-600 text-sm">By land type</p>
+    </div>
+    <div className="flex flex-col items-center">
+      <div className="w-48 h-48 mb-6">
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart>
+            <Pie
+              data={mockData.investmentDistribution}
+              cx="50%"
+              cy="50%"
+              innerRadius={60}
+              outerRadius={80}
+              paddingAngle={5}
+              dataKey="value"
+            >
+              {mockData.investmentDistribution.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color} />
+              ))}
+            </Pie>
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
+      <div className="w-full space-y-3">
+        {mockData.investmentDistribution.map((item, index) => (
+          <div key={index} className="flex justify-between items-center">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }}></div>
+              <span className="text-gray-700 font-semibold text-sm">{item.name}</span>
+            </div>
+            <span className="text-gray-900 font-bold">{item.value}%</span>
+          </div>
+        ))}
+        <div className="flex justify-between items-center pt-2 border-t border-gray-100">
+          <span className="text-gray-900 font-bold text-sm">Total</span>
+          <span className="text-gray-900 font-bold">100%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+// Analytics Section
+const AnalyticsSection = () => (
+  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6" style={{ gap: '24px' }}>
+    <div className="lg:col-span-2">
+      <PortfolioGrowthChart />
+    </div>
+    <div className="space-y-6">
+      <ROISummary />
+      <InvestmentDistribution />
+    </div>
+  </div>
+);
+
+// Recent Investments Table
+const RecentInvestments = () => (
+  <div className="bg-white rounded-2xl border border-gray-100 shadow-lg p-6 mb-6">
+    <div className="flex justify-between items-center mb-6">
+      <div>
+        <h3 className="text-lg font-bold text-gray-900">Recent Investments</h3>
+        <p className="text-gray-600 text-sm">Track your portfolio performance</p>
+      </div>
+      <button className="px-4 py-2 border border-gray-200 rounded-lg text-sm font-semibold text-gray-700 hover:bg-gray-50 transition">
+        View All
+      </button>
+    </div>
+    <div className="overflow-x-auto">
+      <table className="w-full">
+        <thead>
+          <tr className="border-b border-gray-200">
+            <th className="text-left py-3 px-4 text-xs font-bold text-gray-600 uppercase tracking-wider">Property Name</th>
+            <th className="text-left py-3 px-4 text-xs font-bold text-gray-600 uppercase tracking-wider">Location</th>
+            <th className="text-left py-3 px-4 text-xs font-bold text-gray-600 uppercase tracking-wider">Area</th>
+            <th className="text-left py-3 px-4 text-xs font-bold text-gray-600 uppercase tracking-wider">Invested Amount</th>
+            <th className="text-left py-3 px-4 text-xs font-bold text-gray-600 uppercase tracking-wider">Current Value</th>
+            <th className="text-left py-3 px-4 text-xs font-bold text-gray-600 uppercase tracking-wider">ROI</th>
+            <th className="text-left py-3 px-4 text-xs font-bold text-gray-600 uppercase tracking-wider">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {mockData.recentInvestments.map((investment, index) => (
+            <tr key={index} className="border-b border-gray-100 hover:bg-gray-50 transition">
+              <td className="py-4 px-4 font-bold text-gray-900">{investment.name}</td>
+              <td className="py-4 px-4 text-gray-700">{investment.location}</td>
+              <td className="py-4 px-4 text-gray-700">{investment.area}</td>
+              <td className="py-4 px-4 font-bold text-gray-900">₹ {investment.invested.toLocaleString()}</td>
+              <td className="py-4 px-4 font-bold text-gray-900">₹ {investment.current.toLocaleString()}</td>
+              <td className="py-4 px-4 font-bold text-green-600">{investment.roi}%</td>
+              <td className="py-4 px-4">
+                <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-bold">Active</span>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+);
+
+// Recommended Opportunities
+const RecommendedOpportunities = () => (
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+    {mockData.recommendedOpportunities.map((opportunity, index) => (
+      <div key={index} className="bg-white rounded-2xl border border-gray-100 shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+        <div className="h-48 bg-cover bg-center relative" style={{ backgroundImage: `url(${opportunity.image})` }}>
+          <span className="absolute top-4 left-4 px-3 py-1 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-full text-xs font-bold uppercase">
+            {opportunity.badge}
+          </span>
+        </div>
+        <div className="p-6">
+          <h4 className="text-lg font-bold text-gray-900 mb-2">{opportunity.name}</h4>
+          <div className="flex items-center gap-2 text-gray-600 mb-4">
+            <Icon name="Search" size={16} />
+            <span className="text-sm font-semibold">{opportunity.location}</span>
+          </div>
+          <div className="flex justify-between items-center mb-4">
+            <div>
+              <p className="text-gray-600 text-xs font-semibold">Size</p>
+              <p className="text-gray-900 font-bold">{opportunity.size}</p>
+            </div>
+            <div>
+              <p className="text-gray-600 text-xs font-semibold">Expected ROI</p>
+              <p className="text-green-600 font-bold">{opportunity.roi}</p>
+            </div>
+          </div>
+          <button className="w-full py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl font-bold hover:from-green-600 hover:to-green-700 transition">
+            View Details
+          </button>
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
+// Market Update Widget
+const MarketUpdateWidget = () => (
+  <div className="bg-white rounded-2xl border border-gray-100 shadow-lg p-6 mb-6">
+    <h3 className="text-lg font-bold text-gray-900 mb-4">Market Update</h3>
+    <div className="flex items-center justify-between">
+      <div>
+        <p className="text-4xl font-bold text-green-600 mb-1">↑ 12.4%</p>
+        <p className="text-gray-600 text-sm font-semibold">Avg. Land Appreciation</p>
+        <p className="text-gray-500 text-xs">Last 12 Months</p>
+      </div>
+      <div className="w-24 h-16">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={[{ v: 8 }, { v: 10 }, { v: 9 }, { v: 12 }, { v: 11 }, { v: 14 }, { v: 12 }]}>
+            <Line type="monotone" dataKey="v" stroke="#16A34A" strokeWidth={2} dot={false} />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
+  </div>
+);
+
+// Notifications Widget
+const NotificationsWidget = () => (
+  <div className="bg-white rounded-2xl border border-gray-100 shadow-lg p-6 mb-6">
+    <div className="flex justify-between items-center mb-4">
+      <h3 className="text-lg font-bold text-gray-900">Notifications</h3>
+      <button className="text-sm font-semibold text-green-600 hover:text-green-700">View All</button>
+    </div>
+    <div className="space-y-3">
+      {mockData.notifications.map((notification, index) => (
+        <div key={index} className="flex gap-3 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition">
+          <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+            <Icon name={notification.icon} size={20} className="text-green-600" />
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-bold text-gray-900">{notification.title}</p>
+            <p className="text-xs text-gray-600 font-semibold">{notification.message}</p>
+            <p className="text-xs text-gray-500 font-semibold mt-1">{notification.time}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+// Quick Actions Component
+const QuickActions = () => {
+  const actions = [
+    { icon: 'Search', title: 'Browse Opportunities', subtitle: 'Explore new listings' },
+    { icon: 'Wallet', title: 'My Investments', subtitle: 'View all investments' },
+    { icon: 'Download', title: 'Download Reports', subtitle: 'ROI & Portfolio reports' },
+    { icon: 'BarChart', title: 'Portfolio Analytics', subtitle: 'Detailed insights' },
+    { icon: 'FileText', title: 'Documents', subtitle: 'View all documents' },
+    { icon: 'User', title: 'Contact Advisor', subtitle: 'Get expert guidance' }
+  ];
+
+  return (
+    <div className="bg-white rounded-2xl border border-gray-100 shadow-lg p-6">
+      <div className="mb-6">
+        <h3 className="text-lg font-bold text-gray-900">Quick Actions</h3>
+        <p className="text-gray-600 text-sm">Move faster with one-tap access</p>
+      </div>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        {actions.map((action, index) => (
+          <button key={index} className="p-4 rounded-xl border border-gray-100 hover:border-green-200 hover:bg-green-50 transition-all duration-300 text-left group">
+            <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-3 group-hover:bg-green-200 transition">
+              <Icon name={action.icon} size={24} className="text-green-600" />
+            </div>
+            <p className="text-sm font-bold text-gray-900">{action.title}</p>
+            <p className="text-xs text-gray-600 font-semibold">{action.subtitle}</p>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Main Dashboard Component
+const InvestorDashboard = () => {
+  return (
+    <div className="w-full">
+      <HeroSection />
+      <KPISection />
+      <AnalyticsSection />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div className="lg:col-span-2 space-y-6">
+          <RecentInvestments />
+          <RecommendedOpportunities />
+        </div>
+        <div className="space-y-6">
+          <MarketUpdateWidget />
+          <NotificationsWidget />
+        </div>
+      </div>
+      <QuickActions />
+    </div>
+  );
+};
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("React Error:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ padding: '20px', color: 'red', border: '1px solid red', margin: '20px' }}>
+          <h2>Something went wrong in the Dashboard React component.</h2>
+          <pre style={{ whiteSpace: 'pre-wrap' }}>{this.state.error.toString()}</pre>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+// Render the app
+try {
+  const root = ReactDOM.createRoot(document.getElementById('investor-dashboard-root'));
+  root.render(
+    <ErrorBoundary>
+      <InvestorDashboard />
+    </ErrorBoundary>
+  );
+} catch (e) {
+  document.getElementById('investor-dashboard-root').innerHTML = `<div style="color:red; padding: 20px;"><h3>Setup Error:</h3><pre>${e.message}</pre></div>`;
+}
 </script>
-{% endif %}
+{% endverbatim %}
 {% endblock %}
+
+

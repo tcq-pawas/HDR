@@ -5,6 +5,7 @@ from .dashboard_views import (
     InvestmentManagementView, SystemSettingsView, ReportsView, ActivityLogView,
     UserProfileView, PropertyReviewCenterView, PropertyReviewDetailPageView
 )
+from . import investor_views
 
 app_name = 'admin_dash'
 
@@ -13,6 +14,15 @@ urlpatterns = [
     path('dashboard/', AdminDashboardView.as_view(), name='dashboard'),
     path('users/', UserManagementView.as_view(), name='user-management-page'),
     path('users/<int:user_id>/', UserProfileView.as_view(), name='user-profile'),
+    
+    # Investors
+    path('investors/', investor_views.InvestorListView.as_view(), name='investor-list'),
+    path('investors/create/', investor_views.InvestorCreateView.as_view(), name='investor-create'),
+    path('investors/<int:pk>/', investor_views.InvestorDetailView.as_view(), name='investor-detail'),
+    path('investors/<int:pk>/edit/', investor_views.InvestorUpdateView.as_view(), name='investor-update'),
+    path('investors/<int:pk>/delete/', investor_views.InvestorDeleteView.as_view(), name='investor-delete'),
+    path('investors/<int:pk>/toggle-status/', investor_views.InvestorToggleStatusView.as_view(), name='investor-toggle-status'),
+    
     path('inquiries/', InquiryManagementView.as_view(), name='inquiry-management-page'),
     path('investments/', InvestmentManagementView.as_view(), name='investment-management-page'),
     path('settings/', SystemSettingsView.as_view(), name='system-settings-page'),
@@ -60,4 +70,5 @@ urlpatterns = [
     path('api/properties/stats/', views.property_review_stats, name='property-review-stats'),
     path('api/settings/save-email/', views.save_email_settings, name='save-email-settings'),
     path('api/settings/test-email/', views.test_email_settings, name='test-email-settings'),
+    path('api/settings/save-security/', views.save_security_settings, name='save-security-settings'),
 ]

@@ -3,13 +3,20 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from django.db.models import Sum, Count
+from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import (
-    InvestorProfile, InvestmentListing, Investment, ROIData,
+    InvestorProfile, InvestmentListing, Investment, InvestmentRequest, Notification, InvestmentReport, PropertyValuation, ROIHistory, ROIData,
     InvestorDocument, InvestorMeeting
 )
 from .serializers import (
     InvestorProfileSerializer, InvestmentListingSerializer, InvestmentSerializer,
+    InvestmentRequestSerializer, CreateInvestmentRequestSerializer,
+    UpdateInvestmentRequestStatusSerializer, NotificationSerializer,
+    MarkNotificationReadSerializer, InvestmentReportSerializer,
+    CreateInvestmentReportSerializer, PropertyValuationSerializer,
+    CreatePropertyValuationSerializer, ROIHistorySerializer,
+    CreateROIHistorySerializer,
     ROIDataSerializer, InvestorDocumentSerializer, InvestorMeetingSerializer,
     CreateInvestmentSerializer, CreateInvestorDocumentSerializer,
     CreateInvestorMeetingSerializer, UpdateInvestmentStatusSerializer,
@@ -73,6 +80,152 @@ class InvestmentDetailView(generics.RetrieveUpdateDestroyAPIView):
         return Investment.objects.filter(investor=self.request.user).select_related(
             'listing', 'listing__property_obj'
         )
+
+
+class InvestmentRequestListCreateView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return InvestmentRequest.objects.filter(investor=self.request.user).select_related(
+            'listing', 'listing__property_obj', 'agent_assigned'
+        ).order_by('-created_at')
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return CreateInvestmentRequestSerializer
+        return InvestmentRequestSerializer
+
+    def perform_create(self, serializer):
+        listing = get_object_or_404(InvestmentListing, id=serializer.validated_data['listing'].id)
+        serializer.save(investor=self.request.user, listing=listing)
+
+
+class InvestmentRequestDetailView(generics.RetrieveUpdateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return InvestmentRequest.objects.filter(investor=self.request.user).select_related(
+            'listing', 'listing__property_obj', 'agent_assigned'
+        )
+
+    def get_serializer_class(self):
+        if self.request.method == 'PUT' or self.request.method == 'PATCH':
+            return UpdateInvestmentRequestStatusSerializer
+        return InvestmentRequestSerializer
+
+
+class NotificationListView(generics.ListAPIView):
+    serializer_class = NotificationSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['notification_type', 'is_read']
+    ordering = ['-created_at']
+
+    def get_queryset(self):
+        return Notification.objects.filter(user=self.request.user).select_related(
+            'related_investment', 'related_listing', 'related_document'
+        )
+
+
+class NotificationDetailView(generics.RetrieveUpdateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Notification.objects.filter(user=self.request.user)
+
+    def get_serializer_class(self):
+        if self.request.method == 'PUT' or self.request.method == 'PATCH':
+            return MarkNotificationReadSerializer
+        return NotificationSerializer
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def mark_all_notifications_read(request):
+    """Mark all notifications as read for the current user"""
+    Notification.objects.filter(user=request.user, is_read=False).update(
+        is_read=True,
+        read_at=timezone.now()
+    )
+    return Response({'status': 'success', 'message': 'All notifications marked as read'})
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def notification_count(request):
+    """Get count of unread notifications"""
+    unread_count = Notification.objects.filter(user=request.user, is_read=False).count()
+    return Response({'unread_count': unread_count})
+
+
+class InvestmentReportListCreateView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return InvestmentReport.objects.filter(investor=self.request.user).order_by('-generated_at')
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return CreateInvestmentReportSerializer
+        return InvestmentReportSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(investor=self.request.user, generated_by=self.request.user)
+
+
+class InvestmentReportDetailView(generics.RetrieveDestroyAPIView):
+    serializer_class = InvestmentReportSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return InvestmentReport.objects.filter(investor=self.request.user)
+
+
+class PropertyValuationListCreateView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return PropertyValuation.objects.select_related('property_obj', 'valuator').order_by('-valuation_date')
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return CreatePropertyValuationSerializer
+        return PropertyValuationSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(valuator=self.request.user)
+
+
+class PropertyValuationDetailView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = PropertyValuationSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return PropertyValuation.objects.select_related('property_obj', 'valuator')
+
+
+class ROIHistoryListCreateView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return ROIHistory.objects.filter(
+            investment__investor=self.request.user
+        ).select_related('investment', 'investment__listing', 'investment__listing__property_obj').order_by('-record_date')
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return CreateROIHistorySerializer
+        return ROIHistorySerializer
+
+
+class ROIHistoryDetailView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = ROIHistorySerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return ROIHistory.objects.filter(
+            investment__investor=self.request.user
+        ).select_related('investment', 'investment__listing', 'investment__listing__property_obj')
 
 
 @api_view(['POST'])

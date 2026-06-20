@@ -7,7 +7,7 @@ from django.core.validators import RegexValidator
 class PartnerRegistrationForm(forms.ModelForm):
     ROLE_CHOICES = [
         ('agent', 'Real Estate Agent'),
-        ('investor', 'Investor'),
+        ('owner', 'Property Owner'),
     ]
     
     first_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}))
@@ -44,7 +44,7 @@ class PartnerRegistrationForm(forms.ModelForm):
             phone = self.cleaned_data['phone']
             
             # Create the respective profile based on role
-            if role == 'agent':
+            if role in ['agent', 'owner']:
                 AgentProfile.objects.create(user=user, phone=phone, is_verified=False)
             elif role == 'investor':
                 InvestorProfile.objects.create(user=user, phone=phone, verified=False)
