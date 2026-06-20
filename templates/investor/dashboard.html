@@ -6,7 +6,7 @@
 
 {% block page_title %}{% endblock %}
 
-{% block extra_css %}
+{% block extra_head %}
 <!-- TailwindCSS -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
@@ -27,15 +27,20 @@
   }
 </script>
 
-<!-- React and ReactDOM -->
-<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<!-- Dependencies (React, PropTypes, Recharts, Babel) from JSDelivr -->
+<script crossorigin src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js"></script>
+<script crossorigin src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prop-types@15.8.1/prop-types.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/recharts@2.10.3/umd/Recharts.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.23.6/babel.min.js"></script>
 
-<!-- Recharts -->
-<script src="https://unpkg.com/recharts@2.10.3/umd/Recharts.min.js"></script>
-
-<!-- Babel for JSX -->
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script>
+  window.onload = function() {
+    if (typeof React === 'undefined' || typeof Babel === 'undefined') {
+      document.getElementById('investor-dashboard-root').innerHTML = '<div style="padding:20px;color:red;border:1px solid red;margin:20px;"><h3>CDN Loading Error</h3><p>Could not load React or Babel from the CDN. Please check your internet connection or disable any strict adblockers.</p></div>';
+    }
+  };
+</script>
 
 <style>
   body {
@@ -49,13 +54,23 @@
 
 {% block content %}
 <div id="investor-dashboard-root"></div>
+
 {% endblock %}
 
 {% block extra_js %}
-{% verbatim %}
 <script type="text/babel">
+
+const userName = "{{ user.first_name|default:user.username|escapejs }}";
+
+{% verbatim %}
+console.log("Babel script started.");
 const { useState, useEffect } = React;
-const { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } = Recharts;
+const RechartsObj = window.Recharts || {};
+const { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } = RechartsObj;
+
+if (!window.Recharts) {
+  console.error("Recharts failed to load!");
+}
 
 // Mock Data
 const mockData = {
@@ -197,7 +212,7 @@ const HeroSection = () => (
   }}>
     <div className="p-8 flex justify-between items-center h-full">
       <div className="text-white">
-        <h2 className="text-3xl font-bold mb-2">Welcome Back, investor_test! 🌱</h2>
+        <h2 className="text-3xl font-bold mb-2">Welcome Back, {userName}! 🌱</h2>
         <p className="text-white/90 text-lg">Monitor your agricultural land portfolio and investment performance.</p>
       </div>
       <div className="backdrop-blur-md bg-white/10 border border-white/20 rounded-xl p-5 min-w-80">
@@ -580,32 +595,63 @@ const QuickActions = () => {
 // Main Dashboard Component
 const InvestorDashboard = () => {
   return (
-    <div className="flex min-h-screen" style={{ background: '#F8FAFC' }}>
-      <Sidebar />
-      <div className="flex-1 ml-[220px] p-6">
-        <PageHeader />
-        <HeroSection />
-        <KPISection />
-        <AnalyticsSection />
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-          <div className="lg:col-span-2 space-y-6">
-            <RecentInvestments />
-            <RecommendedOpportunities />
-          </div>
-          <div className="space-y-6">
-            <MarketUpdateWidget />
-            <NotificationsWidget />
-          </div>
+    <div className="w-full">
+      <HeroSection />
+      <KPISection />
+      <AnalyticsSection />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div className="lg:col-span-2 space-y-6">
+          <RecentInvestments />
+          <RecommendedOpportunities />
         </div>
-        <QuickActions />
+        <div className="space-y-6">
+          <MarketUpdateWidget />
+          <NotificationsWidget />
+        </div>
       </div>
+      <QuickActions />
     </div>
   );
 };
 
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("React Error:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ padding: '20px', color: 'red', border: '1px solid red', margin: '20px' }}>
+          <h2>Something went wrong in the Dashboard React component.</h2>
+          <pre style={{ whiteSpace: 'pre-wrap' }}>{this.state.error.toString()}</pre>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 // Render the app
-const root = ReactDOM.createRoot(document.getElementById('investor-dashboard-root'));
-root.render(<InvestorDashboard />);
+try {
+  const root = ReactDOM.createRoot(document.getElementById('investor-dashboard-root'));
+  root.render(
+    <ErrorBoundary>
+      <InvestorDashboard />
+    </ErrorBoundary>
+  );
+} catch (e) {
+  document.getElementById('investor-dashboard-root').innerHTML = `<div style="color:red; padding: 20px;"><h3>Setup Error:</h3><pre>${e.message}</pre></div>`;
+}
 </script>
 {% endverbatim %}
 {% endblock %}
