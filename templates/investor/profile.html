@@ -45,6 +45,36 @@
     font-weight: 700;
     color: white;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.avatar-premium:hover {
+    transform: scale(1.05);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+}
+
+.avatar-premium::after {
+    content: '\f030';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.avatar-premium:hover::after {
+    opacity: 1;
 }
 
 .kpi-card {
@@ -277,8 +307,12 @@
     <div class="row align-items-center">
         <div class="col-md-8">
             <div class="d-flex align-items-center mb-4">
-                <div class="avatar-premium me-4">
-                    {{ profile.user.first_name.0|default:profile.user.username.0|upper }}
+                <div class="avatar-premium me-4" onclick="openImageUploadModal()" style="cursor: pointer;" title="Click to change profile picture">
+                    {% if profile.profile_image %}
+                        <img src="{{ profile.profile_image.url }}" alt="Profile" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                    {% else %}
+                        {{ profile.user.first_name.0|default:profile.user.username.0|upper }}
+                    {% endif %}
                 </div>
                 <div class="text-white">
                     <h1 class="mb-1 fw-bold" style="font-size: 2.5rem;">{{ profile.user.get_full_name|default:profile.user.username }}</h1>
@@ -320,7 +354,7 @@
             </div>
         </div>
         <div class="col-md-4 text-md-end text-center mt-md-0 mt-4">
-            <button class="btn btn-light fw-semibold px-4 py-2 rounded-pill" onclick="editProfile()" style="border: none; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
+            <button class="btn btn-light fw-semibold px-4 py-2 rounded-pill" onclick="openEditProfileModal()" style="border: none; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); cursor: pointer;">
                 <i class="fas fa-edit me-2"></i>Edit Profile
             </button>
         </div>
@@ -678,101 +712,479 @@
         </div>
     </div>
 </div>
+
+<!-- Premium Edit Profile Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);">
+            <div class="modal-header" style="border-bottom: 1px solid rgba(0, 0, 0, 0.05); padding: 24px;">
+                <div>
+                    <h5 class="modal-title fw-bold mb-1" style="color: #1e293b;">Edit Profile</h5>
+                    <p class="text-muted mb-0" style="font-size: 0.875rem;">Update your personal information</p>
+                </div>
+                <button type="button" class="btn-close" onclick="closeEditProfileModal()" style="font-size: 1.25rem;"></button>
+            </div>
+            <div class="modal-body" style="padding: 24px;">
+                <form id="editProfileForm" method="post" action="{% url 'investor:profile-page' %}">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">First Name *</label>
+                            <input type="text" class="form-control" name="first_name" id="firstName" value="{{ profile.user.first_name|default:'' }}" style="border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.1); padding: 12px;">
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">Last Name *</label>
+                            <input type="text" class="form-control" name="last_name" id="lastName" value="{{ profile.user.last_name|default:'' }}" style="border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.1); padding: 12px;">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">Email *</label>
+                            <input type="email" class="form-control" name="email" id="email" value="{{ profile.user.email|default:'' }}" style="border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.1); padding: 12px;">
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">Phone Number</label>
+                            <input type="tel" class="form-control" name="phone_number" id="phoneNumber" value="{{ profile.phone_number|default:'' }}" style="border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.1); padding: 12px;">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">Investor Type</label>
+                            <select class="form-select" name="investor_type" style="border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.1); padding: 12px;">
+                                <option value="">Select Type</option>
+                                <option value="individual" {% if profile.investor_type == 'individual' %}selected{% endif %}>Individual</option>
+                                <option value="corporate" {% if profile.investor_type == 'corporate' %}selected{% endif %}>Corporate</option>
+                                <option value="institutional" {% if profile.investor_type == 'institutional' %}selected{% endif %}>Institutional</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">Phone Number</label>
+                            <input type="tel" class="form-control" name="phone_number" id="phoneNumber" value="{{ profile.phone_number|default:'' }}" style="border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.1); padding: 12px;">
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">Address</label>
+                        <textarea class="form-control" name="address" id="address" rows="3" style="border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.1); padding: 12px;">{{ profile.address|default:'' }}</textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">Minimum Investment Amount</label>
+                            <input type="number" class="form-control" name="min_investment_amount" value="{{ profile.min_investment_amount|default:'' }}" style="border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.1); padding: 12px;">
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">Maximum Investment Amount</label>
+                            <input type="number" class="form-control" name="max_investment_amount" value="{{ profile.max_investment_amount|default:'' }}" style="border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.1); padding: 12px;">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">Risk Tolerance</label>
+                            <select class="form-select" name="risk_tolerance" style="border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.1); padding: 12px;">
+                                <option value="">Select Risk Level</option>
+                                <option value="low" {% if profile.risk_tolerance == 'low' %}selected{% endif %}>Low Risk</option>
+                                <option value="medium" {% if profile.risk_tolerance == 'medium' %}selected{% endif %}>Medium Risk</option>
+                                <option value="high" {% if profile.risk_tolerance == 'high' %}selected{% endif %}>High Risk</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">Investment Duration</label>
+                            <select class="form-select" name="investment_duration" style="border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.1); padding: 12px;">
+                                <option value="">Select Duration</option>
+                                <option value="short-term" {% if profile.investment_duration == 'short-term' %}selected{% endif %}>Short Term (1-2 years)</option>
+                                <option value="medium-term" {% if profile.investment_duration == 'medium-term' %}selected{% endif %}>Medium Term (3-5 years)</option>
+                                <option value="long-term" {% if profile.investment_duration == 'long-term' %}selected{% endif %}>Long Term (5+ years)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">Preferred Investment Type</label>
+                            <select class="form-select" name="preferred_investment_type" style="border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.1); padding: 12px;">
+                                <option value="">Select Type</option>
+                                <option value="equity" {% if profile.preferred_investment_type == 'equity' %}selected{% endif %}>Equity</option>
+                                <option value="debt" {% if profile.preferred_investment_type == 'debt' %}selected{% endif %}>Debt</option>
+                                <option value="hybrid" {% if profile.preferred_investment_type == 'hybrid' %}selected{% endif %}>Hybrid</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">Investment Goals</label>
+                            <textarea class="form-control" name="investment_goals" rows="1" style="border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.1); padding: 12px;">{{ profile.investment_goals|default:'' }}</textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid rgba(0, 0, 0, 0.05); padding: 24px;">
+                <button type="button" class="btn btn-light fw-semibold px-4 py-2 rounded-pill" onclick="closeEditProfileModal()" style="border: none;">Cancel</button>
+                <button type="button" class="btn btn-success fw-semibold px-4 py-2 rounded-pill" onclick="saveProfile()" style="background: linear-gradient(135deg, #10b981, #059669); border: none;">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Premium Notification Modal -->
+<div class="modal fade" id="notificationModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); text-align: center; padding: 32px;">
+            <div class="modal-body">
+                <div id="notificationIcon" class="mb-4"></div>
+                <h4 id="notificationTitle" class="fw-bold mb-3"></h4>
+                <p id="notificationMessage" class="text-muted mb-4" style="font-size: 1rem;"></p>
+                <button type="button" class="btn btn-success fw-semibold px-4 py-2 rounded-pill" onclick="closeNotificationModal()" style="background: linear-gradient(135deg, #10b981, #059669); border: none;">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Profile Image Upload Modal -->
+<div class="modal fade" id="imageUploadModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);">
+            <div class="modal-header" style="border-bottom: 1px solid rgba(0, 0, 0, 0.05); padding: 24px;">
+                <div>
+                    <h5 class="modal-title fw-bold mb-1" style="color: #1e293b;">Change Profile Picture</h5>
+                    <p class="text-muted mb-0" style="font-size: 0.875rem;">Upload a new profile image</p>
+                </div>
+                <button type="button" class="btn-close" onclick="closeImageUploadModal()" style="font-size: 1.25rem;"></button>
+            </div>
+            <div class="modal-body" style="padding: 24px;">
+                <form id="imageUploadForm" method="post" action="{% url 'investor:profile-page' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="text-center mb-4">
+                        <div class="avatar-premium mx-auto mb-3" style="width: 120px; height: 120px; font-size: 3rem;">
+                            {{ profile.user.first_name.0|default:profile.user.username.0|upper }}
+                        </div>
+                        <p class="text-muted" style="font-size: 0.875rem;">Current profile picture</p>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">Select New Image</label>
+                        <input type="file" class="form-control" name="profile_image" id="profileImage" accept="image/*" style="border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.1); padding: 12px;">
+                        <small class="text-muted" style="font-size: 0.75rem;">Accepted formats: JPG, PNG, GIF. Max size: 5MB</small>
+                    </div>
+                    <input type="hidden" name="image_upload_only" value="true">
+                </form>
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid rgba(0, 0, 0, 0.05); padding: 24px;">
+                <button type="button" class="btn btn-light fw-semibold px-4 py-2 rounded-pill" onclick="closeImageUploadModal()" style="border: none;">Cancel</button>
+                <button type="button" class="btn btn-success fw-semibold px-4 py-2 rounded-pill" onclick="uploadProfileImage()" style="background: linear-gradient(135deg, #10b981, #059669); border: none;">Upload Image</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Portfolio Performance Chart
-    const ctx = document.getElementById('portfolioChart').getContext('2d');
-    const portfolioChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-            datasets: [{
-                label: 'Portfolio Value',
-                data: [100000, 105000, 108000, 112000, 115000, 118000, 122000, 125000, 128000, 132000, 135000, 140000],
-                borderColor: '#10b981',
-                backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                borderWidth: 3,
-                fill: true,
-                tension: 0.4,
-                pointRadius: 4,
-                pointBackgroundColor: '#10b981',
-                pointBorderColor: '#fff',
-                pointBorderWidth: 2
-            }, {
-                label: 'Invested Amount',
-                data: [100000, 100000, 100000, 100000, 100000, 100000, 100000, 100000, 100000, 100000, 100000, 100000],
-                borderColor: '#3b82f6',
-                backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                borderWidth: 3,
-                fill: true,
-                tension: 0.4,
-                pointRadius: 4,
-                pointBackgroundColor: '#3b82f6',
-                pointBorderColor: '#fff',
-                pointBorderWidth: 2
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: true,
-                    position: 'top',
-                    labels: {
-                        usePointStyle: true,
-                        padding: 20,
-                        font: {
-                            size: 12,
-                            family: 'Inter'
-                        }
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: false,
-                    grid: {
-                        color: 'rgba(0, 0, 0, 0.05)'
-                    },
-                    ticks: {
-                        callback: function(value) {
-                            return '₹' + value.toLocaleString();
-                        },
-                        font: {
-                            size: 11,
-                            family: 'Inter'
-                        }
-                    }
+    document.addEventListener('DOMContentLoaded', function() {
+        // Portfolio Performance Chart
+        const ctx = document.getElementById('portfolioChart');
+        if (ctx) {
+            const portfolioChart = new Chart(ctx.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: 'Portfolio Value',
+                        data: [100000, 105000, 108000, 112000, 115000, 118000, 122000, 125000, 128000, 132000, 135000, 140000],
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#10b981',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    }, {
+                        label: 'Invested Amount',
+                        data: [100000, 100000, 100000, 100000, 100000, 100000, 100000, 100000, 100000, 100000, 100000, 100000],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#3b82f6',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    }]
                 },
-                x: {
-                    grid: {
-                        display: false
-                    },
-                    ticks: {
-                        font: {
-                            size: 11,
-                            family: 'Inter'
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20,
+                                font: {
+                                    size: 12,
+                                    family: 'Inter'
+                                }
+                            }
                         }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return '₹' + value.toLocaleString();
+                                },
+                                font: {
+                                    size: 11,
+                                    family: 'Inter'
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    size: 11,
+                                    family: 'Inter'
+                                }
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
                     }
                 }
-            },
-            interaction: {
-                intersect: false,
-                mode: 'index'
-            }
+            });
         }
     });
 
+    function openEditProfileModal() {
+        try {
+            const modalElement = document.getElementById('editProfileModal');
+            if (modalElement) {
+                modalElement.classList.add('show');
+                modalElement.style.display = 'block';
+                document.body.classList.add('modal-open');
+                
+                // Create backdrop if it doesn't exist
+                let backdrop = document.querySelector('.modal-backdrop');
+                if (!backdrop) {
+                    backdrop = document.createElement('div');
+                    backdrop.className = 'modal-backdrop fade show';
+                    document.body.appendChild(backdrop);
+                }
+                
+                // Add click event to close modal when clicking outside
+                modalElement.addEventListener('click', function(e) {
+                    if (e.target === modalElement) {
+                        closeEditProfileModal();
+                    }
+                });
+            } else {
+                console.error('Modal element not found');
+                alert('Unable to open edit profile modal');
+            }
+        } catch (error) {
+            console.error('Error opening modal:', error);
+            alert('Unable to open edit profile modal');
+        }
+    }
+
+    function closeEditProfileModal() {
+        try {
+            const modalElement = document.getElementById('editProfileModal');
+            if (modalElement) {
+                modalElement.classList.remove('show');
+                modalElement.style.display = 'none';
+                document.body.classList.remove('modal-open');
+                
+                // Remove backdrop
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) {
+                    backdrop.remove();
+                }
+            }
+        } catch (error) {
+            console.error('Error closing modal:', error);
+        }
+    }
+
     function editProfile() {
-        alert('Edit profile functionality would open a modal');
+        openEditProfileModal();
+    }
+
+    function openImageUploadModal() {
+        try {
+            const modalElement = document.getElementById('imageUploadModal');
+            if (modalElement) {
+                modalElement.classList.add('show');
+                modalElement.style.display = 'block';
+                document.body.classList.add('modal-open');
+                
+                // Create backdrop if it doesn't exist
+                let backdrop = document.querySelector('.modal-backdrop');
+                if (!backdrop) {
+                    backdrop = document.createElement('div');
+                    backdrop.className = 'modal-backdrop fade show';
+                    document.body.appendChild(backdrop);
+                }
+                
+                // Add click event to close modal when clicking outside
+                modalElement.addEventListener('click', function(e) {
+                    if (e.target === modalElement) {
+                        closeImageUploadModal();
+                    }
+                });
+            } else {
+                console.error('Image upload modal element not found');
+                alert('Unable to open image upload modal');
+            }
+        } catch (error) {
+            console.error('Error opening image upload modal:', error);
+            alert('Unable to open image upload modal');
+        }
+    }
+
+    function closeImageUploadModal() {
+        try {
+            const modalElement = document.getElementById('imageUploadModal');
+            if (modalElement) {
+                modalElement.classList.remove('show');
+                modalElement.style.display = 'none';
+                document.body.classList.remove('modal-open');
+                
+                // Remove backdrop
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) {
+                    backdrop.remove();
+                }
+            }
+        } catch (error) {
+            console.error('Error closing image upload modal:', error);
+        }
+    }
+
+    function uploadProfileImage() {
+        const profileImage = document.getElementById('profileImage');
+        
+        if (!profileImage || !profileImage.files || profileImage.files.length === 0) {
+            showNotification('error', 'Please select an image to upload');
+            return;
+        }
+        
+        // Submit the image upload form
+        const form = document.getElementById('imageUploadForm');
+        if (form) {
+            form.submit();
+        }
+    }
+
+    function saveProfile() {
+        const firstName = document.getElementById('firstName');
+        const lastName = document.getElementById('lastName');
+        const email = document.getElementById('email');
+        
+        if (!firstName || !lastName || !email) {
+            showNotification('error', 'Please fill in all required fields');
+            return;
+        }
+        
+        if (!firstName.value || !lastName.value || !email.value) {
+            showNotification('error', 'Please fill in all required fields');
+            return;
+        }
+        
+        // Submit the form to the backend
+        const form = document.getElementById('editProfileForm');
+        if (form) {
+            form.submit();
+        }
     }
 
     function downloadReport() {
-        alert('Generating investment report... This will be downloaded shortly.');
+        showNotification('info', 'Generating investment report... This will be downloaded shortly.');
+    }
+
+    function showNotification(type, message) {
+        const notificationModal = document.getElementById('notificationModal');
+        if (!notificationModal) {
+            console.error('Notification modal not found');
+            alert(message);
+            return;
+        }
+        
+        const notificationIcon = document.getElementById('notificationIcon');
+        const notificationTitle = document.getElementById('notificationTitle');
+        const notificationMessage = document.getElementById('notificationMessage');
+        
+        if (!notificationIcon || !notificationTitle || !notificationMessage) {
+            console.error('Notification modal elements not found');
+            alert(message);
+            return;
+        }
+        
+        if (type === 'success') {
+            notificationIcon.className = 'fas fa-check-circle text-success';
+            notificationIcon.style.fontSize = '3rem';
+            notificationTitle.textContent = 'Success';
+            notificationTitle.className = 'fw-bold text-success mb-3';
+        } else if (type === 'error') {
+            notificationIcon.className = 'fas fa-exclamation-circle text-danger';
+            notificationIcon.style.fontSize = '3rem';
+            notificationTitle.textContent = 'Error';
+            notificationTitle.className = 'fw-bold text-danger mb-3';
+        } else {
+            notificationIcon.className = 'fas fa-info-circle text-info';
+            notificationIcon.style.fontSize = '3rem';
+            notificationTitle.textContent = 'Information';
+            notificationTitle.className = 'fw-bold text-info mb-3';
+        }
+        
+        notificationMessage.textContent = message;
+        
+        // Show modal using custom approach
+        notificationModal.classList.add('show');
+        notificationModal.style.display = 'block';
+        document.body.classList.add('modal-open');
+        
+        // Create backdrop if it doesn't exist
+        let backdrop = document.querySelector('.modal-backdrop');
+        if (!backdrop) {
+            backdrop = document.createElement('div');
+            backdrop.className = 'modal-backdrop fade show';
+            document.body.appendChild(backdrop);
+        }
+        
+        // Auto-hide after 3 seconds for success messages
+        if (type === 'success') {
+            setTimeout(() => {
+                closeNotificationModal();
+            }, 3000);
+        }
+    }
+
+    function closeNotificationModal() {
+        try {
+            const notificationModal = document.getElementById('notificationModal');
+            if (notificationModal) {
+                notificationModal.classList.remove('show');
+                notificationModal.style.display = 'none';
+                document.body.classList.remove('modal-open');
+                
+                // Remove backdrop
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) {
+                    backdrop.remove();
+                }
+            }
+        } catch (error) {
+            console.error('Error closing notification modal:', error);
+        }
     }
 </script>
 {% endblock %}

@@ -253,6 +253,57 @@ class InvestorProfileView(InvestorDashboardMixin, TemplateView):
         context['created'] = created
         
         return context
+    
+    def post(self, request, *args, **kwargs):
+        """Handle profile update via POST request"""
+        user = request.user
+        profile, created = InvestorProfile.objects.get_or_create(user=user)
+        
+        # Check if this is an image-only upload
+        image_upload_only = request.POST.get('image_upload_only') == 'true'
+        
+        if image_upload_only:
+            # Handle only profile image upload
+            if 'profile_image' in request.FILES:
+                profile.profile_image = request.FILES['profile_image']
+                profile.save()
+                context = self.get_context_data(**kwargs)
+                context['success_message'] = 'Profile image updated successfully!'
+                return render(request, self.template_name, context)
+            else:
+                context = self.get_context_data(**kwargs)
+                context['error_message'] = 'Please select an image to upload'
+                return render(request, self.template_name, context)
+        
+        # Update user information
+        user.first_name = request.POST.get('first_name', '')
+        user.last_name = request.POST.get('last_name', '')
+        email = request.POST.get('email', '')
+        if email:
+            user.email = email
+        user.save()
+        
+        # Update profile information
+        profile.phone_number = request.POST.get('phone_number', '')
+        profile.address = request.POST.get('address', '')
+        profile.investor_type = request.POST.get('investor_type', '')
+        profile.min_investment_amount = request.POST.get('min_investment_amount') or None
+        profile.max_investment_amount = request.POST.get('max_investment_amount') or None
+        profile.risk_tolerance = request.POST.get('risk_tolerance', '')
+        profile.investment_duration = request.POST.get('investment_duration', '')
+        profile.preferred_investment_type = request.POST.get('preferred_investment_type', '')
+        profile.investment_goals = request.POST.get('investment_goals', '')
+        
+        # Handle profile image upload (if included in main form)
+        if 'profile_image' in request.FILES:
+            profile.profile_image = request.FILES['profile_image']
+        
+        profile.save()
+        
+        context = self.get_context_data(**kwargs)
+        context['success_message'] = 'Profile updated successfully!'
+        
+        return render(request, self.template_name, context)
 
 
 class InvestorInvestmentsView(InvestorDashboardMixin, TemplateView):
