@@ -22,10 +22,18 @@ class InvestorProfile(models.Model):
     company_name = models.CharField(max_length=200, blank=True, null=True)
     contact_person = models.CharField(max_length=100, blank=True, null=True)
     phone = models.CharField(max_length=20, blank=True, null=True)
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
+    address = models.TextField(blank=True, null=True)
+    profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
     risk_tolerance = models.CharField(max_length=20, choices=RISK_TOLERANCE, default='moderate')
     investment_range_min = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
     investment_range_max = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
+    min_investment_amount = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
+    max_investment_amount = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
     preferred_property_types = models.CharField(max_length=500, blank=True, null=True, help_text="Comma-separated list")
+    preferred_investment_type = models.CharField(max_length=20, blank=True, null=True)
+    investment_duration = models.CharField(max_length=20, blank=True, null=True)
+    investment_goals = models.TextField(blank=True, null=True)
     verified = models.BooleanField(default=False)
     
     # KYC and Tax Information

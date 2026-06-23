@@ -2,7 +2,8 @@ from django.urls import path
 from . import views
 from .dashboard_views import (
     InvestorDashboardView, InvestorProfileView, InvestorInvestmentsView,
-    InvestorListingsView, InvestorROIDataView, InvestorDocumentsView
+    InvestorROIDataView, InvestorDocumentsView,
+    InvestmentDetailView, InvestmentROIView
 )
 
 app_name = 'investor'
@@ -12,7 +13,8 @@ urlpatterns = [
     path('dashboard/', InvestorDashboardView.as_view(), name='dashboard'),
     path('profile/', InvestorProfileView.as_view(), name='profile-page'),
     path('investments/', InvestorInvestmentsView.as_view(), name='investments-page'),
-    path('listings/', InvestorListingsView.as_view(), name='listings-page'),
+    path('investments/<int:investment_id>/', InvestmentDetailView.as_view(), name='investment-detail'),
+    path('investments/<int:investment_id>/roi/', InvestmentROIView.as_view(), name='investment-roi'),
     path('roi-data/', InvestorROIDataView.as_view(), name='roi-data-page'),
     path('documents/', InvestorDocumentsView.as_view(), name='documents-page'),
     
@@ -22,7 +24,7 @@ urlpatterns = [
     path('api/listings/<int:pk>/', views.InvestmentListingDetailView.as_view(), name='listing-detail'),
     path('api/featured/', views.featured_investments, name='featured-listings'),
     path('api/investments/', views.InvestmentListCreateView.as_view(), name='investment-list'),
-    path('api/investments/<int:pk>/', views.InvestmentDetailView.as_view(), name='investment-detail'),
+    path('api/investments/<int:pk>/', views.InvestmentDetailView.as_view(), name='api-investment-detail'),
     path('api/investments/<int:investment_id>/update-status/', views.update_investment_status, name='update-investment-status'),
     path('api/investment-requests/', views.InvestmentRequestListCreateView.as_view(), name='investment-request-list'),
     path('api/investment-requests/<int:pk>/', views.InvestmentRequestDetailView.as_view(), name='investment-request-detail'),

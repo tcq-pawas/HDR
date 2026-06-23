@@ -5,106 +5,86 @@
 {% block hero_subtitle %}Connecting NRIs with premium properties{% endblock %}
 
 {% block content %}
+
 <!-- Hero -->
-<section class="py-5 bg-primary text-white text-center">
-    <div class="container">
-        <h1 class="fw-bold display-4">NRI Farmland Investment Services</h1>
-<p class="lead">
-    Secure and transparent farmland investment opportunities for Non-Resident Indians.
-</p>
+<section class="why" style="background: var(--forest); padding: 80px 0; text-align: center;">
+    <div class="section-inner">
+        <h1 class="section-title" style="color: white; font-size: 3.2rem;">NRI Farmland Investment Services</h1>
+        <p class="section-sub" style="color: rgba(255,255,255,0.8); max-width: 700px; margin: 0 auto; font-size: 1.2rem;">
+            Secure and transparent farmland investment opportunities for Non-Resident Indians.
+        </p>
     </div>
 </section>
 
 <!-- Content -->
-<section class="py-5">
-    <div class="container">
-        <div class="row align-items-center mb-5">
+<section class="why" style="background: var(--white); padding-top: 60px;">
+    <div class="section-inner">
+        <div class="row align-items-center g-5">
             <div class="col-md-6">
-    <img src="{% static 'images/farmhouse.png' %}"
-         class="img-fluid rounded shadow"
-         alt="Farmland Investment">
-</div>
-            <div class="col-md-6 ps-md-5">
-                <h3 class="fw-bold mb-3">
-    Own Verified Farmland in India From Anywhere in the World
-</h3>
-               <p class="text-muted">
-    HeyDay Realty helps NRIs invest in professionally managed farmland projects across India. From project selection and documentation to ownership support and investment guidance, our team assists you throughout the process.
-</p>
-                <ul class="list-unstyled mt-4">
-                    <li class="mb-2">
-    <i class="bi bi-check-circle-fill text-primary me-2"></i>
-    Verified Land Documentation
-</li>
-
-<li class="mb-2">
-    <i class="bi bi-check-circle-fill text-primary me-2"></i>
-    Remote Investment Assistance
-</li>
-
-<li class="mb-2">
-    <i class="bi bi-check-circle-fill text-primary me-2"></i>
-    Plantation & Project Management Support
-</li>
+                <img src="{% static 'images/farmhouse.png' %}" class="img-fluid rounded-4 shadow" alt="Farmland Investment">
+            </div>
+            <div class="col-md-6">
+                <div class="section-label">NRI Services</div>
+                <h2 class="section-title" style="font-size: 2.8rem;">Own Verified Farmland in India From Anywhere</h2>
+                <p class="section-sub" style="max-width: 100%; font-size: 1.1rem; margin-bottom: 1.5rem;">
+                    HeyDay Realty helps NRIs invest in professionally managed farmland projects across India. From project selection and documentation to ownership support and investment guidance, our team assists you throughout the process.
+                </p>
+                <ul style="list-style: none; padding: 0; margin-top: 1.5rem;">
+                    <li style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px; color: var(--text-mid);">
+                        <span style="color: var(--gold); font-size: 1.4rem;">✓</span> Verified Land Documentation
+                    </li>
+                    <li style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px; color: var(--text-mid);">
+                        <span style="color: var(--gold); font-size: 1.4rem;">✓</span> Remote Investment Assistance
+                    </li>
+                    <li style="display: flex; align-items: center; gap: 12px; color: var(--text-mid);">
+                        <span style="color: var(--gold); font-size: 1.4rem;">✓</span> Plantation & Project Management Support
+                    </li>
                 </ul>
             </div>
         </div>
+    </div>
+</section>
 
-        <div class="row text-center mt-5">
-            <div class="col-12 mb-4">
-                <h3 class="fw-bold">Long-Term Appreciation</h3>
-<p class="text-muted center mx-auto" style="max-width:700px;">
-    Farmland offers long-term appreciation potential, portfolio diversification and ownership of a tangible asset backed by growing agricultural demand.
-</p>
+<!-- Benefits -->
+<section class="why" style="background: var(--pale);">
+    <div class="section-inner">
+        <div class="why-header">
+            <div class="section-label">Why NRI Investment</div>
+            <h2 class="section-title">Long-Term Appreciation & Security</h2>
+            <p class="section-sub" style="max-width: 700px;">Farmland offers long-term appreciation potential, portfolio diversification and ownership of a tangible asset backed by growing agricultural demand.</p>
+        </div>
+        <div class="invest-grid">
+            <div class="invest-card" style="text-align: center;">
+                <div class="invest-icon" style="margin: 0 auto 16px; background: var(--mint);">📈</div>
+                <h3>Long-Term Appreciation</h3>
+                <p>Quality farmland has historically shown strong long-term value growth.</p>
             </div>
-            <div class="col-md-4">
-                <div class="p-4 border rounded bg-light h-100">
-                    <h5 class="fw-bold">
-    Long-Term Appreciation
-</h5>
-
-<p class="small text-muted">
-    Quality farmland has historically shown strong long-term value growth.
-</p>
-                </div>
+            <div class="invest-card" style="text-align: center;">
+                <div class="invest-icon" style="margin: 0 auto 16px; background: var(--mint);">🏡</div>
+                <h3>Agricultural Asset Ownership</h3>
+                <p>Invest in real land assets instead of purely financial instruments.</p>
             </div>
-            <div class="col-md-4">
-                <div class="p-4 border rounded bg-light h-100">
-                    <h5 class="fw-bold">
-    Agricultural Asset Ownership
-</h5>
-
-<p class="small text-muted">
-    Invest in real land assets instead of purely financial instruments.
-</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="p-4 border rounded bg-light h-100">
-                    <h5 class="fw-bold">
-    Managed Investment Opportunities
-</h5>
-
-<p class="small text-muted">
-    Participate in projects supported by professional planning and management.
-</p>
-                </div>
+            <div class="invest-card" style="text-align: center;">
+                <div class="invest-icon" style="margin: 0 auto 16px; background: var(--mint);">🌿</div>
+                <h3>Managed Investment Opportunities</h3>
+                <p>Participate in projects supported by professional planning and management.</p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- CTA -->
-<section class="py-5 bg-light text-center">
-    <div class="container">
-        <h3 class="fw-bold mb-3">
-    Start Your Farmland Investment Journey
-</h3>
-
-<p class="text-muted mb-4">
-    Connect with our team to explore verified farmland opportunities designed for NRI investors.
-</p>
-        <a href="{% url 'public:contact' %}" class="btn btn-primary btn-lg">Explore Farmland Opportunities</a>
+<div class="cta-banner" style="padding: 0 48px 88px; background: var(--white);">
+    <div class="cta-inner">
+        <div style="position:relative;z-index:2">
+            <div class="cta-label">Start Your Farmland Investment Journey</div>
+            <h2 class="cta-title">Connect with Our Team</h2>
+            <p class="cta-sub">Explore verified farmland opportunities designed for NRI investors.</p>
+        </div>
+        <div class="cta-btns" style="position:relative;z-index:2">
+            <a href="{% url 'public:contact' %}" class="btn-cta-primary">Explore Farmland Opportunities</a>
+        </div>
     </div>
-</section>
+</div>
+
 {% endblock %}

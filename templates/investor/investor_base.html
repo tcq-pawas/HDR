@@ -53,17 +53,27 @@
             flex-direction: column;
         }
         .sidebar .nav-link {
-            color: rgba(255, 255, 255, 0.8);
-            border-radius: 12px;
-            margin: 2px 0;
-            transition: all 0.3s;
-            padding: 12px 20px;
+            color: rgba(255, 255, 255, 0.85);
+            border-radius: 10px;
+            margin: 4px 0;
+            transition: all 0.3s ease;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .sidebar .nav-link i {
+            width: 20px;
+            text-align: center;
+            margin-right: 12px;
         }
         .sidebar .nav-link:hover,
         .sidebar .nav-link.active {
             color: white;
-            background: rgba(255, 255, 255, 0.12);
-            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            transform: translateX(4px);
         }
         /* Main content area */
         .main-content {
@@ -381,9 +391,6 @@
                     </a>
                     <a class="nav-link {% if request.resolver_match.url_name == 'investments-page' %}active{% endif %}" href="{% url 'investor:investments-page' %}">
                         <i class="fas fa-coins me-2"></i> My Investments
-                    </a>
-                    <a class="nav-link {% if request.resolver_match.url_name == 'listings-page' %}active{% endif %}" href="{% url 'investor:listings-page' %}">
-                        <i class="fas fa-list me-2"></i> Available Listings
                     </a>
                     <a class="nav-link {% if request.resolver_match.url_name == 'roi-data-page' %}active{% endif %}" href="{% url 'investor:roi-data-page' %}">
                         <i class="fas fa-chart-pie me-2"></i> ROI Data
