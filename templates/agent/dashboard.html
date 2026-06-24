@@ -182,95 +182,6 @@
         </div>
     </div>
 
-    <div class="kpi-card kpi-card-amber">
-        <div class="kpi-card-icon">
-            <i class="bi bi-pie-chart"></i>
-        </div>
-        <div class="kpi-card-content">
-            <div class="kpi-value">₹{{ stats.pending_commission|floatformat:0 }}</div>
-            <div class="kpi-label">Pending Commission</div>
-            <div class="kpi-trend neutral">
-                <i class="bi bi-dash"></i>
-                <span>Pending payment</span>
-            </div>
-        </div>
-        <div class="kpi-mini-chart">
-            <canvas id="miniChart9"></canvas>
-        </div>
-    </div>
-
-    <div class="kpi-card kpi-card-teal">
-        <div class="kpi-card-icon">
-            <i class="bi bi-cash"></i>
-        </div>
-        <div class="kpi-card-content">
-            <div class="kpi-value">₹{{ stats.commission_earned|floatformat:0 }}</div>
-            <div class="kpi-label">Paid Commission</div>
-            <div class="kpi-trend positive">
-                <i class="bi bi-arrow-up"></i>
-                <span>20.1% from last month</span>
-            </div>
-        </div>
-        <div class="kpi-mini-chart">
-            <canvas id="miniChart10"></canvas>
-        </div>
-    </div>
-</div>
-
-<!-- Quick Actions -->
-<div class="quick-actions-section">
-    <div class="quick-actions-grid">
-        <a href="{% url 'agent:property_type_select' %}" class="action-card action-card-teal">
-            <div class="action-card-icon">
-                <i class="bi bi-plus-lg"></i>
-            </div>
-            <div class="action-card-content">
-                <span class="action-card-title">Add Property</span>
-                <span class="action-card-subtitle">Create new listing</span>
-            </div>
-            <i class="bi bi-arrow-right action-card-arrow"></i>
-        </a>
-        <a href="{% url 'agent:property_type_select' %}" class="action-card action-card-emerald">
-            <div class="action-card-icon">
-                <i class="bi bi-layers"></i>
-            </div>
-            <div class="action-card-content">
-                <span class="action-card-title">Add Unit Listing</span>
-                <span class="action-card-subtitle">List your units</span>
-            </div>
-            <i class="bi bi-arrow-right action-card-arrow"></i>
-        </a>
-        <a href="{% url 'agent:site_visit_add' %}" class="action-card action-card-purple">
-            <div class="action-card-icon">
-                <i class="bi bi-calendar-check"></i>
-            </div>
-            <div class="action-card-content">
-                <span class="action-card-title">Schedule Site Visit</span>
-                <span class="action-card-subtitle">Book a visit</span>
-            </div>
-            <i class="bi bi-arrow-right action-card-arrow"></i>
-        </a>
-        <a href="{% url 'agent:document_add' %}" class="action-card action-card-blue">
-            <div class="action-card-icon">
-                <i class="bi bi-file-earmark"></i>
-            </div>
-            <div class="action-card-content">
-                <span class="action-card-title">Upload Documents</span>
-                <span class="action-card-subtitle">Manage files</span>
-            </div>
-            <i class="bi bi-arrow-right action-card-arrow"></i>
-        </a>
-        <a href="{% url 'agent:lead_list' %}" class="action-card action-card-rose">
-            <div class="action-card-icon">
-                <i class="bi bi-people"></i>
-            </div>
-            <div class="action-card-content">
-                <span class="action-card-title">Manage Leads</span>
-                <span class="action-card-subtitle">Track prospects</span>
-            </div>
-            <i class="bi bi-arrow-right action-card-arrow"></i>
-        </a>
-    </div>
 </div>
 
 <!-- Main Content Grid -->
@@ -359,17 +270,72 @@
                     </tbody>
                 </table>
             </div>
-            <div class="leads-pagination">
-                <span class="pagination-info">Showing 1 to {{ recent_leads|length|default:0 }} of {{ stats.total_leads }} leads</span>
-                <div class="pagination-controls">
-                    <button class="pagination-btn pagination-btn-prev" disabled>Previous</button>
-                    <button class="pagination-btn pagination-btn-active">1</button>
-                    <button class="pagination-btn">2</button>
-                    <button class="pagination-btn">3</button>
-                    <button class="pagination-btn">4</button>
-                    <button class="pagination-btn">5</button>
-                    <button class="pagination-btn pagination-btn-next">Next</button>
+        </div>
+
+        <!-- Recent Properties Section -->
+        <div class="leads-section">
+            <div class="leads-header">
+                <div class="leads-title">
+                    <h2>Recent Properties</h2>
+                    <a href="{% url 'agent:property_list' %}" class="view-all-link">View All</a>
                 </div>
+            </div>
+            <div class="leads-table-container">
+                <table class="leads-table">
+                    <thead>
+                        <tr>
+                            <th>Property Title</th>
+                            <th>Type</th>
+                            <th>Location</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                            <th>Created Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if recent_properties %}
+                            {% for property in recent_properties|slice:":5" %}
+                                <tr>
+                                    <td><strong>{{ property.title }}</strong></td>
+                                    <td>{{ property.property_type|default:"N/A" }}</td>
+                                    <td>{{ property.location|default:"N/A" }}</td>
+                                    <td>₹{{ property.price|floatformat:0|default:"N/A" }}</td>
+                                    <td><span class="status-badge status-new">{{ property.status|default:"Active" }}</span></td>
+                                    <td>{{ property.created_at|date:"M d, Y" }}</td>
+                                    <td>
+                                        <div class="leads-actions">
+                                            <button class="leads-action-btn" title="View">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            <button class="leads-action-btn" title="Edit">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button class="leads-action-btn" title="More">
+                                                <i class="bi bi-three-dots"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="7">
+                                    <div class="empty-state">
+                                        <div class="empty-state-icon">
+                                            <i class="bi bi-building"></i>
+                                        </div>
+                                        <h3>No Properties Yet</h3>
+                                        <p>Your property listings will appear here</p>
+                                        <a href="{% url 'agent:property_type_select' %}" class="btn btn-primary">
+                                            <i class="bi bi-plus-lg"></i> Add Your First Property
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -526,9 +492,7 @@ function initMiniCharts() {
         { id: 'miniChart5', color: '#8B5CF6' },
         { id: 'miniChart6', color: '#10B981' },
         { id: 'miniChart7', color: '#4F46E5' },
-        { id: 'miniChart8', color: '#0891B2' },
-        { id: 'miniChart9', color: '#F59E0B' },
-        { id: 'miniChart10', color: '#0F766E' }
+        { id: 'miniChart8', color: '#0891B2' }
     ];
     
     miniCharts.forEach(chart => {

@@ -40,62 +40,6 @@
 {% endblock %}
 
 {% block content %}
-    <!-- Statistics Cards -->
-    <div class="row mb-4">
-        <div class="col-md-3">
-            <div class="card document-card bg-primary text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h4 class="card-title">{{ documents.count }}</h4>
-                            <p class="card-text">Total Documents</p>
-                        </div>
-                        <i class="fas fa-file-alt fa-2x opacity-75"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card document-card bg-danger text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h4 class="card-title">{{ documents|dictsort:'file_type'|slice:':1'|first }}</h4>
-                            <p class="card-text">PDF Files</p>
-                        </div>
-                        <i class="fas fa-file-pdf fa-2x opacity-75"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card document-card bg-success text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h4 class="card-title">{{ documents|dictsort:'file_type'|slice:':1'|first }}</h4>
-                            <p class="card-text">Excel Files</p>
-                        </div>
-                        <i class="fas fa-file-excel fa-2x opacity-75"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card document-card bg-info text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h4 class="card-title">{{ document_summary.total_documents|default:0 }}</h4>
-                            <p class="card-text">Recent Uploads</p>
-                        </div>
-                        <i class="fas fa-upload fa-2x opacity-75"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Documents List -->
     <div class="card">
         <div class="card-header">

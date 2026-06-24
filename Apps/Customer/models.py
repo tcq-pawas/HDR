@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from Apps.PublicPage.models import Property
+from Apps.Agent.models import Lead
 
 
 class CustomerProfile(models.Model):
@@ -57,6 +58,41 @@ class SavedProperty(models.Model):
     def __str__(self):
         return f"{self.customer.username} saved {self.property.title}"
 
+    def save(self, *args, **kwargs):
+        is_new = self.pk is None
+        super().save(*args, **kwargs)
+        
+        # Automatically create lead when property is saved to wishlist
+        if is_new:
+            self._create_lead()
+
+    def _create_lead(self):
+        """Automatically create a lead for the property seller when customer saves property"""
+        from Apps.Agent.models import Lead
+        
+        # Check if property has a seller
+        if self.property.seller:
+            # Check if lead already exists for this customer-property-agent combination
+            existing_lead = Lead.objects.filter(
+                agent=self.property.seller,
+                property=self.property,
+                email=self.customer.email,
+                phone=self.customer.customer_profile.phone if hasattr(self.customer, 'customer_profile') else ''
+            ).first()
+            
+            if not existing_lead:
+                # Create new lead
+                Lead.objects.create(
+                    agent=self.property.seller,
+                    property=self.property,
+                    name=self.customer.get_full_name() or self.customer.username,
+                    email=self.customer.email,
+                    phone=self.customer.customer_profile.phone if hasattr(self.customer, 'customer_profile') else '',
+                    source='website',
+                    status='new',
+                    notes=f'Lead generated from wishlist/favorite - Customer saved property to wishlist'
+                )
+
 
 class PropertyViewing(models.Model):
     STATUS_CHOICES = [
@@ -76,6 +112,41 @@ class PropertyViewing(models.Model):
 
     def __str__(self):
         return f"Viewing of {self.property.title} by {self.customer.username}"
+
+    def save(self, *args, **kwargs):
+        is_new = self.pk is None
+        super().save(*args, **kwargs)
+        
+        # Automatically create lead when property viewing is scheduled
+        if is_new:
+            self._create_lead()
+
+    def _create_lead(self):
+        """Automatically create a lead for the property seller when customer schedules viewing"""
+        from Apps.Agent.models import Lead
+        
+        # Check if property has a seller
+        if self.property.seller:
+            # Check if lead already exists for this customer-property-agent combination
+            existing_lead = Lead.objects.filter(
+                agent=self.property.seller,
+                property=self.property,
+                email=self.customer.email,
+                phone=self.customer.customer_profile.phone if hasattr(self.customer, 'customer_profile') else ''
+            ).first()
+            
+            if not existing_lead:
+                # Create new lead
+                Lead.objects.create(
+                    agent=self.property.seller,
+                    property=self.property,
+                    name=self.customer.get_full_name() or self.customer.username,
+                    email=self.customer.email,
+                    phone=self.customer.customer_profile.phone if hasattr(self.customer, 'customer_profile') else '',
+                    source='website',
+                    status='new',
+                    notes=f'Lead generated from property viewing - Customer scheduled property visit for {self.scheduled_date}'
+                )
 
 
 class CustomerFeedback(models.Model):

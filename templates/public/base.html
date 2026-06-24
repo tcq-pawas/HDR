@@ -128,10 +128,34 @@
         </li>
       </ul>
 
-      <!-- RIGHT: Button – pushed right with ms-lg-auto -->
-      <a href="#" class="btn btn-warning fw-bold px-4 py-2 rounded-pill shadow-sm mt-2 mt-lg-0 ms-lg-2">
-        Schedule a Tour →
-      </a>
+      <!-- RIGHT: Auth Button – pushed right with ms-lg-auto -->
+      {% if user.is_authenticated %}
+        <div class="d-flex align-items-center gap-2 mt-2 mt-lg-0 ms-lg-2">
+          <div class="dropdown">
+            <button class="btn btn-outline-success d-flex align-items-center gap-2 px-3 py-2 rounded-pill dropdown-toggle" type="button" data-bs-toggle="dropdown">
+              {% load custom_tags %}
+              {% get_profile_image user as profile_image %}
+              {% if profile_image %}
+                <img src="{{ profile_image }}" alt="Profile" class="rounded-circle" style="width:32px; height:32px; object-fit:cover;">
+              {% else %}
+                <div class="rounded-circle bg-success d-flex align-items-center justify-content-center text-white" style="width:32px; height:32px; font-size:14px;">
+                  {{ user.first_name|first|upper }}
+                </div>
+              {% endif %}
+              <span class="fw-semibold">{{ user.first_name }}</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow">
+              <li><a class="dropdown-item" href="{% get_profile_url user %}">My Profile</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-danger" href="{% url 'auth:logout' %}">Logout</a></li>
+            </ul>
+          </div>
+        </div>
+      {% else %}
+        <a href="{% url 'auth:login' %}" class="btn btn-success fw-bold px-4 py-2 rounded-pill shadow-sm mt-2 mt-lg-0 ms-lg-2">
+          Login
+        </a>
+      {% endif %}
 
     </div>
 
