@@ -46,6 +46,19 @@ class CustomLoginView(TemplateView):
             
             form = AuthenticationForm(request)
             return render(request, self.template_name, {'form': form})
+        password = request.POST.get('password', '')
+        
+        # Check if user is suspended/inactive first
+        from django.contrib.auth.models import User
+        user_check = User.objects.filter(username=username).first()
+        if user_check and not user_check.is_active:
+            if user_check.check_password(password):
+                error_msg = "Your account is suspended."
+                messages.error(request, error_msg)
+                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                    return JsonResponse({'success': False, 'errors': {'__all__': [error_msg]}})
+                form = AuthenticationForm(request)
+                return render(request, self.template_name, {'form': form})
             
         form = AuthenticationForm(request, data=request.POST)
         

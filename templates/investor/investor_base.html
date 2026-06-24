@@ -373,7 +373,7 @@
                             {% endif %}
                         </div>
                         <div class="mt-2">
-                            <strong>{{ user.username }}</strong>
+                            <strong>{{ user.get_full_name|default:user.username }}</strong>
                             <div class="small text-white-50">Investor</div>
                             {% if profile.verified %}
                                 <span class="badge bg-light text-success">Verified</span>

@@ -7,7 +7,6 @@ from django.core.validators import RegexValidator
 class PartnerRegistrationForm(forms.ModelForm):
     ROLE_CHOICES = [
         ('agent', 'Real Estate Agent'),
-        ('investor', 'Investor'),
         ('owner', 'Property Owner'),
     ]
     

@@ -3,9 +3,42 @@
 
 {% block title %}Investor Dashboard - HeyDay Realty{% endblock %}
 
-{% block extra_css %}
+{% block extra_head %}
+<!-- TailwindCSS -->
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          primary: {
+            green: '#16A34A',
+            darkGreen: '#064E3B',
+            blue: '#2563EB',
+            teal: '#14B8A6',
+            orange: '#F59E0B'
+          }
+        }
+      }
+    }
+  }
+</script>
+
+<!-- Dependencies (React, PropTypes, Recharts, Babel) from JSDelivr -->
+<script crossorigin src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js"></script>
+<script crossorigin src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prop-types@15.8.1/prop-types.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/recharts@2.10.3/umd/Recharts.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.23.6/babel.min.js"></script>
+
+<script>
+  window.onload = function() {
+    if (typeof React === 'undefined' || typeof Babel === 'undefined') {
+      document.getElementById('investor-dashboard-root').innerHTML = '<div style="padding:20px;color:red;border:1px solid red;margin:20px;"><h3>CDN Loading Error</h3><p>Could not load React or Babel from the CDN. Please check your internet connection or disable any strict adblockers.</p></div>';
+    }
+  };
+</script>
+
 <style>
 body{
     background:#f4f6f9;
@@ -45,17 +78,76 @@ body{
 {% endblock %}
 
 {% block content %}
+<div id="investor-dashboard-root"></div>
 
-<!-- Hero Banner -->
-<section class="hero-banner rounded-3 overflow-hidden mb-4 d-flex align-items-center justify-content-between px-5 text-white" style="height: 200px;">
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/babel">
+
+const userName = "{{ user.first_name|default:user.username|escapejs }}";
+
+{% verbatim %}
+console.log("Babel script started.");
+const { useState, useEffect } = React;
+const RechartsObj = window.Recharts || {};
+const { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } = RechartsObj;
+
+if (!window.Recharts) {
+  console.error("Recharts failed to load!");
+}
 
     <div>
         <h2 class="fw-bold" style="font-size: 2.5rem;">
             Welcome Back, {{ user.first_name|default:user.username }}!
         </h2>
 
-        <p class="mt-2" style="font-size: 1.1rem;">
-            Monitor your agricultural land portfolio and investment performance.
+// Hero Section Component
+const HeroSection = () => (
+  <div className="relative rounded-2xl overflow-hidden h-[160px] mb-6" style={{ 
+    background: 'linear-gradient(135deg, rgba(6, 78, 59, 0.85) 0%, rgba(2, 44, 34, 0.9) 100%), url(/static/img/agricultural_land.jpg) center/cover',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center'
+  }}>
+    <div className="p-8 flex justify-between items-center h-full">
+      <div className="text-white">
+        <h2 className="text-3xl font-bold mb-2">Welcome Back, {userName}! 🌱</h2>
+        <p className="text-white/90 text-lg">Monitor your agricultural land portfolio and investment performance.</p>
+      </div>
+      <div className="backdrop-blur-md bg-white/10 border border-white/20 rounded-xl p-5 min-w-80">
+        <div className="grid grid-cols-2 gap-4">
+          <div className="border-r border-white/20 pr-4">
+            <p className="text-white/80 text-sm font-semibold">Total Portfolio Value</p>
+            <p className="text-white text-xl font-bold">₹ 2,50,00,000</p>
+          </div>
+          <div className="border-r border-white/20 pr-4">
+            <p className="text-white/80 text-sm font-semibold">Total Profit</p>
+            <p className="text-white text-xl font-bold">₹ 48,75,000</p>
+          </div>
+          <div className="border-r border-white/20 pr-4">
+            <p className="text-white/80 text-sm font-semibold">ROI Percentage</p>
+            <p className="text-white text-xl font-bold">38.5%</p>
+          </div>
+          <div>
+            <p className="text-white/80 text-sm font-semibold">Active Investments</p>
+            <p className="text-white text-xl font-bold">12 Properties</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+// KPI Card Component
+const KPICard = ({ title, value, growth, gradient, icon }) => (
+  <div className={`rounded-2xl p-6 text-white h-[120px] ${gradient} shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1`}>
+    <div className="flex justify-between items-start h-full">
+      <div className="flex flex-col justify-between">
+        <p className="text-white/90 font-semibold text-sm">{title}</p>
+        <p className="text-3xl font-bold">{value}</p>
+        <p className="text-white/90 text-xs font-semibold flex items-center gap-1">
+          <Icon name="ArrowUp" size={12} />
+          {growth}
         </p>
     </div>
 
@@ -91,190 +183,68 @@ body{
                 </h3>
             </div>
 
+// Main Dashboard Component
+const InvestorDashboard = () => {
+  return (
+    <div className="w-full">
+      <HeroSection />
+      <KPISection />
+      <AnalyticsSection />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div className="lg:col-span-2 space-y-6">
+          <RecentInvestments />
+          <RecommendedOpportunities />
         </div>
-
-    </div>
-
-</section>
-
-<!-- KPI Cards -->
-<div class="row g-4 mb-4">
-
-    <div class="col-md-3">
-        <div class="bg-success rounded-3 text-white p-4 card-shadow">
-            <h5>Total Portfolio Value</h5>
-            <h2 class="fw-bold mt-2 fs-2">₹2.5Cr</h2>
-            <p class="mt-3 small">↑ 12.5% vs last month</p>
+        <div className="space-y-6">
+          <MarketUpdateWidget />
+          <NotificationsWidget />
         </div>
+      </div>
+      <QuickActions />
     </div>
+  );
+};
 
-    <div class="col-md-3">
-        <div class="bg-primary rounded-3 text-white p-4 card-shadow">
-            <h5>Total ROI</h5>
-            <h2 class="fw-bold mt-2 fs-2">38.5%</h2>
-            <p class="mt-3 small">↑ 6.8% vs last month</p>
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("React Error:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ padding: '20px', color: 'red', border: '1px solid red', margin: '20px' }}>
+          <h2>Something went wrong in the Dashboard React component.</h2>
+          <pre style={{ whiteSpace: 'pre-wrap' }}>{this.state.error.toString()}</pre>
         </div>
-    </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
-    <div class="col-md-3">
-        <div class="bg-info rounded-3 text-white p-4 card-shadow">
-            <h5>Active Investments</h5>
-            <h2 class="fw-bold mt-2 fs-2">12</h2>
-            <p class="mt-3 small">↑ 2 new this month</p>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="bg-warning rounded-3 text-white p-4 card-shadow">
-            <h5>Total Profit</h5>
-            <h2 class="fw-bold mt-2 fs-2">₹48.75L</h2>
-            <p class="mt-3 small">↑ 15.3% vs last month</p>
-        </div>
-    </div>
-
-</div>
-
-<!-- Analytics Section -->
-<div class="row g-4 mb-4">
-
-    <div class="col-md-8">
-        <div class="bg-white rounded-3 p-4 card-shadow">
-
-            <div class="d-flex justify-content-between mb-4">
-                <h3 class="fw-bold">
-                    Portfolio Growth
-                </h3>
-
-                <select class="form-select w-auto">
-                    <option>Last 6 Months</option>
-                </select>
-            </div>
-
-            <div class="d-flex align-items-center justify-content-center text-muted" style="height: 320px;">
-                Chart.js Line Chart Here
-            </div>
-
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="bg-white rounded-3 p-4 card-shadow">
-
-            <h3 class="fw-bold mb-4">
-                ROI Summary
-            </h3>
-
-            <div class="text-center mt-4">
-
-                <div class="rounded-circle border border-success border-5 mx-auto d-flex align-items-center justify-content-center" style="width: 176px; height: 176px; border-width: 14px !important;">
-                    <div>
-                        <h2 class="fw-bold fs-2">
-                            38.5%
-                        </h2>
-                        <p class="small">Total ROI</p>
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-    </div>
-
-</div>
-
-<!-- Bottom Section -->
-<div class="row g-4 mb-4">
-
-    <!-- Investments -->
-    <div class="col-md-8">
-        <div class="bg-white rounded-3 p-4 card-shadow">
-
-            <div class="d-flex justify-content-between mb-4">
-                <h3 class="fw-bold">
-                    Recent Investments
-                </h3>
-
-                <button class="btn btn-outline-secondary">
-                    View All
-                </button>
-            </div>
-
-            <div class="table-responsive">
-                <table class="table">
-
-                    <thead>
-                        <tr class="border-bottom">
-                            <th class="py-3">Property</th>
-                            <th>Location</th>
-                            <th>Area</th>
-                            <th>ROI</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-
-                        <tr class="border-bottom">
-                            <td class="py-3">Green Valley Farms</td>
-                            <td>Hyderabad</td>
-                            <td>5 Acre</td>
-                            <td>30%</td>
-                            <td>
-                                <span class="badge bg-success bg-opacity-10 text-success">
-                                    Active
-                                </span>
-                            </td>
-                        </tr>
-
-                        <tr class="border-bottom">
-                            <td class="py-3">River View Agriculture</td>
-                            <td>Vijayawada</td>
-                            <td>10 Acre</td>
-                            <td>37%</td>
-                            <td>
-                                <span class="badge bg-success bg-opacity-10 text-success">
-                                    Active
-                                </span>
-                            </td>
-                        </tr>
-
-                    </tbody>
-
-                </table>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- Notifications -->
-    <div class="col-md-4">
-        <div class="bg-white rounded-3 p-4 card-shadow">
-
-            <h3 class="fw-bold mb-4">
-                Notifications
-            </h3>
-
-            <div class="d-flex flex-column gap-3">
-
-                <div class="p-3 bg-light rounded-3">
-                    Property value increased by 5.2%
-                </div>
-
-                <div class="p-3 bg-light rounded-3">
-                    New investment opportunity available
-                </div>
-
-                <div class="p-3 bg-light rounded-3">
-                    New report uploaded
-                </div>
-
-            </div>
-
-        </div>
-    </div>
-
-</div>
-
+// Render the app
+try {
+  const root = ReactDOM.createRoot(document.getElementById('investor-dashboard-root'));
+  root.render(
+    <ErrorBoundary>
+      <InvestorDashboard />
+    </ErrorBoundary>
+  );
+} catch (e) {
+  document.getElementById('investor-dashboard-root').innerHTML = `<div style="color:red; padding: 20px;"><h3>Setup Error:</h3><pre>${e.message}</pre></div>`;
+}
+</script>
+{% endverbatim %}
 {% endblock %}
 
 
