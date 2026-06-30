@@ -566,7 +566,7 @@
                         {% endif %}
 
                         <!-- Wishlist controls: keep remove-from-saved behavior via existing id + handler -->
-                        <button class="sp-heart" type="button" aria-label="Remove from saved" onclick="toggleSave({{ saved_property.id }})">
+                        <button class="sp-heart" type="button" aria-label="Remove from saved" onclick="toggleSave({{ saved_property.property.id }})">
                             <i class="fas fa-heart"></i>
                         </button>
                     </div>
@@ -638,7 +638,7 @@
                                 <button class="sp-btn" type="button" onclick="scheduleViewing({{ saved_property.id }})">
                                     <i class="fas fa-calendar-check"></i> Schedule Visit
                                 </button>
-                                <button class="sp-btn sp-btn-danger" type="button" onclick="toggleSave({{ saved_property.id }})">
+                                <button class="sp-btn sp-btn-danger" type="button" onclick="toggleSave({{ saved_property.property.id }})">
                                     <i class="fas fa-heart-crack"></i> Remove
                                 </button>
                             </div>
@@ -927,10 +927,9 @@
         }
 
         // Preserve remove-from-saved action hook.
-        function toggleSave(savedPropertyId) {
+        function toggleSave(propertyId) {
             if (confirm('Remove this property from your saved list?')) {
-                // Backend integration not changed; placeholder UI.
-                alert('Property removed from saved list (placeholder).');
+                window.location.href = '/buy/saved/' + propertyId + '/remove/';
             }
         }
 

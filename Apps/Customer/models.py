@@ -161,3 +161,40 @@ class CustomerFeedback(models.Model):
     def __str__(self):
         property_name = self.property.title if self.property else "General"
         return f"Feedback for {property_name} by {self.customer.username}"
+
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+@receiver(post_save, sender=SavedProperty)
+def create_lead_on_save(sender, instance, created, **kwargs):
+    """
+    Automatically generate a Lead for the assigned agent when a customer saves a property.
+    """
+    agent = instance.property.assigned_agent or instance.property.seller
+    
+    if created and agent:
+        from Apps.Agent.models import Lead
+        
+        customer = instance.customer
+        customer_name = customer.get_full_name() or customer.username
+        customer_email = customer.email
+        customer_phone = ""
+        
+        # Try to get phone from CustomerProfile
+        if hasattr(customer, 'customer_profile') and customer.customer_profile.phone:
+            customer_phone = customer.customer_profile.phone
+            
+        # Create Lead
+        Lead.objects.get_or_create(
+            agent=agent,
+            property=instance.property,
+            email=customer_email,
+            defaults={
+                'name': customer_name,
+                'phone': customer_phone,
+                'status': 'new',
+                'source': 'website',
+                'notes': f"Lead auto-generated from customer {customer_name} saving property '{instance.property.title}' to their wishlist."
+            }
+        )
+
