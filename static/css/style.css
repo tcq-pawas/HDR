@@ -16,6 +16,7 @@
     --light-bg: #ffffff;
     --section-bg: #f8f9fa;
     --white: #ffffff;
+    --cloud-white: #F8FAFC;
 
     /* Lighter variants */
     --primary-blue-light: rgba(30, 115, 190, 0.1);
@@ -653,7 +654,7 @@ footer .social-icons a:hover {
     bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
-    background: linear-gradient(135deg, var(--white) 0%, var(--primary-blue-light) 100%);
+    background: linear-gradient(135deg, var(--cloud-white) 0%, var(--primary-blue-light) 100%);
     padding: 15px 40px;
     border-radius: 50px;
     z-index: 1000;
@@ -678,13 +679,13 @@ footer .social-icons a:hover {
     padding: 14px 18px;
     font-family: var(--font-body);
     transition: all 0.3s ease;
-    background-color: var(--white);
+    background-color: var(--cloud-white);
 }
 
 .form-control:focus {
     border-color: var(--primary-blue);
     box-shadow: 0 0 0 0.2rem rgba(30, 115, 190, 0.25);
-    background-color: var(--white);
+    background-color: var(--cloud-white);
 }
 
 .form-label {
@@ -745,7 +746,7 @@ footer .social-icons a:hover {
 }
 
 .card-header {
-    background: linear-gradient(135deg, var(--primary-blue-light) 0%, var(--white) 100%);
+    background: linear-gradient(135deg, var(--primary-blue-light) 0%, var(--cloud-white) 100%);
     border-bottom: 2px solid var(--primary-orange);
     font-weight: 600;
     color: var(--primary-blue);
@@ -787,7 +788,7 @@ a:focus {
     
     .btn-primary,
     .btn-secondary {
-        border: 2px solid var(--white);
+        border: 2px solid var(--cloud-white);
     }
 }
 

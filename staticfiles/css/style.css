@@ -9,7 +9,8 @@
     --pale: #7BBF96;
     --gold: #E9A62A;
     --gold-light: #FEF3C7;
-    --white: #DDF2E4;
+    --white: var(--cloud-white);
+    --cloud-white: #F8FAFC;
     --text-dark: #0D2B1D;
     --text-mid: #2D5742;
     --text-muted: #6B8C75;
@@ -22,7 +23,7 @@
 body {
     font-family: var(--font-body);
     color: var(--text-dark);
-    background: var(--white);
+    background: var(--cloud-white);
     line-height: 1.6;
     font-size: 16px;
     display: flex;
@@ -956,7 +957,7 @@ footer .social-icons a {
     bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
-    background: linear-gradient(135deg, var(--white) 0%, var(--primary-blue-light) 100%);
+    background: linear-gradient(135deg, var(--cloud-white) 0%, var(--primary-blue-light) 100%);
     padding: 15px 40px;
     border-radius: 50px;
     z-index: 1000;
@@ -981,13 +982,13 @@ footer .social-icons a {
     padding: 14px 18px;
     font-family: var(--font-body);
     transition: all 0.3s ease;
-    background-color: var(--white);
+    background-color: var(--cloud-white);
 }
 
 .form-control:focus {
     border-color: var(--primary-blue);
     box-shadow: 0 0 0 0.2rem rgba(30, 115, 190, 0.25);
-    background-color: var(--white);
+    background-color: var(--cloud-white);
 }
 
 .form-label {
@@ -1048,7 +1049,7 @@ footer .social-icons a {
 }
 
 .card-header {
-    background: linear-gradient(135deg, var(--primary-blue-light) 0%, var(--white) 100%);
+    background: linear-gradient(135deg, var(--primary-blue-light) 0%, var(--cloud-white) 100%);
     border-bottom: 2px solid var(--primary-orange);
     font-weight: 600;
     color: var(--primary-blue);
@@ -1097,7 +1098,7 @@ a:focus {
 
     .btn-primary,
     .btn-secondary {
-        border: 2px solid var(--white);
+        border: 2px solid var(--cloud-white);
     }
 }
 
@@ -2713,7 +2714,7 @@ nav {
     position: absolute;
     bottom: 0; left: 0; right: 0;
     height: 120px;
-    background: linear-gradient(to top, var(--white), transparent);
+    background: linear-gradient(to top, var(--cloud-white), transparent);
 }
 .hero-content { max-width: 620px; position: relative; z-index: 2; }
 .hero-badge {
@@ -2782,7 +2783,7 @@ nav {
 /* Trust Bar */
 .trust-bar {
     top: 3rem;
-    background: var(--white);
+    background: var(--cloud-white);
     padding: 0 48px;
     margin-top: -1px;
     position: relative;
@@ -2793,7 +2794,7 @@ nav {
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    background: var(--white);
+    background: var(--cloud-white);
     border-radius: 20px;
     box-shadow: 0 8px 48px rgba(27,67,50,0.12);
     transform: translateY(-40px);
@@ -2823,8 +2824,8 @@ section { padding: 88px 48px; }
 .section-inner { max-width: 1200px; margin: 0 auto; }
 .section-label {
     display: inline-block;
-    background: var(--mint);
-    color: var(--emerald);
+    background: #062916;
+    color: #4ead83;
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 2px;
@@ -2845,7 +2846,7 @@ section { padding: 88px 48px; }
     margin: 0 auto;color: var(--text-muted);}
 
 .contact-block {
-    background-color: #DDF2E4;
+    background-color: var(--cloud-white);
     border-radius: 20px;
     border: 1px solid var(--border);
     transition: all .3s;
@@ -2864,10 +2865,10 @@ section { padding: 88px 48px; }
 }
 
 .whycard{
-    background: #DDF2E4 !important;
+    background: var(--cloud-white) !important;
 }
 .invest-card {
-    background: var(--white);
+    background: var(--cloud-white);
     border-radius: 20px;
     padding: 32px 24px;
     border: 1px solid var(--border);
@@ -2886,7 +2887,7 @@ section { padding: 88px 48px; }
 .invest-card p { font-size: 14px; color: var(--text-muted); }
 
 /* Featured Listings */
-.listings { background: var(--white); }
+.listings { background: var(--cloud-white); }
 .listings-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; }
 .view-all {
     color: var(--emerald);
@@ -2908,7 +2909,7 @@ section { padding: 88px 48px; }
 
 
 .listing-card {
-    background: var(--white);
+    background: var(--cloud-white);
     border-radius: 20px;
     overflow: hidden;
     border: 1px solid var(--border);
@@ -2972,7 +2973,7 @@ section { padding: 88px 48px; }
     gap: 20px;
 }
 .opp-card {
-    background: var(--white);
+    background: var(--cloud-white);
     border-radius: 20px;
     overflow: hidden;
     border: 1px solid var(--border);
@@ -2994,7 +2995,7 @@ section { padding: 88px 48px; }
 .opp-price { font-family: var(--font-heading); font-size: 20px; color: var(--emerald); font-weight: 700; }
 
 /* Lifestyle */
-.lifestyle { background: var(--white); }
+.lifestyle { background: var(--cloud-white); }
 .lifestyle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .lifestyle-card {
     border-radius: 20px;
@@ -3028,7 +3029,7 @@ section { padding: 88px 48px; }
 .testimonials-header { text-align: center; margin-bottom: 56px; }
 .testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
 .testi-card {
-    background: var(--white);
+    background: var(--cloud-white);
     border-radius: 20px;
     padding: 32px 28px;
     border: 1px solid var(--border);
@@ -3055,7 +3056,7 @@ section { padding: 88px 48px; }
 .testi-role { font-size: 12px; color: var(--text-muted); }
 
 /* CTA Banner */
-.cta-banner { padding: 40px 48px 88px; background: var(--white); }
+.cta-banner { padding: 40px 48px 88px; background: var(--cloud-white); }
 .cta-inner {
     max-width: 1200px;
     margin: 0 auto;
@@ -3369,7 +3370,7 @@ footer {
     border-radius: 20px;
     overflow: hidden;
     border: 1px solid var(--border);
-    background: var(--white);
+    background: var(--cloud-white);
     transition: all .3s;
 }
 
@@ -3402,7 +3403,7 @@ footer {
 
 /* Cards inside swiper-slide */
 .listing-card {
-    background: var(--white);
+    background: var(--cloud-white);
     border-radius: 20px;
     overflow: hidden;
     border: 1px solid var(--border);
