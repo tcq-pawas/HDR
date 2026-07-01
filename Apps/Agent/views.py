@@ -357,35 +357,6 @@ def lead_list(request):
 
 
 @login_required
-def lead_add(request):
-    """Add a new lead"""
-    user_role = get_user_role(request.user)
-    if user_role not in ['agent', 'owner']:
-        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
-    
-    if request.method == 'POST':
-        form = LeadForm(request.POST)
-        if form.is_valid():
-            lead = form.save(commit=False)
-            lead.agent = request.user
-            lead.save()
-            messages.success(request, "Lead created successfully!")
-            return redirect('agent:lead_detail', pk=lead.id)
-    else:
-        form = LeadForm()
-    
-    # Filter properties to only show agent's properties
-    form.fields['property'].queryset = Property.objects.filter(seller=request.user)
-    
-    context = {
-        'form': form,
-        'title': 'Add New Lead'
-    }
-    
-    return render(request, 'agent/lead_form.html', context)
-
-
-@login_required
 def lead_detail(request, pk):
     """View lead details"""
     user_role = get_user_role(request.user)

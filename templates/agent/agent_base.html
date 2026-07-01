@@ -159,7 +159,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="{% url 'agent:lead_list' %}" class="nav-link {% if request.resolver_match.url_name in 'lead_list lead_add lead_detail lead_edit' %}active{% endif %}">
+                            <a href="{% url 'agent:lead_list' %}" class="nav-link {% if request.resolver_match.url_name in 'lead_list lead_detail lead_edit' %}active{% endif %}">
                                 <i class="bi bi-people"></i>
                                 <span>Leads</span>
                             </a>

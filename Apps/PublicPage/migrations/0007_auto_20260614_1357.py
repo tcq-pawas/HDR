@@ -10,11 +10,11 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='property',
-            name='farmhouse_available',
-            field=models.BooleanField(default=False),
-        ),
+        # migrations.AddField(
+        #     model_name='property',
+        #     name='farmhouse_available',
+        #     field=models.BooleanField(default=False),
+        # ),
         migrations.AddField(
             model_name='property',
             name='google_map_link',
