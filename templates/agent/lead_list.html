@@ -14,48 +14,7 @@
     </div>
 </div>
 
-<!-- Filters -->
-<div class="card mb-4">
-    <div class="card-body">
-        <form method="GET" class="row g-3">
-            <div class="col-md-3">
-                <label class="form-label">Status</label>
-                <select name="status" class="form-select">
-                    <option value="">All Status</option>
-                    <option value="new" {% if status_filter == 'new' %}selected{% endif %}>New</option>
-                    <option value="contacted" {% if status_filter == 'contacted' %}selected{% endif %}>Contacted</option>
-                    <option value="qualified" {% if status_filter == 'qualified' %}selected{% endif %}>Qualified</option>
-                    <option value="proposal" {% if status_filter == 'proposal' %}selected{% endif %}>Proposal Sent</option>
-                    <option value="negotiation" {% if status_filter == 'negotiation' %}selected{% endif %}>Negotiation</option>
-                    <option value="closed_won" {% if status_filter == 'closed_won' %}selected{% endif %}>Closed Won</option>
-                    <option value="closed_lost" {% if status_filter == 'closed_lost' %}selected{% endif %}>Closed Lost</option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <label class="form-label">Source</label>
-                <select name="source" class="form-select">
-                    <option value="">All Sources</option>
-                    <option value="website" {% if source_filter == 'website' %}selected{% endif %}>Website</option>
-                    <option value="referral" {% if source_filter == 'referral' %}selected{% endif %}>Referral</option>
-                    <option value="social_media" {% if source_filter == 'social_media' %}selected{% endif %}>Social Media</option>
-                    <option value="advertisement" {% if source_filter == 'advertisement' %}selected{% endif %}>Advertisement</option>
-                    <option value="cold_call" {% if source_filter == 'cold_call' %}selected{% endif %}>Cold Call</option>
-                    <option value="walk_in" {% if source_filter == 'walk_in' %}selected{% endif %}>Walk In</option>
-                    <option value="other" {% if source_filter == 'other' %}selected{% endif %}>Other</option>
-                </select>
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">Search</label>
-                <input type="text" name="search" class="form-control" placeholder="Search by name, email, or phone..." value="{{ request.GET.search }}">
-            </div>
-            <div class="col-md-2 d-flex align-items-end">
-                <button type="submit" class="btn btn-secondary w-100">
-                    <i class="bi bi-search"></i> Filter
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
+<!-- Filters removed -->
 
 <!-- Leads Table -->
 <div class="card">
@@ -67,12 +26,6 @@
                     <tr>
                         <th>Name</th>
                         <th>Property</th>
-                        <th>Status</th>
-                        <th>Source</th>
-                        <th>Priority</th>
-                        <th>Budget</th>
-                        <th>Created</th>
-                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -89,38 +42,6 @@
                             {% else %}
                             <span class="text-muted">No property</span>
                             {% endif %}
-                        </td>
-                        <td>
-                            <span class="badge bg-{% if lead.status == 'new' %}primary{% elif lead.status == 'contacted' %}info{% elif lead.status == 'qualified' %}success{% elif lead.status == 'proposal' %}warning{% elif lead.status == 'negotiation' %}warning{% elif lead.status == 'closed_won' %}success{% elif lead.status == 'closed_lost' %}danger{% endif %}">
-                                {{ lead.get_status_display }}
-                            </span>
-                        </td>
-                        <td>{{ lead.get_source_display }}</td>
-                        <td>
-                            <span class="badge bg-{% if lead.priority == 'high' %}danger{% elif lead.priority == 'medium' %}warning{% else %}secondary{% endif %}">
-                                {{ lead.priority|title }}
-                            </span>
-                        </td>
-                        <td>
-                            {% if lead.budget %}
-                            ₹{{ lead.budget|floatformat:0 }}
-                            {% else %}
-                            <span class="text-muted">-</span>
-                            {% endif %}
-                        </td>
-                        <td>{{ lead.created_at|date:"M d, Y" }}</td>
-                        <td>
-                            <div class="btn-group btn-group-sm">
-                                <a href="{% url 'agent:lead_detail' lead.id %}" class="btn btn-outline-primary" title="View">
-                                    <i class="bi bi-eye"></i>
-                                </a>
-                                <a href="{% url 'agent:lead_edit' lead.id %}" class="btn btn-outline-secondary" title="Edit">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-                                <a href="{% url 'agent:lead_add_followup' lead.id %}" class="btn btn-outline-success" title="Add Follow-up">
-                                    <i class="bi bi-plus"></i>
-                                </a>
-                            </div>
                         </td>
                     </tr>
                     {% endfor %}

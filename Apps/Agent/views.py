@@ -278,6 +278,25 @@ def property_delete(request, pk):
 
 
 @login_required
+def profile(request):
+    # Check if user is an agent
+    user_role = get_user_role(request.user)
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
+    """Profile page"""
+    try:
+        agent_profile = request.user.agent_profile
+    except AgentProfile.DoesNotExist:
+        agent_profile = AgentProfile.objects.create(user=request.user)
+    
+    context = {
+        'agent_profile': agent_profile,
+    }
+    
+    return render(request, 'agent/profile.html', context)
+
+
+@login_required
 def settings(request):
     # Check if user is an agent
     user_role = get_user_role(request.user)
