@@ -6,6 +6,7 @@ from .dashboard_views import (
     UserProfileView, PropertyReviewCenterView, PropertyReviewDetailPageView
 )
 from . import investor_views
+from . import communication_views
 
 app_name = 'admin_dash'
 
@@ -28,6 +29,10 @@ urlpatterns = [
     path('settings/', SystemSettingsView.as_view(), name='system-settings-page'),
     path('reports/', ReportsView.as_view(), name='reports-page'),
     path('activity/', ActivityLogView.as_view(), name='activity-page'),
+    
+    # Communication
+    path('communications/', communication_views.AdminCommunicationListView.as_view(), name='communication-list'),
+    path('communications/send/', communication_views.AdminCommunicationSendView.as_view(), name='communication-send'),
     
     # Property Review System
     path('property-review/', PropertyReviewCenterView.as_view(), name='property-review'),

@@ -341,15 +341,70 @@ def lead_list(request):
     
     leads = Lead.objects.filter(agent=request.user).select_related('property').order_by('-created_at')
     
+    # Calculate stats for the stats cards (unfiltered total for the agent)
+    all_agent_leads = Lead.objects.filter(agent=request.user)
+    total_leads_count = all_agent_leads.count()
+    new_leads_count = all_agent_leads.filter(status='new').count()
+    contacted_leads_count = all_agent_leads.filter(status='contacted').count()
+    
+    # Site Visit Scheduled
+    site_visits_count = SiteVisit.objects.filter(
+        agent=request.user, 
+        status__in=['scheduled', 'confirmed']
+    ).count()
+    
+    # Converted leads (closed_won)
+    converted_leads_count = all_agent_leads.filter(status='closed_won').count()
+
+    # Dynamic percentage change calculation compared to the previous month
+    now = timezone.now()
+    current_month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    if now.month == 1:
+        prev_month_start = now.replace(year=now.year-1, month=12, day=1, hour=0, minute=0, second=0, microsecond=0)
+    else:
+        prev_month_start = now.replace(month=now.month-1, day=1, hour=0, minute=0, second=0, microsecond=0)
+    prev_month_end = current_month_start - timedelta(microseconds=1)
+
+    def get_trend(current_qs, date_field='created_at'):
+        curr_cnt = current_qs.filter(**{f"{date_field}__gte": current_month_start}).count()
+        prev_cnt = current_qs.filter(**{f"{date_field}__gte": prev_month_start, f"{date_field}__lte": prev_month_end}).count()
+        if prev_cnt == 0:
+            change = 100.0 if curr_cnt > 0 else 0.0
+        else:
+            change = round(((curr_cnt - prev_cnt) / prev_cnt) * 100, 1)
+        return {
+            'value': abs(change),
+            'formatted': f"{'+' if change >= 0 else '-'}{abs(change)}%",
+            'is_positive': change >= 0
+        }
+
+    # Trends for each stat
+    total_leads_trend = get_trend(all_agent_leads)
+    new_leads_trend = get_trend(all_agent_leads.filter(status='new'))
+    contacted_leads_trend = get_trend(all_agent_leads.filter(status='contacted'))
+    
+    all_agent_visits = SiteVisit.objects.filter(agent=request.user, status__in=['scheduled', 'confirmed'])
+    site_visits_trend = get_trend(all_agent_visits, date_field='created_at')
+    
+    converted_leads_trend = get_trend(all_agent_leads.filter(status='closed_won'))
+
     # Filter by status
     status_filter = request.GET.get('status')
     if status_filter:
         leads = leads.filter(status=status_filter)
     
-    # Filter by source
-    source_filter = request.GET.get('source')
-    if source_filter:
-        leads = leads.filter(source=source_filter)
+    # Filter by property
+    property_filter = request.GET.get('property')
+    if property_filter:
+        leads = leads.filter(property_id=property_filter)
+        
+    # Filter by date range
+    date_from = request.GET.get('date_from')
+    date_to = request.GET.get('date_to')
+    if date_from:
+        leads = leads.filter(created_at__date__gte=date_from)
+    if date_to:
+        leads = leads.filter(created_at__date__lte=date_to)
     
     # Search
     search_query = request.GET.get('search')
@@ -357,8 +412,12 @@ def lead_list(request):
         leads = leads.filter(
             Q(name__icontains=search_query) |
             Q(email__icontains=search_query) |
-            Q(phone__icontains=search_query)
+            Q(phone__icontains=search_query) |
+            Q(property__title__icontains=search_query)
         )
+    
+    # Fetch list of agent properties for dropdown filter
+    properties = Property.objects.filter(seller=request.user)
     
     # Pagination
     paginator = Paginator(leads, 20)
@@ -369,7 +428,23 @@ def lead_list(request):
         'page_obj': page_obj,
         'leads': page_obj.object_list,
         'status_filter': status_filter,
-        'source_filter': source_filter,
+        'property_filter': property_filter,
+        'date_from': date_from,
+        'date_to': date_to,
+        'search_query': search_query,
+        'properties': properties,
+        # Stats
+        'total_leads_count': total_leads_count,
+        'new_leads_count': new_leads_count,
+        'contacted_leads_count': contacted_leads_count,
+        'site_visits_count': site_visits_count,
+        'converted_leads_count': converted_leads_count,
+        # Trends
+        'total_leads_trend': total_leads_trend,
+        'new_leads_trend': new_leads_trend,
+        'contacted_leads_trend': contacted_leads_trend,
+        'site_visits_trend': site_visits_trend,
+        'converted_leads_trend': converted_leads_trend,
     }
     
     return render(request, 'agent/lead_list.html', context)
@@ -910,18 +985,57 @@ def communication_send(request):
         if form.is_valid():
             communication = form.save(commit=False)
             communication.agent = request.user
-            communication.save()
-            messages.success(request, "Communication sent successfully!")
-            return redirect('agent:communication_list')
+            
+            # Actually send the email if the type is email
+            if communication.communication_type == 'email':
+                from django.core.mail import send_mail
+                from django.conf import settings
+                try:
+                    send_mail(
+                        subject=communication.subject,
+                        message=communication.message,
+                        from_email=settings.DEFAULT_FROM_EMAIL,
+                        recipient_list=[communication.recipient],
+                        fail_silently=False,
+                    )
+                    communication.status = 'sent'
+                    messages.success(request, "Email sent successfully!")
+                except Exception as e:
+                    communication.status = 'failed'
+                    communication.notes = f"Failed to send email: {str(e)}"
+                    messages.error(request, f"Failed to send email: {str(e)}")
+                communication.save()
+                return redirect('agent:communication_list')
+                
+            elif communication.communication_type == 'whatsapp':
+                # Generate WhatsApp link for redirection
+                phone = communication.recipient.strip()
+                clean_phone = ''.join(c for c in phone if c.isdigit())
+                if len(clean_phone) == 10:
+                    clean_phone = '91' + clean_phone  # Default to India country code
+                
+                import urllib.parse
+                whatsapp_url = f"https://api.whatsapp.com/send?phone={clean_phone}&text={urllib.parse.quote(communication.message)}"
+                
+                communication.status = 'sent'
+                communication.save()
+                messages.success(request, "WhatsApp message generated! Opening in new tab...")
+                return render(request, 'agent/communication_whatsapp_redirect.html', {
+                    'whatsapp_url': whatsapp_url
+                })
+                
+            else:
+                # Other communication types (SMS, etc.)
+                communication.status = 'sent'
+                communication.save()
+                messages.success(request, f"{communication.get_communication_type_display()} logged successfully!")
+                return redirect('agent:communication_list')
     else:
         form = CommunicationForm()
     
-    # Filter templates to only show agent's templates
-    form.fields['template_used'].queryset = MessageTemplate.objects.filter(agent=request.user, is_active=True)
-    
     context = {
         'form': form,
-        'title': 'Send Communication'
+        'title': 'Send Communication',
     }
     
     return render(request, 'agent/communication_form.html', context)

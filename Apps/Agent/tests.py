@@ -14,6 +14,9 @@ class AgentDashboardTest(TestCase):
             email='test@example.com',
             password='testpass123'
         )
+        from Apps.Administration.auth_utils import assign_user_group
+        assign_user_group(self.user, 'agent')
+        AgentProfile.objects.get_or_create(user=self.user)
     
     def test_dashboard_requires_login(self):
         response = self.client.get('/agent/dashboard/')

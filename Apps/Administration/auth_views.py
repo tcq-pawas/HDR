@@ -156,7 +156,7 @@ class CustomerRegistrationView(TemplateView):
         form = CustomerRegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)
+            login(request, user, backend='Apps.Administration.backends.EmailOrUsernameModelBackend')
             return redirect(get_role_based_redirect_url(user))
         else:
             messages.error(request, "Registration failed. Please correct the errors below.")
