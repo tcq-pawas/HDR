@@ -1,0 +1,1190 @@
+{% extends "investor/investor_base.html" %}
+{% load humanize %}
+
+{% block title %}Investor Dashboard - HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+* {
+    font-family: 'Inter', sans-serif;
+}
+
+.premium-hero {
+    background: linear-gradient(135deg, rgba(2, 44, 34, 0.95) 0%, rgba(6, 78, 59, 0.9) 50%, rgba(6, 95, 70, 0.85) 100%),
+                url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
+    background-size: cover;
+    background-position: center;
+    border-radius: 24px;
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+}
+
+.premium-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.avatar-premium {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    border: 5px solid rgba(255, 255, 255, 0.3);
+    background: linear-gradient(135deg, #10b981, #059669);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: white;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.avatar-premium:hover {
+    transform: scale(1.05);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+}
+
+.avatar-premium::after {
+    content: '\f030';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.avatar-premium:hover::after {
+    opacity: 1;
+}
+
+.kpi-card {
+    border-radius: 20px;
+    padding: 24px;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #10b981, #059669);
+}
+
+.kpi-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.kpi-card.gradient-1::before {
+    background: linear-gradient(90deg, #3b82f6, #2563eb);
+}
+
+.kpi-card.gradient-2::before {
+    background: linear-gradient(90deg, #10b981, #059669);
+}
+
+.kpi-card.gradient-3::before {
+    background: linear-gradient(90deg, #f59e0b, #d97706);
+}
+
+.kpi-card.gradient-4::before {
+    background: linear-gradient(90deg, #8b5cf6, #7c3aed);
+}
+
+.kpi-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.info-card {
+    border-radius: 20px;
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.info-card:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.info-label {
+    font-size: 0.875rem;
+    color: #64748b;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.info-value {
+    font-size: 1rem;
+    color: #1e293b;
+    font-weight: 600;
+}
+
+.badge-premium {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.badge-gold {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+}
+
+.badge-emerald {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+}
+
+.badge-blue {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+}
+
+.action-card {
+    border-radius: 16px;
+    padding: 20px;
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.action-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border-color: #10b981;
+}
+
+.action-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    margin-bottom: 12px;
+}
+
+.achievement-card {
+    border-radius: 16px;
+    padding: 16px;
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.achievement-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
+}
+
+.document-item {
+    border-radius: 12px;
+    padding: 16px;
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    margin-bottom: 12px;
+    transition: all 0.3s ease;
+}
+
+.document-item:hover {
+    border-color: #10b981;
+    background: #f8fafc;
+}
+
+.insight-card {
+    border-radius: 16px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.chart-container {
+    border-radius: 20px;
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    padding: 24px;
+}
+
+.investment-table {
+    border-radius: 16px;
+    overflow: hidden;
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.investment-table thead {
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+}
+
+.investment-table th {
+    padding: 16px;
+    font-weight: 600;
+    color: #475569;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.investment-table td {
+    padding: 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.investment-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+@media (max-width: 768px) {
+    .premium-hero {
+        padding: 24px;
+        border-radius: 16px;
+    }
+    
+    .avatar-premium {
+        width: 100px;
+        height: 100px;
+        font-size: 2.5rem;
+    }
+    
+    .kpi-number {
+        font-size: 2rem;
+    }
+}
+{% endblock %}
+
+{% block page_title %}Investor Dashboard{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<!-- Premium Investor Hero Section -->
+<div class="premium-hero mb-5">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <div class="d-flex align-items-center mb-4">
+                <div class="avatar-premium me-4" onclick="openImageUploadModal()" style="cursor: pointer;" title="Click to change profile picture">
+                    {% if profile.profile_image %}
+                        <img src="{{ profile.profile_image.url }}" alt="Profile" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                    {% else %}
+                        {{ profile.user.first_name.0|default:profile.user.username.0|upper }}
+                    {% endif %}
+                </div>
+                <div class="text-white">
+                    <h1 class="mb-1 fw-bold" style="font-size: 2.5rem;">{{ profile.user.get_full_name|default:profile.user.username }}</h1>
+                    <p class="mb-2 opacity-75" style="font-size: 1.1rem;">{{ profile.user.email }}</p>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <span class="badge badge-premium badge-emerald">Investor</span>
+                        <span class="badge badge-premium badge-gold">{{ profile.investor_type|default:'Individual'|title }}</span>
+                        {% if profile.verified %}
+                            <span class="badge badge-premium badge-blue">Verified</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-3 col-6">
+                    <div class="text-white">
+                        <div class="opacity-75 mb-1" style="font-size: 0.875rem;">Member Since</div>
+                        <div class="fw-semibold">{{ profile.user.date_joined|date:'M Y' }}</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="text-white">
+                        <div class="opacity-75 mb-1" style="font-size: 0.875rem;">Investor ID</div>
+                        <div class="fw-semibold">INV-{{ profile.id|stringformat:"04d" }}</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="text-white">
+                        <div class="opacity-75 mb-1" style="font-size: 0.875rem;">Portfolio Status</div>
+                        <div class="fw-semibold">Active</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="text-white">
+                        <div class="opacity-75 mb-1" style="font-size: 0.875rem;">Verification</div>
+                        <div class="fw-semibold">{% if profile.verified %}Verified{% else %}Pending{% endif %}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 text-md-end text-center mt-md-0 mt-4">
+            <button class="btn btn-light fw-semibold px-4 py-2 rounded-pill" onclick="openEditProfileModal()" style="border: none; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); cursor: pointer;">
+                <i class="fas fa-edit me-2"></i>Edit Profile
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modern KPI Cards -->
+<div class="row mb-5">
+    <div class="col-md-3 col-6 mb-4">
+        <div class="kpi-card gradient-1">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div class="action-icon" style="background: linear-gradient(135deg, #dbeafe, #bfdbfe); color: #2563eb;">
+                    <i class="fas fa-hand-holding-usd"></i>
+                </div>
+                <span class="badge bg-light text-primary rounded-pill">+12%</span>
+            </div>
+            <div class="kpi-number">₹{{ investment_stats.total_invested_amount|intcomma }}</div>
+            <div class="text-muted mt-1" style="font-size: 0.875rem;">Total Investments</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6 mb-4">
+        <div class="kpi-card gradient-2">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div class="action-icon" style="background: linear-gradient(135deg, #d1fae5, #a7f3d0); color: #059669;">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <span class="badge bg-light text-success rounded-pill">+8%</span>
+            </div>
+            <div class="kpi-number">₹{{ investment_stats.total_invested_amount|intcomma }}</div>
+            <div class="text-muted mt-1" style="font-size: 0.875rem;">Total Invested</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6 mb-4">
+        <div class="kpi-card gradient-3">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div class="action-icon" style="background: linear-gradient(135deg, #fef3c7, #fde68a); color: #d97706;">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <span class="badge bg-light text-warning rounded-pill">+15%</span>
+            </div>
+            <div class="kpi-number">₹{{ roi_analysis.total_returns|intcomma }}</div>
+            <div class="text-muted mt-1" style="font-size: 0.875rem;">Total Returns</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6 mb-4">
+        <div class="kpi-card gradient-4">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div class="action-icon" style="background: linear-gradient(135deg, #ede9fe, #ddd6fe); color: #7c3aed;">
+                    <i class="fas fa-percentage"></i>
+                </div>
+                <span class="badge bg-light text-purple rounded-pill">+5%</span>
+            </div>
+            <div class="kpi-number">{{ roi_analysis.total_roi_percentage|floatformat:1 }}%</div>
+            <div class="text-muted mt-1" style="font-size: 0.875rem;">Average ROI</div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Left Column -->
+    <div class="col-lg-8">
+        <!-- Portfolio Performance Chart -->
+        <div class="chart-container mb-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="fw-bold mb-0" style="color: #1e293b;">Portfolio Performance</h4>
+                <div class="btn-group">
+                    <button class="btn btn-outline-success btn-sm active">1Y</button>
+                    <button class="btn btn-outline-success btn-sm">6M</button>
+                    <button class="btn btn-outline-success btn-sm">3M</button>
+                </div>
+            </div>
+            <canvas id="portfolioChart" height="300"></canvas>
+        </div>
+
+        <!-- Recent Investments Table -->
+        <div class="investment-table mb-5">
+            <div class="p-4 border-bottom">
+                <h4 class="fw-bold mb-0" style="color: #1e293b;">Recent Investments</h4>
+            </div>
+            <div class="table-responsive">
+                <table class="table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Property</th>
+                            <th>Location</th>
+                            <th>Invested</th>
+                            <th>Current Value</th>
+                            <th>ROI</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for investment in recent_investments|slice:':5' %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="rounded me-3" style="width: 40px; height: 40px; background: linear-gradient(135deg, #d1fae5, #a7f3d0); display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-seedling text-success"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold">{{ investment.listing.title }}</div>
+                                        <small class="text-muted">{{ investment.listing.property_obj.title }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ investment.listing.property_obj.location }}</td>
+                            <td class="fw-semibold">₹{{ investment.amount|intcomma }}</td>
+                            <td class="fw-semibold text-success">₹{{ investment.amount|intcomma }}</td>
+                            <td><span class="badge badge-premium badge-emerald">{{ roi_analysis.total_roi_percentage|floatformat:1 }}%</span></td>
+                            <td><span class="badge bg-light text-success rounded-pill">{{ investment.status|title }}</span></td>
+                            <td>
+                                <a href="{% url 'investor:investment-detail' investment.id %}" class="btn btn-sm btn-outline-success rounded-pill">View</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center py-5">
+                                <div class="text-muted">
+                                    <i class="fas fa-inbox fa-2x mb-3"></i>
+                                    <p>No investments yet. Start your investment journey today!</p>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Personal Information & Preferences -->
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="info-card p-4 h-100">
+                    <h4 class="fw-bold mb-4" style="color: #1e293b;">Personal Information</h4>
+                    <div class="mb-3">
+                        <div class="info-label"><i class="fas fa-user me-2"></i>Full Name</div>
+                        <div class="info-value">{{ profile.user.get_full_name|default:profile.user.username }}</div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="info-label"><i class="fas fa-envelope me-2"></i>Email Address</div>
+                        <div class="info-value">{{ profile.user.email }}</div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="info-label"><i class="fas fa-phone me-2"></i>Mobile Number</div>
+                        <div class="info-value">{{ profile.phone_number|default:'Not provided' }}</div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="info-label"><i class="fas fa-map-marker-alt me-2"></i>Address</div>
+                        <div class="info-value">{{ profile.address|default:'Not provided' }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <div class="info-label"><i class="fas fa-calendar me-2"></i>Member Since</div>
+                            <div class="info-value">{{ profile.user.date_joined|date:'M d, Y' }}</div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="info-label"><i class="fas fa-shield-alt me-2"></i>KYC Status</div>
+                            <div class="info-value">{% if profile.verified %}Verified{% else %}Pending{% endif %}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="info-card p-4 h-100">
+                    <h4 class="fw-bold mb-4" style="color: #1e293b;">Investment Preferences</h4>
+                    <div class="mb-3">
+                        <div class="info-label"><i class="fas fa-dollar-sign me-2"></i>Investment Range</div>
+                        <div class="info-value">
+                            {% if profile.min_investment_amount and profile.max_investment_amount %}
+                                ₹{{ profile.min_investment_amount|intcomma }} - ₹{{ profile.max_investment_amount|intcomma }}
+                            {% else %}
+                                Not specified
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="info-label"><i class="fas fa-chart-bar me-2"></i>Risk Tolerance</div>
+                        <div class="info-value">{{ profile.risk_tolerance|default:'Not specified'|title }}</div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="info-label"><i class="fas fa-tag me-2"></i>Investment Type</div>
+                        <div class="info-value">{{ profile.preferred_investment_type|default:'No preference'|title }}</div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="info-label"><i class="fas fa-clock me-2"></i>Duration</div>
+                        <div class="info-value">{{ profile.investment_duration|default:'Not specified'|title }}</div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="info-label"><i class="fas fa-bullseye me-2"></i>Goals</div>
+                        <div class="info-value">{{ profile.investment_goals|default:'Not specified' }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column -->
+    <div class="col-lg-4">
+        <!-- Investor Insights Widget -->
+        <div class="insight-card mb-4">
+            <h4 class="fw-bold mb-4" style="color: #065f46;">
+                <i class="fas fa-lightbulb me-2"></i>Investor Insights
+            </h4>
+            <div class="mb-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="text-muted" style="font-size: 0.875rem;">Portfolio Health</span>
+                    <span class="badge badge-premium badge-emerald">Excellent</span>
+                </div>
+                <div class="progress mt-2" style="height: 8px;">
+                    <div class="progress-bar bg-success" style="width: 85%"></div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="text-muted" style="font-size: 0.875rem;">Risk Category</span>
+                    <span class="badge bg-light text-success rounded-pill">Moderate</span>
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="text-muted" style="font-size: 0.875rem;">Expected Annual Return</span>
+                    <span class="fw-bold text-success">12-15%</span>
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="text-muted" style="font-size: 0.875rem;">Best Asset</span>
+                    <span class="fw-bold">{{ roi_analysis.best_performing_investment.listing.title|default:'N/A' }}</span>
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="text-muted" style="font-size: 0.875rem;">Diversification</span>
+                    <span class="badge bg-light text-info rounded-pill">Well Balanced</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Premium Quick Actions -->
+        <div class="info-card p-4 mb-4">
+            <h4 class="fw-bold mb-4" style="color: #1e293b;">Quick Actions</h4>
+            <div class="row g-3">
+                <div class="col-6">
+                    <a href="{% url 'investor:investments-page' %}" class="action-card">
+                        <div class="action-icon" style="background: linear-gradient(135deg, #d1fae5, #a7f3d0); color: #059669;">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <div class="fw-semibold" style="font-size: 0.875rem;">New Investment</div>
+                    </a>
+                </div>
+                <div class="col-6">
+                    <a href="{% url 'investor:roi-data-page' %}" class="action-card">
+                        <div class="action-icon" style="background: linear-gradient(135deg, #dbeafe, #bfdbfe); color: #2563eb;">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <div class="fw-semibold" style="font-size: 0.875rem;">View ROI Reports</div>
+                    </a>
+                </div>
+                <div class="col-6">
+                    <a href="{% url 'investor:documents-page' %}" class="action-card">
+                        <div class="action-icon" style="background: linear-gradient(135deg, #ede9fe, #ddd6fe); color: #7c3aed;">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="fw-semibold" style="font-size: 0.875rem;">Manage Documents</div>
+                    </a>
+                </div>
+                <div class="col-6">
+                    <button class="action-card" onclick="downloadReport()">
+                        <div class="action-icon" style="background: linear-gradient(135deg, #fef3c7, #fde68a); color: #d97706;">
+                            <i class="fas fa-download"></i>
+                        </div>
+                        <div class="fw-semibold" style="font-size: 0.875rem;">Download Statements</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Investor Achievements -->
+        <div class="info-card p-4 mb-4">
+            <h4 class="fw-bold mb-4" style="color: #1e293b;">Investor Achievements</h4>
+            <div class="row g-2">
+                <div class="col-6">
+                    <div class="achievement-card">
+                        <i class="fas fa-crown text-warning mb-2" style="font-size: 1.5rem;"></i>
+                        <div class="fw-semibold" style="font-size: 0.75rem;">Premium Investor</div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="achievement-card">
+                        <i class="fas fa-seedling text-success mb-2" style="font-size: 1.5rem;"></i>
+                        <div class="fw-semibold" style="font-size: 0.75rem;">Agri Specialist</div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="achievement-card">
+                        <i class="fas fa-chart-line text-info mb-2" style="font-size: 1.5rem;"></i>
+                        <div class="fw-semibold" style="font-size: 0.75rem;">High ROI</div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="achievement-card">
+                        <i class="fas fa-award text-purple mb-2" style="font-size: 1.5rem;"></i>
+                        <div class="fw-semibold" style="font-size: 0.75rem;">Early Bird</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Document & Reports Center -->
+        <div class="info-card p-4">
+            <h4 class="fw-bold mb-4" style="color: #1e293b;">Document Center</h4>
+            <div class="document-item">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded me-3" style="width: 36px; height: 36px; background: #fee2e2; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-file-pdf text-danger"></i>
+                        </div>
+                        <div>
+                            <div class="fw-semibold" style="font-size: 0.875rem;">Portfolio Report</div>
+                            <small class="text-muted" style="font-size: 0.75rem;">Updated today</small>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-outline-success rounded-pill"><i class="fas fa-download"></i></button>
+                </div>
+            </div>
+            <div class="document-item">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded me-3" style="width: 36px; height: 36px; background: #dbeafe; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-file-alt text-primary"></i>
+                        </div>
+                        <div>
+                            <div class="fw-semibold" style="font-size: 0.875rem;">Tax Documents</div>
+                            <small class="text-muted" style="font-size: 0.75rem;">Updated 2 days ago</small>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-outline-success rounded-pill"><i class="fas fa-download"></i></button>
+                </div>
+            </div>
+            <div class="document-item">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded me-3" style="width: 36px; height: 36px; background: #d1fae5; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-file-contract text-success"></i>
+                        </div>
+                        <div>
+                            <div class="fw-semibold" style="font-size: 0.875rem;">Investment Agreements</div>
+                            <small class="text-muted" style="font-size: 0.75rem;">Updated 1 week ago</small>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-outline-success rounded-pill"><i class="fas fa-download"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Premium Edit Profile Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);">
+            <div class="modal-header" style="border-bottom: 1px solid rgba(0, 0, 0, 0.05); padding: 24px;">
+                <div>
+                    <h5 class="modal-title fw-bold mb-1" style="color: #1e293b;">Edit Profile</h5>
+                    <p class="text-muted mb-0" style="font-size: 0.875rem;">Update your personal information</p>
+                </div>
+                <button type="button" class="btn-close" onclick="closeEditProfileModal()" style="font-size: 1.25rem;"></button>
+            </div>
+            <div class="modal-body" style="padding: 24px;">
+                <form id="editProfileForm" method="post" action="{% url 'investor:profile-page' %}">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">First Name *</label>
+                            <input type="text" class="form-control" name="first_name" id="firstName" value="{{ profile.user.first_name|default:'' }}" style="border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.1); padding: 12px;">
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">Last Name *</label>
+                            <input type="text" class="form-control" name="last_name" id="lastName" value="{{ profile.user.last_name|default:'' }}" style="border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.1); padding: 12px;">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">Email *</label>
+                            <input type="email" class="form-control" name="email" id="email" value="{{ profile.user.email|default:'' }}" style="border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.1); padding: 12px;">
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">Phone Number</label>
+                            <input type="tel" class="form-control" name="phone_number" id="phoneNumber" value="{{ profile.phone_number|default:'' }}" style="border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.1); padding: 12px;">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">Investor Type</label>
+                            <select class="form-select" name="investor_type" style="border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.1); padding: 12px;">
+                                <option value="">Select Type</option>
+                                <option value="individual" {% if profile.investor_type == 'individual' %}selected{% endif %}>Individual</option>
+                                <option value="corporate" {% if profile.investor_type == 'corporate' %}selected{% endif %}>Corporate</option>
+                                <option value="institutional" {% if profile.investor_type == 'institutional' %}selected{% endif %}>Institutional</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">Phone Number</label>
+                            <input type="tel" class="form-control" name="phone_number" id="phoneNumber" value="{{ profile.phone_number|default:'' }}" style="border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.1); padding: 12px;">
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">Address</label>
+                        <textarea class="form-control" name="address" id="address" rows="3" style="border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.1); padding: 12px;">{{ profile.address|default:'' }}</textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">Minimum Investment Amount</label>
+                            <input type="number" class="form-control" name="min_investment_amount" value="{{ profile.min_investment_amount|default:'' }}" style="border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.1); padding: 12px;">
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">Maximum Investment Amount</label>
+                            <input type="number" class="form-control" name="max_investment_amount" value="{{ profile.max_investment_amount|default:'' }}" style="border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.1); padding: 12px;">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">Risk Tolerance</label>
+                            <select class="form-select" name="risk_tolerance" style="border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.1); padding: 12px;">
+                                <option value="">Select Risk Level</option>
+                                <option value="low" {% if profile.risk_tolerance == 'low' %}selected{% endif %}>Low Risk</option>
+                                <option value="medium" {% if profile.risk_tolerance == 'medium' %}selected{% endif %}>Medium Risk</option>
+                                <option value="high" {% if profile.risk_tolerance == 'high' %}selected{% endif %}>High Risk</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">Investment Duration</label>
+                            <select class="form-select" name="investment_duration" style="border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.1); padding: 12px;">
+                                <option value="">Select Duration</option>
+                                <option value="short-term" {% if profile.investment_duration == 'short-term' %}selected{% endif %}>Short Term (1-2 years)</option>
+                                <option value="medium-term" {% if profile.investment_duration == 'medium-term' %}selected{% endif %}>Medium Term (3-5 years)</option>
+                                <option value="long-term" {% if profile.investment_duration == 'long-term' %}selected{% endif %}>Long Term (5+ years)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">Preferred Investment Type</label>
+                            <select class="form-select" name="preferred_investment_type" style="border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.1); padding: 12px;">
+                                <option value="">Select Type</option>
+                                <option value="equity" {% if profile.preferred_investment_type == 'equity' %}selected{% endif %}>Equity</option>
+                                <option value="debt" {% if profile.preferred_investment_type == 'debt' %}selected{% endif %}>Debt</option>
+                                <option value="hybrid" {% if profile.preferred_investment_type == 'hybrid' %}selected{% endif %}>Hybrid</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">Investment Goals</label>
+                            <textarea class="form-control" name="investment_goals" rows="1" style="border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.1); padding: 12px;">{{ profile.investment_goals|default:'' }}</textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid rgba(0, 0, 0, 0.05); padding: 24px;">
+                <button type="button" class="btn btn-light fw-semibold px-4 py-2 rounded-pill" onclick="closeEditProfileModal()" style="border: none;">Cancel</button>
+                <button type="button" class="btn btn-success fw-semibold px-4 py-2 rounded-pill" onclick="saveProfile()" style="background: linear-gradient(135deg, #10b981, #059669); border: none;">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Premium Notification Modal -->
+<div class="modal fade" id="notificationModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); text-align: center; padding: 32px;">
+            <div class="modal-body">
+                <div id="notificationIcon" class="mb-4"></div>
+                <h4 id="notificationTitle" class="fw-bold mb-3"></h4>
+                <p id="notificationMessage" class="text-muted mb-4" style="font-size: 1rem;"></p>
+                <button type="button" class="btn btn-success fw-semibold px-4 py-2 rounded-pill" onclick="closeNotificationModal()" style="background: linear-gradient(135deg, #10b981, #059669); border: none;">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Profile Image Upload Modal -->
+<div class="modal fade" id="imageUploadModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);">
+            <div class="modal-header" style="border-bottom: 1px solid rgba(0, 0, 0, 0.05); padding: 24px;">
+                <div>
+                    <h5 class="modal-title fw-bold mb-1" style="color: #1e293b;">Change Profile Picture</h5>
+                    <p class="text-muted mb-0" style="font-size: 0.875rem;">Upload a new profile image</p>
+                </div>
+                <button type="button" class="btn-close" onclick="closeImageUploadModal()" style="font-size: 1.25rem;"></button>
+            </div>
+            <div class="modal-body" style="padding: 24px;">
+                <form id="imageUploadForm" method="post" action="{% url 'investor:profile-page' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="text-center mb-4">
+                        <div class="avatar-premium mx-auto mb-3" style="width: 120px; height: 120px; font-size: 3rem;">
+                            {{ profile.user.first_name.0|default:profile.user.username.0|upper }}
+                        </div>
+                        <p class="text-muted" style="font-size: 0.875rem;">Current profile picture</p>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">Select New Image</label>
+                        <input type="file" class="form-control" name="profile_image" id="profileImage" accept="image/*" style="border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.1); padding: 12px;">
+                        <small class="text-muted" style="font-size: 0.75rem;">Accepted formats: JPG, PNG, GIF. Max size: 5MB</small>
+                    </div>
+                    <input type="hidden" name="image_upload_only" value="true">
+                </form>
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid rgba(0, 0, 0, 0.05); padding: 24px;">
+                <button type="button" class="btn btn-light fw-semibold px-4 py-2 rounded-pill" onclick="closeImageUploadModal()" style="border: none;">Cancel</button>
+                <button type="button" class="btn btn-success fw-semibold px-4 py-2 rounded-pill" onclick="uploadProfileImage()" style="background: linear-gradient(135deg, #10b981, #059669); border: none;">Upload Image</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Portfolio Performance Chart
+        const ctx = document.getElementById('portfolioChart');
+        if (ctx) {
+            const portfolioChart = new Chart(ctx.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: 'Portfolio Value',
+                        data: [100000, 105000, 108000, 112000, 115000, 118000, 122000, 125000, 128000, 132000, 135000, 140000],
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#10b981',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    }, {
+                        label: 'Invested Amount',
+                        data: [100000, 100000, 100000, 100000, 100000, 100000, 100000, 100000, 100000, 100000, 100000, 100000],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#3b82f6',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20,
+                                font: {
+                                    size: 12,
+                                    family: 'Inter'
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return '₹' + value.toLocaleString();
+                                },
+                                font: {
+                                    size: 11,
+                                    family: 'Inter'
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    size: 11,
+                                    family: 'Inter'
+                                }
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    }
+                }
+            });
+        }
+    });
+
+    function openEditProfileModal() {
+        try {
+            const modalElement = document.getElementById('editProfileModal');
+            if (modalElement) {
+                modalElement.classList.add('show');
+                modalElement.style.display = 'block';
+                document.body.classList.add('modal-open');
+                
+                // Create backdrop if it doesn't exist
+                let backdrop = document.querySelector('.modal-backdrop');
+                if (!backdrop) {
+                    backdrop = document.createElement('div');
+                    backdrop.className = 'modal-backdrop fade show';
+                    document.body.appendChild(backdrop);
+                }
+                
+                // Add click event to close modal when clicking outside
+                modalElement.addEventListener('click', function(e) {
+                    if (e.target === modalElement) {
+                        closeEditProfileModal();
+                    }
+                });
+            } else {
+                console.error('Modal element not found');
+                alert('Unable to open edit profile modal');
+            }
+        } catch (error) {
+            console.error('Error opening modal:', error);
+            alert('Unable to open edit profile modal');
+        }
+    }
+
+    function closeEditProfileModal() {
+        try {
+            const modalElement = document.getElementById('editProfileModal');
+            if (modalElement) {
+                modalElement.classList.remove('show');
+                modalElement.style.display = 'none';
+                document.body.classList.remove('modal-open');
+                
+                // Remove backdrop
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) {
+                    backdrop.remove();
+                }
+            }
+        } catch (error) {
+            console.error('Error closing modal:', error);
+        }
+    }
+
+    function editProfile() {
+        openEditProfileModal();
+    }
+
+    function openImageUploadModal() {
+        try {
+            const modalElement = document.getElementById('imageUploadModal');
+            if (modalElement) {
+                modalElement.classList.add('show');
+                modalElement.style.display = 'block';
+                document.body.classList.add('modal-open');
+                
+                // Create backdrop if it doesn't exist
+                let backdrop = document.querySelector('.modal-backdrop');
+                if (!backdrop) {
+                    backdrop = document.createElement('div');
+                    backdrop.className = 'modal-backdrop fade show';
+                    document.body.appendChild(backdrop);
+                }
+                
+                // Add click event to close modal when clicking outside
+                modalElement.addEventListener('click', function(e) {
+                    if (e.target === modalElement) {
+                        closeImageUploadModal();
+                    }
+                });
+            } else {
+                console.error('Image upload modal element not found');
+                alert('Unable to open image upload modal');
+            }
+        } catch (error) {
+            console.error('Error opening image upload modal:', error);
+            alert('Unable to open image upload modal');
+        }
+    }
+
+    function closeImageUploadModal() {
+        try {
+            const modalElement = document.getElementById('imageUploadModal');
+            if (modalElement) {
+                modalElement.classList.remove('show');
+                modalElement.style.display = 'none';
+                document.body.classList.remove('modal-open');
+                
+                // Remove backdrop
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) {
+                    backdrop.remove();
+                }
+            }
+        } catch (error) {
+            console.error('Error closing image upload modal:', error);
+        }
+    }
+
+    function uploadProfileImage() {
+        const profileImage = document.getElementById('profileImage');
+        
+        if (!profileImage || !profileImage.files || profileImage.files.length === 0) {
+            showNotification('error', 'Please select an image to upload');
+            return;
+        }
+        
+        // Submit the image upload form
+        const form = document.getElementById('imageUploadForm');
+        if (form) {
+            form.submit();
+        }
+    }
+
+    function saveProfile() {
+        const firstName = document.getElementById('firstName');
+        const lastName = document.getElementById('lastName');
+        const email = document.getElementById('email');
+        
+        if (!firstName || !lastName || !email) {
+            showNotification('error', 'Please fill in all required fields');
+            return;
+        }
+        
+        if (!firstName.value || !lastName.value || !email.value) {
+            showNotification('error', 'Please fill in all required fields');
+            return;
+        }
+        
+        // Submit the form to the backend
+        const form = document.getElementById('editProfileForm');
+        if (form) {
+            form.submit();
+        }
+    }
+
+    function downloadReport() {
+        showNotification('info', 'Generating investment report... This will be downloaded shortly.');
+    }
+
+    function showNotification(type, message) {
+        const notificationModal = document.getElementById('notificationModal');
+        if (!notificationModal) {
+            console.error('Notification modal not found');
+            alert(message);
+            return;
+        }
+        
+        const notificationIcon = document.getElementById('notificationIcon');
+        const notificationTitle = document.getElementById('notificationTitle');
+        const notificationMessage = document.getElementById('notificationMessage');
+        
+        if (!notificationIcon || !notificationTitle || !notificationMessage) {
+            console.error('Notification modal elements not found');
+            alert(message);
+            return;
+        }
+        
+        if (type === 'success') {
+            notificationIcon.className = 'fas fa-check-circle text-success';
+            notificationIcon.style.fontSize = '3rem';
+            notificationTitle.textContent = 'Success';
+            notificationTitle.className = 'fw-bold text-success mb-3';
+        } else if (type === 'error') {
+            notificationIcon.className = 'fas fa-exclamation-circle text-danger';
+            notificationIcon.style.fontSize = '3rem';
+            notificationTitle.textContent = 'Error';
+            notificationTitle.className = 'fw-bold text-danger mb-3';
+        } else {
+            notificationIcon.className = 'fas fa-info-circle text-info';
+            notificationIcon.style.fontSize = '3rem';
+            notificationTitle.textContent = 'Information';
+            notificationTitle.className = 'fw-bold text-info mb-3';
+        }
+        
+        notificationMessage.textContent = message;
+        
+        // Show modal using custom approach
+        notificationModal.classList.add('show');
+        notificationModal.style.display = 'block';
+        document.body.classList.add('modal-open');
+        
+        // Create backdrop if it doesn't exist
+        let backdrop = document.querySelector('.modal-backdrop');
+        if (!backdrop) {
+            backdrop = document.createElement('div');
+            backdrop.className = 'modal-backdrop fade show';
+            document.body.appendChild(backdrop);
+        }
+        
+        // Auto-hide after 3 seconds for success messages
+        if (type === 'success') {
+            setTimeout(() => {
+                closeNotificationModal();
+            }, 3000);
+        }
+    }
+
+    function closeNotificationModal() {
+        try {
+            const notificationModal = document.getElementById('notificationModal');
+            if (notificationModal) {
+                notificationModal.classList.remove('show');
+                notificationModal.style.display = 'none';
+                document.body.classList.remove('modal-open');
+                
+                // Remove backdrop
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) {
+                    backdrop.remove();
+                }
+            }
+        } catch (error) {
+            console.error('Error closing notification modal:', error);
+        }
+    }
+</script>
+{% endblock %}

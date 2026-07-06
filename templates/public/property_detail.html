@@ -1,0 +1,114 @@
+{% extends 'public/base.html' %}
+{% load static %}
+{% block hero_image %}https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1600&q=80{% endblock %}
+{% block hero_title %}{{ property.title }}{% endblock %}
+{% block hero_subtitle %}{{ property.location }}{% endblock %}
+{% block content %}
+
+<!-- Property Header -->
+<section class="why" style="background: var(--cloud-white); padding-top: 60px;">
+    <div class="section-inner">
+        <div class="row align-items-start">
+            <div class="col-lg-8">
+                <div class="section-label">Property</div>
+                <h1 class="section-title" style="font-size: 2.8rem;">{{ property.title }}</h1>
+                <p style="color: var(--text-muted); font-size: 1.2rem;"><i class="bi bi-geo-alt"></i> {{ property.location }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container py-4">
+    <div class="row g-5">
+        <!-- Main Content -->
+        <div class="col-lg-8">
+
+            <!-- Image Gallery -->
+            <div id="propertyCarousel" class="carousel slide mb-4 rounded-4 overflow-hidden shadow" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    {% for image in property.images.all %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <img src="{{ image.image.url }}" class="d-block w-100" alt="Property Image" style="height: 500px; object-fit: cover;">
+                    </div>
+                    {% empty %}
+                    <div class="carousel-item active">
+                        <img src="https://via.placeholder.com/800x500?text=No+Images" class="d-block w-100" alt="No Image">
+                    </div>
+                    {% endfor %}
+                </div>
+                {% if property.images.count > 1 %}
+                <button class="carousel-control-prev" type="button" data-bs-target="#propertyCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#propertyCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+                {% endif %}
+            </div>
+
+            <!-- Description -->
+            <div class="invest-card" style="border: 1px solid var(--border); background: var(--cloud-white); padding: 32px 28px; margin-bottom: 28px;">
+                <h3 style="font-family: var(--font-heading); color: var(--forest); margin-bottom: 16px;">About this property</h3>
+                <p style="color: var(--text-muted); line-height: 1.8;">{{ property.description|linebreaks }}</p>
+            </div>
+
+            <!-- Details -->
+            <div class="invest-card" style="border: 1px solid var(--border); background: var(--cloud-white); padding: 32px 28px;">
+                <h3 style="font-family: var(--font-heading); color: var(--forest); margin-bottom: 20px;">Details</h3>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <strong style="color: var(--forest);">Type:</strong>
+                        <span style="color: var(--text-mid);">{{ property.get_property_type_display }}</span>
+                    </div>
+                    <div class="col-md-4">
+                        <strong style="color: var(--forest);">Bedrooms:</strong>
+                        <span style="color: var(--text-mid);">{{ property.bedrooms }}</span>
+                    </div>
+                    <div class="col-md-4">
+                        <strong style="color: var(--forest);">Bathrooms:</strong>
+                        <span style="color: var(--text-mid);">{{ property.bathrooms }}</span>
+                    </div>
+                    <div class="col-md-4">
+                        <strong style="color: var(--forest);">Area:</strong>
+                        <span style="color: var(--text-mid);">{{ property.area_sqft }} sqft</span>
+                    </div>
+                    <div class="col-md-4">
+                        <strong style="color: var(--forest);">Price:</strong>
+                        <span style="color: var(--gold); font-weight: 700;">${{ property.price }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <div class="invest-card" style="border: 1px solid var(--border); background: var(--cloud-white); padding: 32px 28px; position: sticky; top: 100px;">
+                <div class="text-center mb-4">
+                    <div class="section-label" style="margin: 0 auto 8px;">Price</div>
+                    <h2 class="section-title" style="font-size: 2.4rem; color: var(--gold);">${{ property.price }}</h2>
+                </div>
+                <h5 style="font-family: var(--font-heading); color: var(--forest); margin-bottom: 16px;">Interested? Contact Us</h5>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label" style="font-weight: 600; color: var(--forest);">Name</label>
+                        <input type="text" name="name" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" style="font-weight: 600; color: var(--forest);">Email</label>
+                        <input type="email" name="email" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" style="font-weight: 600; color: var(--forest);">Message</label>
+                        <textarea name="message" class="form-control" rows="4" required>I am interested in {{ property.title }}...</textarea>
+                    </div>
+                    <button type="submit" class="btn-cta-primary" style="width: 100%; border: none; cursor: pointer;">Send Inquiry</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

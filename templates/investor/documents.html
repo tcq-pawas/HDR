@@ -1,0 +1,117 @@
+{% extends "investor/investor_base.html" %}
+
+{% block title %}Investor Documents - HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+.document-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s;
+}
+.document-card:hover {
+    transform: translateY(-2px);
+}
+.file-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+.file-pdf { background-color: #dc3545; color: white; }
+.file-excel { background-color: #28a745; color: white; }
+.file-word { background-color: #007bff; color: white; }
+.file-image { background-color: #17a2b8; color: white; }
+.file-default { background-color: #6c757d; color: white; }
+{% endblock %}
+
+{% block page_title %}Investment Documents{% endblock %}
+
+{% block header %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2><i class="fas fa-file-alt text-success me-2"></i>Investment Documents</h2>
+        <p class="text-muted">View your investment documents</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+    <!-- Documents List -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">All Documents</h5>
+        </div>
+        <div class="card-body">
+            {% for document in documents %}
+            <div class="document-card mb-3">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <div class="d-flex align-items-start">
+                                <div class="file-icon file-{% if document.file_type == 'pdf' %}pdf{% elif document.file_type == 'excel' %}excel{% elif document.file_type == 'word' %}word{% elif document.file_type == 'image' %}image{% else %}default{% endif %} me-3">
+                                    <i class="fas fa-file-{% if document.file_type == 'pdf' %}pdf{% elif document.file_type == 'excel' %}excel{% elif document.file_type == 'word' %}word{% elif document.file_type == 'image' %}image{% else %}alt{% endif %}"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="card-title mb-1">{{ document.title }}</h6>
+                                    <p class="card-text text-muted mb-2">{{ document.description|default:'No description available' }}</p>
+                                    <div class="d-flex align-items-center text-muted small">
+                                        <span class="me-3">
+                                            <i class="fas fa-folder"></i> 
+                                            {% if document.category == 'investment' %}Investment Agreement
+                                            {% elif document.category == 'roi' %}ROI Report
+                                            {% elif document.category == 'tax' %}Tax Document
+                                            {% elif document.category == 'property' %}Property Document
+                                            {% else %}Other{% endif %}
+                                        </span>
+                                        <span class="me-3">
+                                            <i class="fas fa-calendar"></i> {{ document.uploaded_at|date:'M d, Y' }}
+                                        </span>
+                                        <span class="me-3">
+                                            <i class="fas fa-database"></i> {{ document.file_size|default:'N/A' }}
+                                        </span>
+                                        {% if document.related_investment %}
+                                            <span class="badge bg-info">{{ document.related_investment.listing.title }}</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-outline-primary" onclick="viewDocument({{ document.id }})">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                <button class="btn btn-sm btn-outline-success" onclick="downloadDocument({{ document.id }})">
+                                    <i class="fas fa-download"></i> Download
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="text-center py-5">
+                <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">No documents available</h5>
+                <p class="text-muted">Your investment documents will appear here.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function viewDocument(documentId) {
+        alert('Opening document viewer for document ID: ' + documentId);
+    }
+    
+    function downloadDocument(documentId) {
+        alert('Downloading document ID: ' + documentId);
+    }
+</script>
+{% endblock %}

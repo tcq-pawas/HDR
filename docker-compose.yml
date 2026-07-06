@@ -1,0 +1,71 @@
+x-function: &basics
+  restart: unless-stopped
+  networks:
+    - hdr_network
+
+#version: "3.9.0"
+
+services:
+  postgres:
+    <<: *basics
+    image: postgres:15
+    command: postgres -c 'max_connections=500'
+    env_file:
+      - .env
+    container_name: "hdr-postgres"
+    hostname: "hdr-postgres"
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "${POSTGRES_USER:-postgres}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+  web:
+    <<: *basics
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    restart: always
+    container_name: hdr-web
+    hostname: hdr-web
+    volumes:
+      - static_volume:/app/static
+    command: >
+      sh -c " python manage.py migrate --noinput && python manage.py collectstatic --noinput && gunicorn HeyDayRealty.wsgi:application --workers 5 --bind 0.0.0.0:8000 --graceful-timeout 120 --timeout 120 "
+    expose:
+      - "8000"
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  nginx:
+    <<: *basics
+    build:
+      context: ./docker/nginx
+      dockerfile: Dockerfile
+    container_name: "hdr-nginx"
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx/ssl:/etc/nginx/ssl:rw
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    depends_on:
+      - web
+
+networks:
+  hdr_network:
+    # Using the name property here, we can access this same network
+    # from other clusters (e.g. deploying ETL separately)
+    name: hdr_default
+
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:

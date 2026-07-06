@@ -1,0 +1,56 @@
+{% extends "agent/agent_base.html" %}
+{% load static %}
+
+{% block title %}Reports | HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/agent/reports.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="reports-container">
+    <!-- Header -->
+    <div class="page-header">
+        <h1>Reports & Analytics</h1>
+    </div>
+
+    <!-- Reports Grid -->
+    <div class="reports-grid">
+        <div class="report-card">
+            <div class="report-icon blue">
+                <i class="bi bi-building"></i>
+            </div>
+            <h3>Property Performance</h3>
+            <p>View detailed analytics on your property listings, views, and engagement.</p>
+            <a href="#" class="report-btn">View Report</a>
+        </div>
+
+        <div class="report-card">
+            <div class="report-icon green">
+                <i class="bi bi-people"></i>
+            </div>
+            <h3>Lead Conversion</h3>
+            <p>Track lead generation and conversion rates across all your properties.</p>
+            <a href="#" class="report-btn">View Report</a>
+        </div>
+
+        <div class="report-card">
+            <div class="report-icon orange">
+                <i class="bi bi-calendar-event"></i>
+            </div>
+            <h3>Site Visit Analytics</h3>
+            <p>Analyze site visit scheduling, completion rates, and feedback.</p>
+            <a href="#" class="report-btn">View Report</a>
+        </div>
+
+        <div class="report-card">
+            <div class="report-icon purple">
+                <i class="bi bi-currency-dollar"></i>
+            </div>
+            <h3>Revenue Report</h3>
+            <p>Track sales revenue, commissions, and financial performance.</p>
+            <a href="#" class="report-btn">View Report</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

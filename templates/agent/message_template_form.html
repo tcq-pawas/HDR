@@ -1,0 +1,75 @@
+{% extends "agent/agent_base.html" %}
+{% load static %}
+
+{% block title %}{{ title }} | HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/agent/message_template_form.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="template-form-container">
+    <!-- Header -->
+    <div class="page-header">
+        <h1>{{ title }}</h1>
+    </div>
+
+    <!-- Form -->
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="{{ form.name.id_for_label }}">Template Name *</label>
+                {{ form.name }}
+                {% if form.name.errors %}
+                    <div class="error-message">{{ form.name.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.template_type.id_for_label }}">Template Type *</label>
+                {{ form.template_type }}
+                {% if form.template_type.errors %}
+                    <div class="error-message">{{ form.template_type.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.subject.id_for_label }}">Subject (for Email)</label>
+                {{ form.subject }}
+                {% if form.subject.errors %}
+                    <div class="error-message">{{ form.subject.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.content.id_for_label }}">Message Content *</label>
+                {{ form.content }}
+                {% if form.content.errors %}
+                    <div class="error-message">{{ form.content.errors }}</div>
+                {% endif %}
+                <div class="help-text">Use placeholders like {name}, {property}, {date} for dynamic content.</div>
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.is_active.id_for_label }}">
+                    {{ form.is_active }} Active
+                </label>
+                {% if form.is_active.errors %}
+                    <div class="error-message">{{ form.is_active.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-save"></i> Save Template
+                </button>
+                <a href="{% url 'agent:message_template_list' %}" class="btn btn-secondary">
+                    <i class="bi bi-x-lg"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

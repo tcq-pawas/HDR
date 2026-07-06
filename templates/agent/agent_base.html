@@ -1,0 +1,259 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% if 'owner' in request.user.groups.all|stringformat:"s" %}Owner{% else %}Agent{% endif %} Dashboard | HeyDay Realty{% endblock %}</title>
+    <link rel="icon" href="{% static 'img/favicon.ico' %}">
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/agent-dashboard.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+    <!-- Top Header -->
+    <header class="agent-header">
+        <div class="container-fluid">
+            <div class="header-content">
+                <!-- Logo & Menu Toggle -->
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle">
+                        <i class="bi bi-list"></i>
+                    </button>
+                    <a class="brand-logo" href="{% url 'agent:dashboard' %}">
+                        <img src="{% static 'img/logo.png' %}" alt="HeyDay Realty">
+                        <span>HeyDay Realty</span>
+                    </a>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="header-center">
+                    <div class="search-box">
+                        <i class="bi bi-search"></i>
+                        <input type="text" placeholder="Search properties, leads, inquiries..." class="search-input">
+                    </div>
+                </div>
+
+                <!-- Header Right -->
+                <div class="header-right">
+                    <!-- Notifications -->
+                    <div class="header-item">
+                        <button class="icon-btn" id="notificationBtn">
+                            <i class="bi bi-bell"></i>
+                            <span class="badge notification-badge">3</span>
+                        </button>
+                        <div class="dropdown-menu notification-dropdown" id="notificationDropdown">
+                            <div class="dropdown-header">
+                                <h6>Notifications</h6>
+                                <a href="#" class="mark-all-read">Mark all as read</a>
+                            </div>
+                            <div class="dropdown-body">
+                                <div class="notification-item unread">
+                                    <div class="notification-icon">
+                                        <i class="bi bi-person-plus"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <p class="notification-text">New lead received for Premium Farm Land</p>
+                                        <span class="notification-time">2 min ago</span>
+                                    </div>
+                                </div>
+                                <div class="notification-item unread">
+                                    <div class="notification-icon">
+                                        <i class="bi bi-calendar-check"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <p class="notification-text">Site visit scheduled for tomorrow</p>
+                                        <span class="notification-time">1 hour ago</span>
+                                    </div>
+                                </div>
+                                <div class="notification-item">
+                                    <div class="notification-icon">
+                                        <i class="bi bi-check-circle"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <p class="notification-text">Property "Green Valley Plot" approved</p>
+                                        <span class="notification-time">3 hours ago</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="dropdown-footer">
+                                <a href="#" class="view-all">View all notifications</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- New Lead Count -->
+                    <div class="header-item">
+                        <a href="#" class="icon-btn with-badge">
+                            <i class="bi bi-person-lines-fill"></i>
+                            <span class="badge lead-badge">5</span>
+                        </a>
+                    </div>
+
+                    <!-- Quick Add Property -->
+                    <div class="header-item">
+                        <a href="{% url 'agent:property_type_select' %}" class="btn btn-primary btn-sm quick-add-btn">
+                            <i class="bi bi-plus-lg"></i> Add Property
+                        </a>
+                    </div>
+
+                    <!-- Profile Dropdown -->
+                    <div class="header-item">
+                        <button class="profile-toggle" id="profileToggle">
+                            <div class="profile-avatar">
+                                {% if agent_profile.profile_image %}
+                                    <img src="{{ agent_profile.profile_image.url }}" alt="Profile">
+                                {% else %}
+                                    <div class="avatar-placeholder">
+                                        {{ user.first_name|default:user.username|slice:":1"|upper }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="profile-info">
+                                <span class="profile-name">{{ user.first_name|default:user.username }}</span>
+                                <span class="profile-role">{% if 'owner' in request.user.groups.all|stringformat:"s" %}Owner{% else %}Agent{% endif %}</span>
+                            </div>
+                            <i class="bi bi-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu profile-dropdown" id="profileDropdown">
+                            <a href="{% url 'agent:settings' %}" class="dropdown-item">
+                                <i class="bi bi-gear"></i> Settings
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="{% url 'auth:logout' %}" class="dropdown-item text-danger">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Layout -->
+    <div class="agent-layout">
+        <!-- Sidebar -->
+        <aside class="agent-sidebar" id="agentSidebar">
+            <div class="sidebar-content">
+                <nav class="sidebar-nav">
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="{% url 'agent:dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                                <i class="bi bi-speedometer2"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{% url 'agent:property_list' %}" class="nav-link {% if request.resolver_match.url_name in 'property_list property_add property_edit property_type_select' %}active{% endif %}">
+                                <i class="bi bi-houses"></i>
+                                <span>Properties</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{% url 'agent:lead_list' %}" class="nav-link {% if request.resolver_match.url_name in 'lead_list lead_detail lead_edit' %}active{% endif %}">
+                                <i class="bi bi-people"></i>
+                                <span>Leads</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{% url 'agent:site_visit_list' %}" class="nav-link {% if request.resolver_match.url_name in 'site_visit_list site_visit_add site_visit_detail' %}active{% endif %}">
+                                <i class="bi bi-calendar-event"></i>
+                                <span>Site Visits</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{% url 'agent:booking_list' %}" class="nav-link {% if request.resolver_match.url_name in 'booking_list booking_add booking_detail' %}active{% endif %}">
+                                <i class="bi bi-cash-stack"></i>
+                                <span>Bookings</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{% url 'agent:commission_list' %}" class="nav-link {% if request.resolver_match.url_name in 'commission_list commission_detail' %}active{% endif %}">
+                                <i class="bi bi-currency-dollar"></i>
+                                <span>Commissions</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{% url 'agent:customer_list' %}" class="nav-link {% if request.resolver_match.url_name in 'customer_list customer_detail' %}active{% endif %}">
+                                <i class="bi bi-person-lines-fill"></i>
+                                <span>Customers</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{% url 'agent:document_list' %}" class="nav-link {% if request.resolver_match.url_name in 'document_list document_add' %}active{% endif %}">
+                                <i class="bi bi-file-earmark"></i>
+                                <span>Documents</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{% url 'agent:communication_list' %}" class="nav-link {% if request.resolver_match.url_name in 'communication_list communication_send message_template_list' %}active{% endif %}">
+                                <i class="bi bi-chat-dots"></i>
+                                <span>Communication</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{% url 'agent:reports' %}" class="nav-link {% if request.resolver_match.url_name == 'reports' %}active{% endif %}">
+                                <i class="bi bi-graph-up"></i>
+                                <span>Reports</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{% url 'agent:settings' %}" class="nav-link {% if request.resolver_match.url_name == 'settings' %}active{% endif %}">
+                                <i class="bi bi-gear"></i>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <div class="sidebar-footer">
+                    <a href="{% url 'auth:logout' %}" class="logout-btn">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="agent-main" id="agentMain">
+            <div class="main-content">
+                {% block breadcrumb %}
+                <div class="breadcrumb">
+                    <a href="{% url 'agent:dashboard' %}">Dashboard</a>
+                    {% block breadcrumb_items %}{% endblock %}
+                </div>
+                {% endblock %}
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <!-- Overlay for mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="{% static 'js/agent-dashboard.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

@@ -1,0 +1,73 @@
+{% extends "agent/agent_base.html" %}
+{% load static %}
+
+{% block title %}Message Templates | HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/agent/message_template_list.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="templates-container">
+    <!-- Header -->
+    <div class="page-header">
+        <h1>Message Templates</h1>
+        <a href="{% url 'agent:message_template_add' %}" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Create Template
+        </a>
+    </div>
+
+    <!-- Templates Table -->
+    <div class="templates-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Template Name</th>
+                    <th>Type</th>
+                    <th>Subject</th>
+                    <th>Message Preview</th>
+                    <th>Status</th>
+                    <th>Created At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if templates %}
+                    {% for template in templates %}
+                        <tr>
+                            <td><strong>{{ template.name }}</strong></td>
+                            <td><span class="type-badge type-{{ template.template_type }}">{{ template.get_template_type_display }}</span></td>
+                            <td>{{ template.subject|truncatewords:5|default:"N/A" }}</td>
+                            <td>{{ template.content|truncatewords:10 }}</td>
+                            <td><span class="status-badge status-{% if template.is_active %}active{% else %}inactive{% endif %}">{% if template.is_active %}Active{% else %}Inactive{% endif %}</span></td>
+                            <td>{{ template.created_at|date:"M d, Y" }}</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="{% url 'agent:message_template_edit' template.id %}" class="action-btn" title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="7">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">
+                                    <i class="bi bi-file-text"></i>
+                                </div>
+                                <h3>No Templates Yet</h3>
+                                <p>Create message templates to quickly send common communications to leads and customers.</p>
+                                <a href="{% url 'agent:message_template_add' %}" class="btn btn-primary">
+                                    <i class="bi bi-plus-lg"></i> Create Your First Template
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

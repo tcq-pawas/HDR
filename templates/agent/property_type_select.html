@@ -1,0 +1,48 @@
+{% extends 'agent/agent_base.html' %}
+
+{% block title %}Select Property Type | Agent Dashboard{% endblock %}
+
+{% block breadcrumb_items %}
+<span>Add Property</span>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="header-title">
+        <h1>Select Property Type</h1>
+        <p class="text-muted">Choose the type of property you want to add</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <a href="{% url 'agent:property_add' 'land' %}" class="card property-type-card text-decoration-none">
+            <div class="card-body text-center">
+                <div class="property-type-icon">
+                    <i class="bi bi-map"></i>
+                </div>
+                <h3>Agricultural Land</h3>
+                <p class="text-muted">Add agricultural land, farmland, plantations, and agro-investment properties</p>
+                <button class="btn btn-primary mt-2">Select Agri Land</button>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-6">
+        <a href="{% url 'agent:property_add' 'house' %}" class="card property-type-card text-decoration-none">
+            <div class="card-body text-center">
+                <div class="property-type-icon">
+                    <i class="bi bi-house"></i>
+                </div>
+                <h3>House / Building</h3>
+                <p class="text-muted">Add houses, apartments, villas, or commercial buildings</p>
+                <button class="btn btn-primary mt-2">Select House</button>
+            </div>
+        </a>
+    </div>
+</div>
+
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/agent/property_type_select.css' %}">
+{% endblock %}
+{% endblock %}

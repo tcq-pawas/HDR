@@ -1,0 +1,103 @@
+{% extends "agent/agent_base.html" %}
+{% load static %}
+
+{% block title %}{{ title }} | HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/agent/site_visit_form.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="visit-form-container">
+    <!-- Header -->
+    <div class="page-header">
+        <h1>{{ title }}</h1>
+    </div>
+
+    <!-- Form -->
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.property.id_for_label }}">Property *</label>
+                    {{ form.property }}
+                    {% if form.property.errors %}
+                        <div class="error-message">{{ form.property.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.lead.id_for_label }}">Lead (Optional)</label>
+                    {{ form.lead }}
+                    {% if form.lead.errors %}
+                        <div class="error-message">{{ form.lead.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.customer_name.id_for_label }}">Customer Name *</label>
+                    {{ form.customer_name }}
+                    {% if form.customer_name.errors %}
+                        <div class="error-message">{{ form.customer_name.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.customer_phone.id_for_label }}">Customer Phone *</label>
+                    {{ form.customer_phone }}
+                    {% if form.customer_phone.errors %}
+                        <div class="error-message">{{ form.customer_phone.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.customer_email.id_for_label }}">Customer Email</label>
+                {{ form.customer_email }}
+                {% if form.customer_email.errors %}
+                    <div class="error-message">{{ form.customer_email.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.scheduled_date.id_for_label }}">Scheduled Date & Time *</label>
+                    {{ form.scheduled_date }}
+                    {% if form.scheduled_date.errors %}
+                        <div class="error-message">{{ form.scheduled_date.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.status.id_for_label }}">Status *</label>
+                    {{ form.status }}
+                    {% if form.status.errors %}
+                        <div class="error-message">{{ form.status.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.notes.id_for_label }}">Notes</label>
+                {{ form.notes }}
+                {% if form.notes.errors %}
+                    <div class="error-message">{{ form.notes.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-lg"></i> Save Visit
+                </button>
+                <a href="{% if visit %}{% url 'agent:site_visit_detail' visit.id %}{% else %}{% url 'agent:site_visit_list' %}{% endif %}" class="btn btn-secondary">
+                    <i class="bi bi-x-lg"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

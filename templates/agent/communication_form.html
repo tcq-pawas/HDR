@@ -1,0 +1,93 @@
+{% extends "agent/agent_base.html" %}
+{% load static %}
+
+{% block title %}{{ title }} | HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/agent/communication_form.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="communication-form-container">
+    <!-- Header -->
+    <div class="page-header">
+        <h1>{{ title }}</h1>
+    </div>
+
+    <!-- Form -->
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.communication_type.id_for_label }}">Communication Type *</label>
+                    {{ form.communication_type }}
+                    {% if form.communication_type.errors %}
+                        <div class="error-message">{{ form.communication_type.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.template_used.id_for_label }}">Use Template</label>
+                    {{ form.template_used }}
+                    {% if form.template_used.errors %}
+                        <div class="error-message">{{ form.template_used.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.recipient.id_for_label }}">Recipient Phone/Email *</label>
+                    {{ form.recipient }}
+                    {% if form.recipient.errors %}
+                        <div class="error-message">{{ form.recipient.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.lead.id_for_label }}">Lead (Optional)</label>
+                    {{ form.lead }}
+                    {% if form.lead.errors %}
+                        <div class="error-message">{{ form.lead.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.booking.id_for_label }}">Booking (Optional)</label>
+                {{ form.booking }}
+                {% if form.booking.errors %}
+                    <div class="error-message">{{ form.booking.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.subject.id_for_label }}">Subject (for Email)</label>
+                {{ form.subject }}
+                {% if form.subject.errors %}
+                    <div class="error-message">{{ form.subject.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.message.id_for_label }}">Message *</label>
+                {{ form.message }}
+                {% if form.message.errors %}
+                    <div class="error-message">{{ form.message.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-send"></i> Send Message
+                </button>
+                <a href="{% url 'agent:communication_list' %}" class="btn btn-secondary">
+                    <i class="bi bi-x-lg"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

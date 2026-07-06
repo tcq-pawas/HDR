@@ -1,0 +1,146 @@
+{% extends "investor/investor_base.html" %}
+{% load humanize %}
+
+{% block title %}Investment Details - {{ investment.listing.title }} - HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+.investment-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+.status-badge {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.75rem;
+}
+.roi-positive {
+    color: #28a745;
+    font-weight: bold;
+}
+.roi-negative {
+    color: #dc3545;
+    font-weight: bold;
+}
+{% endblock %}
+
+{% block page_title %}Investment Details{% endblock %}
+
+{% block header %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <a href="{% url 'investor:investments-page' %}" class="btn btn-outline-secondary rounded-circle" style="width: 40px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center;">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <h2 class="d-inline-block ms-3"><i class="fas fa-hand-holding-usd text-success me-2"></i>Investment Details</h2>
+        <p class="text-muted">View detailed information about your investment</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <div class="card investment-card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Investment Information</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Investment ID:</strong> INV-{{ investment.id|stringformat:"04d" }}</p>
+                <p><strong>Listing:</strong> {{ investment.listing.title }}</p>
+                <p><strong>Property:</strong> {{ investment.listing.property_obj.title }}</p>
+                <p><strong>Amount:</strong> ${{ investment.amount|intcomma }}</p>
+                <p><strong>Date:</strong> {{ investment.investment_date|date:'M d, Y' }}</p>
+                <p><strong>Status:</strong> <span class="badge status-badge bg-{% if investment.status == 'confirmed' %}success{% elif investment.status == 'pending' %}warning{% elif investment.status == 'cancelled' %}danger{% else %}secondary{% endif %}">{{ investment.status|title }}</span></p>
+                <p><strong>Type:</strong> {{ investment.listing.investment_type|title }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card investment-card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Performance Summary</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Expected ROI:</strong> {{ investment.listing.expected_roi_percentage }}%</p>
+                {% if investment.latest_roi %}
+                <p><strong>Current ROI:</strong> <span class="{% if investment.latest_roi > 0 %}roi-positive{% else %}roi-negative{% endif %}">{{ investment.latest_roi|floatformat:2 }}%</span></p>
+                {% else %}
+                <p><strong>Current ROI:</strong> <span class="text-muted">Not available yet</span></p>
+                {% endif %}
+                <p><strong>Investment Term:</strong> {{ investment.listing.investment_term_months }} months</p>
+                <p><strong>Payment Frequency:</strong> {{ investment.listing.payment_frequency|title }}</p>
+                {% if investment.status == 'confirmed' %}
+                <p><strong>Next Payment:</strong> Coming soon</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card investment-card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Property Details</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Title:</strong> {{ investment.listing.property_obj.title }}</p>
+                <p><strong>Location:</strong> {{ investment.listing.property_obj.location }}</p>
+                <p><strong>Property Type:</strong> {{ investment.listing.property_obj.property_type|title }}</p>
+                <p><strong>Total Value:</strong> ${{ investment.listing.property_obj.price|intcomma }}</p>
+                <p><strong>Total Investment Needed:</strong> ${{ investment.listing.total_investment_needed|intcomma }}</p>
+                <p><strong>Total Invested So Far:</strong> ${{ investment.listing.total_invested_amount|intcomma }}</p>
+                <p><strong>Your Investment Share:</strong> {% widthratio investment.amount investment.listing.total_investment_needed 100 %}%</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card investment-card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Payment Schedule</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Payment Method:</strong> Bank Transfer</p>
+                <p><strong>Payment Frequency:</strong> {{ investment.listing.payment_frequency|title }}</p>
+                {% if investment.status == 'confirmed' %}
+                <p><strong>Next Payment Date:</strong> Coming soon</p>
+                <p><strong>Expected Monthly Return:</strong> Calculated based on ROI</p>
+                <p><strong>Total Payments Made:</strong> 0</p>
+                {% else %}
+                <p><strong>Payment Status:</strong> <span class="text-muted">Pending investment confirmation</span></p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card investment-card mb-4">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Investment Documents</h5>
+    </div>
+    <div class="card-body">
+        <div class="list-group">
+            <a href="#" class="list-group-item list-group-item-action">
+                <i class="fas fa-file-pdf text-danger"></i> Investment Agreement
+            </a>
+            <a href="#" class="list-group-item list-group-item-action">
+                <i class="fas fa-file-pdf text-danger"></i> Property Valuation Report
+            </a>
+            <a href="#" class="list-group-item list-group-item-action">
+                <i class="fas fa-file-excel text-success"></i> ROI Projections
+            </a>
+            <a href="#" class="list-group-item list-group-item-action">
+                <i class="fas fa-file-pdf text-danger"></i> Insurance Policy
+            </a>
+        </div>
+    </div>
+</div>
+
+{% if investment.status == 'confirmed' %}
+<div class="text-center mb-4">
+    <a href="{% url 'investor:investment-roi' investment.id %}" class="btn btn-success btn-lg">
+        <i class="fas fa-chart-line"></i> View ROI Data
+    </a>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,467 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}HeyDay Realty{% endblock %}</title>
+    <link rel="icon" href="{% static 'img/favicon.ico' %}">
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!---------font awesome icon---------->
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+    <!-- Top Bar -->
+    <!-- <div class="top-bar">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="contact-info">
+                <span class="me-3"><i class="bi bi-telephone-fill text-white"></i> +91 9506688688</span>
+                <span><i class="bi bi-envelope-fill text-white"></i> info@heydayrealty.in</span>
+            </div>
+            <div class="social-icons">
+                <a href="#" class="me-2"><i class="bi bi-facebook"></i></a>
+                <!-- <a href="#" class="me-2"><i class="bi bi-twitter"></i></a> 
+                <a href="#" class="me-2"><i class="bi bi-instagram"></i></a>
+                <a href="#" class="me-2"><i class="bi bi-linkedin"></i></a>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- <div class="topbar">
+    <!-- <div style="display:flex;gap:20px">
+        <a href="tel:+919506688688">📞 +91 9506 688 688</a>
+        <a href="mailto:info@heydayrealty.in">✉ info@heydayrealty.in</a>
+    </div> 
+    <div class="social">
+        <a href="#">𝗙</a>
+        <a href="#">◎</a>
+        <a href="#">in</a>
+        <a href="#">𝗫</a>
+    </div>
+</div> -->
+
+    <!-- Main Navbar -->
+    <!-- <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'public:home' %}">
+                <!-- <img src="{% static 'img/logo.png' %}" alt="HeyDay Realty"> 
+                <img src="{% static 'img/logo-2.png' %}" alt="HeyDay Realty">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link screenshot-hover" href="{% url 'public:home' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'buy:property_search' %}">Buy</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'sell:sell_page' %}">Sell</a></li>
+                    <li class="nav-item"><a class="nav-link" href="">Lands</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'public:media' %}">Media</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'public:about' %}">About Us</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'public:contact' %}">Contact</a></li>
+                    <li class="nav-item">
+                        <a class="tour-btn" href="#">
+                            SCHEDULE A TOUR
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav> -->
+<nav class="navbar navbar-expand-lg sticky-top py-2 shadow-sm border-bottom" style="background: var(--cloud-white);">
+  <div class="container-fluid px-4 px-lg-5">
+
+    <!-- LEFT: Logo -->
+    <a class="navbar-brand p-0" href="{% url 'public:home' %}">
+      <div class="d-flex align-items-center gap-2">
+        <div class="bg-success bg-gradient rounded-3 d-flex align-items-center justify-content-center"
+             style="width:42px; height:42px; font-size:1.3rem;">
+          🌿
+        </div>
+        <div>
+          <div class="fw-bold lh-1" style="font-family:'Playfair Display',serif; font-size:1.25rem; color:#1B4332;">
+            HeyDay
+          </div>
+          <div class="small text-uppercase fw-semibold lh-1" style="font-size:0.6rem; letter-spacing:2px; color:#40916C;">
+            Realty
+          </div>
+        </div>
+      </div>
+    </a>
+
+    <!-- Toggler (hamburger) -->
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
+            data-bs-target="#mainNav" aria-controls="mainNav"
+            aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- COLLAPSIBLE MENU (NO d-flex here) -->
+    <div class="collapse navbar-collapse" id="mainNav">
+
+      <!-- MIDDLE: Menu links – centered with mx-auto -->
+      <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-1 gap-lg-2">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{% url 'public:home' %}">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'buy:property_search' %}">Buy</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'sell:sell_page' %}">Sell</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'public:media' %}">Media</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'public:about' %}">About Us</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'public:contact' %}">Contact</a>
+        </li>
+      </ul>
+
+      <!-- RIGHT: Auth Button – pushed right with ms-lg-auto -->
+      {% if user.is_authenticated %}
+        <div class="d-flex align-items-center gap-2 mt-2 mt-lg-0 ms-lg-2">
+          <div class="dropdown">
+            <button class="btn btn-outline-success d-flex align-items-center gap-2 px-3 py-2 rounded-pill dropdown-toggle" type="button" data-bs-toggle="dropdown">
+              {% load custom_tags %}
+              {% get_profile_image user as profile_image %}
+              {% if profile_image %}
+                <img src="{{ profile_image }}" alt="Profile" class="rounded-circle" style="width:32px; height:32px; object-fit:cover;">
+              {% else %}
+                <div class="rounded-circle bg-success d-flex align-items-center justify-content-center text-white" style="width:32px; height:32px; font-size:14px;">
+                  {{ user.first_name|first|upper }}
+                </div>
+              {% endif %}
+              <span class="fw-semibold">{{ user.first_name }}</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow">
+              <li><a class="dropdown-item" href="{% get_profile_url user %}">My Profile</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-danger" href="{% url 'auth:logout' %}">Logout</a></li>
+            </ul>
+          </div>
+        </div>
+      {% else %}
+        <a href="{% url 'auth:login' %}" class="btn btn-success fw-bold px-4 py-2 rounded-pill shadow-sm mt-2 mt-lg-0 ms-lg-2">
+          Login
+        </a>
+      {% endif %}
+
+    </div>
+
+  </div>
+</nav>
+
+    {% block inner_hero %}
+    {% endblock %}
+
+    {% block content %}
+    {% endblock %}
+
+    <!-- Footer -->
+    <!-- <footer>
+        <div class="container">
+            <div class="row">
+                <!-- Column 1: Company 
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <!-- <h5>Company</h5> 
+
+                    <img src="{% static '/img/logo-2.png' %}" alt="HeyDay Realty"
+                        style="max-width:220px; margin-bottom:20px;">
+
+                    <!-- <p class="footer-desc">
+                        HeyDay Realty is a premium real estate agency dedicated to finding your dream
+                        home. We pride ourselves on transparency, integrity, and excellence in every
+                        transaction.
+                    </p> 
+
+                    <p class="footer-desc">
+    HeyDay Realty helps investors and land buyers discover verified farmland opportunities, managed plantation projects, and long-term agricultural investment assets across India.
+</p>
+
+                    <div class="social-icons mt-4">
+                        <a href="#"><i class="bi bi-facebook"></i></a>
+                        <a href="#"><i class="bi bi-instagram"></i></a>
+                        <a href="#"><i class="bi bi-linkedin"></i></a>
+                        <a href="#"><i class="bi bi-twitter"></i></a>
+                    </div>
+                </div>
+                <!-- <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Company</h5>
+                    <p class="small" style="line-height: 1.8; color: #e0e0e0;">
+                        HeyDay Realty is your trusted partner for premium land investments and residential properties.
+                        With 15+ years of experience, we help you find the perfect property for your future.
+                    </p>
+                    <div class="social-icons mt-3">
+                        <a href="#"><i class="bi bi-facebook"></i></a>
+                        <a href="#"><i class="bi bi-twitter"></i></a>
+                        <a href="#"><i class="bi bi-instagram"></i></a>
+                        <a href="#"><i class="bi bi-linkedin"></i></a>
+                        <a href="#"><i class="bi bi-youtube"></i></a>
+                    </div>
+                </div> 
+                <!-- Column 2: Quick Links 
+                <div class="col-lg-2 col-md-6 mb-4">
+
+                    <h5>QUICK LINKS</h5>
+
+                    <ul class="list-unstyled footer-links">
+
+                        <li><a href="{% url 'public:home' %}">Home</a></li>
+
+                        <li><a href="{% url 'buy:property_search' %}">
+                                Buy Property
+                            </a></li>
+
+                        <li><a href="{% url 'sell:sell_page' %}">
+                                Sell Property
+                            </a></li>
+
+                        <!-- <li><a href="#">Lands</a></li> 
+
+                        <li><a href="{% url 'public:media' %}">
+                                Media
+                            </a></li>
+
+                        <li><a href="{% url 'public:about' %}">
+                                About Us
+                            </a></li>
+
+                                <li>
+                                    <a href="{% url 'public:contact' %}">
+                                        Contact
+                                    </a>
+                                </li>
+
+                    </ul>
+
+                </div>
+                <!-- <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'public:home' %}"><i class="bi bi-chevron-right small me-2"></i>Home</a>
+                        </li>
+                        <li><a href="{% url 'public:about' %}"><i class="bi bi-chevron-right small me-2"></i>About
+                                Us</a></li>
+                        <li><a href="{% url 'buy:property_search' %}"><i class="bi bi-chevron-right small me-2"></i>Buy
+                                Property</a></li>
+                        <li><a href="{% url 'sell:sell_page' %}"><i class="bi bi-chevron-right small me-2"></i>Sell
+                                Property</a></li>
+                        <li><a href="{% url 'public:media' %}"><i class="bi bi-chevron-right small me-2"></i>Media
+                                Gallery</a></li>
+                    </ul>
+                </div> -->
+                <!-- Column 3: Property Types 
+                <div class="col-lg-2 col-md-6 mb-4">
+
+                    <h5>OUR SERVICES</h5>
+
+                    <ul class="list-unstyled footer-links">
+
+                        <li><a href="#">Managed Farmland</a></li>
+
+                        <li><a href="#">Agricultural Land</a></li>
+
+                        <li><a href="#">Farm Plots</a></li>
+
+                        <li><a href="#">Plantation Projects</a></li>
+
+                        <li><a href="#">Investment Consulting</a></li>
+
+                    </ul>
+
+                </div>
+                <!-- <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Property Types</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#"><i class="bi bi-chevron-right small me-2"></i>Residential Plots</a></li>
+                        <li><a href="#"><i class="bi bi-chevron-right small me-2"></i>Commercial Lands</a></li>
+                        <li><a href="#"><i class="bi bi-chevron-right small me-2"></i>Farm Lands</a></li>
+                        <li><a href="#"><i class="bi bi-chevron-right small me-2"></i>Industrial Lands</a></li>
+                        <li><a href="#"><i class="bi bi-chevron-right small me-2"></i>Gated Communities</a></li>
+                    </ul>
+                </div> -->
+                <!-- Column 4: Contact & Newsletter 
+                <div class="col-lg-3 col-md-6 mb-4">
+
+                    <h5>CONTACT US</h5>
+
+                    <ul class="list-unstyled contact-list">
+
+                        <li>
+                            <i class="bi bi-geo-alt"></i>
+                            123 Real Estate Blvd.
+                        </li>
+
+                        <li class="ps-4">
+                            City, Country
+                        </li>
+
+                        <li>
+                            <i class="bi bi-telephone"></i>
+                            +1 234 567 8900
+                        </li>
+
+                        <li>
+                            <i class="bi bi-envelope"></i>
+                            info@heydayrealty.in
+                        </li>
+
+                        <li>
+                            <i class="bi bi-clock"></i>
+                            Mon - Sat 9:00 AM - 7:00 PM
+                        </li>
+
+                    </ul>
+
+                </div>
+                <!-- <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Contact Information</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-3"><i class="bi bi-geo-alt-fill text-accent me-2"></i> 123 Real Estate Blvd, City,
+                            Country</li>
+                        <li class="mb-3"><i class="bi bi-telephone-fill text-accent me-2"></i> +91 9506688688</li>
+                        <li class="mb-3"><i class="bi bi-envelope-fill text-accent me-2"></i> info@heydayrealty.in</li>
+                    </ul>
+                    <h5 class="mt-4">Newsletter</h5>
+                    <div class="input-group mb-3">
+                        <input type="email" class="form-control" placeholder="Your email">
+                        <button class="btn btn-primary" type="button">Subscribe</button>
+                    </div>
+                </div> -->
+                <!-----coloumn 5 
+                <div class="col-lg-2 col-md-6 mb-4">
+
+                    <h5>NEWSLETTER</h5>
+
+                    <p class="footer-news-text">
+                        Stay updated with the latest
+                        properties and market insights.
+                    </p>
+
+                    <div class="newsletter-box">
+
+                        <input type="email" placeholder="Enter your email">
+
+                        <button>
+                            <i class="bi bi-send-fill"></i>
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="copyright-bar">
+            <div class="container text-center">
+                <p class="mb-0">&copy; 2026 HeyDay Realty. All Rights Reserved. Designed by <span
+                        class="text-white">Antigravity</span>.</p>
+            </div>
+        </div>
+    </footer> -->
+
+    <footer>
+    <div class="footer-inner">
+        <div class="footer-top">
+            <div class="footer-brand">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+                    <div style="width:38px;height:38px;background:linear-gradient(135deg,#2D6A4F,#40916C);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px">🌿</div>
+                    <div>
+                        <div class="footer-logo-text">HeyDay Realty</div>
+                        <div class="footer-logo-sub">Farmland Marketplace</div>
+                    </div>
+                </div>
+                <p>HeyDay Realty helps investors discover verified farmland opportunities, managed plantation projects, and long-term agricultural assets across India.</p>
+                <div class="footer-social">
+                    <a href="#">𝗙</a>
+                    <a href="#">◎</a>
+                    <a href="#">in</a>
+                    <a href="#">𝗫</a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <a href="{% url 'public:home' %}">Home</a>
+                <a href="{% url 'buy:property_search' %}">Buy Property</a>
+                <a href="{% url 'sell:sell_page' %}">Sell Property</a>
+                <a href="#">Media</a>
+                <a href="{% url 'public:about' %}">About Us</a>
+                <a href="{% url 'public:contact' %}">Contact</a>
+            </div>
+
+            <div class="footer-col">
+                <h4>Our Services</h4>
+                <a href="#">Managed Farmland</a>
+                <a href="#">Agricultural Land</a>
+                <a href="#">Farm Plots</a>
+                <a href="#">Plantation Projects</a>
+                <a href="#">Investment Consulting</a>
+            </div>
+
+            <!-- <div class="footer-col">
+                <h4>Contact Us</h4>
+                <div class="footer-contact-item">
+                    <span class="footer-contact-icon">📍</span>
+                    <span>123 Real Estate Blvd, City, India</span>
+                </div>
+                <div class="footer-contact-item">
+                    <span class="footer-contact-icon">📞</span>
+                    <span>+91 9506 688 688</span>
+                </div>
+                <div class="footer-contact-item">
+                    <span class="footer-contact-icon">✉</span>
+                    <span>info@heydayrealty.in</span>
+                </div>
+                <div class="footer-contact-item">
+                    <span class="footer-contact-icon">🕐</span>
+                    <span>Mon–Sat 9:00 AM – 7:00 PM</span>
+                </div>
+            </div> -->
+
+            <div class="footer-col">
+                <h4>Newsletter</h4>
+                <p style="font-size:14px;margin-bottom:14px;color:rgba(255,255,255,0.5);line-height:1.6">Stay updated with the latest properties and market insights.</p>
+                <div class="newsletter-form">
+                    <input type="email" placeholder="Your email address">
+                    <button>→</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <span>© 2026 HeyDay Realty. All Rights Reserved. Designed with ♥ in India.</span>
+            <div style="display:flex;gap:20px">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Use</a>
+                <a href="#">Sitemap</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    <!-- Sticky CTA (Global) -->
+    <!-- <div class="sticky-cta">
+        <p class="sticky-text d-none d-md-block mb-0">Ready to Own Premium Farmland?</p>
+        <a href="{% url 'public:contact' %}" class="btn btn-primary rounded-pill px-4 shadow">Book a Visit</a>
+    </div> -->
+    <div class="sticky-bar">
+    <span>Ready to own <em>Premium Farmland?</em></span>
+    <a href="{% url 'public:contact' %}" class="btn-sticky">Book a Visit</a>
+</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

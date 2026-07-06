@@ -1,0 +1,271 @@
+{% extends "administration/admin_base.html" %}
+
+{% load humanize %}
+
+{% block title %}Enquiry #{{ enquiry.enquiry_id }} - Admin Dashboard{% endblock %}
+
+{% block page_title %}Enquiry #{{ enquiry.enquiry_id }}{% endblock %}
+
+{% block page_subtitle %}Full enquiry details{% endblock %}
+
+{% block content %}
+
+<div class="row">
+
+    <!-- Left Column -->
+
+    <div class="col-md-7">
+
+        <div class="card mb-4">
+
+            <div class="card-header">
+
+                <h5 class="mb-0"><i class="fas fa-user"></i> Customer Information</h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <p><strong>Full Name:</strong> {{ enquiry.full_name }}</p>
+
+                <p><strong>Phone Number:</strong> {{ enquiry.phone_number|default:"-" }}</p>
+
+                <p><strong>Email Address:</strong> {{ enquiry.email|default:"-" }}</p>
+
+            </div>
+
+        </div>
+
+
+        <div class="card mb-4">
+
+            <div class="card-header">
+
+                <h5 class="mb-0"><i class="fas fa-chart-line"></i> Investment Requirement</h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <p><strong>Investment Budget:</strong> {{ enquiry.investment_budget|default:"-" }}</p>
+
+                <p><strong>Customer Message:</strong></p>
+
+                <div class="bg-light p-3 rounded">
+
+                    {{ enquiry.message|default:"-" }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Right Column -->
+
+    <div class="col-md-5">
+
+        <div class="card mb-4">
+
+            <div class="card-header">
+
+                <h5 class="mb-0"><i class="fas fa-toggle-on"></i> Enquiry Status</h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="mb-3" id="status-badge-container">
+
+                    {% if enquiry.status == 'new' %}<span class="badge bg-primary fs-6" id="status-badge">New</span>
+
+                    {% elif enquiry.status == 'contacted' %}<span class="badge bg-warning text-dark fs-6" id="status-badge">Contacted</span>
+
+                    {% elif enquiry.status == 'follow_up' %}<span class="badge bg-secondary fs-6" id="status-badge">Follow Up</span>
+
+                    {% elif enquiry.status == 'interested' %}<span class="badge fs-6" style="background-color:#6f42c1;color:#fff;" id="status-badge">Interested</span>
+
+                    {% elif enquiry.status == 'site_visit_scheduled' %}<span class="badge fs-6" style="background-color:#0d6efd;color:#fff;" id="status-badge">Site Visit Scheduled</span>
+
+                    {% elif enquiry.status == 'converted' %}<span class="badge bg-success fs-6" id="status-badge">Converted</span>
+
+                    {% elif enquiry.status == 'closed' %}<span class="badge bg-dark fs-6" id="status-badge">Closed</span>
+
+                    {% endif %}
+
+                </div>
+
+                <form id="status-update-form" method="POST">
+
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="update_status">
+
+                    <div class="mb-3">
+
+                        <select name="status" id="status-select" class="form-select">
+
+                            {% for value, label in status_choices %}
+
+                            <option value="{{ value }}" {% if enquiry.status == value %}selected{% endif %}>{{ label }}</option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100" id="update-status-btn">
+                        <span id="btn-text">Update Status</span>
+                        <span id="btn-spinner" class="spinner-border spinner-border-sm d-none" role="status"></span>
+                    </button>
+
+                </form>
+
+                <!-- Toast notification -->
+                <div id="status-toast" class="alert mt-3 d-none" role="alert"></div>
+
+            </div>
+
+        </div>
+
+        <div class="card mb-4">
+
+            <div class="card-header">
+
+                <h5 class="mb-0"><i class="fas fa-info-circle"></i> System Information</h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <p><strong>Enquiry ID:</strong> #{{ enquiry.enquiry_id }}</p>
+
+                <p><strong>Source:</strong> {{ enquiry.source }}</p>
+
+                <p><strong>Submitted:</strong> {{ enquiry.created_at|date:"d M, Y g:i A" }}</p>
+
+                <p><strong>Last Updated:</strong> {{ enquiry.updated_at|date:"d M, Y g:i A" }}</p>
+
+                <p><strong>IP Address:</strong> {{ enquiry.ip_address|default:"-" }}</p>
+
+                <p><strong>Browser/User Agent:</strong> <small class="text-muted">{{ enquiry.user_agent|default:"-"|truncatechars:80 }}</small></p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<a href="{% url 'admin_dash:inquiry-management-page' %}" class="btn btn-outline-secondary">
+
+    <i class="fas fa-arrow-left"></i> Back to All Enquiries
+
+</a>
+
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="fas fa-sticky-note"></i> Internal Notes <small class="text-muted">(Admin only)</small></h5>
+    </div>
+    <div class="card-body">
+        <form method="POST" class="mb-3">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="add_note">
+            <textarea name="note" class="form-control mb-2" rows="3" 
+                      placeholder="e.g. Customer is looking for farmland near Gorakhpur. Call scheduled for Friday." required></textarea>
+            <button type="submit" class="btn btn-outline-primary btn-sm">
+                <i class="fas fa-plus"></i> Add Note
+            </button>
+        </form>
+
+        {% if enquiry.admin_notes %}
+            <hr>
+            <h6 class="text-muted">Note History</h6>
+            <div class="bg-light p-3 rounded" style="white-space: pre-wrap; max-height: 300px; overflow-y: auto;">{{ enquiry.admin_notes }}</div>
+        {% else %}
+            <p class="text-muted mb-0">No notes added yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+    // Status badge color map
+    const badgeClassMap = {
+        'new':                   'badge bg-primary fs-6',
+        'contacted':             'badge bg-warning text-dark fs-6',
+        'follow_up':             'badge bg-secondary fs-6',
+        'interested':            'badge fs-6',
+        'site_visit_scheduled':  'badge fs-6',
+        'converted':             'badge bg-success fs-6',
+        'closed':                'badge bg-dark fs-6',
+    };
+    const badgeStyleMap = {
+        'interested':           'background-color:#6f42c1;color:#fff;',
+        'site_visit_scheduled': 'background-color:#0d6efd;color:#fff;',
+    };
+
+    const form    = document.getElementById('status-update-form');
+    const badge   = document.getElementById('status-badge');
+    const toast   = document.getElementById('status-toast');
+    const btnText = document.getElementById('btn-text');
+    const spinner = document.getElementById('btn-spinner');
+
+    function showToast(message, isSuccess) {
+        toast.textContent = message;
+        toast.className = 'alert mt-3 ' + (isSuccess ? 'alert-success' : 'alert-danger');
+        toast.classList.remove('d-none');
+        setTimeout(() => { toast.classList.add('d-none'); }, 3000);
+    }
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();  // Page reload band karo
+
+        const formData = new FormData(form);
+        const newStatus = document.getElementById('status-select').value;
+
+        // Button loading state
+        btnText.textContent = 'Updating...';
+        spinner.classList.remove('d-none');
+        form.querySelector('[type=submit]').disabled = true;
+
+        fetch(window.location.href, {
+            method: 'POST',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            body: formData,
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                // Badge update in-place
+                badge.className = badgeClassMap[newStatus] || 'badge bg-secondary fs-6';
+                badge.style.cssText = badgeStyleMap[newStatus] || '';
+                badge.textContent = data.new_status_display;
+
+                // Subtle flash animation
+                badge.style.transition = 'opacity 0.2s';
+                badge.style.opacity = '0';
+                setTimeout(() => { badge.style.opacity = '1'; }, 200);
+
+                showToast('✅ Status updated to: ' + data.new_status_display, true);
+            } else {
+                showToast('❌ ' + (data.error || 'Update failed'), false);
+            }
+        })
+        .catch(() => { showToast('❌ Network error. Please try again.', false); })
+        .finally(() => {
+            btnText.textContent = 'Update Status';
+            spinner.classList.add('d-none');
+            form.querySelector('[type=submit]').disabled = false;
+        });
+    });
+})();
+</script>
+{% endblock %}

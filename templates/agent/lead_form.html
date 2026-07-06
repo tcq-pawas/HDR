@@ -1,0 +1,129 @@
+{% extends "agent/agent_base.html" %}
+{% load static %}
+
+{% block title %}{{ title }} | HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/agent/lead_form.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="lead-form-container">
+    <!-- Header -->
+    <div class="page-header">
+        <h1>{{ title }}</h1>
+    </div>
+
+    <!-- Form -->
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.name.id_for_label }}">Lead Name *</label>
+                    {{ form.name }}
+                    {% if form.name.errors %}
+                        <div class="error-message">{{ form.name.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.phone.id_for_label }}">Phone Number *</label>
+                    {{ form.phone }}
+                    {% if form.phone.errors %}
+                        <div class="error-message">{{ form.phone.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.email.id_for_label }}">Email</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                        <div class="error-message">{{ form.email.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.property.id_for_label }}">Property Interest</label>
+                    {{ form.property }}
+                    {% if form.property.errors %}
+                        <div class="error-message">{{ form.property.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.status.id_for_label }}">Status *</label>
+                    {{ form.status }}
+                    {% if form.status.errors %}
+                        <div class="error-message">{{ form.status.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.source.id_for_label }}">Source *</label>
+                    {{ form.source }}
+                    {% if form.source.errors %}
+                        <div class="error-message">{{ form.source.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.priority.id_for_label }}">Priority *</label>
+                    {{ form.priority }}
+                    {% if form.priority.errors %}
+                        <div class="error-message">{{ form.priority.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.budget.id_for_label }}">Budget (₹)</label>
+                    {{ form.budget }}
+                    {% if form.budget.errors %}
+                        <div class="error-message">{{ form.budget.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.expected_close_date.id_for_label }}">Expected Close Date</label>
+                {{ form.expected_close_date }}
+                {% if form.expected_close_date.errors %}
+                    <div class="error-message">{{ form.expected_close_date.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.requirements.id_for_label }}">Requirements</label>
+                {{ form.requirements }}
+                {% if form.requirements.errors %}
+                    <div class="error-message">{{ form.requirements.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.notes.id_for_label }}">Notes</label>
+                {{ form.notes }}
+                {% if form.notes.errors %}
+                    <div class="error-message">{{ form.notes.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-lg"></i> Save Lead
+                </button>
+                <a href="{% if lead %}{% url 'agent:lead_detail' lead.id %}{% else %}{% url 'agent:lead_list' %}{% endif %}" class="btn btn-secondary">
+                    <i class="bi bi-x-lg"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

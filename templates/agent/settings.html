@@ -1,0 +1,173 @@
+{% extends "agent/agent_base.html" %}
+{% load static %}
+
+{% block title %}Settings | HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/agent/settings.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="settings-container">
+    <!-- Header -->
+    <div class="page-header">
+        <h1>Settings</h1>
+    </div>
+
+    <!-- Profile Form -->
+    <div class="settings-card" style="margin-bottom: 1.5rem;">
+        <h3>Profile Information</h3>
+        <form method="post" enctype="multipart/form-data" style="max-width: 600px;">
+            {% csrf_token %}
+            
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label style="display: block; font-weight: 600; color: #475569; margin-bottom: 0.5rem; font-size: 0.9rem;">First Name</label>
+                {{ form.first_name }}
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label style="display: block; font-weight: 600; color: #475569; margin-bottom: 0.5rem; font-size: 0.9rem;">Last Name</label>
+                {{ form.last_name }}
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label style="display: block; font-weight: 600; color: #475569; margin-bottom: 0.5rem; font-size: 0.9rem;">Email</label>
+                {{ form.email }}
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label style="display: block; font-weight: 600; color: #475569; margin-bottom: 0.5rem; font-size: 0.9rem;">Phone</label>
+                {{ form.phone }}
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label style="display: block; font-weight: 600; color: #475569; margin-bottom: 0.5rem; font-size: 0.9rem;">Company Name</label>
+                {{ form.company_name }}
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label style="display: block; font-weight: 600; color: #475569; margin-bottom: 0.5rem; font-size: 0.9rem;">Employee ID</label>
+                {{ form.employee_id }}
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label style="display: block; font-weight: 600; color: #475569; margin-bottom: 0.5rem; font-size: 0.9rem;">Territory</label>
+                {{ form.territory }}
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label style="display: block; font-weight: 600; color: #475569; margin-bottom: 0.5rem; font-size: 0.9rem;">Commission Rate (%)</label>
+                {{ form.commission_rate }}
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label style="display: block; font-weight: 600; color: #475569; margin-bottom: 0.5rem; font-size: 0.9rem;">Target Sales (₹)</label>
+                {{ form.target_sales }}
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label style="display: block; font-weight: 600; color: #475569; margin-bottom: 0.5rem; font-size: 0.9rem;">Bio</label>
+                {{ form.bio }}
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label style="display: block; font-weight: 600; color: #475569; margin-bottom: 0.5rem; font-size: 0.9rem;">Profile Image</label>
+                {{ form.profile_image }}
+            </div>
+
+            <div style="margin-top: 1.5rem;">
+                <button type="submit" class="settings-btn">Save Changes</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Settings Grid -->
+    <div class="settings-grid">
+        <!-- Notification Settings -->
+        <div class="settings-card">
+            <h3>Notifications</h3>
+            <div class="settings-item">
+                <div>
+                    <div class="settings-item-label">Email Notifications</div>
+                    <div class="settings-item-description">Receive email updates for new leads</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="settings-item">
+                <div>
+                    <div class="settings-item-label">SMS Notifications</div>
+                    <div class="settings-item-description">Receive SMS for urgent inquiries</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="settings-item">
+                <div>
+                    <div class="settings-item-label">Property Approval Alerts</div>
+                    <div class="settings-item-description">Get notified when properties are approved</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Privacy Settings -->
+        <div class="settings-card">
+            <h3>Privacy</h3>
+            <div class="settings-item">
+                <div>
+                    <div class="settings-item-label">Profile Visibility</div>
+                    <div class="settings-item-description">Make your profile visible to buyers</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="settings-item">
+                <div>
+                    <div class="settings-item-label">Show Contact Information</div>
+                    <div class="settings-item-description">Display phone and email on listings</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Account Settings -->
+        <div class="settings-card">
+            <h3>Account</h3>
+            <div class="settings-item">
+                <div>
+                    <div class="settings-item-label">Change Password</div>
+                    <div class="settings-item-description">Update your account password</div>
+                </div>
+                <button class="settings-btn secondary">Change</button>
+            </div>
+            <div class="settings-item">
+                <div>
+                    <div class="settings-item-label">Two-Factor Authentication</div>
+                    <div class="settings-item-description">Add extra security to your account</div>
+                </div>
+                <button class="settings-btn secondary">Enable</button>
+            </div>
+            <div class="settings-item">
+                <div>
+                    <div class="settings-item-label">Delete Account</div>
+                    <div class="settings-item-description">Permanently delete your account</div>
+                </div>
+                <button class="settings-btn" style="background: #ef4444;">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "agent/agent_base.html" %}
+{% load static %}
+
+{% block title %}{{ title }} | HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/agent/lead_followup_form.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="followup-form-container">
+    <!-- Header -->
+    <div class="page-header">
+        <h1>{{ title }}</h1>
+    </div>
+
+    <!-- Form -->
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="{{ form.follow_up_type.id_for_label }}">Follow-up Type *</label>
+                {{ form.follow_up_type }}
+                {% if form.follow_up_type.errors %}
+                    <div class="error-message">{{ form.follow_up_type.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.scheduled_date.id_for_label }}">Scheduled Date & Time</label>
+                {{ form.scheduled_date }}
+                {% if form.scheduled_date.errors %}
+                    <div class="error-message">{{ form.scheduled_date.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.notes.id_for_label }}">Notes *</label>
+                {{ form.notes }}
+                {% if form.notes.errors %}
+                    <div class="error-message">{{ form.notes.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-lg"></i> Save Follow-up
+                </button>
+                <a href="{% url 'agent:lead_detail' lead.id %}" class="btn btn-secondary">
+                    <i class="bi bi-x-lg"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

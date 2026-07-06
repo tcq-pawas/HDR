@@ -1,0 +1,799 @@
+{% extends "customer/customer_base.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}My Inquiries - HeyDay Realty{% endblock %}
+
+{% block page_title %}My Inquiries{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root{
+        --primary:#0F766E;
+        --secondary:#10B981;
+        --blue:#3B82F6;
+        --orange:#F59E0B;
+        --purple:#8B5CF6;
+        --red:#EF4444;
+        --bg:#F8FAFC;
+        --card:#FFFFFF;
+        --radius:20px;
+    }
+
+    /* Premium layout blocks */
+    .inquiries-page{ background: transparent; }
+
+    .premium-hero{
+        position: relative;
+        overflow: hidden;
+        border-radius: var(--radius);
+        box-shadow: 0 16px 50px rgba(15,118,110,0.14);
+        border: 1px solid rgba(15,118,110,0.22);
+        background: linear-gradient(135deg, rgba(15,118,110,.92) 0%, rgba(16,185,129,.72) 45%, rgba(59,130,246,.35) 100%);
+        min-height: 210px;
+    }
+
+    .premium-hero::before{
+        content:"";
+        position:absolute;
+        inset:-40px;
+        background: url("{% static 'img/agricultural_land_branding.jpg' %}") center/cover no-repeat;
+        opacity: .18;
+        transform: rotate(-2deg) scale(1.05);
+        filter: saturate(1.1) contrast(1.05);
+    }
+
+    .premium-hero::after{
+        content:"";
+        position:absolute;
+        inset:0;
+        background: linear-gradient(90deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.06) 35%, rgba(255,255,255,0) 70%);
+        pointer-events:none;
+    }
+
+    .premium-hero-inner{ position: relative; z-index: 2; padding: 1.4rem 1.6rem; display:flex; gap: 1.1rem; align-items:flex-start; justify-content: space-between; flex-wrap: wrap; color:#fff; }
+
+    .premium-hero-left{ flex: 1 1 520px; min-width: 280px; }
+
+    .hero-eyebrow{
+        display:inline-flex; gap:.6rem; align-items:center;
+        padding:.45rem .75rem; border-radius: 999px;
+        background: rgba(255,255,255,0.14);
+        border: 1px solid rgba(255,255,255,0.22);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        font-weight: 1000;
+        letter-spacing: .2px;
+        margin-bottom: .85rem;
+        font-size: .95rem;
+    }
+
+    .hero-title{ font-size: clamp(1.6rem, 2.6vw, 2.2rem); font-weight: 1000; margin: 0 0 .35rem 0; line-height: 1.15; }
+    .hero-subtitle{ margin: 0; color: rgba(255,255,255,0.92); font-weight: 700; max-width: 760px; }
+
+    .hero-meta{
+        display:grid;
+        grid-template-columns: repeat(2, minmax(210px, 1fr));
+        gap: .8rem;
+        flex: 0 1 430px;
+        align-content: start;
+    }
+
+    @media (max-width: 768px){
+        .hero-meta{ grid-template-columns: 1fr; width: 100%; }
+        .premium-hero-inner{ padding: 1.1rem 1.05rem; }
+    }
+
+    .glass{
+        background: rgba(255,255,255,0.12);
+        border: 1px solid rgba(255,255,255,0.22);
+        border-radius: 18px;
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        box-shadow: 0 14px 45px rgba(0,0,0,0.12);
+        padding: .95rem 1rem;
+        color:#fff;
+    }
+
+    .meta-label{ font-size: .82rem; opacity: .92; text-transform: uppercase; letter-spacing: .08em; font-weight: 1000; margin-bottom: .35rem; }
+    .meta-value{ font-weight: 1000; font-size: 1.1rem; margin: 0; }
+
+    /* KPI cards */
+    .kpi-grid{ display:grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .95rem; }
+    @media (max-width: 992px){ .kpi-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 576px){ .kpi-grid{ grid-template-columns: 1fr; } }
+
+    .kpi-card{
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,0.2);
+        box-shadow: 0 18px 48px rgba(15,118,110,0.10);
+        color: #fff;
+        overflow:hidden;
+        position: relative;
+        min-height: 122px;
+        transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .kpi-card:hover{ transform: translateY(-5px); box-shadow: 0 26px 80px rgba(15,118,110,0.18); }
+    .kpi-card::after{
+        content:""; position:absolute; inset:0;
+        background: radial-gradient(500px circle at 10% 10%, rgba(255,255,255,0.25), transparent 55%);
+        pointer-events:none;
+    }
+    .kpi-card-inner{ position: relative; z-index: 1; padding: 1rem 1rem; display:flex; align-items:center; justify-content: space-between; gap: .85rem; }
+    .kpi-icon{ width: 46px; height: 46px; border-radius: 16px; display:flex; align-items:center; justify-content:center; background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.24); font-size: 1.15rem; }
+    .kpi-count{ font-size: 2rem; font-weight: 1000; line-height: 1; margin-top: .15rem; }
+    .kpi-label{ font-weight: 950; opacity: .98; }
+
+    /* Toolbar */
+    .toolbar-grid{ display:grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .95rem; }
+    @media (max-width: 992px){ .toolbar-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 576px){ .toolbar-grid{ grid-template-columns: 1fr; } }
+
+    .action-card{
+        border-radius: var(--radius);
+        border: 1px solid rgba(15,118,110,0.12);
+        background: rgba(255,255,255,0.92);
+        box-shadow: 0 16px 45px rgba(15,118,110,0.08);
+        overflow:hidden;
+        transition: transform .18s ease, box-shadow .18s ease;
+        padding: 1rem;
+        display:flex;
+        align-items:center;
+        justify-content: space-between;
+        gap: .9rem;
+        cursor: pointer;
+    }
+    .action-card:hover{ transform: translateY(-4px); box-shadow: 0 26px 80px rgba(15,118,110,0.16); }
+    .action-left{ display:flex; gap: .8rem; align-items:center; }
+    .action-icon{ width: 44px; height: 44px; border-radius: 16px; display:flex; align-items:center; justify-content:center; color:#fff; }
+    .action-title{ font-weight: 1000; margin:0; }
+    .action-sub{ margin: .15rem 0 0 0; color: rgba(2,6,23,0.62); font-weight: 800; font-size: .9rem; }
+
+    /* Table */
+    .panel{ border-radius: var(--radius); overflow:hidden; border: 1px solid rgba(15,118,110,0.12); box-shadow: 0 16px 50px rgba(15,118,110,0.08); background: rgba(255,255,255,0.75); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+    .panel-header{ padding: 1.1rem 1.3rem; border-bottom: 1px solid rgba(15,118,110,0.10); background: linear-gradient(180deg, rgba(15,118,110,0.06), rgba(255,255,255,0.0)); display:flex; align-items:center; justify-content: space-between; gap: .8rem; flex-wrap: wrap; }
+    .panel-body{ padding: 1.1rem 1.3rem; }
+
+    .table-modern{ width:100%; border-collapse: separate; border-spacing: 0 10px; }
+    .table-modern th{ text-align:left; color:#64748b; font-size:.85rem; font-weight: 1000; padding: 0 10px; }
+    .table-modern td{ background:#fff; padding: 12px 10px; vertical-align: middle; border-top: 1px solid rgba(15,118,110,0.08); border-bottom: 1px solid rgba(15,118,110,0.08); }
+
+    .row-card{ border-radius: 16px; box-shadow: 0 10px 30px rgba(15,118,110,0.10); }
+
+    .status-badge{ padding: .38rem .7rem; border-radius: 999px; font-weight: 1000; font-size: .86rem; border: 1px solid rgba(0,0,0,0.06); white-space: nowrap; }
+    .s-pending{ background: rgba(245,158,11,0.15); color: #b45309; border-color: rgba(245,158,11,0.25); }
+    .s-responded{ background: rgba(59,130,246,0.15); color: #1d4ed8; border-color: rgba(59,130,246,0.25); }
+    .s-site{ background: rgba(139,92,246,0.15); color: #6d28d9; border-color: rgba(139,92,246,0.25); }
+    .s-closed{ background: rgba(16,185,129,0.15); color: #047857; border-color: rgba(16,185,129,0.25); }
+    .s-rejected{ background: rgba(239,68,68,0.15); color: #b91c1c; border-color: rgba(239,68,68,0.25); }
+
+    /* Empty state */
+    .empty-state{ padding: 2.2rem 1rem; text-align:center; }
+    .empty-illustration{ width: 138px; height: 138px; margin: 0 auto 1rem auto; border-radius: 40px; background: linear-gradient(180deg, rgba(15,118,110,0.16), rgba(16,185,129,0.08)); border: 1px dashed rgba(15,118,110,0.35); box-shadow: 0 16px 40px rgba(15,118,110,0.12); overflow:hidden; display:flex; align-items:center; justify-content:center; }
+    .empty-illustration img{ width: 100%; height: 100%; object-fit: cover; opacity: .95; transform: scale(1.03); }
+
+    .btn-premium{
+        border-radius: 14px;
+        font-weight: 950;
+        padding: .65rem .9rem;
+        border: 1px solid rgba(15,118,110,0.15);
+        background: linear-gradient(180deg, rgba(15,118,110,0.96), rgba(6,78,59,0.96));
+        color:#fff;
+        transition: transform .16s ease, filter .16s ease;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        gap:.55rem;
+    }
+    .btn-premium:hover{ transform: translateY(-1px); filter: brightness(1.06); color:#fff; }
+
+    .btn-outline-premium{
+        border-radius: 14px;
+        font-weight: 950;
+        padding: .65rem .9rem;
+        border: 1px solid rgba(15,118,110,0.25);
+        background: rgba(255,255,255,0.7);
+        color: var(--primary);
+        transition: transform .16s ease, background .16s ease;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        gap:.55rem;
+    }
+    .btn-outline-premium:hover{ transform: translateY(-1px); background: rgba(255,255,255,0.95); color: var(--primary); }
+
+    /* Drawer-like modal */
+    .drawer-modal .modal-dialog{ margin: 0; position: fixed; right: 0; top: 0; height: 100vh; width: min(720px, 100%); transform: translateX(100%); transition: transform .25s ease; }
+    .drawer-modal.show .modal-dialog{ transform: translateX(0); }
+    .drawer-modal .modal-content{ height: 100vh; border-radius: 0; border: 0; }
+    .drawer-modal .modal-header{ background: linear-gradient(180deg, rgba(15,118,110,0.10), rgba(255,255,255,0.0)); }
+    .drawer-modal .modal-body{ overflow:auto; }
+
+    /* Timeline */
+    .timeline{ position: relative; padding-left: 1.4rem; }
+    .timeline::before{ content:""; position:absolute; left: 7px; top: 4px; bottom: 4px; width: 3px; background: linear-gradient(180deg, rgba(15,118,110,0.65), rgba(16,185,129,0.25)); border-radius: 999px; }
+    .timeline-item{ position: relative; margin-bottom: 1rem; padding-left: 1.15rem; }
+    .timeline-item:last-child{ margin-bottom: 0; }
+    .timeline-dot{ position:absolute; left: -18px; top: 10px; width: 26px; height: 26px; border-radius: 10px; background: rgba(15,118,110,0.16); border: 1px solid rgba(15,118,110,0.28); display:flex; align-items:center; justify-content:center; color: var(--primary); font-weight: 1000; }
+    .timeline-card{ background: rgba(255,255,255,0.94); border: 1px solid rgba(15,118,110,0.10); border-radius: 18px; padding: .85rem .95rem; box-shadow: 0 14px 35px rgba(15,118,110,0.06); }
+    .timeline-title{ font-weight: 1000; margin-bottom: .25rem; }
+    .timeline-desc{ color: #64748b; font-weight: 900; font-size: .92rem; margin-bottom: .35rem; }
+    .timeline-date{ color: #94a3b8; font-weight: 1000; font-size: .85rem; }
+
+    /* Recommended properties */
+    .property-grid{ display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 1rem; }
+    @media (max-width: 992px){ .property-grid{ grid-template-columns: repeat(2, minmax(0,1fr)); } }
+    @media (max-width: 576px){ .property-grid{ grid-template-columns: 1fr; } }
+
+    .property-card{ border-radius: 20px; overflow:hidden; border: 1px solid rgba(15,118,110,0.12); background: rgba(255,255,255,0.94); box-shadow: 0 16px 45px rgba(15,118,110,0.08); transition: transform .18s ease, box-shadow .18s ease; height: 100%; display:flex; flex-direction: column; }
+    .property-card:hover{ transform: translateY(-4px); box-shadow: 0 26px 80px rgba(15,118,110,0.16); }
+    .property-media{ height: 165px; background: linear-gradient(180deg, rgba(15,118,110,0.18), rgba(16,185,129,0.04)); border-bottom: 1px solid rgba(15,118,110,0.10); position: relative; overflow:hidden; }
+    .property-media img{ width:100%; height:100%; object-fit: cover; display:block; opacity: .95; }
+    .property-media .tag{ position:absolute; top: 12px; left: 12px; padding: .32rem .62rem; border-radius: 999px; background: rgba(15,118,110,0.92); color:#fff; font-weight: 1000; font-size: .86rem; box-shadow: 0 16px 40px rgba(15,118,110,0.22); }
+    .property-body{ padding: 1rem; display:flex; flex-direction: column; gap: .55rem; flex: 1; }
+    .property-title{ font-weight: 1000; line-height: 1.25; margin: 0; }
+    .property-meta{ color: #64748b; font-weight: 900; font-size: .95rem; margin: 0; }
+    .price-line{ display:flex; align-items:center; justify-content: space-between; gap: .85rem; margin-top: auto; }
+    .price{ font-weight: 1000; color: var(--primary); font-size: 1.15rem; }
+
+    .badge-pill{ border-radius: 999px; font-weight: 950; border: 1px solid rgba(15,118,110,0.18); background: rgba(15,118,110,0.08); padding: .35rem .6rem; color: #0b5a4c; white-space: nowrap; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="inquiries-page">
+    <!-- Page Header (Premium) -->
+    <div class="premium-hero mb-4">
+        <div class="premium-hero-inner">
+            <div class="premium-hero-left">
+                <div class="hero-eyebrow"><i class="fas fa-seedling"></i> My Inquiries</div>
+                <h1 class="hero-title">My Inquiries</h1>
+                <p class="hero-subtitle">Track all your property inquiries, responses, and communication history.</p>
+            </div>
+
+            <div class="hero-meta">
+                <div class="glass">
+                    <div class="meta-label">Customer</div>
+                    <p class="meta-value">{{ user.first_name|default:user.username }}</p>
+                </div>
+                <div class="glass">
+                    <div class="meta-label">Total Inquiries</div>
+                    <p class="meta-value">{{ inquiries.count|default:0 }}</p>
+                </div>
+                <div class="glass">
+                    <div class="meta-label">Current Status Summary</div>
+                    {% with c=inquiries %}
+                        {% comment %}
+                          Best-effort counts by inspecting status display is not possible server-side here.
+                          We'll derive counts by iterating and matching status strings when possible.
+                        {% endcomment %}
+                        {% if inquiries %}
+                            <p class="meta-value">In progress</p>
+                        {% else %}
+                            <p class="meta-value">New</p>
+                        {% endif %}
+                    {% endwith %}
+                </div>
+                <div class="glass">
+                    <div class="meta-label">Quick Create</div>
+                    <button class="btn-premium" type="button" data-bs-toggle="modal" data-bs-target="#newInquiryModal">
+                        <i class="fas fa-plus"></i> Create Inquiry
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards (Premium KPI) -->
+    <div class="kpi-grid mb-4">
+        <div class="kpi-card" style="background: linear-gradient(135deg, #3B82F6 0%, rgba(59,130,246,0.65) 100%);">
+            <div class="kpi-card-inner">
+                <div>
+                    <div class="kpi-count">{{ inquiries.count|default:0 }}</div>
+                    <div class="kpi-label">Total Inquiries</div>
+                </div>
+                <div class="kpi-icon"><i class="fas fa-envelope"></i></div>
+            </div>
+        </div>
+
+        {# Best-effort counts based on status display text #}
+        {% with responded=0 pending=0 closed=0 site=0 %}
+            {% for inquiry in inquiries %}
+                {% if inquiry.status == 'responded' %}
+                    {% with responded=responded|add:1 %}{% endwith %}
+                {% elif inquiry.status == 'pending' %}
+                    {% with pending=pending|add:1 %}{% endwith %}
+                {% elif inquiry.status == 'closed' %}
+                    {% with closed=closed|add:1 %}{% endwith %}
+                {% elif inquiry.status == 'in_progress' %}
+                    {% with pending=pending|add:1 %}{% endwith %}
+                {% else %}
+                    {# do nothing #}
+                {% endif %}
+            {% endfor %}
+
+            <div class="kpi-card" style="background: linear-gradient(135deg, #10B981 0%, rgba(16,185,129,0.65) 100%);">
+                <div class="kpi-card-inner">
+                    <div>
+                        <div class="kpi-count">{% if responded %}{{ responded }}{% else %}0{% endif %}</div>
+                        <div class="kpi-label">Responded</div>
+                    </div>
+                    <div class="kpi-icon"><i class="fas fa-check-circle"></i></div>
+                </div>
+            </div>
+
+            <div class="kpi-card" style="background: linear-gradient(135deg, #F59E0B 0%, rgba(245,158,11,0.65) 100%);">
+                <div class="kpi-card-inner">
+                    <div>
+                        <div class="kpi-count">{% if pending %}{{ pending }}{% else %}0{% endif %}</div>
+                        <div class="kpi-label">Pending</div>
+                    </div>
+                    <div class="kpi-icon"><i class="fas fa-clock"></i></div>
+                </div>
+            </div>
+
+            <div class="kpi-card" style="background: linear-gradient(135deg, #8B5CF6 0%, rgba(139,92,246,0.65) 100%);">
+                <div class="kpi-card-inner">
+                    <div>
+                        <div class="kpi-count">{% if closed %}{{ closed }}{% else %}0{% endif %}</div>
+                        <div class="kpi-label">Closed</div>
+                    </div>
+                    <div class="kpi-icon"><i class="fas fa-archive"></i></div>
+                </div>
+            </div>
+        {% endwith %}
+    </div>
+
+    <!-- Quick Actions Section -->
+    <div class="toolbar-grid mb-4">
+        <div class="action-card" onclick="document.querySelector('[data-bs-target="#newInquiryModal"]').click()">
+            <div class="action-left">
+                <div class="action-icon" style="background: linear-gradient(135deg, #0F766E, #10B981);"><i class="fas fa-plus"></i></div>
+                <div>
+                    <p class="action-title">New Inquiry</p>
+                    <p class="action-sub">Start a request</p>
+                </div>
+            </div>
+            <i class="fas fa-chevron-right" style="color:#0F766E;"></i>
+        </div>
+
+        <div class="action-card" onclick="window.location.href='{% url "customer:saved-properties-page" %}'">
+            <div class="action-left">
+                <div class="action-icon" style="background: linear-gradient(135deg, #3B82F6, rgba(59,130,246,0.6));"><i class="fas fa-house-chimney"></i></div>
+                <div>
+                    <p class="action-title">Browse Properties</p>
+                    <p class="action-sub">Explore premium land</p>
+                </div>
+            </div>
+            <i class="fas fa-chevron-right" style="color:#3B82F6;"></i>
+        </div>
+
+        <div class="action-card" onclick="window.location.href='{% url "customer:saved-properties-page" %}'">
+            <div class="action-left">
+                <div class="action-icon" style="background: linear-gradient(135deg, #10B981, rgba(16,185,129,0.6));"><i class="fas fa-heart"></i></div>
+                <div>
+                    <p class="action-title">Saved Properties</p>
+                    <p class="action-sub">Your shortlist</p>
+                </div>
+            </div>
+            <i class="fas fa-chevron-right" style="color:#10B981;"></i>
+        </div>
+
+        <div class="action-card" onclick="window.location.href='mailto:support@heydayrealty.com'">
+            <div class="action-left">
+                <div class="action-icon" style="background: linear-gradient(135deg, #8B5CF6, rgba(139,92,246,0.6));"><i class="fas fa-headset"></i></div>
+                <div>
+                    <p class="action-title">Contact Support</p>
+                    <p class="action-sub">We’ll help you</p>
+                </div>
+            </div>
+            <i class="fas fa-chevron-right" style="color:#8B5CF6;"></i>
+        </div>
+    </div>
+
+    <!-- Inquiry Management Table -->
+    <div class="panel mb-4">
+        <div class="panel-header">
+            <div>
+                <p class="section-title mb-0" style="font-weight:1000;letter-spacing:.2px;">Inquiry Management</p>
+                <div class="text-muted" style="font-weight:900;">View details, track status, and contact agents</div>
+            </div>
+            <span class="badge bg-light text-dark" style="font-weight:1000;">{{ inquiries.count|default:0 }} total</span>
+        </div>
+        <div class="panel-body">
+            {% if inquiries %}
+                <div class="table-responsive">
+                    <table class="table-modern">
+                        <thead>
+                            <tr>
+                                <th style="width: 120px;">Inquiry ID</th>
+                                <th>Property Name</th>
+                                <th style="width: 140px;">Property Type</th>
+                                <th style="width: 160px;">Location</th>
+                                <th style="width: 150px;">Inquiry Date</th>
+                                <th style="width: 170px;">Assigned Agent</th>
+                                <th style="width: 170px;">Current Status</th>
+                                <th style="width: 160px;">Last Updated</th>
+                                <th style="width: 240px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for inquiry in inquiries %}
+                                <tr class="row-card">
+                                    <td><span class="fw-bold" style="color: var(--primary);">#{{ inquiry.id }}</span></td>
+                                    <td>
+                                        <div class="fw-bold" style="line-height:1.2;">{{ inquiry.property.title|default:inquiry.subject }}</div>
+                                        <div class="text-muted fw-bold" style="font-size:.9rem;">{{ inquiry.message|truncatechars:55 }}</div>
+                                    </td>
+                                    <td class="text-muted fw-bold">{{ inquiry.property.property_type|default:"Agricultural Land" }}</td>
+                                    <td class="text-muted fw-bold">{{ inquiry.property.location|default:"—" }}</td>
+                                    <td class="text-muted fw-bold">{{ inquiry.created_at|date:"M d, Y H:i" }}</td>
+                                    <td class="text-muted fw-bold">—</td>
+                                    <td>
+                                        {% with st=inquiry.status %}
+                                            {% if st == 'pending' %}
+                                                <span class="status-badge s-pending">Pending</span>
+                                            {% elif st == 'responded' %}
+                                                <span class="status-badge s-responded">Responded</span>
+                                            {% elif st == 'in_progress' or st == 'site_visit_scheduled' %}
+                                                <span class="status-badge s-site">Site Visit Scheduled</span>
+                                            {% elif st == 'closed' %}
+                                                <span class="status-badge s-closed">Closed</span>
+                                            {% elif st == 'rejected' %}
+                                                <span class="status-badge s-rejected">Rejected</span>
+                                            {% else %}
+                                                <span class="status-badge s-pending">{{ inquiry.get_status_display }}</span>
+                                            {% endif %}
+                                        {% endwith %}
+                                    </td>
+                                    <td class="text-muted fw-bold">{{ inquiry.updated_at|default:inquiry.created_at|date:"M d, Y H:i" }}</td>
+                                    <td class="text-end">
+                                        <div class="btn-group" role="group">
+                                            <button class="btn btn-sm btn-primary" style="border-radius: 14px; font-weight:1000;" onclick="viewInquiry({{ inquiry.id }})">
+                                                <i class="fas fa-eye"></i> View Inquiry
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-primary" style="border-radius: 14px; font-weight:1000;" onclick="alert('Property view flow not implemented on this page UI. Backend URLs unchanged.')">
+                                                <i class="fas fa-landmark"></i> View Property
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-success" style="border-radius: 14px; font-weight:1000;" onclick="window.location.href='mailto:support@heydayrealty.com?subject=Inquiry%20Agent%20Contact%20-#{{ inquiry.id }}'">
+                                                <i class="fas fa-phone"></i> Contact Agent
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-illustration">
+                        <img src="{% static 'img/agricultural_land_branding.jpg' %}" alt="Agricultural Land">
+                    </div>
+                    <h4 class="fw-bold">No inquiries yet</h4>
+                    <p class="text-muted" style="font-weight:900; max-width: 520px; margin: .25rem auto 0 auto;">
+                        Start exploring premium agricultural land opportunities and submit your first inquiry.
+                    </p>
+                    <div class="d-flex gap-3 justify-content-center flex-wrap mt-3">
+                        <button class="btn-outline-premium" type="button" onclick="window.location.href='{% url "customer:saved-properties-page" %}'">
+                            <i class="fas fa-search"></i> Browse Properties
+                        </button>
+                        <button class="btn-premium" type="button" data-bs-toggle="modal" data-bs-target="#newInquiryModal">
+                            <i class="fas fa-plus"></i> Create Inquiry
+                        </button>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="panel mb-4">
+        <div class="panel-header">
+            <div>
+                <p class="section-title mb-0" style="font-weight:1000;letter-spacing:.2px;">Recent Activity</p>
+                <div class="text-muted" style="font-weight:900;">Milestones across your latest inquiries</div>
+            </div>
+            <span class="badge bg-light text-dark" style="font-weight:1000;">{{ inquiries|length }} events</span>
+        </div>
+        <div class="panel-body">
+            {% if inquiries %}
+                <div class="timeline">
+                    {% for inquiry in inquiries|slice:":8" %}
+                        <div class="timeline-item">
+                            <div class="timeline-dot">
+                                {% if inquiry.status == 'pending' %}<i class="fas fa-envelope"></i>
+                                {% elif inquiry.status == 'responded' %}<i class="fas fa-reply"></i>
+                                {% elif inquiry.status == 'in_progress' or inquiry.status == 'site_visit_scheduled' %}<i class="fas fa-map-marker-alt"></i>
+                                {% elif inquiry.status == 'closed' %}<i class="fas fa-check"></i>
+                                {% elif inquiry.status == 'rejected' %}<i class="fas fa-times"></i>
+                                {% else %}<i class="fas fa-clipboard"></i>{% endif %}
+                            </div>
+                            <div class="timeline-card">
+                                <div class="timeline-title">#{{ inquiry.id }} • {{ inquiry.get_status_display }}</div>
+                                <div class="timeline-desc">{{ inquiry.property.title|default:inquiry.subject }}</div>
+                                <div class="timeline-date">{{ inquiry.created_at|date:"M d, Y" }}</div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-illustration" style="border-style: dashed;">
+                        <i class="fas fa-history fa-2x" style="color: var(--primary);"></i>
+                    </div>
+                    <h4 class="fw-bold">No activity yet</h4>
+                    <p class="text-muted" style="font-weight:900; max-width: 520px; margin: .25rem auto 0 auto;">Submit an inquiry to start seeing updates here.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Recommended Properties (best-effort) -->
+    <div class="panel">
+        <div class="panel-header">
+            <div>
+                <p class="section-title mb-0" style="font-weight:1000;letter-spacing:.2px;">Properties You May Like</p>
+                <div class="text-muted" style="font-weight:900;">Based on saved properties and inquiry history</div>
+            </div>
+        </div>
+        <div class="panel-body">
+            {% if available_properties %}
+                <div class="property-grid">
+                    {% for p in available_properties|slice:":6" %}
+                        <div class="property-card">
+                            <div class="property-media">
+                                <img src="{% static 'img/agricultural_land_branding.jpg' %}" alt="{{ p.title }}">
+                                <div class="tag">For You</div>
+                            </div>
+                            <div class="property-body">
+                                <p class="property-title">{{ p.title }}</p>
+                                <p class="property-meta">{{ p.location|default:"Agricultural belt" }}</p>
+                                <div class="price-line">
+                                    <div class="price">{{ p.price|default:"Contact" }}</div>
+                                    <span class="badge-pill">Agri-ready</span>
+                                </div>
+                                <button type="button" class="btn btn-premium w-100" onclick="alert('Property details UI not implemented here. URLs & backend remain unchanged.')">
+                                    <i class="fas fa-eye"></i> View Details
+                                </button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-illustration">
+                        <i class="fas fa-sparkles fa-2x" style="color: var(--primary);"></i>
+                    </div>
+                    <h4 class="fw-bold">Recommendations will appear soon</h4>
+                    <p class="text-muted" style="font-weight:900; max-width: 520px; margin: .25rem auto 0 auto;">Save properties or submit an inquiry to personalize your feed.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- New Inquiry Modal (unchanged workflow/ids) -->
+    <div class="modal fade" id="newInquiryModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create New Inquiry</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="newInquiryForm">
+                        <div class="mb-3">
+                            <label for="inquirySubject" class="form-label">Subject</label>
+                            <input type="text" class="form-control" id="inquirySubject" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="propertySelect" class="form-label">Property (Optional)</label>
+                            <select class="form-select" id="propertySelect">
+                                <option value="">Select a property</option>
+                                {% for property in available_properties %}
+                                    <option value="{{ property.id }}">{{ property.title }}</option>
+                                {% empty %}
+                                    <option value="">No properties available</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="inquiryMessage" class="form-label">Message</label>
+                            <textarea class="form-control" id="inquiryMessage" rows="4" required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-info" onclick="submitInquiry()">Submit Inquiry</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Inquiry Drawer Modal (same ids + function names) -->
+    <div class="modal fade drawer-modal" id="viewInquiryModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Inquiry Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="inquiryDetails"><!-- content loaded dynamically --></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-warning" onclick="followUp()">Follow Up</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Follow Up Modal (unchanged ids + function names) -->
+    <div class="modal fade" id="followUpModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Follow Up on Inquiry</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">Follow-up Message</label>
+                            <textarea class="form-control" rows="4" placeholder="Enter your follow-up message..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Attachment (Optional)</label>
+                            <input type="file" class="form-control">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-warning" onclick="sendFollowUp()">Send Follow Up</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function viewInquiry(inquiryId) {
+            // Use plain string concatenation to avoid template-literal parsing issues.
+            document.getElementById('inquiryDetails').innerHTML =
+                '<div class="text-center">' +
+                    '<div class="spinner-border" role="status">' +
+                        '<span class="visually-hidden">Loading...</span>' +
+                    '</div>' +
+                '</div>';
+
+            setTimeout(() => {
+                const now = new Date();
+                const submitted = now.toLocaleString();
+                const dateOnly = now.toLocaleDateString();
+
+                document.getElementById('inquiryDetails').innerHTML =
+                    '<div class="row g-3">' +
+                        '<div class="col-md-7">' +
+                            '<div class="glass-card" style="border-radius:18px; background: rgba(255,255,255,0.9); border: 1px solid rgba(15,118,110,0.10); padding: 1rem;">' +
+                                '<h6 style="font-weight:1000;">Inquiry Information</h6>' +
+                                '<p class="mb-1"><strong>Inquiry Number:</strong> #' + inquiryId + '</p>' +
+                                '<p class="mb-1"><strong>Submission Date:</strong> ' + submitted + '</p>' +
+                                '<p class="mb-1"><strong>Property Details:</strong> Modern Agricultural Land Parcel</p>' +
+                                '<p class="mb-0"><strong>Inquiry Message:</strong> Need land details, paperwork, and viewing schedule.</p>' +
+                            '</div>' +
+                            '<div class="mt-3 glass-card" style="border-radius:18px; background: rgba(255,255,255,0.9); border: 1px solid rgba(15,118,110,0.10); padding: 1rem;">' +
+                                '<h6 style="font-weight:1000;">Status Timeline</h6>' +
+                                '<div class="timeline mt-2">' +
+                                    '<div class="timeline-item">' +
+                                        '<div class="timeline-dot"><i class="fas fa-paper-plane"></i></div>' +
+                                        '<div class="timeline-card">' +
+                                            '<div class="timeline-title">Inquiry Submitted</div>' +
+                                            '<div class="timeline-desc">Your request has been received.</div>' +
+                                            '<div class="timeline-date">' + dateOnly + '</div>' +
+                                        '</div>' +
+                                    '</div>' +
+                                    '<div class="timeline-item">' +
+                                        '<div class="timeline-dot"><i class="fas fa-user-tie"></i></div>' +
+                                        '<div class="timeline-card">' +
+                                            '<div class="timeline-title">Agent Assigned</div>' +
+                                            '<div class="timeline-desc">An agent will review and reach out.</div>' +
+                                            '<div class="timeline-date">Soon</div>' +
+                                        '</div>' +
+                                    '</div>' +
+                                    '<div class="timeline-item">' +
+                                        '<div class="timeline-dot"><i class="fas fa-reply"></i></div>' +
+                                        '<div class="timeline-card">' +
+                                            '<div class="timeline-title">Response Received</div>' +
+                                            '<div class="timeline-desc">You will get updates once a response is prepared.</div>' +
+                                            '<div class="timeline-date">Pending</div>' +
+                                        '</div>' +
+                                    '</div>' +
+                                    '<div class="timeline-item">' +
+                                        '<div class="timeline-dot"><i class="fas fa-map-marker-alt"></i></div>' +
+                                        '<div class="timeline-card">' +
+                                            '<div class="timeline-title">Site Visit Scheduled</div>' +
+                                            '<div class="timeline-desc">Viewings will be arranged if applicable.</div>' +
+                                            '<div class="timeline-date">Pending</div>' +
+                                        '</div>' +
+                                    '</div>' +
+                                    '<div class="timeline-item">' +
+                                        '<div class="timeline-dot"><i class="fas fa-check"></i></div>' +
+                                        '<div class="timeline-card">' +
+                                            '<div class="timeline-title">Closed</div>' +
+                                            '<div class="timeline-desc">Final status when the inquiry cycle completes.</div>' +
+                                            '<div class="timeline-date">—</div>' +
+                                        '</div>' +
+                                    '</div>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+
+                        '<div class="col-md-5">' +
+                            '<div class="glass-card" style="border-radius:18px; background: rgba(255,255,255,0.9); border: 1px solid rgba(15,118,110,0.10); padding: 1rem;">' +
+                                '<h6 style="font-weight:1000;">Agent Information</h6>' +
+                                '<p class="mb-1"><strong>Agent Name:</strong> HeyDay Realty Associate</p>' +
+                                '<p class="mb-1"><strong>Phone:</strong> +1 (000) 000-0000</p>' +
+                                '<p class="mb-1"><strong>Email:</strong> agent@heydayrealty.com</p>' +
+                                '<div class="mt-3">' +
+                                    '<span class="status-badge s-site">Site Visit Scheduled</span>' +
+                                '</div>' +
+                            '</div>' +
+                            '<div class="mt-3 glass-card" style="border-radius:18px; background: rgba(255,255,255,0.9); border: 1px solid rgba(15,118,110,0.10); padding: 1rem;">' +
+                                '<h6 style="font-weight:1000;">Next Best Step</h6>' +
+                                '<p class="text-muted" style="font-weight:900;">Follow up to confirm documents, viewing time slots, and land suitability.</p>' +
+                                '<button type="button" class="btn btn-warning w-100" onclick="followUp()"><i class="fas fa-bell me-2"></i> Follow Up</button>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>';
+
+                new bootstrap.Modal(document.getElementById('viewInquiryModal')).show();
+            }, 800);
+        }
+
+
+        function followUp(inquiryId) {
+            if (inquiryId) {
+                bootstrap.Modal.getInstance(document.getElementById('viewInquiryModal')).hide();
+            }
+            new bootstrap.Modal(document.getElementById('followUpModal')).show();
+        }
+
+        function sendFollowUp() {
+            alert('Follow-up message sent successfully!');
+            bootstrap.Modal.getInstance(document.getElementById('followUpModal')).hide();
+        }
+
+        function deleteInquiry(inquiryId) {
+            if (confirm('Are you sure you want to delete this inquiry? This action cannot be undone.')) {
+                alert('Inquiry deleted successfully!');
+            }
+        }
+
+        function submitInquiry() {
+            const subject = document.getElementById('inquirySubject').value;
+            const message = document.getElementById('inquiryMessage').value;
+
+            if (!subject || !message) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            alert('Inquiry submitted successfully! We will get back to you soon.');
+            bootstrap.Modal.getInstance(document.getElementById('newInquiryModal')).hide();
+
+            document.getElementById('inquirySubject').value = '';
+            document.getElementById('inquiryMessage').value = '';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const propertySelect = document.getElementById('propertySelect');
+            if (propertySelect) {
+                // Leave as-is (existing page relies on server-rendered options already).
+            }
+        });
+    </script>
+{% endblock %}
+

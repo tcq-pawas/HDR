@@ -1,0 +1,1455 @@
+{% load static %}
+
+{% load humanize %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}Admin Dashboard - HeyDay Realty{% endblock %}</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+
+        :root {
+
+            --primary: #0F766E;
+
+            --primary-light: #14B8A6;
+
+            --primary-dark: #0D5F57;
+
+            --secondary: #10B981;
+
+            --accent: #F59E0B;
+
+            --background: #F8FAFC;
+
+            --surface: #FFFFFF;
+
+            --text-primary: #1E293B;
+
+            --text-secondary: #64748B;
+
+            --border: #E2E8F0;
+
+            --success: #10B981;
+
+            --warning: #F59E0B;
+
+            --danger: #EF4444;
+
+            --info: #3B82F6;
+
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+            --radius: 16px;
+
+            --radius-sm: 8px;
+
+            --radius-lg: 24px;
+
+        }
+
+
+
+        * {
+
+            margin: 0;
+
+            padding: 0;
+
+            box-sizing: border-box;
+
+        }
+
+        
+
+        body {
+
+            background-color: var(--background);
+
+            font-family: 'Inter', sans-serif;
+
+            color: var(--text-primary);
+
+            overflow-x: hidden;
+
+            line-height: 1.6;
+
+        }
+
+        
+
+        h1, h2, h3, h4, h5, h6 {
+
+            font-family: 'Poppins', sans-serif;
+
+            font-weight: 600;
+
+            color: var(--text-primary);
+
+        }
+
+        
+
+        /* App Container */
+
+        .app-container {
+
+            display: flex;
+
+            min-height: 100vh;
+
+        }
+
+        
+
+        /* Sidebar Styles */
+
+        .sidebar {
+
+            background: linear-gradient(180deg, var(--primary) 0%, var(--primary-dark) 100%);
+
+            min-height: 100vh;
+
+            color: white;
+
+            width: 280px;
+
+            position: fixed;
+
+            top: 0;
+
+            left: 0;
+
+            z-index: 1000;
+
+            display: flex;
+
+            flex-direction: column;
+
+            overflow-y: auto;
+
+            overflow-x: hidden;
+
+            transition: transform 0.3s ease;
+
+            backdrop-filter: blur(10px);
+
+        }
+
+        
+
+        .sidebar-brand {
+
+            padding: 24px;
+
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+        }
+
+        
+
+        .sidebar-brand h5 {
+
+            font-family: 'Poppins', sans-serif;
+
+            font-weight: 700;
+
+            font-size: 1.25rem;
+
+            margin: 0;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+        }
+
+        
+
+        .sidebar .nav-link {
+
+            color: rgba(255, 255, 255, 0.85);
+
+            border-radius: var(--radius-sm);
+
+            margin: 4px 12px;
+
+            padding: 12px 16px;
+
+            transition: all 0.3s ease;
+
+            display: flex;
+
+            align-items: center;
+
+            text-decoration: none;
+
+            font-weight: 500;
+
+            font-size: 0.9rem;
+
+        }
+
+        
+
+        .sidebar .nav-link:hover,
+
+        .sidebar .nav-link.active {
+
+            color: white;
+
+            background: rgba(255, 255, 255, 0.15);
+
+            backdrop-filter: blur(10px);
+
+            transform: translateX(4px);
+
+        }
+
+        
+
+        .sidebar .nav-link i {
+
+            width: 20px;
+
+            margin-right: 12px;
+
+            font-size: 1rem;
+
+        }
+
+        
+
+        /* Main Content Styles */
+
+        .main-content {
+
+            margin-left: 280px;
+
+            flex: 1;
+
+            overflow-x: hidden;
+
+            overflow-y: auto;
+
+            min-height: 100vh;
+
+            background: var(--background);
+
+        }
+
+        
+
+        .main-content-wrapper {
+
+            padding: 32px;
+
+            max-width: 100%;
+
+        }
+
+        
+
+        /* Content Container Fixes */
+
+        .content-container {
+
+            width: 100%;
+
+            overflow-x: hidden;
+
+        }
+
+        
+
+        /* Modern Card Styles */
+
+        .card {
+
+            border: none;
+
+            border-radius: var(--radius);
+
+            box-shadow: var(--shadow-md);
+
+            transition: all 0.3s ease;
+
+            overflow: hidden;
+
+            margin-bottom: 24px;
+
+            background: var(--surface);
+
+            border: 1px solid var(--border);
+
+        }
+
+        
+
+        .card:hover {
+
+            box-shadow: var(--shadow-lg);
+
+            transform: translateY(-2px);
+
+        }
+
+        
+
+        .card-header {
+
+            background: transparent;
+
+            border-bottom: 1px solid var(--border);
+
+            padding: 20px 24px;
+
+            font-weight: 600;
+
+            font-family: 'Poppins', sans-serif;
+
+        }
+
+        
+
+        .card-body {
+
+            padding: 24px;
+
+        }
+
+        
+
+        /* Glassmorphism Card */
+
+        .glass-card {
+
+            background: rgba(255, 255, 255, 0.9);
+
+            backdrop-filter: blur(20px);
+
+            border: 1px solid rgba(255, 255, 255, 0.2);
+
+        }
+
+        
+
+        /* Stat Card Styles */
+
+        .stat-card {
+
+            border: none;
+
+            border-radius: var(--radius);
+
+            box-shadow: var(--shadow-md);
+
+            transition: all 0.3s ease;
+
+            background: var(--surface);
+
+            border: 1px solid var(--border);
+
+            overflow: hidden;
+
+        }
+
+        
+
+        .stat-card:hover {
+
+            box-shadow: var(--shadow-lg);
+
+            transform: translateY(-4px);
+
+        }
+
+        
+
+        .stat-icon {
+
+            width: 56px;
+
+            height: 56px;
+
+            border-radius: var(--radius-sm);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 1.5rem;
+
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+
+            color: white;
+
+        }
+
+        
+
+        .stat-icon-success {
+
+            background: linear-gradient(135deg, var(--success) 0%, #34D399 100%);
+
+        }
+
+        
+
+        .stat-icon-warning {
+
+            background: linear-gradient(135deg, var(--warning) 0%, #FBBF24 100%);
+
+        }
+
+        
+
+        .stat-icon-danger {
+
+            background: linear-gradient(135deg, var(--danger) 0%, #F87171 100%);
+
+        }
+
+        
+
+        .stat-icon-info {
+
+            background: linear-gradient(135deg, var(--info) 0%, #60A5FA 100%);
+
+        }
+
+        
+
+        /* Activity Item Styles */
+
+        .activity-item {
+
+            border-left: 3px solid var(--primary);
+
+            padding-left: 16px;
+
+            margin-bottom: 16px;
+
+            position: relative;
+
+        }
+
+        
+
+        .activity-item::before {
+
+            content: '';
+
+            position: absolute;
+
+            left: -7px;
+
+            top: 0;
+
+            width: 12px;
+
+            height: 12px;
+
+            border-radius: 50%;
+
+            background: var(--primary);
+
+        }
+
+        
+
+        /* Button Styles */
+
+        .btn {
+
+            border-radius: var(--radius-sm);
+
+            font-weight: 500;
+
+            padding: 10px 20px;
+
+            transition: all 0.3s ease;
+
+            font-family: 'Inter', sans-serif;
+
+        }
+
+        
+
+        .btn-primary {
+
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+
+            border: none;
+
+            color: white;
+
+        }
+
+        
+
+        .btn-primary:hover {
+
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+
+            transform: translateY(-2px);
+
+            box-shadow: var(--shadow-md);
+
+        }
+
+        
+
+        .btn-outline-primary {
+
+            border: 2px solid var(--primary);
+
+            color: var(--primary);
+
+            background: transparent;
+
+        }
+
+        
+
+        .btn-outline-primary:hover {
+
+            background: var(--primary);
+
+            color: white;
+
+        }
+
+        
+
+        /* Table Fixes */
+
+        .table-responsive {
+
+            overflow-x: auto;
+
+            -webkit-overflow-scrolling: touch;
+
+            border-radius: var(--radius);
+
+        }
+
+        
+
+        .table {
+
+            min-width: 600px;
+
+            font-size: 0.9rem;
+
+        }
+
+        
+
+        .table thead th {
+
+            background: var(--background);
+
+            font-weight: 600;
+
+            font-family: 'Poppins', sans-serif;
+
+            color: var(--text-secondary);
+
+            border-bottom: 2px solid var(--border);
+
+            padding: 16px;
+
+        }
+
+        
+
+        .table tbody td {
+
+            padding: 16px;
+
+            border-bottom: 1px solid var(--border);
+
+            vertical-align: middle;
+
+        }
+
+        
+
+        /* Badge Styles */
+
+        .badge {
+
+            padding: 6px 12px;
+
+            border-radius: var(--radius-sm);
+
+            font-weight: 500;
+
+            font-size: 0.85rem;
+
+        }
+
+        
+
+        /* Progress Bar */
+
+        .progress {
+
+            height: 8px;
+
+            border-radius: var(--radius-sm);
+
+            background: var(--border);
+
+        }
+
+        
+
+        .progress-bar {
+
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+
+            border-radius: var(--radius-sm);
+
+        }
+
+        
+
+        /* Page Header */
+
+        .page-header {
+
+            background: var(--surface);
+
+            padding: 24px 32px;
+
+            margin-bottom: 32px;
+
+            border-bottom: 1px solid var(--border);
+
+            border-radius: var(--radius);
+
+            box-shadow: var(--shadow-sm);
+
+        }
+
+        
+
+        .page-title {
+
+            color: var(--text-primary);
+
+            font-weight: 700;
+
+            margin: 0;
+
+            font-size: 1.75rem;
+
+        }
+
+        
+
+        .page-subtitle {
+
+            color: var(--text-secondary);
+
+            margin: 8px 0 0 0;
+
+            font-size: 1rem;
+
+        }
+
+        
+
+        /* Mobile Menu Toggle */
+
+        .mobile-menu-toggle {
+
+            display: none;
+
+            position: fixed;
+
+            top: 20px;
+
+            left: 20px;
+
+            z-index: 1001;
+
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+
+            color: white;
+
+            border: none;
+
+            border-radius: var(--radius-sm);
+
+            padding: 12px 16px;
+
+            cursor: pointer;
+
+            box-shadow: var(--shadow-lg);
+
+            font-size: 1.25rem;
+
+        }
+
+        
+
+        @media (max-width: 768px) {
+
+            .mobile-menu-toggle {
+
+                display: block;
+
+            }
+
+        }
+
+        
+
+        /* Responsive Design */
+
+        @media (max-width: 768px) {
+
+            .sidebar {
+
+                transform: translateX(-100%);
+
+                width: 100%;
+
+                max-width: 280px;
+
+            }
+
+            
+
+            .sidebar.show {
+
+                transform: translateX(0);
+
+            }
+
+            
+
+            .main-content {
+
+                margin-left: 0;
+
+            }
+
+            
+
+            .main-content-wrapper {
+
+                padding: 16px;
+
+            }
+
+            
+
+            .page-header {
+
+                padding: 16px;
+
+                margin-bottom: 16px;
+
+            }
+
+            
+
+            .page-title {
+
+                font-size: 1.5rem;
+
+            }
+
+            
+
+            .table {
+
+                font-size: 0.8rem;
+
+                min-width: 500px;
+
+            }
+
+            
+
+            .card-body {
+
+                padding: 16px;
+
+            }
+
+            
+
+            .stat-icon {
+
+                width: 48px;
+
+                height: 48px;
+
+                font-size: 1.25rem;
+
+            }
+
+        }
+
+        
+
+        @media (max-width: 576px) {
+
+            .main-content-wrapper {
+
+                padding: 12px;
+
+            }
+
+            
+
+            .page-header {
+
+                padding: 12px;
+
+            }
+
+            
+
+            .table {
+
+                font-size: 0.75rem;
+
+                min-width: 400px;
+
+            }
+
+            
+
+            .card-body {
+
+                padding: 12px;
+
+            }
+
+            
+
+            .stat-icon {
+
+                width: 40px;
+
+                height: 40px;
+
+                font-size: 1.1rem;
+
+            }
+
+        }
+
+        
+
+        /* Scrollbar Styling */
+
+        ::-webkit-scrollbar {
+
+            width: 8px;
+
+            height: 8px;
+
+        }
+
+        
+
+        ::-webkit-scrollbar-track {
+
+            background: var(--background);
+
+        }
+
+        
+
+        ::-webkit-scrollbar-thumb {
+
+            background: var(--border);
+
+            border-radius: 4px;
+
+        }
+
+        
+
+        ::-webkit-scrollbar-thumb:hover {
+
+            background: var(--text-secondary);
+
+        }
+
+        
+
+        /* Animation */
+
+        @keyframes fadeIn {
+
+            from {
+
+                opacity: 0;
+
+                transform: translateY(10px);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform: translateY(0);
+
+            }
+
+        }
+
+        
+
+        .fade-in {
+
+            animation: fadeIn 0.3s ease forwards;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="app-container">
+
+        <!-- Mobile Menu Toggle -->
+
+        <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+
+            <i class="fas fa-bars"></i>
+
+        </button>
+
+        
+
+        <!-- Sidebar -->
+
+        <nav class="sidebar" id="sidebar">
+
+            <div class="sidebar-brand">
+
+                <h5>
+
+                    <i class="fas fa-building"></i> HeyDay Realty
+
+                </h5>
+
+            </div>
+
+            
+
+            <div class="p-3 flex-grow-1">
+
+                <!-- Profile Section -->
+
+                <div class="mb-4 p-3 rounded" style="background: rgba(255, 255, 255, 0.1);">
+
+                    <div class="d-flex align-items-center">
+
+                        <div class="rounded-circle bg-white d-inline-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
+
+                            {% if user.profile.profile_picture %}
+
+                                <img src="{{ user.profile.profile_picture.url }}" alt="Profile" class="rounded-circle" style="width: 44px; height: 44px; object-fit: cover;">
+
+                            {% else %}
+
+                                <i class="fas fa-user-shield fa-lg" style="color: var(--primary);"></i>
+
+                            {% endif %}
+
+                        </div>
+
+                        <div>
+
+                            <div class="fw-bold text-white">{{ user.get_full_name|default:user.username }}</div>
+
+                            <div class="small text-white-50">Administrator</div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                
+
+                <ul class="nav flex-column">
+
+                    <li class="nav-item">
+
+                        <a class="nav-link" href="{% url 'admin_dash:dashboard' %}">
+
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+
+                        </a>
+
+                    </li>
+
+                    <li class="nav-item">
+
+                        <a class="nav-link" href="{% url 'admin_dash:user-management-page' %}">
+
+                            <i class="fas fa-users"></i> Users
+
+                        </a>
+
+                    </li>
+
+                    <li class="nav-item">
+
+                        <a class="nav-link" href="{% url 'admin_dash:investor-list' %}">
+
+                            <i class="fas fa-user-tie"></i> Investors
+
+                        </a>
+
+                    </li>
+
+                    <li class="nav-item">
+
+                        <a class="nav-link d-flex align-items-center" href="{% url 'admin_dash:inquiry-management-page' %}" id="sidebar-inquiries-link">
+
+                            <i class="fas fa-envelope"></i> 
+                            <span class="me-2">Inquiries</span>
+                            <span class="badge bg-danger rounded-pill ms-auto d-none" id="inquiry-notification-badge">0</span>
+
+                        </a>
+
+                    </li>
+
+                    <li class="nav-item">
+
+                        <a class="nav-link" href="{% url 'admin_dash:investment-management-page' %}">
+
+                            <i class="fas fa-chart-line"></i> Investments
+
+                        </a>
+
+                    </li>
+
+                    <li class="nav-item">
+
+                        <a class="nav-link" href="{% url 'admin_dash:property-review' %}">
+
+                            <i class="fas fa-building"></i> Property Review
+
+                        </a>
+
+                    </li>
+
+                    <li class="nav-item">
+
+                        <a class="nav-link" href="{% url 'admin_dash:reports-page' %}">
+
+                            <i class="fas fa-file-alt"></i> Reports
+
+                        </a>
+
+                    </li>
+
+                    <li class="nav-item">
+
+                        <a class="nav-link" href="{% url 'admin_dash:system-settings-page' %}">
+
+                            <i class="fas fa-cog"></i> Settings
+
+                        </a>
+
+                    </li>
+
+                    <li class="nav-item">
+
+                        <a class="nav-link" href="{% url 'admin_dash:activity-page' %}">
+
+                            <i class="fas fa-history"></i> Activity Log
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </div>
+
+            
+
+            <!-- Logout Button at Bottom -->
+
+            <div class="p-3 border-top border-white border-opacity-25">
+
+                <a href="{% url 'auth:logout' %}" class="nav-link text-white">
+
+                    <i class="fas fa-sign-out-alt"></i> Logout
+
+                </a>
+
+            </div>
+
+        </nav>
+
+        
+
+        <!-- Main Content -->
+
+        <main class="main-content">
+
+            <div class="main-content-wrapper">
+
+                <!-- Page Header -->
+
+                <div class="page-header">
+
+                    <div class="container-fluid">
+
+                        <h1 class="page-title">
+
+                            {% block page_title %}Admin Dashboard{% endblock %}
+
+                        </h1>
+
+                        {% block page_subtitle %}<p class="page-subtitle">Manage and monitor your real estate platform</p>{% endblock %}
+
+                    </div>
+
+                </div>
+
+                
+
+                <!-- Content -->
+
+                <div class="content-container">
+
+                    {% block content %}
+
+                    <!-- Page content will go here -->
+
+                    {% endblock %}
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+    
+
+    <!-- Scripts -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+
+        function toggleSidebar() {
+
+            const sidebar = document.getElementById('sidebar');
+
+            sidebar.classList.toggle('show');
+
+        }
+
+        
+
+        // Close sidebar when clicking outside on mobile
+
+        document.addEventListener('click', function(event) {
+
+            const sidebar = document.getElementById('sidebar');
+
+            const toggle = document.querySelector('.mobile-menu-toggle');
+
+            
+
+            if (window.innerWidth <= 768 && 
+
+                !sidebar.contains(event.target) && 
+
+                !toggle.contains(event.target) && 
+
+                sidebar.classList.contains('show')) {
+
+                sidebar.classList.remove('show');
+
+            }
+
+        });
+
+        
+
+        // Active menu highlighting
+
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const currentPath = window.location.pathname;
+
+            const navLinks = document.querySelectorAll('.sidebar .nav-link');
+
+            
+
+            navLinks.forEach(link => {
+
+                if (link.getAttribute('href') === currentPath) {
+
+                    link.classList.add('active');
+
+                }
+
+            });
+
+        });
+
+    </script>
+
+    <!-- Real-time Website Enquiry Polling & Notifications -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarBadge = document.getElementById('inquiry-notification-badge');
+            const bellBadge = document.getElementById('bell-notification-badge');
+            let lastSeenInquiryId = localStorage.getItem('last_seen_inquiry_id') || 0;
+            let isFirstLoad = true;
+    
+            function checkNewInquiries() {
+                fetch('/admin-dashboard/api/inquiries/unread-count/')
+                    .then(response => {
+                        if (!response.ok) throw new Error('Unregistered user or server error');
+                        return response.json();
+                    })
+                    .then(data => {
+                        const count = data.unread_count;
+                        
+                        // Update sidebar badge
+                        if (sidebarBadge) {
+                            if (count > 0) {
+                                sidebarBadge.textContent = count;
+                                sidebarBadge.classList.remove('d-none');
+                            } else {
+                                sidebarBadge.classList.add('d-none');
+                            }
+                        }
+                        
+                        // Update bell icon badge
+                        if (bellBadge) {
+                            if (count > 0) {
+                                bellBadge.textContent = count;
+                                bellBadge.classList.remove('d-none');
+                            } else {
+                                bellBadge.classList.add('d-none');
+                            }
+                        }
+    
+                        // If we have new inquiries, notify and prepend if we're on the Inquiry table page
+                        if (data.latest_inquiries && data.latest_inquiries.length > 0) {
+                            const newestInquiry = data.latest_inquiries[0];
+                            const newestId = newestInquiry.id;
+                            
+                            // Check if this is indeed a new inquiry we haven't seen in this session/browser storage
+                            if (!isFirstLoad && newestId > lastSeenInquiryId) {
+                                lastSeenInquiryId = newestId;
+                                localStorage.setItem('last_seen_inquiry_id', newestId);
+                                
+                                // Show premium browser toast
+                                showInquiryToast(newestInquiry);
+                                
+                                // Prepend row to table if currently viewing inquiries page
+                                const tableBody = document.querySelector('.inquiries-table-body');
+                                if (tableBody) {
+                                    prependInquiryToTable(newestInquiry, tableBody);
+                                }
+                            } else if (isFirstLoad) {
+                                lastSeenInquiryId = newestId;
+                                localStorage.setItem('last_seen_inquiry_id', mapEnquiriesToIds(data.latest_inquiries));
+                                isFirstLoad = false;
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        // Silent fail to prevent console noise on ordinary auth expiry
+                    });
+            }
+    
+            function mapEnquiriesToIds(inquiries) {
+                if (!inquiries || inquiries.length === 0) return 0;
+                return Math.max(...inquiries.map(i => i.id));
+            }
+    
+            function showInquiryToast(inquiry) {
+                // Ensure a premium notifications container exists
+                let container = document.getElementById('inquiry-toast-container');
+                if (!container) {
+                    container = document.createElement('div');
+                    container.id = 'inquiry-toast-container';
+                    container.className = 'position-fixed bottom-0 end-0 p-3';
+                    container.style.zIndex = '1090';
+                    document.body.appendChild(container);
+                }
+                
+                const toastId = 'inquiry_toast_' + inquiry.id;
+                const toastHtml = `
+                    <div id="${toastId}" class="toast align-items-center text-white border-0 shadow-lg show" role="alert" aria-live="assertive" aria-atomic="true" style="background: linear-gradient(135deg, #0F766E 0%, #115E59 100%); min-width: 320px; border-radius: 12px; margin-top: 10px; opacity: 1; transition: opacity 0.4s ease;">
+                        <div class="d-flex">
+                            <div class="toast-body p-3 w-100">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <div class="d-flex align-items-center">
+                                        <div class="bg-white rounded-circle p-1 me-2 d-flex align-items-center justify-content-center" style="width: 24px; height: 24px;">
+                                            <i class="fas fa-envelope text-teal" style="color: #0F766E; font-size: 0.8rem;"></i>
+                                        </div>
+                                        <strong class="text-white">New Enquiry Submitted</strong>
+                                    </div>
+                                    <span class="badge bg-danger rounded-pill">New</span>
+                                </div>
+                                <p class="mb-1 text-white" style="font-size: 0.9rem;"><strong>${inquiry.full_name}</strong> has submitted an enquiry.</p>
+                                <div class="text-white-50 mb-2" style="font-size: 0.8rem;">Budget: ${inquiry.investment_budget}</div>
+                                <div class="d-flex gap-2 justify-content-end mt-2 pt-2 border-top border-white-50 border-opacity-25">
+                                    <a href="/admin-dashboard/inquiries/${inquiry.id}/" class="btn btn-xs btn-light fw-bold text-teal" style="font-size: 0.75rem; padding: 3px 10px; border-radius: 6px; color: #0F766E; text-decoration: none;">View Detail</a>
+                                    <button type="button" class="btn btn-xs btn-outline-light text-white" style="font-size: 0.75rem; padding: 3px 10px; border-radius: 6px;" onclick="document.getElementById('${toastId}').remove()">Dismiss</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', toastHtml);
+                
+                // Play notification alert sound
+                try {
+                    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
+                    gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.15);
+                } catch(e) {}
+                
+                // Self destruct toast after 10s
+                setTimeout(() => {
+                    const toastEl = document.getElementById(toastId);
+                    if (toastEl) {
+                        toastEl.style.opacity = '0';
+                        setTimeout(() => toastEl.remove(), 400);
+                    }
+                }, 10000);
+            }
+    
+            function prependInquiryToTable(inquiry, tbody) {
+                // Return if row with this inquiry ID already exists
+                if (document.getElementById(`inquiry-row-${inquiry.id}`)) return;
+                
+                // Remove empty row statement if it exists
+                const emptyRow = tbody.querySelector('.no-inquiries-row') || tbody.querySelector('td[colspan="9"]')?.parentElement;
+                if (emptyRow) emptyRow.remove();
+                
+                const tr = document.createElement('tr');
+                tr.id = `inquiry-row-${inquiry.id}`;
+                tr.className = 'table-light-highlight-animation';
+                tr.style.background = '#e6fffa';
+                tr.innerHTML = `
+                    <td>
+                        <span class="badge bg-light text-dark border fw-normal">#${inquiry.enquiry_id}</span>
+                    </td>
+                    <td>
+                        <div class="fw-bold">${inquiry.full_name}</div>
+                    </td>
+                    <td>${inquiry.phone_number}</td>
+                    <td>
+                        <a href="mailto:${inquiry.email}" class="text-decoration-none">${inquiry.email}</a>
+                    </td>
+                    <td>
+                        <span class="badge bg-light text-success border">${inquiry.investment_budget}</span>
+                    </td>
+                    <td>
+                        <p class="mb-0 text-muted small text-truncate" style="max-width: 200px;" title="${inquiry.message}">
+                            ${inquiry.message}
+                        </p>
+                    </td>
+                    <td>
+                        <span class="badge bg-primary">New</span>
+                    </td>
+                    <td>
+                        <small class="text-muted">${inquiry.created_at}</small>
+                    </td>
+                    <td>
+                        <div class="d-flex gap-1 justify-content-center">
+                            <a href="/admin-dashboard/inquiries/${inquiry.id}/" class="btn btn-sm btn-outline-primary" title="View Enquiry">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </div>
+                    </td>
+                `;
+                
+                // Prepend to top of list
+                tbody.insertBefore(tr, tbody.firstChild);
+                
+                // Update total cards and pending cards dynamically!
+                const totalTitle = document.querySelector('.bg-primary .card-title');
+                const pendingTitle = document.querySelector('.bg-warning .card-title');
+                const todayTitle = document.querySelector('.bg-info .card-title');
+                if (totalTitle) totalTitle.textContent = parseInt(totalTitle.textContent || '0') + 1;
+                if (pendingTitle) pendingTitle.textContent = parseInt(pendingTitle.textContent || '0') + 1;
+                if (todayTitle) todayTitle.textContent = parseInt(todayTitle.textContent || '0') + 1;
+                
+                // Fade color out after 5s
+                setTimeout(() => {
+                    tr.style.transition = 'background-color 2s ease';
+                    tr.style.background = '';
+                }, 5000);
+            }
+    
+            // Run check on startup and then poll every 4s
+            setTimeout(checkNewInquiries, 800);
+            setInterval(checkNewInquiries, 4000);
+        });
+    </script>
+
+    
+
+    {% block extra_js %}
+
+    <!-- Additional JavaScript can be included here -->
+
+    {% endblock %}
+
+</body>
+
+</html>
+

@@ -1,0 +1,628 @@
+{% extends "public/base.html" %}
+{% load static %}
+
+{% block title %}{{ property.title }} | HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+<style>
+    .property-detail-wrapper {
+        padding: 4rem 0;
+        background: var(--cloud-white);
+    }
+    .property-detail-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+    /* Breadcrumb */
+    .breadcrumb-nav {
+        font-size: 0.9rem;
+        margin-bottom: 2rem;
+        color: var(--text-muted);
+    }
+    .breadcrumb-nav a {
+        color: var(--emerald);
+        text-decoration: none;
+    }
+    .breadcrumb-nav a:hover {
+        color: var(--gold);
+    }
+    /* Gallery */
+    .gallery-section {
+        background: var(--cloud-white);
+        border-radius: 28px;
+        overflow: hidden;
+        margin-bottom: 2.5rem;
+        box-shadow: 0 8px 30px rgba(27,67,50,0.08);
+        border: 1px solid var(--border);
+    }
+    .main-image-container {
+        position: relative;
+        background: #f5f5f5;
+    }
+    .main-image {
+        width: 100%;
+        height: 500px;
+        object-fit: cover;
+        display: block;
+    }
+    .image-navigation {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 1rem;
+        z-index: 5;
+    }
+    .image-nav-btn {
+        width: 45px;
+        height: 45px;
+        background: rgba(255,255,255,0.9);
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 1.2rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        color: var(--forest);
+        font-weight: 700;
+    }
+    .image-nav-btn:hover {
+        background: var(--gold);
+        color: var(--cloud-white);
+    }
+    .wishlist-heart {
+        position: absolute;
+        top: 1.5rem;
+        right: 1.5rem;
+        width: 50px;
+        height: 50px;
+        background: var(--cloud-white);
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        color: var(--text-muted);
+    }
+    .wishlist-heart:hover {
+        background: var(--gold);
+        color: var(--cloud-white);
+        transform: scale(1.1);
+    }
+    .wishlist-heart.saved {
+        background: var(--gold);
+        color: var(--cloud-white);
+    }
+    .thumbnail-gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        gap: 0.75rem;
+        padding: 1rem;
+        background: var(--pale);
+    }
+    .thumbnail {
+        aspect-ratio: 1;
+        object-fit: cover;
+        border-radius: 12px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+    }
+    .thumbnail:hover,
+    .thumbnail.active {
+        border-color: var(--gold);
+        transform: scale(0.95);
+    }
+    /* Content Grid */
+    .property-info-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+    .property-details-section {
+        background: var(--cloud-white);
+        padding: 2rem;
+        border-radius: 28px;
+        border: 1px solid var(--border);
+        box-shadow: 0 8px 30px rgba(27,67,50,0.06);
+    }
+    .property-title {
+        font-family: var(--font-heading);
+        font-size: 2.2rem;
+        color: var(--forest);
+        margin-bottom: 1.5rem;
+    }
+    .property-price-section {
+        background: var(--pale);
+        padding: 1.5rem;
+        border-radius: 16px;
+        margin-bottom: 2rem;
+        border-left: 4px solid var(--gold);
+    }
+    .price-display {
+        font-family: var(--font-heading);
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--gold);
+    }
+    .price-total {
+        font-size: 1rem;
+        color: var(--text-mid);
+    }
+    .details-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        margin: 2rem 0;
+    }
+    .detail-card {
+        background: var(--cloud-white);
+        padding: 1.25rem;
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        transition: all 0.3s ease;
+    }
+    .detail-card:hover {
+        border-color: var(--gold);
+        box-shadow: 0 4px 12px rgba(27,67,50,0.06);
+    }
+    .detail-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--text-muted);
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+    .detail-value {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--forest);
+    }
+    .section-title {
+        font-family: var(--font-heading);
+        font-size: 1.4rem;
+        color: var(--forest);
+        margin: 2rem 0 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--gold);
+    }
+    .description-text {
+        color: var(--text-mid);
+        line-height: 1.8;
+    }
+    .description-text ul {
+        list-style: none;
+        padding: 0;
+    }
+    .description-text li {
+        padding: 0.25rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .description-text li::before {
+        content: "✔";
+        color: var(--gold);
+        font-weight: 700;
+    }
+    .btn-map {
+        display: inline-block;
+        padding: 12px 28px;
+        background: var(--gold);
+        color: var(--forest);
+        border-radius: 50px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: none;
+        font-size: 0.95rem;
+        margin-top: 0.5rem;
+    }
+    .btn-map:hover {
+        background: #d4931f;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(233,166,42,0.3);
+    }
+    /* Sidebar */
+    .property-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    .sidebar-card {
+        background: var(--cloud-white);
+        padding: 2rem;
+        border-radius: 28px;
+        border: 1px solid var(--border);
+        box-shadow: 0 8px 30px rgba(27,67,50,0.06);
+        text-align: center;
+    }
+    .agent-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--emerald), var(--mid));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        color: var(--cloud-white);
+        margin: 0 auto 1rem;
+    }
+    .agent-name {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--forest);
+    }
+    .agent-title {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+    .contact-info-list {
+        text-align: left;
+        margin-top: 1rem;
+    }
+    .contact-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.5rem 0;
+        color: var(--text-mid);
+        font-size: 0.9rem;
+        border-bottom: 1px solid var(--border);
+    }
+    .contact-item:last-child {
+        border-bottom: none;
+    }
+    .contact-item i {
+        color: var(--gold);
+        width: 20px;
+        text-align: center;
+    }
+    /* Inquiry Form */
+    .inquiry-form-section {
+        background: var(--cloud-white);
+        padding: 2rem;
+        border-radius: 28px;
+        border: 1px solid var(--border);
+        box-shadow: 0 8px 30px rgba(27,67,50,0.06);
+    }
+    .inquiry-form-section h3 {
+        font-family: var(--font-heading);
+        font-size: 1.3rem;
+        color: var(--forest);
+        margin-bottom: 1.5rem;
+    }
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        color: var(--forest);
+        margin-bottom: 0.4rem;
+        font-size: 0.9rem;
+    }
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        font-family: var(--font-body);
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        background: var(--cloud-white);
+        color: var(--text-dark);
+    }
+    .form-group input:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: var(--gold);
+        box-shadow: 0 0 0 4px rgba(233,166,42,0.1);
+    }
+    .submit-btn {
+        width: 100%;
+        padding: 1rem;
+        background: var(--gold);
+        color: var(--forest);
+        border: none;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 16px rgba(233,166,42,0.25);
+    }
+    .submit-btn:hover {
+        background: #d4931f;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(233,166,42,0.35);
+    }
+    /* Responsive */
+    @media (max-width: 992px) {
+        .property-info-grid {
+            grid-template-columns: 1fr;
+        }
+        .details-grid {
+            grid-template-columns: 1fr;
+        }
+        .main-image {
+            height: 400px;
+        }
+    }
+    @media (max-width: 768px) {
+        .property-detail-wrapper {
+            padding: 2rem 0;
+        }
+        .property-title {
+            font-size: 1.8rem;
+        }
+        .price-display {
+            font-size: 2rem;
+        }
+        .main-image {
+            height: 300px;
+        }
+        .thumbnail-gallery {
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+        }
+        .property-details-section,
+        .sidebar-card,
+        .inquiry-form-section {
+            padding: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="property-detail-wrapper">
+    <div class="property-detail-container">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb-nav">
+            <a href="{% url 'public:home' %}">Home</a> &gt;
+            <a href="{% url 'buy:property_search' %}">Buy Property</a> &gt;
+            <span>{{ property.title }}</span>
+        </div>
+
+        <!-- Image Gallery -->
+        <div class="gallery-section">
+            <div class="main-image-container">
+                {% if property.images.all %}
+                    <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}" class="main-image" id="mainImage">
+                    {% if property.images.count > 1 %}
+                        <div class="image-navigation">
+                            <button class="image-nav-btn" onclick="prevImage()">&lt;</button>
+                            <button class="image-nav-btn" onclick="nextImage()">&gt;</button>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <div style="width:100%; height:500px; background:#f5f5f5; display:flex; align-items:center; justify-content:center; color:#999;">
+                        <i class="bi bi-image" style="font-size:4rem;"></i>
+                    </div>
+                {% endif %}
+
+                <!-- Wishlist Button -->
+                {% if user.is_authenticated %}
+                    <form method="post" style="display:inline;" action="{% url 'buy:save_property' property.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="wishlist-heart {% if is_saved %}saved{% endif %}" title="Add to Wishlist">
+                            <i class="bi bi-heart-fill"></i>
+                        </button>
+                    </form>
+                {% else %}
+                    <button class="wishlist-heart" title="Login to save" onclick="alert('Please login to save properties')">
+                        <i class="bi bi-heart"></i>
+                    </button>
+                {% endif %}
+            </div>
+
+            <!-- Thumbnail Gallery -->
+            {% if property.images.count > 1 %}
+                <div class="thumbnail-gallery">
+                    {% for image in property.images.all %}
+                        <img src="{{ image.image.url }}" alt="Thumbnail" class="thumbnail {% if forloop.first %}active{% endif %}" data-index="{{ forloop.counter0 }}" onclick="changeImage(this.src, this.dataset.index)">
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Content Grid -->
+        <div class="property-info-grid">
+            <!-- Left Column -->
+            <div>
+                <div class="property-details-section">
+                    <h1 class="property-title">{{ property.title }}</h1>
+
+                    <!-- Price Section -->
+                    <div class="property-price-section">
+                        <div class="price-display">₹{{ property.price|floatformat:0 }}</div>
+                        <div class="price-total">Total Price: ₹{{ property.price|floatformat:0 }}</div>
+                    </div>
+
+                    <!-- Key Details -->
+                    <div class="details-grid">
+                        <div class="detail-card">
+                            <div class="detail-label">Project Size</div>
+                            <div class="detail-value">{{ property.project_size_acre|default:"N/A" }}</div>
+                        </div>
+                        <div class="detail-card">
+                            <div class="detail-label">Property Type</div>
+                            <div class="detail-value">{{ property.category|default:"N/A" }}</div>
+                        </div>
+                        <div class="detail-card">
+                            <div class="detail-label">Plot Sizes</div>
+                            <div class="detail-value">{{ property.plot_sizes|default:"N/A" }}</div>
+                        </div>
+                        <div class="detail-card">
+                            <div class="detail-label">Water Source</div>
+                            <div class="detail-value">{{ property.water_source|default:"N/A" }}</div>
+                        </div>
+                        <div class="detail-card">
+                            <div class="detail-label">Road Access</div>
+                            <div class="detail-value">{{ property.road_access|default:"N/A" }}</div>
+                        </div>
+                        <div class="detail-card">
+                            <div class="detail-label">Registry Status</div>
+                            <div class="detail-value">{{ property.registry_status|default:"Available" }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Location -->
+                    <p style="color: var(--text-mid); font-size:1rem; margin-bottom:2rem;">
+                        <i class="bi bi-geo-alt" style="color: var(--gold); margin-right:0.5rem;"></i>
+                        {{ property.location }}
+                    </p>
+
+                    <!-- Description -->
+                    {% if property.public_description %}
+                        <div class="description-section">
+                            <h3 class="section-title">About Property</h3>
+                            <p class="description-text">{{ property.public_description }}</p>
+                        </div>
+                    {% endif %}
+
+                    {% if property.description %}
+                        <div class="description-section">
+                            <h3 class="section-title">Full Details</h3>
+                            <p class="description-text">{{ property.description }}</p>
+                        </div>
+                    {% endif %}
+
+                    <!-- Project Highlights -->
+                    {% if property.project_highlights %}
+                        <div class="description-section">
+                            <h3 class="section-title">Project Highlights</h3>
+                            <div class="description-text">
+                                <ul>
+                                    {% for item in property.project_highlights.splitlines %}
+                                        <li>{{ item }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <!-- Additional Info -->
+                    <div class="details-grid" style="margin-top:1rem;">
+                        <div class="detail-card">
+                            <div class="detail-label">Soil Type</div>
+                            <div class="detail-value">{{ property.soil_type|default:"N/A" }}</div>
+                        </div>
+                        <div class="detail-card">
+                            <div class="detail-label">Plantation Type</div>
+                            <div class="detail-value">{{ property.plantation_type|default:"N/A" }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Map Link -->
+                    {% if property.google_map_link %}
+                        <div style="margin-top:1.5rem;">
+                            <a href="{{ property.google_map_link }}" target="_blank" class="btn-map">
+                                <i class="bi bi-map"></i> View on Google Maps
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Right Column - Sidebar -->
+            <div class="property-sidebar">
+                <!-- Agent Card -->
+                <div class="sidebar-card">
+                    <div class="agent-avatar">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                    <div class="agent-name">HeyDay Realty</div>
+                    <div class="agent-title">Property Agent</div>
+                    <div class="contact-info-list">
+                        <div class="contact-item">
+                            <i class="bi bi-telephone-fill"></i>
+                            <span>+91 9506 688 688</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="bi bi-envelope-fill"></i>
+                            <span>info@heydayrealty.in</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Inquiry Form -->
+                <div class="inquiry-form-section">
+                    <h3>Send Inquiry</h3>
+                    <form method="post" action="{% url 'buy:send_inquiry' property.id %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="{{ form.name.id_for_label }}">Your Name</label>
+                            {{ form.name }}
+                            {% if form.name.errors %}
+                                <small style="color:#dc3545;">{{ form.name.errors }}</small>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.email.id_for_label }}">Email Address</label>
+                            {{ form.email }}
+                            {% if form.email.errors %}
+                                <small style="color:#dc3545;">{{ form.email.errors }}</small>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.message.id_for_label }}">Message</label>
+                            {{ form.message }}
+                            {% if form.message.errors %}
+                                <small style="color:#dc3545;">{{ form.message.errors }}</small>
+                            {% endif %}
+                        </div>
+                        <button type="submit" class="submit-btn">Submit Inquiry</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentImageIndex = 0;
+    const images = document.querySelectorAll('.thumbnail');
+    const totalImages = images.length;
+
+    function changeImage(src, index) {
+        document.getElementById('mainImage').src = src;
+        currentImageIndex = index;
+        document.querySelectorAll('.thumbnail').forEach((thumb, i) => {
+            thumb.classList.toggle('active', i === index);
+        });
+    }
+
+    function nextImage() {
+        if (images.length > 0) {
+            currentImageIndex = (currentImageIndex + 1) % images.length;
+            changeImage(images[currentImageIndex].src, currentImageIndex);
+        }
+    }
+
+    function prevImage() {
+        if (images.length > 0) {
+            currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+            changeImage(images[currentImageIndex].src, currentImageIndex);
+        }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextImage();
+        if (e.key === 'ArrowLeft') prevImage();
+    });
+</script>
+{% endblock %}

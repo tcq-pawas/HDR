@@ -1,0 +1,93 @@
+{% extends "agent/agent_base.html" %}
+{% load static %}
+
+{% block title %}{{ title }} | HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/agent/installment_form.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="installment-form-container">
+    <!-- Header -->
+    <div class="page-header">
+        <h1>{{ title }}</h1>
+    </div>
+
+    <!-- Form -->
+    <div class="card">
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.installment_number.id_for_label }}">Installment Number *</label>
+                    {{ form.installment_number }}
+                    {% if form.installment_number.errors %}
+                        <div class="error-message">{{ form.installment_number.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.amount.id_for_label }}">Amount (₹) *</label>
+                    {{ form.amount }}
+                    {% if form.amount.errors %}
+                        <div class="error-message">{{ form.amount.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.due_date.id_for_label }}">Due Date *</label>
+                    {{ form.due_date }}
+                    {% if form.due_date.errors %}
+                        <div class="error-message">{{ form.due_date.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.paid_date.id_for_label }}">Paid Date</label>
+                    {{ form.paid_date }}
+                    {% if form.paid_date.errors %}
+                        <div class="error-message">{{ form.paid_date.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.status.id_for_label }}">Status *</label>
+                {{ form.status }}
+                {% if form.status.errors %}
+                    <div class="error-message">{{ form.status.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.payment_method.id_for_label }}">Payment Method</label>
+                {{ form.payment_method }}
+                {% if form.payment_method.errors %}
+                    <div class="error-message">{{ form.payment_method.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.notes.id_for_label }}">Notes</label>
+                {{ form.notes }}
+                {% if form.notes.errors %}
+                    <div class="error-message">{{ form.notes.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-lg"></i> Save Installment
+                </button>
+                <a href="{% url 'agent:booking_detail' booking.id %}" class="btn btn-secondary">
+                    <i class="bi bi-x-lg"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

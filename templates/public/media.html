@@ -1,0 +1,149 @@
+{% extends 'public/base.html' %}
+{% load static %}
+
+{% block inner_hero %}
+
+<section class="inner-hero"
+    style="background-image: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80');">
+    <div class="inner-hero-content">
+        <h1 class="inner-hero-title">Farmland Media Gallery</h1>
+        <p class="inner-hero-quote">
+            Explore our projects, plantations, landscapes and investment opportunities
+        </p>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+
+<!-- Intro -->
+<section class="why" style="background: var(--cloud-white); padding-top: 60px;">
+    <div class="section-inner">
+        <div class="why-header">
+            <div class="section-label">Media Gallery</div>
+            <h2 class="section-title">Explore Our Farmland Projects</h2>
+            <p class="section-sub" style="max-width: 700px;">Browse project images, plantations, infrastructure, amenities and surrounding landscapes from our managed farmland investment opportunities.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Gallery with filters -->
+<section class="why" style="background: var(--pale); padding-top: 40px;">
+    <div class="section-inner">
+        <!-- Filter Buttons -->
+        <div class="media-filters">
+            <button class="media-filter-btn active" data-filter="all">All</button>
+            <button class="media-filter-btn" data-filter=".cat-img-General">Projects</button>
+            <button class="media-filter-btn" data-filter=".cat-img-Interiors">Plantations</button>
+            <button class="media-filter-btn" data-filter=".cat-img-Amenities">Amenities</button>
+            <button class="media-filter-btn" data-filter=".cat-img-Neighborhood">Surroundings</button>
+        </div>
+
+        <!-- Gallery Grid -->
+        <div class="row g-4">
+            {% for image in images %}
+            <div class="col-lg-4 col-md-6 gallery-item cat-img-{{ image.category }}">
+                <div class="listing-card" style="border-radius: 20px; overflow: hidden; background: var(--cloud-white);">
+                    <div class="listing-img-wrap">
+                        {% if image.image %}
+                        <img src="{{ image.image.url }}" class="gallery-image" alt="{{ image.property.title }}" style="width:100%; height:280px; object-fit:cover; transition:.5s;">
+                        {% else %}
+                        <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80" class="gallery-image" alt="Farmland" style="width:100%; height:280px; object-fit:cover;">
+                        {% endif %}
+                    </div>
+                    <div class="listing-body">
+                        <div class="listing-name">{{ image.property.title }}</div>
+                        <div class="listing-loc">{{ image.property.location }}</div>
+                        <span class="tag" style="background: var(--mint); color: var(--emerald);">{{ image.category }}</span>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <h3 class="section-title" style="font-size: 2rem;">No Project Images Available Yet</h3>
+                <p class="section-sub" style="max-width: 100%;">Farmland project images will appear here as projects are added.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Page-specific CSS and JS (keep as is) -->
+<style>
+    .media-filters {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 50px;
+    }
+    .media-filter-btn {
+        min-width: 160px;
+        padding: 14px 28px;
+        border: 2px solid var(--gold);
+        border-radius: 50px;
+        background: var(--cloud-white);
+        color: var(--text-dark);
+        font-weight: 600;
+        font-size: 15px;
+        cursor: pointer;
+        transition: all .3s ease;
+    }
+    .media-filter-btn:hover {
+        background: var(--gold);
+        color: var(--cloud-white);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(212,162,58,.30);
+    }
+    .media-filter-btn.active {
+        background: var(--gold);
+        color: var(--cloud-white);
+        border-color: var(--gold);
+        box-shadow: 0 10px 25px rgba(212,162,58,.35);
+    }
+    .gallery-item {
+        transition: all .3s ease;
+    }
+    .gallery-item .listing-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 40px rgba(0,0,0,.12) !important;
+    }
+    .gallery-item .listing-card:hover .gallery-image {
+        transform: scale(1.05);
+    }
+    @media (max-width: 768px) {
+        .media-filter-btn {
+            min-width: 130px;
+            padding: 10px 18px;
+            font-size: 14px;
+        }
+        .gallery-image {
+            height: 220px !important;
+        }
+    }
+</style>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const buttons = document.querySelectorAll('.media-filter-btn');
+        const items = document.querySelectorAll('.gallery-item');
+        buttons.forEach(button => {
+            button.addEventListener('click', function() {
+                buttons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                const filter = this.dataset.filter;
+                items.forEach(item => {
+                    if (filter === 'all') {
+                        item.style.display = 'block';
+                    } else if (item.classList.contains(filter.replace('.', ''))) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+    });
+</script>
+
+{% endblock %}

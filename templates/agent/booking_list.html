@@ -1,0 +1,115 @@
+{% extends "agent/agent_base.html" %}
+{% load static %}
+
+{% block title %}Bookings Management | HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/agent/booking_list.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="bookings-container">
+    <!-- Header -->
+    <div class="page-header">
+        <h1>Bookings Management</h1>
+        <a href="{% url 'agent:booking_add' %}" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> New Booking
+        </a>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-bar">
+        <select name="status" onchange="location.href='?status='+this.value">
+            <option value="">All Status</option>
+            <option value="token_paid" {% if status_filter == 'token_paid' %}selected{% endif %}>Token Paid</option>
+            <option value="agreement_signed" {% if status_filter == 'agreement_signed' %}selected{% endif %}>Agreement Signed</option>
+            <option value="installment_pending" {% if status_filter == 'installment_pending' %}selected{% endif %}>Installment Pending</option>
+            <option value="installment_completed" {% if status_filter == 'installment_completed' %}selected{% endif %}>Installment Completed</option>
+            <option value="payment_completed" {% if status_filter == 'payment_completed' %}selected{% endif %}>Payment Completed</option>
+            <option value="cancelled" {% if status_filter == 'cancelled' %}selected{% endif %}>Cancelled</option>
+            <option value="refunded" {% if status_filter == 'refunded' %}selected{% endif %}>Refunded</option>
+        </select>
+    </div>
+
+    <!-- Bookings Table -->
+    <div class="bookings-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Customer Name</th>
+                    <th>Property</th>
+                    <th>Total Amount</th>
+                    <th>Token Amount</th>
+                    <th>Status</th>
+                    <th>Booking Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if bookings %}
+                    {% for booking in bookings %}
+                        <tr>
+                            <td><strong>{{ booking.customer_name }}</strong></td>
+                            <td>{{ booking.property.title|truncatewords:3 }}</td>
+                            <td>₹{{ booking.total_amount|floatformat:0 }}</td>
+                            <td>₹{{ booking.token_amount|floatformat:0 }}</td>
+                            <td><span class="status-badge status-{{ booking.status }}">{{ booking.get_status_display }}</span></td>
+                            <td>{{ booking.booking_date|date:"M d, Y" }}</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="{% url 'agent:booking_detail' booking.id %}" class="action-btn" title="View">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="{% url 'agent:booking_edit' booking.id %}" class="action-btn" title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="7">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">
+                                    <i class="bi bi-cash-stack"></i>
+                                </div>
+                                <h3>No Bookings Yet</h3>
+                                <p>Bookings will appear here when you create new property bookings.</p>
+                                <a href="{% url 'agent:booking_add' %}" class="btn btn-primary">
+                                    <i class="bi bi-plus-lg"></i> Create Your First Booking
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <nav aria-label="Page navigation" style="margin-top: 1rem;">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}">Previous</a>
+                </li>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ num }}{% if status_filter %}&status={{ status_filter }}{% endif %}">{{ num }}</a></li>
+                {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

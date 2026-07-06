@@ -1,0 +1,942 @@
+{% extends "customer/customer_base.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}Saved Properties - HeyDay Realty{% endblock %}
+
+{% block page_title %}Saved Properties{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root{
+        --primary:#0F766E;
+        --secondary:#10B981;
+        --blue:#3B82F6;
+        --purple:#8B5CF6;
+        --orange:#F59E0B;
+        --red:#EF4444;
+        --bg:#F8FAFC;
+        --card:#FFFFFF;
+        --radius:20px;
+        --glass: rgba(255,255,255,0.10);
+        --glass-2: rgba(255,255,255,0.16);
+        --border: rgba(15,118,110,0.16);
+        --shadow: 0 16px 45px rgba(15,118,110,0.10);
+    }
+
+    .saved-properties-page{
+        background: transparent;
+    }
+
+    /* Hero */
+    .sp-hero{
+        position: relative;
+        overflow: hidden;
+        border-radius: 20px;
+        box-shadow: 0 16px 50px rgba(15,118,110,0.14);
+        border: 1px solid rgba(15,118,110,0.22);
+        background: linear-gradient(135deg, rgba(15,118,110,.90) 0%, rgba(16,185,129,.70) 45%, rgba(59,130,246,.35) 100%);
+        min-height: 235px;
+    }
+    .sp-hero::before{
+        content:"";
+        position:absolute;
+        inset:-40px;
+        background: url("{% static 'img/agricultural_land_branding.jpg' %}") center/cover no-repeat;
+        opacity:.20;
+        transform: rotate(-2deg) scale(1.05);
+        filter: saturate(1.1) contrast(1.05);
+    }
+    .sp-hero::after{
+        content:"";
+        position:absolute;
+        inset:0;
+        background: linear-gradient(90deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.06) 35%, rgba(255,255,255,0) 70%);
+        pointer-events:none;
+    }
+    .sp-hero-inner{
+        position:relative;
+        z-index:2;
+        padding:1.5rem 1.6rem;
+        display:flex;
+        gap:1.25rem;
+        align-items:flex-start;
+        justify-content:space-between;
+        flex-wrap:wrap;
+        color:#fff;
+    }
+    .sp-hero-left{ flex: 1 1 520px; min-width: 280px; }
+    .sp-eyebrow{
+        display:inline-flex;
+        gap:.6rem;
+        align-items:center;
+        padding:.45rem .75rem;
+        border-radius:999px;
+        background: rgba(255,255,255,0.14);
+        border:1px solid rgba(255,255,255,0.22);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        font-weight:1000;
+        letter-spacing:.2px;
+        margin-bottom:.85rem;
+        font-size:.95rem;
+    }
+    .sp-title{ font-size: clamp(1.7rem, 2.8vw, 2.4rem); font-weight:1000; line-height:1.15; margin:0 0 .35rem 0; }
+    .sp-subtitle{ margin:0; color: rgba(255,255,255,0.92); font-weight:700; max-width: 760px; }
+
+    .sp-meta{
+        display:grid;
+        grid-template-columns: repeat(2, minmax(210px, 1fr));
+        gap:.85rem;
+        flex: 0 1 460px;
+        align-content:start;
+        min-width: 320px;
+    }
+    .sp-glass{
+        background: rgba(255,255,255,0.12);
+        border:1px solid rgba(255,255,255,0.22);
+        border-radius: 18px;
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        box-shadow: 0 14px 45px rgba(0,0,0,0.12);
+        padding: .95rem 1rem;
+        color:#fff;
+    }
+    .sp-meta-label{
+        font-size:.82rem;
+        opacity:.92;
+        text-transform:uppercase;
+        letter-spacing:.08em;
+        font-weight:1000;
+        margin-bottom:.35rem;
+    }
+    .sp-meta-value{ font-weight:1000; font-size: 1.1rem; margin:0; }
+
+    @media (max-width: 768px){
+        .sp-meta{ grid-template-columns: 1fr; min-width: unset; }
+        .sp-hero-inner{ padding: 1.1rem 1.05rem; }
+    }
+
+    /* KPI Cards */
+    .sp-kpi-grid{ display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: .95rem; }
+    @media (max-width: 992px){ .sp-kpi-grid{ grid-template-columns: repeat(2, minmax(0,1fr)); } }
+    @media (max-width: 576px){ .sp-kpi-grid{ grid-template-columns: 1fr; } }
+
+    .sp-kpi-card{
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,0.20);
+        box-shadow: 0 18px 48px rgba(15,118,110,0.10);
+        color:#fff;
+        overflow:hidden;
+        position:relative;
+        min-height: 122px;
+        transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .sp-kpi-card:hover{ transform: translateY(-5px); box-shadow: 0 26px 80px rgba(15,118,110,0.18); }
+    .sp-kpi-card::after{
+        content:"";
+        position:absolute;
+        inset:0;
+        background: radial-gradient(500px circle at 10% 10%, rgba(255,255,255,0.25), transparent 55%);
+        pointer-events:none;
+    }
+    .sp-kpi-inner{ position:relative; z-index:1; padding: 1rem 1rem; display:flex; align-items:center; justify-content:space-between; gap:.85rem; }
+    .sp-kpi-left{ display:flex; align-items:center; gap:.9rem; }
+    .sp-kpi-icon{
+        width:46px; height:46px; border-radius: 16px;
+        display:flex; align-items:center; justify-content:center;
+        background: rgba(255,255,255,0.18);
+        border: 1px solid rgba(255,255,255,0.24);
+        font-size:1.15rem;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+    .sp-kpi-count{ font-size: 2rem; font-weight:1000; line-height:1; }
+    .sp-kpi-label{ font-weight:950; opacity:.98; }
+    .sp-trend{
+        margin-top:.65rem;
+        font-weight: 900;
+        font-size: .92rem;
+        display:flex;
+        gap:.45rem;
+        align-items:center;
+        justify-content:flex-end;
+    }
+    .sp-trend-pill{
+        padding:.25rem .55rem;
+        border-radius:999px;
+        background: rgba(255,255,255,0.16);
+        border: 1px solid rgba(255,255,255,0.20);
+        white-space:nowrap;
+        font-weight: 950;
+    }
+
+    /* Toolbar */
+    .sp-toolbar-grid{ display:grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: .95rem; }
+    @media (max-width: 1200px){ .sp-toolbar-grid{ grid-template-columns: repeat(3, minmax(0,1fr)); } }
+    @media (max-width: 992px){ .sp-toolbar-grid{ grid-template-columns: repeat(2, minmax(0,1fr)); } }
+    @media (max-width: 576px){ .sp-toolbar-grid{ grid-template-columns: 1fr; } }
+
+    .sp-action-card{
+        border-radius: 20px;
+        border: 1px solid rgba(15,118,110,0.12);
+        background: rgba(255,255,255,0.92);
+        box-shadow: 0 16px 45px rgba(15,118,110,0.08);
+        overflow:hidden;
+        transition: transform .18s ease, box-shadow .18s ease;
+        padding: 1rem;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:.9rem;
+        cursor:pointer;
+        min-height: 74px;
+    }
+    .sp-action-card:hover{ transform: translateY(-4px); box-shadow: 0 26px 80px rgba(15,118,110,0.16); }
+    .sp-action-left{ display:flex; gap:.8rem; align-items:center; }
+    .sp-action-icon{
+        width:44px; height:44px;
+        border-radius: 16px;
+        display:flex; align-items:center; justify-content:center;
+        color:#fff;
+        box-shadow: 0 14px 40px rgba(0,0,0,0.12);
+    }
+    .sp-action-title{ font-weight: 1000; margin:0; }
+    .sp-action-sub{ margin: .18rem 0 0 0; color: rgba(2,6,23,0.62); font-weight: 900; font-size:.9rem; }
+
+    /* Property Grid */
+    .sp-property-grid{ display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 1rem; }
+    @media (max-width: 992px){ .sp-property-grid{ grid-template-columns: repeat(2, minmax(0,1fr)); } }
+    @media (max-width: 576px){ .sp-property-grid{ grid-template-columns: 1fr; } }
+
+    .sp-property-card{
+        border-radius: 20px;
+        overflow:hidden;
+        border: 1px solid rgba(15,118,110,0.12);
+        background: rgba(255,255,255,0.94);
+        box-shadow: 0 16px 45px rgba(15,118,110,0.08);
+        transition: transform .18s ease, box-shadow .18s ease;
+        height: 100%;
+        display:flex;
+        flex-direction:column;
+        position:relative;
+    }
+    .sp-property-card:hover{ transform: translateY(-4px); box-shadow: 0 26px 80px rgba(15,118,110,0.16); }
+
+    .sp-media{
+        position:relative;
+        background: linear-gradient(180deg, rgba(15,118,110,0.18), rgba(16,185,129,0.04));
+        border-bottom: 1px solid rgba(15,118,110,0.10);
+        aspect-ratio: 16 / 9;
+        overflow:hidden;
+    }
+    .sp-media img{ width:100%; height:100%; object-fit: cover; display:block; opacity:.97; }
+
+    .sp-fallback{
+        width:100%; height:100%;
+        display:flex; align-items:center; justify-content:center;
+        background: rgba(15,118,110,0.06);
+    }
+
+    .sp-tag{
+        position:absolute;
+        top: 12px;
+        left: 12px;
+        padding: .32rem .62rem;
+        border-radius: 999px;
+        background: rgba(15,118,110,0.92);
+        color:#fff;
+        font-weight:1000;
+        font-size:.86rem;
+        box-shadow: 0 16px 40px rgba(15,118,110,0.22);
+    }
+
+    .sp-heart{
+        position:absolute;
+        top: 12px;
+        right: 12px;
+        width: 40px;
+        height: 40px;
+        border-radius: 14px;
+        border: 1px solid rgba(255,255,255,0.35);
+        background: rgba(255,255,255,0.65);
+        color: var(--red);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        cursor:pointer;
+        transition: transform .15s ease, background .15s ease;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+    .sp-heart:hover{ transform: translateY(-2px) scale(1.02); background: rgba(255,255,255,0.85); }
+
+    .sp-body{ padding: 1rem; display:flex; flex-direction:column; gap: .55rem; flex: 1; }
+
+    .sp-title{ font-weight: 1000; line-height: 1.2; margin:0; font-size:1.04rem; }
+    .sp-type-badge{ display:inline-flex; align-items:center; gap:.35rem; padding:.32rem .62rem; border-radius:999px; font-weight:1000; border: 1px solid rgba(15,118,110,0.18); background: rgba(15,118,110,0.08); color: #0b5a4c; white-space:nowrap; }
+
+    .sp-loc{ color:#64748b; font-weight: 900; font-size: .95rem; display:flex; gap:.5rem; align-items:center; margin:0; flex-wrap:wrap; }
+
+    .sp-metric-grid{ display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:.65rem; }
+    .sp-metric{ background: rgba(255,255,255,0.80); border: 1px solid rgba(15,118,110,0.10); border-radius: 16px; padding: .6rem .7rem; }
+    .sp-metric-label{ color:#64748b; font-weight: 950; font-size: .78rem; text-transform: uppercase; letter-spacing: .02em; }
+    .sp-metric-value{ font-weight: 1000; margin-top:.25rem; }
+
+    .sp-badges{ display:flex; flex-wrap:wrap; gap:.45rem; }
+    .sp-badge{
+        padding:.33rem .62rem;
+        border-radius:999px;
+        font-weight: 1000;
+        font-size:.82rem;
+        border: 1px solid rgba(0,0,0,0.06);
+        white-space:nowrap;
+        background: rgba(2,6,23,0.02);
+        color: rgba(2,6,23,0.75);
+    }
+
+    .sp-status-row{ display:flex; gap:.5rem; align-items:center; justify-content:space-between; }
+    .sp-status{ padding:.38rem .7rem; border-radius:999px; font-weight:1000; font-size:.86rem; border: 1px solid rgba(0,0,0,0.06); white-space:nowrap; }
+    .s-available{ background: rgba(16,185,129,0.15); color: #047857; border-color: rgba(16,185,129,0.25); }
+    .s-reserved{ background: rgba(245,158,11,0.15); color: #b45309; border-color: rgba(245,158,11,0.25); }
+    .s-sold{ background: rgba(239,68,68,0.15); color: #b91c1c; border-color: rgba(239,68,68,0.25); }
+
+    .sp-actions{ display:flex; flex-direction:column; gap:.55rem; margin-top:auto; }
+    .sp-action-row{ display:flex; gap:.6rem; }
+    .sp-btn{
+        border-radius: 16px;
+        font-weight: 950;
+        padding: .65rem .85rem;
+        border: 1px solid rgba(15,118,110,0.15);
+        background: rgba(255,255,255,0.90);
+        color: var(--primary);
+        transition: transform .16s ease, box-shadow .16s ease;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        gap:.55rem;
+        flex:1;
+    }
+    .sp-btn:hover{ transform: translateY(-1px); box-shadow: 0 16px 40px rgba(15,118,110,0.14); }
+
+    .sp-btn-primary{
+        background: linear-gradient(180deg, rgba(15,118,110,0.96), rgba(6,78,59,0.96));
+        color:#fff;
+        border-color: rgba(15,118,110,0.25);
+    }
+    .sp-btn-danger{ background: linear-gradient(180deg, rgba(239,68,68,0.95), rgba(185,28,28,0.95)); color:#fff; border-color: rgba(239,68,68,0.25); }
+
+    /* Empty state */
+    .sp-empty{
+        padding: 2.2rem 1rem;
+        text-align:center;
+    }
+    .sp-empty-illustration{
+        width: 160px;
+        height: 160px;
+        margin: 0 auto 1rem auto;
+        border-radius: 48px;
+        background: linear-gradient(180deg, rgba(15,118,110,0.16), rgba(16,185,129,0.08));
+        border: 1px dashed rgba(15,118,110,0.35);
+        box-shadow: 0 16px 40px rgba(15,118,110,0.12);
+        overflow:hidden;
+        position:relative;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+    }
+    .sp-empty-illustration::before{
+        content:"";
+        position:absolute;
+        inset:0;
+        background: url("{% static 'img/agricultural_land_branding.jpg' %}") center/cover no-repeat;
+        opacity: .10;
+        transform: scale(1.05);
+    }
+    .sp-empty-illustration i{ position:relative; z-index:2; color: var(--primary); font-size: 2rem; }
+
+    .sp-empty h4{ font-weight:1000; font-size: 1.25rem; }
+    .sp-empty p{ color:#64748b; font-weight: 900; font-size: .98rem; max-width: 540px; margin: .25rem auto 0 auto; }
+
+    .sp-empty-actions{ display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; margin-top: 1.15rem; }
+
+    /* Recently + Recommended */
+    .sp-horizontal{
+        display:flex;
+        gap: .9rem;
+        overflow-x: auto;
+        padding-bottom: .25rem;
+        scroll-snap-type: x mandatory;
+    }
+    .sp-horizontal::-webkit-scrollbar{ height: 8px; }
+    .sp-horizontal::-webkit-scrollbar-thumb{ background: rgba(15,118,110,0.25); border-radius: 999px; }
+
+    .sp-mini-card{
+        flex: 0 0 auto;
+        width: 290px;
+        scroll-snap-align: start;
+        border-radius: 20px;
+        overflow:hidden;
+        border: 1px solid rgba(15,118,110,0.12);
+        background: rgba(255,255,255,0.94);
+        box-shadow: 0 16px 45px rgba(15,118,110,0.08);
+    }
+
+    .sp-section-head{ display:flex; align-items:baseline; justify-content:space-between; gap: 1rem; margin: 1.1rem 0 .9rem; flex-wrap:wrap; }
+    .sp-section-title{ font-weight:1000; margin:0; }
+    .sp-section-sub{ color:#64748b; font-weight: 900; margin: .25rem 0 0 0; }
+
+    .sp-recent-wrap, .sp-recommended-wrap{ margin-top: 1.2rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="saved-properties-page">
+    <!-- Premium Hero -->
+    <div class="sp-hero mb-4">
+        <div class="sp-hero-inner">
+            <div class="sp-hero-left">
+                <div class="sp-eyebrow"><i class="fas fa-seedling"></i> Premium Saved Properties</div>
+                <h1 class="sp-title">Saved Properties</h1>
+                <p class="sp-subtitle">Manage your favourite agricultural land and investment opportunities.</p>
+            </div>
+
+            <div class="sp-meta">
+                <div class="sp-glass">
+                    <div class="sp-meta-label">Customer</div>
+                    <p class="sp-meta-value">{{ user.first_name|default:user.username }}</p>
+                </div>
+
+                <div class="sp-glass">
+                    <div class="sp-meta-label">Total Saved Properties</div>
+                    <p class="sp-meta-value">{{ saved_properties.count|default:0 }}</p>
+                </div>
+
+                <div class="sp-glass">
+                    <div class="sp-meta-label">Total Wishlist Value</div>
+                    <p class="sp-meta-value">$ {{ wishlist_total|default:"0"|intcomma }}</p>
+                </div>
+
+                <div class="sp-glass">
+                    <div class="sp-meta-label">Last Saved Date</div>
+                    <p class="sp-meta-value">{{ last_saved_at|default:"—" }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="sp-kpi-grid mb-4">
+        <div class="sp-kpi-card" style="background: linear-gradient(135deg, #3B82F6 0%, rgba(59,130,246,0.65) 100%);">
+            <div class="sp-kpi-inner">
+                <div class="sp-kpi-left">
+                    <div class="sp-kpi-icon"><i class="fas fa-heart"></i></div>
+                    <div>
+                        <div class="sp-kpi-count">{{ saved_properties.count|default:0 }}</div>
+                        <div class="sp-kpi-label">Saved Properties</div>
+                    </div>
+                </div>
+                <div class="sp-trend"><span class="sp-trend-pill">▲ Stable Interest</span></div>
+            </div>
+        </div>
+
+        <div class="sp-kpi-card" style="background: linear-gradient(135deg, #10B981 0%, rgba(16,185,129,0.65) 100%);">
+            <div class="sp-kpi-inner">
+                <div class="sp-kpi-left">
+                    <div class="sp-kpi-icon"><i class="fas fa-sparkles"></i></div>
+                    <div>
+                        <div class="sp-kpi-count">{{ added_this_week|default:0 }}</div>
+                        <div class="sp-kpi-label">Added This Week</div>
+                    </div>
+                </div>
+                <div class="sp-trend"><span class="sp-trend-pill">▲ Quick Adds</span></div>
+            </div>
+        </div>
+
+        <div class="sp-kpi-card" style="background: linear-gradient(135deg, #F59E0B 0%, rgba(245,158,11,0.65) 100%);">
+            <div class="sp-kpi-inner">
+                <div class="sp-kpi-left">
+                    <div class="sp-kpi-icon"><i class="fas fa-tag"></i></div>
+                    <div>
+                        <div class="sp-kpi-count">{{ price_reduced|default:0 }}</div>
+                        <div class="sp-kpi-label">Price Reduced</div>
+                    </div>
+                </div>
+                <div class="sp-trend"><span class="sp-trend-pill">▼ Better Deals</span></div>
+            </div>
+        </div>
+
+        <div class="sp-kpi-card" style="background: linear-gradient(135deg, #8B5CF6 0%, rgba(139,92,246,0.65) 100%);">
+            <div class="sp-kpi-inner">
+                <div class="sp-kpi-left">
+                    <div class="sp-kpi-icon"><i class="fas fa-calendar-check"></i></div>
+                    <div>
+                        <div class="sp-kpi-count">{{ scheduled_viewings|default:0 }}</div>
+                        <div class="sp-kpi-label">Scheduled Viewings</div>
+                    </div>
+                </div>
+                <div class="sp-trend"><span class="sp-trend-pill">▲ Up Next</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Toolbar -->
+    <div class="sp-toolbar-grid mb-4">
+        <div class="sp-action-card" onclick="browseProperties()">
+            <div class="sp-action-left">
+                <div class="sp-action-icon" style="background: linear-gradient(135deg, #3B82F6, rgba(59,130,246,0.6));"><i class="fas fa-search"></i></div>
+                <div>
+                    <p class="sp-action-title">Browse Properties</p>
+                    <p class="sp-action-sub">Explore premium land</p>
+                </div>
+            </div>
+            <i class="fas fa-chevron-right" style="color:#3B82F6;"></i>
+        </div>
+
+        <div class="sp-action-card" onclick="compareProperties()">
+            <div class="sp-action-left">
+                <div class="sp-action-icon" style="background: linear-gradient(135deg, #10B981, rgba(16,185,129,0.6));"><i class="fas fa-balance-scale"></i></div>
+                <div>
+                    <p class="sp-action-title">Compare Properties</p>
+                    <p class="sp-action-sub">Shortlist side-by-side</p>
+                </div>
+            </div>
+            <i class="fas fa-chevron-right" style="color:#10B981;"></i>
+        </div>
+
+<div class="sp-action-card" onclick="scheduleViewing('')" >
+
+            <div class="sp-action-left">
+                <div class="sp-action-icon" style="background: linear-gradient(135deg, #8B5CF6, rgba(139,92,246,0.6));"><i class="fas fa-calendar-check"></i></div>
+                <div>
+                    <p class="sp-action-title">Schedule Site Visit</p>
+                    <p class="sp-action-sub">Plan your viewing</p>
+                </div>
+            </div>
+            <i class="fas fa-chevron-right" style="color:#8B5CF6;"></i>
+        </div>
+
+        <div class="sp-action-card" onclick="makeInquiry()">
+            <div class="sp-action-left">
+                <div class="sp-action-icon" style="background: linear-gradient(135deg, #F59E0B, rgba(245,158,11,0.6));"><i class="fas fa-headset"></i></div>
+                <div>
+                    <p class="sp-action-title">Contact Advisor</p>
+                    <p class="sp-action-sub">Get investment guidance</p>
+                </div>
+            </div>
+            <i class="fas fa-chevron-right" style="color:#F59E0B;"></i>
+        </div>
+
+        <div class="sp-action-card" onclick="exportWishlist()">
+            <div class="sp-action-left">
+                <div class="sp-action-icon" style="background: linear-gradient(135deg, #0F766E, rgba(15,118,110,0.6));"><i class="fas fa-file-export"></i></div>
+                <div>
+                    <p class="sp-action-title">Export Wishlist</p>
+                    <p class="sp-action-sub">Share your shortlist</p>
+                </div>
+            </div>
+            <i class="fas fa-chevron-right" style="color:#0F766E;"></i>
+        </div>
+    </div>
+
+    <!-- Property Grid -->
+    <div class="sp-section-head">
+        <div>
+            <p class="sp-section-title">Your Investment Shortlist</p>
+            <p class="sp-section-sub">Professional cards with key financial metrics</p>
+        </div>
+        <span class="badge bg-light text-dark" style="font-weight:1000; border-radius: 999px;">{{ saved_properties.count|default:0 }} saved</span>
+    </div>
+
+    {% if saved_properties %}
+        <div class="sp-property-grid mb-4">
+            {% for saved_property in saved_properties %}
+                <div class="sp-property-card">
+                    <div class="sp-media">
+                        {% if saved_property.property.image %}
+                            <img src="{{ saved_property.property.image.url }}" alt="{{ saved_property.property.title }}">
+                        {% else %}
+                            <div class="sp-fallback">
+                                <i class="fas fa-seedling" style="font-size:2rem; color: rgba(15,118,110,0.75);"></i>
+                            </div>
+                        {% endif %}
+
+                        {% if saved_property.property.featured %}
+                            <div class="sp-tag">Featured</div>
+                        {% endif %}
+
+                        <!-- Wishlist controls: keep remove-from-saved behavior via existing id + handler -->
+                        <button class="sp-heart" type="button" aria-label="Remove from saved" onclick="toggleSave({{ saved_property.property.id }})">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                    </div>
+
+                    <div class="sp-body">
+                        <div class="d-flex align-items-start justify-content-between gap-2">
+                            <div style="min-width:0;">
+                                <p class="sp-title" title="{{ saved_property.property.title }}">{{ saved_property.property.title }}</p>
+                            </div>
+                            <span class="sp-type-badge">{{ saved_property.property.get_property_type_display }}</span>
+                        </div>
+
+                        <p class="sp-loc"><i class="fas fa-map-marker-alt" style="color: var(--primary);"></i>
+                            {{ saved_property.property.village|default:saved_property.property.location }}
+                        </p>
+
+                        <!-- Property metrics -->
+                        <div class="sp-metric-grid">
+                                <div class="sp-metric">
+                                <div class="sp-metric-label">Total Area</div>
+                                <div class="sp-metric-value">{{ saved_property.property.area_sqft|default:0|intcomma }}</div>
+                                <div class="sp-metric-label" style="text-transform:none; letter-spacing:0; margin-top:.25rem;">{{ saved_property.property.area_unit|default:"sqft" }}</div>
+                            </div>
+                            <div class="sp-metric">
+                                <div class="sp-metric-label">Price</div>
+                                <div class="sp-metric-value">${{ saved_property.property.price|default:0|intcomma }}</div>
+                            </div>
+                            <div class="sp-metric">
+                                <div class="sp-metric-label">Price Per Acre</div>
+                                <div class="sp-metric-value">{{ saved_property.property.price_per_acre|default:0|intcomma }}</div>
+                            </div>
+                            <div class="sp-metric">
+                                <div class="sp-metric-label">ROI Potential</div>
+                                <div class="sp-metric-value">{{ saved_property.property.roi_potential|default:"—" }}</div>
+                            </div>
+                        </div>
+
+                        <!-- Property badges -->
+                        <div class="sp-badges">
+                            {% if saved_property.property.featured %}<span class="sp-badge">Investment Opportunity</span>{% endif %}
+                            <span class="sp-badge">Verified</span>
+                            <span class="sp-badge">Near Highway</span>
+                            <span class="sp-badge">Clear Title</span>
+                        </div>
+
+                        <!-- Property status -->
+                        {% with status=saved_property.property.status|default:"available" %}
+                            <div class="sp-status-row">
+                                <div class="sp-status {% if status == 'available' %}s-available{% elif status == 'reserved' %}s-reserved{% else %}s-sold{% endif %}">
+                                    {{ status|capfirst }}
+                                </div>
+                                <small class="text-muted" style="font-weight:900;">Saved {{ saved_property.saved_at|date:"M d, Y" }}</small>
+                            </div>
+                        {% endwith %}
+
+                        <!-- Property actions -->
+                        <div class="sp-actions">
+                            <div class="sp-action-row">
+                                <button class="sp-btn" type="button" onclick="viewDetails({{ saved_property.id }})">
+                                    <i class="fas fa-eye"></i> View Details
+                                </button>
+                            </div>
+                            <div class="sp-action-row">
+                                <button class="sp-btn sp-btn-primary" type="button" onclick="makeInquiry()">
+                                    <i class="fas fa-envelope"></i> Inquire
+                                </button>
+                            </div>
+                            <div class="sp-action-row">
+                                <button class="sp-btn" type="button" onclick="scheduleViewing({{ saved_property.id }})">
+                                    <i class="fas fa-calendar-check"></i> Schedule Visit
+                                </button>
+                                <button class="sp-btn sp-btn-danger" type="button" onclick="toggleSave({{ saved_property.property.id }})">
+                                    <i class="fas fa-heart-crack"></i> Remove
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <!-- Empty state -->
+        <div class="sp-empty mb-4">
+            <div class="sp-empty-illustration"><i class="fas fa-seedling"></i></div>
+            <h4>No Saved Properties Yet</h4>
+            <p>You haven't saved any properties yet.</p>
+            <div class="sp-empty-actions">
+                <button class="btn btn-primary" type="button" onclick="browseProperties()">
+                    <i class="fas fa-search"></i> Browse Properties
+                </button>
+                <button class="btn btn-outline-primary" type="button" onclick="browseProperties()">
+                    <i class="fas fa-leaf"></i> Explore Agricultural Land
+                </button>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Recently Viewed Properties (if provided by context) -->
+    <div class="sp-recent-wrap">
+        <div class="sp-section-head">
+            <div>
+                <p class="sp-section-title">Recently Viewed</p>
+                <p class="sp-section-sub">Your latest land research</p>
+            </div>
+            {% if recently_viewed %}
+                <span class="badge bg-light text-dark" style="font-weight:1000; border-radius: 999px;">{{ recently_viewed|length }} viewed</span>
+            {% endif %}
+        </div>
+
+        {% if recently_viewed %}
+            <div class="sp-horizontal mb-4">
+                {% for p in recently_viewed %}
+                    <div class="sp-mini-card">
+                        <div class="sp-media" style="aspect-ratio: 16/9;">
+                            {% if p.image %}
+                                <img src="{{ p.image.url }}" alt="{{ p.title }}">
+                            {% else %}
+                                <div class="sp-fallback"><i class="fas fa-seedling" style="font-size:2rem; color: rgba(15,118,110,0.75);"></i></div>
+                            {% endif %}
+                        </div>
+                        <div class="sp-body">
+                            <p class="sp-title">{{ p.title }}</p>
+                            <p class="sp-loc"><i class="fas fa-map-marker-alt" style="color: var(--primary);"></i>{{ p.location|default:"—" }}</p>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="fw-bold" style="color: var(--primary);">${{ p.price|default:0|intcomma }}</div>
+                                <button class="btn btn-sm btn-primary" style="border-radius: 14px; font-weight:1000;" onclick="makeInquiry()">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Recommended Properties (if provided by context) -->
+    <div class="sp-recommended-wrap">
+        <div class="sp-section-head">
+            <div>
+                <p class="sp-section-title">Recommended Agricultural Land</p>
+                <p class="sp-section-sub">Based on saved + viewed activity</p>
+            </div>
+        </div>
+
+        {% if recommended_properties %}
+            <div class="sp-property-grid">
+                {% for p in recommended_properties %}
+                    <div class="sp-property-card">
+                        <div class="sp-media">
+                            <img src="{% if p.image %}{{ p.image.url }}{% else %}{% static 'img/agricultural_land_branding.jpg' %}{% endif %}" alt="{{ p.title }}">
+                            <div class="sp-tag">For You</div>
+                        </div>
+                        <div class="sp-body">
+                            <p class="sp-title">{{ p.title }}</p>
+                            <p class="sp-loc"><i class="fas fa-map-marker-alt" style="color: var(--primary);"></i>{{ p.location|default:"—" }}</p>
+                            <div class="sp-metric-grid">
+                                <div class="sp-metric">
+                                    <div class="sp-metric-label">Total Area</div>
+                                    <div class="sp-metric-value">{{ p.area_sqft|default:0|intcomma }}</div>
+                                    <div class="sp-metric-label" style="text-transform:none; letter-spacing:0; margin-top:.25rem;">{{ p.area_unit|default:"sqft" }}</div>
+                                </div>
+                                <div class="sp-metric">
+                                    <div class="sp-metric-label">Price</div>
+                                    <div class="sp-metric-value">${{ p.price|default:0|intcomma }}</div>
+                                </div>
+                            </div>
+                            <div class="sp-actions">
+                                <button class="sp-btn sp-btn-primary" type="button" onclick="makeInquiry()">
+                                    <i class="fas fa-eye"></i> View Details
+                                </button>
+                                <button class="sp-btn" type="button" onclick="save_property()">
+                                    <i class="fas fa-heart"></i> Save
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Property Details Modal (keep existing ids/functionality) -->
+    <div class="modal fade" id="propertyDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Property Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="propertyDetailsContent">
+                        <!-- Content will be loaded dynamically -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="makeInquiry()">Make Inquiry</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notes Modal (keep existing ids/functionality) -->
+    <div class="modal fade" id="notesModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Property Notes</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="notesForm">
+                        <div class="mb-3">
+                            <label for="propertyNotes" class="form-label">Your Notes</label>
+                            <textarea class="form-control" id="propertyNotes" rows="4" placeholder="Add your notes about this property..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="propertyRating" class="form-label">Rating</label>
+                            <select class="form-select" id="propertyRating">
+                                <option value="">Select Rating</option>
+                                <option value="5">5 Stars - Excellent</option>
+                                <option value="4">4 Stars - Very Good</option>
+                                <option value="3">3 Stars - Good</option>
+                                <option value="2">2 Stars - Fair</option>
+                                <option value="1">1 Star - Poor</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-warning" onclick="saveNotes()">Save Notes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Preserving existing frontend function names.
+        function toggleFavorite(button, propertyId) {
+            button.classList.toggle('active');
+            const isActive = button.classList.contains('active');
+            
+            if (isActive) {
+                alert('Property added to favorites!');
+            } else {
+                if (confirm('Are you sure you want to remove this property from your saved list?')) {
+                    alert('Property removed from favorites!');
+                    // In a real implementation, this would remove the property and refresh the page
+                } else {
+                    button.classList.add('active');
+                }
+            }
+        }
+
+        function viewProperty(propertyId) {
+            // Use plain string concatenation to avoid JS parser/template-literal issues.
+            var contentEl = document.getElementById('propertyDetailsContent');
+            if (!contentEl) return;
+
+            contentEl.innerHTML = '' +
+                '<div class="text-center">' +
+                    '<div class="spinner-border" role="status">' +
+                        '<span class="visually-hidden">Loading...</span>' +
+                    '</div>' +
+                '</div>';
+
+            setTimeout(() => {
+                var h4 = '{{ saved_properties.first.property.title|default:"Property" }}';
+                contentEl.innerHTML = '' +
+                    '<div class="row">' +
+                        '<div class="col-md-8">' +
+                            '<div class="carousel slide" data-bs-ride="carousel">' +
+                                '<div class="carousel-inner">' +
+                                    '<div class="carousel-item active">' +
+                                        '<img src="https://picsum.photos/seed/property' + propertyId + '/800/450.jpg" class="d-block w-100" alt="Property Image">' +
+                                    '</div>' +
+                                    '<div class="carousel-item">' +
+                                        '<img src="https://picsum.photos/seed/property' + propertyId + 'b/800/450.jpg" class="d-block w-100" alt="Property Image">' +
+                                    '</div>' +
+                                '</div>' +
+                                '<button class="carousel-control-prev" type="button" data-bs-target="#propertyCarousel" data-bs-slide="prev">' +
+                                    '<span class="carousel-control-prev-icon"></span>' +
+                                '</button>' +
+                                '<button class="carousel-control-next" type="button" data-bs-target="#propertyCarousel" data-bs-slide="next">' +
+                                    '<span class="carousel-control-next-icon"></span>' +
+                                '</button>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="col-md-4">' +
+                            '<h4>' + h4 + '</h4>' +
+                            '<div class="price-tag mb-3">$350,000</div>' +
+                            '<p><i class="fas fa-map-marker-alt"></i> Investment Location</p>' +
+                            '<div class="d-flex justify-content-between text-muted mb-3">' +
+                                '<span><i class="fas fa-ruler"></i> 1,200 sqft</span>' +
+                                '<span><i class="fas fa-layer-group"></i> Investment</span>' +
+                            '</div>' +
+                            '<div class="mb-3">' +
+                                '<h6>Highlights</h6>' +
+                                '<ul class="list-unstyled">' +
+                                    '<li><i class="fas fa-check text-success"></i> Agri-ready</li>' +
+                                    '<li><i class="fas fa-check text-success"></i> Verified</li>' +
+                                    '<li><i class="fas fa-check text-success"></i> Clear Title</li>' +
+                                '</ul>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>';
+            }, 900);
+
+            new bootstrap.Modal(document.getElementById('propertyDetailsModal')).show();
+        }
+
+
+        // Compatibility: old buttons may call viewDetails
+        function viewDetails(propertyId){
+            viewProperty(propertyId);
+        }
+
+        function scheduleViewing(propertyId) {
+            // If a viewing modal exists elsewhere, keep behaviour.
+            // Otherwise, keep non-breaking frontend alert.
+            alert('Schedule visit flow. Backend URLs unchanged.');
+        }
+
+        function submitViewing() {
+            alert('Viewing scheduled successfully! We will contact you to confirm the details.');
+        }
+
+        function addNotes(savedPropertyId) {
+            new bootstrap.Modal(document.getElementById('notesModal')).show();
+        }
+
+        function saveNotes() {
+            alert('Notes saved successfully!');
+            const modalEl = document.getElementById('notesModal');
+            if(modalEl){
+                const inst = bootstrap.Modal.getInstance(modalEl);
+                if(inst) inst.hide();
+            }
+        }
+
+        function makeInquiry() {
+            alert('Redirecting to inquiry form...');
+        }
+
+        function browseProperties() {
+            alert('Redirecting to property browsing page...');
+        }
+
+        function compareProperties() {
+            alert('Compare feature would be implemented here...');
+        }
+
+        function exportWishlist(){
+            alert('Export wishlist (UI only). Backend URLs unchanged.');
+        }
+
+        // Preserve remove-from-saved action hook.
+        function toggleSave(propertyId) {
+            if (confirm('Remove this property from your saved list?')) {
+                window.location.href = '/buy/saved/' + propertyId + '/remove/';
+            }
+        }
+
+        function save_property(){
+            alert('Save property flow (UI placeholder).');
+        }
+    </script>
+</div>
+{% endblock %}
+

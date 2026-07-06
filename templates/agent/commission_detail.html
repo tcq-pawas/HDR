@@ -1,0 +1,65 @@
+{% extends "agent/agent_base.html" %}
+{% load static %}
+
+{% block title %}Commission Details | HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/agent/commission_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="commission-detail-container">
+    <!-- Header -->
+    <div class="page-header">
+        <h1>Commission Details</h1>
+        <a href="{% url 'agent:commission_list' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Commissions
+        </a>
+    </div>
+
+    <!-- Commission Information -->
+    <div class="card">
+        <h3>Commission Information</h3>
+        <div class="info-row">
+            <div class="info-label">Property:</div>
+            <div class="info-value"><strong>{{ commission.property.title }}</strong></div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Commission Amount:</div>
+            <div class="info-value"><span class="amount-highlight">₹{{ commission.commission_amount|floatformat:0 }}</span></div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Commission Rate:</div>
+            <div class="info-value">{{ commission.commission_rate }}%</div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Sale Amount:</div>
+            <div class="info-value">₹{{ commission.sale_amount|floatformat:0 }}</div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Status:</div>
+            <div class="info-value"><span class="status-badge status-{{ commission.status }}">{{ commission.get_status_display }}</span></div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Due Date:</div>
+            <div class="info-value">{{ commission.due_date|date:"M d, Y"|default:"N/A" }}</div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Paid Date:</div>
+            <div class="info-value">{{ commission.paid_date|date:"M d, Y"|default:"N/A" }}</div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Payment Method:</div>
+            <div class="info-value">{{ commission.payment_method|default:"N/A" }}</div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Created Date:</div>
+            <div class="info-value">{{ commission.created_at|date:"M d, Y H:i" }}</div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Notes:</div>
+            <div class="info-value">{{ commission.notes|default:"N/A" }}</div>
+        </div>
+    </div>
+</div>
+{% endblock %}

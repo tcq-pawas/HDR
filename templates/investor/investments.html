@@ -1,0 +1,218 @@
+{% extends "investor/investor_base.html" %}
+{% load humanize %}
+
+{% block title %}My Investments - HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+.investment-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s;
+}
+.investment-card:hover {
+    transform: translateY(-2px);
+}
+.status-badge {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.75rem;
+}
+.roi-positive {
+    color: #28a745;
+    font-weight: bold;
+}
+.roi-negative {
+    color: #dc3545;
+    font-weight: bold;
+{% endblock %}
+
+{% block page_title %}My Investments{% endblock %}
+
+{% block header %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2><i class="fas fa-hand-holding-usd text-success me-2"></i>My Investments</h2>
+        <p class="text-muted">View your investment portfolio</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+
+
+    <!-- Investments List -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">All Investments</h5>
+        </div>
+        <div class="card-body">
+            <!-- Dummy Investment 1 -->
+            <div class="investment-card mb-3">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <div class="d-flex align-items-start">
+                                <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="card-title mb-1">Modern Downtown Apartment</h6>
+                                    <p class="card-text text-muted mb-2">
+                                        <i class="fas fa-home"></i> Luxury Condo Complex
+                                        <span class="ms-3"><i class="fas fa-map-marker-alt"></i> Downtown Area</span>
+                                    </p>
+                                    <div class="d-flex align-items-center text-muted small">
+                                        <span class="me-3"><i class="fas fa-dollar-sign"></i> $50,000</span>
+                                        <span class="me-3"><i class="fas fa-calendar"></i> Jan 15, 2024</span>
+                                        <span class="badge status-badge bg-success">Confirmed</span>
+                                        <span class="ms-3 badge bg-info">Equity Investment</span>
+                                    </div>
+                                    <div class="mt-2">
+                                        <small class="text-muted">
+                                            <i class="fas fa-chart-line"></i> Current ROI: 
+                                            <span class="roi-positive">8.3%</span>
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="btn-group">
+                                <a href="{% url 'investor:investment-detail' 1 %}" class="btn btn-sm btn-outline-info">
+                                    <i class="fas fa-eye"></i> Details
+                                </a>
+                                <a href="{% url 'investor:investment-roi' 1 %}" class="btn btn-sm btn-outline-success">
+                                    <i class="fas fa-chart-line"></i> ROI
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dummy Investment 2 -->
+            <div class="investment-card mb-3">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <div class="d-flex align-items-start">
+                                <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="card-title mb-1">Suburban Family House</h6>
+                                    <p class="card-text text-muted mb-2">
+                                        <i class="fas fa-home"></i> Residential Property Development
+                                        <span class="ms-3"><i class="fas fa-map-marker-alt"></i> Suburban District</span>
+                                    </p>
+                                    <div class="d-flex align-items-center text-muted small">
+                                        <span class="me-3"><i class="fas fa-dollar-sign"></i> $25,000</span>
+                                        <span class="me-3"><i class="fas fa-calendar"></i> Feb 20, 2024</span>
+                                        <span class="badge status-badge bg-success">Confirmed</span>
+                                        <span class="ms-3 badge bg-info">Debt Investment</span>
+                                    </div>
+                                    <div class="mt-2">
+                                        <small class="text-muted">
+                                            <i class="fas fa-chart-line"></i> Current ROI: 
+                                            <span class="roi-positive">6.2%</span>
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="btn-group">
+                                <a href="{% url 'investor:investment-detail' 2 %}" class="btn btn-sm btn-outline-info">
+                                    <i class="fas fa-eye"></i> Details
+                                </a>
+                                <a href="{% url 'investor:investment-roi' 2 %}" class="btn btn-sm btn-outline-success">
+                                    <i class="fas fa-chart-line"></i> ROI
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dummy Investment 3 -->
+            <div class="investment-card mb-3">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <div class="d-flex align-items-start">
+                                <div class="rounded-circle bg-warning text-white d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="card-title mb-1">Luxury Penthouse</h6>
+                                    <p class="card-text text-muted mb-2">
+                                        <i class="fas fa-home"></i> High-End Residential Tower
+                                        <span class="ms-3"><i class="fas fa-map-marker-alt"></i> City Center</span>
+                                    </p>
+                                    <div class="d-flex align-items-center text-muted small">
+                                        <span class="me-3"><i class="fas fa-dollar-sign"></i> $75,000</span>
+                                        <span class="me-3"><i class="fas fa-calendar"></i> Mar 10, 2024</span>
+                                        <span class="badge status-badge bg-warning">Pending</span>
+                                        <span class="ms-3 badge bg-info">Equity Investment</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="btn-group">
+                                <a href="{% url 'investor:investment-detail' 3 %}" class="btn btn-sm btn-outline-info">
+                                    <i class="fas fa-eye"></i> Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dummy Investment 4 -->
+            <div class="investment-card mb-3">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <div class="d-flex align-items-start">
+                                <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px;">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="card-title mb-1">Commercial Office Building</h6>
+                                    <p class="card-text text-muted mb-2">
+                                        <i class="fas fa-home"></i> Business Park Development
+                                        <span class="ms-3"><i class="fas fa-map-marker-alt"></i> Industrial Zone</span>
+                                    </p>
+                                    <div class="d-flex align-items-center text-muted small">
+                                        <span class="me-3"><i class="fas fa-dollar-sign"></i> $100,000</span>
+                                        <span class="me-3"><i class="fas fa-calendar"></i> Dec 5, 2023</span>
+                                        <span class="badge status-badge bg-success">Confirmed</span>
+                                        <span class="ms-3 badge bg-info">Equity Investment</span>
+                                    </div>
+                                    <div class="mt-2">
+                                        <small class="text-muted">
+                                            <i class="fas fa-chart-line"></i> Current ROI: 
+                                            <span class="roi-positive">12.8%</span>
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="btn-group">
+                                <a href="{% url 'investor:investment-detail' 4 %}" class="btn btn-sm btn-outline-info">
+                                    <i class="fas fa-eye"></i> Details
+                                </a>
+                                <a href="{% url 'investor:investment-roi' 4 %}" class="btn btn-sm btn-outline-success">
+                                    <i class="fas fa-chart-line"></i> ROI
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

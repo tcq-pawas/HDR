@@ -1,0 +1,102 @@
+{% extends "agent/agent_base.html" %}
+{% load static %}
+
+{% block title %}{{ title }} | HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/agent/document_form.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="document-form-container">
+    <!-- Header -->
+    <div class="page-header">
+        <h1>{{ title }}</h1>
+    </div>
+
+    <!-- Form -->
+    <div class="card">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.document_type.id_for_label }}">Document Type *</label>
+                    {{ form.document_type }}
+                    {% if form.document_type.errors %}
+                        <div class="error-message">{{ form.document_type.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.category.id_for_label }}">Category *</label>
+                    {{ form.category }}
+                    {% if form.category.errors %}
+                        <div class="error-message">{{ form.category.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.title.id_for_label }}">Document Title *</label>
+                {{ form.title }}
+                {% if form.title.errors %}
+                    <div class="error-message">{{ form.title.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.property.id_for_label }}">Property (Optional)</label>
+                    {{ form.property }}
+                    {% if form.property.errors %}
+                        <div class="error-message">{{ form.property.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.booking.id_for_label }}">Booking (Optional)</label>
+                    {{ form.booking }}
+                    {% if form.booking.errors %}
+                        <div class="error-message">{{ form.booking.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.file.id_for_label }}">File *</label>
+                {{ form.file }}
+                {% if form.file.errors %}
+                    <div class="error-message">{{ form.file.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.description.id_for_label }}">Description</label>
+                {{ form.description }}
+                {% if form.description.errors %}
+                    <div class="error-message">{{ form.description.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.is_public.id_for_label }}">
+                    {{ form.is_public }} Make Public
+                </label>
+                {% if form.is_public.errors %}
+                    <div class="error-message">{{ form.is_public.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-upload"></i> Upload Document
+                </button>
+                <a href="{% url 'agent:document_list' %}" class="btn btn-secondary">
+                    <i class="bi bi-x-lg"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

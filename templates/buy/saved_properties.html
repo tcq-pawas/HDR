@@ -1,0 +1,299 @@
+{% extends "public/base.html" %}
+{% load static %}
+
+{% block title %}Saved Properties | HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+<style>
+    .saved-properties-wrapper {
+        padding: 4rem 0;
+        background: var(--cloud-white);
+        min-height: 80vh;
+    }
+    .saved-properties-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+    .page-header {
+        margin-bottom: 3rem;
+    }
+    .page-header h1 {
+        font-family: var(--font-heading);
+        font-size: 2.5rem;
+        color: var(--forest);
+        margin-bottom: 0.5rem;
+    }
+    .page-header p {
+        color: var(--text-muted);
+        font-size: 1rem;
+    }
+    .properties-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+    .property-card {
+        background: var(--cloud-white);
+        border-radius: 20px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        box-shadow: 0 8px 30px rgba(27,67,50,0.06);
+        transition: all 0.3s ease;
+    }
+    .property-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 40px rgba(27,67,50,0.1);
+        border-color: var(--gold);
+    }
+    .property-image-wrapper {
+        position: relative;
+        overflow: hidden;
+        height: 200px;
+        background: var(--pale);
+    }
+    .property-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    .property-card:hover .property-image {
+        transform: scale(1.05);
+    }
+    .wishlist-remove-btn {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        width: 40px;
+        height: 40px;
+        background: var(--cloud-white);
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        color: var(--gold);
+        z-index: 10;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+    }
+    .wishlist-remove-btn:hover {
+        background: var(--gold);
+        color: var(--cloud-white);
+        transform: scale(1.1);
+    }
+    .property-content {
+        padding: 1.5rem;
+    }
+    .property-title {
+        font-family: var(--font-heading);
+        font-size: 1.2rem;
+        color: var(--forest);
+        margin-bottom: 0.5rem;
+        font-weight: 700;
+    }
+    .property-location {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        margin-bottom: 0.75rem;
+    }
+    .property-price {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--gold);
+        margin-bottom: 0.75rem;
+    }
+    .property-details-mini {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 0.5rem;
+        padding: 0.75rem 0;
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 1rem;
+        font-size: 0.85rem;
+        color: var(--text-mid);
+        text-align: center;
+    }
+    .property-detail-item strong {
+        display: block;
+        color: var(--forest);
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+    .property-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+    .action-btn {
+        flex: 1;
+        padding: 0.6rem;
+        border: 1px solid var(--border);
+        background: var(--cloud-white);
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        transition: all 0.3s ease;
+        font-size: 0.85rem;
+        color: var(--text-mid);
+    }
+    .action-btn:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+    }
+    .action-btn-primary {
+        background: var(--forest);
+        color: var(--cloud-white);
+        border-color: var(--forest);
+    }
+    .action-btn-primary:hover {
+        background: var(--emerald);
+        border-color: var(--emerald);
+        color: var(--cloud-white);
+    }
+
+    /* Empty State */
+    .empty-state {
+        background: var(--cloud-white);
+        padding: 4rem 2rem;
+        border-radius: 28px;
+        text-align: center;
+        border: 2px dashed var(--border);
+        margin: 3rem 0;
+    }
+    .empty-state-icon {
+        font-size: 4rem;
+        color: var(--border);
+        margin-bottom: 1rem;
+    }
+    .empty-state h2 {
+        font-family: var(--font-heading);
+        font-size: 1.8rem;
+        color: var(--forest);
+        margin-bottom: 0.5rem;
+    }
+    .empty-state p {
+        color: var(--text-muted);
+        margin-bottom: 2rem;
+    }
+    .empty-state-btn {
+        padding: 0.75rem 1.5rem;
+        background: var(--gold);
+        color: var(--forest);
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        font-weight: 700;
+        transition: all 0.3s ease;
+    }
+    .empty-state-btn:hover {
+        background: #d4931f;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(233,166,42,0.3);
+    }
+
+    @media (max-width: 768px) {
+        .page-header h1 { font-size: 1.8rem; }
+        .properties-grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem; }
+        .property-details-mini { grid-template-columns: 1fr 1fr; }
+        .property-actions { flex-direction: column; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="saved-properties-wrapper">
+    <div class="saved-properties-container">
+        <div class="page-header">
+            <h1>My Saved Properties</h1>
+            <p>Properties you've bookmarked for later review</p>
+        </div>
+
+        {% if saved_items %}
+            <div class="properties-grid">
+                {% for item in saved_items %}
+                    <div class="property-card">
+                        <div class="property-image-wrapper">
+                            {% if item.property.images.all %}
+                                <img src="{{ item.property.images.first.image.url }}" alt="{{ item.property.title }}" class="property-image">
+                            {% else %}
+                                <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:var(--pale); color:var(--text-muted);">
+                                    <i class="bi bi-image" style="font-size:2rem;"></i>
+                                </div>
+                            {% endif %}
+                            <form method="post" action="{% url 'buy:remove_saved_property' item.property.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="wishlist-remove-btn" title="Remove from saved">
+                                    <i class="bi bi-heart-fill"></i>
+                                </button>
+                            </form>
+                        </div>
+                        <div class="property-content">
+                            <h3 class="property-title">{{ item.property.title }}</h3>
+                            <div class="property-location">
+                                <i class="bi bi-geo-alt"></i> {{ item.property.location }}
+                            </div>
+                            <div class="property-price">₹{{ item.property.price|floatformat:0 }}</div>
+                            <div class="property-details-mini">
+                                <div class="property-detail-item">
+                                    <strong>{{ item.property.area_sqft }}</strong>
+                                    <span>Sq Ft</span>
+                                </div>
+                                <div class="property-detail-item">
+                                    <strong>{{ item.property.bedrooms }}</strong>
+                                    <span>Bedrooms</span>
+                                </div>
+                                <div class="property-detail-item">
+                                    <strong>{{ item.property.bathrooms }}</strong>
+                                    <span>Bathrooms</span>
+                                </div>
+                            </div>
+                            <div class="property-actions">
+                                <a href="{% url 'buy:property_detail' item.property.id %}" class="action-btn action-btn-primary">
+                                    <i class="bi bi-eye"></i> View Details
+                                </a>
+                                <button class="action-btn" onclick="shareProperty('{{ item.property.title }}', window.location.href)">
+                                    <i class="bi bi-share"></i> Share
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-state-icon"><i class="bi bi-heart"></i></div>
+                <h2>No Saved Properties</h2>
+                <p>You haven't saved any properties yet. Start exploring and save your favorites!</p>
+                <a href="{% url 'buy:property_search' %}" class="empty-state-btn">
+                    <i class="bi bi-search"></i> Browse Properties
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    function shareProperty(title, url) {
+        if (navigator.share) {
+            navigator.share({ title: 'Check out this property', text: title, url: url });
+        } else {
+            alert('Share this property: ' + title);
+        }
+    }
+</script>
+{% endblock %}

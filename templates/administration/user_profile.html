@@ -1,0 +1,1166 @@
+{% extends "administration/admin_base.html" %}
+{% load humanize %}
+
+{% block title %}User Profile - Admin Dashboard{% endblock %}
+
+{% block page_title %}User Profile{% endblock %}
+
+{% block page_subtitle %}View and manage user details, permissions, and activity.{% endblock %}
+
+{% block content %}
+<style>
+    * {
+        font-family: 'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    
+    .profile-card {
+        background: #FFFFFF;
+        border-radius: 20px;
+        border: 1px solid #E2E8F0;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+        padding: 32px;
+        margin-bottom: 24px;
+    }
+    
+    .profile-header-section {
+        display: flex;
+        align-items: flex-start;
+        gap: 24px;
+        margin-bottom: 24px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid #F1F5F9;
+    }
+    
+    .profile-avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #0F766E 0%, #10B981 100%);
+        border: 4px solid #F8FAFC;
+        box-shadow: 0 4px 12px rgba(15, 118, 110, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: white;
+        flex-shrink: 0;
+    }
+    
+    .profile-info {
+        flex: 1;
+    }
+    
+    .profile-name {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #0F172A;
+        margin-bottom: 4px;
+    }
+    
+    .profile-username {
+        color: #64748B;
+        font-size: 0.95rem;
+        margin-bottom: 8px;
+    }
+    
+    .profile-email {
+        color: #64748B;
+        font-size: 0.875rem;
+        margin-bottom: 12px;
+    }
+    
+    .profile-badges {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+    
+    .role-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+    
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+    
+    .status-badge.active {
+        background: #D1FAE5;
+        color: #059669;
+    }
+    
+    .status-badge.inactive {
+        background: #FEE2E2;
+        color: #DC2626;
+    }
+    
+    .action-bar {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+    
+    .action-btn {
+        padding: 10px 18px;
+        border-radius: 10px;
+        font-weight: 500;
+        font-size: 0.875rem;
+        transition: all 0.2s;
+        border: 1px solid #E2E8F0;
+        background: #FFFFFF;
+        color: #0F172A;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .action-btn:hover {
+        background: #F8FAFC;
+        border-color: #CBD5E1;
+        transform: translateY(-1px);
+    }
+    
+    .action-btn.primary {
+        background: linear-gradient(135deg, #0F766E 0%, #10B981 100%);
+        color: white;
+        border: none;
+    }
+    
+    .action-btn.primary:hover {
+        background: linear-gradient(135deg, #0D655F 0%, #0E9A8A 100%);
+        box-shadow: 0 4px 12px rgba(15, 118, 110, 0.3);
+    }
+    
+    .action-btn.danger {
+        background: #FEE2E2;
+        color: #DC2626;
+        border-color: #FECACA;
+    }
+    
+    .action-btn.danger:hover {
+        background: #FECACA;
+    }
+    
+    .info-card {
+        background: #FFFFFF;
+        border-radius: 16px;
+        border: 1px solid #E2E8F0;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+        padding: 24px;
+        margin-bottom: 24px;
+    }
+    
+    .info-card h5 {
+        font-weight: 600;
+        color: #0F172A;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #F1F5F9;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .info-card h5 i {
+        color: #0F766E;
+    }
+    
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px solid #F8FAFC;
+    }
+    
+    .info-row:last-child {
+        border-bottom: none;
+    }
+    
+    .info-label {
+        color: #64748B;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+    
+    .info-value {
+        color: #0F172A;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+    
+    .kpi-card {
+        background: #FFFFFF;
+        border-radius: 16px;
+        border: 1px solid #E2E8F0;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+        padding: 20px;
+        text-align: center;
+        transition: all 0.3s;
+    }
+    
+    .kpi-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+    
+    .kpi-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 12px;
+        font-size: 1.25rem;
+    }
+    
+    .kpi-value {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #0F172A;
+        margin-bottom: 4px;
+    }
+    
+    .kpi-label {
+        font-size: 0.8rem;
+        color: #64748B;
+        font-weight: 500;
+    }
+    
+    .timeline {
+        position: relative;
+        padding-left: 20px;
+    }
+    
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: #E2E8F0;
+    }
+    
+    .timeline-item {
+        position: relative;
+        padding-bottom: 20px;
+    }
+    
+    .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: -24px;
+        top: 4px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #0F766E;
+        border: 2px solid #FFFFFF;
+        box-shadow: 0 0 0 2px #0F766E;
+    }
+    
+    .timeline-item:last-child {
+        padding-bottom: 0;
+    }
+    
+    .timeline-action {
+        font-weight: 600;
+        color: #0F172A;
+        font-size: 0.9rem;
+        margin-bottom: 4px;
+    }
+    
+    .timeline-time {
+        color: #94A3B8;
+        font-size: 0.8rem;
+    }
+    
+    .permission-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        border-radius: 10px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        background: #F0F9FF;
+        color: #0369A1;
+        border: 1px solid #BAE6FD;
+    }
+    
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #64748B;
+        font-weight: 500;
+        font-size: 0.9rem;
+        text-decoration: none;
+        padding: 10px 16px;
+        border-radius: 10px;
+        transition: all 0.2s;
+        margin-bottom: 24px;
+    }
+    
+    .back-link:hover {
+        background: #F8FAFC;
+        color: #0F172A;
+    }
+    
+    @media (max-width: 768px) {
+        .profile-header-section {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .profile-avatar {
+            margin: 0 auto;
+        }
+        
+        .profile-badges {
+            justify-content: center;
+        }
+        
+        .action-bar {
+            flex-direction: column;
+        }
+        
+        .action-btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+
+<!-- Back Button -->
+<a href="{% url 'admin_dash:user-management-page' %}" class="back-link">
+    <i class="fas fa-arrow-left"></i>
+    Back to Users
+</a>
+
+<!-- Profile Card -->
+<div class="profile-card">
+    <div class="profile-header-section">
+        <div class="profile-avatar">
+            {{ viewed_user.username|first|upper }}
+        </div>
+        <div class="profile-info">
+            <div class="profile-name">{{ viewed_user.get_full_name|default:viewed_user.username }}</div>
+            <div class="profile-username">@{{ viewed_user.username }}</div>
+            <div class="profile-email">{{ viewed_user.email }}</div>
+            <div class="profile-email">
+                <i class="fas fa-phone fa-sm text-muted me-1"></i>
+                {% if viewed_user.customer_profile.phone %}
+                    {{ viewed_user.customer_profile.phone }}
+                {% elif viewed_user.investor_profile.phone %}
+                    {{ viewed_user.investor_profile.phone }}
+                {% elif viewed_user.agent_profile.phone %}
+                    {{ viewed_user.agent_profile.phone }}
+                {% else %}
+                    No phone number
+                {% endif %}
+            </div>
+            <div class="profile-badges">
+                {% if viewed_user.role == 'admin' %}
+                    <span class="role-badge" style="background: linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%); color: white;">
+                        <i class="fas fa-shield-alt"></i> Admin
+                    </span>
+                {% elif viewed_user.role == 'owner' %}
+                    <span class="role-badge" style="background: linear-gradient(135deg, #0284C7 0%, #38BDF8 100%); color: white;">
+                        <i class="fas fa-key"></i> Owner
+                    </span>
+                {% elif viewed_user.role == 'agent' %}
+                    <span class="role-badge" style="background: linear-gradient(135deg, #2563EB 0%, #3B82F6 100%); color: white;">
+                        <i class="fas fa-user-tie"></i> Agent
+                    </span>
+                {% elif viewed_user.role == 'investor' %}
+                    <span class="role-badge" style="background: linear-gradient(135deg, #10B981 0%, #34D399 100%); color: white;">
+                        <i class="fas fa-chart-line"></i> Investor
+                    </span>
+                {% elif viewed_user.role == 'customer' %}
+                    <span class="role-badge" style="background: linear-gradient(135deg, #F97316 0%, #FB923C 100%); color: white;">
+                        <i class="fas fa-user"></i> Customer
+                    </span>
+                {% else %}
+                    <span class="role-badge" style="background: #94A3B8; color: white;">
+                        <i class="fas fa-question"></i> Unassigned
+                    </span>
+                {% endif %}
+                
+                {% if viewed_user.is_active %}
+                    <span class="status-badge active">
+                        <span style="width: 6px; height: 6px; background: #059669; border-radius: 50%;"></span>
+                        Active
+                    </span>
+                {% else %}
+                    <span class="status-badge inactive">
+                        <span style="width: 6px; height: 6px; background: #DC2626; border-radius: 50%;"></span>
+                        Inactive
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Action Bar -->
+    <div class="action-bar">
+        {% if viewed_user.is_active %}
+            <button class="action-btn" onclick="suspendUser()">
+                <i class="fas fa-pause"></i> Suspend User
+            </button>
+        {% else %}
+            <button class="action-btn" onclick="activateUser()">
+                <i class="fas fa-play"></i> Activate User
+            </button>
+        {% endif %}
+        <button class="action-btn" onclick="resetPassword()">
+            <i class="fas fa-key"></i> Reset Password
+        </button>
+        <button class="action-btn" onclick="changeRole()">
+            <i class="fas fa-user-tag"></i> Change Role
+        </button>
+        <button class="action-btn danger" onclick="deleteUser()">
+            <i class="fas fa-trash"></i> Delete User
+        </button>
+    </div>
+</div>
+
+<!-- KPI Cards Row -->
+<div class="row mb-4">
+    <div class="col-6 col-md-2 mb-3">
+        <div class="kpi-card">
+            <div class="kpi-icon" style="background: #E0E7FF; color: #4338CA;">
+                <i class="fas fa-sign-in-alt"></i>
+            </div>
+            <div class="kpi-value">{{ viewed_user.login_count|default:"0" }}</div>
+            <div class="kpi-label">Total Logins</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-2 mb-3">
+        <div class="kpi-card">
+            <div class="kpi-icon" style="background: #D1FAE5; color: #059669;">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="kpi-value">{{ viewed_user.date_joined|timesince }}</div>
+            <div class="kpi-label">Account Age</div>
+        </div>
+    </div>
+    {% if viewed_user.role == 'customer' %}
+        <div class="col-6 col-md-2 mb-3">
+            <div class="kpi-card">
+                <div class="kpi-icon" style="background: #FEF3C7; color: #D97706;">
+                    <i class="fas fa-home"></i>
+                </div>
+                <div class="kpi-value">{{ customer_data.purchased_properties|default:"0" }}</div>
+                <div class="kpi-label">Properties</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-2 mb-3">
+            <div class="kpi-card">
+                <div class="kpi-icon" style="background: #FEE2E2; color: #DC2626;">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <div class="kpi-value">{{ customer_data.saved_properties|default:"0" }}</div>
+                <div class="kpi-label">Saved</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-2 mb-3">
+            <div class="kpi-card">
+                <div class="kpi-icon" style="background: #E0F2FE; color: #0284C7;">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="kpi-value">{{ customer_data.inquiries|default:"0" }}</div>
+                <div class="kpi-label">Inquiries</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-2 mb-3">
+            <div class="kpi-card">
+                <div class="kpi-icon" style="background: #F3E8FF; color: #7C3AED;">
+                    <i class="fas fa-file"></i>
+                </div>
+                <div class="kpi-value">{{ customer_data.documents|default:"0" }}</div>
+                <div class="kpi-label">Documents</div>
+            </div>
+        </div>
+    {% elif viewed_user.role == 'investor' %}
+        <div class="col-6 col-md-2 mb-3">
+            <div class="kpi-card">
+                <div class="kpi-icon" style="background: #D1FAE5; color: #059669;">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="kpi-value">${{ investor_data.total_investments|default:0|intcomma }}</div>
+                <div class="kpi-label">Investments</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-2 mb-3">
+            <div class="kpi-card">
+                <div class="kpi-icon" style="background: #FEF3C7; color: #D97706;">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="kpi-value">{{ investor_data.roi|default:"0" }}%</div>
+                <div class="kpi-label">ROI</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-2 mb-3">
+            <div class="kpi-card">
+                <div class="kpi-icon" style="background: #E0E7FF; color: #4338CA;">
+                    <i class="fas fa-coins"></i>
+                </div>
+                <div class="kpi-value">{{ investor_data.investment_count|default:"0" }}</div>
+                <div class="kpi-label">Count</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-2 mb-3">
+            <div class="kpi-card">
+                <div class="kpi-icon" style="background: #F3E8FF; color: #7C3AED;">
+                    <i class="fas fa-file"></i>
+                </div>
+                <div class="kpi-value">{{ investor_data.documents|default:"0" }}</div>
+                <div class="kpi-label">Documents</div>
+            </div>
+        </div>
+    {% elif viewed_user.role == 'agent' or viewed_user.role == 'owner' %}
+        <div class="col-6 col-md-2 mb-3">
+            <div class="kpi-card">
+                <div class="kpi-icon" style="background: #E0E7FF; color: #4338CA;">
+                    <i class="fas fa-building"></i>
+                </div>
+                <div class="kpi-value">{{ agent_data.assigned_properties|default:"0" }}</div>
+                <div class="kpi-label">Properties</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-2 mb-3">
+            <div class="kpi-card">
+                <div class="kpi-icon" style="background: #D1FAE5; color: #059669;">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="kpi-value">{{ agent_data.leads|default:"0" }}</div>
+                <div class="kpi-label">Leads</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-2 mb-3">
+            <div class="kpi-card">
+                <div class="kpi-icon" style="background: #FEF3C7; color: #D97706;">
+                    <i class="fas fa-user-friends"></i>
+                </div>
+                <div class="kpi-value">{{ agent_data.customers|default:"0" }}</div>
+                <div class="kpi-label">Customers</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-2 mb-3">
+            <div class="kpi-card">
+                <div class="kpi-icon" style="background: #FEE2E2; color: #DC2626;">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="kpi-value">${{ agent_data.commission|default:0|intcomma }}</div>
+                <div class="kpi-label">Commission</div>
+            </div>
+        </div>
+    {% else %}
+        <div class="col-6 col-md-2 mb-3">
+            <div class="kpi-card">
+                <div class="kpi-icon" style="background: #E0E7FF; color: #4338CA;">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="kpi-value">-</div>
+                <div class="kpi-label">Managed</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-2 mb-3">
+            <div class="kpi-card">
+                <div class="kpi-icon" style="background: #D1FAE5; color: #059669;">
+                    <i class="fas fa-history"></i>
+                </div>
+                <div class="kpi-value">{{ admin_data.activity_logs|length|default:"0" }}</div>
+                <div class="kpi-label">Activities</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-2 mb-3">
+            <div class="kpi-card">
+                <div class="kpi-icon" style="background: #FEF3C7; color: #D97706;">
+                    <i class="fas fa-key"></i>
+                </div>
+                <div class="kpi-value">{{ admin_data.permissions|length|default:"0" }}</div>
+                <div class="kpi-label">Permissions</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-2 mb-3">
+            <div class="kpi-card">
+                <div class="kpi-icon" style="background: #F3E8FF; color: #7C3AED;">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="kpi-value">Full</div>
+                <div class="kpi-label">Access</div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<div class="row">
+    <!-- Basic Information -->
+    <div class="col-lg-4 mb-4">
+        <div class="info-card">
+            <h5><i class="fas fa-user"></i> Basic Information</h5>
+            <div class="info-row">
+                <div class="info-label">Full Name</div>
+                <div class="info-value">{{ viewed_user.get_full_name|default:"Not provided" }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Username</div>
+                <div class="info-value">@{{ viewed_user.username }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Email</div>
+                <div class="info-value">{{ viewed_user.email }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Phone Number</div>
+                <div class="info-value">
+                    {% if viewed_user.customer_profile.phone %}
+                        {{ viewed_user.customer_profile.phone }}
+                    {% elif viewed_user.investor_profile.phone %}
+                        {{ viewed_user.investor_profile.phone }}
+                    {% elif viewed_user.agent_profile.phone %}
+                        {{ viewed_user.agent_profile.phone }}
+                    {% else %}
+                        Not provided
+                    {% endif %}
+                </div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Role</div>
+                <div class="info-value">{{ viewed_user.role|title|default:"Unassigned" }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Status</div>
+                <div class="info-value">
+                    {% if viewed_user.is_active %}
+                        <span class="status-badge active">Active</span>
+                    {% else %}
+                        <span class="status-badge inactive">Inactive</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Account Information -->
+    <div class="col-lg-4 mb-4">
+        <div class="info-card">
+            <h5><i class="fas fa-cog"></i> Account Information</h5>
+            <div class="info-row">
+                <div class="info-label">User ID</div>
+                <div class="info-value">#{{ viewed_user.id }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Created Date</div>
+                <div class="info-value">{{ viewed_user.date_joined|date:"F d, Y" }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Updated Date</div>
+                <div class="info-value">{{ viewed_user.updated_at|date:"F d, Y"|default:"Not available" }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Email Verified</div>
+                <div class="info-value">
+                    {% if viewed_user.email_verified %}
+                        <span class="status-badge active">Verified</span>
+                    {% else %}
+                        <span class="status-badge inactive">Not Verified</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Activity Information -->
+    <div class="col-lg-4 mb-4">
+        <div class="info-card">
+            <h5><i class="fas fa-history"></i> Activity Information</h5>
+            <div class="info-row">
+                <div class="info-label">Last Login</div>
+                <div class="info-value">{{ viewed_user.last_login|date:"F d, Y, H:i"|default:"Never" }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Last Active</div>
+                <div class="info-value">{{ viewed_user.last_login|timesince|default:"Never" }} ago</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Total Logins</div>
+                <div class="info-value">{{ viewed_user.login_count|default:"0" }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Account Age</div>
+                <div class="info-value">{{ viewed_user.date_joined|timesince }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Role-Specific Information -->
+{% if viewed_user.role == 'customer' %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="info-card">
+            <h5><i class="fas fa-shopping-cart"></i> Customer Details</h5>
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <div class="kpi-card">
+                        <div class="kpi-icon" style="background: #FEF3C7; color: #D97706;">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <div class="kpi-value">{{ customer_data.purchased_properties|default:"0" }}</div>
+                        <div class="kpi-label">Purchased Properties</div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="kpi-card">
+                        <div class="kpi-icon" style="background: #FEE2E2; color: #DC2626;">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="kpi-value">{{ customer_data.saved_properties|default:"0" }}</div>
+                        <div class="kpi-label">Saved Properties</div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="kpi-card">
+                        <div class="kpi-icon" style="background: #E0F2FE; color: #0284C7;">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="kpi-value">{{ customer_data.inquiries|default:"0" }}</div>
+                        <div class="kpi-label">Inquiries</div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="kpi-card">
+                        <div class="kpi-icon" style="background: #F3E8FF; color: #7C3AED;">
+                            <i class="fas fa-file"></i>
+                        </div>
+                        <div class="kpi-value">{{ customer_data.documents|default:"0" }}</div>
+                        <div class="kpi-label">Documents</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% elif viewed_user.role == 'investor' %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="info-card">
+            <h5><i class="fas fa-chart-line"></i> Investor Details</h5>
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <div class="kpi-card">
+                        <div class="kpi-icon" style="background: #D1FAE5; color: #059669;">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="kpi-value">${{ investor_data.total_investments|default:0|intcomma }}</div>
+                        <div class="kpi-label">Total Investments</div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="kpi-card">
+                        <div class="kpi-icon" style="background: #FEF3C7; color: #D97706;">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="kpi-value">{{ investor_data.roi|default:"0" }}%</div>
+                        <div class="kpi-label">ROI</div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="kpi-card">
+                        <div class="kpi-icon" style="background: #E0E7FF; color: #4338CA;">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="kpi-value">{{ investor_data.investment_count|default:"0" }}</div>
+                        <div class="kpi-label">Investment Count</div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="kpi-card">
+                        <div class="kpi-icon" style="background: #F3E8FF; color: #7C3AED;">
+                            <i class="fas fa-file"></i>
+                        </div>
+                        <div class="kpi-value">{{ investor_data.documents|default:"0" }}</div>
+                        <div class="kpi-label">Documents</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% elif viewed_user.role == 'agent' or viewed_user.role == 'owner' %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="info-card">
+            <h5><i class="fas fa-user-tie"></i> {% if viewed_user.role == 'owner' %}Owner{% else %}Agent{% endif %} Details</h5>
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <div class="kpi-card">
+                        <div class="kpi-icon" style="background: #E0E7FF; color: #4338CA;">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="kpi-value">{{ agent_data.assigned_properties|default:"0" }}</div>
+                        <div class="kpi-label">Assigned Properties</div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="kpi-card">
+                        <div class="kpi-icon" style="background: #D1FAE5; color: #059669;">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="kpi-value">{{ agent_data.leads|default:"0" }}</div>
+                        <div class="kpi-label">Leads</div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="kpi-card">
+                        <div class="kpi-icon" style="background: #FEF3C7; color: #D97706;">
+                            <i class="fas fa-user-friends"></i>
+                        </div>
+                        <div class="kpi-value">{{ agent_data.customers|default:"0" }}</div>
+                        <div class="kpi-label">Customers</div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="kpi-card">
+                        <div class="kpi-icon" style="background: #FEE2E2; color: #DC2626;">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="kpi-value">${{ agent_data.commission|default:0|intcomma }}</div>
+                        <div class="kpi-label">Commission</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endif %}
+
+<!-- Activity Timeline -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="info-card">
+            <h5><i class="fas fa-stream"></i> Activity Timeline</h5>
+            <div class="timeline">
+                {% for activity in recent_activities %}
+                <div class="timeline-item">
+                    <div class="timeline-action">{{ activity.action }}</div>
+                    <div style="color: #64748B; font-size: 0.85rem; margin-bottom: 4px;">{{ activity.description|default:"" }}</div>
+                    <div class="timeline-time">{{ activity.timestamp|timesince }} ago</div>
+                </div>
+                {% empty %}
+                <div class="text-center text-muted py-4">
+                    <small>No recent activity</small>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Login History -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="info-card">
+            <h5><i class="fas fa-sign-in-alt"></i> Login History</h5>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th style="font-weight: 600; color: #64748B; font-size: 0.875rem;">Date & Time</th>
+                            <th style="font-weight: 600; color: #64748B; font-size: 0.875rem;">IP Address</th>
+                            <th style="font-weight: 600; color: #64748B; font-size: 0.875rem;">Device</th>
+                            <th style="font-weight: 600; color: #64748B; font-size: 0.875rem;">Location</th>
+                            <th style="font-weight: 600; color: #64748B; font-size: 0.875rem;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for login in login_history %}
+                        <tr>
+                            <td style="color: #0F172A; font-size: 0.875rem;">{{ login.timestamp|date:"M d, Y H:i" }}</td>
+                            <td style="color: #64748B; font-size: 0.875rem;">{{ login.ip_address|default:"N/A" }}</td>
+                            <td style="color: #64748B; font-size: 0.875rem;">{{ login.device|default:"N/A" }}</td>
+                            <td style="color: #64748B; font-size: 0.875rem;">{{ login.location|default:"N/A" }}</td>
+                            <td>
+                                {% if login.successful %}
+                                    <span class="status-badge active">Success</span>
+                                {% else %}
+                                    <span class="status-badge inactive">Failed</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center py-4">
+                                <small class="text-muted">No login history available</small>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reset Password Modal -->
+<div class="modal fade" id="resetPasswordModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="border-radius: 16px; border: none; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);">
+            <div class="modal-header" style="border-bottom: 1px solid #F1F5F9; padding: 24px 28px;">
+                <h5 class="modal-title" style="font-weight: 600; color: #0F172A; font-size: 1.1rem;">Reset Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="padding: 28px;">
+                <form id="resetPasswordForm">
+                    <div class="mb-4">
+                        <label style="color: #64748B; font-size: 0.875rem; font-weight: 600; margin-bottom: 8px; display: block;">New Password</label>
+                        <input type="password" class="form-control" name="new_password" id="new_password" required style="border-radius: 10px; border-color: #E2E8F0; padding: 12px 16px; font-size: 0.9rem;">
+                    </div>
+                    <div class="mb-4">
+                        <label style="color: #64748B; font-size: 0.875rem; font-weight: 600; margin-bottom: 8px; display: block;">Confirm Password</label>
+                        <input type="password" class="form-control" name="confirm_password" id="confirm_password" required style="border-radius: 10px; border-color: #E2E8F0; padding: 12px 16px; font-size: 0.9rem;">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid #F1F5F9; padding: 20px 28px;">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" style="border-radius: 10px; border-color: #E2E8F0; color: #64748B; padding: 10px 24px; font-weight: 500;">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="submitResetPassword()" style="background: linear-gradient(135deg, #0F766E 0%, #10B981 100%); border: none; border-radius: 10px; padding: 10px 24px; font-weight: 500;">Reset Password</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Change Role Modal -->
+<div class="modal fade" id="changeRoleModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="border-radius: 16px; border: none; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);">
+            <div class="modal-header" style="border-bottom: 1px solid #F1F5F9; padding: 24px 28px;">
+                <h5 class="modal-title" style="font-weight: 600; color: #0F172A; font-size: 1.1rem;">Change User Role</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="padding: 28px;">
+                <form id="changeRoleForm">
+                    <div class="mb-4">
+                        <label style="color: #64748B; font-size: 0.875rem; font-weight: 600; margin-bottom: 8px; display: block;">Select New Role</label>
+                        <select class="form-select" name="new_role" style="border-radius: 10px; border-color: #E2E8F0; padding: 12px 16px; font-size: 0.9rem;">
+                            <option value="customer" {% if viewed_user.role == 'customer' %}selected{% endif %}>Customer</option>
+                            <option value="agent" {% if viewed_user.role == 'agent' %}selected{% endif %}>Agent</option>
+                            <option value="owner" {% if viewed_user.role == 'owner' %}selected{% endif %}>Owner</option>
+                            <option value="investor" {% if viewed_user.role == 'investor' %}selected{% endif %}>Investor</option>
+                            <option value="admin" {% if viewed_user.role == 'admin' %}selected{% endif %}>Admin</option>
+                        </select>
+                    </div>
+                    <div class="alert alert-warning" style="border-radius: 10px; background: #FEF3C7; border-color: #FCD34D; color: #92400E; padding: 16px;">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Changing a user's role will affect their permissions and access to platform features.
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid #F1F5F9; padding: 20px 28px;">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" style="border-radius: 10px; border-color: #E2E8F0; color: #64748B; padding: 10px 24px; font-weight: 500;">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveRoleChange()" style="background: linear-gradient(135deg, #0F766E 0%, #10B981 100%); border: none; border-radius: 10px; padding: 10px 24px; font-weight: 500;">Change Role</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function openEditModal() {
+        const modal = new bootstrap.Modal(document.getElementById('editUserModal'));
+        modal.show();
+    }
+    
+    function saveUser() {
+        // Function disabled/removed since 'Edit User' button was removed
+    }
+
+    function suspendUser() {
+        if (confirm('Are you sure you want to suspend this user? They will not be able to access the platform.')) {
+            fetch(`/admin-dashboard/api/users/{{ viewed_user.id }}/suspend/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('User suspended successfully!');
+                    location.reload();
+                } else {
+                    alert('Error suspending user: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error suspending user');
+            });
+        }
+    }
+    
+    function activateUser() {
+        if (confirm('Are you sure you want to activate this user? They will regain access to the platform.')) {
+            fetch(`/admin-dashboard/api/users/{{ viewed_user.id }}/activate/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('User activated successfully!');
+                    location.reload();
+                } else {
+                    alert('Error activating user: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error activating user');
+            });
+        }
+    }
+    
+    function resetPassword() {
+        const modal = new bootstrap.Modal(document.getElementById('resetPasswordModal'));
+        modal.show();
+    }
+    
+    function submitResetPassword() {
+        const newPassword = document.getElementById('new_password').value;
+        const confirmPassword = document.getElementById('confirm_password').value;
+        
+        if (!newPassword || !confirmPassword) {
+            alert('Please fill in both fields.');
+            return;
+        }
+        
+        if (newPassword !== confirmPassword) {
+            alert('Passwords do not match.');
+            return;
+        }
+        
+        const formData = new FormData();
+        formData.append('new_password', newPassword);
+        
+        fetch(`/admin-dashboard/api/users/{{ viewed_user.id }}/reset-password/`, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                const modal = bootstrap.Modal.getInstance(document.getElementById('resetPasswordModal'));
+                if (modal) {
+                    modal.hide();
+                }
+                document.getElementById('resetPasswordForm').reset();
+            } else {
+                alert('Error resetting password: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error sending password reset');
+        });
+    }
+    
+    function changeRole() {
+        const modal = new bootstrap.Modal(document.getElementById('changeRoleModal'));
+        modal.show();
+    }
+    
+    function saveRoleChange() {
+        const form = document.getElementById('changeRoleForm');
+        const formData = new FormData(form);
+        
+        fetch(`/admin-dashboard/api/users/{{ viewed_user.id }}/change-role/`, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('User role changed successfully!');
+                location.reload();
+            } else {
+                alert('Error changing role: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error changing role');
+        });
+    }
+    
+    function deleteUser() {
+        if (confirm('Are you sure you want to delete this user? This action cannot be undone and all user data will be permanently removed.')) {
+            if (confirm('WARNING: This is a destructive action. Please confirm again that you want to delete this user permanently.')) {
+                fetch(`/admin-dashboard/api/users/{{ viewed_user.id }}/delete/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken')
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('User deleted successfully!');
+                        window.location.href = '/admin-dashboard/users/';
+                    } else {
+                        alert('Error deleting user: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error deleting user');
+                });
+            }
+        }
+    }
+    
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+{% endblock %}

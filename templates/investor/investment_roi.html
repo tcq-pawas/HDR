@@ -1,0 +1,169 @@
+{% extends "investor/investor_base.html" %}
+{% load humanize %}
+
+{% block title %}ROI Data - {{ investment.listing.title }} - HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+.investment-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+.roi-positive {
+    color: #28a745;
+    font-weight: bold;
+}
+.roi-negative {
+    color: #dc3545;
+    font-weight: bold;
+}
+{% endblock %}
+
+{% block page_title %}ROI Performance Data{% endblock %}
+
+{% block header %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <a href="{% url 'investor:investment-detail' investment.id %}" class="btn btn-outline-secondary rounded-circle" style="width: 40px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center;">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <h2 class="d-inline-block ms-3"><i class="fas fa-chart-line text-success me-2"></i>ROI Performance Data</h2>
+        <p class="text-muted">Track your investment returns and performance</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <div class="card investment-card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">ROI Performance</h5>
+            </div>
+            <div class="card-body">
+                <div class="bg-light p-3 rounded mb-3">
+                    <p class="text-center mb-2">
+                        <strong>Current ROI:</strong> 
+                        {% if roi_data %}
+                            <span class="{% if roi_data.actual_roi_percentage > 0 %}roi-positive{% else %}roi-negative{% endif %}">{{ roi_data.actual_roi_percentage|floatformat:2 }}%</span>
+                        {% else %}
+                            <span class="text-muted">Not available yet</span>
+                        {% endif %}
+                    </p>
+                    <p class="text-center mb-2">
+                        <strong>Expected ROI:</strong> {{ investment.listing.expected_roi_percentage }}%
+                    </p>
+                    <p class="text-center mb-0">
+                        <strong>Performance:</strong> 
+                        {% if roi_data %}
+                            {% widthratio roi_data.actual_roi_percentage 1 100 as current_roi %}
+                            {% widthratio investment.listing.expected_roi_percentage 80 100 as target_roi %}
+                            {% if current_roi >= target_roi %}
+                                <span class="text-success">On Track</span>
+                            {% else %}
+                                <span class="text-warning">Below Target</span>
+                            {% endif %}
+                        {% else %}
+                            <span class="text-muted">Pending</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card investment-card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Investment Progress</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Total Invested:</strong> ${{ investment.amount|intcomma }}</p>
+                {% if roi_data %}
+                <p><strong>Total Returns:</strong> ${{ roi_data.total_returns|intcomma }}</p>
+                <p><strong>Investment Period:</strong> {{ roi_data.investment_period_months }} months</p>
+                <p><strong>Remaining Term:</strong> {{ investment.listing.investment_term_months|add:roi_data.investment_period_months }} months</p>
+                {% else %}
+                <p><strong>Total Returns:</strong> <span class="text-muted">Not available yet</span></p>
+                <p><strong>Investment Period:</strong> {{ investment.listing.investment_term_months }} months</p>
+                <p><strong>Remaining Term:</strong> {{ investment.listing.investment_term_months }} months</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card investment-card mb-4">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Monthly Returns History</h5>
+    </div>
+    <div class="card-body">
+        {% if roi_history %}
+        <div class="table-responsive">
+            <table class="table table-sm table-striped">
+                <thead>
+                    <tr>
+                        <th>Month</th>
+                        <th>Returns</th>
+                        <th>Cumulative</th>
+                        <th>ROI %</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in roi_history %}
+                    <tr>
+                        <td>{{ record.record_date|date:'M Y' }}</td>
+                        <td>${{ record.monthly_returns|intcomma }}</td>
+                        <td>${{ record.cumulative_returns|intcomma }}</td>
+                        <td class="{% if record.roi_percentage > 0 %}roi-positive{% else %}roi-negative{% endif %}">{{ record.roi_percentage|floatformat:2 }}%</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-4">
+            <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
+            <p class="text-muted">No ROI history data available yet</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card investment-card mb-4">
+    <div class="card-header">
+        <h5 class="card-title mb-0">ROI Analysis</h5>
+    </div>
+    <div class="card-body">
+        <p><strong>Total Invested:</strong> ${{ investment.amount|intcomma }}</p>
+        {% if roi_data %}
+        <p><strong>Total Returns:</strong> ${{ roi_data.total_returns|intcomma }}</p>
+        <p><strong>Current ROI:</strong> {{ roi_data.actual_roi_percentage|floatformat:2 }}%</p>
+        <p><strong>Annualized ROI:</strong> {{ roi_data.annualized_roi_percentage|floatformat:2 }}%</p>
+        <p><strong>Investment Period:</strong> {{ roi_data.investment_period_months }} months</p>
+        <p><strong>Remaining Term:</strong> {{ investment.listing.investment_term_months|add:roi_data.investment_period_months }} months</p>
+        <p><strong>Projected Final ROI:</strong> {{ investment.listing.expected_roi_percentage }}%</p>
+        {% else %}
+        <p><strong>Total Returns:</strong> <span class="text-muted">Not available yet</span></p>
+        <p><strong>Current ROI:</strong> <span class="text-muted">Not available yet</span></p>
+        <p><strong>Annualized ROI:</strong> <span class="text-muted">Not available yet</span></p>
+        <p><strong>Investment Period:</strong> {{ investment.listing.investment_term_months }} months</p>
+        <p><strong>Remaining Term:</strong> {{ investment.listing.investment_term_months }} months</p>
+        <p><strong>Projected Final ROI:</strong> {{ investment.listing.expected_roi_percentage }}%</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="text-center mb-4">
+    <button class="btn btn-primary" onclick="exportROI()">
+        <i class="fas fa-download"></i> Export ROI Data
+    </button>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function exportROI() {
+        alert('Exporting ROI data to Excel...');
+    }
+</script>
+{% endblock %}

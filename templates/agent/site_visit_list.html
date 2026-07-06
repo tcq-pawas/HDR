@@ -1,0 +1,120 @@
+{% extends "agent/agent_base.html" %}
+{% load static %}
+
+{% block title %}Site Visits Management | HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/agent/site_visit_list.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="visits-container">
+    <!-- Header -->
+    <div class="page-header">
+        <h1>Site Visits Management</h1>
+        <a href="{% url 'agent:site_visit_add' %}" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Schedule Visit
+        </a>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-bar">
+        <select name="status" onchange="location.href='?status='+this.value">
+            <option value="">All Status</option>
+            <option value="scheduled" {% if status_filter == 'scheduled' %}selected{% endif %}>Scheduled</option>
+            <option value="confirmed" {% if status_filter == 'confirmed' %}selected{% endif %}>Confirmed</option>
+            <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>Completed</option>
+            <option value="cancelled" {% if status_filter == 'cancelled' %}selected{% endif %}>Cancelled</option>
+            <option value="no_show" {% if status_filter == 'no_show' %}selected{% endif %}>No Show</option>
+            <option value="rescheduled" {% if status_filter == 'rescheduled' %}selected{% endif %}>Rescheduled</option>
+        </select>
+        <input type="date" name="date_from" value="{{ date_from|default:'' }}" placeholder="From Date" onchange="location.href='?date_from='+this.value">
+        <input type="date" name="date_to" value="{{ date_to|default:'' }}" placeholder="To Date" onchange="location.href='?date_to='+this.value">
+    </div>
+
+    <!-- Visits Table -->
+    <div class="visits-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Customer Name</th>
+                    <th>Phone</th>
+                    <th>Property</th>
+                    <th>Scheduled Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if visits %}
+                    {% for visit in visits %}
+                        <tr>
+                            <td><strong>{{ visit.customer_name }}</strong></td>
+                            <td>{{ visit.customer_phone }}</td>
+                            <td>{{ visit.property.title|truncatewords:3 }}</td>
+                            <td>{{ visit.scheduled_date|date:"M d, Y H:i" }}</td>
+                            <td><span class="status-badge status-{{ visit.status }}">{{ visit.get_status_display }}</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="{% url 'agent:site_visit_detail' visit.id %}" class="action-btn" title="View">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="{% url 'agent:site_visit_edit' visit.id %}" class="action-btn" title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="tel:{{ visit.customer_phone }}" class="action-btn" title="Call">
+                                        <i class="bi bi-telephone"></i>
+                                    </a>
+                                    <a href="https://wa.me/{{ visit.customer_phone }}" target="_blank" class="action-btn" title="WhatsApp">
+                                        <i class="bi bi-whatsapp"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">
+                                    <i class="bi bi-calendar-event"></i>
+                                </div>
+                                <h3>No Site Visits Scheduled</h3>
+                                <p>Site visits will appear here when you schedule property viewings.</p>
+                                <a href="{% url 'agent:site_visit_add' %}" class="btn btn-primary">
+                                    <i class="bi bi-plus-lg"></i> Schedule Your First Visit
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <nav aria-label="Page navigation" style="margin-top: 1rem;">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}">Previous</a>
+                </li>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ num }}{% if status_filter %}&status={{ status_filter }}{% endif %}">{{ num }}</a></li>
+                {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

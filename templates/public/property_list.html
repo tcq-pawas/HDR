@@ -1,0 +1,350 @@
+{% extends 'public/base.html' %}
+{% load static %}
+{% block hero_image %}https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1600&q=80{% endblock %}
+{% block hero_title %}Projects{% endblock %}
+{% block hero_subtitle %}Explore our premium projects{% endblock %}
+
+
+{% block title %}Projects | HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Page-specific overrides using new variables */
+    .hero-carousel {
+        height: 75vh;
+        width: 100%;
+        overflow: hidden;
+        position: relative;
+    }
+    .carousel-item {
+        height: 75vh;
+    }
+    .hero-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+    }
+    .hero-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.3));
+    }
+    .hero-content {
+        position: absolute;
+        bottom: 20%;
+        left: 8%;
+        z-index: 2;
+        max-width: 550px;
+        color: #fff;
+    }
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        color: #fff;
+    }
+    .hero-text {
+        font-size: 1.2rem;
+        opacity: 0.8;
+    }
+    /* Lifestyle scroller */
+    .lifestyle-scroller {
+        display: flex;
+        overflow-x: auto;
+        gap: 20px;
+        padding: 2rem 0;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    .lifestyle-scroller::-webkit-scrollbar {
+        display: none;
+    }
+    .lifestyle-item {
+        min-width: 300px;
+        height: 400px;
+        border-radius: 24px;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+        flex-shrink: 0;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(15,23,42,.08);
+        transition: .35s ease;
+    }
+    .lifestyle-item:hover {
+        transform: translateY(-8px);
+    }
+    .lifestyle-caption {
+        background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+        padding: 20px;
+    }
+    /* Testimonial card */
+    .testimonial-card {
+        background: var(--cloud-white);
+        padding: 3rem;
+        border-radius: 24px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+        border-left: 5px solid var(--gold);
+        position: relative;
+        margin: 1rem;
+    }
+    .testimonial-quote-icon {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        font-size: 4rem;
+        color: rgba(0, 0, 0, 0.05);
+        font-family: serif;
+    }
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 2.5rem;
+        }
+        .hero-content {
+            left: 5%;
+            bottom: 15%;
+        }
+        .lifestyle-item {
+            min-width: 240px;
+            height: 300px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- 1. Hero Carousel -->
+<div id="heroCarousel" class="carousel slide carousel-fade hero-carousel" data-bs-ride="carousel" data-bs-interval="4000">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <div class="hero-bg" style="background-image: url('https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=1920&auto=format&fit=crop');"></div>
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <h1 class="hero-title">Experience Seamless Living</h1>
+                <p class="hero-text">Luxury homes designed for your modern lifestyle. Discover excellence in every detail.</p>
+                <a href="#properties" class="btn-cta-primary" style="display: inline-block; margin-top: 1rem;">Explore Projects</a>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <div class="hero-bg" style="background-image: url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=1920&auto=format&fit=crop');"></div>
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <h1 class="hero-title">Your Urban Sanctuary</h1>
+                <p class="hero-text">Find peace and tranquility in the heart of the bustling city.</p>
+                <a href="#properties" class="btn-cta-primary" style="display: inline-block; margin-top: 1rem;">View Details</a>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <div class="hero-bg" style="background-image: url('https://images.unsplash.com/photo-1600596542815-2495db98dada?q=80&w=1920&auto=format&fit=crop');"></div>
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <h1 class="hero-title">Architectural Masterpieces</h1>
+                <p class="hero-text">Award-winning designs that redefine the skyline.</p>
+                <a href="#contact" class="btn-cta-primary" style="display: inline-block; margin-top: 1rem;">Schedule Visit</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 2. Projects Grid -->
+<section id="properties" class="why" style="background: var(--pale); padding-top: 60px; padding-bottom: 60px;">
+    <div class="section-inner">
+        <div class="why-header">
+            <div class="section-label">Featured Projects</div>
+            <h2 class="section-title">Explore Our Exclusive Collection</h2>
+            <p class="section-sub" style="max-width: 700px;">Premium residences tailored to your needs.</p>
+        </div>
+
+        {% if page_obj %}
+        <div class="listings-grid" style="grid-template-columns: repeat(3, 1fr);">
+            {% for property in page_obj %}
+            <div class="listing-card">
+                <div class="listing-img-wrap">
+                    <a href="{% url 'public:property_detail' property.slug %}">
+                        {% if property.images.first %}
+                        <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}" style="width:100%; height:210px; object-fit:cover;">
+                        {% else %}
+                        <img src="https://via.placeholder.com/800x600?text=Premium+Project" alt="Project Image" style="width:100%; height:210px; object-fit:cover;">
+                        {% endif %}
+                    </a>
+                    <span class="verified-badge">{{ property.get_property_type_display }}</span>
+                </div>
+                <div class="listing-body">
+                    <div class="listing-name"><a href="{% url 'public:property_detail' property.slug %}" style="color: var(--forest); text-decoration: none;">{{ property.title }}</a></div>
+                    <div class="listing-loc">{{ property.location }}</div>
+                    <div class="listing-tags">
+                        <span class="tag">{{ property.area_sqft }} sqft</span>
+                        <span class="tag">{{ property.bedrooms }} Bed</span>
+                        <span class="tag">{{ property.bathrooms }} Bath</span>
+                    </div>
+                    <div class="listing-footer">
+                        <div class="listing-price">${{ property.price }}</div>
+                        <a href="{% url 'public:property_detail' property.slug %}" class="btn-detail">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+        <nav class="mt-5">
+            <ul class="pagination justify-content-center" style="gap: 8px;">
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" style="border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: var(--cloud-white); color: var(--forest); border: 1px solid var(--border);" href="?page={{ page_obj.previous_page_number }}"><i class="bi bi-chevron-left"></i></a></li>
+                {% else %}
+                <li class="page-item disabled"><span class="page-link" style="border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: var(--cloud-white); color: var(--text-muted); border: 1px solid var(--border);"><i class="bi bi-chevron-left"></i></span></li>
+                {% endif %}
+
+                {% for i in page_obj.paginator.page_range %}
+                {% if page_obj.number == i %}
+                <li class="page-item active"><span class="page-link" style="border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: var(--gold); color: var(--cloud-white); border: 1px solid var(--gold);">{{ i }}</span></li>
+                {% else %}
+                <li class="page-item"><a class="page-link" style="border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: var(--cloud-white); color: var(--forest); border: 1px solid var(--border);" href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" style="border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: var(--cloud-white); color: var(--forest); border: 1px solid var(--border);" href="?page={{ page_obj.next_page_number }}"><i class="bi bi-chevron-right"></i></a></li>
+                {% else %}
+                <li class="page-item disabled"><span class="page-link" style="border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: var(--cloud-white); color: var(--text-muted); border: 1px solid var(--border);"><i class="bi bi-chevron-right"></i></span></li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+
+        {% else %}
+        <div class="text-center py-5">
+            <h3 style="color: var(--text-mid);">No projects found.</h3>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- 3. Lifestyle & Location -->
+<section class="why" style="background: var(--cloud-white); padding-top: 60px; padding-bottom: 40px;">
+    <div class="section-inner">
+        <div class="why-header" style="text-align: left; margin-bottom: 32px;">
+            <div class="section-label">Lifestyle</div>
+            <h2 class="section-title">The <span style="color: var(--gold);">Lifestyle</span></h2>
+            <p class="section-sub" style="max-width: 100%;">More than just a home, experience a community designed for well-being.</p>
+        </div>
+        <div class="lifestyle-scroller">
+            <div class="lifestyle-item" style="background-image: url('https://images.unsplash.com/photo-1544984243-ec57ea16fe90?q=80&w=600');">
+                <div class="lifestyle-caption position-absolute bottom-0 start-0 p-3 text-white w-100">
+                    <h5 class="mb-0">Fine Dining</h5>
+                </div>
+            </div>
+            <div class="lifestyle-item" style="background-image: url('https://images.unsplash.com/photo-1522047322927-410a8b948981?q=80&w=600');">
+                <div class="lifestyle-caption position-absolute bottom-0 start-0 p-3 text-white w-100">
+                    <h5 class="mb-0">Co-working Spaces</h5>
+                </div>
+            </div>
+            <div class="lifestyle-item" style="background-image: url('https://images.unsplash.com/photo-1571902943202-507ec2618e8f?q=80&w=600');">
+                <div class="lifestyle-caption position-absolute bottom-0 start-0 p-3 text-white w-100">
+                    <h5 class="mb-0">Wellness Centers</h5>
+                </div>
+            </div>
+            <div class="lifestyle-item" style="background-image: url('https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=600');">
+                <div class="lifestyle-caption position-absolute bottom-0 start-0 p-3 text-white w-100">
+                    <h5 class="mb-0">Luxury Resorts</h5>
+                </div>
+            </div>
+            <div class="lifestyle-item" style="background-image: url('https://images.unsplash.com/photo-1470058869958-2a77ade41c02?q=80&w=600');">
+                <div class="lifestyle-caption position-absolute bottom-0 start-0 p-3 text-white w-100">
+                    <h5 class="mb-0">Nature Trails</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 4. Testimonials -->
+<section class="why" style="background: var(--pale); padding-top: 60px; padding-bottom: 60px;">
+    <div class="section-inner">
+        <div class="why-header">
+            <div class="section-label">Client Stories</div>
+            <h2 class="section-title">What Our Clients Say</h2>
+        </div>
+        <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="row justify-content-center">
+                        <div class="col-md-9">
+                            <div class="testimonial-card">
+                                <div class="testimonial-quote-icon">"</div>
+                                <img src="https://randomuser.me/api/portraits/men/32.jpg" class="rounded-circle mb-3 shadow-sm" width="80" alt="Client">
+                                <p class="text-muted fs-5 fst-italic mb-4">"The professionalism and dedication of the HeyDay Realty team were outstanding. They helped us find our dream home effortlessly."</p>
+                                <h5 class="fw-bold mb-0" style="color: var(--forest);">James Sterling</h5>
+                                <small class="text-muted">Tech Entrepreneur</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="row justify-content-center">
+                        <div class="col-md-9">
+                            <div class="testimonial-card">
+                                <div class="testimonial-quote-icon">"</div>
+                                <img src="https://randomuser.me/api/portraits/women/44.jpg" class="rounded-circle mb-3 shadow-sm" width="80" alt="Client">
+                                <p class="text-muted fs-5 fst-italic mb-4">"I fell in love with the virtual tours. It made selecting a property so much easier. Highly recommended!"</p>
+                                <h5 class="fw-bold mb-0" style="color: var(--forest);">Sarah Connor</h5>
+                                <small class="text-muted">Architect</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon bg-primary rounded-circle p-2" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon bg-primary rounded-circle p-2" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Smooth scroll for lifestyle scroller (optional horizontal scroll enhancement)
+    const slider = document.querySelector('.lifestyle-scroller');
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    if (slider) {
+        slider.addEventListener('mousedown', (e) => {
+            isDown = true;
+            slider.classList.add('active');
+            startX = e.pageX - slider.offsetLeft;
+            scrollLeft = slider.scrollLeft;
+        });
+        slider.addEventListener('mouseleave', () => {
+            isDown = false;
+        });
+        slider.addEventListener('mouseup', () => {
+            isDown = false;
+        });
+        slider.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - slider.offsetLeft;
+            const walk = (x - startX) * 2; // scroll-fast
+            slider.scrollLeft = scrollLeft - walk;
+        });
+    }
+</script>
+{% endblock %}

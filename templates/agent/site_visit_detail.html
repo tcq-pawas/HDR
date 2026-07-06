@@ -1,0 +1,103 @@
+{% extends "agent/agent_base.html" %}
+{% load static %}
+
+{% block title %}Site Visit Details | HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/agent/site_visit_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="visit-detail-container">
+    <!-- Header -->
+    <div class="page-header">
+        <h1>Site Visit Details</h1>
+        <div class="action-buttons">
+            <a href="{% url 'agent:site_visit_edit' visit.id %}" class="btn btn-secondary">
+                <i class="bi bi-pencil"></i> Edit Visit
+            </a>
+            <a href="tel:{{ visit.customer_phone }}" class="btn btn-success">
+                <i class="bi bi-telephone"></i> Call
+            </a>
+            <a href="https://wa.me/{{ visit.customer_phone }}" target="_blank" class="btn btn-success">
+                <i class="bi bi-whatsapp"></i> WhatsApp
+            </a>
+        </div>
+    </div>
+
+    <!-- Detail Grid -->
+    <div class="detail-grid">
+        <!-- Visit Information -->
+        <div class="card">
+            <h3>Visit Information</h3>
+            <div class="info-row">
+                <div class="info-label">Customer Name:</div>
+                <div class="info-value"><strong>{{ visit.customer_name }}</strong></div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Phone:</div>
+                <div class="info-value">{{ visit.customer_phone }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Email:</div>
+                <div class="info-value">{{ visit.customer_email|default:"N/A" }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Property:</div>
+                <div class="info-value">{{ visit.property.title }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Scheduled Date:</div>
+                <div class="info-value">{{ visit.scheduled_date|date:"M d, Y H:i" }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Status:</div>
+                <div class="info-value"><span class="status-badge status-{{ visit.status }}">{{ visit.get_status_display }}</span></div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Notes:</div>
+                <div class="info-value">{{ visit.notes|default:"N/A" }}</div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Created Date:</div>
+                <div class="info-value">{{ visit.created_at|date:"M d, Y H:i" }}</div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card">
+            <h3>Quick Actions</h3>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <form method="post" style="margin-bottom: 1rem;">
+                    {% csrf_token %}
+                    <select name="status" class="form-select" style="padding: 0.5rem; border-radius: 6px; border: 1px solid #e2e8f0;">
+                        <option value="scheduled" {% if visit.status == 'scheduled' %}selected{% endif %}>Scheduled</option>
+                        <option value="confirmed" {% if visit.status == 'confirmed' %}selected{% endif %}>Confirmed</option>
+                        <option value="completed" {% if visit.status == 'completed' %}selected{% endif %}>Completed</option>
+                        <option value="cancelled" {% if visit.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                        <option value="no_show" {% if visit.status == 'no_show' %}selected{% endif %}>No Show</option>
+                        <option value="rescheduled" {% if visit.status == 'rescheduled' %}selected{% endif %}>Rescheduled</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">
+                        <i class="bi bi-check-lg"></i> Update Status
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feedback Section -->
+    <div class="card">
+        <h3>Visit Feedback</h3>
+        <form method="post">
+            {% csrf_token %}
+            <div class="feedback-section">
+                <textarea name="feedback" placeholder="Enter visit feedback...">{{ visit.feedback|default:"" }}</textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">
+                <i class="bi bi-save"></i> Save Feedback
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

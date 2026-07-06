@@ -1,0 +1,180 @@
+{% extends "public/base.html" %}
+{% load static %}
+
+{% block title %}Sell Your Property | HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+<!-- No extra CSS needed - Pure Bootstrap + Global Theme -->
+{% endblock %}
+
+{% block inner_hero %}
+<section class="inner-hero" style="background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');">
+    <div class="inner-hero-content">
+        <h1 class="inner-hero-title">Sell Your Farmland</h1>
+        <p class="inner-hero-quote">"Connect with serious buyers and investors looking for verified agricultural land opportunities."</p>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+
+<!-- ========== GET STARTED SECTION ========== -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center display-6 fw-bold mb-5">LET'S GET YOU STARTED</h2>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-6">
+                <div class="card border-0 shadow-sm text-center p-4">
+                    <div class="card-body">
+                        {% if user.is_authenticated %}
+                            <!-- Logged In -->
+                            <div class="display-1 text-primary mb-3">
+                                <i class="bi bi-person-check"></i>
+                            </div>
+                            <h3 class="h4 fw-bold">Welcome back, {{ user.first_name|default:user.username }}!</h3>
+                            <p class="text-muted mb-4">Access your agent dashboard to manage your property listings.</p>
+                            <a href="{% url 'agent:dashboard' %}" class="btn-cta-primary d-block text-center py-2">
+                                <i class="bi bi-speedometer2"></i> Go To Agent Dashboard
+                            </a>
+                        {% else %}
+                            <!-- Not Logged In -->
+                            <div class="display-1 text-primary mb-3">
+                                <i class="bi bi-lock"></i>
+                            </div>
+                            <h3 class="h4 fw-bold">Login to Start Selling</h3>
+                            <p class="text-muted mb-4">Sign in with your account to create and manage property listings.</p>
+                            <a href="{% url 'auth:login' %}" class="btn-cta-primary d-block text-center py-2">
+                                <i class="bi bi-box-arrow-in-right"></i> Login Now
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== WHATSAPP SECTION ========== -->
+<section class="py-5 bg-white">
+    <div class="container">
+        <h2 class="text-center display-6 fw-bold mb-5">Need Help Listing Your Farmland?</h2>
+        
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6 text-center">
+                <div class="bg-success bg-gradient p-5 rounded-4 shadow-lg d-inline-flex align-items-center justify-content-center text-white">
+                    <i class="bi bi-chat-dots display-1"></i>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <h3 class="fw-bold mb-3">Quick Chat Support</h3>
+                <p class="text-muted">Have questions about selling your property? Our experts are available on WhatsApp to help you 24/7.</p>
+                <p class="text-muted">We'll guide you through every step of the process and help you get the best deal for your land.</p>
+                <a href="https://wa.me/919506688688" target="_blank" class="btn btn-success rounded-pill px-4 py-2 fw-bold">
+                    <i class="bi bi-whatsapp"></i> Chat With Us on WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== FAQ SECTION ========== -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center display-6 fw-bold mb-5">FREQUENTLY ASKED QUESTIONS</h2>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="accordion" id="faqAccordion">
+                    
+                    <!-- FAQ 1 -->
+                    <div class="accordion-item border-0 shadow-sm mb-3 rounded-3 overflow-hidden">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button rounded-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                How do I list my property for sale?
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">
+                                Simply log in to your account and click "Add Property" from your agent dashboard. Fill in the property details, upload images, and submit. Your listing will be reviewed by our admin team and published once approved.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 2 -->
+                    <div class="accordion-item border-0 shadow-sm mb-3 rounded-3 overflow-hidden">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed rounded-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                What documents do I need to sell my property?
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">
+                                You'll need the property deed, proof of ownership, recent survey map, and any relevant documents. Our team will guide you through the exact requirements when you're ready to finalize the sale.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 3 -->
+                    <div class="accordion-item border-0 shadow-sm mb-3 rounded-3 overflow-hidden">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed rounded-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                How long does it take to sell my property?
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">
+                                The time varies depending on property location, price, and market conditions. On average, most properties sell within 2-6 months. Our expert marketing strategies help speed up the process.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 4 -->
+                    <div class="accordion-item border-0 shadow-sm mb-3 rounded-3 overflow-hidden">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed rounded-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                                What are your commission rates?
+                            </button>
+                        </h2>
+                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">
+                                We offer competitive commission rates that vary based on property type and location. Contact our team directly for a customized quote. We aim to provide the best value for your sale.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 5 -->
+                    <div class="accordion-item border-0 shadow-sm mb-3 rounded-3 overflow-hidden">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed rounded-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                                Can I edit my listing after it's published?
+                            </button>
+                        </h2>
+                        <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">
+                                Yes! You can edit your property details, upload new images, update pricing, and modify any information from your agent dashboard anytime. Changes will be reflected immediately on the platform.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 6 -->
+                    <div class="accordion-item border-0 shadow-sm mb-3 rounded-3 overflow-hidden">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed rounded-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
+                                How will I receive inquiries from buyers?
+                            </button>
+                        </h2>
+                        <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">
+                                All buyer inquiries will be sent to your agent dashboard. You'll also receive email notifications, and interested buyers may contact you directly via the information you provide in your listing.
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
