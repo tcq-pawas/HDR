@@ -18,6 +18,8 @@
 
 {% block content %}
 
+
+
     <!-- Statistics Cards -->
 
     <div class="row mb-4">
@@ -32,7 +34,7 @@
 
                         <div>
 
-                            <h4 class="card-title">{{ inquiries.count }}</h4>
+                            <h4 class="card-title">{{ total_count }}</h4>
 
                             <p class="card-text">Total Inquiries</p>
 
@@ -58,7 +60,7 @@
 
                         <div>
 
-                            <h4 class="card-title">0</h4>
+                            <h4 class="card-title">{{ responded_count }}</h4>
 
                             <p class="card-text">Responded</p>
 
@@ -84,7 +86,7 @@
 
                         <div>
 
-                            <h4 class="card-title">0</h4>
+                            <h4 class="card-title">{{ pending_count }}</h4>
 
                             <p class="card-text">Pending</p>
 
@@ -110,7 +112,7 @@
 
                         <div>
 
-                            <h4 class="card-title">0</h4>
+                            <h4 class="card-title">{{ today_count }}</h4>
 
                             <p class="card-text">Today</p>
 
@@ -132,7 +134,7 @@
 
     <!-- Action Buttons -->
 
-    <div class="row mb-4">
+    <div class="row mb-5 position-relative" style="z-index: 5;">
 
         <div class="col-12">
 
@@ -186,6 +188,96 @@
 
     </div>
 
+    <!-- search bar -->
+    <div class="filter-bar-modern mb-4">
+
+    <form method="GET" class="row g-2 align-items-center">
+
+        <div class="col-md-3">
+
+            <div class="input-group">
+                
+                <span class="input-group-text"><i class="fas fa-search text-muted"></i></span>
+                
+                <input type="text" name="search" class="form-control no-left-radius" 
+                       
+                    placeholder="Search by name, email or phone..." value="{{ search }}">
+            
+            </div>
+        
+        </div>
+        
+        <div class="col-md-2">
+            
+            <select name="budget" class="form-select">
+                
+                <option value="">All Budgets</option>
+                
+                {% for b in budget_choices %}
+                
+                    <option value="{{ b }}" {% if selected_budget == b %}selected{% endif %}>{{ b }}</option>
+                
+                {% endfor %}
+            
+            </select>
+       
+        </div>
+       
+        <div class="col-md-2">
+            
+            <select name="date_filter" class="form-select">
+            
+                <option value="">Any Date</option>
+            
+                <option value="today" {% if selected_date_filter == 'today' %}selected{% endif %}>Today</option>
+            
+                <option value="week" {% if selected_date_filter == 'week' %}selected{% endif %}>This Week</option>
+            
+                <option value="month" {% if selected_date_filter == 'month' %}selected{% endif %}>This Month</option>
+            
+            </select>
+        
+        </div>
+        
+        <div class="col-md-2">
+        
+            <select name="status" class="form-select">
+        
+                <option value="">All Status</option>
+        
+                {% for value, label in status_choices %}
+        
+                    <option value="{{ value }}" {% if selected_status == value %}selected{% endif %}>{{ label }}</option>
+            
+                    {% endfor %}
+            
+                </select>
+        
+        </div>
+        
+        <div class="col-md-2">
+            
+            <button type="submit" class="btn btn-success w-100" style="border-radius:10px; height:42px;">
+            
+                <i class="fas fa-search"></i> Search
+            
+            </button>
+        
+        </div>
+        
+        <div class="col-md-1">
+        
+            <a href="{% url 'admin_dash:inquiry-management-page' %}" class="btn btn-reset-modern w-100 d-flex align-items-center justify-content-center gap-1">
+        
+                <i class="fas fa-rotate-left"></i> Reset
+        
+            </a>
+        
+        </div>
+    
+    </form>
+
+    </div>
 
 
     <!-- Inquiries Table -->
@@ -212,17 +304,46 @@
 
                                 <tr>
 
-                                    <th>ID</th>
+                                    <th>
+                                        <a href="?sort={% if current_sort == 'enquiry_id' %}-enquiry_id{% else %}enquiry_id{% endif %}&search={{ search }}&status={{ selected_status }}" class="text-dark text-decoration-none">
+                                        Enquiry ID
+                                        {% if current_sort == 'enquiry_id' %}▲{% elif current_sort == '-enquiry_id' %}▼{% endif %}
+                                        </a>
+                                    </th>
 
-                                    <th>Customer</th>
+                                    <th>
+                                         <a href="?sort={% if current_sort == 'full_name' %}-full_name{% else %}full_name{% endif %}&search={{ search }}&status={{ selected_status }}" class="text-dark text-decoration-none">
+                                            Full Name
+                                            {% if current_sort == 'full_name' %}▲{% elif current_sort == '-full_name' %}▼{% endif %}
+                                         </a>
+                                    </th>
 
-                                    <th>Subject</th>
+                                    <th>Phone Number</th>
 
-                                    <th>Property</th>
+                                    <th>Email Address</th>
 
-                                    <th>Status</th>
+                                    <th>
+                                        <a href="?sort={% if current_sort == 'investment_budget' %}-investment_budget{% else %}investment_budget{% endif %}&search={{ search }}&status={{ selected_status }}" class="text-dark text-decoration-none">
+                                        Investment Budget
+                                        {% if current_sort == 'investment_budget' %}▲{% elif current_sort == '-investment_budget' %}▼{% endif %}
+                                        </a>
+                                    </th>
 
-                                    <th>Date</th>
+                                    <th>Message (Short Preview)</th>
+
+                                    <th>
+                                        <a href="?sort={% if current_sort == 'status' %}-status{% else %}status{% endif %}&search={{ search }}&status={{ selected_status }}" class="text-dark text-decoration-none">
+                                            Status
+                                            {% if current_sort == 'status' %}▲{% elif current_sort == '-status' %}▼{% endif %}
+                                        </a>
+                                    </th>
+
+                                    <th>
+                                        <a href="?sort={% if current_sort == 'created_at' %}-created_at{% else %}created_at{% endif %}&search={{ search }}&status={{ selected_status }}" class="text-dark text-decoration-none">
+                                            Submitted Date & Time
+                                            {% if current_sort == 'created_at' %}▲{% elif current_sort == '-created_at' %}▼{% endif %}
+                                        </a>
+                                    </th>
 
                                     <th>Actions</th>
 
@@ -230,122 +351,104 @@
 
                             </thead>
 
-                            <tbody>
+                            <tbody class="inquiries-table-body">
 
-                                {% for inquiry in inquiries %}
+                            {% for inquiry in inquiries %}
 
-                                    <tr>
+                                <tr id="inquiry-row-{{ inquiry.id }}">
 
-                                        <td>#{{ inquiry.id }}</td>
+                                    <td>#{{ inquiry.enquiry_id }}</td>
 
-                                        <td>
+                                    <td>{{ inquiry.full_name }}</td>
+                                    
+                                    <td>{{ inquiry.phone_number }}</td>
+                                    
+                                    <td>{{ inquiry.email|default:"-" }}</td>
+                                    
+                                    <td>{{ inquiry.investment_budget|default:"-" }}</td>
+                                    
+                                    <td>
+                                    
+                                        <div class="text-truncate" style="max-width: 180px;">
+                                    
+                                            {{ inquiry.message|default:"-" }}
+                                    
+                                        </div>
+                                    
+                                    </td>
+                                    
+                                    <td>
+                                    
+                                        {% if inquiry.status == 'new' %}
 
-                                            <div class="d-flex align-items-center">
+                                            <span class="badge bg-primary">New</span>
+                                        
+                                        {% elif inquiry.status == 'contacted' %}
 
-                                                <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px; font-size: 0.8rem;">
+                                            <span class="badge bg-warning text-dark">Contacted</span>
+                                        
+                                        {% elif inquiry.status == 'follow_up' %}
 
-                                                    {{ inquiry.user.username|first|upper }}
+                                            <span class="badge bg-secondary">Follow Up</span>
 
-                                                </div>
+                                        {% elif inquiry.status == 'interested' %}
 
-                                                <div>
+                                            <span class="badge" style="background-color:#6f42c1;color:#fff;">Interested</span>
 
-                                                    <div class="fw-bold">{{ inquiry.user.get_full_name|default:inquiry.user.username }}</div>
+                                        {% elif inquiry.status == 'site_visit_scheduled' %}
 
-                                                    <small class="text-muted">{{ inquiry.user.email }}</small>
+                                            <span class="badge" style="background-color:#0d6efd;color:#fff;">Site Visit Scheduled</span>
 
-                                                </div>
+                                        {% elif inquiry.status == 'converted' %}
 
-                                            </div>
+                                            <span class="badge bg-success">Converted</span>
 
-                                        </td>
+                                        {% elif inquiry.status == 'closed' %}
+                                        
+                                            <span class="badge bg-dark">Closed</span>
 
-                                        <td>
+                                        {% elif inquiry.status == 'spam' %}
+                                            <span class="badge bg-danger">Spam</span>
 
-                                            <div class="text-truncate" style="max-width: 200px;">
-
-                                                {{ inquiry.subject }}
-
-                                            </div>
-
-                                        </td>
-
-                                        <td>
-
-                                            {% if inquiry.property %}
-
-                                                <span class="badge bg-info">{{ inquiry.property.title }}</span>
-
-                                            {% else %}
-
-                                                <span class="text-muted">General</span>
-
-                                            {% endif %}
-
-                                        </td>
-
-                                        <td>
-
-                                            <span class="badge bg-{{ inquiry.status|yesno:'success,warning,secondary' }}">
-
-                                                {{ inquiry.get_status_display }}
-
-                                            </span>
-
-                                        </td>
-
-                                        <td>{{ inquiry.created_at|date:"M d, Y" }}</td>
-
-                                        <td>
-
-                                            <div class="btn-group" role="group">
-
-                                                <button class="btn btn-sm btn-outline-primary" onclick="viewInquiry({{ inquiry.id }})">
-
-                                                    <i class="fas fa-eye"></i>
-
-                                                </button>
-
-                                                <button class="btn btn-sm btn-outline-success" onclick="respondToInquiry({{ inquiry.id }})">
-
-                                                    <i class="fas fa-reply"></i>
-
-                                                </button>
-
-                                                <button class="btn btn-sm btn-outline-secondary" onclick="assignInquiry({{ inquiry.id }})">
-
-                                                    <i class="fas fa-user-plus"></i>
-
-                                                </button>
-
-                                                <button class="btn btn-sm btn-outline-danger" onclick="deleteInquiry({{ inquiry.id }})">
-
+                                        {% endif %}
+                                    
+                                    </td>
+                                    
+                                    <td>{{ inquiry.created_at|date:"d M, Y g:i A" }}</td>
+                                    
+                                    <td>
+                                        <div class="d-flex gap-2 align-items-center">
+                                            <a href="{% url 'admin_dash:inquiry-detail-page' inquiry.id %}" class="btn btn-sm btn-outline-primary" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <form method="POST" action="{% url 'admin_dash:inquiry-delete' inquiry.id %}" class="m-0"
+                                                onsubmit="return confirm('Delete enquiry #{{ inquiry.enquiry_id }} permanently?');">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
                                                     <i class="fas fa-trash"></i>
-
                                                 </button>
-
-                                            </div>
-
-                                        </td>
-
-                                    </tr>
-
+                                            </form>
+                                        </div>
+                                    </td>
+                                
+                                </tr>
+                                
                                 {% empty %}
-
-                                    <tr>
-
-                                        <td colspan="7" class="text-center py-4">
-
-                                            <i class="fas fa-envelope fa-3x text-muted mb-3"></i>
-
-                                            <p class="text-muted">No inquiries found</p>
-
-                                        </td>
-
-                                    </tr>
-
+                                
+                                <tr>
+                                
+                                    <td colspan="9" class="text-center py-4">
+                                
+                                        <i class="fas fa-envelope fa-3x text-muted mb-3"></i>
+                                
+                                        <p class="text-muted">No enquiries found</p>
+                                
+                                    </td>
+                                
+                                </tr>
+                           
                                 {% endfor %}
-
+                        
                             </tbody>
 
                         </table>
@@ -469,6 +572,61 @@
         </div>
 
     </div>
+
+    {% if is_paginated %}
+    
+    <nav class="mt-3 d-flex justify-content-between align-items-center">
+    
+        <span class="text-muted small">
+    
+            Showing {{ page_obj.start_index }}–{{ page_obj.end_index }} of {{ page_obj.paginator.count }} enquiries
+    
+        </span>
+    
+        <ul class="pagination mb-0">
+    
+            {% if page_obj.has_previous %}
+    
+            <li class="page-item">
+    
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ search }}&status={{ selected_status }}&budget={{ selected_budget }}&date_filter={{ selected_date_filter }}&sort={{ current_sort }}">Previous</a>
+    
+            </li>
+    
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+
+                {% if num == page_obj.number %}
+
+                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+
+                    <li class="page-item">
+                        
+                        <a class="page-link" href="?page={{ num }}&search={{ search }}&status={{ selected_status }}&budget={{ selected_budget }}&date_filter={{ selected_date_filter }}&sort={{ current_sort }}">{{ num }}</a>
+                    
+                    </li>
+                
+                    {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+
+                <li class="page-item">
+
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ search }}&status={{ selected_status }}&budget={{ selected_budget }}&date_filter={{ selected_date_filter }}&sort={{ current_sort }}">Next</a>
+                
+                </li>
+
+            {% endif %}
+
+        </ul>
+    
+    </nav>
+    
+{% endif %}
 
 {% endblock %}
 

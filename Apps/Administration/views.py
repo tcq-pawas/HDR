@@ -1135,3 +1135,35 @@ def save_security_settings(request):
         return Response({'success': True, 'message': 'Security settings saved successfully'})
     except Exception as e:
         return Response({'success': False, 'message': str(e)}, status=400)
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def get_unread_inquiries(request):
+    from .auth_utils import get_user_role
+    if get_user_role(request.user) != 'admin':
+        from rest_framework.exceptions import PermissionDenied
+        raise PermissionDenied("Admin access required.")
+    
+    from Apps.PublicPage.models import Inquiry as WebsiteContactInquiry
+    
+    unread_count = WebsiteContactInquiry.objects.filter(status='new').count()
+    latest_new = WebsiteContactInquiry.objects.filter(status='new').order_by('-created_at')[:5]
+    
+    data = {
+        'unread_count': unread_count,
+        'latest_inquiries': [
+            {
+                'id': item.id,
+                'enquiry_id': item.enquiry_id,
+                'full_name': item.full_name,
+                'phone_number': item.phone_number or '-',
+                'email': item.email or '-',
+                'investment_budget': item.investment_budget or '-',
+                'message': item.message[:100] + '...' if len(item.message) > 100 else item.message,
+                'status': item.status,
+                'created_at': item.created_at.strftime('%d %b, %Y %I:%M %p'),
+            } for item in latest_new
+        ]
+    }
+    return Response(data)

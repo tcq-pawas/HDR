@@ -1044,9 +1044,11 @@
 
                     <li class="nav-item">
 
-                        <a class="nav-link" href="{% url 'admin_dash:inquiry-management-page' %}">
+                        <a class="nav-link d-flex align-items-center" href="{% url 'admin_dash:inquiry-management-page' %}" id="sidebar-inquiries-link">
 
-                            <i class="fas fa-envelope"></i> Inquiries
+                            <i class="fas fa-envelope"></i> 
+                            <span class="me-2">Inquiries</span>
+                            <span class="badge bg-danger rounded-pill ms-auto d-none" id="inquiry-notification-badge">0</span>
 
                         </a>
 
@@ -1092,11 +1094,6 @@
 
                     </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'admin_dash:communication-list' %}">
-                            <i class="fas fa-comments"></i> Communication
-                        </a>
-                    </li>
                     <li class="nav-item">
 
                         <a class="nav-link" href="{% url 'admin_dash:activity-page' %}">
@@ -1239,6 +1236,209 @@
 
         });
 
+    </script>
+
+    <!-- Real-time Website Enquiry Polling & Notifications -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarBadge = document.getElementById('inquiry-notification-badge');
+            const bellBadge = document.getElementById('bell-notification-badge');
+            let lastSeenInquiryId = localStorage.getItem('last_seen_inquiry_id') || 0;
+            let isFirstLoad = true;
+    
+            function checkNewInquiries() {
+                fetch('/admin-dashboard/api/inquiries/unread-count/')
+                    .then(response => {
+                        if (!response.ok) throw new Error('Unregistered user or server error');
+                        return response.json();
+                    })
+                    .then(data => {
+                        const count = data.unread_count;
+                        
+                        // Update sidebar badge
+                        if (sidebarBadge) {
+                            if (count > 0) {
+                                sidebarBadge.textContent = count;
+                                sidebarBadge.classList.remove('d-none');
+                            } else {
+                                sidebarBadge.classList.add('d-none');
+                            }
+                        }
+                        
+                        // Update bell icon badge
+                        if (bellBadge) {
+                            if (count > 0) {
+                                bellBadge.textContent = count;
+                                bellBadge.classList.remove('d-none');
+                            } else {
+                                bellBadge.classList.add('d-none');
+                            }
+                        }
+    
+                        // If we have new inquiries, notify and prepend if we're on the Inquiry table page
+                        if (data.latest_inquiries && data.latest_inquiries.length > 0) {
+                            const newestInquiry = data.latest_inquiries[0];
+                            const newestId = newestInquiry.id;
+                            
+                            // Check if this is indeed a new inquiry we haven't seen in this session/browser storage
+                            if (!isFirstLoad && newestId > lastSeenInquiryId) {
+                                lastSeenInquiryId = newestId;
+                                localStorage.setItem('last_seen_inquiry_id', newestId);
+                                
+                                // Show premium browser toast
+                                showInquiryToast(newestInquiry);
+                                
+                                // Prepend row to table if currently viewing inquiries page
+                                const tableBody = document.querySelector('.inquiries-table-body');
+                                if (tableBody) {
+                                    prependInquiryToTable(newestInquiry, tableBody);
+                                }
+                            } else if (isFirstLoad) {
+                                lastSeenInquiryId = newestId;
+                                localStorage.setItem('last_seen_inquiry_id', mapEnquiriesToIds(data.latest_inquiries));
+                                isFirstLoad = false;
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        // Silent fail to prevent console noise on ordinary auth expiry
+                    });
+            }
+    
+            function mapEnquiriesToIds(inquiries) {
+                if (!inquiries || inquiries.length === 0) return 0;
+                return Math.max(...inquiries.map(i => i.id));
+            }
+    
+            function showInquiryToast(inquiry) {
+                // Ensure a premium notifications container exists
+                let container = document.getElementById('inquiry-toast-container');
+                if (!container) {
+                    container = document.createElement('div');
+                    container.id = 'inquiry-toast-container';
+                    container.className = 'position-fixed bottom-0 end-0 p-3';
+                    container.style.zIndex = '1090';
+                    document.body.appendChild(container);
+                }
+                
+                const toastId = 'inquiry_toast_' + inquiry.id;
+                const toastHtml = `
+                    <div id="${toastId}" class="toast align-items-center text-white border-0 shadow-lg show" role="alert" aria-live="assertive" aria-atomic="true" style="background: linear-gradient(135deg, #0F766E 0%, #115E59 100%); min-width: 320px; border-radius: 12px; margin-top: 10px; opacity: 1; transition: opacity 0.4s ease;">
+                        <div class="d-flex">
+                            <div class="toast-body p-3 w-100">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <div class="d-flex align-items-center">
+                                        <div class="bg-white rounded-circle p-1 me-2 d-flex align-items-center justify-content-center" style="width: 24px; height: 24px;">
+                                            <i class="fas fa-envelope text-teal" style="color: #0F766E; font-size: 0.8rem;"></i>
+                                        </div>
+                                        <strong class="text-white">New Enquiry Submitted</strong>
+                                    </div>
+                                    <span class="badge bg-danger rounded-pill">New</span>
+                                </div>
+                                <p class="mb-1 text-white" style="font-size: 0.9rem;"><strong>${inquiry.full_name}</strong> has submitted an enquiry.</p>
+                                <div class="text-white-50 mb-2" style="font-size: 0.8rem;">Budget: ${inquiry.investment_budget}</div>
+                                <div class="d-flex gap-2 justify-content-end mt-2 pt-2 border-top border-white-50 border-opacity-25">
+                                    <a href="/admin-dashboard/inquiries/${inquiry.id}/" class="btn btn-xs btn-light fw-bold text-teal" style="font-size: 0.75rem; padding: 3px 10px; border-radius: 6px; color: #0F766E; text-decoration: none;">View Detail</a>
+                                    <button type="button" class="btn btn-xs btn-outline-light text-white" style="font-size: 0.75rem; padding: 3px 10px; border-radius: 6px;" onclick="document.getElementById('${toastId}').remove()">Dismiss</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', toastHtml);
+                
+                // Play notification alert sound
+                try {
+                    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
+                    gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.15);
+                } catch(e) {}
+                
+                // Self destruct toast after 10s
+                setTimeout(() => {
+                    const toastEl = document.getElementById(toastId);
+                    if (toastEl) {
+                        toastEl.style.opacity = '0';
+                        setTimeout(() => toastEl.remove(), 400);
+                    }
+                }, 10000);
+            }
+    
+            function prependInquiryToTable(inquiry, tbody) {
+                // Return if row with this inquiry ID already exists
+                if (document.getElementById(`inquiry-row-${inquiry.id}`)) return;
+                
+                // Remove empty row statement if it exists
+                const emptyRow = tbody.querySelector('.no-inquiries-row') || tbody.querySelector('td[colspan="9"]')?.parentElement;
+                if (emptyRow) emptyRow.remove();
+                
+                const tr = document.createElement('tr');
+                tr.id = `inquiry-row-${inquiry.id}`;
+                tr.className = 'table-light-highlight-animation';
+                tr.style.background = '#e6fffa';
+                tr.innerHTML = `
+                    <td>
+                        <span class="badge bg-light text-dark border fw-normal">#${inquiry.enquiry_id}</span>
+                    </td>
+                    <td>
+                        <div class="fw-bold">${inquiry.full_name}</div>
+                    </td>
+                    <td>${inquiry.phone_number}</td>
+                    <td>
+                        <a href="mailto:${inquiry.email}" class="text-decoration-none">${inquiry.email}</a>
+                    </td>
+                    <td>
+                        <span class="badge bg-light text-success border">${inquiry.investment_budget}</span>
+                    </td>
+                    <td>
+                        <p class="mb-0 text-muted small text-truncate" style="max-width: 200px;" title="${inquiry.message}">
+                            ${inquiry.message}
+                        </p>
+                    </td>
+                    <td>
+                        <span class="badge bg-primary">New</span>
+                    </td>
+                    <td>
+                        <small class="text-muted">${inquiry.created_at}</small>
+                    </td>
+                    <td>
+                        <div class="d-flex gap-1 justify-content-center">
+                            <a href="/admin-dashboard/inquiries/${inquiry.id}/" class="btn btn-sm btn-outline-primary" title="View Enquiry">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </div>
+                    </td>
+                `;
+                
+                // Prepend to top of list
+                tbody.insertBefore(tr, tbody.firstChild);
+                
+                // Update total cards and pending cards dynamically!
+                const totalTitle = document.querySelector('.bg-primary .card-title');
+                const pendingTitle = document.querySelector('.bg-warning .card-title');
+                const todayTitle = document.querySelector('.bg-info .card-title');
+                if (totalTitle) totalTitle.textContent = parseInt(totalTitle.textContent || '0') + 1;
+                if (pendingTitle) pendingTitle.textContent = parseInt(pendingTitle.textContent || '0') + 1;
+                if (todayTitle) todayTitle.textContent = parseInt(todayTitle.textContent || '0') + 1;
+                
+                // Fade color out after 5s
+                setTimeout(() => {
+                    tr.style.transition = 'background-color 2s ease';
+                    tr.style.background = '';
+                }, 5000);
+            }
+    
+            // Run check on startup and then poll every 4s
+            setTimeout(checkNewInquiries, 800);
+            setInterval(checkNewInquiries, 4000);
+        });
     </script>
 
     

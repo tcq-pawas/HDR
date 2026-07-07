@@ -560,18 +560,15 @@ class DocumentForm(forms.ModelForm):
 class CommunicationForm(forms.ModelForm):
     """Form for sending communications"""
     
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['communication_type'].choices = [('email', 'Email')]
-        
     class Meta:
         model = Communication
-        fields = ['communication_type', 'recipient', 'subject', 'message']
+        fields = ['communication_type', 'recipient', 'subject', 'message', 'template_used']
         widgets = {
             'communication_type': forms.Select(attrs={'class': 'form-select'}),
-            'recipient': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Recipient Email'}),
+            'recipient': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Recipient (Phone or Email)'}),
             'subject': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Subject'}),
             'message': forms.Textarea(attrs={'class': 'form-control', 'rows': 5, 'placeholder': 'Message'}),
+            'template_used': forms.Select(attrs={'class': 'form-select'}),
         }
 
 

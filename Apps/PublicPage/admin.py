@@ -1,9 +1,14 @@
 from django.contrib import admin
 from .models import Property, PropertyImage, PropertyInquiry
+from .models import ContactInquiry
+from .models import WebsiteEnquiry
 
 class PropertyImageInline(admin.TabularInline):
     model = PropertyImage
     extra = 1
+
+
+admin.site.register(ContactInquiry)
 
 @admin.register(Property)
 class PropertyAdmin(admin.ModelAdmin):
@@ -27,3 +32,9 @@ class PropertyAdmin(admin.ModelAdmin):
 class PropertyInquiryAdmin(admin.ModelAdmin):
     list_display = ('name', 'email', 'property', 'created_at')
     search_fields = ('name', 'email', 'message')
+
+
+@admin.register(WebsiteEnquiry)
+class WebsiteEnquiryAdmin(admin.ModelAdmin):
+    list_display = ('enquiry_id', 'full_name', 'email', 'status', 'created_at')
+    search_fields = ('full_name', 'email', 'enquiry_id')

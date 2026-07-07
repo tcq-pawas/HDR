@@ -1,6 +1,13 @@
 from django.db import models
 from django.utils.text import slugify
 from django.contrib.auth.models import User
+import random
+
+# Deferred import to avoid circular imports at module load time
+def _get_user_role(user):
+    # pyrefly: ignore [missing-import]
+    from Apps.Administration.auth_utils import get_user_role
+    return get_user_role(user)
 
 class Property(models.Model):
     PROPERTY_TYPES = (
@@ -419,8 +426,7 @@ class Property(models.Model):
         if not user.is_authenticated:
             return False
         
-        from Apps.Administration.auth_utils import get_user_role
-        user_role = get_user_role(user)
+        user_role = _get_user_role(user)
         
         return user_role == self.allowed_roles
 
@@ -455,8 +461,7 @@ class Property(models.Model):
         })
         
         # Add investment details for investors
-        from Apps.Administration.auth_utils import get_user_role
-        user_role = get_user_role(user)
+        user_role = _get_user_role(user)
         
         if user_role == 'investor' and self.investment_opportunity:
             base_data.update({
@@ -489,3 +494,182 @@ class PropertyInquiry(models.Model):
 
     def __str__(self):
         return f"Inquiry from {self.name}"
+
+# contact form
+class ContactInquiry(models.Model):
+    full_name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=20)
+    email = models.EmailField(blank=True, null=True)
+    budget = models.CharField(max_length=50, blank=True, null=True)
+    message = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.full_name} - {self.phone}"
+    
+    
+#Inquiry model for admin panel
+class Inquiry(models.Model):
+    STATUS_CHOICES = [
+        ('new', 'New'),
+        ('contacted', 'Contacted'),
+        ('follow_up', 'Follow Up'),
+        ('interested', 'Interested'),
+        ('site_visit_scheduled', 'Site Visit Scheduled'),
+        ('converted', 'Converted'),
+        ('closed', 'Closed'),
+        # ('spam', 'Spam'),
+    ]
+    enquiry_id = models.CharField(max_length=5, unique=True, editable=False, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    full_name = models.CharField(max_length=255)
+    phone_number = models.CharField(max_length=20, null=True, blank=True)
+    email = models.EmailField()
+    investment_budget = models.CharField(max_length=100, null=True, blank=True)
+    investment_requirement = models.TextField(null=True, blank=True)
+    message = models.TextField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='new')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    source = models.CharField(max_length=100, default='Website Contact Form')
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    user_agent = models.TextField(null=True, blank=True)
+    
+    admin_notes = models.TextField(null=True, blank=True, help_text="Internal notes, visible only to admin")
+    
+    
+    class Meta:
+        ordering = ['-created_at']
+        
+    def save(self, *args, **kwargs):
+        if not self.enquiry_id:
+            self.enquiry_id = self.generate_unique_id()
+        super().save(*args, **kwargs)
+        
+    @staticmethod
+    def generate_unique_id():
+        while True:
+            new_id = str(random.randint(10000, 99999))
+            if not Inquiry.objects.filter(enquiry_id=new_id).exists():
+                return new_id
+
+    def __str__(self):
+        return f"Enquiry #{self.enquiry_id} - {self.full_name}"
+
+
+# ==================== WebsiteEnquiry Model ====================
+class WebsiteEnquiry(models.Model):
+    STATUS_CHOICES = [
+        ('new', 'New'),
+        ('contacted', 'Contacted'),
+        ('follow_up', 'Follow Up'),
+        ('interested', 'Interested'),
+        ('site_visit_scheduled', 'Site Visit Scheduled'),
+        ('converted', 'Converted'),
+        ('closed', 'Closed'),
+    ]
+
+    BUDGET_CHOICES = [
+        ('under_5L', 'Under ₹5 Lakh'),
+        ('5L_10L', '₹5 Lakh – ₹10 Lakh'),
+        ('10L_25L', '₹10 Lakh – ₹25 Lakh'),
+        ('25L_50L', '₹25 Lakh – ₹50 Lakh'),
+        ('50L_1Cr', '₹50 Lakh – ₹1 Crore'),
+        ('above_1Cr', 'Above ₹1 Crore'),
+    ]
+
+    # Auto-generated unique enquiry ID (e.g. ENQ-84291)
+    enquiry_id = models.CharField(max_length=10, unique=True, editable=False, blank=True)
+
+    # Contact Information
+    full_name = models.CharField(max_length=255, verbose_name="Full Name")
+    phone_number = models.CharField(max_length=20, verbose_name="Phone Number")
+    email = models.EmailField(verbose_name="Email Address")
+
+    # Enquiry Details
+    investment_budget = models.CharField(
+        max_length=50,
+        choices=BUDGET_CHOICES,
+        null=True, blank=True,
+        verbose_name="Investment Budget"
+    )
+    message = models.TextField(verbose_name="Message")
+
+    # Status & Workflow
+    status = models.CharField(
+        max_length=25,
+        choices=STATUS_CHOICES,
+        default='new',
+        verbose_name="Status"
+    )
+
+    # Admin-only Internal Notes
+    admin_notes = models.TextField(
+        null=True, blank=True,
+        verbose_name="Admin Notes",
+        help_text="Internal notes — visible only to admin"
+    )
+
+    # Tracking / Meta
+    source = models.CharField(
+        max_length=100,
+        default='Website Contact Form',
+        verbose_name="Source"
+    )
+
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created At")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Updated At")
+
+    # Optional System Info
+    ip_address = models.GenericIPAddressField(
+        null=True, blank=True,
+        verbose_name="IP Address"
+    )
+    user_agent = models.TextField(
+        null=True, blank=True,
+        verbose_name="User Agent"
+    )
+
+    # Linked User (if logged in)
+    user = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True, blank=True,
+        related_name='website_enquiries',
+        verbose_name="User Interface"
+    )
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "Website Enquiry"
+        verbose_name_plural = "Website Enquiries"
+
+    def save(self, *args, **kwargs):
+        if not self.enquiry_id:
+            self.enquiry_id = self._generate_unique_id()
+        super().save(*args, **kwargs)
+
+    @staticmethod
+    def _generate_unique_id():
+        while True:
+            new_id = f"ENQ-{random.randint(10000, 99999)}"
+            if not WebsiteEnquiry.objects.filter(enquiry_id=new_id).exists():
+                return new_id
+
+    def get_status_badge_class(self):
+        """Returns Bootstrap badge class for the current status"""
+        badge_map = {
+            'new':                  'bg-primary',
+            'contacted':            'bg-warning text-dark',
+            'follow_up':            'bg-secondary',
+            'interested':           'bg-purple',
+            'site_visit_scheduled': 'bg-info',
+            'converted':            'bg-success',
+            'closed':               'bg-dark',
+        }
+        return badge_map.get(self.status, 'bg-secondary')
+
+    def __str__(self):
+        return f"{self.enquiry_id} — {self.full_name} ({self.get_status_display()})"

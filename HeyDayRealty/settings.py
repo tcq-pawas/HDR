@@ -20,33 +20,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Load environment variables
 load_dotenv(os.path.join(BASE_DIR, '.env'))
 
-
-def get_env(name, default=None):
-    value = os.getenv(name, default)
-    if value is None:
-        return default
-    return value
-
-
-def get_list_env(name, default=None):
-    raw_value = get_env(name, default)
-    if raw_value is None:
-        return []
-    if isinstance(raw_value, (list, tuple)):
-        return [str(item).strip() for item in raw_value if str(item).strip()]
-    return [item.strip() for item in str(raw_value).split(',') if item.strip()]
-
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = get_env('SECRET_KEY', 'django-insecure-secret-key')
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = get_env('DEBUG', 'False') == 'True'
+DEBUG = os.getenv('DEBUG') == 'True'
 
-ALLOWED_HOSTS = get_list_env('ALLOWED_HOSTS', 'localhost,127.0.0.1')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
 
 
 # Application definition
@@ -108,7 +91,7 @@ WSGI_APPLICATION = 'HeyDayRealty.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DB_ENGINE = get_env('DB_ENGINE', 'django.db.backends.postgresql')
+DB_ENGINE = os.getenv('DB_ENGINE', 'django.db.backends.postgresql')
 
 if DB_ENGINE == 'django.db.backends.sqlite3':
     DATABASES = {
@@ -121,15 +104,15 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': DB_ENGINE,
-            'NAME': get_env('DB_NAME', get_env('DATABASE_NAME', 'heyday_db')),
-            'USER': get_env('DB_USER', get_env('DATABASE_USER', 'postgres')),
-            'PASSWORD': get_env('DB_PASSWORD', get_env('DATABASE_PASSWORD', 'postgres')),
-            'HOST': get_env('DB_HOST', get_env('DATABASE_HOST', 'localhost')),
-            'PORT': get_env('DB_PORT', get_env('DATABASE_PORT', '5432')),
+            'NAME': os.getenv('DB_NAME',  default='heyday_db'),
+            'USER': os.getenv('DB_USER',  default='postgres'),
+            'PASSWORD': os.getenv('DB_PASSWORD',  default='postgres'),
+            'HOST': os.getenv('DB_HOST',  default='localhost'),
+            'PORT': os.getenv('DB_PORT', default='5432'),
         }
     }
 
-
+print(f"Using database engine: {DATABASES}")
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 

@@ -1,242 +1,10 @@
 {% extends "agent/agent_base.html" %}
 {% load static %}
 
-{% block title %}Settings | Agent Dashboard | HeyDay Realty{% endblock %}
+{% block title %}Settings | HeyDay Realty{% endblock %}
 
 {% block extra_css %}
-<style>
-    /* Premium Settings Styling */
-    :root {
-        --theme-teal: #0F766E;
-        --theme-teal-light: rgba(15, 118, 110, 0.05);
-        --theme-teal-border: rgba(15, 118, 110, 0.2);
-        --text-dark: #1e293b;
-        --text-gray: #64748b;
-        --border-light: #e2e8f0;
-        --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.05);
-        --radius-card: 16px;
-    }
-
-    .settings-container {
-        padding: 8px;
-    }
-
-    .page-header {
-        margin-bottom: 24px;
-        padding-bottom: 16px;
-        border-bottom: 1px solid var(--border-light);
-    }
-    .page-header h1 {
-        font-size: 24px;
-        font-weight: 700;
-        color: var(--text-dark);
-        margin: 0;
-    }
-
-    .settings-card {
-        background: #fff;
-        border: 1px solid var(--border-light);
-        border-radius: var(--radius-card);
-        padding: 24px;
-        box-shadow: var(--shadow-card);
-        margin-bottom: 24px;
-    }
-
-    .settings-card h3 {
-        font-size: 16px;
-        font-weight: 600;
-        color: var(--text-dark);
-        margin: 0 0 20px 0;
-        padding-bottom: 12px;
-        border-bottom: 1px solid var(--border-light);
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    .settings-card h3 i {
-        color: var(--theme-teal);
-    }
-
-    /* Custom form styling */
-    .form-group {
-        margin-bottom: 16px;
-    }
-    .form-label {
-        font-weight: 600;
-        color: var(--text-dark);
-        font-size: 13px;
-        margin-bottom: 6px;
-        display: block;
-    }
-    .form-control, .form-select {
-        border-radius: 8px;
-        border: 1px solid var(--border-light);
-        padding: 10px 14px;
-        font-size: 14px;
-        transition: all 0.2s ease;
-        background-color: #fff;
-        color: var(--text-dark);
-        width: 100%;
-    }
-    .form-control:focus, .form-select:focus {
-        border-color: var(--theme-teal);
-        box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
-        outline: none;
-    }
-    .form-control::placeholder {
-        color: #94a3b8;
-    }
-
-    /* Avatar Upload styling */
-    .avatar-upload-wrapper {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        padding: 10px 0;
-    }
-    .profile-avatar-xl {
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 4px solid #fff;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        transition: all 0.2s ease;
-    }
-    .avatar-placeholder-custom {
-        background-color: var(--theme-teal-light);
-        color: var(--theme-teal);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 44px;
-        font-weight: 700;
-        border: 2px dashed var(--theme-teal-border);
-    }
-    .avatar-edit-badge {
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        width: 36px;
-        height: 36px;
-        background-color: var(--theme-teal);
-        color: #fff;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-        transition: all 0.2s ease;
-    }
-    .avatar-edit-badge:hover {
-        background-color: #0d645d;
-        transform: scale(1.05);
-    }
-
-    /* Toggles & Preferences */
-    .settings-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 14px 0;
-        border-bottom: 1px solid var(--border-light);
-    }
-    .settings-item:last-child {
-        border-bottom: none;
-    }
-    .settings-item-label {
-        font-weight: 600;
-        color: var(--text-dark);
-        font-size: 14px;
-    }
-    .settings-item-description {
-        color: var(--text-gray);
-        font-size: 12px;
-        margin-top: 2px;
-    }
-    .toggle-switch {
-        position: relative;
-        width: 50px;
-        height: 26px;
-        flex-shrink: 0;
-    }
-    .toggle-switch input.form-check-input {
-        opacity: 0 !important;
-        position: absolute !important;
-        width: 0 !important;
-        height: 0 !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        border: none !important;
-    }
-    .toggle-slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #cbd5e1;
-        transition: 0.3s;
-        border-radius: 26px;
-    }
-    .toggle-slider:before {
-        position: absolute;
-        content: "";
-        height: 20px;
-        width: 20px;
-        left: 3px;
-        bottom: 3px;
-        background-color: white;
-        transition: 0.3s;
-        border-radius: 50%;
-    }
-    .toggle-switch input:checked + .toggle-slider {
-        background-color: var(--theme-teal) !important;
-    }
-    .toggle-switch input:checked + .toggle-slider:before {
-        transform: translateX(24px);
-    }
-
-    /* Buttons */
-    .btn-teal {
-        background-color: var(--theme-teal);
-        color: #fff;
-        border: none;
-        border-radius: 8px;
-        font-weight: 600;
-        padding: 10px 24px;
-        transition: all 0.2s ease;
-    }
-    .btn-teal:hover {
-        background-color: #0d645d;
-        color: #fff;
-        box-shadow: 0 4px 10px rgba(15, 118, 110, 0.2);
-    }
-    .btn-light-custom {
-        background-color: #f1f5f9;
-        color: var(--text-dark);
-        border: 1px solid var(--border-light);
-        border-radius: 8px;
-        font-weight: 600;
-        padding: 10px 24px;
-        text-decoration: none;
-        transition: all 0.2s ease;
-        display: inline-block;
-        text-align: center;
-    }
-    .btn-light-custom:hover {
-        background-color: #e2e8f0;
-        color: var(--text-dark);
-    }
-</style>
-{% endblock %}
-
-{% block breadcrumb_items %}
-<i class="bi bi-chevron-right mx-2 text-muted" style="font-size: 0.8rem;"></i>
-<span class="text-muted">Settings</span>
+<link rel="stylesheet" href="{% static 'css/agent/settings.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -246,181 +14,160 @@
         <h1>Settings</h1>
     </div>
 
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endfor %}
-    {% endif %}
-
-    <!-- Outer Form wrapping all fields and preferences to save dynamically -->
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        
-        <div class="row">
-            <!-- Left Column: Profile Card & Quick Toggles -->
-            <div class="col-lg-4">
-                <!-- Avatar Preview Card -->
-                <div class="settings-card text-center">
-                    <h3><i class="bi bi-person-circle"></i> Profile Picture</h3>
-                    <div class="avatar-upload-wrapper">
-                        <div class="position-relative d-inline-block mb-3">
-                            {% if agent_profile.profile_image %}
-                                <img id="avatarPreview" src="{{ agent_profile.profile_image.url }}" alt="Profile Image" class="profile-avatar-xl">
-                            {% else %}
-                                <div id="avatarPlaceholder" class="profile-avatar-xl avatar-placeholder-custom">
-                                    {{ user.first_name|default:user.username|slice:":1"|upper }}
-                                </div>
-                                <img id="avatarPreview" src="" alt="Profile Image" class="profile-avatar-xl d-none">
-                            {% endif %}
-                            
-                            <label for="{{ form.profile_image.id_for_label }}" class="avatar-edit-badge" title="Change profile picture">
-                                <i class="bi bi-camera-fill"></i>
-                            </label>
-                            <div style="display: none;">
-                                {{ form.profile_image }}
-                            </div>
-                        </div>
-                        <h5 class="fw-bold mb-1">{{ user.get_full_name|default:user.username }}</h5>
-                        <p class="text-muted small mb-0">{% if 'owner' in request.user.groups.all|stringformat:"s" %}Owner{% else %}Agent{% endif %}</p>
-                        <p class="text-muted small mb-0">{{ agent_profile.company_name|default:"Independent Agent" }}</p>
-                    </div>
-                </div>
-
-                <!-- Notifications Card -->
-                <div class="settings-card">
-                    <h3><i class="bi bi-bell"></i> Notification Settings</h3>
-                    <div class="settings-item">
-                        <div>
-                            <div class="settings-item-label">Email Alerts</div>
-                            <div class="settings-item-description">Get updates on new leads via email</div>
-                        </div>
-                        <label class="toggle-switch">
-                            {{ form.notification_email }}
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-                    <div class="settings-item">
-                        <div>
-                            <div class="settings-item-label">SMS Alerts</div>
-                            <div class="settings-item-description">Get SMS for urgent appointments</div>
-                        </div>
-                        <label class="toggle-switch">
-                            {{ form.notification_sms }}
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-                    <div class="settings-item">
-                        <div>
-                            <div class="settings-item-label">WhatsApp Alerts</div>
-                            <div class="settings-item-description">Get chat alerts on your mobile</div>
-                        </div>
-                        <label class="toggle-switch">
-                            {{ form.notification_whatsapp }}
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-                </div>
+    <!-- Profile Form -->
+    <div class="settings-card" style="margin-bottom: 1.5rem;">
+        <h3>Profile Information</h3>
+        <form method="post" enctype="multipart/form-data" style="max-width: 600px;">
+            {% csrf_token %}
+            
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label style="display: block; font-weight: 600; color: #475569; margin-bottom: 0.5rem; font-size: 0.9rem;">First Name</label>
+                {{ form.first_name }}
             </div>
 
-            <!-- Right Column: Settings Details -->
-            <div class="col-lg-8">
-                <!-- Personal Info Card -->
-                <div class="settings-card">
-                    <h3><i class="bi bi-person-badge"></i> Personal Details</h3>
-                    <div class="row">
-                        <div class="col-md-6 form-group">
-                            <label class="form-label">First Name</label>
-                            {{ form.first_name }}
-                        </div>
-                        <div class="col-md-6 form-group">
-                            <label class="form-label">Last Name</label>
-                            {{ form.last_name }}
-                        </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-md-6 form-group">
-                            <label class="form-label">Email Address</label>
-                            {{ form.email }}
-                        </div>
-                        <div class="col-md-6 form-group">
-                            <label class="form-label">Phone Number</label>
-                            {{ form.phone }}
-                        </div>
-                    </div>
-                </div>
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label style="display: block; font-weight: 600; color: #475569; margin-bottom: 0.5rem; font-size: 0.9rem;">Last Name</label>
+                {{ form.last_name }}
+            </div>
 
-                <!-- Business Details Card -->
-                <div class="settings-card">
-                    <h3><i class="bi bi-briefcase"></i> Business Settings</h3>
-                    <div class="row">
-                        <div class="col-md-6 form-group">
-                            <label class="form-label">Company Name</label>
-                            {{ form.company_name }}
-                        </div>
-                        <div class="col-md-6 form-group">
-                            <label class="form-label">Employee ID</label>
-                            {{ form.employee_id }}
-                        </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-md-6 form-group">
-                            <label class="form-label">Assigned Territory</label>
-                            {{ form.territory }}
-                        </div>
-                        <div class="col-md-6 form-group">
-                            <label class="form-label">Commission Rate (%)</label>
-                            {{ form.commission_rate }}
-                        </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-md-12 form-group">
-                            <label class="form-label">Monthly Sales Target (₹)</label>
-                            {{ form.target_sales }}
-                        </div>
-                    </div>
-                </div>
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label style="display: block; font-weight: 600; color: #475569; margin-bottom: 0.5rem; font-size: 0.9rem;">Email</label>
+                {{ form.email }}
+            </div>
 
-                <!-- Bio Card -->
-                <div class="settings-card">
-                    <h3><i class="bi bi-file-earmark-person"></i> Biography</h3>
-                    <div class="form-group mb-0">
-                        <label class="form-label">Write a brief intro about yourself</label>
-                        {{ form.bio }}
-                    </div>
-                </div>
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label style="display: block; font-weight: 600; color: #475569; margin-bottom: 0.5rem; font-size: 0.9rem;">Phone</label>
+                {{ form.phone }}
+            </div>
 
-                <!-- Save/Cancel Actions -->
-                <div class="d-flex justify-content-end gap-3 mb-4">
-                    <a href="{% url 'agent:profile' %}" class="btn-light-custom">Cancel</a>
-                    <button type="submit" class="btn btn-teal px-5">Save Changes</button>
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label style="display: block; font-weight: 600; color: #475569; margin-bottom: 0.5rem; font-size: 0.9rem;">Company Name</label>
+                {{ form.company_name }}
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label style="display: block; font-weight: 600; color: #475569; margin-bottom: 0.5rem; font-size: 0.9rem;">Employee ID</label>
+                {{ form.employee_id }}
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label style="display: block; font-weight: 600; color: #475569; margin-bottom: 0.5rem; font-size: 0.9rem;">Territory</label>
+                {{ form.territory }}
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label style="display: block; font-weight: 600; color: #475569; margin-bottom: 0.5rem; font-size: 0.9rem;">Commission Rate (%)</label>
+                {{ form.commission_rate }}
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label style="display: block; font-weight: 600; color: #475569; margin-bottom: 0.5rem; font-size: 0.9rem;">Target Sales (₹)</label>
+                {{ form.target_sales }}
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label style="display: block; font-weight: 600; color: #475569; margin-bottom: 0.5rem; font-size: 0.9rem;">Bio</label>
+                {{ form.bio }}
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label style="display: block; font-weight: 600; color: #475569; margin-bottom: 0.5rem; font-size: 0.9rem;">Profile Image</label>
+                {{ form.profile_image }}
+            </div>
+
+            <div style="margin-top: 1.5rem;">
+                <button type="submit" class="settings-btn">Save Changes</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Settings Grid -->
+    <div class="settings-grid">
+        <!-- Notification Settings -->
+        <div class="settings-card">
+            <h3>Notifications</h3>
+            <div class="settings-item">
+                <div>
+                    <div class="settings-item-label">Email Notifications</div>
+                    <div class="settings-item-description">Receive email updates for new leads</div>
                 </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="settings-item">
+                <div>
+                    <div class="settings-item-label">SMS Notifications</div>
+                    <div class="settings-item-description">Receive SMS for urgent inquiries</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="settings-item">
+                <div>
+                    <div class="settings-item-label">Property Approval Alerts</div>
+                    <div class="settings-item-description">Get notified when properties are approved</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="toggle-slider"></span>
+                </label>
             </div>
         </div>
-    </form>
-</div>
-{% endblock %}
 
-{% block extra_js %}
-<script>
-    // Live preview for profile image file upload
-    document.getElementById('{{ form.profile_image.id_for_label }}').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const preview = document.getElementById('avatarPreview');
-                const placeholder = document.getElementById('avatarPlaceholder');
-                preview.src = event.target.result;
-                preview.classList.remove('d-none');
-                if (placeholder) {
-                    placeholder.classList.add('d-none');
-                }
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-</script>
+        <!-- Privacy Settings -->
+        <div class="settings-card">
+            <h3>Privacy</h3>
+            <div class="settings-item">
+                <div>
+                    <div class="settings-item-label">Profile Visibility</div>
+                    <div class="settings-item-description">Make your profile visible to buyers</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            <div class="settings-item">
+                <div>
+                    <div class="settings-item-label">Show Contact Information</div>
+                    <div class="settings-item-description">Display phone and email on listings</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Account Settings -->
+        <div class="settings-card">
+            <h3>Account</h3>
+            <div class="settings-item">
+                <div>
+                    <div class="settings-item-label">Change Password</div>
+                    <div class="settings-item-description">Update your account password</div>
+                </div>
+                <button class="settings-btn secondary">Change</button>
+            </div>
+            <div class="settings-item">
+                <div>
+                    <div class="settings-item-label">Two-Factor Authentication</div>
+                    <div class="settings-item-description">Add extra security to your account</div>
+                </div>
+                <button class="settings-btn secondary">Enable</button>
+            </div>
+            <div class="settings-item">
+                <div>
+                    <div class="settings-item-label">Delete Account</div>
+                    <div class="settings-item-description">Permanently delete your account</div>
+                </div>
+                <button class="settings-btn" style="background: #ef4444;">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

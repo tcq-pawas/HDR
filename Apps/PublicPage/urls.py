@@ -25,4 +25,5 @@ urlpatterns = [
     
     # API endpoints
     path('api/', include(router.urls)),
+    path('admin/enquiries/', views.website_enquiry_list, name='website_enquiry_list'),
 ]

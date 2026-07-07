@@ -119,24 +119,32 @@
                 <h2 class="section-title" style="font-size: 2rem;">Tell us about your investment requirements</h2>
                 <p class="section-sub" style="max-width: 100%;">Our team will get in touch with you shortly.</p>
             </div>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show mb-4" role="alert" style="border-radius: 12px;">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
             <form method="POST">
                 {% csrf_token %}
                 <div class="row g-4">
                     <div class="col-md-6">
                         <label class="form-label" style="font-weight: 600; color: var(--forest);">Full Name</label>
-                        <input type="text" class="form-control" placeholder="Enter your full name" required>
+                        <input type="text" name="full_name"  class="form-control" placeholder="Enter your full name" required>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label" style="font-weight: 600; color: var(--forest);">Phone Number</label>
-                        <input type="text" class="form-control" placeholder="Enter your phone number" required>
+                        <input type="text" name="phone_number" class="form-control" placeholder="Enter your phone number" required>
                     </div>
                     <div class="col-12">
                         <label class="form-label" style="font-weight: 600; color: var(--forest);">Email Address</label>
-                        <input type="email" class="form-control" placeholder="Enter your email address">
+                        <input type="email" name="email" class="form-control" placeholder="Enter your email address">
                     </div>
                     <div class="col-12">
                         <label class="form-label" style="font-weight: 600; color: var(--forest);">Investment Budget</label>
-                        <select class="form-control">
+                        <select class="form-control" name="budget">
                             <option>Select Budget Range</option>
                             <option>Below ₹5 Lakh</option>
                             <option>₹5 Lakh – ₹10 Lakh</option>
@@ -146,7 +154,7 @@
                     </div>
                     <div class="col-12">
                         <label class="form-label" style="font-weight: 600; color: var(--forest);">Message</label>
-                        <textarea class="form-control" rows="5" placeholder="Tell us about your investment requirements"></textarea>
+                        <textarea class="form-control" name="message" rows="5" placeholder="Tell us about your investment requirements"></textarea>
                     </div>
                     <div class="col-12 text-center">
                         <button type="submit" class="btn-cta-primary" style="border: none; cursor: pointer;">Request a Call Back</button>

@@ -596,11 +596,12 @@
 
                 </div>
 
-                <button class="header-btn">
+                <a href="{% url 'admin_dash:inquiry-management-page' %}" class="header-btn position-relative text-decoration-none" id="header-bell-btn" title="View Inquiries" style="display:inline-flex; align-items:center;">
 
                     <i class="fas fa-bell"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none" id="bell-notification-badge" style="font-size: 0.65rem; padding: 0.25em 0.5em;">0</span>
 
-                </button>
+                </a>
 
                 <button class="header-btn">
 

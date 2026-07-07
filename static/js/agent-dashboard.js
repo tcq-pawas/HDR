@@ -53,35 +53,21 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Profile Dropdown
-    const profileToggles = document.querySelectorAll('.profile-toggle');
+    const profileToggle = document.getElementById('profileToggle');
+    const profileDropdown = document.getElementById('profileDropdown');
 
-    if (profileToggles.length > 0) {
-        profileToggles.forEach((toggle) => {
-            // Find the dropdown that is the immediate next sibling
-            const dropdown = toggle.nextElementSibling;
-            
-            if (dropdown && dropdown.classList.contains('profile-dropdown')) {
-                toggle.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    
-                    // Close all other profile dropdowns first
-                    document.querySelectorAll('.profile-dropdown').forEach(d => {
-                        if (d !== dropdown) d.classList.remove('show');
-                    });
-                    
-                    dropdown.classList.toggle('show');
-                });
-
-                dropdown.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                });
-            }
+    if (profileToggle && profileDropdown) {
+        profileToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('show');
         });
 
         document.addEventListener('click', function() {
-            document.querySelectorAll('.profile-dropdown').forEach(dropdown => {
-                dropdown.classList.remove('show');
-            });
+            profileDropdown.classList.remove('show');
+        });
+
+        profileDropdown.addEventListener('click', function(e) {
+            e.stopPropagation();
         });
     }
 

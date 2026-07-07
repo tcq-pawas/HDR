@@ -36,6 +36,9 @@ urlpatterns = [
     path('buy/', include(('Apps.buy.urls', 'buy'), namespace='buy')),
     path('sell/', include(('Apps.sell.urls', 'sell'), namespace='sell')),
     
+
+    path('public/', include('Apps.PublicPage.urls')),
+    
     # Agent Dashboard
     path('agent/', include(('Apps.Agent.urls', 'agent'), namespace='agent')),
     
@@ -49,6 +52,7 @@ urlpatterns = [
     path('api/investor/', include(('Apps.Investor.urls', 'api_investor'), namespace='api_investor')),
     path('api/admin/', include(('Apps.Administration.urls', 'api_admin'), namespace='api_admin')),
     path('api-auth/', include('rest_framework.urls')),
+    
 ]
 
 # Custom error handlers for unauthorized access

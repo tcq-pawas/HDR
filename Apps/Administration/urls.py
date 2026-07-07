@@ -3,10 +3,10 @@ from . import views
 from .dashboard_views import (
     AdminDashboardView, UserManagementView, InquiryManagementView,
     InvestmentManagementView, SystemSettingsView, ReportsView, ActivityLogView,
-    UserProfileView, PropertyReviewCenterView, PropertyReviewDetailPageView
+    UserProfileView, PropertyReviewCenterView, PropertyReviewDetailPageView, InquiryDetailPageView,
+    InquiryBulkActionView, InquiryExportCSVView, InquiryExportExcelView,  InquiryDeleteView 
 )
 from . import investor_views
-from . import communication_views
 
 app_name = 'admin_dash'
 
@@ -15,6 +15,7 @@ urlpatterns = [
     path('dashboard/', AdminDashboardView.as_view(), name='dashboard'),
     path('users/', UserManagementView.as_view(), name='user-management-page'),
     path('users/<int:user_id>/', UserProfileView.as_view(), name='user-profile'),
+    path('inquiries/<int:pk>/delete/', InquiryDeleteView.as_view(), name='inquiry-delete'),
     
     # Investors
     path('investors/', investor_views.InvestorListView.as_view(), name='investor-list'),
@@ -29,11 +30,11 @@ urlpatterns = [
     path('settings/', SystemSettingsView.as_view(), name='system-settings-page'),
     path('reports/', ReportsView.as_view(), name='reports-page'),
     path('activity/', ActivityLogView.as_view(), name='activity-page'),
-    
-    # Communication
-    path('communications/', communication_views.AdminCommunicationListView.as_view(), name='communication-list'),
-    path('communications/send/', communication_views.AdminCommunicationSendView.as_view(), name='communication-send'),
-    
+    path('inquiries/<int:pk>/', InquiryDetailPageView.as_view(), name='inquiry-detail-page'),
+    path('inquiries/bulk-action/', InquiryBulkActionView.as_view(), name='inquiry-bulk-action'),
+    path('inquiries/export/csv/', InquiryExportCSVView.as_view(), name='inquiry-export-csv'),
+    path('inquiries/export/excel/', InquiryExportExcelView.as_view(), name='inquiry-export-excel'),
+      
     # Property Review System
     path('property-review/', PropertyReviewCenterView.as_view(), name='property-review'),
     path('property-review/<int:property_id>/', PropertyReviewDetailPageView.as_view(), name='property-review-detail'),
@@ -76,4 +77,5 @@ urlpatterns = [
     path('api/settings/save-email/', views.save_email_settings, name='save-email-settings'),
     path('api/settings/test-email/', views.test_email_settings, name='test-email-settings'),
     path('api/settings/save-security/', views.save_security_settings, name='save-security-settings'),
+    path('api/inquiries/unread-count/', views.get_unread_inquiries, name='unread-inquiries-count'),
 ]
