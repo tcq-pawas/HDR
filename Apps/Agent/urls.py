@@ -6,6 +6,7 @@ app_name = 'agent'
 urlpatterns = [
     # Dashboard
     path('dashboard/', views.dashboard, name='dashboard'),
+    path('profile/', views.profile, name='profile'),
     path('settings/', views.settings, name='settings'),
     
     # Property Management

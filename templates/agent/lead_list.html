@@ -2,167 +2,563 @@
 
 {% block title %}Leads Management | Agent Dashboard{% endblock %}
 
+{% block extra_css %}
+<style>
+    /* Premium Color Palette & Styles */
+    :root {
+        --theme-teal: #0F766E;
+        --theme-teal-light: rgba(15, 118, 110, 0.1);
+        --theme-blue: #1E73BE;
+        --theme-blue-light: rgba(30, 115, 190, 0.1);
+        --theme-orange: #F7941D;
+        --theme-orange-light: rgba(247, 148, 29, 0.1);
+        --theme-purple: #8B5CF6;
+        --theme-purple-light: rgba(139, 92, 246, 0.1);
+        --theme-green: #10B981;
+        --theme-green-light: rgba(16, 185, 129, 0.1);
+        --text-dark: #1e293b;
+        --text-gray: #64748b;
+        --border-light: #e2e8f0;
+    }
+
+    /* Breadcrumb styling override */
+    .breadcrumb a {
+        color: var(--theme-teal);
+        text-decoration: none;
+        font-weight: 500;
+    }
+    .breadcrumb a:hover {
+        text-decoration: underline;
+    }
+
+    /* Page Header */
+    .leads-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+    .leads-title h1 {
+        font-size: 26px;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin: 0 0 4px 0;
+    }
+    .leads-title p {
+        color: var(--text-gray);
+        font-size: 14px;
+        margin: 0;
+    }
+    .btn-export {
+        border: 1px solid var(--border-light);
+        background-color: #fff;
+        color: var(--text-dark);
+        font-weight: 500;
+        padding: 8px 16px;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s ease;
+    }
+    .btn-export:hover {
+        background-color: #f8fafc;
+        border-color: #cbd5e1;
+    }
+
+    /* Stats Grid */
+    .stats-container {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+    @media (max-width: 1200px) {
+        .stats-container {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+    @media (max-width: 768px) {
+        .stats-container {
+            grid-template-columns: repeat(1, 1fr);
+        }
+    }
+
+    .stat-card-custom {
+        background: #fff;
+        border: 1px solid var(--border-light);
+        border-radius: 12px;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .stat-card-custom:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .stat-icon-wrapper {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        flex-shrink: 0;
+    }
+    .stat-card-custom-content {
+        flex-grow: 1;
+    }
+    .stat-card-custom-content .label {
+        font-size: 13px;
+        color: var(--text-gray);
+        font-weight: 500;
+        margin-bottom: 4px;
+        display: block;
+    }
+    .stat-card-custom-content .value {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--text-dark);
+        line-height: 1;
+        margin-bottom: 6px;
+        display: block;
+    }
+    .stat-card-custom-content .trend {
+        font-size: 11px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 2px;
+    }
+
+    /* Icon Theme Colors */
+    .icon-teal { background-color: var(--theme-teal-light); color: var(--theme-teal); }
+    .icon-blue { background-color: var(--theme-blue-light); color: var(--theme-blue); }
+    .icon-orange { background-color: var(--theme-orange-light); color: var(--theme-orange); }
+    .icon-purple { background-color: var(--theme-purple-light); color: var(--theme-purple); }
+    .icon-green { background-color: var(--theme-green-light); color: var(--theme-green); }
+
+    /* Filters Bar */
+    .filters-card {
+        background: #fff;
+        border: 1px solid var(--border-light);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 24px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .filters-form {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    .filter-item-search {
+        flex-grow: 2;
+        min-width: 250px;
+    }
+    .filter-item-select {
+        flex-grow: 1;
+        min-width: 150px;
+    }
+    .filter-item-date {
+        flex-grow: 1;
+        min-width: 130px;
+    }
+    .filter-item-buttons {
+        display: flex;
+        gap: 8px;
+        flex-shrink: 0;
+    }
+
+    .btn-teal {
+        background-color: var(--theme-teal);
+        color: #fff;
+        border: none;
+    }
+    .btn-teal:hover {
+        background-color: #0d645d;
+        color: #fff;
+    }
+    .btn-outline-teal {
+        border-color: var(--theme-teal);
+        color: var(--theme-teal);
+        background: transparent;
+    }
+    .btn-outline-teal:hover {
+        background-color: var(--theme-teal);
+        color: #fff;
+    }
+
+    /* Table Container */
+    .table-card {
+        background: #fff;
+        border: 1px solid var(--border-light);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        margin-bottom: 24px;
+    }
+    .table-responsive {
+        margin: 0;
+    }
+    .table th {
+        background-color: #f8fafc;
+        color: var(--text-gray);
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 14px 18px;
+        border-bottom: 1px solid var(--border-light);
+    }
+    .table td {
+        padding: 14px 18px;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 13px;
+        color: var(--text-dark);
+    }
+    .table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    /* Customer initial badge */
+    .avatar-badge {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 13px;
+        flex-shrink: 0;
+    }
+    .badge-teal { background-color: var(--theme-teal-light); color: var(--theme-teal); }
+    .badge-blue { background-color: var(--theme-blue-light); color: var(--theme-blue); }
+    .badge-orange { background-color: var(--theme-orange-light); color: var(--theme-orange); }
+    .badge-purple { background-color: var(--theme-purple-light); color: var(--theme-purple); }
+    .badge-green { background-color: var(--theme-green-light); color: var(--theme-green); }
+
+    /* Custom Status Badges */
+    .badge-status {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        text-align: center;
+        text-transform: capitalize;
+    }
+    .badge-status-new { background-color: var(--theme-teal-light); color: var(--theme-teal); }
+    .badge-status-contacted { background-color: var(--theme-orange-light); color: var(--theme-orange); }
+    .badge-status-qualified { background-color: var(--theme-purple-light); color: var(--theme-purple); }
+    .badge-status-proposal { background-color: var(--theme-blue-light); color: var(--theme-blue); }
+    .badge-status-negotiation { background-color: rgba(245, 158, 11, 0.1); color: #d97706; }
+    .badge-status-closed_won { background-color: var(--theme-green-light); color: var(--theme-green); }
+    .badge-status-closed_lost { background-color: rgba(239, 68, 68, 0.1); color: #ef4444; }
+
+    /* Pagination */
+    .pagination-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 20px;
+        background-color: #fff;
+        border-top: 1px solid var(--border-light);
+    }
+    @media (max-width: 576px) {
+        .pagination-container {
+            flex-direction: column;
+            gap: 12px;
+            text-align: center;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block breadcrumb_items %}
-<span>Leads</span>
+<i class="bi bi-chevron-right mx-2 text-muted" style="font-size: 0.8rem;"></i>
+<span class="text-muted">Leads</span>
 {% endblock %}
 
 {% block content %}
-<div class="page-header">
-    <div class="header-title">
+<div class="leads-header">
+    <div class="leads-title">
         <h1>Leads Management</h1>
-        <p class="text-muted">Manage and track your leads</p>
+        <p>Customers who have added your properties to their favorites.</p>
+    </div>
+    <div>
+        <a href="{% url 'agent:export_report' 'leads' %}" class="btn btn-export">
+            <i class="bi bi-download"></i> Export Leads
+        </a>
     </div>
 </div>
 
-<!-- Filters -->
-<div class="card mb-4">
-    <div class="card-body">
-        <form method="GET" class="row g-3">
-            <div class="col-md-3">
-                <label class="form-label">Status</label>
-                <select name="status" class="form-select">
-                    <option value="">All Status</option>
-                    <option value="new" {% if status_filter == 'new' %}selected{% endif %}>New</option>
-                    <option value="contacted" {% if status_filter == 'contacted' %}selected{% endif %}>Contacted</option>
-                    <option value="qualified" {% if status_filter == 'qualified' %}selected{% endif %}>Qualified</option>
-                    <option value="proposal" {% if status_filter == 'proposal' %}selected{% endif %}>Proposal Sent</option>
-                    <option value="negotiation" {% if status_filter == 'negotiation' %}selected{% endif %}>Negotiation</option>
-                    <option value="closed_won" {% if status_filter == 'closed_won' %}selected{% endif %}>Closed Won</option>
-                    <option value="closed_lost" {% if status_filter == 'closed_lost' %}selected{% endif %}>Closed Lost</option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <label class="form-label">Source</label>
-                <select name="source" class="form-select">
-                    <option value="">All Sources</option>
-                    <option value="website" {% if source_filter == 'website' %}selected{% endif %}>Website</option>
-                    <option value="referral" {% if source_filter == 'referral' %}selected{% endif %}>Referral</option>
-                    <option value="social_media" {% if source_filter == 'social_media' %}selected{% endif %}>Social Media</option>
-                    <option value="advertisement" {% if source_filter == 'advertisement' %}selected{% endif %}>Advertisement</option>
-                    <option value="cold_call" {% if source_filter == 'cold_call' %}selected{% endif %}>Cold Call</option>
-                    <option value="walk_in" {% if source_filter == 'walk_in' %}selected{% endif %}>Walk In</option>
-                    <option value="other" {% if source_filter == 'other' %}selected{% endif %}>Other</option>
-                </select>
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">Search</label>
-                <input type="text" name="search" class="form-control" placeholder="Search by name, email, or phone..." value="{{ request.GET.search }}">
-            </div>
-            <div class="col-md-2 d-flex align-items-end">
-                <button type="submit" class="btn btn-secondary w-100">
-                    <i class="bi bi-search"></i> Filter
-                </button>
-            </div>
-        </form>
+<!-- Stats Container -->
+<div class="stats-container">
+    <!-- Stat 1: Total -->
+    <div class="stat-card-custom">
+        <div class="stat-icon-wrapper icon-teal">
+            <i class="bi bi-heart"></i>
+        </div>
+        <div class="stat-card-custom-content">
+            <span class="label">Total Favorite Leads</span>
+            <span class="value">{{ total_leads_count }}</span>
+            <span class="trend {% if total_leads_trend.is_positive %}text-success{% else %}text-danger{% endif %}">
+                <i class="bi {% if total_leads_trend.is_positive %}bi-arrow-up-short{% else %}bi-arrow-down-short{% endif %}"></i> {{ total_leads_trend.formatted }} <span class="text-muted font-normal">from last month</span>
+            </span>
+        </div>
+    </div>
+    <!-- Stat 2: New -->
+    <div class="stat-card-custom">
+        <div class="stat-icon-wrapper icon-blue">
+            <i class="bi bi-person-plus"></i>
+        </div>
+        <div class="stat-card-custom-content">
+            <span class="label">New Leads</span>
+            <span class="value">{{ new_leads_count }}</span>
+            <span class="trend {% if new_leads_trend.is_positive %}text-success{% else %}text-danger{% endif %}">
+                <i class="bi {% if new_leads_trend.is_positive %}bi-arrow-up-short{% else %}bi-arrow-down-short{% endif %}"></i> {{ new_leads_trend.formatted }} <span class="text-muted font-normal">from last month</span>
+            </span>
+        </div>
+    </div>
+    <!-- Stat 3: Contacted -->
+    <div class="stat-card-custom">
+        <div class="stat-icon-wrapper icon-orange">
+            <i class="bi bi-telephone"></i>
+        </div>
+        <div class="stat-card-custom-content">
+            <span class="label">Contacted</span>
+            <span class="value">{{ contacted_leads_count }}</span>
+            <span class="trend {% if contacted_leads_trend.is_positive %}text-success{% else %}text-danger{% endif %}">
+                <i class="bi {% if contacted_leads_trend.is_positive %}bi-arrow-up-short{% else %}bi-arrow-down-short{% endif %}"></i> {{ contacted_leads_trend.formatted }} <span class="text-muted font-normal">from last month</span>
+            </span>
+        </div>
+    </div>
+    <!-- Stat 4: Site Visit Scheduled -->
+    <div class="stat-card-custom">
+        <div class="stat-icon-wrapper icon-purple">
+            <i class="bi bi-calendar-event"></i>
+        </div>
+        <div class="stat-card-custom-content">
+            <span class="label">Site Visit Scheduled</span>
+            <span class="value">{{ site_visits_count }}</span>
+            <span class="trend {% if site_visits_trend.is_positive %}text-success{% else %}text-danger{% endif %}">
+                <i class="bi {% if site_visits_trend.is_positive %}bi-arrow-up-short{% else %}bi-arrow-down-short{% endif %}"></i> {{ site_visits_trend.formatted }} <span class="text-muted font-normal">from last month</span>
+            </span>
+        </div>
+    </div>
+    <!-- Stat 5: Converted -->
+    <div class="stat-card-custom">
+        <div class="stat-icon-wrapper icon-green">
+            <i class="bi bi-check-circle"></i>
+        </div>
+        <div class="stat-card-custom-content">
+            <span class="label">Converted</span>
+            <span class="value">{{ converted_leads_count }}</span>
+            <span class="trend {% if converted_leads_trend.is_positive %}text-success{% else %}text-danger{% endif %}">
+                <i class="bi {% if converted_leads_trend.is_positive %}bi-arrow-up-short{% else %}bi-arrow-down-short{% endif %}"></i> {{ converted_leads_trend.formatted }} <span class="text-muted font-normal">from last month</span>
+            </span>
+        </div>
     </div>
 </div>
 
-<!-- Leads Table -->
-<div class="card">
-    <div class="card-body">
-        {% if leads %}
-        <div class="table-responsive">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Property</th>
-                        <th>Status</th>
-                        <th>Source</th>
-                        <th>Priority</th>
-                        <th>Budget</th>
-                        <th>Created</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for lead in leads %}
-                    <tr>
-                        <td>
-                            <div class="fw-bold">{{ lead.name }}</div>
-                            <div class="text-muted small">{{ lead.email }}</div>
-                            <div class="text-muted small">{{ lead.phone }}</div>
-                        </td>
-                        <td>
-                            {% if lead.property %}
-                            <a href="{% url 'agent:property_edit' lead.property.id %}">{{ lead.property.title }}</a>
-                            {% else %}
-                            <span class="text-muted">No property</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            <span class="badge bg-{% if lead.status == 'new' %}primary{% elif lead.status == 'contacted' %}info{% elif lead.status == 'qualified' %}success{% elif lead.status == 'proposal' %}warning{% elif lead.status == 'negotiation' %}warning{% elif lead.status == 'closed_won' %}success{% elif lead.status == 'closed_lost' %}danger{% endif %}">
-                                {{ lead.get_status_display }}
-                            </span>
-                        </td>
-                        <td>{{ lead.get_source_display }}</td>
-                        <td>
-                            <span class="badge bg-{% if lead.priority == 'high' %}danger{% elif lead.priority == 'medium' %}warning{% else %}secondary{% endif %}">
-                                {{ lead.priority|title }}
-                            </span>
-                        </td>
-                        <td>
-                            {% if lead.budget %}
-                            ₹{{ lead.budget|floatformat:0 }}
-                            {% else %}
-                            <span class="text-muted">-</span>
-                            {% endif %}
-                        </td>
-                        <td>{{ lead.created_at|date:"M d, Y" }}</td>
-                        <td>
-                            <div class="btn-group btn-group-sm">
-                                <a href="{% url 'agent:lead_detail' lead.id %}" class="btn btn-outline-primary" title="View">
-                                    <i class="bi bi-eye"></i>
-                                </a>
-                                <a href="{% url 'agent:lead_edit' lead.id %}" class="btn btn-outline-secondary" title="Edit">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-                                <a href="{% url 'agent:lead_add_followup' lead.id %}" class="btn btn-outline-success" title="Add Follow-up">
-                                    <i class="bi bi-plus"></i>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+<!-- Filters Bar -->
+<div class="filters-card">
+    <form class="filters-form" method="GET" action="{% url 'agent:lead_list' %}">
+        <!-- Search Input -->
+        <div class="filter-item-search">
+            <div class="input-group">
+                <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                <input type="text" name="search" class="form-control border-start-0 ps-0" placeholder="Search by customer name, phone or property..." value="{{ search_query|default:'' }}">
+            </div>
         </div>
 
-        <!-- Pagination -->
-        {% if page_obj.has_other_pages %}
+        <!-- Status Filter -->
+        <div class="filter-item-select">
+            <select name="status" class="form-select text-muted">
+                <option value="">All Status</option>
+                <option value="new" {% if status_filter == 'new' %}selected{% endif %}>New</option>
+                <option value="contacted" {% if status_filter == 'contacted' %}selected{% endif %}>Contacted</option>
+                <option value="qualified" {% if status_filter == 'qualified' %}selected{% endif %}>Qualified</option>
+                <option value="proposal" {% if status_filter == 'proposal' %}selected{% endif %}>Proposal Sent</option>
+                <option value="negotiation" {% if status_filter == 'negotiation' %}selected{% endif %}>Negotiation</option>
+                <option value="closed_won" {% if status_filter == 'closed_won' %}selected{% endif %}>Converted</option>
+                <option value="closed_lost" {% if status_filter == 'closed_lost' %}selected{% endif %}>Closed Lost</option>
+            </select>
+        </div>
+
+        <!-- Property Filter -->
+        <div class="filter-item-select">
+            <select name="property" class="form-select text-muted">
+                <option value="">All Properties</option>
+                {% for prop in properties %}
+                <option value="{{ prop.id }}" {% if property_filter == prop.id|stringformat:"s" %}selected{% endif %}>{{ prop.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Date From Filter -->
+        <div class="filter-item-date">
+            <input type="date" name="date_from" class="form-control text-muted" placeholder="From Date" value="{{ date_from|default:'' }}">
+        </div>
+
+        <!-- Date To Filter -->
+        <div class="filter-item-date">
+            <input type="date" name="date_to" class="form-control text-muted" placeholder="To Date" value="{{ date_to|default:'' }}">
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="filter-item-buttons">
+            <button type="submit" class="btn btn-teal px-3"><i class="bi bi-funnel"></i></button>
+            <a href="{% url 'agent:lead_list' %}" class="btn btn-outline-teal px-3"><i class="bi bi-arrow-counterclockwise"></i> Reset</a>
+        </div>
+    </form>
+</div>
+
+<!-- Table Card -->
+<div class="table-card">
+    {% if leads %}
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Customer</th>
+                    <th>Mobile</th>
+                    <th>Email</th>
+                    <th>Interested Property</th>
+                    <th>Location</th>
+                    <th>Favorite Date</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lead in leads %}
+                <!-- Determine color for avatar circle sequentially -->
+                {% cycle 'badge-teal' 'badge-blue' 'badge-orange' 'badge-purple' 'badge-green' as bg_class silent %}
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="avatar-badge {{ bg_class }}">
+                                {{ lead.name|slice:":1"|upper }}
+                            </div>
+                            <span class="fw-semibold text-dark">{{ lead.name }}</span>
+                        </div>
+                    </td>
+                    <td class="text-muted">{{ lead.phone }}</td>
+                    <td class="text-muted">{{ lead.email|default:'-' }}</td>
+                    <td>
+                        {% if lead.property %}
+                        <div class="fw-semibold text-dark">{{ lead.property.title }}</div>
+                        <div class="text-muted small">{{ lead.property.category }}</div>
+                        {% else %}
+                        <span class="text-muted">General Inquiry</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if lead.property %}
+                        <span class="text-muted">{{ lead.property.location }}</span>
+                        {% else %}
+                        <span class="text-muted">-</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="fw-semibold text-dark">{{ lead.created_at|date:"d M Y" }}</div>
+                        <div class="text-muted small">{{ lead.created_at|date:"h:i A" }}</div>
+                    </td>
+                    <td>
+                        <span class="badge-status badge-status-{{ lead.status }}">
+                            {% if lead.status == 'closed_won' %}
+                                Converted
+                            {% elif lead.status == 'closed_lost' %}
+                                Lost
+                            {% elif lead.status == 'proposal' %}
+                                Proposal
+                            {% else %}
+                                {{ lead.status }}
+                            {% endif %}
+                        </span>
+                    </td>
+                    <td class="text-end">
+                        <div class="d-flex align-items-center justify-content-end gap-2">
+                            <a href="{% url 'agent:lead_detail' lead.id %}" class="btn btn-sm btn-light text-primary" title="View Lead Detail">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-light text-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                                    <li><a class="dropdown-item" href="{% url 'agent:lead_edit' lead.id %}"><i class="bi bi-pencil me-2"></i>Edit Lead</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'agent:lead_add_followup' lead.id %}"><i class="bi bi-calendar-plus me-2"></i>Add Follow-up</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination Container -->
+    <div class="pagination-container">
+        <div class="text-muted small">
+            Showing <strong>{{ page_obj.start_index }}</strong> to <strong>{{ page_obj.end_index }}</strong> of <strong>{{ page_obj.paginator.count }}</strong> leads
+        </div>
         <nav aria-label="Page navigation">
-            <ul class="pagination justify-content-center">
+            <ul class="pagination mb-0 pagination-sm">
                 {% if page_obj.has_previous %}
                 <li class="page-item">
-                    <a class="page-link" href="?page=1{% if status_filter %}&status={{ status_filter }}{% endif %}{% if source_filter %}&source={{ source_filter }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">First</a>
+                    <a class="page-link text-teal" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if property_filter %}&property={{ property_filter }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
                 </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if source_filter %}&source={{ source_filter }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Previous</a>
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">&laquo;</span>
                 </li>
                 {% endif %}
-                
-                <li class="page-item active">
-                    <span class="page-link">{{ page_obj.number }} <span class="sr-only">(current)</span></span>
-                </li>
-                
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <li class="page-item active"><span class="page-link bg-teal border-teal text-white">{{ num }}</span></li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <li class="page-item">
+                        <a class="page-link text-teal" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if property_filter %}&property={{ property_filter }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}">{{ num }}</a>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+
                 {% if page_obj.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if source_filter %}&source={{ source_filter }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Next</a>
+                    <a class="page-link text-teal" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if property_filter %}&property={{ property_filter }}{% endif %}{% if date_from %}&date_from={{ date_from }}{% endif %}{% if date_to %}&date_to={{ date_to }}{% endif %}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
                 </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if source_filter %}&source={{ source_filter }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Last</a>
+                {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">&raquo;</span>
                 </li>
                 {% endif %}
             </ul>
         </nav>
-        {% endif %}
-        {% else %}
-        <div class="text-center py-5">
-            <i class="bi bi-people text-muted" style="font-size: 4rem;"></i>
-            <h4 class="mt-3 text-muted">No Leads Found</h4>
-            <p class="text-muted">Leads will be automatically generated when customers save properties to wishlist or schedule viewings.</p>
-        </div>
-        {% endif %}
     </div>
+    {% else %}
+    <div class="text-center py-5 bg-white">
+        <i class="bi bi-people text-muted" style="font-size: 4rem;"></i>
+        <h4 class="mt-3 text-muted">No Leads Found</h4>
+        <p class="text-muted">No leads match your search criteria. Try modifying your filters or search terms.</p>
+        <a href="{% url 'agent:lead_list' %}" class="btn btn-teal mt-2"><i class="bi bi-arrow-counterclockwise"></i> Reset Filters</a>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}

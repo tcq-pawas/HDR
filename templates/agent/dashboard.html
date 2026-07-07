@@ -28,18 +28,34 @@
         <a href="{% url 'agent:property_type_select' %}" class="btn-add-property">
             <i class="bi bi-plus-lg"></i> Add Property
         </a>
-        <div class="header-profile">
-            <div class="profile-avatar">
-                {% if agent_profile.profile_image %}
-                    <img src="{{ agent_profile.profile_image.url }}" alt="Profile">
-                {% else %}
-                    <span>{{ user.first_name|default:user.username|slice:":1"|upper }}</span>
-                {% endif %}
-            </div>
-            <div class="profile-info">
-                <span class="profile-name">{{ user.first_name|default:user.username }}</span>
-                <span class="profile-role">{% if 'owner' in request.user.groups.all|stringformat:"s" %}Owner{% else %}Agent{% endif %}</span>
-            </div>
+        <div class="header-item dropdown" style="position: relative;">
+            <button class="header-profile" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background: none; border: none; cursor: pointer; display: flex; align-items: center; padding: 0;">
+                <div class="profile-avatar">
+                    {% if agent_profile.profile_image %}
+                        <img src="{{ agent_profile.profile_image.url }}" alt="Profile">
+                    {% else %}
+                        <span>{{ user.first_name|default:user.username|slice:":1"|upper }}</span>
+                    {% endif %}
+                </div>
+                <div class="profile-info">
+                    <span class="profile-name">{{ user.first_name|default:user.username }}</span>
+                    <span class="profile-role">{% if 'owner' in request.user.groups.all|stringformat:"s" %}Owner{% else %}Agent{% endif %}</span>
+                </div>
+                <i class="bi bi-chevron-down" style="margin-left: 10px; color: #64748b;"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end profile-dropdown" style="position: absolute; right: 0; left: auto; top: 100%; margin-top: 10px;">
+                <li>
+                    <a href="{% url 'agent:profile' %}" class="dropdown-item">
+                        <i class="bi bi-person"></i> Profile
+                    </a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <a href="{% url 'auth:logout' %}" class="dropdown-item text-danger">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </a>
+                </li>
+            </ul>
         </div>
     </div>
 </div>

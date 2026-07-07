@@ -36,15 +36,19 @@
                             <td><span class="source-badge source-{{ customer.source|lower }}">{{ customer.source }}</span></td>
                             <td>
                                 <div class="action-buttons">
-                                    <a href="{% url 'agent:customer_detail' customer.phone %}" class="action-btn" title="View Details">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-                                    <a href="tel:{{ customer.phone }}" class="action-btn" title="Call">
-                                        <i class="bi bi-telephone"></i>
-                                    </a>
-                                    <a href="https://wa.me/{{ customer.phone }}" target="_blank" class="action-btn" title="WhatsApp">
-                                        <i class="bi bi-whatsapp"></i>
-                                    </a>
+                                    {% if customer.phone %}
+                                        <a href="{% url 'agent:customer_detail' customer.phone %}" class="action-btn" title="View Details">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a href="tel:{{ customer.phone }}" class="action-btn" title="Call">
+                                            <i class="bi bi-telephone"></i>
+                                        </a>
+                                        <a href="https://wa.me/{{ customer.phone }}" target="_blank" class="action-btn" title="WhatsApp">
+                                            <i class="bi bi-whatsapp"></i>
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted small">No contact info</span>
+                                    {% endif %}
                                 </div>
                             </td>
                         </tr>

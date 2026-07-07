@@ -17,16 +17,7 @@
         </a>
     </div>
 
-    <!-- Filters -->
-    <div class="filters-bar">
-        <select name="type" onchange="location.href='?type='+this.value">
-            <option value="">All Types</option>
-            <option value="whatsapp" {% if type_filter == 'whatsapp' %}selected{% endif %}>WhatsApp</option>
-            <option value="email" {% if type_filter == 'email' %}selected{% endif %}>Email</option>
-            <option value="sms" {% if type_filter == 'sms' %}selected{% endif %}>SMS</option>
-            <option value="call" {% if type_filter == 'call' %}selected{% endif %}>Phone Call</option>
-        </select>
-    </div>
+
 
     <!-- Communications Table -->
     <div class="communications-table">
