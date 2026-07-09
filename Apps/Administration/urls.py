@@ -17,6 +17,7 @@ urlpatterns = [
     path('users/<int:user_id>/', UserProfileView.as_view(), name='user-profile'),
     path('inquiries/<int:pk>/delete/', InquiryDeleteView.as_view(), name='inquiry-delete'),
     
+    
     # Investors
     path('investors/', investor_views.InvestorListView.as_view(), name='investor-list'),
     path('investors/create/', investor_views.InvestorCreateView.as_view(), name='investor-create'),

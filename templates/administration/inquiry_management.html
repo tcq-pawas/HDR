@@ -2,283 +2,291 @@
 
 {% load humanize %}
 
-
-
 {% block title %}Inquiry Management - Admin Dashboard{% endblock %}
-
-
 
 {% block page_title %}Inquiry Management{% endblock %}
 
-
-
 {% block page_subtitle %}Manage and respond to customer inquiries{% endblock %}
-
-
 
 {% block content %}
 
+<style>
+    
+    :root{
+    
+        --brand:#16a34a;
+    
+        --ink:#1f2937;
+    
+        --muted:#6b7280;
+    
+        --line:#eef1f0;
+    
+    }
 
+    /* ---------- Stat cards ---------- */
+    
+    .stat-card-modern{
+    
+        background:#fff;
+    
+        border:1px solid var(--line);
+    
+        border-radius:16px;
+    
+        padding:20px 22px;
+    
+        display:flex;
+    
+        align-items:flex-start;
+    
+        justify-content:space-between;
+    
+        box-shadow:0 1px 2px rgba(16,24,40,.04);
+    
+        height:100%;
+    
+    }
+    
+    .stat-card-modern .stat-value{ font-size:1.9rem; font-weight:700; color:var(--ink); line-height:1; margin-bottom:6px;}
+    
+    .stat-card-modern .stat-label{ font-size:.85rem; color:var(--muted); margin:0;}
+    
+    .stat-icon-circle{
+    
+        width:46px; height:46px; border-radius:50%;
+    
+        display:flex; align-items:center; justify-content:center;
+    
+        flex-shrink:0; font-size:1.05rem;
+    
+    }
+    
+    .stat-icon-blue{ background:#e7edff; color:#3b5bfd; }
+    
+    .stat-icon-green{ background:#e3f9ee; color:#16a34a; }
+    
+    .stat-icon-amber{ background:#fff2df; color:#f59e0b; }
+    
+    .stat-icon-cyan{ background:#e2f6fb; color:#0891b2; }
+
+    /* ---------- Filter bar (single line, like original) ---------- */
+    
+    .filter-bar-modern .btn{ display:flex; align-items:center; justify-content:center; }
+    
+    .filter-bar-modern .btn:focus{ box-shadow:none !important; outline:none !important; }
+    
+    .filter-bar-modern .form-select, .filter-bar-modern .form-control{ height:42px; border-radius:10px; border-color:#e2e6e8; }
+    
+    .filter-bar-modern .col-md-1 .btn{ min-width:46px; padding-left:10px; padding-right:10px; }
+    
+    .filter-bar-modern .btn + .btn{ margin-left:6px; }
+    
+    @media (min-width:768px){
+    
+        .filter-bar-modern .row > [class*="col-md-"]{ padding-left:.35rem; padding-right:.35rem; }
+    
+    }
+    
+    .btn-brand{ background:var(--brand); border-color:var(--brand); color:#fff; }
+    
+    .btn-brand:hover{ background:#128a3e; border-color:#128a3e; color:#fff; }
+
+    /* ---------- Table ---------- */
+    
+    .inquiry-table thead th{
+    
+        border-bottom:1px solid var(--line);
+    
+        color:var(--muted);
+    
+        font-weight:600;
+    
+        font-size:.78rem;
+    
+        text-transform:uppercase;
+    
+        letter-spacing:.03em;
+    
+        white-space:nowrap;
+    
+        padding-bottom:12px;
+    
+    }
+    
+    .inquiry-table thead th a{ color:var(--muted) !important; }
+    
+    .inquiry-table tbody td{
+    
+        vertical-align:middle;
+    
+        padding-top:14px;
+    
+        padding-bottom:14px;
+    
+        border-bottom:1px solid var(--line);
+    
+    }
+    
+    .inquiry-table tbody tr:hover{ background:#fafbfa; }
+    
+    .enquiry-id-cell{ color:var(--brand); font-weight:600; }
+
+    .customer-cell{ display:flex; align-items:center; gap:10px; }
+    
+    .iq-avatar-circle{
+    
+        width:36px; height:36px; min-width:36px; min-height:36px; max-width:36px; max-height:36px;
+    
+        border-radius:50%; flex-shrink:0; box-sizing:border-box; overflow:hidden;
+    
+        display:flex; align-items:center; justify-content:center;
+    
+        font-weight:600; font-size:.78rem; line-height:1; text-align:center; padding:0;
+    
+    }
+    
+    .iq-avatar-1{ background:#fde2e4; color:#c2255c; }
+    
+    .iq-avatar-2{ background:#e4d9fa; color:#6f42c1; }
+    
+    .iq-avatar-3{ background:#d9e8fc; color:#1c64f2; }
+    
+    .iq-avatar-4{ background:#fdecc8; color:#b45309; }
+    
+    .iq-avatar-5{ background:#d7f5e9; color:#0f766e; }
+
+    .customer-name{ font-weight:600; color:var(--ink); font-size:.92rem; }
+
+    .customer-sub{ font-size:.78rem; color:var(--muted); line-height:1.4; }
+
+    .status-pill{
+    
+        display:inline-flex; align-items:center; gap:6px;
+    
+        padding:5px 12px; border-radius:999px; font-size:.78rem; font-weight:600;
+    
+    }
+    
+    .status-pill .dot{ width:6px; height:6px; border-radius:50%; }
+    
+    .status-new{ background:#e7edff; color:#3b5bfd; } .status-new .dot{ background:#3b5bfd; }
+    
+    .status-contacted{ background:#fff2df; color:#b45309; } .status-contacted .dot{ background:#f59e0b; }
+    
+    .status-follow_up{ background:#eef0f2; color:#4b5563; } .status-follow_up .dot{ background:#6b7280; }
+    
+    .status-interested{ background:#f1e9fd; color:#6f42c1; } .status-interested .dot{ background:#6f42c1; }
+    
+    .status-site_visit_scheduled{ background:#e2f0ff; color:#0d6efd; } .status-site_visit_scheduled .dot{ background:#0d6efd; }
+    
+    .status-converted{ background:#e3f9ee; color:#16a34a; } .status-converted .dot{ background:#16a34a; }
+    
+    .status-closed{ background:#e9eaeb; color:#1f2937; } .status-closed .dot{ background:#1f2937; }
+    
+    .status-spam{ background:#fde2e2; color:#dc2626; } .status-spam .dot{ background:#dc2626; }
+
+    .action-icon-btn{
+    
+        width:34px; height:34px; border-radius:8px; border:1px solid #e2e6e8;
+    
+        display:inline-flex; align-items:center; justify-content:center; color:var(--muted); background:#fff;
+    
+    }
+    
+    .action-icon-btn:hover{ background:#f7f8f8; color:var(--ink); }
+    
+    .action-icon-btn.danger:hover{ background:#fdecec; color:#dc2626; border-color:#f6c9c9; }
+
+    /* ---------- Pagination ---------- */
+    
+    .pagination-modern .page-link{
+    
+        border-radius:8px !important; margin:0 3px; border:1px solid #e2e6e8; color:var(--ink);
+    
+    }
+    
+    .pagination-modern .page-item.active .page-link{ background:var(--brand); border-color:var(--brand); color:#fff; }
+
+</style>
 
     <!-- Statistics Cards -->
 
-    <div class="row mb-4">
+    <div class="row mb-4 g-3">
 
-        <div class="col-md-3">
+        <div class="col-6 col-lg-3">
 
-            <div class="card stat-card bg-primary text-white">
+            <div class="stat-card-modern">
 
-                <div class="card-body">
+                <div>
 
-                    <div class="d-flex justify-content-between">
+                    <div class="stat-value">{{ total_count }}</div>
 
-                        <div>
-
-                            <h4 class="card-title">{{ total_count }}</h4>
-
-                            <p class="card-text">Total Inquiries</p>
-
-                        </div>
-
-                        <i class="fas fa-envelope fa-2x opacity-75"></i>
-
-                    </div>
+                    <p class="stat-label">Total Inquiries</p>
 
                 </div>
 
+                <div class="stat-icon-circle stat-icon-blue"><i class="fas fa-envelope"></i></div>
+            
             </div>
-
+        
         </div>
+        
+        <div class="col-6 col-lg-3">
+            
+            <div class="stat-card-modern">
+                
+                <div>
 
-        <div class="col-md-3">
+                    <div class="stat-value">{{ responded_count }}</div>
 
-            <div class="card stat-card bg-success text-white">
-
-                <div class="card-body">
-
-                    <div class="d-flex justify-content-between">
-
-                        <div>
-
-                            <h4 class="card-title">{{ responded_count }}</h4>
-
-                            <p class="card-text">Responded</p>
-
-                        </div>
-
-                        <i class="fas fa-check-circle fa-2x opacity-75"></i>
-
-                    </div>
+                    <p class="stat-label">Responded</p>
 
                 </div>
 
+                <div class="stat-icon-circle stat-icon-green"><i class="fas fa-check-circle"></i></div>
+            
             </div>
 
         </div>
 
-        <div class="col-md-3">
+        <div class="col-6 col-lg-3">
 
-            <div class="card stat-card bg-warning text-white">
+            <div class="stat-card-modern">
 
-                <div class="card-body">
+                <div>
 
-                    <div class="d-flex justify-content-between">
+                    <div class="stat-value">{{ pending_count }}</div>
 
-                        <div>
-
-                            <h4 class="card-title">{{ pending_count }}</h4>
-
-                            <p class="card-text">Pending</p>
-
-                        </div>
-
-                        <i class="fas fa-clock fa-2x opacity-75"></i>
-
-                    </div>
+                    <p class="stat-label">Pending</p>
 
                 </div>
 
+                <div class="stat-icon-circle stat-icon-amber"><i class="fas fa-clock"></i></div>
+           
             </div>
 
         </div>
 
-        <div class="col-md-3">
+        <div class="col-6 col-lg-3">
 
-            <div class="card stat-card bg-info text-white">
+            <div class="stat-card-modern">
 
-                <div class="card-body">
+                <div>
 
-                    <div class="d-flex justify-content-between">
+                    <div class="stat-value">{{ today_count }}</div>
 
-                        <div>
-
-                            <h4 class="card-title">{{ today_count }}</h4>
-
-                            <p class="card-text">Today</p>
-
-                        </div>
-
-                        <i class="fas fa-calendar-day fa-2x opacity-75"></i>
-
-                    </div>
+                    <p class="stat-label">Today</p>
 
                 </div>
 
-            </div>
-
-        </div>
-
-    </div>
-
-
-
-    <!-- Action Buttons -->
-
-    <div class="row mb-5 position-relative" style="z-index: 5;">
-
-        <div class="col-12">
-
-            <div class="card">
-
-                <div class="card-body">
-
-                    <div class="d-flex gap-2 flex-wrap">
-
-                        <button class="btn btn-primary" onclick="respondToInquiries()">
-
-                            <i class="fas fa-reply"></i> Bulk Respond
-
-                        </button>
-
-                        <button class="btn btn-outline-secondary" onclick="exportInquiries()">
-
-                            <i class="fas fa-download"></i> Export
-
-                        </button>
-
-                        <div class="btn-group ms-auto">
-
-                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-
-                                <i class="fas fa-filter"></i> Filter Status
-
-                            </button>
-
-                            <ul class="dropdown-menu">
-
-                                <li><a class="dropdown-item" href="?status=all">All Inquiries</a></li>
-
-                                <li><a class="dropdown-item" href="?status=pending">Pending</a></li>
-
-                                <li><a class="dropdown-item" href="?status=responded">Responded</a></li>
-
-                                <li><a class="dropdown-item" href="?status=closed">Closed</a></li>
-
-                            </ul>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- search bar -->
-    <div class="filter-bar-modern mb-4">
-
-    <form method="GET" class="row g-2 align-items-center">
-
-        <div class="col-md-3">
-
-            <div class="input-group">
-                
-                <span class="input-group-text"><i class="fas fa-search text-muted"></i></span>
-                
-                <input type="text" name="search" class="form-control no-left-radius" 
-                       
-                    placeholder="Search by name, email or phone..." value="{{ search }}">
+                <div class="stat-icon-circle stat-icon-cyan"><i class="fas fa-calendar-day"></i></div>
             
             </div>
-        
-        </div>
-        
-        <div class="col-md-2">
-            
-            <select name="budget" class="form-select">
-                
-                <option value="">All Budgets</option>
-                
-                {% for b in budget_choices %}
-                
-                    <option value="{{ b }}" {% if selected_budget == b %}selected{% endif %}>{{ b }}</option>
-                
-                {% endfor %}
-            
-            </select>
-       
-        </div>
-       
-        <div class="col-md-2">
-            
-            <select name="date_filter" class="form-select">
-            
-                <option value="">Any Date</option>
-            
-                <option value="today" {% if selected_date_filter == 'today' %}selected{% endif %}>Today</option>
-            
-                <option value="week" {% if selected_date_filter == 'week' %}selected{% endif %}>This Week</option>
-            
-                <option value="month" {% if selected_date_filter == 'month' %}selected{% endif %}>This Month</option>
-            
-            </select>
-        
-        </div>
-        
-        <div class="col-md-2">
-        
-            <select name="status" class="form-select">
-        
-                <option value="">All Status</option>
-        
-                {% for value, label in status_choices %}
-        
-                    <option value="{{ value }}" {% if selected_status == value %}selected{% endif %}>{{ label }}</option>
-            
-                    {% endfor %}
-            
-                </select>
-        
-        </div>
-        
-        <div class="col-md-2">
-            
-            <button type="submit" class="btn btn-success w-100" style="border-radius:10px; height:42px;">
-            
-                <i class="fas fa-search"></i> Search
-            
-            </button>
-        
-        </div>
-        
-        <div class="col-md-1">
-        
-            <a href="{% url 'admin_dash:inquiry-management-page' %}" class="btn btn-reset-modern w-100 d-flex align-items-center justify-content-center gap-1">
-        
-                <i class="fas fa-rotate-left"></i> Reset
-        
-            </a>
         
         </div>
     
-    </form>
-
     </div>
-
 
     <!-- Inquiries Table -->
 
@@ -286,62 +294,206 @@
 
         <div class="col-12">
 
-            <div class="card">
+            <div class="card border-0" style="border-radius:16px; box-shadow:0 1px 2px rgba(16,24,40,.04); border:1px solid var(--line);">
+                
+                <div class="card-body" style="overflow: visible; padding: 12px 20px;">
+                    
+                    <div class="filter-bar-modern mb-4">
+                    
+                        <form method="GET" class="row g-2 align-items-center flex-wrap" style="margin-bottom: 0;">
+                    
+                            <div class="col-md-3">
+                    
+                                <div class="input-group">
+                    
+                                    <input type="text" name="search" class="form-control no-left-radius"
+                    
+                                    placeholder="Search by name, email or phone..." value="{{ search }}">
+                    
+                                </div>
+                    
+                            </div>
+                    
+                            <div class="col-md-2">
+                    
+                                <select name="budget" class="form-select">
+                    
+                                    <option value="">All Budgets</option>
+                    
+                                    {% for b in budget_choices %}
+                                      
+                                        <option value="{{ b }}" {% if selected_budget == b %}selected{% endif %}>{{ b }}</option>
+                                    
+                                    {% endfor %}
+                                
+                                </select>
+                            
+                            </div>
 
-                <div class="card-header">
+                            <div class="col-md-2">
+
+                                <select name="date_filter" class="form-select">
+
+                                    <option value="">Any Date</option>
+
+                                    <option value="today" {% if selected_date_filter == 'today' %}selected{% endif %}>Today</option>
+                                    
+                                    <option value="week" {% if selected_date_filter == 'week' %}selected{% endif %}>This Week</option>
+                                    
+                                    <option value="month" {% if selected_date_filter == 'month' %}selected{% endif %}>This Month</option>
+                                
+                                </select>
+                            
+                            </div>
+                           
+                            <div class="col-md-2">
+                                
+                                <select name="status" class="form-select">
+                                    
+                                    <option value="">All Status</option>
+                                    
+                                    {% for value, label in status_choices %}
+                                        
+                                        <option value="{{ value }}" {% if selected_status == value %}selected{% endif %}>{{ label }}</option>
+                                    
+                                        {% endfor %}
+                                
+                                    </select>
+
+                            </div>
+
+                            <div class="col-md-1">
+
+                                <button type="submit" class="btn btn-brand w-100" style="border-radius:10px; height:42px;">
+
+                                    <i class="fas fa-search"></i> Search
+
+                                </button>
+
+                            </div>
+
+                            <div class="col-md-1">
+
+                                <a href="{% url 'admin_dash:inquiry-management-page' %}" class="btn btn-outline-secondary w-100" style="height:42px; display: flex; align-items: center; justify-content: center; border-radius:10px;">
+                                    
+                                    <i class="fas fa-rotate-left"></i> Reset
+
+                                </a>
+                                
+                            </div>
+
+                            <div class="col-md-1">
+
+                                <div class="dropdown">
+
+                                    <button class="btn btn-outline-secondary dropdown-toggle px-3" id="exportDropdownBtn" type="button"
+                                            
+                                            data-bs-toggle="dropdown" data-bs-boundary="viewport" aria-expanded="false"
+                                            
+                                            style="border-radius:10px; height:42px; min-width:100px;">
+
+                                        <i class="fas fa-download"></i> Export
+
+                                    </button>
+
+                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="exportDropdownBtn">
+                                        
+                                        <li><a class="dropdown-item" href="#" onclick="exportInquiries('csv'); return false;">Export as CSV</a></li>
+                                        
+                                        <li><a class="dropdown-item" href="#" onclick="exportInquiries('xlsx'); return false;">Export as Excel</a></li>
+                                   
+                                    </ul>
+                                
+                                </div>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+                <div class="card-header bg-white" style="border-bottom:1px solid var(--line);">
 
                     <h5 class="mb-0">All Inquiries</h5>
 
                 </div>
 
-                <div class="card-body">
+                <div class="card-body" style="overflow: visible; padding: 12px 20px;">
 
                     <div class="table-responsive">
 
-                        <table class="table table-hover">
+                        <table class="table table-hover inquiry-table">
 
                             <thead>
 
                                 <tr>
 
-                                    <th>
-                                        <a href="?sort={% if current_sort == 'enquiry_id' %}-enquiry_id{% else %}enquiry_id{% endif %}&search={{ search }}&status={{ selected_status }}" class="text-dark text-decoration-none">
-                                        Enquiry ID
-                                        {% if current_sort == 'enquiry_id' %}▲{% elif current_sort == '-enquiry_id' %}▼{% endif %}
-                                        </a>
+                                    <th style="width:36px;">
+                                        
+                                        <input type="checkbox" class="form-check-input" id="selectAllInquiries" onclick="toggleAllInquiries(this)">
+                                    
                                     </th>
 
                                     <th>
-                                         <a href="?sort={% if current_sort == 'full_name' %}-full_name{% else %}full_name{% endif %}&search={{ search }}&status={{ selected_status }}" class="text-dark text-decoration-none">
-                                            Full Name
+                                       
+                                        <a href="?sort={% if current_sort == 'enquiry_id' %}-enquiry_id{% else %}enquiry_id{% endif %}&search={{ search }}&status={{ selected_status }}" class="text-decoration-none">
+                                       
+                                            Enquiry ID
+                                       
+                                            {% if current_sort == 'enquiry_id' %}▲{% elif current_sort == '-enquiry_id' %}▼{% endif %}
+                                       
+                                        </a>
+                                   
+                                    </th>
+
+                                    <th>
+                                        
+                                        <a href="?sort={% if current_sort == 'full_name' %}-full_name{% else %}full_name{% endif %}&search={{ search }}&status={{ selected_status }}" class="text-decoration-none">
+                                        
+                                            Customer
+                                        
                                             {% if current_sort == 'full_name' %}▲{% elif current_sort == '-full_name' %}▼{% endif %}
-                                         </a>
+                                        
+                                        </a>
+                                    
                                     </th>
 
-                                    <th>Phone Number</th>
-
-                                    <th>Email Address</th>
-
                                     <th>
-                                        <a href="?sort={% if current_sort == 'investment_budget' %}-investment_budget{% else %}investment_budget{% endif %}&search={{ search }}&status={{ selected_status }}" class="text-dark text-decoration-none">
-                                        Investment Budget
+                                        
+                                        <a href="?sort={% if current_sort == 'investment_budget' %}-investment_budget{% else %}investment_budget{% endif %}&search={{ search }}&status={{ selected_status }}" class="text-decoration-none">
+                                        
+                                            Investment Budget
+                                        
                                         {% if current_sort == 'investment_budget' %}▲{% elif current_sort == '-investment_budget' %}▼{% endif %}
+                                        
                                         </a>
+
                                     </th>
 
                                     <th>Message (Short Preview)</th>
 
                                     <th>
-                                        <a href="?sort={% if current_sort == 'status' %}-status{% else %}status{% endif %}&search={{ search }}&status={{ selected_status }}" class="text-dark text-decoration-none">
+                                        
+                                        <a href="?sort={% if current_sort == 'status' %}-status{% else %}status{% endif %}&search={{ search }}&status={{ selected_status }}" class="text-decoration-none">
+                                        
                                             Status
+                                        
                                             {% if current_sort == 'status' %}▲{% elif current_sort == '-status' %}▼{% endif %}
+                                        
                                         </a>
+                                    
                                     </th>
 
                                     <th>
-                                        <a href="?sort={% if current_sort == 'created_at' %}-created_at{% else %}created_at{% endif %}&search={{ search }}&status={{ selected_status }}" class="text-dark text-decoration-none">
-                                            Submitted Date & Time
+                                        
+                                        <a href="?sort={% if current_sort == 'created_at' %}-created_at{% else %}created_at{% endif %}&search={{ search }}&status={{ selected_status }}" class="text-decoration-none">
+                                        
+                                            Date & Time
+                                        
                                             {% if current_sort == 'created_at' %}▲{% elif current_sort == '-created_at' %}▼{% endif %}
+                                        
                                         </a>
                                     </th>
 
@@ -357,98 +509,144 @@
 
                                 <tr id="inquiry-row-{{ inquiry.id }}">
 
-                                    <td>#{{ inquiry.enquiry_id }}</td>
-
-                                    <td>{{ inquiry.full_name }}</td>
-                                    
-                                    <td>{{ inquiry.phone_number }}</td>
-                                    
-                                    <td>{{ inquiry.email|default:"-" }}</td>
-                                    
-                                    <td>{{ inquiry.investment_budget|default:"-" }}</td>
-                                    
                                     <td>
-                                    
-                                        <div class="text-truncate" style="max-width: 180px;">
-                                    
-                                            {{ inquiry.message|default:"-" }}
-                                    
+    <input type="checkbox" class="form-check-input inquiry-select" value="{{ inquiry.id }}">
+</td>
+
+                                    <td class="enquiry-id-cell">#{{ inquiry.enquiry_id }}</td>
+
+                                    <td>
+                                        
+                                        <div class="customer-cell">
+                                           
+                                            {% cycle 'iq-avatar-1' 'iq-avatar-2' 'iq-avatar-3' 'iq-avatar-4' 'iq-avatar-5' as avatar_color silent %}
+                                           
+                                            <div class="iq-avatar-circle {{ avatar_color }}" data-name="{{ inquiry.full_name }}"></div>
+                                           
+                                            <div>
+                                           
+                                                <div class="customer-name">{{ inquiry.full_name }}</div>
+                                           
+                                                <div class="customer-sub">{{ inquiry.phone_number }}</div>
+                                           
+                                                <div class="customer-sub">{{ inquiry.email|default:"-" }}</div>
+                                           
+                                            </div>
+                                        
                                         </div>
                                     
                                     </td>
-                                    
-                                    <td>
-                                    
-                                        {% if inquiry.status == 'new' %}
 
-                                            <span class="badge bg-primary">New</span>
+                                    <td>{{ inquiry.investment_budget|default:"-" }}</td>
+
+                                    <td>
+
+                                        <div class="text-truncate" style="max-width: 180px;">
+
+                                            {{ inquiry.message|default:"-" }}
+
+                                        </div>
+
+                                    </td>
+
+                                    <td>
+
+                                        {% if inquiry.status == 'new' %}
+                                            
+                                            <span class="status-pill status-new"><span class="dot"></span>New</span>
                                         
                                         {% elif inquiry.status == 'contacted' %}
-
-                                            <span class="badge bg-warning text-dark">Contacted</span>
+                                            
+                                            <span class="status-pill status-contacted"><span class="dot"></span>Contacted</span>
                                         
                                         {% elif inquiry.status == 'follow_up' %}
-
-                                            <span class="badge bg-secondary">Follow Up</span>
-
+                                            
+                                            <span class="status-pill status-follow_up"><span class="dot"></span>Follow Up</span>
+                                        
                                         {% elif inquiry.status == 'interested' %}
-
-                                            <span class="badge" style="background-color:#6f42c1;color:#fff;">Interested</span>
-
+                                            
+                                            <span class="status-pill status-interested"><span class="dot"></span>Interested</span>
+                                        
                                         {% elif inquiry.status == 'site_visit_scheduled' %}
 
-                                            <span class="badge" style="background-color:#0d6efd;color:#fff;">Site Visit Scheduled</span>
-
+                                            <span class="status-pill status-site_visit_scheduled"><span class="dot"></span>Site Visit Scheduled</span>
+                                        
                                         {% elif inquiry.status == 'converted' %}
-
-                                            <span class="badge bg-success">Converted</span>
-
+                                           
+                                            <span class="status-pill status-converted"><span class="dot"></span>Converted</span>
+                                        
                                         {% elif inquiry.status == 'closed' %}
                                         
-                                            <span class="badge bg-dark">Closed</span>
-
+                                            <span class="status-pill status-closed"><span class="dot"></span>Closed</span>
+                                        
                                         {% elif inquiry.status == 'spam' %}
-                                            <span class="badge bg-danger">Spam</span>
-
+                                    
+                                            <span class="status-pill status-spam"><span class="dot"></span>Spam</span>
+                                        
                                         {% endif %}
+
+                                    </td>
+
+                                    <td class="small">
+                                        
+                                        <div style="color:var(--ink);">{{ inquiry.created_at|date:"M d, Y" }}</div>
+                                        
+                                        <div class="text-muted">{{ inquiry.created_at|date:"g:i A" }}</div>
                                     
                                     </td>
-                                    
-                                    <td>{{ inquiry.created_at|date:"d M, Y g:i A" }}</td>
-                                    
+
                                     <td>
                                         <div class="d-flex gap-2 align-items-center">
-                                            <a href="{% url 'admin_dash:inquiry-detail-page' inquiry.id %}" class="btn btn-sm btn-outline-primary" title="View">
+
+                                            <a href="{% url 'admin_dash:inquiry-detail-page' inquiry.id %}" class="action-icon-btn" title="View">
+                                                
                                                 <i class="fas fa-eye"></i>
+                                            
                                             </a>
+                                            <button type="button" class="action-icon-btn" title="Share"
+
+                                                onclick="shareInquiry('{{ inquiry.enquiry_id }}', '{{ inquiry.full_name|default:''|escapejs }}', '{{ inquiry.email|default:'-'|escapejs }}', '{{ inquiry.phone_number|default:'-'|escapejs }}', '{% url 'admin_dash:inquiry-detail-page' inquiry.id %}')">
+                                            
+                                                <i class="fas fa-share"></i>
+                                            
+                                            </button>
+                                            
                                             <form method="POST" action="{% url 'admin_dash:inquiry-delete' inquiry.id %}" class="m-0"
+                                            
                                                 onsubmit="return confirm('Delete enquiry #{{ inquiry.enquiry_id }} permanently?');">
+                                                
                                                 {% csrf_token %}
-                                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                                
+                                                <button type="submit" class="action-icon-btn danger" title="Delete">
+                                                
                                                     <i class="fas fa-trash"></i>
+                                                
                                                 </button>
+                                            
                                             </form>
+
                                         </div>
+
                                     </td>
-                                
+
                                 </tr>
-                                
+
                                 {% empty %}
-                                
+
                                 <tr>
-                                
-                                    <td colspan="9" class="text-center py-4">
-                                
+
+                                    <td colspan="8" class="text-center py-4">
+
                                         <i class="fas fa-envelope fa-3x text-muted mb-3"></i>
-                                
+
                                         <p class="text-muted">No enquiries found</p>
-                                
+
                                     </td>
-                                
+
                                 </tr>
-                           
+
                                 {% endfor %}
-                        
+
                             </tbody>
 
                         </table>
@@ -462,8 +660,6 @@
         </div>
 
     </div>
-
-
 
     <!-- Inquiry Details Modal -->
 
@@ -495,7 +691,7 @@
 
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 
-                    <button type="button" class="btn btn-primary" onclick="respondToInquiry()">Respond</button>
+                    <button type="button" class="btn btn-brand" onclick="respondToInquiry()">Respond</button>
 
                 </div>
 
@@ -504,8 +700,6 @@
         </div>
 
     </div>
-
-
 
     <!-- Response Modal -->
 
@@ -563,7 +757,7 @@
 
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
 
-                    <button type="button" class="btn btn-primary" onclick="sendResponse()">Send Response</button>
+                    <button type="button" class="btn btn-brand" onclick="sendResponse()">Send Response</button>
 
                 </div>
 
@@ -574,25 +768,25 @@
     </div>
 
     {% if is_paginated %}
-    
-    <nav class="mt-3 d-flex justify-content-between align-items-center">
-    
-        <span class="text-muted small">
-    
+
+    <nav class="mt-3 d-flex flex-column flex-md-row justify-content-center align-items-center gap-2">
+
+        <span class="text-muted small text-center">
+
             Showing {{ page_obj.start_index }}–{{ page_obj.end_index }} of {{ page_obj.paginator.count }} enquiries
-    
+
         </span>
-    
-        <ul class="pagination mb-0">
-    
+
+        <ul class="pagination pagination-modern justify-content-center mb-0">
+
             {% if page_obj.has_previous %}
-    
+
             <li class="page-item">
-    
+
                 <a class="page-link" href="?page={{ page_obj.previous_page_number }}&search={{ search }}&status={{ selected_status }}&budget={{ selected_budget }}&date_filter={{ selected_date_filter }}&sort={{ current_sort }}">Previous</a>
-    
+
             </li>
-    
+
             {% endif %}
 
             {% for num in page_obj.paginator.page_range %}
@@ -604,11 +798,11 @@
                 {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
 
                     <li class="page-item">
-                        
+
                         <a class="page-link" href="?page={{ num }}&search={{ search }}&status={{ selected_status }}&budget={{ selected_budget }}&date_filter={{ selected_date_filter }}&sort={{ current_sort }}">{{ num }}</a>
-                    
+
                     </li>
-                
+
                     {% endif %}
             {% endfor %}
 
@@ -617,28 +811,23 @@
                 <li class="page-item">
 
                     <a class="page-link" href="?page={{ page_obj.next_page_number }}&search={{ search }}&status={{ selected_status }}&budget={{ selected_budget }}&date_filter={{ selected_date_filter }}&sort={{ current_sort }}">Next</a>
-                
+
                 </li>
 
             {% endif %}
 
         </ul>
-    
+
     </nav>
-    
+
 {% endif %}
 
 {% endblock %}
 
-
-
 {% block extra_js %}
-
 <script>
 
     function viewInquiry(inquiryId) {
-
-        // Load inquiry details
 
         document.getElementById('inquiryDetailsContent').innerHTML = `
 
@@ -653,10 +842,6 @@
             </div>
 
         `;
-
-        
-
-        // Simulate loading
 
         setTimeout(() => {
 
@@ -706,13 +891,9 @@
 
         }, 1000);
 
-        
-
         new bootstrap.Modal(document.getElementById('inquiryDetailsModal')).show();
 
     }
-
-    
 
     function respondToInquiry(inquiryId) {
 
@@ -721,8 +902,6 @@
         new bootstrap.Modal(document.getElementById('responseModal')).show();
 
     }
-
-    
 
     function sendResponse() {
 
@@ -736,8 +915,6 @@
 
         }
 
-        
-
         alert('Response sent successfully!');
 
         bootstrap.Modal.getInstance(document.getElementById('responseModal')).hide();
@@ -745,8 +922,6 @@
         document.getElementById('responseForm').reset();
 
     }
-
-    
 
     function assignInquiry(inquiryId) {
 
@@ -760,8 +935,6 @@
 
     }
 
-    
-
     function deleteInquiry(inquiryId) {
 
         if (confirm('Are you sure you want to delete this inquiry?')) {
@@ -772,23 +945,91 @@
 
     }
 
-    
-
     function respondToInquiries() {
 
         alert('Bulk response functionality would be implemented here');
 
     }
 
-    
+    function exportInquiries(format) {
 
-    function exportInquiries() {
+        const params = new URLSearchParams(window.location.search);
 
-        alert('Exporting inquiries data...');
+        const url = format === 'xlsx'
+
+            ? "{% url 'admin_dash:inquiry-export-excel' %}"
+
+            : "{% url 'admin_dash:inquiry-export-csv' %}";
+
+        window.location.href = `${url}?${params.toString()}`;
+    }
+
+    function shareInquiry(enquiryId, fullName, email, phone, url) {
+
+        const shareText = `Inquiry #${enquiryId}\nName: ${fullName}\nEmail: ${email}\nPhone: ${phone}\nDetails: ${url}`;
+
+        if (navigator.share) {
+
+            navigator.share({
+
+                title: `Share inquiry #${enquiryId}`,
+
+                text: shareText,
+
+                url: url
+
+            }).catch(() => {
+
+                alert('Share canceled or not supported.');
+
+            });
+
+        } else {
+
+            const tempInput = document.createElement('textarea');
+
+            tempInput.value = shareText;
+
+            document.body.appendChild(tempInput);
+
+            tempInput.select();
+
+            document.execCommand('copy');
+
+            document.body.removeChild(tempInput);
+
+            alert('Inquiry details copied to clipboard. Paste it into your app to share.');
+
+        }
 
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        var exportToggle = document.getElementById('exportDropdownBtn');
+
+        if (exportToggle && window.bootstrap) {
+
+            new bootstrap.Dropdown(exportToggle);
+
+        }
+
+    });
+
+    document.querySelectorAll('.iq-avatar-circle[data-name]').forEach(function (el) {
+
+        var name = (el.getAttribute('data-name') || '').trim();
+
+        if (!name) { return; }
+
+        var parts = name.split(/\s+/).filter(Boolean);
+
+        var initials = parts.slice(0, 2).map(function (p) { return p.charAt(0).toUpperCase(); }).join('');
+
+        el.textContent = initials;
+
+    });
 
 </script>
 
 {% endblock %}
-
