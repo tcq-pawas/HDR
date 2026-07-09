@@ -672,4 +672,4 @@ class WebsiteEnquiry(models.Model):
         return badge_map.get(self.status, 'bg-secondary')
 
     def __str__(self):
-        return f"{self.enquiry_id} — {self.full_name} ({self.get_status_display()})"
+        return f"{self.enquiry_id} — {self.full_name} ({self.get_status_display()})"

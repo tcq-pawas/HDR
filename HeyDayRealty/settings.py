@@ -104,15 +104,15 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': DB_ENGINE,
-            'NAME': os.getenv('DB_NAME', 'heyday_db'),
-            'USER': os.getenv('DB_USER', 'postgres'),
-            'PASSWORD': os.getenv('DB_PASSWORD', 'postgres'),
-            'HOST': os.getenv('DB_HOST', 'localhost'),
-            'PORT': os.getenv('DB_PORT', '5432'),
+            'NAME': os.getenv('DB_NAME',  default='heyday_db'),
+            'USER': os.getenv('DB_USER',  default='postgres'),
+            'PASSWORD': os.getenv('DB_PASSWORD',  default='postgres'),
+            'HOST': os.getenv('DB_HOST',  default='localhost'),
+            'PORT': os.getenv('DB_PORT', default='5432'),
         }
     }
 
-
+print(f"Using database engine: {DATABASES}")
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 

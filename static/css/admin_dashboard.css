@@ -1,9 +1,9 @@
 /* HeyDay Realty Admin Dashboard - Premium SaaS Theme */
 
 :root {
-    --primary: #0F766E;
-    --primary-light: #14B8A6;
-    --secondary: #10B981;
+    --primary: #004526;
+    --primary-light: #006638;
+    --secondary: #005530;
     --accent: #F59E0B;
     --background: #F8FAFC;
     --surface: #FFFFFF;
@@ -389,12 +389,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .kpi-icon.users {
-    background: rgba(15, 118, 110, 0.1);
+    background: rgba(0, 69, 38, 0.1);
     color: var(--primary);
 }
 
 .kpi-icon.agents {
-    background: rgba(16, 185, 129, 0.1);
+    background: rgba(0, 85, 48, 0.1);
     color: var(--secondary);
 }
 
@@ -883,7 +883,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .lead-stat-icon.conversion {
-    background: rgba(15, 118, 110, 0.1);
+    background: rgba(0, 69, 38, 0.1);
     color: var(--primary);
 }
 
