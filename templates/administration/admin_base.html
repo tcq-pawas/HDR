@@ -24,13 +24,13 @@
 
         :root {
 
-            --primary: #0F766E;
+            --primary: #004526;
 
-            --primary-light: #14B8A6;
+            --primary-light: #006638;
 
-            --primary-dark: #0D5F57;
+            --primary-dark: #002815;
 
-            --secondary: #10B981;
+            --secondary: #005530;
 
             --accent: #F59E0B;
 
@@ -1323,13 +1323,13 @@
                 
                 const toastId = 'inquiry_toast_' + inquiry.id;
                 const toastHtml = `
-                    <div id="${toastId}" class="toast align-items-center text-white border-0 shadow-lg show" role="alert" aria-live="assertive" aria-atomic="true" style="background: linear-gradient(135deg, #0F766E 0%, #115E59 100%); min-width: 320px; border-radius: 12px; margin-top: 10px; opacity: 1; transition: opacity 0.4s ease;">
+                    <div id="${toastId}" class="toast align-items-center text-white border-0 shadow-lg show" role="alert" aria-live="assertive" aria-atomic="true" style="background: linear-gradient(135deg, #004526 0%, #002815 100%); min-width: 320px; border-radius: 12px; margin-top: 10px; opacity: 1; transition: opacity 0.4s ease;">
                         <div class="d-flex">
                             <div class="toast-body p-3 w-100">
                                 <div class="d-flex align-items-center justify-content-between mb-2">
                                     <div class="d-flex align-items-center">
                                         <div class="bg-white rounded-circle p-1 me-2 d-flex align-items-center justify-content-center" style="width: 24px; height: 24px;">
-                                            <i class="fas fa-envelope text-teal" style="color: #0F766E; font-size: 0.8rem;"></i>
+                                            <i class="fas fa-envelope text-teal" style="color: #004526; font-size: 0.8rem;"></i>
                                         </div>
                                         <strong class="text-white">New Enquiry Submitted</strong>
                                     </div>
@@ -1338,7 +1338,7 @@
                                 <p class="mb-1 text-white" style="font-size: 0.9rem;"><strong>${inquiry.full_name}</strong> has submitted an enquiry.</p>
                                 <div class="text-white-50 mb-2" style="font-size: 0.8rem;">Budget: ${inquiry.investment_budget}</div>
                                 <div class="d-flex gap-2 justify-content-end mt-2 pt-2 border-top border-white-50 border-opacity-25">
-                                    <a href="/admin-dashboard/inquiries/${inquiry.id}/" class="btn btn-xs btn-light fw-bold text-teal" style="font-size: 0.75rem; padding: 3px 10px; border-radius: 6px; color: #0F766E; text-decoration: none;">View Detail</a>
+                                    <a href="/admin-dashboard/inquiries/${inquiry.id}/" class="btn btn-xs btn-light fw-bold text-teal" style="font-size: 0.75rem; padding: 3px 10px; border-radius: 6px; color: #004526; text-decoration: none;">View Detail</a>
                                     <button type="button" class="btn btn-xs btn-outline-light text-white" style="font-size: 0.75rem; padding: 3px 10px; border-radius: 6px;" onclick="document.getElementById('${toastId}').remove()">Dismiss</button>
                                 </div>
                             </div>

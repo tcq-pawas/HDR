@@ -1,9 +1,10 @@
 /* Agent Dashboard Styles */
 
 :root {
-    --primary-orange: #F7941D;
-    --primary-blue: #1E73BE;
-    --secondary-blue: #1a5fa0;
+    --primary-green: #004526;
+    --primary-green-light: #006638;
+    --primary-green-dark: #002815;
+    --secondary-green: #005530;
     --success-green: #10b981;
     --warning-yellow: #f59e0b;
     --danger-red: #ef4444;
@@ -39,7 +40,7 @@ body {
 
 /* ==================== Header ==================== */
 .agent-header {
-    background: linear-gradient(180deg, #0F766E 0%, #115E59 50%, #042F2E 100%);
+    background: linear-gradient(180deg, #004526 0%, #002815 50%, #002200 100%);
     border-bottom: none;
     position: fixed;
     top: 0;
@@ -47,7 +48,7 @@ body {
     right: 0;
     z-index: 1000;
     height: 64px;
-    box-shadow: 0 4px 12px rgba(15, 118, 110, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 69, 38, 0.3);
 }
 
 .header-content {
@@ -179,7 +180,7 @@ body {
 }
 
 .notification-badge {
-    background: var(--primary-orange);
+    background: var(--primary-green-light);
 }
 
 .lead-badge {
@@ -187,7 +188,7 @@ body {
 }
 
 .quick-add-btn {
-    background: var(--primary-orange);
+    background: var(--primary-green);
     border: none;
     color: white;
     padding: 8px 16px;
@@ -198,7 +199,7 @@ body {
 }
 
 .quick-add-btn:hover {
-    background: #e68a1a;
+    background: var(--primary-green-light);
     transform: translateY(-1px);
     box-shadow: var(--shadow-md);
 }
@@ -310,7 +311,7 @@ body {
 
 .mark-all-read {
     font-size: 12px;
-    color: var(--primary-blue);
+    color: var(--primary-green);
     text-decoration: none;
     font-weight: 500;
 }
@@ -332,7 +333,7 @@ body {
 }
 
 .notification-item.unread {
-    background: rgba(30, 115, 190, 0.05);
+    background: rgba(0, 69, 38, 0.05);
 }
 
 .notification-icon {
@@ -343,7 +344,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--primary-blue);
+    color: var(--primary-green);
     flex-shrink: 0;
 }
 
@@ -370,7 +371,7 @@ body {
 
 .view-all {
     font-size: 13px;
-    color: var(--primary-blue);
+    color: var(--primary-green);
     text-decoration: none;
     font-weight: 500;
 }
@@ -388,7 +389,7 @@ body {
 
 .profile-dropdown .dropdown-item:hover {
     background: var(--bg-gray);
-    color: var(--primary-blue);
+    color: var(--primary-green);
 }
 
 .profile-dropdown .dropdown-item i {
@@ -418,7 +419,7 @@ body {
 /* ==================== Sidebar ==================== */
 .agent-sidebar {
     width: 260px;
-    background: linear-gradient(180deg, #0F766E 0%, #115E59 50%, #042F2E 100%);
+    background: linear-gradient(180deg, #004526 0%, #002815 50%, #002200 100%);
     border-right: none;
     position: fixed;
     left: 0;
@@ -623,13 +624,13 @@ body {
 }
 
 .stat-icon.blue {
-    background: rgba(30, 115, 190, 0.1);
-    color: var(--primary-blue);
+    background: rgba(0, 69, 38, 0.1);
+    color: var(--primary-green);
 }
 
 .stat-icon.orange {
-    background: rgba(247, 148, 29, 0.1);
-    color: var(--primary-orange);
+    background: rgba(0, 69, 38, 0.1);
+    color: var(--primary-green);
 }
 
 .stat-icon.green {
@@ -713,7 +714,7 @@ body {
 
 .quick-action-card:hover {
     background: white;
-    border-color: var(--primary-blue);
+    border-color: var(--primary-green);
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
 }
@@ -722,8 +723,8 @@ body {
     width: 40px;
     height: 40px;
     border-radius: var(--radius-sm);
-    background: rgba(30, 115, 190, 0.1);
-    color: var(--primary-blue);
+    background: rgba(0, 69, 38, 0.1);
+    color: var(--primary-green);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -764,7 +765,7 @@ body {
 
 .view-all-link {
     font-size: 13px;
-    color: var(--primary-blue);
+    color: var(--primary-green);
     text-decoration: none;
     font-weight: 500;
 }
@@ -831,13 +832,13 @@ body {
 }
 
 .status-new {
-    background: rgba(30, 115, 190, 0.1);
-    color: var(--primary-blue);
+    background: rgba(0, 69, 38, 0.1);
+    color: var(--primary-green);
 }
 
 .status-contacted {
-    background: rgba(247, 148, 29, 0.1);
-    color: var(--primary-orange);
+    background: rgba(0, 69, 38, 0.1);
+    color: var(--primary-green);
 }
 
 .status-scheduled {
@@ -866,8 +867,8 @@ body {
 }
 
 .status-sold {
-    background: rgba(30, 115, 190, 0.1);
-    color: var(--primary-blue);
+    background: rgba(0, 69, 38, 0.1);
+    color: var(--primary-green);
 }
 
 .status-rejected {
@@ -891,12 +892,12 @@ body {
 }
 
 .action-btn-edit {
-    background: rgba(30, 115, 190, 0.1);
-    color: var(--primary-blue);
+    background: rgba(0, 69, 38, 0.1);
+    color: var(--primary-green);
 }
 
 .action-btn-edit:hover {
-    background: var(--primary-blue);
+    background: var(--primary-green);
     color: white;
 }
 
@@ -921,12 +922,12 @@ body {
 }
 
 .action-btn-call {
-    background: rgba(30, 115, 190, 0.1);
-    color: var(--primary-blue);
+    background: rgba(0, 69, 38, 0.1);
+    color: var(--primary-green);
 }
 
 .action-btn-call:hover {
-    background: var(--primary-blue);
+    background: var(--primary-green);
     color: white;
 }
 

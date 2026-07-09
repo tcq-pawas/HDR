@@ -9,8 +9,8 @@
 {% block extra_css %}
 <style>
     :root{
-        --primary:#0F766E;
-        --secondary:#10B981;
+        --primary:#004526;
+        --secondary:#006638;
         --blue:#3B82F6;
         --orange:#F59E0B;
         --purple:#8B5CF6;
@@ -348,13 +348,13 @@
     <div class="toolbar-grid mb-4">
         <div class="action-card" onclick="document.querySelector('[data-bs-target="#newInquiryModal"]').click()">
             <div class="action-left">
-                <div class="action-icon" style="background: linear-gradient(135deg, #0F766E, #10B981);"><i class="fas fa-plus"></i></div>
+                <div class="action-icon" style="background: linear-gradient(135deg, #004526, #006638);"><i class="fas fa-plus"></i></div>
                 <div>
                     <p class="action-title">New Inquiry</p>
                     <p class="action-sub">Start a request</p>
                 </div>
             </div>
-            <i class="fas fa-chevron-right" style="color:#0F766E;"></i>
+            <i class="fas fa-chevron-right" style="color:#004526;"></i>
         </div>
 
         <div class="action-card" onclick="window.location.href='{% url "customer:saved-properties-page" %}'">
