@@ -12,6 +12,25 @@ class PropertyForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        
+        # Base important fields required
+        self.fields['title'].required = True
+        self.fields['property_type'].required = True
+        self.fields['category'].required = True
+        self.fields['price'].required = True
+        self.fields['location'].required = True
+        self.fields['state'].required = True
+        self.fields['district'].required = True
+        self.fields['city'].required = True
+        self.fields['pincode'].required = True
+        self.fields['full_address'].required = True
+        
+        # Image required if not already uploaded
+        if not (self.instance and self.instance.pk and self.instance.featured_image):
+            self.fields['featured_image'].required = True
+        else:
+            self.fields['featured_image'].required = False
+
         # Make fields conditionally required based on property type
         if self.instance and self.instance.pk:
             # Editing existing property
@@ -194,12 +213,20 @@ class AgriculturalLandForm(forms.ModelForm):
         self.fields['tehsil'].required = True
         self.fields['village'].required = False  # Will be added to model
         self.fields['pincode'].required = True
+        self.fields['price'].required = True
+        self.fields['full_address'].required = True
+        
+        # Image required if not already uploaded
+        if not (self.instance and self.instance.pk and self.instance.featured_image):
+            self.fields['featured_image'].required = True
+        else:
+            self.fields['featured_image'].required = False
     
     class Meta:
         model = Property
         fields = [
             # Basic Information
-            'title', 'property_type', 'category', 'public_description', 'description',
+            'title', 'public_description', 'description',
             # Land Information
             'land_code', 'agri_land_category', 'land_status',
             # Area Information

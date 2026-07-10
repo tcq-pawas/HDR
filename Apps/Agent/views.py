@@ -180,7 +180,11 @@ def property_add(request, property_type):
             
             property_obj.save()
             messages.success(request, "Property created successfully! It's pending admin approval.")
-            return redirect('agent:property_edit', pk=property_obj.id)
+            return redirect('agent:property_list')
+        else:
+            with open("C:/Users/AJAY/HDR/form_errors.txt", "w") as f:
+                f.write(str(form.errors))
+            print("Form errors:", form.errors)
     else:
         # Use appropriate form based on property_type
         if property_type == 'land':
