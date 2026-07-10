@@ -691,6 +691,7 @@ class LocationData(models.Model):
         verbose_name = "Location Data"
         verbose_name_plural = "Location Data"
         ordering = ['sort_order', 'city']
+        db_table = 'location'
 
     def __str__(self):
         return f"{self.city}, {self.state}"
