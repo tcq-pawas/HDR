@@ -386,6 +386,8 @@ class InvestmentManagementView(AdminDashboardMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
+        from .forms import InvestmentForm
+        
         context['investments'] = Investment.objects.select_related(
             'investor', 'listing', 'listing__property_obj'
         ).order_by('-investment_date')
@@ -394,7 +396,33 @@ class InvestmentManagementView(AdminDashboardMixin, TemplateView):
             'property_obj'
         ).order_by('-created_at')
         
+        context['form'] = InvestmentForm()
+        
+        # Calculate statistics
+        all_investments = Investment.objects.all()
+        context['total_investments'] = all_investments.count()
+        context['total_amount'] = all_investments.aggregate(total=Sum('amount'))['total'] or 0
+        context['pending_investments'] = all_investments.filter(status='pending').count()
+        context['approved_investments'] = all_investments.filter(status='confirmed').count()
+        
         return context
+    
+    def post(self, request, *args, **kwargs):
+        from .forms import InvestmentForm
+        from django.contrib import messages
+        
+        form = InvestmentForm(request.POST)
+        
+        if form.is_valid():
+            investment = form.save()
+            messages.success(
+                request,
+                f"Investment created successfully! {investment.investor.username} invested ${investment.amount} in {investment.listing.property_obj.title}"
+            )
+        else:
+            messages.error(request, f"Error creating investment: {form.errors}")
+        
+        return redirect('admin_dash:investment-management-page')
 
 
 class SystemSettingsView(AdminDashboardMixin, TemplateView):

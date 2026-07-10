@@ -673,3 +673,24 @@ class WebsiteEnquiry(models.Model):
 
     def __str__(self):
         return f"{self.enquiry_id} — {self.full_name} ({self.get_status_display()})"
+
+
+class LocationData(models.Model):
+    """Model to store location data from CSV import"""
+    geo_name_id = models.IntegerField(unique=True, primary_key=True)
+    city = models.CharField(max_length=200)
+    state = models.CharField(max_length=200)
+    country = models.CharField(max_length=10)
+    latitude = models.DecimalField(max_digits=10, decimal_places=8)
+    longitude = models.DecimalField(max_digits=11, decimal_places=8)
+    timezone = models.CharField(max_length=100)
+    sort_order = models.IntegerField(default=1)
+    display_name = models.CharField(max_length=300)
+
+    class Meta:
+        verbose_name = "Location Data"
+        verbose_name_plural = "Location Data"
+        ordering = ['sort_order', 'city']
+
+    def __str__(self):
+        return f"{self.city}, {self.state}"

@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
 from Apps.Agent.models import AgentProfile
-from Apps.Investor.models import InvestorProfile
+from Apps.Investor.models import InvestorProfile, Investment, InvestmentListing
+from Apps.PublicPage.models import Property
 from django.core.validators import RegexValidator
 
 class PartnerRegistrationForm(forms.ModelForm):
@@ -53,3 +54,110 @@ class PartnerRegistrationForm(forms.ModelForm):
             assign_user_group(user, role)
                 
         return user
+
+
+class InvestmentForm(forms.ModelForm):
+    """Form for creating investments by admin"""
+    
+    investor = forms.ModelChoiceField(
+        queryset=User.objects.filter(groups__name='investor'),
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        label='Select Investor'
+    )
+    
+    property = forms.ModelChoiceField(
+        queryset=Property.objects.filter(status='approved'),
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        label='Select Property'
+    )
+    
+    amount = forms.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Enter investment amount'}),
+        label='Investment Amount'
+    )
+    
+    notes = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Optional notes'}),
+        label='Notes'
+    )
+    
+    class Meta:
+        model = Investment
+        fields = ['amount', 'notes']
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Filter investors to only those with investor profiles
+        self.fields['investor'].queryset = User.objects.filter(
+            groups__name='investor',
+            investor_profile__isnull=False
+        ).select_related('investor_profile')
+        
+        # Filter properties to only approved ones with investment listings
+        self.fields['property'].queryset = Property.objects.filter(
+            status='approved',
+            investment_listings__status='active'
+        ).distinct().prefetch_related('investment_listings')
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        investor = cleaned_data.get('investor')
+        property_obj = cleaned_data.get('property')
+        amount = cleaned_data.get('amount')
+        
+        if investor and property_obj and amount:
+            # Check if investor already has an investment in this property
+            existing_investment = Investment.objects.filter(
+                investor=investor,
+                listing__property_obj=property_obj
+            ).exists()
+            
+            if existing_investment:
+                raise forms.ValidationError(
+                    f"{investor.username} already has an investment in this property."
+                )
+            
+            # Check if there's an active investment listing for this property
+            try:
+                listing = InvestmentListing.objects.get(
+                    property_obj=property_obj,
+                    status='active'
+                )
+                
+                # Check if amount meets minimum investment
+                if amount < listing.minimum_investment:
+                    raise forms.ValidationError(
+                        f"Minimum investment for this property is ${listing.minimum_investment}"
+                    )
+                
+                # Check if investment would exceed total needed
+                total_invested = listing.total_invested_amount
+                if total_invested + amount > listing.total_investment_needed:
+                    raise forms.ValidationError(
+                        f"Investment amount exceeds remaining available funds. "
+                        f"Available: ${listing.total_investment_needed - total_invested}"
+                    )
+                
+                # Store the listing for use in save
+                cleaned_data['listing'] = listing
+                
+            except InvestmentListing.DoesNotExist:
+                raise forms.ValidationError(
+                    "No active investment listing found for this property."
+                )
+        
+        return cleaned_data
+    
+    def save(self, commit=True):
+        investment = super().save(commit=False)
+        investment.investor = self.cleaned_data['investor']
+        investment.listing = self.cleaned_data['listing']
+        investment.status = 'confirmed'
+        
+        if commit:
+            investment.save()
+        
+        return investment

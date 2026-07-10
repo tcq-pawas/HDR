@@ -22,6 +22,7 @@ from django.urls import reverse
 from django.contrib.sites.shortcuts import get_current_site
 from Apps.Customer.models import CustomerProfile, Inquiry, SavedProperty
 from Apps.Investor.models import Investment, InvestmentListing, InvestorProfile
+from .forms import InvestmentForm
 from Apps.PublicPage.models import Property
 from .serializers import (
     AdminProfileSerializer, SystemSettingsSerializer, DashboardWidgetSerializer,
@@ -1137,6 +1138,31 @@ def save_security_settings(request):
         return Response({'success': False, 'message': str(e)}, status=400)
 
 
+@api_view(['POST'])
+@admin_required_api
+def save_general_settings(request):
+    try:
+        from Apps.Administration.models import SystemSettings
+        
+        site_name = request.data.get('siteName', 'HeyDay Realty')
+        site_description = request.data.get('siteDescription', 'Professional real estate investment platform')
+        contact_email = request.data.get('contactEmail', 'info@heydayrealty.com')
+        phone_number = request.data.get('phoneNumber', '+1 (555) 123-4567')
+        address = request.data.get('address', '123 Business Ave, Suite 100\nNew York, NY 10001')
+        timezone = request.data.get('timezone', 'America/New_York')
+        
+        SystemSettings.objects.update_or_create(setting_key='SITE_NAME', defaults={'setting_value': site_name})
+        SystemSettings.objects.update_or_create(setting_key='SITE_DESCRIPTION', defaults={'setting_value': site_description})
+        SystemSettings.objects.update_or_create(setting_key='CONTACT_EMAIL', defaults={'setting_value': contact_email})
+        SystemSettings.objects.update_or_create(setting_key='PHONE_NUMBER', defaults={'setting_value': phone_number})
+        SystemSettings.objects.update_or_create(setting_key='ADDRESS', defaults={'setting_value': address})
+        SystemSettings.objects.update_or_create(setting_key='TIMEZONE', defaults={'setting_value': timezone})
+
+        return Response({'success': True, 'message': 'General settings saved successfully'})
+    except Exception as e:
+        return Response({'success': False, 'message': str(e)}, status=400)
+
+
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
 def get_unread_inquiries(request):
@@ -1167,3 +1193,35 @@ def get_unread_inquiries(request):
         ]
     }
     return Response(data)
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def create_investment(request):
+    """API endpoint to create an investment"""
+    from .auth_utils import get_user_role
+    if get_user_role(request.user) != 'admin':
+        from rest_framework.exceptions import PermissionDenied
+        raise PermissionDenied("Admin access required.")
+    
+    form = InvestmentForm(request.data)
+    
+    if form.is_valid():
+        investment = form.save()
+        return Response({
+            'success': True,
+            'message': 'Investment created successfully',
+            'investment': {
+                'id': investment.id,
+                'investor': investment.investor.username,
+                'property': investment.listing.property_obj.title,
+                'amount': str(investment.amount),
+                'status': investment.status,
+                'investment_date': investment.investment_date.strftime('%Y-%m-%d %H:%M:%S')
+            }
+        }, status=status.HTTP_201_CREATED)
+    else:
+        return Response({
+            'success': False,
+            'errors': form.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
