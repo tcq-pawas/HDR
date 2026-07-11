@@ -1,0 +1,116 @@
+{% extends "agent/agent_base.html" %}
+{% load static %}
+
+{% block title %}Profile | HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/agent/settings.css' %}">
+<style>
+    .profile-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 2rem;
+        gap: 1.5rem;
+    }
+    .profile-avatar-large {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        background-color: #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        color: #64748b;
+    }
+    .profile-info h2 {
+        margin: 0;
+        color: #1e293b;
+    }
+    .profile-info p {
+        margin: 0;
+        color: #64748b;
+    }
+    .profile-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    .detail-group {
+        margin-bottom: 1rem;
+    }
+    .detail-label {
+        font-weight: 600;
+        color: #475569;
+        font-size: 0.9rem;
+        margin-bottom: 0.25rem;
+    }
+    .detail-value {
+        color: #1e293b;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="settings-container">
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <h1>Agent Profile</h1>
+        <a href="{% url 'agent:settings' %}" class="btn btn-primary">
+            <i class="bi bi-pencil"></i> Edit Profile
+        </a>
+    </div>
+
+    <div class="settings-card">
+        <div class="profile-header">
+            {% if agent_profile.profile_image %}
+                <img src="{{ agent_profile.profile_image.url }}" alt="Profile" class="profile-avatar-large">
+            {% else %}
+                <div class="profile-avatar-large">
+                    {{ request.user.first_name|default:request.user.username|slice:":1"|upper }}
+                </div>
+            {% endif %}
+            <div class="profile-info">
+                <h2>{{ request.user.get_full_name|default:request.user.username }}</h2>
+                <p>{{ agent_profile.company_name|default:"Independent Agent" }}</p>
+                <p><i class="bi bi-geo-alt"></i> {{ agent_profile.territory|default:"Not specified" }}</p>
+            </div>
+        </div>
+
+        <div class="profile-details">
+            <div>
+                <div class="detail-group">
+                    <div class="detail-label">Email</div>
+                    <div class="detail-value">{{ request.user.email|default:"Not provided" }}</div>
+                </div>
+                <div class="detail-group">
+                    <div class="detail-label">Phone</div>
+                    <div class="detail-value">{{ agent_profile.phone|default:"Not provided" }}</div>
+                </div>
+                <div class="detail-group">
+                    <div class="detail-label">Employee ID</div>
+                    <div class="detail-value">{{ agent_profile.employee_id|default:"Not provided" }}</div>
+                </div>
+            </div>
+            <div>
+                <div class="detail-group">
+                    <div class="detail-label">Commission Rate</div>
+                    <div class="detail-value">{{ agent_profile.commission_rate|default:"0" }}%</div>
+                </div>
+                <div class="detail-group">
+                    <div class="detail-label">Target Sales</div>
+                    <div class="detail-value">₹{{ agent_profile.target_sales|default:"0" }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-group">
+            <div class="detail-label">Bio</div>
+            <div class="detail-value">
+                {{ agent_profile.bio|default:"No bio provided."|linebreaks }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

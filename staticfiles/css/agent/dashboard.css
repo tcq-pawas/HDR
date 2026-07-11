@@ -2,10 +2,10 @@
 
 :root {
     --primary-color: #0abfa0;
-    --sidebar-bg: #11cdad;
+    --sidebar-bg: #096b3d;
     --sidebar-active-bg: #ffffff;
-    --sidebar-active-text: #11cdad;
-    --sidebar-text: #ffffff;
+    --sidebar-active-text: #065649;
+    --sidebar-text: #2c3e50;
 
     --bg-white: #ffffff;
     --bg-light: #f9f9fb;
@@ -229,7 +229,7 @@ body {
     align-items: center;
     gap: 12px;
     text-decoration: none;
-    color: white;
+    color: #2c3e50;
     font-size: 20px;
     font-weight: 700;
     margin-bottom: 30px;
@@ -290,7 +290,7 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-    color: white;
+    color: #2c3e50;
     padding: 10px 20px;
     text-decoration: none;
     margin-top: auto;
@@ -336,6 +336,13 @@ body {
 .dashboard-header {
     display: flex;
     justify-content: space-between;
+}
+
+.header-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: -6px;
 }
 
 .kpi-cards-grid {

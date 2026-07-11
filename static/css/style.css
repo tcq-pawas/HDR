@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap');
 
 :root {
+<<<<<<< HEAD
     --forest: #1B4332;
     --emerald: #2D6A4F;
     --mid: #40916C;
@@ -18,6 +19,41 @@
 
     --font-heading: 'Playfair Display', serif;
     --font-body: 'Inter', sans-serif;
+=======
+    /* Brand Colors - HeyDay Realty */
+    --primary-green: #004526;
+    --primary-green-light: #006638;
+    --primary-green-dark: #002815;
+    --dark-header: #1F2937;
+    --secondary-green: #005530;
+    --accent-gold: #FFA500;
+
+    /* Extended palette for accessibility and design */
+    --primary-color: var(--primary-green);
+    --accent-color: var(--primary-green);
+    --secondary-color: #333333;
+    --text-color: #555555;
+    --light-bg: #ffffff;
+    --section-bg: #f8f9fa;
+    --white: #ffffff;
+    --cloud-white: #F8FAFC;
+
+    /* Lighter variants */
+    --primary-green-light: rgba(0, 69, 38, 0.1);
+    --primary-green-medium: rgba(0, 69, 38, 0.2);
+    --primary-green-dark: rgba(0, 40, 21, 0.1);
+    --dark-header-light: rgba(31, 41, 55, 0.95);
+
+    --font-heading: 'Playfair Display', serif;
+    --font-body: 'Outfit', sans-serif;
+
+    /* Brand-based gradients */
+    --gradient-btn: linear-gradient(135deg, rgba(0, 69, 38, 0.85) 0%, rgba(0, 40, 21, 0.85) 100%);
+    --gradient-btn-hover: linear-gradient(135deg, rgba(0, 40, 21, 0.95) 0%, rgba(0, 69, 38, 0.95) 100%);
+    --gradient-overlay: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.7));
+    --gradient-brand: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-light) 100%);
+    --gradient-dark: linear-gradient(135deg, var(--dark-header) 0%, #111827 100%);
+>>>>>>> f25d19253666b48006a98b4bcf2bbaedd618a11f
 }
 
 body {
@@ -89,7 +125,7 @@ h6 {
     border-radius: 2px;
 }
 
-/* Secondary Button - Custom Blue Theme */
+/* Secondary Button - Custom Green Theme */
 .btn-secondary {
     background: var(--gradient-brand);
     border: none;
@@ -98,21 +134,21 @@ h6 {
     padding: 12px 30px;
     border-radius: 5px;
     letter-spacing: 0.5px;
-    box-shadow: 0 4px 15px rgba(5, 153, 227, 0.2);
+    box-shadow: 0 4px 15px rgba(0, 69, 38, 0.2);
     color: #fff;
     transition: all 0.3s ease;
 }
 
 .btn-secondary:hover {
-    background: linear-gradient(135deg, var(--primary-blue-medium) 0%, var(--primary-blue) 100%);
-    box-shadow: 0 6px 20px rgba(5, 153, 227, 0.3);
+    background: linear-gradient(135deg, var(--primary-green-medium) 0%, var(--primary-green) 100%);
+    box-shadow: 0 6px 20px rgba(0, 69, 38, 0.3);
     transform: translateY(-2px);
     color: #fff;
 }
 
 .btn-outline-secondary {
-    color: var(--primary-orange);
-    border: 2px solid var(--primary-orange);
+    color: var(--primary-green);
+    border: 2px solid var(--primary-green);
     background-color: transparent;
     font-weight: 600;
     text-transform: uppercase;

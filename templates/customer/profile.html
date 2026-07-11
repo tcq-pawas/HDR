@@ -8,15 +8,15 @@
 {% block content %}
 <style>
     :root{
-        --primary:#0F766E;
-        --secondary:#10B981;
+        --primary:#004526;
+        --secondary:#006638;
         --purple:#8B5CF6;
         --blue:#3B82F6;
         --pink:#EC4899;
         --bg:#F8FAFC;
         --card:#FFFFFF;
         --radius:20px;
-        --shadow: 0 12px 30px rgba(15, 118, 110, 0.12);
+        --shadow: 0 12px 30px rgba(0, 69, 38, 0.12);
         --shadow-soft: 0 8px 20px rgba(2, 6, 23, 0.06);
     }
 
@@ -466,7 +466,7 @@
                                 <div class="label">Full Name</div>
                                 <div class="value" data-field="full_name">{{ profile.user.get_full_name|default:'Not set' }}</div>
                             </div>
-                            <button class="btn btn-link edit-btn" style="color:#0F766E; text-decoration:none;" onclick="openFieldEdit('full_name')">
+                            <button class="btn btn-link edit-btn" style="color:#004526; text-decoration:none;" onclick="openFieldEdit('full_name')">
                                 <i class="fas fa-pen"></i>
                             </button>
                         </div>
@@ -479,7 +479,7 @@
                                 <div class="label">Email Address</div>
                                 <div class="value" data-field="email">{{ profile.user.email }}</div>
                             </div>
-                            <button class="btn btn-link edit-btn" style="color:#0F766E; text-decoration:none;" onclick="openFieldEdit('email')">
+                            <button class="btn btn-link edit-btn" style="color:#004526; text-decoration:none;" onclick="openFieldEdit('email')">
                                 <i class="fas fa-pen"></i>
                             </button>
                         </div>
@@ -492,7 +492,7 @@
                                 <div class="label">Phone Number</div>
                                 <div class="value" data-field="phone">{{ profile.phone|default:'Not set' }}</div>
                             </div>
-                            <button class="btn btn-link edit-btn" style="color:#0F766E; text-decoration:none;" onclick="openFieldEdit('phone')">
+                            <button class="btn btn-link edit-btn" style="color:#004526; text-decoration:none;" onclick="openFieldEdit('phone')">
                                 <i class="fas fa-pen"></i>
                             </button>
                         </div>
@@ -505,7 +505,7 @@
                                 <div class="label">Preferred Contact</div>
                                 <div class="value" data-field="contact_method">{{ profile.get_preferred_contact_method_display|default:'Not set' }}</div>
                             </div>
-                            <button class="btn btn-link edit-btn" style="color:#0F766E; text-decoration:none;" onclick="openFieldEdit('contact_method')">
+                            <button class="btn btn-link edit-btn" style="color:#004526; text-decoration:none;" onclick="openFieldEdit('contact_method')">
                                 <i class="fas fa-pen"></i>
                             </button>
                         </div>

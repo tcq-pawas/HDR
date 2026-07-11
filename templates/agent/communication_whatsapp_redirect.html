@@ -1,0 +1,37 @@
+{% extends "agent/agent_base.html" %}
+
+{% block title %}Redirecting to WhatsApp... | HeyDay Realty{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column align-items-center justify-content-center py-5 bg-white border rounded-4 shadow-sm" style="min-height: 350px; margin-top: 20px;">
+    <div class="spinner-border mb-4" role="status" style="width: 3.5rem; height: 3.5rem; color: #004526;">
+        <span class="visually-hidden">Redirecting...</span>
+    </div>
+    <h3 class="fw-bold text-dark mb-2">Opening WhatsApp...</h3>
+    <p class="text-muted text-center px-3" style="max-width: 500px;">
+        We are launching WhatsApp in a new browser tab with your pre-filled message and recipient. 
+    </p>
+    <div class="mt-2 text-center">
+        <p class="text-muted small mb-3">If the tab didn't open automatically, click the button below:</p>
+        <a href="{{ whatsapp_url }}" target="_blank" id="whatsappManualBtn" class="btn px-4 py-2" style="background-color: #004526; color: white; border: none; font-weight: 600; border-radius: 8px;">
+            <i class="bi bi-whatsapp"></i> Open WhatsApp Manually
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const whatsappUrl = "{{ whatsapp_url|safe }}";
+        
+        // Open the WhatsApp Web/API link in a new tab
+        window.open(whatsappUrl, '_blank');
+        
+        // Redirect this dashboard tab back to the list after a brief delay
+        setTimeout(function() {
+            window.location.href = "{% url 'agent:communication_list' %}";
+        }, 1500);
+    });
+</script>
+{% endblock %}
