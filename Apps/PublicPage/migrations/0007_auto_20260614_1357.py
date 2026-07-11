@@ -9,45 +9,4 @@ class Migration(migrations.Migration):
         ('PublicPage', '0006_property_agri_land_category_and_more'),
     ]
 
-    operations = [
-        # migrations.AddField(
-        #     model_name='property',
-        #     name='farmhouse_available',
-        #     field=models.BooleanField(default=False),
-        # ),
-        migrations.AddField(
-            model_name='property',
-            name='google_map_link',
-            field=models.URLField(blank=True),
-        ),
-        migrations.AddField(
-            model_name='property',
-            name='plantation_type',
-            field=models.CharField(blank=True, max_length=200),
-        ),
-        migrations.AddField(
-            model_name='property',
-            name='plot_sizes',
-            field=models.CharField(blank=True, help_text='Example: 5000 Sq Ft - 1 Acre', max_length=200),
-        ),
-        migrations.AddField(
-            model_name='property',
-            name='project_size_acre',
-            field=models.CharField(blank=True, max_length=100),
-        ),
-        migrations.AddField(
-            model_name='property',
-            name='registry_status',
-            field=models.CharField(blank=True, max_length=100),
-        ),
-        migrations.AddField(
-            model_name='property',
-            name='road_access',
-            field=models.CharField(blank=True, max_length=200),
-        ),
-        migrations.AddField(
-            model_name='property',
-            name='water_source',
-            field=models.CharField(blank=True, max_length=200),
-        ),
-    ]
+    operations = []
