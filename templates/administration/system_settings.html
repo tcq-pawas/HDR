@@ -59,34 +59,34 @@
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="siteName" class="form-label">Site Name</label>
-                                            <input type="text" class="form-control" id="siteName" value="HeyDay Realty">
+                                            <input type="text" class="form-control" id="siteName" value="{{ settings.SITE_NAME|default:'HeyDay Realty' }}">
                                         </div>
                                         <div class="mb-3">
                                             <label for="siteDescription" class="form-label">Site Description</label>
-                                            <textarea class="form-control" id="siteDescription" rows="3">Professional real estate investment platform</textarea>
+                                            <textarea class="form-control" id="siteDescription" rows="3">{{ settings.SITE_DESCRIPTION|default:'Professional real estate investment platform' }}</textarea>
                                         </div>
                                         <div class="mb-3">
                                             <label for="contactEmail" class="form-label">Contact Email</label>
-                                            <input type="email" class="form-control" id="contactEmail" value="info@heydayrealty.com">
+                                            <input type="email" class="form-control" id="contactEmail" value="{{ settings.CONTACT_EMAIL|default:'info@heydayrealty.com' }}">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
                                             <label for="phoneNumber" class="form-label">Phone Number</label>
-                                            <input type="tel" class="form-control" id="phoneNumber" value="+1 (555) 123-4567">
+                                            <input type="tel" class="form-control" id="phoneNumber" value="{{ settings.PHONE_NUMBER|default:'+1 (555) 123-4567' }}">
                                         </div>
                                         <div class="mb-3">
                                             <label for="address" class="form-label">Address</label>
-                                            <textarea class="form-control" id="address" rows="3">123 Business Ave, Suite 100<br>New York, NY 10001</textarea>
+                                            <textarea class="form-control" id="address" rows="3">{{ settings.ADDRESS|default:'123 Business Ave, Suite 100<br>New York, NY 10001' }}</textarea>
                                         </div>
                                         <div class="mb-3">
                                             <label for="timezone" class="form-label">Timezone</label>
                                             <select class="form-select" id="timezone">
-                                                <option value="UTC">UTC</option>
-                                                <option value="America/New_York" selected>Eastern Time (ET)</option>
-                                                <option value="America/Chicago">Central Time (CT)</option>
-                                                <option value="America/Denver">Mountain Time (MT)</option>
-                                                <option value="America/Los_Angeles">Pacific Time (PT)</option>
+                                                <option value="UTC" {% if settings.TIMEZONE == 'UTC' %}selected{% endif %}>UTC</option>
+                                                <option value="America/New_York" {% if settings.TIMEZONE == 'America/New_York' or not settings.TIMEZONE %}selected{% endif %}>Eastern Time (ET)</option>
+                                                <option value="America/Chicago" {% if settings.TIMEZONE == 'America/Chicago' %}selected{% endif %}>Central Time (CT)</option>
+                                                <option value="America/Denver" {% if settings.TIMEZONE == 'America/Denver' %}selected{% endif %}>Mountain Time (MT)</option>
+                                                <option value="America/Los_Angeles" {% if settings.TIMEZONE == 'America/Los_Angeles' %}selected{% endif %}>Pacific Time (PT)</option>
                                             </select>
                                         </div>
                                     </div>
@@ -313,8 +313,36 @@
 {% block extra_js %}
 <script>
     function saveGeneralSettings() {
-        alert('General settings saved successfully!');
-        // In a real implementation, this would save the settings via AJAX
+        const formData = {
+            siteName: document.getElementById('siteName').value,
+            siteDescription: document.getElementById('siteDescription').value,
+            contactEmail: document.getElementById('contactEmail').value,
+            phoneNumber: document.getElementById('phoneNumber').value,
+            address: document.getElementById('address').value,
+            timezone: document.getElementById('timezone').value
+        };
+        
+        fetch('/admin-dashboard/api/settings/save-general/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.success) {
+                alert('General settings saved successfully!');
+                location.reload();
+            } else {
+                alert('Error saving settings: ' + data.message);
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert('Failed to save general settings.');
+        });
     }
     
     function saveEmailSettings() {
@@ -339,6 +367,7 @@
         .then(data => {
             if(data.success) {
                 alert('Email settings saved successfully!');
+                location.reload();
             } else {
                 alert('Error saving settings: ' + data.message);
             }
@@ -413,6 +442,7 @@
         .then(data => {
             if(data.success) {
                 alert('Security settings saved successfully!');
+                location.reload();
             } else {
                 alert('Error saving settings: ' + data.message);
             }

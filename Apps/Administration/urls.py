@@ -4,7 +4,7 @@ from .dashboard_views import (
     AdminDashboardView, UserManagementView, InquiryManagementView,
     InvestmentManagementView, SystemSettingsView, ReportsView, ActivityLogView,
     UserProfileView, PropertyReviewCenterView, PropertyReviewDetailPageView, InquiryDetailPageView,
-    InquiryBulkActionView, InquiryExportCSVView, InquiryExportExcelView,  InquiryDeleteView 
+    InquiryBulkActionView, InquiryExportCSVView, InquiryExportExcelView,  InquiryDeleteView
 )
 from . import investor_views
 
@@ -78,5 +78,7 @@ urlpatterns = [
     path('api/settings/save-email/', views.save_email_settings, name='save-email-settings'),
     path('api/settings/test-email/', views.test_email_settings, name='test-email-settings'),
     path('api/settings/save-security/', views.save_security_settings, name='save-security-settings'),
+    path('api/settings/save-general/', views.save_general_settings, name='save-general-settings'),
     path('api/inquiries/unread-count/', views.get_unread_inquiries, name='unread-inquiries-count'),
+    path('api/investments/create/', views.create_investment, name='create-investment'),
 ]

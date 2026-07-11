@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import Property, PropertyImage, PropertyInquiry
 from .models import ContactInquiry
-from .models import WebsiteEnquiry
+from .models import WebsiteEnquiry, LocationData
 
 class PropertyImageInline(admin.TabularInline):
     model = PropertyImage
@@ -38,3 +38,11 @@ class PropertyInquiryAdmin(admin.ModelAdmin):
 class WebsiteEnquiryAdmin(admin.ModelAdmin):
     list_display = ('enquiry_id', 'full_name', 'email', 'status', 'created_at')
     search_fields = ('full_name', 'email', 'enquiry_id')
+
+
+@admin.register(LocationData)
+class LocationDataAdmin(admin.ModelAdmin):
+    list_display = ('geo_name_id', 'city', 'state', 'country', 'sort_order', 'display_name')
+    list_filter = ('state', 'country')
+    search_fields = ('city', 'state', 'display_name')
+    ordering = ('sort_order', 'city')

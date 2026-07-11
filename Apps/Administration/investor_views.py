@@ -154,6 +154,8 @@ class InvestorDeleteView(AdminDashboardMixin, DeleteView):
         profile.delete()
         user.delete()
         
+        return redirect(self.success_url)
+        
 class InvestorToggleStatusView(AdminDashboardMixin, DetailView):
     model = InvestorProfile
     

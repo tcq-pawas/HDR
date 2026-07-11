@@ -57,7 +57,7 @@
     </div>
 
     <!-- Form -->
-    <form method="post" class="wizard-form" enctype="multipart/form-data" id="agriculturalLandForm">
+    <form method="post" class="wizard-form" enctype="multipart/form-data" id="agriculturalLandForm" novalidate>
         {% csrf_token %}
 
         <!-- Step 1: Land Information -->
@@ -336,7 +336,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="{{ form.full_address.id_for_label }}">Full Address</label>
+                    <label for="{{ form.full_address.id_for_label }}" class="field-required">Full Address</label>
                     {{ form.full_address }}
                     {% if form.full_address.errors %}<div class="error-message">{{ form.full_address.errors }}</div>{% endif %}
                 </div>
@@ -479,7 +479,7 @@
                 <h3>Media Upload</h3>
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="{{ form.featured_image.id_for_label }}">Featured Image</label>
+                        <label for="{{ form.featured_image.id_for_label }}" class="field-required">Featured Image</label>
                         {{ form.featured_image }}
                         {% if form.featured_image.errors %}<div class="error-message">{{ form.featured_image.errors }}</div>{% endif %}
                     </div>
@@ -625,25 +625,33 @@ document.addEventListener('DOMContentLoaded', function() {
 
         areaConversion.style.display = 'block';
 
-        // Conversion factors to acre
-        const toAcre = {
-            'acre': 1,
-            'bigha': 0.2471,
-            'hectare': 2.471,
-            'guntha': 0.0247,
-            'sq_yard': 0.0002066,
-            'sq_meter': 0.0002471
+        // Conversion factors to SqFt
+        const toSqFt = {
+            'sqft': 1,
+            'sqyard': 9,
+            'sq_yard': 9,
+            'sq_meter': 10.7639104,
+            'acre': 43560,
+            'hectare': 107639.104,
+            'bigha': 27000,
+            'guntha': 1089
         };
 
-        const areaInAcre = area * toAcre[unit];
+        const conversionFactor = toSqFt[unit];
+        if (conversionFactor === undefined) {
+            areaConversion.style.display = 'none';
+            return;
+        }
+
+        const areaInSqFt = area * conversionFactor;
 
         // Convert to other units
-        document.getElementById('acreValue').textContent = areaInAcre.toFixed(2) + ' Acre';
-        document.getElementById('bighaValue').textContent = (areaInAcre / 0.2471).toFixed(2) + ' Bigha';
-        document.getElementById('hectareValue').textContent = (areaInAcre / 2.471).toFixed(2) + ' Hectare';
-        document.getElementById('gunthaValue').textContent = (areaInAcre / 0.0247).toFixed(2) + ' Guntha';
-        document.getElementById('sqYardValue').textContent = (areaInAcre / 0.0002066).toFixed(2) + ' Sq Yard';
-        document.getElementById('sqMeterValue').textContent = (areaInAcre / 0.0002471).toFixed(2) + ' Sq Meter';
+        document.getElementById('acreValue').textContent = (areaInSqFt / toSqFt['acre']).toFixed(2) + ' Acre';
+        document.getElementById('bighaValue').textContent = (areaInSqFt / toSqFt['bigha']).toFixed(2) + ' Bigha';
+        document.getElementById('hectareValue').textContent = (areaInSqFt / toSqFt['hectare']).toFixed(2) + ' Hectare';
+        document.getElementById('gunthaValue').textContent = (areaInSqFt / toSqFt['guntha']).toFixed(2) + ' Guntha';
+        document.getElementById('sqYardValue').textContent = (areaInSqFt / toSqFt['sq_yard']).toFixed(2) + ' Sq Yard';
+        document.getElementById('sqMeterValue').textContent = (areaInSqFt / toSqFt['sq_meter']).toFixed(2) + ' Sq Meter';
     }
 
     totalAreaInput.addEventListener('input', convertArea);
@@ -682,9 +690,26 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    function validateCurrentStep() {
+        const currentStepEl = document.querySelector(`.wizard-step[data-step="${currentStep}"]`);
+        const inputs = currentStepEl.querySelectorAll('input, select, textarea');
+        let isValid = true;
+
+        for (let i = 0; i < inputs.length; i++) {
+            if (!inputs[i].checkValidity()) {
+                inputs[i].reportValidity();
+                isValid = false;
+                break;
+            }
+        }
+        return isValid;
+    }
+
     nextBtn.addEventListener('click', () => {
-        if (currentStep < totalSteps) {
-            showStep(currentStep + 1);
+        if (validateCurrentStep()) {
+            if (currentStep < totalSteps) {
+                showStep(currentStep + 1);
+            }
         }
     });
 
@@ -692,19 +717,47 @@ document.addEventListener('DOMContentLoaded', function() {
     stepIndicators.forEach(indicator => {
         indicator.addEventListener('click', () => {
             const step = parseInt(indicator.dataset.step);
-            showStep(step);
+            if (step < currentStep || validateCurrentStep()) {
+                showStep(step);
+            }
         });
     });
 
+    // Form Submission Validation (Disabled temporarily to catch backend errors)
+    /*
+    form.addEventListener('submit', function(e) {
+        let isValid = true;
+        let firstInvalidStep = null;
+        
+        const allInputs = form.querySelectorAll('input, select, textarea');
+        for (let i = 0; i < allInputs.length; i++) {
+            if (!allInputs[i].checkValidity()) {
+                isValid = false;
+                const stepEl = allInputs[i].closest('.wizard-step');
+                if (stepEl && firstInvalidStep === null) {
+                    firstInvalidStep = parseInt(stepEl.dataset.step);
+                }
+                if (firstInvalidStep === parseInt(stepEl.dataset.step)) {
+                    allInputs[i].reportValidity();
+                }
+            }
+        }
+
+        if (!isValid && firstInvalidStep) {
+            e.preventDefault(); 
+            showStep(firstInvalidStep); 
+        }
+    });
+    */
+
     // Auto-save functionality
     let autoSaveTimeout;
-    const form = document.getElementById('agriculturalLandForm');
-
+    
     function autoSave() {
         autoSaveIndicator.innerHTML = '<i class="bi bi-cloud-arrow-up"></i> Saving...';
         autoSaveIndicator.classList.add('saving');
 
-        // Simulate auto-save (in real implementation, send AJAX request)
+        // Simulate auto-save
         setTimeout(() => {
             autoSaveIndicator.innerHTML = '<i class="bi bi-check-circle"></i> Saved';
             autoSaveIndicator.classList.remove('saving');
@@ -722,8 +775,18 @@ document.addEventListener('DOMContentLoaded', function() {
         autoSaveTimeout = setTimeout(autoSave, 2000);
     });
 
-    // Initialize
-    showStep(1);
+    // Initialize: Check if there are any backend errors and show that step first
+    const firstError = document.querySelector('.error-message');
+    if (firstError) {
+        const errorStep = firstError.closest('.wizard-step');
+        if (errorStep) {
+            showStep(parseInt(errorStep.dataset.step));
+        } else {
+            showStep(1);
+        }
+    } else {
+        showStep(1);
+    }
 });
 </script>
 {% endblock %}
