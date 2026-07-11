@@ -1,10 +1,12 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% if 'owner' in request.user.groups.all|stringformat:"s" %}Owner{% else %}Agent{% endif %} Dashboard | HeyDay Realty{% endblock %}</title>
+    <title>{% block title %}{% if 'owner' in request.user.groups.all|stringformat:"s" %}Owner{% else %}Agent{% endif %}
+        Dashboard | HeyDay Realty{% endblock %}</title>
     <link rel="icon" href="{% static 'img/favicon.ico' %}">
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -24,25 +26,21 @@
             <div class="header-content">
                 <!-- Logo & Menu Toggle -->
                 <div class="header-left">
-                    <button class="menu-toggle" id="menuToggle">
-                        <i class="bi bi-list"></i>
-                    </button>
-                    <a class="brand-logo" href="{% url 'agent:dashboard' %}">
-                        <img src="{% static 'img/logo.png' %}" alt="HeyDay Realty">
-                        <span>HeyDay Realty</span>
-                    </a>
+                    {% block header_title %}{% endblock %}
                 </div>
 
-                <!-- Search Bar -->
-                <div class="header-center">
-                    <div class="search-box">
-                        <i class="bi bi-search"></i>
-                        <input type="text" placeholder="Search properties, leads, inquiries..." class="search-input">
-                    </div>
-                </div>
+                
 
                 <!-- Header Right -->
                 <div class="header-right">
+
+                    <!-- Search Bar -->
+                    <div class="header-center">
+                        <div class="search-box">
+                            <i class="bi bi-search"></i>
+                            <input type="text" placeholder="Search properties, leads, inquiries..." class="search-input">
+                        </div>
+                    </div>
                     <!-- Notifications -->
                     <div class="header-item">
                         <button class="icon-btn" id="notificationBtn">
@@ -109,16 +107,16 @@
                         <button class="profile-toggle" id="profileToggle">
                             <div class="profile-avatar">
                                 {% if agent_profile.profile_image %}
-                                    <img src="{{ agent_profile.profile_image.url }}" alt="Profile">
+                                <img src="{{ agent_profile.profile_image.url }}" alt="Profile">
                                 {% else %}
-                                    <div class="avatar-placeholder">
-                                        {{ user.first_name|default:user.username|slice:":1"|upper }}
-                                    </div>
+                                <div class="avatar-placeholder">
+                                    {{ user.first_name|default:user.username|slice:":1"|upper }}
+                                </div>
                                 {% endif %}
                             </div>
                             <div class="profile-info">
                                 <span class="profile-name">{{ user.first_name|default:user.username }}</span>
-                                <span class="profile-role">{% if 'owner' in request.user.groups.all|stringformat:"s" %}Owner{% else %}Agent{% endif %}</span>
+                                <span class="profile-role">Agent</span>
                             </div>
                             <i class="bi bi-chevron-down"></i>
                         </button>
@@ -142,80 +140,114 @@
         <!-- Sidebar -->
         <aside class="agent-sidebar" id="agentSidebar">
             <div class="sidebar-content">
+
+                <!-- Logo -->
+                <a class="brand-logo" href="{% url 'agent:dashboard' %}">
+                    <img src="{% static 'img/logo.png' %}" alt="HeyDay Realty">
+                    <span>HeyDay Realty</span>
+                </a>
+
+                <!-- Profile -->
+                <div class="sidebar-profile">
+                    <div class="profile-avatar">
+                        {% if agent_profile.profile_image %}
+                        <img src="{{ agent_profile.profile_image.url }}" alt="Profile">
+                        {% else %}
+                        {{ user.first_name|default:user.username|slice:":1"|upper }}
+                        {% endif %}
+                    </div>
+                    <div class="profile-info">
+                        <span class="profile-name">{{ user.first_name|default:user.username }}</span>
+                        <span class="profile-role">Agent</span>
+                    </div>
+                </div>
+
                 <nav class="sidebar-nav">
+
                     <ul class="nav-list">
                         <li class="nav-item">
-                            <a href="{% url 'agent:dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                            <a href="{% url 'agent:dashboard' %}"
+                                class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
                                 <i class="bi bi-speedometer2"></i>
                                 <span>Dashboard</span>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="{% url 'agent:property_list' %}" class="nav-link {% if request.resolver_match.url_name in 'property_list property_add property_edit property_type_select' %}active{% endif %}">
+                            <a href="{% url 'agent:property_list' %}"
+                                class="nav-link {% if request.resolver_match.url_name in 'property_list property_add property_edit property_type_select' %}active{% endif %}">
                                 <i class="bi bi-houses"></i>
                                 <span>Properties</span>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="{% url 'agent:lead_list' %}" class="nav-link {% if request.resolver_match.url_name in 'lead_list lead_detail lead_edit' %}active{% endif %}">
+                            <a href="{% url 'agent:lead_list' %}"
+                                class="nav-link {% if request.resolver_match.url_name in 'lead_list lead_detail lead_edit' %}active{% endif %}">
                                 <i class="bi bi-people"></i>
                                 <span>Leads</span>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="{% url 'agent:site_visit_list' %}" class="nav-link {% if request.resolver_match.url_name in 'site_visit_list site_visit_add site_visit_detail' %}active{% endif %}">
+                            <a href="{% url 'agent:site_visit_list' %}"
+                                class="nav-link {% if request.resolver_match.url_name in 'site_visit_list site_visit_add site_visit_detail' %}active{% endif %}">
                                 <i class="bi bi-calendar-event"></i>
                                 <span>Site Visits</span>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="{% url 'agent:booking_list' %}" class="nav-link {% if request.resolver_match.url_name in 'booking_list booking_add booking_detail' %}active{% endif %}">
+                            <a href="{% url 'agent:booking_list' %}"
+                                class="nav-link {% if request.resolver_match.url_name in 'booking_list booking_add booking_detail' %}active{% endif %}">
                                 <i class="bi bi-cash-stack"></i>
                                 <span>Bookings</span>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="{% url 'agent:commission_list' %}" class="nav-link {% if request.resolver_match.url_name in 'commission_list commission_detail' %}active{% endif %}">
+                            <a href="{% url 'agent:commission_list' %}"
+                                class="nav-link {% if request.resolver_match.url_name in 'commission_list commission_detail' %}active{% endif %}">
                                 <i class="bi bi-currency-dollar"></i>
                                 <span>Commissions</span>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="{% url 'agent:customer_list' %}" class="nav-link {% if request.resolver_match.url_name in 'customer_list customer_detail' %}active{% endif %}">
+                            <a href="{% url 'agent:customer_list' %}"
+                                class="nav-link {% if request.resolver_match.url_name in 'customer_list customer_detail' %}active{% endif %}">
                                 <i class="bi bi-person-lines-fill"></i>
                                 <span>Customers</span>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="{% url 'agent:document_list' %}" class="nav-link {% if request.resolver_match.url_name in 'document_list document_add' %}active{% endif %}">
+                            <a href="{% url 'agent:document_list' %}"
+                                class="nav-link {% if request.resolver_match.url_name in 'document_list document_add' %}active{% endif %}">
                                 <i class="bi bi-file-earmark"></i>
                                 <span>Documents</span>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="{% url 'agent:communication_list' %}" class="nav-link {% if request.resolver_match.url_name in 'communication_list communication_send message_template_list' %}active{% endif %}">
+                            <a href="{% url 'agent:communication_list' %}"
+                                class="nav-link {% if request.resolver_match.url_name in 'communication_list communication_send message_template_list' %}active{% endif %}">
                                 <i class="bi bi-chat-dots"></i>
                                 <span>Communication</span>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="{% url 'agent:reports' %}" class="nav-link {% if request.resolver_match.url_name == 'reports' %}active{% endif %}">
+                            <a href="{% url 'agent:reports' %}"
+                                class="nav-link {% if request.resolver_match.url_name == 'reports' %}active{% endif %}">
                                 <i class="bi bi-graph-up"></i>
                                 <span>Reports</span>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="{% url 'agent:settings' %}" class="nav-link {% if request.resolver_match.url_name == 'settings' %}active{% endif %}">
+                            <a href="{% url 'agent:settings' %}"
+                                class="nav-link {% if request.resolver_match.url_name == 'settings' %}active{% endif %}">
                                 <i class="bi bi-gear"></i>
                                 <span>Settings</span>
                             </a>
@@ -237,7 +269,7 @@
             <div class="main-content">
                 {% block breadcrumb %}
                 <div class="breadcrumb">
-                    <a href="{% url 'agent:dashboard' %}">Dashboard</a>
+                    <a href="{% url 'agent:dashboard' %}"> >Dashboard </a>
                     {% block breadcrumb_items %}{% endblock %}
                 </div>
                 {% endblock %}

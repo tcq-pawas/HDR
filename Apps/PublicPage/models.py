@@ -304,7 +304,7 @@ class Property(models.Model):
     seo_title = models.CharField(max_length=200, null=True, blank=True, help_text="SEO Title")
     seo_description = models.TextField(null=True, blank=True, help_text="SEO Description")
     keywords = models.CharField(max_length=500, null=True, blank=True, help_text="Keywords (comma-separated)")
-    property_highlights = models.TextField(null=True, blank=True, help_text="Property Highlights")
+    property_highlights = models.TextField(null=True, blank=True, default='')
     
     # ==================== House/Villa-Specific Fields ====================
     bhk_configuration = models.CharField(max_length=20, null=True, blank=True, help_text="BHK Configuration (e.g., 2BHK, 3BHK)")
@@ -672,4 +672,4 @@ class WebsiteEnquiry(models.Model):
         return badge_map.get(self.status, 'bg-secondary')
 
     def __str__(self):
-        return f"{self.enquiry_id} — {self.full_name} ({self.get_status_display()})"
+        return f"{self.enquiry_id} — {self.full_name} ({self.get_status_display()})"

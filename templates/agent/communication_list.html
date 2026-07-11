@@ -1,7 +1,17 @@
 {% extends "agent/agent_base.html" %}
 {% load static %}
 
-{% block title %}Communication History | HeyDay Realty{% endblock %}
+{% block title %}Email Communication | HeyDay Realty{% endblock %}
+
+{% block breadcrumb %}
+<div class="breadcrumb">
+    <a href="{% url 'agent:dashboard' %}">Dashboard</a>
+    <i class="bi bi-chevron-right" style="font-size: 0.7rem; color: #94a3b8;"></i>
+    <span>Communication</span>
+</div>
+{% endblock %}
+
+{% block header_title %}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/agent/communication_list.css' %}">
@@ -9,65 +19,170 @@
 
 {% block content %}
 <div class="communication-container">
-    <!-- Header -->
-    <div class="page-header">
-        <h1>Communication History</h1>
-        <a href="{% url 'agent:communication_send' %}" class="btn btn-primary">
-            <i class="bi bi-plus-lg"></i> Send Message
+
+    <!-- Page Header -->
+    <div class="comm-page-header">
+        <div>
+            <h1><i class="bi bi-envelope"></i> Email Communication</h1>
+            <p>Manage all emails sent to customers regarding your properties.</p>
+        </div>
+        <a href="{% url 'agent:communication_send' %}" class="btn-compose">
+            <i class="bi bi-plus-lg"></i> Compose Email
         </a>
     </div>
 
+    <!-- Stats Cards -->
+    <div class="comm-stats-grid">
+        <div class="comm-stat-card">
+            <div class="comm-stat-icon icon-sent">
+                <i class="bi bi-send"></i>
+            </div>
+            <div class="comm-stat-content">
+                <div class="comm-stat-label">Total Emails Sent</div>
+                <div class="comm-stat-value">{{ stats.total_sent|default:0 }}</div>
+                <div class="comm-stat-trend positive">{{ stats.sent_change|default:"18.5%" }} from last month</div>
+            </div>
+        </div>
+
+        <div class="comm-stat-card">
+            <div class="comm-stat-icon icon-delivered">
+                <i class="bi bi-envelope-check"></i>
+            </div>
+            <div class="comm-stat-content">
+                <div class="comm-stat-label">Delivered Emails</div>
+                <div class="comm-stat-value">{{ stats.delivered|default:0 }}</div>
+                <div class="comm-stat-trend positive">{{ stats.delivery_rate|default:"87.5%" }} Delivery Rate</div>
+            </div>
+        </div>
+
+        <div class="comm-stat-card">
+            <div class="comm-stat-icon icon-opened">
+                <i class="bi bi-eye"></i>
+            </div>
+            <div class="comm-stat-content">
+                <div class="comm-stat-label">Opened Emails</div>
+                <div class="comm-stat-value">{{ stats.opened|default:0 }}</div>
+                <div class="comm-stat-trend positive">{{ stats.open_rate|default:"53.1%" }} Open Rate</div>
+            </div>
+        </div>
+
+        <div class="comm-stat-card">
+            <div class="comm-stat-icon icon-failed">
+                <i class="bi bi-exclamation-triangle"></i>
+            </div>
+            <div class="comm-stat-content">
+                <div class="comm-stat-label">Failed Emails</div>
+                <div class="comm-stat-value">{{ stats.failed|default:0 }}</div>
+                <div class="comm-stat-trend negative">{{ stats.failure_rate|default:"6.3%" }} Failure Rate</div>
+            </div>
+        </div>
+    </div>
+
     <!-- Filters -->
-    <div class="filters-bar">
-        <select name="type" onchange="location.href='?type='+this.value">
-            <option value="">All Types</option>
-            <option value="whatsapp" {% if type_filter == 'whatsapp' %}selected{% endif %}>WhatsApp</option>
-            <option value="email" {% if type_filter == 'email' %}selected{% endif %}>Email</option>
-            <option value="sms" {% if type_filter == 'sms' %}selected{% endif %}>SMS</option>
-            <option value="call" {% if type_filter == 'call' %}selected{% endif %}>Phone Call</option>
+    <div class="comm-filters-bar">
+        <div class="comm-search-box">
+            <i class="bi bi-search"></i>
+            <input type="text" id="commSearchInput" placeholder="Search by customer name or email...">
+        </div>
+
+        <select name="property" class="comm-filter-select" onchange="location.href='?property='+this.value">
+            <option value="">All Properties</option>
+            {% for property in properties %}
+            <option value="{{ property.id }}" {% if property_filter == property.id|stringformat:"s" %}selected{% endif %}>{{ property.title }}</option>
+            {% endfor %}
         </select>
+
+        <select name="status" class="comm-filter-select" onchange="location.href='?status='+this.value">
+            <option value="">All Status</option>
+            <option value="delivered" {% if status_filter == 'delivered' %}selected{% endif %}>Delivered</option>
+            <option value="opened" {% if status_filter == 'opened' %}selected{% endif %}>Opened</option>
+            <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+            <option value="failed" {% if status_filter == 'failed' %}selected{% endif %}>Failed</option>
+        </select>
+
+        <button class="comm-date-range-btn">
+            <i class="bi bi-calendar3"></i>
+            <span>{{ date_range|default:"Select Date Range" }}</span>
+        </button>
+
+        <a href="{% url 'agent:communication_list' %}" class="comm-reset-btn">
+            <i class="bi bi-arrow-clockwise"></i> Reset
+        </a>
     </div>
 
     <!-- Communications Table -->
-    <div class="communications-table">
-        <table>
+    <div class="comm-table-wrapper">
+        <table class="comm-table">
             <thead>
                 <tr>
-                    <th>Type</th>
-                    <th>Recipient</th>
+                    <th>Customer</th>
+                    <th>Email Address</th>
+                    <th>Property</th>
                     <th>Subject</th>
-                    <th>Message Preview</th>
+                    <th>Sent On <i class="bi bi-arrow-down"></i></th>
                     <th>Status</th>
-                    <th>Sent At</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% if communications %}
-                    {% for communication in communications %}
-                        <tr>
-                            <td><span class="type-badge type-{{ communication.communication_type }}">{{ communication.get_communication_type_display }}</span></td>
-                            <td>{{ communication.recipient }}</td>
-                            <td>{{ communication.subject|truncatewords:5|default:"N/A" }}</td>
-                            <td>{{ communication.message|truncatewords:10 }}</td>
-                            <td><span class="status-badge status-{{ communication.status }}">{{ communication.get_status_display }}</span></td>
-                            <td>{{ communication.sent_at|date:"M d, Y H:i" }}</td>
-                        </tr>
-                    {% endfor %}
+                {% for communication in communications %}
+                <tr class="comm-row"
+                    data-comm-id="{{ communication.id }}"
+                    data-customer-name="{{ communication.recipient_name|default:communication.recipient }}"
+                    data-customer-email="{{ communication.recipient }}"
+                    data-customer-url="{% if communication.lead_id %}{% url 'agent:lead_detail' communication.lead_id %}{% endif %}"
+                    data-property-title="{{ communication.property.title|default:'' }}"
+                    data-property-category="{{ communication.property.category|default:'' }}"
+                    data-property-location="{{ communication.property.location|default:'' }}"
+                    data-property-image="{% if communication.property.featured_image %}{{ communication.property.featured_image.url }}{% endif %}"
+                    data-subject="{{ communication.subject|default:'N/A' }}"
+                    data-sent-on="{{ communication.sent_at|date:'d M Y, h:i A' }}"
+                    data-status="{{ communication.get_status_display }}"
+                    data-status-class="status-{{ communication.status }}"
+                    data-message="{{ communication.message|default:'' }}"
+                    data-attachment-name="{{ communication.attachment_name|default:'' }}"
+                    data-attachment-size="{{ communication.attachment_size|default:'' }}"
+                    data-attachment-url="{% if communication.attachment %}{{ communication.attachment.url }}{% endif %}">
+                    <td>
+                        <div class="comm-customer-cell">
+                            <div class="comm-avatar">{{ communication.recipient_name|default:communication.recipient|slice:":1"|upper }}</div>
+                            <span>{{ communication.recipient_name|default:communication.recipient }}</span>
+                        </div>
+                    </td>
+                    <td>{{ communication.recipient }}</td>
+                    <td>
+                        <div class="comm-property-cell">
+                            <strong>{{ communication.property.title|default:"N/A" }}</strong>
+                            <span>{{ communication.property.category|default:"" }}</span>
+                        </div>
+                    </td>
+                    <td>{{ communication.subject|truncatewords:5|default:"N/A" }}</td>
+                    <td>{{ communication.sent_at|date:"d M Y" }}<br><span class="comm-time">{{ communication.sent_at|date:"h:i A" }}</span></td>
+                    <td><span class="comm-status-badge status-{{ communication.status }}">{{ communication.get_status_display }}</span></td>
+                    <td>
+                        <div class="comm-actions">
+                            <button class="comm-action-btn comm-view-btn" title="View"><i class="bi bi-eye"></i></button>
+                            <button class="comm-action-btn" title="More"><i class="bi bi-three-dots-vertical"></i></button>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
                 {% else %}
-                    <tr>
-                        <td colspan="6">
-                            <div class="empty-state">
-                                <div class="empty-state-icon">
-                                    <i class="bi bi-chat-dots"></i>
-                                </div>
-                                <h3>No Communications Yet</h3>
-                                <p>Communication history will appear here when you send messages to leads or customers.</p>
-                                <a href="{% url 'agent:communication_send' %}" class="btn btn-primary">
-                                    <i class="bi bi-plus-lg"></i> Send Your First Message
-                                </a>
+                <tr>
+                    <td colspan="7">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <i class="bi bi-chat-dots"></i>
                             </div>
-                        </td>
-                    </tr>
+                            <h3>No Communications Yet</h3>
+                            <p>Communication history will appear here when you send messages to leads or customers.</p>
+                            <a href="{% url 'agent:communication_send' %}" class="btn btn-primary">
+                                <i class="bi bi-plus-lg"></i> Send Your First Message
+                            </a>
+                        </div>
+                    </td>
+                </tr>
                 {% endif %}
             </tbody>
         </table>
@@ -75,27 +190,169 @@
 
     <!-- Pagination -->
     {% if page_obj.has_other_pages %}
-    <nav aria-label="Page navigation" style="margin-top: 1rem;">
-        <ul class="pagination">
+    <div class="comm-pagination">
+        <span class="comm-pagination-info">Showing {{ page_obj.start_index }} to {{ page_obj.end_index }} of {{ page_obj.paginator.count }} emails</span>
+        <div class="comm-pagination-controls">
             {% if page_obj.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if type_filter %}&type={{ type_filter }}{% endif %}">Previous</a>
-                </li>
+            <a href="?page={{ page_obj.previous_page_number }}" class="comm-page-btn"><i class="bi bi-chevron-left"></i></a>
             {% endif %}
             {% for num in page_obj.paginator.page_range %}
                 {% if page_obj.number == num %}
-                    <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
-                {% else %}
-                    <li class="page-item"><a class="page-link" href="?page={{ num }}{% if type_filter %}&type={{ type_filter }}{% endif %}">{{ num }}</a></li>
+                <span class="comm-page-btn active">{{ num }}</span>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <a href="?page={{ num }}" class="comm-page-btn">{{ num }}</a>
                 {% endif %}
             {% endfor %}
             {% if page_obj.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if type_filter %}&type={{ type_filter }}{% endif %}">Next</a>
-                </li>
+            <a href="?page={{ page_obj.next_page_number }}" class="comm-page-btn"><i class="bi bi-chevron-right"></i></a>
             {% endif %}
-        </ul>
-    </nav>
+        </div>
+    </div>
     {% endif %}
 </div>
+
+<!-- Email Detail Side Panel -->
+<div class="email-detail-panel" id="emailDetailPanel">
+    <div class="email-detail-header">
+        <h3>Email Details</h3>
+        <button class="email-detail-close" id="closeEmailDetail"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="email-detail-body">
+        <!-- Customer -->
+        <div class="ed-customer">
+            <div class="ed-avatar" id="edAvatar"></div>
+            <div class="ed-customer-info">
+                <div class="ed-customer-name" id="edCustomerName"></div>
+                <div class="ed-customer-email" id="edCustomerEmail"></div>
+                <a href="#" class="ed-profile-link" id="edProfileLink" target="_blank">
+                    View Customer Profile <i class="bi bi-box-arrow-up-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Property -->
+        <div class="ed-property" id="edPropertyBlock">
+            <img src="" alt="" class="ed-property-img" id="edPropertyImg">
+            <div class="ed-property-info">
+                <div class="ed-property-title" id="edPropertyTitle"></div>
+                <div class="ed-property-category" id="edPropertyCategory"></div>
+                <div class="ed-property-location"><i class="bi bi-geo-alt"></i> <span id="edPropertyLocation"></span></div>
+            </div>
+        </div>
+
+        <!-- Meta rows -->
+        <div class="ed-meta-row">
+            <span class="ed-meta-label">Subject</span>
+            <span class="ed-meta-value" id="edSubject"></span>
+        </div>
+        <div class="ed-meta-row">
+            <span class="ed-meta-label">Sent On</span>
+            <span class="ed-meta-value" id="edSentOn"></span>
+        </div>
+        <div class="ed-meta-row">
+            <span class="ed-meta-label">Status</span>
+            <span class="ed-meta-value"><span class="comm-status-badge" id="edStatus"></span></span>
+        </div>
+
+        <!-- Email content -->
+        <div class="ed-section-title">Email Content</div>
+        <div class="ed-email-content" id="edMessage"></div>
+
+        <!-- Attachment -->
+        <div class="ed-attachment-block" id="edAttachmentBlock">
+            <div class="ed-section-title">Attachment (1)</div>
+            <a href="#" class="ed-attachment" id="edAttachmentLink" target="_blank">
+                <div class="ed-attachment-icon"><i class="bi bi-file-earmark-pdf-fill"></i></div>
+                <div class="ed-attachment-info">
+                    <div class="ed-attachment-name" id="edAttachmentName"></div>
+                    <div class="ed-attachment-size" id="edAttachmentSize"></div>
+                </div>
+                <i class="bi bi-download"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer actions -->
+    <div class="ed-footer">
+        <a href="#" class="ed-btn ed-btn-outline" id="edReplyBtn"><i class="bi bi-reply"></i> Reply</a>
+        <a href="#" class="ed-btn ed-btn-solid" id="edSendBtn"><i class="bi bi-send"></i> Send Email</a>
+    </div>
+</div>
+<div class="email-detail-overlay" id="emailDetailOverlay"></div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const panel = document.getElementById('emailDetailPanel');
+    const overlay = document.getElementById('emailDetailOverlay');
+    const closeBtn = document.getElementById('closeEmailDetail');
+    const viewBtns = document.querySelectorAll('.comm-view-btn');
+
+    function openPanel(row) {
+        const d = row.dataset;
+
+        document.getElementById('edAvatar').textContent = (d.customerName || d.customerEmail || '?').charAt(0).toUpperCase();
+        document.getElementById('edCustomerName').textContent = d.customerName || 'N/A';
+        document.getElementById('edCustomerEmail').textContent = d.customerEmail || '';
+
+        const profileLink = document.getElementById('edProfileLink');
+        if (d.customerUrl) {
+            profileLink.href = d.customerUrl;
+            profileLink.style.display = 'inline-flex';
+        } else {
+            profileLink.style.display = 'none';
+        }
+
+        const propertyBlock = document.getElementById('edPropertyBlock');
+        if (d.propertyTitle) {
+            propertyBlock.style.display = 'flex';
+            document.getElementById('edPropertyImg').src = d.propertyImage || '';
+            document.getElementById('edPropertyTitle').textContent = d.propertyTitle;
+            document.getElementById('edPropertyCategory').textContent = d.propertyCategory || '';
+            document.getElementById('edPropertyLocation').textContent = d.propertyLocation || '';
+        } else {
+            propertyBlock.style.display = 'none';
+        }
+
+        document.getElementById('edSubject').textContent = d.subject || 'N/A';
+        document.getElementById('edSentOn').textContent = d.sentOn || '';
+
+        const statusEl = document.getElementById('edStatus');
+        statusEl.textContent = d.status || '';
+        statusEl.className = 'comm-status-badge ' + (d.statusClass || '');
+
+        document.getElementById('edMessage').innerHTML = (d.message || 'No content available.').replace(/\n/g, '<br>');
+
+        const attachBlock = document.getElementById('edAttachmentBlock');
+        if (d.attachmentName) {
+            attachBlock.style.display = 'block';
+            document.getElementById('edAttachmentName').textContent = d.attachmentName;
+            document.getElementById('edAttachmentSize').textContent = d.attachmentSize || '';
+            document.getElementById('edAttachmentLink').href = d.attachmentUrl || '#';
+        } else {
+            attachBlock.style.display = 'none';
+        }
+
+        panel.classList.add('open');
+        overlay.classList.add('show');
+    }
+
+    viewBtns.forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            openPanel(this.closest('.comm-row'));
+        });
+    });
+
+    function closePanel() {
+        panel.classList.remove('open');
+        overlay.classList.remove('show');
+    }
+
+    closeBtn.addEventListener('click', closePanel);
+    overlay.addEventListener('click', closePanel);
+});
+</script>
 {% endblock %}
