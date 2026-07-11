@@ -17,6 +17,7 @@ urlpatterns = [
     
     # Lead Management
     path('leads/', views.lead_list, name='lead_list'),
+    path('lead/add/', views.lead_add, name='lead_add'),
     path('lead/<int:pk>/', views.lead_detail, name='lead_detail'),
     path('lead/<int:pk>/edit/', views.lead_edit, name='lead_edit'),
     path('lead/<int:pk>/followup/add/', views.lead_add_followup, name='lead_add_followup'),

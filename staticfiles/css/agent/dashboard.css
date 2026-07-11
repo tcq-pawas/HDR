@@ -2,10 +2,10 @@
 
 :root {
     --primary-color: #0abfa0;
-    --sidebar-bg: #096b3d;
+    --sidebar-bg: #5ecdc0;
     --sidebar-active-bg: #ffffff;
-    --sidebar-active-text: #065649;
-    --sidebar-text: #2c3e50;
+    --sidebar-active-text: #0d9488;
+    --sidebar-text: #ffffff;
 
     --bg-white: #ffffff;
     --bg-light: #f9f9fb;
@@ -132,7 +132,7 @@ body {
     position: relative;
     color: var(--text-gray);
     transition: var(--transition);
-    
+
 }
 
 .icon-btn:hover {
@@ -229,7 +229,7 @@ body {
     align-items: center;
     gap: 12px;
     text-decoration: none;
-    color: #2c3e50;
+    color: #ffffff;
     font-size: 20px;
     font-weight: 700;
     margin-bottom: 30px;
@@ -246,12 +246,20 @@ body {
     gap: 12px;
     padding: 10px 0;
     margin-bottom: 20px;
-    color: white;
+    color: var(--sidebar-text);
 }
 
 .sidebar-profile .profile-avatar {
-    background: white;
-    color: var(--sidebar-bg);
+    background: var(--primary-color);
+    color: white;
+}
+
+.sidebar-profile .profile-name {
+    color: #ffffff;
+}
+
+.sidebar-profile .profile-role {
+    color: rgba(255, 255, 255, 0.8);
 }
 
 .sidebar-nav .nav-list {
@@ -269,7 +277,7 @@ body {
     align-items: center;
     gap: 15px;
     padding: 12px 20px;
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--sidebar-text);
     text-decoration: none;
     font-weight: 500;
     border-radius: 8px;

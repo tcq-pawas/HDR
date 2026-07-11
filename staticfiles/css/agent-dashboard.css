@@ -2,9 +2,9 @@
 
 :root {
     --primary-color: #0abfa0;
-    --sidebar-bg: #11cdad;
+    --sidebar-bg: #5ecdc0;
     --sidebar-active-bg: #ffffff;
-    --sidebar-active-text: #11cdad;
+    --sidebar-active-text: #0d9488;
     --sidebar-text: #ffffff;
 
     --bg-white: #ffffff;
@@ -211,7 +211,7 @@ body {
     align-items: center;
     gap: 12px;
     text-decoration: none;
-    color: white;
+    color: #ffffff;
     font-size: 20px;
     font-weight: 700;
     margin-bottom: 30px;
@@ -228,12 +228,20 @@ body {
     gap: 12px;
     padding: 10px 0;
     margin-bottom: 20px;
-    color: white;
+    color: var(--sidebar-text);
 }
 
 .sidebar-profile .profile-avatar {
-    background: white;
-    color: var(--sidebar-bg);
+    background: var(--primary-color);
+    color: white;
+}
+
+.sidebar-profile .profile-name {
+    color: #ffffff;
+}
+
+.sidebar-profile .profile-role {
+    color: rgba(255, 255, 255, 0.8);
 }
 
 .sidebar-nav .nav-list {
@@ -251,7 +259,7 @@ body {
     align-items: center;
     gap: 15px;
     padding: 12px 20px;
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--sidebar-text);
     text-decoration: none;
     font-weight: 500;
     border-radius: 8px;
@@ -272,10 +280,16 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-    color: white;
+    color: var(--sidebar-text);
     padding: 10px 20px;
     text-decoration: none;
     margin-top: auto;
+    opacity: 0.8;
+}
+
+.logout-btn:hover {
+    opacity: 1;
+    color: #e74c3c;
 }
 
 /* Main Layout */
