@@ -1,4 +1,5 @@
 {% load static %}
+{% load custom_tags %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -132,20 +133,16 @@
       {% if user.is_authenticated %}
         <div class="d-flex align-items-center gap-2 mt-2 mt-lg-0 ms-lg-2">
           <div class="dropdown">
-            <button class="btn btn-outline-success d-flex align-items-center gap-2 px-3 py-2 rounded-pill dropdown-toggle" type="button" data-bs-toggle="dropdown">
-              {% load custom_tags %}
-              {% get_profile_image user as profile_image %}
-              {% if profile_image %}
-                <img src="{{ profile_image }}" alt="Profile" class="rounded-circle" style="width:32px; height:32px; object-fit:cover;">
+            <button class="btn btn-success d-flex align-items-center gap-2 px-3 py-2 rounded-pill dropdown-toggle" type="button" data-bs-toggle="dropdown" style="background: linear-gradient(135deg, #198754 0%, #20c997 100%); border: none; box-shadow: 0 2px 8px rgba(25, 135, 84, 0.3);">
+              {% if user.agent_profile and user.agent_profile.profile_image and user.agent_profile.profile_image.name %}
+                <img src="{{ user.agent_profile.profile_image.url }}" alt="Profile" class="rounded-circle" style="width:44px; height:44px; object-fit:cover; border:3px solid #fff; flex-shrink:0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
               {% else %}
-                <div class="rounded-circle bg-success d-flex align-items-center justify-content-center text-white" style="width:32px; height:32px; font-size:14px;">
-                  {{ user.first_name|first|upper }}
-                </div>
+                <img src="https://ui-avatars.com/api/?name={% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}&background=198754&color=fff&size=44&bold=true" alt="Profile" class="rounded-circle" style="width:44px; height:44px; object-fit:cover; border:3px solid #fff; flex-shrink:0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
               {% endif %}
-              <span class="fw-semibold">{{ user.first_name }}</span>
+              <span class="fw-semibold text-white">{% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}</span>
             </button>
             <ul class="dropdown-menu dropdown-menu-end shadow">
-              <li><a class="dropdown-item" href="{% get_profile_url user %}">My Profile</a></li>
+              <li><a class="dropdown-item" href="/dashboard/">My Dashboard</a></li>
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item text-danger" href="{% url 'auth:logout' %}">Logout</a></li>
             </ul>
