@@ -106,8 +106,8 @@
                     <div class="header-item">
                         <button class="profile-toggle" id="profileToggle">
                             <div class="profile-avatar">
-                                {% if agent_profile.profile_image %}
-                                <img src="{{ agent_profile.profile_image.url }}" alt="Profile">
+                                {% if user.agent_profile and user.agent_profile.profile_image and user.agent_profile.profile_image.name %}
+                                <img src="{{ user.agent_profile.profile_image.url }}" alt="Profile" style="width:100%; height:100%; object-fit:cover;">
                                 {% else %}
                                 <div class="avatar-placeholder">
                                     {{ user.first_name|default:user.username|slice:":1"|upper }}
@@ -148,7 +148,7 @@
                 </a>
 
                 <!-- Profile -->
-                <div class="sidebar-profile">
+                <!-- <div class="sidebar-profile">
                     <div class="profile-avatar">
                         {% if agent_profile.profile_image %}
                         <img src="{{ agent_profile.profile_image.url }}" alt="Profile">
@@ -160,7 +160,7 @@
                         <span class="profile-name">{{ user.first_name|default:user.username }}</span>
                         <span class="profile-role">Agent</span>
                     </div>
-                </div>
+                </div> -->
 
                 <nav class="sidebar-nav">
 
