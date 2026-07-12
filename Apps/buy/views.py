@@ -112,12 +112,21 @@ def property_detail(request, pk):
     is_saved = False
     if request.user.is_authenticated:
         is_saved = SavedProperty.objects.filter(customer=request.user, property=property_obj).exists()
+    
+    # Get similar properties (same category, excluding current property)
+    similar_properties = Property.objects.filter(
+        is_active=True,
+        status='approved',
+        show_to_public=True,
+        category=property_obj.category
+    ).exclude(pk=pk).prefetch_related('images')[:6]
         
     return render(request, 'buy/property_detail.html', {
         'property': property_obj,
         'images': property_obj.images.all(),
         'form': form,
-        'is_saved': is_saved
+        'is_saved': is_saved,
+        'similar_properties': similar_properties
     })
 
 @login_required

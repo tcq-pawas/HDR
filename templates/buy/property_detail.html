@@ -5,47 +5,142 @@
 
 {% block extra_css %}
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background: #FAFAF7;
+        color: #1a2e2a;
+    }
+
     .property-detail-wrapper {
-        padding: 4rem 0;
-        background: var(--cloud-white);
+        background: #FAFAF7;
+        padding: 0;
     }
+
     .property-detail-container {
-        max-width: 1200px;
+        max-width: 1440px;
         margin: 0 auto;
-        padding: 0 1rem;
+        padding: 0 24px;
     }
+
     /* Breadcrumb */
     .breadcrumb-nav {
+        background: #0F6A3C;
+        padding: 12px 24px;
         font-size: 0.9rem;
-        margin-bottom: 2rem;
-        color: var(--text-muted);
+        color: white;
     }
+
     .breadcrumb-nav a {
-        color: var(--emerald);
+        color: white;
         text-decoration: none;
+        opacity: 0.8;
+        transition: opacity 0.2s;
     }
+
     .breadcrumb-nav a:hover {
-        color: var(--gold);
+        opacity: 1;
     }
+
+    .breadcrumb-nav span {
+        margin: 0 8px;
+        opacity: 0.6;
+    }
+
+    .breadcrumb-nav .current {
+        opacity: 1;
+    }
+
+    /* Main Layout */
+    .main-content {
+        display: grid;
+        grid-template-columns: 60% 40%;
+        gap: 24px;
+        padding: 24px 0;
+    }
+
+    /* Cards */
+    .card {
+        background: white;
+        border-radius: 18px;
+        border: 1px solid #EAEAEA;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        padding: 24px;
+        margin-bottom: 24px;
+    }
+
     /* Gallery */
     .gallery-section {
-        background: var(--cloud-white);
-        border-radius: 28px;
+        padding: 0;
         overflow: hidden;
-        margin-bottom: 2.5rem;
-        box-shadow: 0 8px 30px rgba(27,67,50,0.08);
-        border: 1px solid var(--border);
     }
+
     .main-image-container {
         position: relative;
         background: #f5f5f5;
+        border-radius: 18px 18px 0 0;
+        overflow: hidden;
     }
+
     .main-image {
         width: 100%;
-        height: 500px;
+        height: 450px;
         object-fit: cover;
         display: block;
     }
+
+    .posted-badge {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        background: rgba(0,0,0,0.6);
+        color: white;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        backdrop-filter: blur(4px);
+        z-index: 5;
+    }
+
+    .wishlist-btn {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        width: 44px;
+        height: 44px;
+        background: rgba(255,255,255,0.95);
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 1.3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: all 0.2s;
+        color: #6b7a7a;
+    }
+
+    .wishlist-btn:hover {
+        background: #F4B400;
+        color: white;
+        transform: scale(1.05);
+    }
+
+    .wishlist-btn.saved {
+        background: #F4B400;
+        color: white;
+    }
+
     .image-navigation {
         position: absolute;
         top: 50%;
@@ -53,335 +148,719 @@
         width: 100%;
         display: flex;
         justify-content: space-between;
-        padding: 0 1rem;
+        padding: 0 16px;
         z-index: 5;
     }
-    .image-nav-btn {
-        width: 45px;
-        height: 45px;
-        background: rgba(255,255,255,0.9);
+
+    .nav-btn {
+        width: 44px;
+        height: 44px;
+        background: rgba(255,255,255,0.95);
         border: none;
         border-radius: 50%;
         cursor: pointer;
         font-size: 1.2rem;
-        transition: all 0.3s ease;
+        transition: all 0.2s;
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        color: var(--forest);
+        color: #0F6A3C;
         font-weight: 700;
     }
-    .image-nav-btn:hover {
-        background: var(--gold);
-        color: var(--cloud-white);
+
+    .nav-btn:hover {
+        background: #F4B400;
+        color: white;
     }
-    .wishlist-heart {
-        position: absolute;
-        top: 1.5rem;
-        right: 1.5rem;
-        width: 50px;
-        height: 50px;
-        background: var(--cloud-white);
-        border: none;
-        border-radius: 50%;
-        cursor: pointer;
-        font-size: 1.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 10;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        transition: all 0.3s ease;
-        color: var(--text-muted);
-    }
-    .wishlist-heart:hover {
-        background: var(--gold);
-        color: var(--cloud-white);
-        transform: scale(1.1);
-    }
-    .wishlist-heart.saved {
-        background: var(--gold);
-        color: var(--cloud-white);
-    }
+
     .thumbnail-gallery {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-        gap: 0.75rem;
-        padding: 1rem;
-        background: var(--pale);
+        display: flex;
+        gap: 12px;
+        padding: 16px;
+        background: white;
+        border-radius: 0 0 18px 18px;
+        overflow-x: auto;
     }
+
     .thumbnail {
-        aspect-ratio: 1;
+        width: 80px;
+        height: 80px;
         object-fit: cover;
         border-radius: 12px;
         cursor: pointer;
         border: 2px solid transparent;
-        transition: all 0.3s ease;
+        transition: all 0.2s;
+        flex-shrink: 0;
     }
+
     .thumbnail:hover,
     .thumbnail.active {
-        border-color: var(--gold);
-        transform: scale(0.95);
+        border-color: #F4B400;
     }
-    /* Content Grid */
-    .property-info-grid {
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-        gap: 2rem;
-        margin-bottom: 2rem;
+
+    .thumbnail-more {
+        position: relative;
     }
-    .property-details-section {
-        background: var(--cloud-white);
-        padding: 2rem;
-        border-radius: 28px;
-        border: 1px solid var(--border);
-        box-shadow: 0 8px 30px rgba(27,67,50,0.06);
-    }
-    .property-title {
-        font-family: var(--font-heading);
-        font-size: 2.2rem;
-        color: var(--forest);
-        margin-bottom: 1.5rem;
-    }
-    .property-price-section {
-        background: var(--pale);
-        padding: 1.5rem;
-        border-radius: 16px;
-        margin-bottom: 2rem;
-        border-left: 4px solid var(--gold);
-    }
-    .price-display {
-        font-family: var(--font-heading);
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: var(--gold);
-    }
-    .price-total {
-        font-size: 1rem;
-        color: var(--text-mid);
-    }
-    .details-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
-        margin: 2rem 0;
-    }
-    .detail-card {
-        background: var(--cloud-white);
-        padding: 1.25rem;
-        border-radius: 16px;
-        border: 1px solid var(--border);
-        transition: all 0.3s ease;
-    }
-    .detail-card:hover {
-        border-color: var(--gold);
-        box-shadow: 0 4px 12px rgba(27,67,50,0.06);
-    }
-    .detail-label {
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: var(--text-muted);
-        font-weight: 600;
-        margin-bottom: 0.25rem;
-    }
-    .detail-value {
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: var(--forest);
-    }
-    .section-title {
-        font-family: var(--font-heading);
-        font-size: 1.4rem;
-        color: var(--forest);
-        margin: 2rem 0 1rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 2px solid var(--gold);
-    }
-    .description-text {
-        color: var(--text-mid);
-        line-height: 1.8;
-    }
-    .description-text ul {
-        list-style: none;
-        padding: 0;
-    }
-    .description-text li {
-        padding: 0.25rem 0;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    .description-text li::before {
-        content: "✔";
-        color: var(--gold);
-        font-weight: 700;
-    }
-    .btn-map {
-        display: inline-block;
-        padding: 12px 28px;
-        background: var(--gold);
-        color: var(--forest);
-        border-radius: 50px;
-        font-weight: 700;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        border: none;
-        font-size: 0.95rem;
-        margin-top: 0.5rem;
-    }
-    .btn-map:hover {
-        background: #d4931f;
-        transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(233,166,42,0.3);
-    }
-    /* Sidebar */
-    .property-sidebar {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-    }
-    .sidebar-card {
-        background: var(--cloud-white);
-        padding: 2rem;
-        border-radius: 28px;
-        border: 1px solid var(--border);
-        box-shadow: 0 8px 30px rgba(27,67,50,0.06);
-        text-align: center;
-    }
-    .agent-avatar {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, var(--emerald), var(--mid));
+
+    .thumbnail-more::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: rgba(15, 106, 60, 0.7);
+        border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 2rem;
-        color: var(--cloud-white);
-        margin: 0 auto 1rem;
-    }
-    .agent-name {
-        font-weight: 700;
-        font-size: 1.1rem;
-        color: var(--forest);
-    }
-    .agent-title {
-        color: var(--text-muted);
+        color: white;
+        font-weight: 600;
         font-size: 0.9rem;
-        margin-bottom: 1rem;
     }
-    .contact-info-list {
-        text-align: left;
-        margin-top: 1rem;
+
+    /* Features Strip */
+    .features-strip {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 0;
     }
-    .contact-item {
+
+    .feature-item {
+        padding: 20px 16px;
+        text-align: center;
+        border-right: 1px solid #EAEAEA;
+    }
+
+    .feature-item:last-child {
+        border-right: none;
+    }
+
+    .feature-icon {
+        width: 32px;
+        height: 32px;
+        margin: 0 auto 8px;
+        color: #0F6A3C;
+    }
+
+    .feature-title {
+        font-size: 0.75rem;
+        color: #6b7a7a;
+        margin-bottom: 4px;
+        font-weight: 500;
+    }
+
+    .feature-value {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #1a2e2a;
+    }
+
+    /* Section Headings */
+    .section-heading {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #0F6A3C;
+        margin-bottom: 16px;
+    }
+
+    /* About Property */
+    .about-description {
+        color: #3d4f4a;
+        line-height: 1.7;
+        margin-bottom: 20px;
+    }
+
+    .checklist {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .checklist-item {
         display: flex;
         align-items: center;
-        gap: 0.75rem;
-        padding: 0.5rem 0;
-        color: var(--text-mid);
-        font-size: 0.9rem;
-        border-bottom: 1px solid var(--border);
+        gap: 8px;
+        color: #3d4f4a;
+        font-size: 0.95rem;
     }
-    .contact-item:last-child {
+
+    .checklist-item i {
+        color: #0F6A3C;
+        font-size: 1rem;
+    }
+
+    /* Details Table */
+    .details-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .details-table tr:nth-child(even) {
+        background: #f8fafc;
+    }
+
+    .details-table td {
+        padding: 14px 16px;
+        border-bottom: 1px solid #EAEAEA;
+    }
+
+    .details-table tr:last-child td {
         border-bottom: none;
     }
-    .contact-item i {
-        color: var(--gold);
-        width: 20px;
+
+    .table-label {
+        font-weight: 500;
+        color: #6b7a7a;
+        width: 40%;
+    }
+
+    .table-value {
+        font-weight: 600;
+        color: #1a2e2a;
+    }
+
+    /* Amenities */
+    .amenities-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+    }
+
+    .amenity-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 16px;
+        border: 1px solid #EAEAEA;
+        border-radius: 12px;
+        transition: all 0.2s;
+    }
+
+    .amenity-item:hover {
+        border-color: #0F6A3C;
+        background: #f8fafc;
+    }
+
+    .amenity-icon {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 8px;
+        color: #0F6A3C;
+    }
+
+    .amenity-name {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: #1a2e2a;
+    }
+
+    /* Location */
+    .location-address {
+        color: #3d4f4a;
+        margin-bottom: 16px;
+        font-size: 0.95rem;
+    }
+
+    .map-container {
+        width: 100%;
+        height: 300px;
+        border-radius: 18px;
+        overflow: hidden;
+        background: #f5f5f5;
+        position: relative;
+    }
+
+    .map-container iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+
+    .map-button {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        padding: 10px 20px;
+        background: white;
+        border: 1px solid #EAEAEA;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #0F6A3C;
+        cursor: pointer;
+        transition: all 0.2s;
+        z-index: 5;
+    }
+
+    .map-button:hover {
+        background: #0F6A3C;
+        color: white;
+        border-color: #0F6A3C;
+    }
+
+    /* Right Column */
+    .price-card {
+        padding: 24px;
+    }
+
+    .price-badges {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+
+    .price-badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .badge-verified {
+        background: #e8f5e9;
+        color: #0F6A3C;
+    }
+
+    .badge-agent {
+        background: #fff8e1;
+        color: #F4B400;
+    }
+
+    .property-title-large {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1a2e2a;
+        margin-bottom: 8px;
+    }
+
+    .property-location-row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: #1a2e2a;
+        font-size: 0.95rem;
+        margin-bottom: 16px;
+    }
+
+    .price-large {
+        font-family: 'Playfair Display', serif;
+        font-size: 2rem;
+        font-weight: 700;
+        color: #0F6A3C;
+        margin-bottom: 4px;
+    }
+
+    .price-total-text {
+        color: #6b7a7a;
+        font-size: 0.85rem;
+        margin-bottom: 20px;
+    }
+
+    .contact-buttons {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 16px;
+    }
+
+    .btn-primary {
+        flex: 1;
+        padding: 14px 24px;
+        background: #0F6A3C;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: center;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .btn-primary:hover {
+        background: #0a502d;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(15, 106, 60, 0.3);
+    }
+
+    .btn-secondary {
+        flex: 1;
+        padding: 14px 24px;
+        background: white;
+        color: #0F6A3C;
+        border: 1px solid #0F6A3C;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: center;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .btn-secondary:hover {
+        background: #f8fafc;
+        border-color: #0a502d;
+    }
+
+    .action-row {
+        display: flex;
+        gap: 12px;
+        padding-top: 16px;
+        border-top: 1px solid #EAEAEA;
+    }
+
+    .action-link {
+        flex: 1;
+        padding: 10px 16px;
+        border: 1px solid #EAEAEA;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #6b7a7a;
+        text-decoration: none;
+        text-align: center;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .action-link:hover {
+        border-color: #0F6A3C;
+        color: #0F6A3C;
+    }
+
+    /* Agent Card */
+    .agent-card {
         text-align: center;
     }
-    /* Inquiry Form */
-    .inquiry-form-section {
-        background: var(--cloud-white);
-        padding: 2rem;
-        border-radius: 28px;
-        border: 1px solid var(--border);
-        box-shadow: 0 8px 30px rgba(27,67,50,0.06);
+
+    .agent-photo {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #0F6A3C, #1a8a4f);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 12px;
+        color: white;
+        font-size: 2rem;
     }
-    .inquiry-form-section h3 {
-        font-family: var(--font-heading);
+
+    .agent-name-large {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1a2e2a;
+        margin-bottom: 4px;
+    }
+
+    .agent-verified {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: #e8f5e9;
+        color: #0F6A3C;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .agent-rating {
+        color: #F4B400;
+        font-size: 0.9rem;
+        margin-bottom: 16px;
+    }
+
+    .agent-contact {
+        text-align: left;
+        margin-bottom: 16px;
+    }
+
+    .agent-contact-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 0;
+        color: #3d4f4a;
+        font-size: 0.9rem;
+        border-bottom: 1px solid #EAEAEA;
+    }
+
+    .agent-contact-item:last-child {
+        border-bottom: none;
+    }
+
+    .agent-contact-item i {
+        color: #0F6A3C;
+        width: 20px;
+    }
+
+    .agent-buttons {
+        display: flex;
+        gap: 12px;
+    }
+
+    /* Enquiry Form */
+    .enquiry-form-section h3 {
+        font-family: 'Playfair Display', serif;
         font-size: 1.3rem;
-        color: var(--forest);
-        margin-bottom: 1.5rem;
+        font-weight: 600;
+        color: #0F6A3C;
+        margin-bottom: 20px;
     }
+
     .form-group {
-        margin-bottom: 1.25rem;
+        margin-bottom: 16px;
     }
+
     .form-group label {
         display: block;
-        font-weight: 600;
-        color: var(--forest);
-        margin-bottom: 0.4rem;
+        font-weight: 500;
+        color: #1a2e2a;
+        margin-bottom: 8px;
         font-size: 0.9rem;
     }
+
     .form-group input,
-    .form-group textarea {
+    .form-group textarea,
+    .form-group select {
         width: 100%;
-        padding: 0.8rem 1rem;
-        border: 1px solid var(--border);
+        padding: 12px 16px;
+        border: 1px solid #EAEAEA;
         border-radius: 12px;
-        font-family: var(--font-body);
+        font-family: 'Inter', sans-serif;
         font-size: 0.95rem;
-        transition: all 0.3s ease;
-        background: var(--cloud-white);
-        color: var(--text-dark);
+        transition: all 0.2s;
+        background: white;
+        color: #1a2e2a;
     }
+
     .form-group input:focus,
-    .form-group textarea:focus {
+    .form-group textarea:focus,
+    .form-group select:focus {
         outline: none;
-        border-color: var(--gold);
-        box-shadow: 0 0 0 4px rgba(233,166,42,0.1);
+        border-color: #0F6A3C;
+        box-shadow: 0 0 0 3px rgba(15, 106, 60, 0.1);
     }
-    .submit-btn {
+
+    .form-group textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    .submit-btn-full {
         width: 100%;
-        padding: 1rem;
-        background: var(--gold);
-        color: var(--forest);
+        padding: 14px 24px;
+        background: #0F6A3C;
+        color: white;
         border: none;
-        border-radius: 50px;
-        font-weight: 700;
+        border-radius: 12px;
+        font-weight: 600;
         font-size: 1rem;
         cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 16px rgba(233,166,42,0.25);
+        transition: all 0.2s;
     }
-    .submit-btn:hover {
-        background: #d4931f;
+
+    .submit-btn-full:hover {
+        background: #0a502d;
         transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(233,166,42,0.35);
+        box-shadow: 0 4px 12px rgba(15, 106, 60, 0.3);
     }
+
+    .privacy-note {
+        font-size: 0.75rem;
+        color: #6b7a7a;
+        text-align: center;
+        margin-top: 12px;
+    }
+
+    /* Similar Properties */
+    .similar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .view-all-btn {
+        padding: 8px 16px;
+        background: white;
+        border: 1px solid #0F6A3C;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #0F6A3C;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+    }
+
+    .view-all-btn:hover {
+        background: #0F6A3C;
+        color: white;
+    }
+
+    .similar-scroll {
+        display: flex;
+        gap: 16px;
+        overflow-x: auto;
+        padding-bottom: 8px;
+    }
+
+    .similar-card {
+        min-width: 280px;
+        background: white;
+        border-radius: 18px;
+        border: 1px solid #EAEAEA;
+        overflow: hidden;
+        transition: all 0.2s;
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .similar-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+
+    .similar-image {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+        position: relative;
+    }
+
+    .similar-content {
+        padding: 16px;
+    }
+
+    .similar-price {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #0F6A3C;
+        margin-bottom: 4px;
+    }
+
+    .similar-price-label {
+        font-size: 0.75rem;
+        color: #6b7a7a;
+        margin-bottom: 8px;
+    }
+
+    .similar-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1a2e2a;
+        margin-bottom: 8px;
+        line-height: 1.4;
+    }
+
+    .similar-location {
+        font-size: 0.85rem;
+        color: #6b7a7a;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .similar-view-btn {
+        width: 100%;
+        padding: 10px 16px;
+        background: #0F6A3C;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .similar-view-btn:hover {
+        background: #0a502d;
+    }
+
     /* Responsive */
-    @media (max-width: 992px) {
-        .property-info-grid {
+    @media (max-width: 1024px) {
+        .main-content {
             grid-template-columns: 1fr;
         }
-        .details-grid {
-            grid-template-columns: 1fr;
+
+        .features-strip {
+            grid-template-columns: repeat(3, 1fr);
         }
-        .main-image {
-            height: 400px;
+
+        .feature-item:nth-child(3),
+        .feature-item:nth-child(6) {
+            border-right: none;
+        }
+
+        .amenities-grid {
+            grid-template-columns: repeat(2, 1fr);
         }
     }
+
     @media (max-width: 768px) {
-        .property-detail-wrapper {
-            padding: 2rem 0;
+        .property-detail-container {
+            padding: 0 16px;
         }
-        .property-title {
-            font-size: 1.8rem;
+
+        .main-content {
+            gap: 16px;
+            padding: 16px 0;
         }
-        .price-display {
-            font-size: 2rem;
+
+        .card {
+            padding: 16px;
+            margin-bottom: 16px;
         }
+
         .main-image {
             height: 300px;
         }
-        .thumbnail-gallery {
-            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+
+        .features-strip {
+            grid-template-columns: repeat(2, 1fr);
         }
-        .property-details-section,
-        .sidebar-card,
-        .inquiry-form-section {
-            padding: 1.5rem;
+
+        .feature-item:nth-child(2),
+        .feature-item:nth-child(4) {
+            border-right: none;
+        }
+
+        .checklist {
+            grid-template-columns: 1fr;
+        }
+
+        .amenities-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .contact-buttons {
+            flex-direction: column;
+        }
+
+        .similar-scroll {
+            flex-direction: column;
+        }
+
+        .similar-card {
+            min-width: 100%;
         }
     }
 </style>
@@ -389,194 +868,342 @@
 
 {% block content %}
 <div class="property-detail-wrapper">
-    <div class="property-detail-container">
-        <!-- Breadcrumb -->
-        <div class="breadcrumb-nav">
-            <a href="{% url 'public:home' %}">Home</a> &gt;
-            <a href="{% url 'buy:property_search' %}">Buy Property</a> &gt;
-            <span>{{ property.title }}</span>
+    <!-- Breadcrumb - Full Width -->
+    <div class="breadcrumb-nav">
+        <div class="property-detail-container">
+            <a href="{% url 'public:home' %}">Home</a>
+            <span>&gt;</span>
+            <a href="{% url 'buy:property_search' %}">Buy</a>
+            <span>&gt;</span>
+            <a href="#">Agricultural Land</a>
+            <span>&gt;</span>
+            <span class="current">{{ property.title }}</span>
         </div>
+    </div>
 
-        <!-- Image Gallery -->
-        <div class="gallery-section">
-            <div class="main-image-container">
-                {% if property.images.all %}
-                    <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}" class="main-image" id="mainImage">
+    <div class="property-detail-container">
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Left Column (60%) -->
+            <div class="left-column">
+                <!-- Property Gallery -->
+                <div class="card gallery-section">
+                    <div class="main-image-container">
+                        {% if property.featured_image %}
+                            <img src="{{ property.featured_image.url }}" alt="{{ property.title }}" class="main-image" id="mainImage">
+                        {% elif property.images.all %}
+                            <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}" class="main-image" id="mainImage">
+                            {% if property.images.count > 1 %}
+                                <div class="image-navigation">
+                                    <button class="nav-btn" onclick="prevImage()">&lt;</button>
+                                    <button class="nav-btn" onclick="nextImage()">&gt;</button>
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            <div style="width:100%; height:450px; background:#f5f5f5; display:flex; align-items:center; justify-content:center; color:#999;">
+                                <i class="bi bi-image" style="font-size:4rem;"></i>
+                            </div>
+                        {% endif %}
+
+                        <div class="posted-badge">Posted 1 day ago</div>
+
+                        <!-- Wishlist Button -->
+                        {% if user.is_authenticated %}
+                            <form method="post" style="display:inline;" action="{% url 'buy:save_property' property.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="wishlist-btn {% if is_saved %}saved{% endif %}" title="Add to Wishlist">
+                                    <i class="bi bi-heart-fill"></i>
+                                </button>
+                            </form>
+                        {% else %}
+                            <button class="wishlist-btn" title="Login to save" onclick="alert('Please login to save properties')">
+                                <i class="bi bi-heart"></i>
+                            </button>
+                        {% endif %}
+                    </div>
+
+                    <!-- Thumbnail Gallery -->
                     {% if property.images.count > 1 %}
-                        <div class="image-navigation">
-                            <button class="image-nav-btn" onclick="prevImage()">&lt;</button>
-                            <button class="image-nav-btn" onclick="nextImage()">&gt;</button>
+                        <div class="thumbnail-gallery">
+                            {% for image in property.images.all %}
+                                <img src="{{ image.image.url }}" alt="Thumbnail" class="thumbnail {% if forloop.first %}active{% endif %}" data-index="{{ forloop.counter0 }}" onclick="changeImage(this.src, this.dataset.index)">
+                            {% endfor %}
+                            {% if property.images.count > 5 %}
+                                <div class="thumbnail thumbnail-more" style="background-image: url('{{ property.images.5.image.url }}');">
+                                    +{{ property.images.count|add:"-5" }}
+                                </div>
+                            {% endif %}
                         </div>
                     {% endif %}
-                {% else %}
-                    <div style="width:100%; height:500px; background:#f5f5f5; display:flex; align-items:center; justify-content:center; color:#999;">
-                        <i class="bi bi-image" style="font-size:4rem;"></i>
-                    </div>
-                {% endif %}
-
-                <!-- Wishlist Button -->
-                {% if user.is_authenticated %}
-                    <form method="post" style="display:inline;" action="{% url 'buy:save_property' property.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="wishlist-heart {% if is_saved %}saved{% endif %}" title="Add to Wishlist">
-                            <i class="bi bi-heart-fill"></i>
-                        </button>
-                    </form>
-                {% else %}
-                    <button class="wishlist-heart" title="Login to save" onclick="alert('Please login to save properties')">
-                        <i class="bi bi-heart"></i>
-                    </button>
-                {% endif %}
-            </div>
-
-            <!-- Thumbnail Gallery -->
-            {% if property.images.count > 1 %}
-                <div class="thumbnail-gallery">
-                    {% for image in property.images.all %}
-                        <img src="{{ image.image.url }}" alt="Thumbnail" class="thumbnail {% if forloop.first %}active{% endif %}" data-index="{{ forloop.counter0 }}" onclick="changeImage(this.src, this.dataset.index)">
-                    {% endfor %}
                 </div>
-            {% endif %}
-        </div>
 
-        <!-- Content Grid -->
-        <div class="property-info-grid">
-            <!-- Left Column -->
-            <div>
-                <div class="property-details-section">
-                    <h1 class="property-title">{{ property.title }}</h1>
-
-                    <!-- Price Section -->
-                    <div class="property-price-section">
-                        <div class="price-display">₹{{ property.price|floatformat:0 }}</div>
-                        <div class="price-total">Total Price: ₹{{ property.price|floatformat:0 }}</div>
+                <!-- Property Features Strip -->
+                <div class="card features-strip">
+                    <div class="feature-item">
+                        <i class="bi bi-rulers feature-icon"></i>
+                        <div class="feature-title">Area</div>
+                        <div class="feature-value">{{ property.project_size_acre|default:"N/A" }}</div>
                     </div>
+                    <div class="feature-item">
+                        <i class="bi bi-house feature-icon"></i>
+                        <div class="feature-title">Type</div>
+                        <div class="feature-value">{{ property.category|default:"N/A" }}</div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="bi bi-signpost feature-icon"></i>
+                        <div class="feature-title">Road</div>
+                        <div class="feature-value">{{ property.road_access|default:"N/A" }}</div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="bi bi-grid feature-icon"></i>
+                        <div class="feature-title">Shape</div>
+                        <div class="feature-value">{{ property.land_shape|default:"N/A" }}</div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="bi bi-person-badge feature-icon"></i>
+                        <div class="feature-title">Ownership</div>
+                        <div class="feature-value">{{ property.ownership_type|default:"N/A" }}</div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="bi bi-key feature-icon"></i>
+                        <div class="feature-title">Possession</div>
+                        <div class="feature-value">Ready</div>
+                    </div>
+                </div>
 
-                    <!-- Key Details -->
-                    <div class="details-grid">
-                        <div class="detail-card">
-                            <div class="detail-label">Project Size</div>
-                            <div class="detail-value">{{ property.project_size_acre|default:"N/A" }}</div>
+                <!-- About Property -->
+                <div class="card">
+                    <h2 class="section-heading">About This Property</h2>
+                    <p class="about-description">{{ property.public_description|default:property.description }}</p>
+                    <div class="checklist">
+                        <div class="checklist-item"><i class="bi bi-check-circle-fill"></i> Clear Title Property</div>
+                        <div class="checklist-item"><i class="bi bi-check-circle-fill"></i> Road Connectivity</div>
+                        <div class="checklist-item"><i class="bi bi-check-circle-fill"></i> Water Availability</div>
+                        <div class="checklist-item"><i class="bi bi-check-circle-fill"></i> Fertile Soil</div>
+                        <div class="checklist-item"><i class="bi bi-check-circle-fill"></i> Electricity Available</div>
+                        <div class="checklist-item"><i class="bi bi-check-circle-fill"></i> Peaceful Location</div>
+                    </div>
+                </div>
+
+                <!-- Property Details Table -->
+                <div class="card">
+                    <h2 class="section-heading">Property Details</h2>
+                    <table class="details-table">
+                        <tr>
+                            <td class="table-label">Property ID</td>
+                            <td class="table-value">{{ property.id }}</td>
+                        </tr>
+                        <tr>
+                            <td class="table-label">Type</td>
+                            <td class="table-value">{{ property.category|default:"N/A" }}</td>
+                        </tr>
+                        <tr>
+                            <td class="table-label">Area</td>
+                            <td class="table-value">{{ property.project_size_acre|default:"N/A" }}</td>
+                        </tr>
+                        <tr>
+                            <td class="table-label">Price</td>
+                            <td class="table-value">₹{{ property.price|floatformat:0 }}</td>
+                        </tr>
+                        <tr>
+                            <td class="table-label">Location</td>
+                            <td class="table-value">{{ property.location }}</td>
+                        </tr>
+                        <tr>
+                            <td class="table-label">Ownership</td>
+                            <td class="table-value">{{ property.ownership_type|default:"N/A" }}</td>
+                        </tr>
+                        <tr>
+                            <td class="table-label">Possession</td>
+                            <td class="table-value">Ready to Move</td>
+                        </tr>
+                        <tr>
+                            <td class="table-label">Road Access</td>
+                            <td class="table-value">{{ property.road_access|default:"N/A" }}</td>
+                        </tr>
+                        <tr>
+                            <td class="table-label">Water Source</td>
+                            <td class="table-value">{{ property.water_source|default:"N/A" }}</td>
+                        </tr>
+                        <tr>
+                            <td class="table-label">Soil Type</td>
+                            <td class="table-value">{{ property.soil_type|default:"N/A" }}</td>
+                        </tr>
+                        <tr>
+                            <td class="table-label">Best For</td>
+                            <td class="table-value">Agriculture, Investment</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Amenities -->
+                <div class="card">
+                    <h2 class="section-heading">Amenities & Highlights</h2>
+                    <div class="amenities-grid">
+                        <div class="amenity-item">
+                            <i class="bi bi-signpost-2 amenity-icon"></i>
+                            <span class="amenity-name">Road Connectivity</span>
                         </div>
-                        <div class="detail-card">
-                            <div class="detail-label">Property Type</div>
-                            <div class="detail-value">{{ property.category|default:"N/A" }}</div>
+                        <div class="amenity-item">
+                            <i class="bi bi-droplet-fill amenity-icon"></i>
+                            <span class="amenity-name">Water</span>
                         </div>
-                        <div class="detail-card">
-                            <div class="detail-label">Plot Sizes</div>
-                            <div class="detail-value">{{ property.plot_sizes|default:"N/A" }}</div>
+                        <div class="amenity-item">
+                            <i class="bi bi-lightning-charge amenity-icon"></i>
+                            <span class="amenity-name">Electricity</span>
                         </div>
-                        <div class="detail-card">
-                            <div class="detail-label">Water Source</div>
-                            <div class="detail-value">{{ property.water_source|default:"N/A" }}</div>
+                        <div class="amenity-item">
+                            <i class="bi bi-file-earmark-text amenity-icon"></i>
+                            <span class="amenity-name">Legal Documents</span>
                         </div>
-                        <div class="detail-card">
-                            <div class="detail-label">Road Access</div>
-                            <div class="detail-value">{{ property.road_access|default:"N/A" }}</div>
+                        <div class="amenity-item">
+                            <i class="bi bi-graph-up-arrow amenity-icon"></i>
+                            <span class="amenity-name">High Appreciation</span>
                         </div>
-                        <div class="detail-card">
-                            <div class="detail-label">Registry Status</div>
-                            <div class="detail-value">{{ property.registry_status|default:"Available" }}</div>
+                        <div class="amenity-item">
+                            <i class="bi bi-tree amenity-icon"></i>
+                            <span class="amenity-name">Peaceful Location</span>
+                        </div>
+                        <div class="amenity-item">
+                            <i class="bi bi-flower1 amenity-icon"></i>
+                            <span class="amenity-name">Fertile Soil</span>
+                        </div>
+                        <div class="amenity-item">
+                            <i class="bi bi-basket amenity-icon"></i>
+                            <span class="amenity-name">Suitable for Crops</span>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Location -->
-                    <p style="color: var(--text-mid); font-size:1rem; margin-bottom:2rem;">
-                        <i class="bi bi-geo-alt" style="color: var(--gold); margin-right:0.5rem;"></i>
+                <!-- Location -->
+                <div class="card">
+                    <h2 class="section-heading">Location</h2>
+                    <p class="location-address">
+                        <i class="bi bi-geo-alt-fill" style="color: #0F6A3C; margin-right: 8px;"></i>
                         {{ property.location }}
                     </p>
-
-                    <!-- Description -->
-                    {% if property.public_description %}
-                        <div class="description-section">
-                            <h3 class="section-title">About Property</h3>
-                            <p class="description-text">{{ property.public_description }}</p>
-                        </div>
-                    {% endif %}
-
-                    {% if property.description %}
-                        <div class="description-section">
-                            <h3 class="section-title">Full Details</h3>
-                            <p class="description-text">{{ property.description }}</p>
-                        </div>
-                    {% endif %}
-
-                    <!-- Project Highlights -->
-                    {% if property.project_highlights %}
-                        <div class="description-section">
-                            <h3 class="section-title">Project Highlights</h3>
-                            <div class="description-text">
-                                <ul>
-                                    {% for item in property.project_highlights.splitlines %}
-                                        <li>{{ item }}</li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        </div>
-                    {% endif %}
-
-                    <!-- Additional Info -->
-                    <div class="details-grid" style="margin-top:1rem;">
-                        <div class="detail-card">
-                            <div class="detail-label">Soil Type</div>
-                            <div class="detail-value">{{ property.soil_type|default:"N/A" }}</div>
-                        </div>
-                        <div class="detail-card">
-                            <div class="detail-label">Plantation Type</div>
-                            <div class="detail-value">{{ property.plantation_type|default:"N/A" }}</div>
-                        </div>
-                    </div>
-
-                    <!-- Map Link -->
-                    {% if property.google_map_link %}
-                        <div style="margin-top:1.5rem;">
-                            <a href="{{ property.google_map_link }}" target="_blank" class="btn-map">
-                                <i class="bi bi-map"></i> View on Google Maps
+                    <div class="map-container">
+                        {% if property.google_map_link %}
+                            <iframe src="{{ property.google_map_link }}" allowfullscreen></iframe>
+                            <a href="{{ property.google_map_link }}" target="_blank" class="map-button">
+                                <i class="bi bi-map"></i> Google Maps
                             </a>
-                        </div>
-                    {% endif %}
+                        {% else %}
+                            <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #6b7a7a;">
+                                <i class="bi bi-map" style="font-size: 3rem; margin-right: 12px;"></i>
+                                <span>Map not available</span>
+                            </div>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
 
-            <!-- Right Column - Sidebar -->
-            <div class="property-sidebar">
+            <!-- Right Column (40%) -->
+            <div class="right-column">
+                <!-- Price Card -->
+                <div class="card price-card">
+                    <div class="price-badges">
+                        <span class="price-badge badge-verified">✓ Verified Property</span>
+                        <span class="price-badge badge-agent">✓ Agent Verified</span>
+                    </div>
+                    <h1 class="property-title-large">{{ property.title }}</h1>
+                    <div class="property-location-row">
+                        <i class="bi bi-geo-alt"></i>
+                        {{ property.location }}
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+                        <div style="background: #f8fafc; padding: 12px; border-radius: 12px;">
+                            <div style="font-size: 0.75rem; color: #6b7a7a; margin-bottom: 4px;">Property Type</div>
+                            <div style="font-size: 0.9rem; font-weight: 600; color: #1a2e2a;">{{ property.category|default:"N/A" }}</div>
+                        </div>
+                        <div style="background: #f8fafc; padding: 12px; border-radius: 12px;">
+                            <div style="font-size: 0.75rem; color: #6b7a7a; margin-bottom: 4px;">Area</div>
+                            <div style="font-size: 0.9rem; font-weight: 600; color: #1a2e2a;">{{ property.project_size_acre|default:"N/A" }}</div>
+                        </div>
+                    </div>
+                    <div class="price-large">₹{{ property.price|floatformat:0 }}</div>
+                    <div class="price-total-text">Total Price: ₹{{ property.price|floatformat:0 }}</div>
+                </div>
+
                 <!-- Agent Card -->
-                <div class="sidebar-card">
-                    <div class="agent-avatar">
+                <div class="card agent-card">
+                    <div class="agent-photo">
                         <i class="bi bi-person-fill"></i>
                     </div>
-                    <div class="agent-name">HeyDay Realty</div>
-                    <div class="agent-title">Property Agent</div>
-                    <div class="contact-info-list">
-                        <div class="contact-item">
+                    <h3 class="agent-name-large">HeyDay Realty</h3>
+                    <div class="agent-verified">
+                        <i class="bi bi-check-circle-fill"></i> Verified Agent
+                    </div>
+                    <div class="agent-rating">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        (4.9)
+                    </div>
+                    <div class="agent-contact">
+                        <div class="agent-contact-item">
                             <i class="bi bi-telephone-fill"></i>
                             <span>+91 9506 688 688</span>
                         </div>
-                        <div class="contact-item">
+                        <div class="agent-contact-item">
                             <i class="bi bi-envelope-fill"></i>
                             <span>info@heydayrealty.in</span>
                         </div>
+                        <div class="agent-contact-item">
+                            <i class="bi bi-geo-alt-fill"></i>
+                            <span>Bangalore, Karnataka</span>
+                        </div>
+                    </div>
+                    <div class="agent-buttons">
+                        <a href="tel:+919506688688" class="btn-primary">
+                            <i class="bi bi-telephone-fill"></i> Contact Agent
+                        </a>
+                        <a href="https://wa.me/919506688688" target="_blank" class="btn-secondary">
+                            <i class="bi bi-whatsapp"></i> WhatsApp
+                        </a>
+                    </div>
+                    <div class="action-row">
+                        <a href="#" class="action-link">
+                            <i class="bi bi-share"></i> Share
+                        </a>
+                        <a href="#" class="action-link">
+                            <i class="bi bi-download"></i> Download Brochure
+                        </a>
                     </div>
                 </div>
 
-                <!-- Inquiry Form -->
-                <div class="inquiry-form-section">
-                    <h3>Send Inquiry</h3>
+                <!-- Enquiry Form -->
+                <div class="card enquiry-form-section">
+                    <h3>Request More Information</h3>
                     <form method="post" action="{% url 'buy:send_inquiry' property.id %}">
                         {% csrf_token %}
                         <div class="form-group">
-                            <label for="{{ form.name.id_for_label }}">Your Name</label>
+                            <label for="{{ form.name.id_for_label }}">Name</label>
                             {{ form.name }}
                             {% if form.name.errors %}
                                 <small style="color:#dc3545;">{{ form.name.errors }}</small>
                             {% endif %}
                         </div>
                         <div class="form-group">
-                            <label for="{{ form.email.id_for_label }}">Email Address</label>
+                            <label for="{{ form.phone.id_for_label }}">Phone</label>
+                            <input type="tel" name="phone" id="phone" required placeholder="Enter your phone number">
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.email.id_for_label }}">Email</label>
                             {{ form.email }}
                             {% if form.email.errors %}
                                 <small style="color:#dc3545;">{{ form.email.errors }}</small>
                             {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label for="interested_in">Interested In</label>
+                            <select name="interested_in" id="interested_in">
+                                <option value="buy">Buying Property</option>
+                                <option value="invest">Visit Property</option>
+                                <option value="info">More Information</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="{{ form.message.id_for_label }}">Message</label>
@@ -585,8 +1212,45 @@
                                 <small style="color:#dc3545;">{{ form.message.errors }}</small>
                             {% endif %}
                         </div>
-                        <button type="submit" class="submit-btn">Submit Inquiry</button>
+                        <button type="submit" class="submit-btn-full">Submit Inquiry</button>
+                        <p class="privacy-note">Your information is secure and will not be shared with third parties.</p>
                     </form>
+                </div>
+
+                <!-- Similar Properties -->
+                <div class="card">
+                    <div class="similar-header">
+                        <h2 class="section-heading" style="margin-bottom: 0;">Similar Properties</h2>
+                        <a href="{% url 'buy:property_search' %}" class="view-all-btn">View All</a>
+                    </div>
+                    <div class="similar-scroll">
+                        {% for similar in similar_properties|slice:":3" %}
+                            <a href="{% url 'buy:property_detail' similar.id %}" class="similar-card">
+                                {% if similar.featured_image %}
+                                    <img src="{{ similar.featured_image.url }}" alt="{{ similar.title }}" class="similar-image">
+                                {% elif similar.images.all %}
+                                    <img src="{{ similar.images.first.image.url }}" alt="{{ similar.title }}" class="similar-image">
+                                {% else %}
+                                    <div class="similar-image" style="background: #f5f5f5; display: flex; align-items: center; justify-content: center;">
+                                        <i class="bi bi-image" style="font-size: 2rem; color: #999;"></i>
+                                    </div>
+                                {% endif %}
+                                <div class="similar-content">
+                                    <div class="similar-price">₹{{ similar.price|floatformat:0 }}</div>
+                                    <div class="similar-price-label">Total Price</div>
+                                    <h4 class="similar-title">{{ similar.title }}</h4>
+                                    <div class="similar-location">
+                                        <i class="bi bi-geo-alt"></i> {{ similar.location }}
+                                    </div>
+                                    <button class="similar-view-btn">View Details</button>
+                                </div>
+                            </a>
+                        {% empty %}
+                            <div style="padding: 24px; text-align: center; color: #6b7a7a;">
+                                No similar properties available
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>
@@ -599,11 +1263,14 @@
     const totalImages = images.length;
 
     function changeImage(src, index) {
-        document.getElementById('mainImage').src = src;
-        currentImageIndex = index;
-        document.querySelectorAll('.thumbnail').forEach((thumb, i) => {
-            thumb.classList.toggle('active', i === index);
-        });
+        const mainImage = document.getElementById('mainImage');
+        if (mainImage) {
+            mainImage.src = src;
+            currentImageIndex = index;
+            document.querySelectorAll('.thumbnail').forEach((thumb, i) => {
+                thumb.classList.toggle('active', i === index);
+            });
+        }
     }
 
     function nextImage() {
