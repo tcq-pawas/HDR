@@ -1,7 +1,7 @@
 {% extends "agent/agent_base.html" %}
 {% load static %}
 
-{% block title %}Documents Management | HeyDay Realty{% endblock %}
+{% block title %}Documents Verification | HeyDay Realty{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/agent/document_list.css' %}">
@@ -9,113 +9,237 @@
 
 {% block content %}
 <div class="documents-container">
+
+    <!-- Breadcrumb -->
+    <!-- <nav class="breadcrumb-nav">
+        <a href="{% url 'agent:dashboard' %}">Dashboard</a>
+        <i class="bi bi-chevron-right"></i>
+        <span>Documents</span>
+    </nav> -->
+
     <!-- Header -->
-    <div class="page-header">
-        <h1>Documents Management</h1>
-        <a href="{% url 'agent:document_add' %}" class="btn btn-primary">
-            <i class="bi bi-plus-lg"></i> Upload Document
+    <div class="verification-header">
+        <div>
+            <h1>Documents Verification</h1>
+            <p class="subtitle">Complete your identity and address verification to unlock all agent features.</p>
+        </div>
+
+        {% if verification_status == 'approved' %}
+        <div class="status-banner status-approved">
+            <i class="bi bi-check-circle-fill"></i>
+            <div>
+                <strong>Verification Status: <span>Approved</span></strong>
+                <p>Your account is fully verified.</p>
+            </div>
+        </div>
+        {% elif verification_status == 'rejected' %}
+        <div class="status-banner status-rejected">
+            <i class="bi bi-x-circle-fill"></i>
+            <div>
+                <strong>Verification Status: <span>Rejected</span></strong>
+                <p>{{ agent_profile.verification_remarks|default:"Please re-upload correct documents." }}</p>
+            </div>
+        </div>
+        {% elif verification_status == 'pending' %}
+        <div class="status-banner status-pending">
+            <i class="bi bi-exclamation-circle-fill"></i>
+            <div>
+                <strong>Verification Status: <span>Pending</span></strong>
+                <p>Your documents are under review by admin.</p>
+            </div>
+        </div>
+        {% else %}
+        <div class="status-banner status-not-started">
+            <i class="bi bi-info-circle-fill"></i>
+            <div>
+                <strong>Verification Status: <span>Not Started</span></strong>
+                <p>Upload your documents to begin verification.</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Stepper -->
+    <div class="stepper-card">
+        <div class="stepper">
+            <div class="step {% if id_proof_uploaded %}completed{% else %}active{% endif %}">
+                <div class="step-icon-wrap">
+                    <div class="step-icon"><i class="bi bi-person-vcard"></i></div>
+                    <span class="step-number">1</span>
+                </div>
+                <div class="step-label">ID Proof</div>
+                <div class="step-status">{% if id_proof_uploaded %}Uploaded{% else %}Pending{% endif %}</div>
+            </div>
+
+            <div class="step-line {% if id_proof_uploaded %}completed{% endif %}"></div>
+
+            <div class="step {% if address_proof_uploaded %}completed{% endif %}">
+                <div class="step-icon-wrap">
+                    <div class="step-icon"><i class="bi bi-geo-alt"></i></div>
+                    <span class="step-number">2</span>
+                </div>
+                <div class="step-label">Address Proof</div>
+                <div class="step-status">{% if address_proof_uploaded %}Uploaded{% else %}Pending{% endif %}</div>
+            </div>
+
+            <div class="step-line {% if address_proof_uploaded %}completed{% endif %}"></div>
+
+            <div class="step {% if admin_review_done %}completed{% endif %}">
+                <div class="step-icon-wrap">
+                    <div class="step-icon"><i class="bi bi-person"></i></div>
+                    <span class="step-number">3</span>
+                </div>
+                <div class="step-label">Admin Review</div>
+                <div class="step-status">{% if admin_review_done %}Done{% else %}Pending{% endif %}</div>
+            </div>
+
+            <div class="step-line {% if is_verified %}completed{% endif %}"></div>
+
+            <div class="step {% if is_verified %}completed{% else %}locked{% endif %}">
+                <div class="step-icon-wrap">
+                    <div class="step-icon"><i class="bi bi-shield-check"></i></div>
+                    <span class="step-number">4</span>
+                </div>
+                <div class="step-label">Verification Complete</div>
+                <div class="step-status">{% if is_verified %}Verified{% else %}Locked{% endif %}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Cards + Checklist -->
+    <div class="verification-grid">
+
+        <!-- ID Proof Card -->
+        <div class="upload-card">
+            <div class="upload-card-header">
+                <i class="bi bi-person-vcard"></i>
+                <h3>ID Proof</h3>
+            </div>
+            <p class="upload-card-desc">Upload any one valid government ID proof.</p>
+
+            <form method="post" enctype="multipart/form-data" class="upload-form">
+                {% csrf_token %}
+                <input type="hidden" name="proof_type" value="id_proof">
+                <label for="id_proof_input" class="dropzone">
+                    <i class="bi bi-cloud-arrow-up"></i>
+                    {% if id_proof_uploaded %}
+                    <strong>Document uploaded</strong>
+                    <span>{{ agent_profile.id_proof_document.name|slice:"24:" }}</span>
+                    {% else %}
+                    <strong>No document uploaded yet</strong>
+                    <span>Accepted: Aadhaar Card, PAN Card, Passport, Driving Licence</span>
+                    {% endif %}
+                </label>
+                <input type="file" id="id_proof_input" name="file" accept=".pdf,.jpg,.jpeg,.png" hidden
+                    onchange="this.form.submit()">
+                <button type="button" class="btn btn-upload"
+                    onclick="document.getElementById('id_proof_input').click()">
+                    <i class="bi bi-upload"></i> Upload ID Proof
+                </button>
+            </form>
+        </div>
+
+        <!-- Address Proof Card -->
+        <div class="upload-card">
+            <div class="upload-card-header">
+                <i class="bi bi-geo-alt"></i>
+                <h3>Address Proof</h3>
+            </div>
+            <p class="upload-card-desc">Upload any one valid address proof.</p>
+
+            <form method="post" enctype="multipart/form-data" class="upload-form">
+                {% csrf_token %}
+                <input type="hidden" name="proof_type" value="address_proof">
+                <label for="address_proof_input" class="dropzone">
+                    <i class="bi bi-cloud-arrow-up"></i>
+                    {% if address_proof_uploaded %}
+                    <strong>Document uploaded</strong>
+                    <span>{{ agent_profile.address_proof_document.name|slice:"29:" }}</span>
+                    {% else %}
+                    <strong>No document uploaded yet</strong>
+                    <span>Accepted: Aadhaar Card, Passport, Driving Licence, Utility Bill, Bank Statement (Last 3
+                        months)</span>
+                    {% endif %}
+                </label>
+                <input type="file" id="address_proof_input" name="file" accept=".pdf,.jpg,.jpeg,.png" hidden
+                    onchange="this.form.submit()">
+                <button type="button" class="btn btn-upload"
+                    onclick="document.getElementById('address_proof_input').click()">
+                    <i class="bi bi-upload"></i> Upload Address Proof
+                </button>
+            </form>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="verification-sidebar">
+            <div class="checklist-card">
+                <h4>Verification Checklist</h4>
+                <ul class="checklist">
+                    <li>
+                        <i
+                            class="bi {% if id_proof_uploaded %}bi-check-circle-fill checked{% else %}bi-circle{% endif %}"></i>
+                        <span>ID Proof Uploaded</span>
+                        <em class="{% if id_proof_uploaded %}done{% else %}pending{% endif %}">
+                            {% if id_proof_uploaded %}Done{% else %}Pending{% endif %}
+                        </em>
+                    </li>
+                    <li>
+                        <i
+                            class="bi {% if address_proof_uploaded %}bi-check-circle-fill checked{% else %}bi-circle{% endif %}"></i>
+                        <span>Address Proof Uploaded</span>
+                        <em class="{% if address_proof_uploaded %}done{% else %}pending{% endif %}">
+                            {% if address_proof_uploaded %}Done{% else %}Pending{% endif %}
+                        </em>
+                    </li>
+                    <li>
+                        <i
+                            class="bi {% if admin_review_done %}bi-check-circle-fill checked{% else %}bi-circle{% endif %}"></i>
+                        <span>Admin Review</span>
+                        <em class="{% if admin_review_done %}done{% else %}pending{% endif %}">
+                            {% if admin_review_done %}Done{% else %}Pending{% endif %}
+                        </em>
+                    </li>
+                    <li class="{% if not is_verified %}locked-item{% endif %}">
+                        <i class="bi {% if is_verified %}bi-check-circle-fill checked{% else %}bi-lock{% endif %}"></i>
+                        <span>Verification Complete</span>
+                        <em class="{% if is_verified %}done{% else %}locked{% endif %}">
+                            {% if is_verified %}Done{% else %}Locked{% endif %}
+                        </em>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <div class="info-card-header">
+                    <i class="bi bi-shield-check"></i>
+                    <strong>Why is verification required?</strong>
+                </div>
+                <p>Verification helps us ensure a safe and trusted platform for our customers and agents.</p>
+                <ul class="info-list">
+                    <li><i class="bi bi-check-circle-fill"></i> Build customer trust</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Get more leads</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Unlock all agent features</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Banner -->
+    {% if not is_verified %}
+    <div class="pending-banner">
+        <div class="pending-banner-left">
+            <i class="bi bi-lock-fill"></i>
+            <div>
+                <strong>Your account is under verification</strong>
+                <p>You will be able to add properties, manage leads, site visits and use other features once your
+                    documents are verified by our admin team.</p>
+            </div>
+        </div>
+        <a href="#" class="btn btn-outline">
+            <i class="bi bi-question-circle"></i> Need Help?
         </a>
     </div>
-
-    <!-- Filters -->
-    <div class="filters-bar">
-        <select name="type" onchange="location.href='?type='+this.value">
-            <option value="">All Types</option>
-            <option value="property" {% if type_filter == 'property' %}selected{% endif %}>Property Document</option>
-            <option value="customer" {% if type_filter == 'customer' %}selected{% endif %}>Customer Document</option>
-            <option value="agreement" {% if type_filter == 'agreement' %}selected{% endif %}>Agreement</option>
-            <option value="receipt" {% if type_filter == 'receipt' %}selected{% endif %}>Receipt</option>
-            <option value="other" {% if type_filter == 'other' %}selected{% endif %}>Other</option>
-        </select>
-        <select name="category" onchange="location.href='?category='+this.value">
-            <option value="">All Categories</option>
-            <option value="title_deed" {% if category_filter == 'title_deed' %}selected{% endif %}>Title Deed</option>
-            <option value="approval" {% if category_filter == 'approval' %}selected{% endif %}>Approval Document</option>
-            <option value="tax" {% if category_filter == 'tax' %}selected{% endif %}>Tax Document</option>
-            <option value="identity" {% if category_filter == 'identity' %}selected{% endif %}>Identity Proof</option>
-            <option value="address" {% if category_filter == 'address' %}selected{% endif %}>Address Proof</option>
-            <option value="photograph" {% if category_filter == 'photograph' %}selected{% endif %}>Photograph</option>
-            <option value="other" {% if category_filter == 'other' %}selected{% endif %}>Other</option>
-        </select>
-    </div>
-
-    <!-- Documents Table -->
-    <div class="documents-table">
-        <table>
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Type</th>
-                    <th>Category</th>
-                    <th>Property</th>
-                    <th>Uploaded At</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% if documents %}
-                    {% for document in documents %}
-                        <tr>
-                            <td><strong>{{ document.title }}</strong></td>
-                            <td><span class="type-badge type-{{ document.document_type }}">{{ document.get_document_type_display }}</span></td>
-                            <td>{{ document.get_category_display }}</td>
-                            <td>{{ document.property.title|truncatewords:3|default:"N/A" }}</td>
-                            <td>{{ document.uploaded_at|date:"M d, Y" }}</td>
-                            <td>
-                                <div class="action-buttons">
-                                    <a href="{{ document.file.url }}" target="_blank" class="action-btn" title="View/Download">
-                                        <i class="bi bi-download"></i>
-                                    </a>
-                                    <a href="{% url 'agent:document_delete' document.id %}" class="action-btn" title="Delete" style="color: #dc2626;">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                {% else %}
-                    <tr>
-                        <td colspan="6">
-                            <div class="empty-state">
-                                <div class="empty-state-icon">
-                                    <i class="bi bi-file-earmark"></i>
-                                </div>
-                                <h3>No Documents Yet</h3>
-                                <p>Documents will appear here when you upload property or customer documents.</p>
-                                <a href="{% url 'agent:document_add' %}" class="btn btn-primary">
-                                    <i class="bi bi-plus-lg"></i> Upload Your First Document
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                {% endif %}
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Pagination -->
-    {% if page_obj.has_other_pages %}
-    <nav aria-label="Page navigation" style="margin-top: 1rem;">
-        <ul class="pagination">
-            {% if page_obj.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if type_filter %}&type={{ type_filter }}{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}">Previous</a>
-                </li>
-            {% endif %}
-            {% for num in page_obj.paginator.page_range %}
-                {% if page_obj.number == num %}
-                    <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
-                {% else %}
-                    <li class="page-item"><a class="page-link" href="?page={{ num }}{% if type_filter %}&type={{ type_filter }}{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}">{{ num }}</a></li>
-                {% endif %}
-            {% endfor %}
-            {% if page_obj.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if type_filter %}&type={{ type_filter }}{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}">Next</a>
-                </li>
-            {% endif %}
-        </ul>
-    </nav>
     {% endif %}
+
 </div>
 {% endblock %}
