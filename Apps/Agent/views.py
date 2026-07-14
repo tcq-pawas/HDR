@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.db.models import Q, Count, Sum
 from django.utils.text import slugify
 from django.core.exceptions import PermissionDenied
@@ -10,7 +10,8 @@ from django.utils import timezone
 from datetime import timedelta
 import csv
 
-from Apps.PublicPage.models import Property
+from django.views.decorators.http import require_GET
+from Apps.PublicPage.models import Property, LocationData, PropertyImage
 from Apps.Administration.auth_utils import get_user_role
 from .models import (
     AgentProfile, Lead, LeadFollowUp, SiteVisit,
@@ -109,6 +110,23 @@ def dashboard(request):
 
 
 @login_required
+def profile(request):
+    """View agent profile"""
+    user_role = get_user_role(request.user)
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
+        
+    agent_profile = get_object_or_404(AgentProfile, user=request.user)
+    
+    context = {
+        'agent_profile': agent_profile,
+        'user': request.user,
+    }
+    
+    return render(request, 'agent/profile.html', context)
+
+
+@login_required
 def property_list(request):
     # Check if user is an agent
     user_role = get_user_role(request.user)
@@ -175,10 +193,15 @@ def property_add(request, property_type):
                 property_obj.property_type = 'sale'
                 property_obj.category = 'Apartments'
             
-            if not property_obj.slug:
-                property_obj.slug = slugify(property_obj.title)
+            # Slug will be automatically generated and deduplicated in the Property.save() method
             
             property_obj.save()
+            
+            # Save multiple images to the PropertyImage gallery table
+            images = request.FILES.getlist('featured_image')
+            for image in images:
+                PropertyImage.objects.create(property=property_obj, image=image, category='General')
+            
             messages.success(request, "Property created successfully! It's pending admin approval.")
             return redirect('agent:property_list')
         else:
@@ -232,6 +255,12 @@ def property_edit(request, pk):
             property_obj = form.save(commit=False)
             property_obj.last_updated_by = request.user
             property_obj.save()
+            
+            # Save multiple images to the PropertyImage gallery table
+            images = request.FILES.getlist('featured_image')
+            for image in images:
+                PropertyImage.objects.create(property=property_obj, image=image, category='General')
+                
             messages.success(request, "Property updated successfully!")
             return redirect('agent:property_list')
     else:
@@ -257,6 +286,17 @@ def property_edit(request, pk):
         return render(request, 'agent/agricultural_land_form.html', context)
     else:
         return render(request, 'agent/property_form.html', context)
+
+
+@login_required
+@require_GET
+def get_cities_by_state(request):
+    """AJAX endpoint to get cities for a given state"""
+    state = request.GET.get('state', '')
+    if state:
+        cities = LocationData.objects.filter(state=state).values_list('city', flat=True).distinct().order_by('city')
+        return JsonResponse({'cities': list(cities)})
+    return JsonResponse({'cities': []})
 
 
 @login_required
@@ -886,6 +926,9 @@ def communication_list(request):
 @login_required
 def communication_send(request):
     """Send a new communication"""
+    from django.core.mail import send_mail
+    from django.conf import settings
+    
     user_role = get_user_role(request.user)
     if user_role not in ['agent', 'owner']:
         raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
@@ -895,14 +938,27 @@ def communication_send(request):
         if form.is_valid():
             communication = form.save(commit=False)
             communication.agent = request.user
-            communication.save()
-            messages.success(request, "Communication sent successfully!")
+            
+            # Send Email
+            try:
+                send_mail(
+                    subject=communication.subject,
+                    message=communication.message,
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[communication.recipient],
+                    fail_silently=False,
+                )
+                communication.status = 'sent'
+                communication.save()
+                messages.success(request, "Email sent successfully!")
+            except Exception as e:
+                communication.status = 'failed'
+                communication.save()
+                messages.error(request, f"Failed to send email: {str(e)}")
+                
             return redirect('agent:communication_list')
     else:
         form = CommunicationForm()
-    
-    # Filter templates to only show agent's templates
-    form.fields['template_used'].queryset = MessageTemplate.objects.filter(agent=request.user, is_active=True)
     
     context = {
         'form': form,

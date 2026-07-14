@@ -19,47 +19,19 @@
         <form method="post">
             {% csrf_token %}
             
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="{{ form.communication_type.id_for_label }}">Communication Type *</label>
-                    {{ form.communication_type }}
-                    {% if form.communication_type.errors %}
-                        <div class="error-message">{{ form.communication_type.errors }}</div>
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    <label for="{{ form.template_used.id_for_label }}">Use Template</label>
-                    {{ form.template_used }}
-                    {% if form.template_used.errors %}
-                        <div class="error-message">{{ form.template_used.errors }}</div>
-                    {% endif %}
-                </div>
+            <div class="form-group mb-3">
+                <label for="{{ form.communication_type.id_for_label }}">Communication Type *</label>
+                {{ form.communication_type }}
+                {% if form.communication_type.errors %}
+                    <div class="error-message">{{ form.communication_type.errors }}</div>
+                {% endif %}
             </div>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="{{ form.recipient.id_for_label }}">Recipient Phone/Email *</label>
-                    {{ form.recipient }}
-                    {% if form.recipient.errors %}
-                        <div class="error-message">{{ form.recipient.errors }}</div>
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    <label for="{{ form.lead.id_for_label }}">Lead (Optional)</label>
-                    {{ form.lead }}
-                    {% if form.lead.errors %}
-                        <div class="error-message">{{ form.lead.errors }}</div>
-                    {% endif %}
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="{{ form.booking.id_for_label }}">Booking (Optional)</label>
-                {{ form.booking }}
-                {% if form.booking.errors %}
-                    <div class="error-message">{{ form.booking.errors }}</div>
+            <div class="form-group mb-3">
+                <label for="{{ form.recipient.id_for_label }}">Recipient Email Address *</label>
+                {{ form.recipient }}
+                {% if form.recipient.errors %}
+                    <div class="error-message">{{ form.recipient.errors }}</div>
                 {% endif %}
             </div>
 

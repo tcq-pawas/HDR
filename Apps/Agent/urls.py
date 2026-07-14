@@ -7,6 +7,7 @@ urlpatterns = [
     # Dashboard
     path('dashboard/', views.dashboard, name='dashboard'),
     path('settings/', views.settings, name='settings'),
+    path('profile/', views.profile, name='profile'),
     
     # Property Management
     path('properties/', views.property_list, name='property_list'),
@@ -14,6 +15,9 @@ urlpatterns = [
     path('property/add/<str:property_type>/', views.property_add, name='property_add'),
     path('property/<int:pk>/edit/', views.property_edit, name='property_edit'),
     path('property/<int:pk>/delete/', views.property_delete, name='property_delete'),
+    
+    # AJAX
+    path('ajax/get-cities/', views.get_cities_by_state, name='get_cities'),
     
     # Lead Management
     path('leads/', views.lead_list, name='lead_list'),
