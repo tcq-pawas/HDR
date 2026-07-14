@@ -1,64 +1,18 @@
 {% extends "agent/agent_base.html" %}
 {% load static %}
 
-{% block title %}{% if 'owner' in request.user.groups.all|stringformat:"s" %}Owner{% else %}Agent{% endif %} Dashboard | HeyDay Realty{% endblock %}
+{% block title %}{% if 'owner' in request.user.groups.all|stringformat:"s" %}Owner{% else %}Agent{% endif %} Dashboard |
+HeyDay Realty{% endblock %}
+
+{% block breadcrumb %}{% endblock %}
+
+{% block header_title %}
+<h1 class="page-title">Dashboard</h1>
+<p class="welcome-message">Welcome back, {{ user.first_name|default:user.username }}! Here's what's happening with your
+    business today.</p>
+{% endblock %}
 
 {% block content %}
-<!-- Dashboard Header -->
-<div class="dashboard-header">
-    <div class="header-left">
-        <h1 class="page-title">Dashboard</h1>
-        <p class="welcome-message">Welcome back, {{ user.first_name|default:user.username }}! Here's what's happening with your business today.</p>
-    </div>
-    <div class="header-center">
-        <div class="header-search">
-            <i class="bi bi-search"></i>
-            <input type="text" placeholder="Search properties, leads, inquiries..." class="header-search-input">
-        </div>
-    </div>
-    <div class="header-right">
-        <button class="header-icon-btn">
-            <i class="bi bi-bell"></i>
-            <span class="header-badge">3</span>
-        </button>
-        <button class="header-icon-btn">
-            <i class="bi bi-envelope"></i>
-            <span class="header-badge header-badge-green">5</span>
-        </button>
-        <a href="{% url 'agent:property_type_select' %}" class="btn-add-property">
-            <i class="bi bi-plus-lg"></i> Add Property
-        </a>
-        <div class="dropdown">
-            <div class="header-profile" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer; display: flex; align-items: center; gap: 8px;">
-                <div class="profile-avatar">
-                    {% if agent_profile.profile_image %}
-                        <img src="{{ agent_profile.profile_image.url }}" alt="Profile">
-                    {% else %}
-                        <span>{{ user.first_name|default:user.username|slice:":1"|upper }}</span>
-                    {% endif %}
-                </div>
-                <div class="profile-info">
-                    <span class="profile-name">{{ user.first_name|default:user.username }}</span>
-                    <span class="profile-role">{% if 'owner' in request.user.groups.all|stringformat:"s" %}Owner{% else %}Agent{% endif %}</span>
-                </div>
-                <i class="bi bi-chevron-down text-muted ms-1" style="font-size: 0.8rem;"></i>
-            </div>
-            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-4 mt-2 py-2" style="min-width: 200px;">
-                <li>
-                    <a class="dropdown-item d-flex align-items-center py-2 px-3 text-secondary" href="{% url 'agent:profile' %}">
-                        <i class="bi bi-person me-3 fs-5"></i> <span class="fw-medium">Profile</span>
-                    </a>
-                </li>
-                <li><hr class="dropdown-divider opacity-10"></li>
-                <li>
-                    <a class="dropdown-item d-flex align-items-center py-2 px-3 text-danger" href="{% url 'auth:logout' %}">
-                        <i class="bi bi-box-arrow-right me-3 fs-5"></i> <span class="fw-medium">Logout</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
 
 <!-- KPI Statistics Cards -->
 <div class="kpi-cards-grid">
@@ -74,9 +28,9 @@
                 <span>12.5% from last month</span>
             </div>
         </div>
-        <div class="kpi-mini-chart">
+        <!-- <div class="kpi-mini-chart">
             <canvas id="miniChart1"></canvas>
-        </div>
+        </div> -->
     </div>
 
     <div class="kpi-card kpi-card-emerald">
@@ -91,9 +45,9 @@
                 <span>8.2% from last month</span>
             </div>
         </div>
-        <div class="kpi-mini-chart">
+        <!-- <div class="kpi-mini-chart">
             <canvas id="miniChart2"></canvas>
-        </div>
+        </div> -->
     </div>
 
     <div class="kpi-card kpi-card-blue">
@@ -108,9 +62,9 @@
                 <span>18.7% from last month</span>
             </div>
         </div>
-        <div class="kpi-mini-chart">
+        <!-- <div class="kpi-mini-chart">
             <canvas id="miniChart3"></canvas>
-        </div>
+        </div> -->
     </div>
 
     <div class="kpi-card kpi-card-rose">
@@ -125,9 +79,9 @@
                 <span>21.2% from yesterday</span>
             </div>
         </div>
-        <div class="kpi-mini-chart">
+        <!-- <div class="kpi-mini-chart">
             <canvas id="miniChart4"></canvas>
-        </div>
+        </div> -->
     </div>
 
     <div class="kpi-card kpi-card-purple">
@@ -142,9 +96,9 @@
                 <span>9.1% from last month</span>
             </div>
         </div>
-        <div class="kpi-mini-chart">
+        <!-- <div class="kpi-mini-chart">
             <canvas id="miniChart5"></canvas>
-        </div>
+        </div> -->
     </div>
 
     <div class="kpi-card kpi-card-green">
@@ -159,9 +113,9 @@
                 <span>15.4% from last month</span>
             </div>
         </div>
-        <div class="kpi-mini-chart">
+        <!-- <div class="kpi-mini-chart">
             <canvas id="miniChart6"></canvas>
-        </div>
+        </div> -->
     </div>
 
     <div class="kpi-card kpi-card-indigo">
@@ -176,9 +130,9 @@
                 <span>16.3% from last month</span>
             </div>
         </div>
-        <div class="kpi-mini-chart">
+        <!-- <div class="kpi-mini-chart">
             <canvas id="miniChart7"></canvas>
-        </div>
+        </div> -->
     </div>
 
     <div class="kpi-card kpi-card-cyan">
@@ -193,9 +147,9 @@
                 <span>14.6% from last month</span>
             </div>
         </div>
-        <div class="kpi-mini-chart">
+        <!-- <div class="kpi-mini-chart">
             <canvas id="miniChart8"></canvas>
-        </div>
+        </div> -->
     </div>
 
 </div>
@@ -244,44 +198,44 @@
                     </thead>
                     <tbody>
                         {% if recent_leads %}
-                            {% for lead in recent_leads|slice:":5" %}
-                                <tr>
-                                    <td><strong>{{ lead.name }}</strong></td>
-                                    <td>{{ lead.phone|default:"N/A" }}</td>
-                                    <td>{{ lead.property.title|truncatewords:3 }}</td>
-                                    <td>{{ lead.property.location|default:"N/A" }}</td>
-                                    <td><span class="status-badge status-new">New</span></td>
-                                    <td>{{ lead.created_at|date:"M d, Y" }}</td>
-                                    <td>
-                                        <div class="leads-actions">
-                                            <button class="leads-action-btn" title="Call">
-                                                <i class="bi bi-telephone"></i>
-                                            </button>
-                                            <button class="leads-action-btn" title="Email">
-                                                <i class="bi bi-envelope"></i>
-                                            </button>
-                                            <button class="leads-action-btn" title="More">
-                                                <i class="bi bi-three-dots"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            {% endfor %}
+                        {% for lead in recent_leads|slice:":5" %}
+                        <tr>
+                            <td><strong>{{ lead.name }}</strong></td>
+                            <td>{{ lead.phone|default:"N/A" }}</td>
+                            <td>{{ lead.property.title|truncatewords:3 }}</td>
+                            <td>{{ lead.property.location|default:"N/A" }}</td>
+                            <td><span class="status-badge status-new">New</span></td>
+                            <td>{{ lead.created_at|date:"M d, Y" }}</td>
+                            <td>
+                                <div class="leads-actions">
+                                    <button class="leads-action-btn" title="Call">
+                                        <i class="bi bi-telephone"></i>
+                                    </button>
+                                    <button class="leads-action-btn" title="Email">
+                                        <i class="bi bi-envelope"></i>
+                                    </button>
+                                    <button class="leads-action-btn" title="More">
+                                        <i class="bi bi-three-dots"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
                         {% else %}
-                            <tr>
-                                <td colspan="7">
-                                    <div class="empty-state">
-                                        <div class="empty-state-icon">
-                                            <i class="bi bi-people"></i>
-                                        </div>
-                                        <h3>No Leads Yet</h3>
-                                        <p>Leads will appear here when buyers show interest in your properties</p>
-                                        <a href="{% url 'agent:property_list' %}" class="btn btn-primary">
-                                            <i class="bi bi-plus-lg"></i> Add Property to Get Leads
-                                        </a>
+                        <tr>
+                            <td colspan="7">
+                                <div class="empty-state">
+                                    <div class="empty-state-icon">
+                                        <i class="bi bi-people"></i>
                                     </div>
-                                </td>
-                            </tr>
+                                    <h3>No Leads Yet</h3>
+                                    <p>Leads will appear here when buyers show interest in your properties</p>
+                                    <a href="{% url 'agent:property_list' %}" class="btn btn-primary">
+                                        <i class="bi bi-plus-lg"></i> Add Property to Get Leads
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
                         {% endif %}
                     </tbody>
                 </table>
@@ -311,44 +265,44 @@
                     </thead>
                     <tbody>
                         {% if recent_properties %}
-                            {% for property in recent_properties|slice:":5" %}
-                                <tr>
-                                    <td><strong>{{ property.title }}</strong></td>
-                                    <td>{{ property.property_type|default:"N/A" }}</td>
-                                    <td>{{ property.location|default:"N/A" }}</td>
-                                    <td>₹{{ property.price|floatformat:0|default:"N/A" }}</td>
-                                    <td><span class="status-badge status-new">{{ property.status|default:"Active" }}</span></td>
-                                    <td>{{ property.created_at|date:"M d, Y" }}</td>
-                                    <td>
-                                        <div class="leads-actions">
-                                            <button class="leads-action-btn" title="View">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            <button class="leads-action-btn" title="Edit">
-                                                <i class="bi bi-pencil"></i>
-                                            </button>
-                                            <button class="leads-action-btn" title="More">
-                                                <i class="bi bi-three-dots"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            {% endfor %}
+                        {% for property in recent_properties|slice:":5" %}
+                        <tr>
+                            <td><strong>{{ property.title }}</strong></td>
+                            <td>{{ property.property_type|default:"N/A" }}</td>
+                            <td>{{ property.location|default:"N/A" }}</td>
+                            <td>₹{{ property.price|floatformat:0|default:"N/A" }}</td>
+                            <td><span class="status-badge status-new">{{ property.status|default:"Active" }}</span></td>
+                            <td>{{ property.created_at|date:"M d, Y" }}</td>
+                            <td>
+                                <div class="leads-actions">
+                                    <button class="leads-action-btn" title="View">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    <button class="leads-action-btn" title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="leads-action-btn" title="More">
+                                        <i class="bi bi-three-dots"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
                         {% else %}
-                            <tr>
-                                <td colspan="7">
-                                    <div class="empty-state">
-                                        <div class="empty-state-icon">
-                                            <i class="bi bi-building"></i>
-                                        </div>
-                                        <h3>No Properties Yet</h3>
-                                        <p>Your property listings will appear here</p>
-                                        <a href="{% url 'agent:property_type_select' %}" class="btn btn-primary">
-                                            <i class="bi bi-plus-lg"></i> Add Your First Property
-                                        </a>
+                        <tr>
+                            <td colspan="7">
+                                <div class="empty-state">
+                                    <div class="empty-state-icon">
+                                        <i class="bi bi-building"></i>
                                     </div>
-                                </td>
-                            </tr>
+                                    <h3>No Properties Yet</h3>
+                                    <p>Your property listings will appear here</p>
+                                    <a href="{% url 'agent:property_type_select' %}" class="btn btn-primary">
+                                        <i class="bi bi-plus-lg"></i> Add Your First Property
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
                         {% endif %}
                     </tbody>
                 </table>
@@ -453,26 +407,26 @@
             </div>
             <div class="site-visits-list">
                 {% if upcoming_visits %}
-                    {% for visit in upcoming_visits|slice:":5" %}
-                        <div class="site-visit-item">
-                            <div class="site-visit-time">
-                                <span class="visit-hour">{{ visit.scheduled_date|date:"H:i" }}</span>
-                                <span class="visit-ampm">{{ visit.scheduled_date|date:"A" }}</span>
-                            </div>
-                            <div class="site-visit-info">
-                                <div class="visit-customer">{{ visit.lead.name }}</div>
-                                <div class="visit-property">{{ visit.property.title|truncatewords:2 }}</div>
-                            </div>
-                            <button class="site-visit-contact-btn">
-                                <i class="bi bi-telephone"></i>
-                            </button>
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="site-visits-empty">
-                        <i class="bi bi-calendar-x"></i>
-                        <p>No site visits scheduled for today</p>
+                {% for visit in upcoming_visits|slice:":5" %}
+                <div class="site-visit-item">
+                    <div class="site-visit-time">
+                        <span class="visit-hour">{{ visit.scheduled_date|date:"H:i" }}</span>
+                        <span class="visit-ampm">{{ visit.scheduled_date|date:"A" }}</span>
                     </div>
+                    <div class="site-visit-info">
+                        <div class="visit-customer">{{ visit.lead.name }}</div>
+                        <div class="visit-property">{{ visit.property.title|truncatewords:2 }}</div>
+                    </div>
+                    <button class="site-visit-contact-btn">
+                        <i class="bi bi-telephone"></i>
+                    </button>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="site-visits-empty">
+                    <i class="bi bi-calendar-x"></i>
+                    <p>No site visits scheduled for today</p>
+                </div>
                 {% endif %}
             </div>
             <div class="analytics-widget-footer">
@@ -490,93 +444,93 @@
 
 {% block extra_js %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize mini charts
-    initMiniCharts();
-    
-    // Initialize lead overview chart
-    initLeadOverviewChart();
-});
+    document.addEventListener('DOMContentLoaded', function () {
+        // Initialize mini charts
+        initMiniCharts();
 
-// Initialize Mini Charts
-function initMiniCharts() {
-    const miniCharts = [
-        { id: 'miniChart1', color: '#004526' },
-        { id: 'miniChart2', color: '#006638' },
-        { id: 'miniChart3', color: '#005530' },
-        { id: 'miniChart4', color: '#002815' },
-        { id: 'miniChart5', color: '#004526' },
-        { id: 'miniChart6', color: '#006638' },
-        { id: 'miniChart7', color: '#005530' },
-        { id: 'miniChart8', color: '#004526' }
-    ];
-    
-    miniCharts.forEach(chart => {
-        const ctx = document.getElementById(chart.id);
+        // Initialize lead overview chart
+        initLeadOverviewChart();
+    });
+
+    // Initialize Mini Charts
+    function initMiniCharts() {
+        const miniCharts = [
+            { id: 'miniChart1', color: '#0F766E' },
+            { id: 'miniChart2', color: '#10B981' },
+            { id: 'miniChart3', color: '#3B82F6' },
+            { id: 'miniChart4', color: '#F43F5E' },
+            { id: 'miniChart5', color: '#8B5CF6' },
+            { id: 'miniChart6', color: '#10B981' },
+            { id: 'miniChart7', color: '#4F46E5' },
+            { id: 'miniChart8', color: '#0891B2' }
+        ];
+
+        miniCharts.forEach(chart => {
+            const ctx = document.getElementById(chart.id);
+            if (ctx) {
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['', '', '', '', '', ''],
+                        datasets: [{
+                            data: [Math.random() * 10, Math.random() * 10, Math.random() * 10, Math.random() * 10, Math.random() * 10, Math.random() * 10],
+                            borderColor: chart.color,
+                            backgroundColor: chart.color + '20',
+                            fill: true,
+                            tension: 0.4,
+                            borderWidth: 2,
+                            pointRadius: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            x: { display: false },
+                            y: { display: false }
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    // Initialize Lead Overview Chart
+    function initLeadOverviewChart() {
+        const ctx = document.getElementById('leadOverviewChart');
         if (ctx) {
             new Chart(ctx, {
-                type: 'line',
+                type: 'doughnut',
                 data: {
-                    labels: ['', '', '', '', '', ''],
+                    labels: ['New', 'Contacted', 'Interested', 'Site Visit', 'Proposal'],
                     datasets: [{
-                        data: [Math.random() * 10, Math.random() * 10, Math.random() * 10, Math.random() * 10, Math.random() * 10, Math.random() * 10],
-                        borderColor: chart.color,
-                        backgroundColor: chart.color + '20',
-                        fill: true,
-                        tension: 0.4,
-                        borderWidth: 2,
-                        pointRadius: 0
+                        data: [34, 65, 58, 45, 43],
+                        backgroundColor: ['#0F766E', '#10B981', '#3B82F6', '#8B5CF6', '#F59E0B'],
+                        borderWidth: 0,
+                        cutout: '75%'
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { display: false }
-                    },
-                    scales: {
-                        x: { display: false },
-                        y: { display: false }
-                    }
-                }
-            });
-        }
-    });
-}
-
-// Initialize Lead Overview Chart
-function initLeadOverviewChart() {
-    const ctx = document.getElementById('leadOverviewChart');
-    if (ctx) {
-        new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['New', 'Contacted', 'Interested', 'Site Visit', 'Proposal'],
-                datasets: [{
-                    data: [34, 65, 58, 45, 43],
-                    backgroundColor: ['#004526', '#006638', '#005530', '#002815', '#002200'],
-                    borderWidth: 0,
-                    cutout: '75%'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                const percentage = ((context.raw / total) * 100).toFixed(1);
-                                return context.label + ': ' + context.raw + ' (' + percentage + '%)';
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((context.raw / total) * 100).toFixed(1);
+                                    return context.label + ': ' + context.raw + ' (' + percentage + '%)';
+                                }
                             }
                         }
                     }
                 }
-            }
-        });
+            });
+        }
     }
-}
 </script>
 {% endblock %}

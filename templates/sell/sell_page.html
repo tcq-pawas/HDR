@@ -4,177 +4,816 @@
 {% block title %}Sell Your Property | HeyDay Realty{% endblock %}
 
 {% block extra_css %}
-<!-- No extra CSS needed - Pure Bootstrap + Global Theme -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+    --primary-green: #0F6A3C;
+    --dark-green: #083B26;
+    --accent-gold: #F4B400;
+    --light-bg: #FAFAF7;
+    --text-dark: #18392B;
+    --border-color: #EAEAEA;
+    --card-shadow: 0 10px 30px rgba(0,0,0,0.06);
+}
+
+.sell-page-body {
+    background: var(--light-bg);
+    font-family: 'Inter', sans-serif;
+}
+
+/* Hero Section */
+.sell-hero {
+    position: relative;
+    height: 400px;
+    background-image: url('{% static "images/hero-img-all.png" %}');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.sell-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.55);
+}
+
+.sell-hero-content {
+    position: relative;
+    z-index: 1;
+    color: white;
+    max-width: 800px;
+    padding: 0 20px;
+}
+
+.sell-hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: white;
+}
+
+.sell-hero-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.95;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.sell-hero-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--accent-gold);
+    font-size: 1.5rem;
+}
+
+/* Section Styles */
+.sell-section {
+    padding: 72px 0;
+}
+
+.sell-section-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.25rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    text-align: center;
+    margin-bottom: 0.75rem;
+}
+
+.support-section-title {
+    font-size: 44px;
+    font-weight: 700;
+    color: #0F3E2A;
+    margin-bottom: 12px;
+}
+
+.support-underline {
+    width: 60px;
+    height: 4px;
+    background: var(--primary-green);
+    border-radius: 999px;
+    margin: 0 auto 48px auto;
+}
+
+.sell-section-subtitle {
+    font-size: 1rem;
+    color: #666;
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+/* Card Styles */
+.sell-card {
+    background: white;
+    border-radius: 18px;
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--border-color);
+}
+
+/* Get Started Card */
+.get-started-card {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 50px;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.get-started-icon {
+    width: 150px;
+    height: 150px;
+    background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-green);
+    font-size: 80px;
+    flex-shrink: 0;
+}
+
+.get-started-content h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+}
+
+.get-started-content p {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 1.25rem;
+}
+
+.security-text {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.85rem;
+    color: var(--primary-green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+/* Button Styles */
+.btn-sell-primary {
+    background: #F4B400;
+    color: white;
+    border: none;
+    border-radius: 999px;
+    height: 48px;
+    padding: 0 24px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 15px;
+}
+
+.btn-sell-primary:hover {
+    background: #D9A000;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(244, 180, 0, 0.4);
+    color: white;
+}
+
+.btn-sell-secondary {
+    background: transparent;
+    color: white;
+    border: 1.5px solid white;
+    border-radius: 999px;
+    height: 48px;
+    padding: 0 24px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 15px;
+}
+
+.btn-sell-secondary:hover {
+    background: white;
+    color: #063B27;
+    transform: translateY(-2px);
+}
+
+.btn-whatsapp {
+    background: var(--primary-green);
+    color: white;
+    border: none;
+    border-radius: 999px;
+    height: 48px;
+    padding: 0 32px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-whatsapp:hover {
+    background: var(--dark-green);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(15, 106, 60, 0.4);
+    color: white;
+}
+
+/* WhatsApp Support Section */
+.support-card {
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    height: 500px;
+    border: 1px solid #ECECEC;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.support-icon {
+    width: 200px;
+    height: 200px;
+    background: linear-gradient(135deg, #0da345 0%, #01421e 100%);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 3rem;
+    flex-shrink: 0;
+}
+
+.support-icon i {
+    font-size: 100px;
+}
+
+.support-content {
+    flex: 1;
+}
+
+.support-content h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+}
+
+.support-content p {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+}
+
+.phone-mockup {
+    position: relative;
+    width: 500px;
+    height: 500px;
+    border-radius: 30px;
+    padding: 12px;
+    flex-shrink: 0;
+}
+
+.phone-screen {
+    border-radius: 20px;
+    height: 100%;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.chat-bubble {
+    background: #DCF8C6;
+    padding: 8px 12px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    max-width: 80%;
+}
+
+.chat-bubble.received {
+    background: #ECE5DD;
+    align-self: flex-start;
+}
+
+.chat-bubble.sent {
+    background: #DCF8C6;
+    align-self: flex-end;
+}
+
+.leaf-decoration {
+    position: absolute;
+    font-size: 3rem;
+    opacity: 0.3;
+}
+
+.leaf-left {
+    bottom: -20px;
+    left: -30px;
+}
+
+.leaf-right {
+    top: -20px;
+    right: -30px;
+}
+
+/* FAQ Section */
+.faq-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.faq-item {
+    background: white;
+    border-radius: 18px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: box-shadow 0.3s ease;
+}
+
+.faq-item:hover {
+    box-shadow: var(--card-shadow);
+}
+
+.faq-button {
+    width: 100%;
+    padding: 24px;
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    text-align: left;
+}
+
+.faq-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-green);
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.faq-question {
+    flex: 1;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+.faq-chevron {
+    color: var(--primary-green);
+    transition: transform 0.3s ease;
+}
+
+.faq-button[aria-expanded="true"] .faq-chevron {
+    transform: rotate(180deg);
+}
+
+.faq-body {
+    padding: 0 24px 24px 80px;
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Bottom CTA */
+.cta-banner {
+    background: linear-gradient(90deg, #063B27 0%, #08452E 45%, #063B27 100%);
+    border-radius: 22px;
+    padding: 28px 36px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    max-width: 2000px;
+    margin: 0 auto;
+    height: 300px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cta-banner::before,
+.cta-banner::after {
+    content: '🌿';
+    position: absolute;
+    font-size: 3.5rem;
+    opacity: 0.18;
+}
+
+.cta-banner::before {
+    top: 10px;
+    left: 20px;
+}
+
+.cta-banner::after {
+    bottom: 10px;
+    right: 20px;
+}
+
+.cta-left {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.cta-right {
+    display: flex;
+    align-items: center;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 16px;
+}
+
+.cta-icon {
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: white;
+    box-shadow: 0 4px 15px rgba(255,255,255,0.1);
+    flex-shrink: 0;
+}
+
+.cta-text h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-bottom: 0.25rem;
+    line-height: 1.2;
+}
+
+.cta-text p {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    color: #D7E7DD;
+    line-height: 1.4;
+    max-width: 420px;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+    .sell-hero-title {
+        font-size: 2.25rem;
+    }
+    
+    .support-card {
+        flex-direction: column;
+        text-align: center;
+        height: auto;
+        min-height: auto;
+        padding: 32px;
+    }
+    
+    .phone-mockup {
+        margin-top: 20px;
+        width: 160px;
+        height: 250px;
+    }
+    
+    .support-section-title {
+        font-size: 32px;
+    }
+    
+    .cta-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .cta-left {
+        flex-direction: column;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .cta-buttons a {
+        width: 100%;
+    }
+}
+
+@media (max-width: 767px) {
+    .sell-hero {
+        height: 300px;
+    }
+    
+    .sell-hero-title {
+        font-size: 1.75rem;
+    }
+    
+    .sell-hero-subtitle {
+        font-size: 1rem;
+    }
+    
+    .sell-section-heading {
+        font-size: 1.75rem;
+    }
+    
+    .get-started-card {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .faq-body {
+        padding: 0 20px 20px 20px;
+    }
+    
+    .cta-banner {
+        padding: 24px 28px;
+        height: auto;
+        min-height: 120px;
+    }
+    
+    .cta-content {
+        flex-direction: row;
+        text-align: left;
+        gap: 20px;
+    }
+    
+    .cta-left {
+        gap: 16px;
+    }
+    
+    .cta-icon {
+        width: 56px;
+        height: 56px;
+        font-size: 1.5rem;
+    }
+    
+    .cta-text h2 {
+        font-size: 24px;
+    }
+    
+    .cta-text p {
+        font-size: 14px;
+        max-width: 300px;
+    }
+    
+    .cta-buttons {
+        gap: 10px;
+    }
+    
+    .cta-buttons a {
+        padding: 0 20px;
+        font-size: 14px;
+    }
+}
+</style>
 {% endblock %}
 
 {% block inner_hero %}
-<section class="inner-hero" style="background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');">
-    <div class="inner-hero-content">
-        <h1 class="inner-hero-title">Sell Your Farmland</h1>
-        <p class="inner-hero-quote">"Connect with serious buyers and investors looking for verified agricultural land opportunities."</p>
+<section class="sell-hero">
+    <div class="sell-hero-content">
+        <h1 class="sell-hero-title">Sell Your Farmland</h1>
+        <p class="sell-hero-subtitle">Connect with serious buyers and investors looking for verified agricultural land opportunities.</p>
+        <div class="sell-hero-divider">
+            <span>🌿</span>
+            <span>✦</span>
+            <span>🌿</span>
+        </div>
     </div>
 </section>
 {% endblock %}
 
 {% block content %}
-
+<div class="sell-page-body">
 <!-- ========== GET STARTED SECTION ========== -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <h2 class="text-center display-6 fw-bold mb-5">LET'S GET YOU STARTED</h2>
+<section class="sell-section">
+    <div class="container" style="max-width: 2500px; margin: auto;">
+        <h2 class="sell-section-heading">LET'S GET YOU STARTED</h2>
+        <p class="sell-section-subtitle">Choose the best way to get started with listing your farmland.</p>
         
-        <div class="row justify-content-center">
-            <div class="col-lg-4 col-md-6">
-                <div class="card border-0 shadow-sm text-center p-4">
-                    <div class="card-body">
-                        {% if user.is_authenticated %}
-                            <!-- Logged In -->
-                            <div class="display-1 text-primary mb-3">
-                                <i class="bi bi-person-check"></i>
-                            </div>
-                            <h3 class="h4 fw-bold">Welcome back, {{ user.first_name|default:user.username }}!</h3>
-                            <p class="text-muted mb-4">Access your agent dashboard to manage your property listings.</p>
-                            <a href="{% url 'agent:dashboard' %}" class="btn-cta-primary d-block text-center py-2">
-                                <i class="bi bi-speedometer2"></i> Go To Agent Dashboard
-                            </a>
-                        {% else %}
-                            <!-- Not Logged In -->
-                            <div class="display-1 text-primary mb-3">
-                                <i class="bi bi-lock"></i>
-                            </div>
-                            <h3 class="h4 fw-bold">Login to Start Selling</h3>
-                            <p class="text-muted mb-4">Sign in with your account to create and manage property listings.</p>
-                            <a href="{% url 'auth:login' %}" class="btn-cta-primary d-block text-center py-2">
-                                <i class="bi bi-box-arrow-in-right"></i> Login Now
-                            </a>
-                        {% endif %}
-                    </div>
-                </div>
+        <div class="sell-card get-started-card">
+            <div class="get-started-icon">
+                <i class="fa-regular fa-user"></i>
             </div>
+            <div class="get-started-content">
+                {% if user.is_authenticated %}
+                    <h3>Welcome back, {{ user.first_name|default:user.username }}!</h3>
+                    <p>Access your agent dashboard to manage your property listings.</p>
+                    <a href="{% url 'agent:dashboard' %}" class="btn-sell-primary">
+                        <i class="bi bi-speedometer2"></i> Go To Dashboard
+                    </a>
+                {% else %}
+                    <h3>Login to Start Selling</h3>
+                    <p>Sign in with your account to create and manage property listings.</p>
+                    <a href="{% url 'auth:login' %}" class="btn-sell-primary">
+                        <i class="bi bi-box-arrow-in-right"></i> Login Now
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="security-text">
+            <i class="bi bi-shield-check"></i>
+            Your information is secure and protected
         </div>
     </div>
 </section>
 
-<!-- ========== WHATSAPP SECTION ========== -->
-<section class="py-5 bg-white">
-    <div class="container">
-        <h2 class="text-center display-6 fw-bold mb-5">Need Help Listing Your Farmland?</h2>
+<!-- ========== WHATSAPP SUPPORT SECTION ========== -->
+<section class="sell-section">
+    <div class="container" style="max-width: 1750px; margin: auto;">
+        <h2 class="sell-section-heading support-section-title">Need Help Listing Your Farmland?</h2>
+        <div class="support-underline"></div>
         
-        <div class="row align-items-center g-5">
-            <div class="col-lg-6 text-center">
-                <div class="bg-success bg-gradient p-5 rounded-4 shadow-lg d-inline-flex align-items-center justify-content-center text-white">
-                    <i class="bi bi-chat-dots display-1"></i>
-                </div>
+        <div class="sell-card support-card">
+            <div class="support-icon">
+                <i class="bi bi-whatsapp"></i>
             </div>
-            <div class="col-lg-6">
-                <h3 class="fw-bold mb-3">Quick Chat Support</h3>
-                <p class="text-muted">Have questions about selling your property? Our experts are available on WhatsApp to help you 24/7.</p>
-                <p class="text-muted">We'll guide you through every step of the process and help you get the best deal for your land.</p>
-                <a href="https://wa.me/919506688688" target="_blank" class="btn btn-success rounded-pill px-4 py-2 fw-bold">
+            <div class="support-content">
+                <h3>Quick Chat Support</h3>
+                <p>Have questions about selling your property? Our experts are available on WhatsApp to help you 24/7.</p>
+                <p>We'll guide you through every step of the process and help you get the best deal for your land.</p>
+                <a href="https://wa.me/919506688688" target="_blank" class="btn-whatsapp">
                     <i class="bi bi-whatsapp"></i> Chat With Us on WhatsApp
                 </a>
+            </div>
+            <div class="phone-mockup">
+                <div class="phone-screen">
+                    <img src="{% static 'sell/mobile-sell.png' %}" alt="Mobile Sell" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
             </div>
         </div>
     </div>
 </section>
 
 <!-- ========== FAQ SECTION ========== -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <h2 class="text-center display-6 fw-bold mb-5">FREQUENTLY ASKED QUESTIONS</h2>
+<section class="sell-section">
+    <div class="container" style="max-width: 2500px; margin: auto;">
+        <h2 class="sell-section-heading">FREQUENTLY ASKED QUESTIONS</h2>
         
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="accordion" id="faqAccordion">
-                    
-                    <!-- FAQ 1 -->
-                    <div class="accordion-item border-0 shadow-sm mb-3 rounded-3 overflow-hidden">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button rounded-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
-                                How do I list my property for sale?
-                            </button>
-                        </h2>
-                        <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body text-muted">
-                                Simply log in to your account and click "Add Property" from your agent dashboard. Fill in the property details, upload images, and submit. Your listing will be reviewed by our admin team and published once approved.
-                            </div>
-                        </div>
+        <div class="faq-container">
+            <!-- FAQ 1 -->
+            <div class="faq-item">
+                <button class="faq-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1" aria-expanded="true">
+                    <div class="faq-icon">
+                        <i class="bi bi-question-lg"></i>
                     </div>
-
-                    <!-- FAQ 2 -->
-                    <div class="accordion-item border-0 shadow-sm mb-3 rounded-3 overflow-hidden">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed rounded-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
-                                What documents do I need to sell my property?
-                            </button>
-                        </h2>
-                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body text-muted">
-                                You'll need the property deed, proof of ownership, recent survey map, and any relevant documents. Our team will guide you through the exact requirements when you're ready to finalize the sale.
-                            </div>
-                        </div>
+                    <span class="faq-question">How do I list my property for sale?</span>
+                    <i class="bi bi-chevron-down faq-chevron"></i>
+                </button>
+                <div id="faq1" class="collapse show" data-bs-parent=".faq-container">
+                    <div class="faq-body">
+                        Simply log in to your account and click "Add Property" from your agent dashboard. Fill in the property details, upload images, and submit. Your listing will be reviewed by our admin team and published once approved.
                     </div>
+                </div>
+            </div>
 
-                    <!-- FAQ 3 -->
-                    <div class="accordion-item border-0 shadow-sm mb-3 rounded-3 overflow-hidden">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed rounded-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
-                                How long does it take to sell my property?
-                            </button>
-                        </h2>
-                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body text-muted">
-                                The time varies depending on property location, price, and market conditions. On average, most properties sell within 2-6 months. Our expert marketing strategies help speed up the process.
-                            </div>
-                        </div>
+            <!-- FAQ 2 -->
+            <div class="faq-item">
+                <button class="faq-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2" aria-expanded="false">
+                    <div class="faq-icon">
+                        <i class="bi bi-question-lg"></i>
                     </div>
-
-                    <!-- FAQ 4 -->
-                    <div class="accordion-item border-0 shadow-sm mb-3 rounded-3 overflow-hidden">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed rounded-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
-                                What are your commission rates?
-                            </button>
-                        </h2>
-                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body text-muted">
-                                We offer competitive commission rates that vary based on property type and location. Contact our team directly for a customized quote. We aim to provide the best value for your sale.
-                            </div>
-                        </div>
+                    <span class="faq-question">What documents do I need to sell my property?</span>
+                    <i class="bi bi-chevron-down faq-chevron"></i>
+                </button>
+                <div id="faq2" class="collapse" data-bs-parent=".faq-container">
+                    <div class="faq-body">
+                        You'll need the property deed, proof of ownership, recent survey map, and any relevant documents. Our team will guide you through the exact requirements when you're ready to finalize the sale.
                     </div>
+                </div>
+            </div>
 
-                    <!-- FAQ 5 -->
-                    <div class="accordion-item border-0 shadow-sm mb-3 rounded-3 overflow-hidden">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed rounded-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
-                                Can I edit my listing after it's published?
-                            </button>
-                        </h2>
-                        <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body text-muted">
-                                Yes! You can edit your property details, upload new images, update pricing, and modify any information from your agent dashboard anytime. Changes will be reflected immediately on the platform.
-                            </div>
-                        </div>
+            <!-- FAQ 3 -->
+            <div class="faq-item">
+                <button class="faq-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3" aria-expanded="false">
+                    <div class="faq-icon">
+                        <i class="bi bi-question-lg"></i>
                     </div>
-
-                    <!-- FAQ 6 -->
-                    <div class="accordion-item border-0 shadow-sm mb-3 rounded-3 overflow-hidden">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed rounded-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
-                                How will I receive inquiries from buyers?
-                            </button>
-                        </h2>
-                        <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body text-muted">
-                                All buyer inquiries will be sent to your agent dashboard. You'll also receive email notifications, and interested buyers may contact you directly via the information you provide in your listing.
-                            </div>
-                        </div>
+                    <span class="faq-question">How long does it take to sell my property?</span>
+                    <i class="bi bi-chevron-down faq-chevron"></i>
+                </button>
+                <div id="faq3" class="collapse" data-bs-parent=".faq-container">
+                    <div class="faq-body">
+                        The time varies depending on property location, price, and market conditions. On average, most properties sell within 2-6 months. Our expert marketing strategies help speed up the process.
                     </div>
+                </div>
+            </div>
 
+            <!-- FAQ 4 -->
+            <div class="faq-item">
+                <button class="faq-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4" aria-expanded="false">
+                    <div class="faq-icon">
+                        <i class="bi bi-question-lg"></i>
+                    </div>
+                    <span class="faq-question">What are your commission rates?</span>
+                    <i class="bi bi-chevron-down faq-chevron"></i>
+                </button>
+                <div id="faq4" class="collapse" data-bs-parent=".faq-container">
+                    <div class="faq-body">
+                        We offer competitive commission rates that vary based on property type and location. Contact our team directly for a customized quote. We aim to provide the best value for your sale.
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ 5 -->
+            <div class="faq-item">
+                <button class="faq-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5" aria-expanded="false">
+                    <div class="faq-icon">
+                        <i class="bi bi-question-lg"></i>
+                    </div>
+                    <span class="faq-question">Can I edit my listing after it's published?</span>
+                    <i class="bi bi-chevron-down faq-chevron"></i>
+                </button>
+                <div id="faq5" class="collapse" data-bs-parent=".faq-container">
+                    <div class="faq-body">
+                        Yes! You can edit your property details, upload new images, update pricing, and modify any information from your agent dashboard anytime. Changes will be reflected immediately on the platform.
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ 6 -->
+            <div class="faq-item">
+                <button class="faq-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6" aria-expanded="false">
+                    <div class="faq-icon">
+                        <i class="bi bi-question-lg"></i>
+                    </div>
+                    <span class="faq-question">How will I receive inquiries from buyers?</span>
+                    <i class="bi bi-chevron-down faq-chevron"></i>
+                </button>
+                <div id="faq6" class="collapse" data-bs-parent=".faq-container">
+                    <div class="faq-body">
+                        All buyer inquiries will be sent to your agent dashboard. You'll also receive email notifications, and interested buyers may contact you directly via the information you provide in your listing.
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
+<!-- ========== BOTTOM CTA SECTION ========== -->
+<section class="sell-section">
+    <div class="container" style="max-width: 2000px; margin: auto;">
+        <div class="cta-banner">
+            <div class="cta-left">
+                <div class="cta-icon">
+                    <i class="fa fa-sprout"></i>
+                </div>
+                <div class="cta-text">
+                    <h2>Ready to sell your farmland?</h2>
+                    <p>List your property today and connect with genuine buyers and investors.</p>
+                </div>
+            </div>
+            <div class="cta-right">
+                <div class="cta-buttons">
+                    <a href="/agent/dashboard/" class="btn-sell-primary">
+                        <i class="bi bi-list-check"></i> List Your Property
+                    </a>
+                    <a href="/contact/" class="btn-sell-secondary">
+                        <i class="bi bi-person-lines-fill"></i> Talk to Advisor
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</div>
 {% endblock %}

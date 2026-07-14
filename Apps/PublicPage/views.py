@@ -3,11 +3,26 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.db.models import Q
 from .models import Inquiry, Property, PropertyInquiry, PropertyImage, WebsiteEnquiry
+from Apps.Agent.models import AgentProfile
 
+# def home(request):
+#     featured_properties = Property.objects.filter(is_featured=True).order_by('-created_at')[:6]
+#     return render(request, 'public/home.html', {
+#         'featured_properties': featured_properties
+#     })
+
+    
 def home(request):
-    featured_properties = Property.objects.filter(is_featured=True).order_by('-created_at')[:6]
+    # Show latest properties automatically — no manual "featured" toggling needed
+    all_properties = Property.objects.all().order_by('-created_at')
+    print("=== HOME VIEW CALLED, COUNT:", all_properties.count(), "===")
+
+    farmland_listings = all_properties[:5]
+    verified_properties = all_properties[5:9]
+
     return render(request, 'public/home.html', {
-        'featured_properties': featured_properties
+        'farmland_listings': farmland_listings,
+        'verified_properties': verified_properties,
     })
 
 
@@ -219,18 +234,210 @@ def contact(request):
         
     return render(request, 'public/contact.html')
 
-def media_page(request):
-    images = PropertyImage.objects.select_related('property').all().order_by('-id')
-    categories = PropertyImage.IMAGE_CATEGORIES
-    
-    return render(request, 'public/media.html', {
-        'images': images,
-        'categories': categories
-    })
-
 def career(request):
     return render(request, 'public/career.html')
+
+def agents(request):
+    """
+    Public agents listing page with search filters
+    """
+    # Get all agents with profiles
+    agents_list = AgentProfile.objects.select_related('user').all().order_by('-created_at')
+    
+    # Search filters
+    search_query = request.GET.get('search', '')
+    location = request.GET.get('location', '')
+    specialization = request.GET.get('specialization', '')
+    languages = request.GET.get('languages', '')
+    
+    # Apply filters
+    if search_query:
+        agents_list = agents_list.filter(
+            Q(user__first_name__icontains=search_query) |
+            Q(user__last_name__icontains=search_query) |
+            Q(user__username__icontains=search_query) |
+            Q(company_name__icontains=search_query) |
+            Q(territory__icontains=search_query)
+        )
+    
+    if location:
+        agents_list = agents_list.filter(territory__icontains=location)
+    
+    if specialization:
+        agents_list = agents_list.filter(bio__icontains=specialization)
+    
+    if languages:
+        agents_list = agents_list.filter(bio__icontains=languages)
+    
+    # Pagination
+    paginator = Paginator(agents_list, 9)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    # Popular searches
+    popular_searches = [
+        'Bangalore', 'Chennai', 'Hyderabad', 'Mumbai', 'Pune',
+        'Farmland', 'Agricultural Land', 'Plantation', 'Investment'
+    ]
+    
+    return render(request, 'public/agents.html', {
+        'page_obj': page_obj,
+        'search_query': search_query,
+        'location': location,
+        'specialization': specialization,
+        'languages': languages,
+        'popular_searches': popular_searches,
+    })
 
 def nri(request):
     return render(request, 'public/nri.html')
 
+def subscription_plans(request):
+    """
+    Subscription plans page for agents.
+    Displays pricing tiers and billing options.
+    """
+    # Pricing data - prepared for future Stripe integration
+    pricing_plans = {
+        'seed': {
+            'name': 'Seed',
+            'subtitle': 'Forever Free',
+            'price': 0,
+            'billing': '₹0/month',
+            'button_text': 'Get Started Free',
+            'features': [
+                {'text': '5 Active Listings', 'included': True},
+                {'text': 'Basic Dashboard', 'included': True},
+                {'text': 'Buyer Inquiries', 'included': True},
+                {'text': 'WhatsApp Contact', 'included': True},
+                {'text': 'Basic Analytics', 'included': True},
+                {'text': 'Featured Listings', 'included': False},
+                {'text': 'Videos', 'included': False},
+                {'text': 'Brochure Upload', 'included': False},
+                {'text': 'Verified Agent Badge', 'included': False},
+                {'text': 'Priority in Search', 'included': False},
+                {'text': 'Advanced Lead Management', 'included': False},
+                {'text': 'Property Analytics (Advanced)', 'included': False},
+                {'text': 'Team Members (1 Only)', 'included': False},
+                {'text': 'Priority Support (Email)', 'included': False},
+            ]
+        },
+        'harvest': {
+            'name': 'Harvest',
+            'subtitle': 'Billed annually at ₹4,799',
+            'price': 499,
+            'billing': '₹499/month',
+            'button_text': 'Choose Harvest Plan',
+            'features': [
+                {'text': '50 Active Listings', 'included': True},
+                {'text': '5 Featured Listings', 'included': True},
+                {'text': '25 Images per Property', 'included': True},
+                {'text': 'Videos', 'included': True},
+                {'text': 'Brochure Upload', 'included': True},
+                {'text': 'Verified Agent Badge', 'included': True},
+                {'text': 'High Priority in Search', 'included': True},
+                {'text': 'Advanced Lead Management', 'included': True},
+                {'text': 'Property Analytics (Advanced)', 'included': True},
+                {'text': 'WhatsApp Leads', 'included': True},
+                {'text': 'Team Members (Up to 3)', 'included': True},
+                {'text': 'Priority Support', 'included': True},
+            ]
+        },
+        'legacy': {
+            'name': 'Legacy',
+            'subtitle': 'Billed annually at ₹9,599',
+            'price': 999,
+            'billing': '₹999/month',
+            'button_text': 'Choose Legacy Plan',
+            'features': [
+                {'text': 'Unlimited Active Listings', 'included': True},
+                {'text': 'Unlimited Featured Listings', 'included': True},
+                {'text': 'Unlimited Images per Property', 'included': True},
+                {'text': 'Videos', 'included': True},
+                {'text': 'Brochure Upload', 'included': True},
+                {'text': 'Premium Verified Badge', 'included': True},
+                {'text': 'Highest Priority in Search', 'included': True},
+                {'text': 'Premium CRM (Lead Management)', 'included': True},
+                {'text': 'Property Analytics (Advanced + Reports)', 'included': True},
+                {'text': 'WhatsApp Leads', 'included': True},
+                {'text': 'Unlimited Team Members', 'included': True},
+                {'text': 'Dedicated Support', 'included': True},
+            ]
+        }
+    }
+    
+    # Billing periods with discounts
+    billing_periods = {
+        '1_month': {'label': '1 Month', 'discount': 0},
+        '3_months': {'label': '3 Months', 'discount': 10},
+        '6_months': {'label': '6 Months', 'discount': 15},
+        '12_months': {'label': '12 Months', 'discount': 20},
+    }
+    
+    return render(request, 'public/subscription/subscription.html', {
+        'pricing_plans': pricing_plans,
+        'billing_periods': billing_periods,
+    })
+
+def agent_profile(request, agent_id=None):
+    """
+    Public agent profile page with detailed information,
+    listed properties, and reviews.
+    """
+    from django.shortcuts import get_object_or_404
+    
+    # Get agent profile
+    agent = get_object_or_404(AgentProfile, id=agent_id)
+    
+    # Get agent's listed properties (active and approved)
+    agent_properties = Property.objects.filter(
+        seller=agent.user,
+        is_active=True,
+        status='approved',
+        show_to_public=True
+    ).prefetch_related('images').order_by('-created_at')
+    
+    # Calculate statistics
+    active_listings = agent_properties.count()
+    properties_sold = agent.user.bookings.count() if hasattr(agent.user, 'bookings') else 0
+    years_experience = 1  # Default, could be calculated from created_at
+    rating = 4.8  # Default rating, could be calculated from reviews
+    response_rate = 95  # Default response rate
+    
+    # Sample reviews data (in production, this would come from a Review model)
+    sample_reviews = [
+        {
+            'name': 'Rajesh Kumar',
+            'avatar': 'https://randomuser.me/api/portraits/men/32.jpg',
+            'rating': 5,
+            'review': 'Excellent service! Very professional and knowledgeable about farmland investments.',
+            'date': '2 weeks ago'
+        },
+        {
+            'name': 'Priya Sharma',
+            'avatar': 'https://randomuser.me/api/portraits/women/44.jpg',
+            'rating': 4,
+            'review': 'Good experience. Helped me find the perfect agricultural land for my needs.',
+            'date': '1 month ago'
+        },
+        {
+            'name': 'Amit Patel',
+            'avatar': 'https://randomuser.me/api/portraits/men/67.jpg',
+            'rating': 5,
+            'review': 'Highly recommended. Very responsive and transparent throughout the process.',
+            'date': '1 month ago'
+        }
+    ]
+    
+    context = {
+        'agent': agent,
+        'agent_properties': agent_properties,
+        'active_listings': active_listings,
+        'properties_sold': properties_sold,
+        'years_experience': years_experience,
+        'rating': rating,
+        'response_rate': response_rate,
+        'reviews': sample_reviews,
+    }
+    
+    return render(request, 'public/agent_profile.html', context)

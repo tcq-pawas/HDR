@@ -5,6 +5,13 @@ from Apps.PublicPage.models import Property
 
 class AgentProfile(models.Model):
     """Extended profile for agents/sellers"""
+
+    VERIFICATION_STATUS_CHOICES = [
+        ('not_started', 'Not Started'),
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+    ]
     
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='agent_profile')
     phone = models.CharField(max_length=20, blank=True)
@@ -21,6 +28,11 @@ class AgentProfile(models.Model):
     notification_whatsapp = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    id_proof_document = models.FileField(upload_to='agent_verification/id_proof/', blank=True, null=True)
+    address_proof_document = models.FileField(upload_to='agent_verification/address_proof/', blank=True, null=True)
+    verification_status = models.CharField(max_length=20, choices=VERIFICATION_STATUS_CHOICES, default='not_started')
+    verification_remarks = models.TextField(blank=True, null=True)
+
 
     def __str__(self):
         return f"{self.user.get_full_name() or self.user.username} - Agent"

@@ -205,9 +205,8 @@ def property_add(request, property_type):
             messages.success(request, "Property created successfully! It's pending admin approval.")
             return redirect('agent:property_list')
         else:
-            with open("C:/Users/AJAY/HDR/form_errors.txt", "w") as f:
-                f.write(str(form.errors))
             print("Form errors:", form.errors)
+            messages.error(request, f"Please fix the errors below: {form.errors}")
     else:
         # Use appropriate form based on property_type
         if property_type == 'land':
@@ -364,7 +363,17 @@ def lead_list(request):
     if user_role not in ['agent', 'owner']:
         raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
     
-    leads = Lead.objects.filter(agent=request.user).select_related('property').order_by('-created_at')
+    all_leads = Lead.objects.filter(agent=request.user)
+    leads = all_leads.select_related('property').order_by('-created_at')
+    
+    # Stats for the top cards
+    stats = {
+        'total_leads': all_leads.count(),
+        'new_leads': all_leads.filter(status='new').count(),
+        'contacted_leads': all_leads.filter(status='contacted').count(),
+        'qualified_leads': all_leads.filter(status='qualified').count(),
+        'closed_won_leads': all_leads.filter(status='closed_won').count(),
+    }
     
     # Filter by status
     status_filter = request.GET.get('status')
@@ -376,23 +385,48 @@ def lead_list(request):
     if source_filter:
         leads = leads.filter(source=source_filter)
     
+    # Filter by date range
+    date_from = request.GET.get('date_from')
+    date_to = request.GET.get('date_to')
+    if date_from:
+        leads = leads.filter(created_at__date__gte=date_from)
+    if date_to:
+        leads = leads.filter(created_at__date__lte=date_to)
+    
     # Search
     search_query = request.GET.get('search')
     if search_query:
         leads = leads.filter(
             Q(name__icontains=search_query) |
             Q(email__icontains=search_query) |
-            Q(phone__icontains=search_query)
+            Q(phone__icontains=search_query) |
+            Q(property__title__icontains=search_query)
         )
     
+    # CSV Export
+    if request.GET.get('export') == 'csv':
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="leads_export.csv"'
+        writer = csv.writer(response)
+        writer.writerow(['Name', 'Phone', 'Email', 'Property', 'Status', 'Source', 'Priority', 'Created Date'])
+        for lead in leads:
+            writer.writerow([
+                lead.name, lead.phone, lead.email,
+                lead.property.title if lead.property else '-',
+                lead.get_status_display(), lead.get_source_display(),
+                lead.priority.title(), lead.created_at.strftime('%d %b %Y %I:%M %p')
+            ])
+        return response
+    
     # Pagination
-    paginator = Paginator(leads, 20)
+    paginator = Paginator(leads, 10)
     page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
     
     context = {
         'page_obj': page_obj,
         'leads': page_obj.object_list,
+        'stats': stats,
         'status_filter': status_filter,
         'source_filter': source_filter,
     }
@@ -416,6 +450,34 @@ def lead_detail(request, pk):
     }
     
     return render(request, 'agent/lead_detail.html', context)
+
+
+@login_required
+def lead_add(request):
+    """Add a new lead manually"""
+    user_role = get_user_role(request.user)
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
+    
+    if request.method == 'POST':
+        form = LeadForm(request.POST)
+        if form.is_valid():
+            lead = form.save(commit=False)
+            lead.agent = request.user
+            lead.save()
+            messages.success(request, "Lead added successfully!")
+            return redirect('agent:lead_list')
+    else:
+        form = LeadForm()
+    
+    form.fields['property'].queryset = Property.objects.filter(seller=request.user)
+    
+    context = {
+        'form': form,
+        'title': 'Add New Lead'
+    }
+    
+    return render(request, 'agent/lead_form.html', context)
 
 
 @login_required
@@ -812,37 +874,49 @@ def commission_detail(request, pk):
 
 @login_required
 def document_list(request):
-    """List all documents for the agent"""
+    """Agent verification page - upload ID proof & address proof"""
     user_role = get_user_role(request.user)
     if user_role not in ['agent', 'owner']:
         raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
-    
-    documents = Document.objects.filter(agent=request.user).select_related('property', 'booking').order_by('-uploaded_at')
-    
-    # Filter by type
-    type_filter = request.GET.get('type')
-    if type_filter:
-        documents = documents.filter(document_type=type_filter)
-    
-    # Filter by category
-    category_filter = request.GET.get('category')
-    if category_filter:
-        documents = documents.filter(category=category_filter)
-    
-    # Pagination
-    paginator = Paginator(documents, 20)
-    page_number = request.GET.get('page', 1)
-    page_obj = paginator.get_page(page_number)
-    
-    context = {
-        'page_obj': page_obj,
-        'documents': page_obj.object_list,
-        'type_filter': type_filter,
-        'category_filter': category_filter,
-    }
-    
-    return render(request, 'agent/document_list.html', context)
 
+    try:
+        agent_profile = request.user.agent_profile
+    # pyrefly: ignore [missing-attribute]
+    except AgentProfile.DoesNotExist:
+        # pyrefly: ignore [missing-attribute]
+        agent_profile = AgentProfile.objects.create(user=request.user)
+
+    if request.method == 'POST':
+        proof_type = request.POST.get('proof_type')
+        uploaded_file = request.FILES.get('file')
+
+        if uploaded_file and proof_type == 'id_proof':
+            agent_profile.id_proof_document = uploaded_file
+            if agent_profile.verification_status == 'not_started':
+                agent_profile.verification_status = 'pending'
+            agent_profile.save()
+            messages.success(request, "ID Proof uploaded successfully!")
+        elif uploaded_file and proof_type == 'address_proof':
+            agent_profile.address_proof_document = uploaded_file
+            if agent_profile.verification_status == 'not_started':
+                agent_profile.verification_status = 'pending'
+            agent_profile.save()
+            messages.success(request, "Address Proof uploaded successfully!")
+        else:
+            messages.error(request, "Please select a valid file to upload.")
+
+        return redirect('agent:document_list')
+
+    context = {
+        'agent_profile': agent_profile,
+        'id_proof_uploaded': bool(agent_profile.id_proof_document),
+        'address_proof_uploaded': bool(agent_profile.address_proof_document),
+        'verification_status': agent_profile.verification_status,
+        'admin_review_done': agent_profile.verification_status in ['approved', 'rejected'],
+        'is_verified': agent_profile.is_verified,  # existing boolean field use kiya
+    }
+
+    return render(request, 'agent/document_list.html', context)
 
 @login_required
 def document_add(request):

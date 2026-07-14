@@ -1,4 +1,5 @@
 {% load static %}
+{% load custom_tags %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,70 +12,14 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <!---------font awesome icon---------->
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     {% block extra_css %}{% endblock %}
 </head>
 
 <body>
-    <!-- Top Bar -->
-    <!-- <div class="top-bar">
-        <div class="container d-flex justify-content-between align-items-center">
-            <div class="contact-info">
-                <span class="me-3"><i class="bi bi-telephone-fill text-white"></i> +91 9506688688</span>
-                <span><i class="bi bi-envelope-fill text-white"></i> info@heydayrealty.in</span>
-            </div>
-            <div class="social-icons">
-                <a href="#" class="me-2"><i class="bi bi-facebook"></i></a>
-                <!-- <a href="#" class="me-2"><i class="bi bi-twitter"></i></a> 
-                <a href="#" class="me-2"><i class="bi bi-instagram"></i></a>
-                <a href="#" class="me-2"><i class="bi bi-linkedin"></i></a>
-            </div>
-        </div>
-    </div> -->
-
-    <!-- <div class="topbar">
-    <!-- <div style="display:flex;gap:20px">
-        <a href="tel:+919506688688">📞 +91 9506 688 688</a>
-        <a href="mailto:info@heydayrealty.in">✉ info@heydayrealty.in</a>
-    </div> 
-    <div class="social">
-        <a href="#">𝗙</a>
-        <a href="#">◎</a>
-        <a href="#">in</a>
-        <a href="#">𝗫</a>
-    </div>
-</div> -->
-
-    <!-- Main Navbar -->
-    <!-- <nav class="navbar navbar-expand-lg sticky-top">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'public:home' %}">
-                <!-- <img src="{% static 'img/logo.png' %}" alt="HeyDay Realty"> 
-                <img src="{% static 'img/logo-2.png' %}" alt="HeyDay Realty">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item"><a class="nav-link screenshot-hover" href="{% url 'public:home' %}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'buy:property_search' %}">Buy</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'sell:sell_page' %}">Sell</a></li>
-                    <li class="nav-item"><a class="nav-link" href="">Lands</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'public:media' %}">Media</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'public:about' %}">About Us</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'public:contact' %}">Contact</a></li>
-                    <li class="nav-item">
-                        <a class="tour-btn" href="#">
-                            SCHEDULE A TOUR
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav> -->
 <nav class="navbar navbar-expand-lg sticky-top py-2 shadow-sm border-bottom" style="background: var(--cloud-white);">
   <div class="container-fluid px-4 px-lg-5">
 
@@ -118,10 +63,13 @@
           <a class="nav-link" href="{% url 'sell:sell_page' %}">Sell</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'public:media' %}">Media</a>
+          <a class="nav-link" href="{% url 'public:subscription_plans' %}">Subscription</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'public:about' %}">About Us</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'public:agents' %}">Find Agents</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'public:contact' %}">Contact</a>
@@ -132,20 +80,16 @@
       {% if user.is_authenticated %}
         <div class="d-flex align-items-center gap-2 mt-2 mt-lg-0 ms-lg-2">
           <div class="dropdown">
-            <button class="btn btn-outline-success d-flex align-items-center gap-2 px-3 py-2 rounded-pill dropdown-toggle" type="button" data-bs-toggle="dropdown">
-              {% load custom_tags %}
-              {% get_profile_image user as profile_image %}
-              {% if profile_image %}
-                <img src="{{ profile_image }}" alt="Profile" class="rounded-circle" style="width:32px; height:32px; object-fit:cover;">
+            <button class="btn btn-success d-flex align-items-center gap-2 px-3 py-2 rounded-pill dropdown-toggle" type="button" data-bs-toggle="dropdown" style="background: linear-gradient(135deg, #198754 0%, #034330 100%);border: none;box-shadow: 0 2px 8px rgba(25, 135, 84, 0.3);">
+              {% if user.agent_profile and user.agent_profile.profile_image and user.agent_profile.profile_image.name %}
+                <img src="{{ user.agent_profile.profile_image.url }}" alt="Profile" class="rounded-circle" style="width:44px; height:44px; object-fit:cover; border:3px solid #fff; flex-shrink:0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
               {% else %}
-                <div class="rounded-circle bg-success d-flex align-items-center justify-content-center text-white" style="width:32px; height:32px; font-size:14px;">
-                  {{ user.first_name|first|upper }}
-                </div>
+                <img src="https://ui-avatars.com/api/?name={% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}&background=198754&color=fff&size=44&bold=true" alt="Profile" class="rounded-circle" style="width:44px; height:44px; object-fit:cover; border:3px solid #fff; flex-shrink:0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
               {% endif %}
-              <span class="fw-semibold">{{ user.first_name }}</span>
+              <span class="fw-semibold text-white">{% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}</span>
             </button>
             <ul class="dropdown-menu dropdown-menu-end shadow">
-              <li><a class="dropdown-item" href="{% get_profile_url user %}">My Profile</a></li>
+              <li><a class="dropdown-item" href="/dashboard/">My Dashboard</a></li>
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item text-danger" href="{% url 'auth:logout' %}">Logout</a></li>
             </ul>
@@ -229,10 +173,6 @@
 
                         <!-- <li><a href="#">Lands</a></li> 
 
-                        <li><a href="{% url 'public:media' %}">
-                                Media
-                            </a></li>
-
                         <li><a href="{% url 'public:about' %}">
                                 About Us
                             </a></li>
@@ -257,8 +197,6 @@
                                 Property</a></li>
                         <li><a href="{% url 'sell:sell_page' %}"><i class="bi bi-chevron-right small me-2"></i>Sell
                                 Property</a></li>
-                        <li><a href="{% url 'public:media' %}"><i class="bi bi-chevron-right small me-2"></i>Media
-                                Gallery</a></li>
                     </ul>
                 </div> -->
                 <!-- Column 3: Property Types 
@@ -370,95 +308,57 @@
         </div>
     </footer> -->
 
-    <footer>
-    <div class="footer-inner">
-        <div class="footer-top">
+    <footer class="footer">
+        <div class="footer-container">
             <div class="footer-brand">
-                <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
-                    <div style="width:38px;height:38px;background:linear-gradient(135deg,#2D6A4F,#40916C);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px">🌿</div>
-                    <div>
-                        <div class="footer-logo-text">HeyDay Realty</div>
-                        <div class="footer-logo-sub">Farmland Marketplace</div>
-                    </div>
-                </div>
-                <p>HeyDay Realty helps investors discover verified farmland opportunities, managed plantation projects, and long-term agricultural assets across India.</p>
+                <div class="footer-brand-logo">HeyDay Realty</div>
+                <p class="footer-brand-description">HeyDay Realty helps investors discover verified farmland opportunities, managed plantation projects, and long-term agricultural assets across India.</p>
                 <div class="footer-social">
-                    <a href="#">𝗙</a>
-                    <a href="#">◎</a>
-                    <a href="#">in</a>
-                    <a href="#">𝗫</a>
+                    <a href="#" class="footer-social-link">𝗙</a>
+                    <a href="#" class="footer-social-link">◎</a>
+                    <a href="#" class="footer-social-link">in</a>
+                    <a href="#" class="footer-social-link">𝗫</a>
                 </div>
             </div>
 
-            <div class="footer-col">
+            <div class="footer-column">
                 <h4>Quick Links</h4>
-                <a href="{% url 'public:home' %}">Home</a>
-                <a href="{% url 'buy:property_search' %}">Buy Property</a>
-                <a href="{% url 'sell:sell_page' %}">Sell Property</a>
-                <a href="#">Media</a>
-                <a href="{% url 'public:about' %}">About Us</a>
-                <a href="{% url 'public:contact' %}">Contact</a>
+                <div class="footer-links">
+                    <a href="{% url 'public:home' %}" class="footer-link">Home</a>
+                    <a href="{% url 'buy:property_search' %}" class="footer-link">Buy Property</a>
+                    <a href="{% url 'sell:sell_page' %}" class="footer-link">Sell Property</a>
+                    <a href="{% url 'public:agents' %}" class="footer-link">Find Agents</a>
+                    <a href="{% url 'public:about' %}" class="footer-link">About Us</a>
+                    <a href="{% url 'public:contact' %}" class="footer-link">Contact</a>
+                </div>
             </div>
 
-            <div class="footer-col">
-                <h4>Our Services</h4>
-                <a href="#">Managed Farmland</a>
-                <a href="#">Agricultural Land</a>
-                <a href="#">Farm Plots</a>
-                <a href="#">Plantation Projects</a>
-                <a href="#">Investment Consulting</a>
-            </div>
-
-            <!-- <div class="footer-col">
-                <h4>Contact Us</h4>
-                <div class="footer-contact-item">
-                    <span class="footer-contact-icon">📍</span>
-                    <span>123 Real Estate Blvd, City, India</span>
-                </div>
-                <div class="footer-contact-item">
-                    <span class="footer-contact-icon">📞</span>
-                    <span>+91 9506 688 688</span>
-                </div>
-                <div class="footer-contact-item">
-                    <span class="footer-contact-icon">✉</span>
-                    <span>info@heydayrealty.in</span>
-                </div>
-                <div class="footer-contact-item">
-                    <span class="footer-contact-icon">🕐</span>
-                    <span>Mon–Sat 9:00 AM – 7:00 PM</span>
-                </div>
-            </div> -->
-
-            <div class="footer-col">
-                <h4>Newsletter</h4>
-                <p style="font-size:14px;margin-bottom:14px;color:rgba(255,255,255,0.5);line-height:1.6">Stay updated with the latest properties and market insights.</p>
-                <div class="newsletter-form">
-                    <input type="email" placeholder="Your email address">
-                    <button>→</button>
+            <div class="footer-column">
+                <h4>Services</h4>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">Managed Farmland</a>
+                    <a href="#" class="footer-link">Agricultural Land</a>
+                    <a href="#" class="footer-link">Farm Plots</a>
+                    <a href="#" class="footer-link">Plantation Projects</a>
+                    <a href="#" class="footer-link">Investment Consulting</a>
                 </div>
             </div>
         </div>
 
         <div class="footer-bottom">
-            <span>© 2026 HeyDay Realty. All Rights Reserved. Designed with ♥ in India.</span>
-            <div style="display:flex;gap:20px">
-                <a href="#">Privacy Policy</a>
-                <a href="#">Terms of Use</a>
-                <a href="#">Sitemap</a>
+            <span>© 2026 HeyDay Realty. All Rights Reserved.</span>
+            <div class="footer-bottom-links">
+                <a href="#" class="footer-bottom-link">Privacy Policy</a>
+                <a href="#" class="footer-bottom-link">Terms of Use</a>
+                <a href="#" class="footer-bottom-link">Sitemap</a>
             </div>
         </div>
-    </div>
-</footer>
+    </footer>
 
-    <!-- Sticky CTA (Global) -->
-    <!-- <div class="sticky-cta">
-        <p class="sticky-text d-none d-md-block mb-0">Ready to Own Premium Farmland?</p>
-        <a href="{% url 'public:contact' %}" class="btn btn-primary rounded-pill px-4 shadow">Book a Visit</a>
-    </div> -->
-    <div class="sticky-bar">
-    <span>Ready to own <em>Premium Farmland?</em></span>
-    <a href="{% url 'public:contact' %}" class="btn-sticky">Book a Visit</a>
-</div>
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/919506688688" class="whatsapp-float" target="_blank">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     {% block extra_js %}{% endblock %}

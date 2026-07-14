@@ -64,153 +64,151 @@
 
     {% if properties %}
 
-        <div class="properties-table">
+    <div class="properties-table">
 
-            <table>
+        <table>
 
-                <thead>
+            <thead>
 
-                    <tr>
+                <tr>
 
-                        <th>Title</th>
+                    <th>Title</th>
 
-                        <th>Location</th>
+                    <th>Location</th>
 
-                        <th>Price</th>
+                    <th>Price</th>
 
-                        <th>Category</th>
+                    <th>Category</th>
 
-                        <th>Status</th>
+                    <th>Status</th>
 
-                        <th>Created</th>
+                    <th>Created</th>
 
-                        <th>Action</th>
+                    <th>Action</th>
 
-                    </tr>
+                </tr>
 
-                </thead>
+            </thead>
 
-                <tbody>
+            <tbody>
 
-                    {% for property in properties %}
+                {% for property in properties %}
 
-                        <tr>
+                <tr>
 
-                            <td class="property-title">{{ property.title|truncatewords:5 }}</td>
+                    <td class="property-title">{{ property.title|truncatewords:5 }}</td>
 
-                            <td>{{ property.location }}</td>
+                    <td>{{ property.location }}</td>
 
-                            <td>₹{{ property.price|floatformat:0 }}</td>
+                    <td>₹{{ property.price|floatformat:0 }}</td>
 
-                            <td>{{ property.category }}</td>
+                    <td>{{ property.category }}</td>
 
-                            <td>
+                    <td>
 
-                                <span class="status-badge status-{{ property.status }}">
+                        <span class="status-badge status-{{ property.status }}">
 
-                                    {{ property.get_status_display }}
+                            {{ property.get_status_display }}
 
-                                </span>
+                        </span>
 
-                            </td>
+                    </td>
 
-                            <td>{{ property.created_at|date:"M d, Y" }}</td>
+                    <td>{{ property.created_at|date:"M d, Y" }}</td>
 
-                            <td>
+                    <td>
 
-                                <div class="action-buttons">
+                        <div class="action-buttons">
 
-                                    <a href="{% url 'agent:property_edit' property.id %}" class="action-btn edit">Edit</a>
+                            <a href="{% url 'agent:property_edit' property.id %}" class="action-btn edit">Edit</a>
 
-                                    <a href="{% url 'agent:property_delete' property.id %}" class="action-btn delete">Delete</a>
+                            <a href="{% url 'agent:property_delete' property.id %}" class="action-btn delete">Delete</a>
 
-                                </div>
+                        </div>
 
-                            </td>
+                    </td>
 
-                        </tr>
-
-                    {% endfor %}
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-
-
-        <!-- Pagination -->
-
-        {% if page_obj.has_other_pages %}
-
-            <div class="pagination">
-
-                {% if page_obj.has_previous %}
-
-                    <a href="?page=1">First</a>
-
-                    <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
-
-                {% endif %}
-
-
-
-                {% for num in page_obj.paginator.page_range %}
-
-                    {% if page_obj.number == num %}
-
-                        <span class="current">{{ num }}</span>
-
-                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-
-                        <a href="?page={{ num }}">{{ num }}</a>
-
-                    {% endif %}
+                </tr>
 
                 {% endfor %}
 
+            </tbody>
+
+        </table>
+
+    </div>
 
 
-                {% if page_obj.has_next %}
 
-                    <a href="?page={{ page_obj.next_page_number }}">Next</a>
+    <!-- Pagination -->
 
-                    <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+    {% if page_obj.has_other_pages %}
 
-                {% endif %}
+    <div class="pagination">
 
-            </div>
+        {% if page_obj.has_previous %}
+
+        <a href="?page=1">First</a>
+
+        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
 
         {% endif %}
 
+
+
+        {% for num in page_obj.paginator.page_range %}
+
+        {% if page_obj.number == num %}
+
+        <span class="current">{{ num }}</span>
+
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %} <a href="?page={{ num }}">{{ num
+            }}</a>
+
+            {% endif %}
+
+            {% endfor %}
+
+
+
+            {% if page_obj.has_next %}
+
+            <a href="?page={{ page_obj.next_page_number }}">Next</a>
+
+            <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+
+            {% endif %}
+
+    </div>
+
+    {% endif %}
+
     {% else %}
 
-        <!-- Empty State -->
+    <!-- Empty State -->
 
-        <div class="empty-state">
+    <div class="empty-state">
 
-            <div class="empty-state-icon">
+        <div class="empty-state-icon">
 
-                <i class="bi bi-houses"></i>
-
-            </div>
-
-            <h3>No Properties Yet</h3>
-
-            <p>You haven't added any properties yet. Start by creating your first property listing!</p>
-
-            <a href="{% url 'agent:property_type_select' %}">
-
-                <i class="bi bi-plus-lg"></i> Add Your First Property
-
-            </a>
+            <i class="bi bi-houses"></i>
 
         </div>
+
+        <h3>No Properties Yet</h3>
+
+        <p>You haven't added any properties yet. Start by creating your first property listing!</p>
+
+        <a href="{% url 'agent:property_type_select' %}">
+
+            <i class="bi bi-plus-lg"></i> Add Your First Property
+
+        </a>
+
+    </div>
 
     {% endif %}
 
 </div>
 
 {% endblock %}
-
