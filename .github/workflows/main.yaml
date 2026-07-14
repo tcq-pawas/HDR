@@ -68,6 +68,15 @@ jobs:
             sudo mkdir -p $PROJECT_DIR
             sudo chown $USER:$USER $PROJECT_DIR
             
+            # Install Docker if not present
+            if ! command -v docker &> /dev/null; then
+              sudo apt-get update
+              sudo apt-get install -y docker.io docker-compose
+              sudo usermod -aG docker $USER
+              sudo systemctl start docker
+              sudo systemctl enable docker
+            fi
+            
             # Clone repository if it doesn't exist, otherwise pull latest
             if [ ! -d "$PROJECT_DIR/HDR/.git" ]; then
               cd $PROJECT_DIR
@@ -81,41 +90,32 @@ jobs:
               git pull origin main
             fi
             
-            # Create virtual environment if it doesn't exist
-            if [ ! -d "$PROJECT_DIR/myenv" ]; then
-              cd $PROJECT_DIR
-              python3 -m venv myenv
+            # Create .env file from secrets if it doesn't exist
+            if [ ! -f .env ]; then
+              cat > .env << ENVEOF
+            SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}
+            DEBUG=False
+            DB_ENGINE=django.db.backends.postgresql
+            DB_NAME=${{ secrets.DB_NAME }}
+            DB_USER=${{ secrets.DB_USER }}
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            DB_HOST=postgres
+            DB_PORT=5432
+            ENVEOF
             fi
             
-            # Activate virtual environment
-            source $PROJECT_DIR/myenv/bin/activate
+            # Stop existing containers
+            docker-compose down || true
             
-            # Install/update dependencies
-            pip install -r requirements.txt --quiet
+            # Build and start containers
+            docker-compose build
+            docker-compose up -d
             
-            # Run Django migrations
-            python3 manage.py migrate --noinput
+            # Wait for services to be healthy
+            sleep 10
             
-            # Collect static files
-            python3 manage.py collectstatic --noinput --clear
-            
-            # Restart Gunicorn service if it exists
-            if systemctl is-active --quiet gunicorn; then
-              sudo systemctl restart gunicorn
-            elif service gunicorn status > /dev/null 2>&1; then
-              sudo service gunicorn restart
-            else
-              echo "Gunicorn service not found, skipping restart"
-            fi
-            
-            # Reload Nginx if it's active
-            if systemctl is-active --quiet nginx; then
-              sudo systemctl reload nginx
-            elif service nginx status > /dev/null 2>&1; then
-              sudo service nginx reload
-            else
-              echo "Nginx service not active, skipping reload"
-            fi
+            # Show running containers
+            docker-compose ps
           ENDSSH
       
       # ============================================
