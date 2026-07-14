@@ -1,0 +1,97 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:  # Allow manual trigger from GitHub UI
+
+jobs:
+  deploy:
+    name: Deploy Django App to EC2
+    runs-on: ubuntu-latest
+    
+    steps:
+      # ============================================
+      # Step 1: Checkout the code from GitHub
+      # ============================================
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      # ============================================
+      # Step 2: Set up Python environment
+      # ============================================
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      # ============================================
+      # Step 3: Install dependencies
+      # ============================================
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r HDR/requirements.txt
+      
+      # ============================================
+      # Step 4: Run basic checks/tests
+      # ============================================
+      - name: Run Django checks
+        run: |
+          cd HDR
+          python manage.py check --deploy
+        env:
+          SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          DB_ENGINE: django.db.backends.sqlite3
+          DEBUG: False
+      
+      # ============================================
+      # Step 5: Configure SSH key for EC2 access
+      # ============================================
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/ec2_key.pem
+          chmod 600 ~/.ssh/ec2_key.pem
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+      
+      # ============================================
+      # Step 6: Deploy to EC2 server
+      # ============================================
+      - name: Deploy to EC2
+        run: |
+          ssh -i ~/.ssh/ec2_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'ENDSSH'
+            # Navigate to project directory
+            cd /home/ubuntu/HeyDay/HDR || cd /var/www/HeyDay/HDR
+            
+            # Pull latest code from main branch
+            git fetch origin main
+            git checkout main
+            git pull origin main
+            
+            # Activate virtual environment
+            source ../myenv/bin/activate || source /home/ubuntu/HeyDay/myenv/bin/activate
+            
+            # Install/update dependencies
+            pip install -r requirements.txt --quiet
+            
+            # Run Django migrations
+            python manage.py migrate --noinput
+            
+            # Collect static files
+            python manage.py collectstatic --noinput --clear
+            
+            # Restart Gunicorn service
+            sudo systemctl restart gunicorn || sudo service gunicorn restart
+            
+            # Reload Nginx to apply any config changes
+            sudo systemctl reload nginx || sudo service nginx reload
+          ENDSSH
+      
+      # ============================================
+      # Step 7: Cleanup SSH key
+      # ============================================
+      - name: Cleanup SSH key
+        if: always()
+        run: rm -f ~/.ssh/ec2_key.pem
