@@ -65,7 +65,6 @@
                     <li class="nav-item"><a class="nav-link" href="{% url 'buy:property_search' %}">Buy</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'sell:sell_page' %}">Sell</a></li>
                     <li class="nav-item"><a class="nav-link" href="">Lands</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'public:media' %}">Media</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'public:about' %}">About Us</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'public:contact' %}">Contact</a></li>
                     <li class="nav-item">
@@ -120,10 +119,13 @@
           <a class="nav-link" href="{% url 'sell:sell_page' %}">Sell</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'public:media' %}">Media</a>
+          <a class="nav-link" href="{% url 'public:subscription_plans' %}">Subscription</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'public:about' %}">About Us</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'public:agents' %}">Find Agents</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'public:contact' %}">Contact</a>
@@ -227,10 +229,6 @@
 
                         <!-- <li><a href="#">Lands</a></li> 
 
-                        <li><a href="{% url 'public:media' %}">
-                                Media
-                            </a></li>
-
                         <li><a href="{% url 'public:about' %}">
                                 About Us
                             </a></li>
@@ -255,8 +253,6 @@
                                 Property</a></li>
                         <li><a href="{% url 'sell:sell_page' %}"><i class="bi bi-chevron-right small me-2"></i>Sell
                                 Property</a></li>
-                        <li><a href="{% url 'public:media' %}"><i class="bi bi-chevron-right small me-2"></i>Media
-                                Gallery</a></li>
                     </ul>
                 </div> -->
                 <!-- Column 3: Property Types 
@@ -387,7 +383,7 @@
                     <a href="{% url 'public:home' %}" class="footer-link">Home</a>
                     <a href="{% url 'buy:property_search' %}" class="footer-link">Buy Property</a>
                     <a href="{% url 'sell:sell_page' %}" class="footer-link">Sell Property</a>
-                    <a href="{% url 'public:media' %}" class="footer-link">Media</a>
+                    <a href="{% url 'public:agents' %}" class="footer-link">Find Agents</a>
                     <a href="{% url 'public:about' %}" class="footer-link">About Us</a>
                     <a href="{% url 'public:contact' %}" class="footer-link">Contact</a>
                 </div>

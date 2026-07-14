@@ -1,0 +1,707 @@
+{% extends 'public/base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="agents-hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <h1 class="hero-title">Find Trusted Real Estate Agents</h1>
+        <p class="hero-subtitle">Connect with verified and experienced agents near you.</p>
+        <div class="hero-features">
+            <div class="hero-feature">
+                <i class="fas fa-check-circle"></i>
+                <span>Verified Agents</span>
+            </div>
+            <div class="hero-feature">
+                <i class="fas fa-user-tie"></i>
+                <span>Experienced Professionals</span>
+            </div>
+            <div class="hero-feature">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Local Expertise</span>
+            </div>
+            <div class="hero-feature">
+                <i class="fas fa-star"></i>
+                <span>Top Rated</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Search Panel -->
+<section class="search-section">
+    <div class="page-container">
+        <div class="search-card">
+            <form method="GET" action="{% url 'public:agents' %}" class="search-form">
+                <div class="search-inputs">
+                    <input type="text" name="search" class="search-input" placeholder="Search" value="{{ search_query }}">
+                    <input type="text" name="location" class="search-input" placeholder="Location" value="{{ location }}">
+                    <input type="text" name="specialization" class="search-input" placeholder="Specialization" value="{{ specialization }}">
+                    <input type="text" name="languages" class="search-input" placeholder="Languages" value="{{ languages }}">
+                    <button type="submit" class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <a href="{% url 'public:agents' %}" class="reset-btn">
+                        <i class="fas fa-redo"></i>
+                    </a>
+                </div>
+            </form>
+        </div>
+        <div class="popular-searches">
+            <span class="popular-label">Popular Searches:</span>
+            {% for search in popular_searches %}
+                <a href="?search={{ search }}" class="popular-chip">{{ search }}</a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Results Section -->
+<section class="results-section">
+    <div class="page-container">
+        <div class="results-header">
+            <div class="results-count">{{ page_obj.paginator.count }} Verified Agents Found</div>
+            <div class="results-sort">
+                <select class="sort-select">
+                    <option>Sort By: Relevance</option>
+                    <option>Rating: High to Low</option>
+                    <option>Rating: Low to High</option>
+                    <option>Experience: High to Low</option>
+                </select>
+            </div>
+        </div>
+
+        {% if page_obj %}
+            <div class="agents-grid">
+                {% for agent in page_obj %}
+                    <div class="agent-card">
+                        <div class="card-top">
+                            {% if agent.is_verified %}
+                                <span class="premium-badge">Premium</span>
+                            {% endif %}
+                            {% if agent.is_verified %}
+                                <div class="verified-badge-corner">Verified</div>
+                            {% endif %}
+                        </div>
+                        <div class="card-profile">
+                            <div class="profile-image-wrapper">
+                                {% if agent.profile_image and agent.profile_image.name %}
+                                    <img src="{{ agent.profile_image.url }}" alt="{{ agent.user.get_full_name }}" class="profile-image">
+                                {% else %}
+                                    <img src="https://ui-avatars.com/api/?name={{ agent.user.first_name }}+{{ agent.user.last_name }}&background=0F6A3C&color=fff&size=200&bold=true" alt="{{ agent.user.get_full_name }}" class="profile-image">
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="agent-name">{{ agent.user.get_full_name|default:agent.user.username }}</h3>
+                            <div class="agent-rating">
+                                <i class="fas fa-star"></i>
+                                <span>4.8</span>
+                                <span class="rating-count">(124)</span>
+                            </div>
+                            <p class="agent-specialization">{{ agent.bio|truncatewords:8|default:"Real Estate Specialist" }}</p>
+                            <div class="agent-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                {{ agent.territory|default:"India" }}
+                            </div>
+                            <div class="agent-stats">
+                                <div class="stat">
+                                    <span class="stat-value">{{ agent.created_at|timesince }}</span>
+                                    <span class="stat-label">Experience</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-value">{{ agent.user.bookings.count|default:0 }}</span>
+                                    <span class="stat-label">Properties Sold</span>
+                                </div>
+                            </div>
+                            <div class="agent-tags">
+                                <span class="tag">Residential</span>
+                                <span class="tag">Commercial</span>
+                            </div>
+                            <a href="{% url 'public:agent_profile' agent.id %}" class="view-profile-btn">View Profile</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if page_obj.has_other_pages %}
+                <div class="pagination">
+                    {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if location %}&location={{ location }}{% endif %}{% if specialization %}&specialization={{ specialization }}{% endif %}{% if languages %}&languages={{ languages }}{% endif %}" class="pagination-btn">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    {% endif %}
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <span class="pagination-btn active">{{ num }}</span>
+                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                            <a href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if location %}&location={{ location }}{% endif %}{% if specialization %}&specialization={{ specialization }}{% endif %}{% if languages %}&languages={{ languages }}{% endif %}" class="pagination-btn">{{ num }}</a>
+                        {% endif %}
+                    {% endfor %}
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if location %}&location={{ location }}{% endif %}{% if specialization %}&specialization={{ specialization }}{% endif %}{% if languages %}&languages={{ languages }}{% endif %}" class="pagination-btn">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="empty-state">
+                <i class="fas fa-user-tie"></i>
+                <h3>No Agents Found</h3>
+                <p>Try adjusting your search filters or check back later.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<style>
+    .page-container {
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 0 24px;
+    }
+
+    /* Hero Section */
+    .agents-hero {
+        position: relative;
+        height: 320px;
+        background-image: url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1920&q=80');
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-top: 100px;
+    }
+
+    .hero-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(15, 106, 60, 0.85);
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        color: white;
+    }
+
+    .hero-title {
+        font-size: 48px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        font-family: var(--font-heading);
+    }
+
+    .hero-subtitle {
+        font-size: 18px;
+        opacity: 0.9;
+        margin-bottom: 32px;
+    }
+
+    .hero-features {
+        display: flex;
+        justify-content: center;
+        gap: 48px;
+    }
+
+    .hero-feature {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+    .hero-feature i {
+        font-size: 20px;
+    }
+
+    /* Search Section */
+    .search-section {
+        margin-top: -70px;
+        position: relative;
+        z-index: 2;
+        padding-bottom: 40px;
+    }
+
+    .search-card {
+        background: white;
+        width: 90%;
+        margin: 0 auto;
+        height: 140px;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        padding: 24px 32px;
+    }
+
+    .search-inputs {
+        display: flex;
+        gap: 16px;
+        height: 100%;
+        align-items: center;
+    }
+
+    .search-input {
+        flex: 1;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        padding: 14px 20px;
+        font-size: 15px;
+        transition: all 0.2s ease;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: #0F6A3C;
+        box-shadow: 0 0 0 3px rgba(15, 106, 60, 0.1);
+    }
+
+    .search-btn {
+        width: 56px;
+        height: 56px;
+        background: #0F6A3C;
+        border: none;
+        border-radius: 12px;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .search-btn:hover {
+        background: #0a4d2b;
+    }
+
+    .reset-btn {
+        width: 56px;
+        height: 56px;
+        background: #f5f5f5;
+        border: none;
+        border-radius: 12px;
+        color: #666;
+        font-size: 18px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .reset-btn:hover {
+        background: #e0e0e0;
+    }
+
+    .popular-searches {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        margin-top: 24px;
+    }
+
+    .popular-label {
+        font-weight: 600;
+        color: #666;
+        font-size: 14px;
+    }
+
+    .popular-chip {
+        background: rgba(15, 106, 60, 0.1);
+        color: #0F6A3C;
+        padding: 8px 20px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .popular-chip:hover {
+        background: #0F6A3C;
+        color: white;
+    }
+
+    /* Results Section */
+    .results-section {
+        padding: 40px 0 80px;
+    }
+
+    .results-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 32px;
+    }
+
+    .results-count {
+        font-size: 20px;
+        font-weight: 600;
+        color: #1F1F1F;
+    }
+
+    .sort-select {
+        padding: 10px 20px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 14px;
+        background: white;
+        cursor: pointer;
+    }
+
+    /* Agents Grid */
+    .agents-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 24px;
+    }
+
+    .agent-card {
+        background: white;
+        border-radius: 18px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .agent-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-top {
+        padding: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        position: relative;
+    }
+
+    .premium-badge {
+        background: linear-gradient(135deg, #F4B400 0%, #d4a000 100%);
+        color: white;
+        padding: 6px 14px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .wishlist-btn {
+        background: white;
+        border: none;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: all 0.2s ease;
+        color: #666;
+    }
+
+    .wishlist-btn:hover {
+        color: #e74c3c;
+        transform: scale(1.1);
+    }
+
+    .verified-badge-corner {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        background: #10B981;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-profile {
+        padding: 0 16px;
+        text-align: center;
+    }
+
+    .profile-image-wrapper {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        margin: 0 auto;
+    }
+
+    .profile-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 4px solid white;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .verified-shield {
+        position: absolute;
+        bottom: 4px;
+        right: 4px;
+        background: #10B981;
+        color: white;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        border: 3px solid white;
+    }
+
+    .card-body {
+        padding: 20px 16px;
+        text-align: center;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .agent-name {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1F1F1F;
+        margin-bottom: 8px;
+    }
+
+    .agent-rating {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        margin-bottom: 12px;
+    }
+
+    .agent-rating i {
+        color: #F4B400;
+        font-size: 14px;
+    }
+
+    .agent-rating span {
+        font-weight: 600;
+        color: #1F1F1F;
+    }
+
+    .rating-count {
+        color: #666 !important;
+        font-size: 13px !important;
+        font-weight: 400 !important;
+    }
+
+    .agent-specialization {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 12px;
+        line-height: 1.4;
+    }
+
+    .agent-location {
+        font-size: 13px;
+        color: #666;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+    }
+
+    .agent-stats {
+        display: flex;
+        justify-content: center;
+        gap: 24px;
+        margin-bottom: 16px;
+        padding: 12px 0;
+        border-top: 1px solid #e0e0e0;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .stat {
+        text-align: center;
+    }
+
+    .stat-value {
+        display: block;
+        font-size: 16px;
+        font-weight: 700;
+        color: #0F6A3C;
+    }
+
+    .stat-label {
+        font-size: 12px;
+        color: #666;
+    }
+
+    .agent-tags {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+
+    .tag {
+        background: rgba(15, 106, 60, 0.08);
+        color: #0F6A3C;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 500;
+    }
+
+    .view-profile-btn {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        background: #0F6A3C;
+        color: white;
+        text-align: center;
+        border-radius: 10px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        margin-top: auto;
+    }
+
+    .view-profile-btn:hover {
+        background: #0a4d2b;
+        color: white;
+    }
+
+    /* Pagination */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 48px;
+    }
+
+    .pagination-btn {
+        width: 44px;
+        height: 44px;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        color: #1F1F1F;
+        font-weight: 600;
+        transition: all 0.2s ease;
+    }
+
+    .pagination-btn:hover {
+        border-color: #0F6A3C;
+        color: #0F6A3C;
+    }
+
+    .pagination-btn.active {
+        background: #0F6A3C;
+        border-color: #0F6A3C;
+        color: white;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 80px 0;
+    }
+
+    .empty-state i {
+        font-size: 64px;
+        color: #e0e0e0;
+        margin-bottom: 24px;
+    }
+
+    .empty-state h3 {
+        font-size: 24px;
+        color: #1F1F1F;
+        margin-bottom: 8px;
+    }
+
+    .empty-state p {
+        color: #666;
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+        .agents-grid {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+
+    @media (max-width: 992px) {
+        .agents-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        .hero-title {
+            font-size: 36px;
+        }
+        .hero-features {
+            gap: 24px;
+        }
+        .search-card {
+            height: auto;
+            padding: 20px;
+        }
+        .search-inputs {
+            flex-wrap: wrap;
+        }
+        .search-input {
+            min-width: 150px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .agents-grid {
+            grid-template-columns: 1fr;
+        }
+        .hero-title {
+            font-size: 28px;
+        }
+        .hero-subtitle {
+            font-size: 16px;
+        }
+        .hero-features {
+            flex-direction: column;
+            gap: 16px;
+        }
+        .search-card {
+            width: 100%;
+        }
+        .search-inputs {
+            flex-direction: column;
+        }
+        .search-input,
+        .search-btn,
+        .reset-btn {
+            width: 100%;
+        }
+        .results-header {
+            flex-direction: column;
+            gap: 16px;
+            align-items: flex-start;
+        }
+        .popular-searches {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+</style>
+{% endblock %}

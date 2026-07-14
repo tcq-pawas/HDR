@@ -19,9 +19,11 @@ urlpatterns = [
     path('p/<slug:slug>/', public_property_detail, name='property_detail'),
     path('about/', views.about, name='about'),
     path('contact/', views.contact, name='contact'),
-    path('gallery/', views.media_page, name='media'),
+    path('agents/', views.agents, name='agents'),
+    path('agents/<int:agent_id>/', views.agent_profile, name='agent_profile'),
     path('career/', views.career, name='career'),
     path('nri/', views.nri, name='nri'),
+    path('subscription/', views.subscription_plans, name='subscription_plans'),
     
     # API endpoints
     path('api/', include(router.urls)),
