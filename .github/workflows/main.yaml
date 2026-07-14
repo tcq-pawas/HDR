@@ -91,12 +91,12 @@ jobs:
               fi
               git clone ${{ secrets.GITHUB_REPO_URL }} HDR
               cd HDR
-              git checkout main
+              git checkout HDR-New
             else
               cd HDR
-              git fetch origin main
-              git checkout main
-              git pull origin main
+              git fetch origin HDR-New
+              git checkout HDR-New
+              git pull origin HDR-New
             fi
             
             # Create .env file from secrets if it doesn't exist
