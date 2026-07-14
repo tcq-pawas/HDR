@@ -3,7 +3,7 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - main
+      - HDR-New
   workflow_dispatch:  # Allow manual trigger from GitHub UI
 
 jobs:
