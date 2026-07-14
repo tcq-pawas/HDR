@@ -4119,8 +4119,16 @@ footer {
 .property-card-image {
     width: 100%;
     height: 200px;
-    object-fit: cover;
+    overflow: hidden;
     position: relative;
+    background: #f0f0f0;
+}
+
+.property-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 .property-badge {

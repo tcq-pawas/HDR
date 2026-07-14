@@ -186,23 +186,21 @@ def public_property_detail(request, slug):
 
 
 def public_home(request):
-    """Template view for public home page"""
-    featured_properties = Property.objects.filter(
-        is_active=True, 
-        show_to_public=True, 
-        is_featured=True
-    ).order_by('-created_at')[:6]
-    
-    recent_properties = Property.objects.filter(
-        is_active=True, 
-        show_to_public=True
-    ).order_by('-created_at')[:8]
-    
+    """Template view for public home page - only approved properties shown"""
+    approved_properties = Property.objects.filter(
+        status='approved'
+    ).order_by('-created_at')
+
+    farmland_listings = approved_properties
+    verified_properties = approved_properties
+
     context = {
-        'featured_properties': featured_properties,
-        'recent_properties': recent_properties,
+        'farmland_listings': farmland_listings,
+        'verified_properties': verified_properties,
+        'featured_properties': approved_properties,
+        'recent_properties': approved_properties,
         'is_authenticated': request.user.is_authenticated,
         'user_role': get_user_role(request.user) if request.user.is_authenticated else None,
     }
-    
+
     return render(request, 'public/home.html', context)

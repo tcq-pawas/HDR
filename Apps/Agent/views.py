@@ -182,9 +182,8 @@ def property_add(request, property_type):
             messages.success(request, "Property created successfully! It's pending admin approval.")
             return redirect('agent:property_list')
         else:
-            with open("C:/Users/AJAY/HDR/form_errors.txt", "w") as f:
-                f.write(str(form.errors))
             print("Form errors:", form.errors)
+            messages.error(request, f"Please fix the errors below: {form.errors}")
     else:
         # Use appropriate form based on property_type
         if property_type == 'land':
@@ -835,37 +834,49 @@ def commission_detail(request, pk):
 
 @login_required
 def document_list(request):
-    """List all documents for the agent"""
+    """Agent verification page - upload ID proof & address proof"""
     user_role = get_user_role(request.user)
     if user_role not in ['agent', 'owner']:
         raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
-    
-    documents = Document.objects.filter(agent=request.user).select_related('property', 'booking').order_by('-uploaded_at')
-    
-    # Filter by type
-    type_filter = request.GET.get('type')
-    if type_filter:
-        documents = documents.filter(document_type=type_filter)
-    
-    # Filter by category
-    category_filter = request.GET.get('category')
-    if category_filter:
-        documents = documents.filter(category=category_filter)
-    
-    # Pagination
-    paginator = Paginator(documents, 20)
-    page_number = request.GET.get('page', 1)
-    page_obj = paginator.get_page(page_number)
-    
-    context = {
-        'page_obj': page_obj,
-        'documents': page_obj.object_list,
-        'type_filter': type_filter,
-        'category_filter': category_filter,
-    }
-    
-    return render(request, 'agent/document_list.html', context)
 
+    try:
+        agent_profile = request.user.agent_profile
+    # pyrefly: ignore [missing-attribute]
+    except AgentProfile.DoesNotExist:
+        # pyrefly: ignore [missing-attribute]
+        agent_profile = AgentProfile.objects.create(user=request.user)
+
+    if request.method == 'POST':
+        proof_type = request.POST.get('proof_type')
+        uploaded_file = request.FILES.get('file')
+
+        if uploaded_file and proof_type == 'id_proof':
+            agent_profile.id_proof_document = uploaded_file
+            if agent_profile.verification_status == 'not_started':
+                agent_profile.verification_status = 'pending'
+            agent_profile.save()
+            messages.success(request, "ID Proof uploaded successfully!")
+        elif uploaded_file and proof_type == 'address_proof':
+            agent_profile.address_proof_document = uploaded_file
+            if agent_profile.verification_status == 'not_started':
+                agent_profile.verification_status = 'pending'
+            agent_profile.save()
+            messages.success(request, "Address Proof uploaded successfully!")
+        else:
+            messages.error(request, "Please select a valid file to upload.")
+
+        return redirect('agent:document_list')
+
+    context = {
+        'agent_profile': agent_profile,
+        'id_proof_uploaded': bool(agent_profile.id_proof_document),
+        'address_proof_uploaded': bool(agent_profile.address_proof_document),
+        'verification_status': agent_profile.verification_status,
+        'admin_review_done': agent_profile.verification_status in ['approved', 'rejected'],
+        'is_verified': agent_profile.is_verified,  # existing boolean field use kiya
+    }
+
+    return render(request, 'agent/document_list.html', context)
 
 @login_required
 def document_add(request):

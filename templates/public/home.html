@@ -1,4 +1,4 @@
-﻿{% extends 'public/base.html' %}
+{% extends 'public/base.html' %}
 {% load static %}
 
 {% block content %}
@@ -141,81 +141,33 @@
             <a href="{% url 'buy:property_search' %}" class="view-all-link">View All Listings →</a>
         </div>
         <div class="property-cards">
+            {% for property in farmland_listings %}
             <div class="property-card">
                 <div class="property-card-image">
-                    <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&q=80" alt="Agriculture Investment Plot">
+                    {% if property.images.first %}
+                    <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}">
+                    {% elif property.featured_image %}
+                    <img src="{{ property.featured_image.url }}" alt="{{ property.title }}">
+                    {% else %}
+                    <img src="https://via.placeholder.com/400x300?text=Property" alt="{{ property.title }}">
+                    {% endif %}
                     <div class="property-badge">Verified</div>
                     <div class="property-wishlist">♡</div>
                 </div>
                 <div class="property-card-content">
-                    <div class="property-state">Delhi, NCR</div>
-                    <div class="property-category">Farmland</div>
-                    <div class="property-name">Agriculture Investment Plot</div>
-                    <div class="property-area">5 Acres</div>
-                    <div class="property-price">₹2.50 Cr</div>
-                    <button class="btn-view-details">View Details</button>
+                    <div class="property-state">{{ property.location }}</div>
+                    <div class="property-category">{{ property.get_property_type_display }}</div>
+                    <div class="property-name">{{ property.title }}</div>
+                    <div class="property-area">{{ property.area_sqft }} sqft</div>
+                    <div class="property-price">₹{{ property.price }}</div>
+                    <a href="{% url 'buy:property_detail' property.id %}" class="btn-view-details">View Details</a>
                 </div>
+                
+                <!-- <a href="{% url 'public:property_detail' property.slug %}" -->
             </div>
-            <div class="property-card">
-                <div class="property-card-image">
-                    <img src="https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=400&q=80" alt="Weekend Farm Township">
-                    <div class="property-badge">Verified</div>
-                    <div class="property-wishlist">♡</div>
-                </div>
-                <div class="property-card-content">
-                    <div class="property-state">Pune, Maharashtra</div>
-                    <div class="property-category">Farm Township</div>
-                    <div class="property-name">Weekend Farm Township</div>
-                    <div class="property-area">3 Acres</div>
-                    <div class="property-price">₹1.95 Cr</div>
-                    <button class="btn-view-details">View Details</button>
-                </div>
-            </div>
-            <div class="property-card">
-                <div class="property-card-image">
-                    <img src="https://images.unsplash.com/photo-1591543869373-47c48a9680ea?w=400&q=80" alt="Agriculture Investment Plot">
-                    <div class="property-badge">Verified</div>
-                    <div class="property-wishlist">♡</div>
-                </div>
-                <div class="property-card-content">
-                    <div class="property-state">Bangalore</div>
-                    <div class="property-category">Farmland</div>
-                    <div class="property-name">Agriculture Investment Plot</div>
-                    <div class="property-area">2 Acres</div>
-                    <div class="property-price">₹1.20 Cr</div>
-                    <button class="btn-view-details">View Details</button>
-                </div>
-            </div>
-            <div class="property-card">
-                <div class="property-card-image">
-                    <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=400&q=80" alt="Organic Orchard Plot">
-                    <div class="property-badge">Verified</div>
-                    <div class="property-wishlist">♡</div>
-                </div>
-                <div class="property-card-content">
-                    <div class="property-state">Nashik</div>
-                    <div class="property-category">Orchard</div>
-                    <div class="property-name">Organic Orchard Plot</div>
-                    <div class="property-area">1.5 Acres</div>
-                    <div class="property-price">₹95 Lac</div>
-                    <button class="btn-view-details">View Details</button>
-                </div>
-            </div>
-            <div class="property-card">
-                <div class="property-card-image">
-                    <img src="https://images.unsplash.com/photo-1628624747186-a941c476b7ef?w=400&q=80" alt="Managed Farm Estate">
-                    <div class="property-badge">Verified</div>
-                    <div class="property-wishlist">♡</div>
-                </div>
-                <div class="property-card-content">
-                    <div class="property-state">Hyderabad</div>
-                    <div class="property-category">Managed Farm</div>
-                    <div class="property-name">Managed Farm Estate</div>
-                    <div class="property-area">4 Acres</div>
-                    <div class="property-price">₹2.10 Cr</div>
-                    <button class="btn-view-details">View Details</button>
-                </div>
-            </div>
+            {% empty %}
+            <p style="color: var(--text-muted, #6f7f90);">No featured farmland listings yet.</p>
+            {% endfor %}
         </div>
         <div class="carousel-arrows">
             <button class="carousel-arrow">←</button>
@@ -235,66 +187,31 @@
             <a href="{% url 'buy:property_search' %}" class="view-all-link">View All Listings →</a>
         </div>
         <div class="property-cards">
+            {% for property in verified_properties %}
             <div class="property-card">
                 <div class="property-card-image">
-                    <img src="https://images.unsplash.com/photo-1529921879218-f99546dab0c6?w=400&q=80" alt="Premium Farm Township">
+                    {% if property.images.first %}
+                    <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}">
+                    {% elif property.featured_image %}
+                    <img src="{{ property.featured_image.url }}" alt="{{ property.title }}">
+                    {% else %}
+                    <img src="https://via.placeholder.com/400x300?text=Property" alt="{{ property.title }}">
+                    {% endif %}
                     <div class="property-badge">Verified</div>
                     <div class="property-wishlist">♡</div>
                 </div>
                 <div class="property-card-content">
-                    <div class="property-state">Sarjapur Road, Bangalore</div>
-                    <div class="property-category">Farm Township</div>
-                    <div class="property-name">Premium Farm Township</div>
-                    <div class="property-area">4 Acres</div>
-                    <div class="property-price">₹2.80 Cr</div>
-                    <button class="btn-view-details">View Details</button>
+                    <div class="property-state">{{ property.location }}</div>
+                    <div class="property-category">{{ property.get_property_type_display }}</div>
+                    <div class="property-name">{{ property.title }}</div>
+                    <div class="property-area">{{ property.area_sqft }} sqft</div>
+                    <div class="property-price">₹{{ property.price }}</div>
+                    <a href="{% url 'public:property_detail' property.slug %}" class="btn-view-details">View Details</a>
                 </div>
             </div>
-            <div class="property-card">
-                <div class="property-card-image">
-                    <img src="https://images.unsplash.com/photo-1560493676-04071c5f467b?w=400&q=80" alt="Managed Plantation Project">
-                    <div class="property-badge">Verified</div>
-                    <div class="property-wishlist">♡</div>
-                </div>
-                <div class="property-card-content">
-                    <div class="property-state">Coorg, Karnataka</div>
-                    <div class="property-category">Plantation</div>
-                    <div class="property-name">Managed Plantation Estate</div>
-                    <div class="property-area">6 Acres</div>
-                    <div class="property-price">₹3.40 Cr</div>
-                    <button class="btn-view-details">View Details</button>
-                </div>
-            </div>
-            <div class="property-card">
-                <div class="property-card-image">
-                    <img src="https://images.unsplash.com/photo-1474440692490-2e83ae13ba29?w=400&q=80" alt="Orchard Farm Plot">
-                    <div class="property-badge">Verified</div>
-                    <div class="property-wishlist">♡</div>
-                </div>
-                <div class="property-card-content">
-                    <div class="property-state">Nashik, Maharashtra</div>
-                    <div class="property-category">Orchard</div>
-                    <div class="property-name">Organic Orchard Farm Plot</div>
-                    <div class="property-area">2.5 Acres</div>
-                    <div class="property-price">₹1.65 Cr</div>
-                    <button class="btn-view-details">View Details</button>
-                </div>
-            </div>
-            <div class="property-card">
-                <div class="property-card-image">
-                    <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=400&q=80" alt="Premium Farm Estate">
-                    <div class="property-badge">Verified</div>
-                    <div class="property-wishlist">♡</div>
-                </div>
-                <div class="property-card-content">
-                    <div class="property-state">Indore</div>
-                    <div class="property-category">Farm Estate</div>
-                    <div class="property-name">Premium Farm Estate</div>
-                    <div class="property-area">3.5 Acres</div>
-                    <div class="property-price">₹1.75 Cr</div>
-                    <button class="btn-view-details">View Details</button>
-                </div>
-            </div>
+            {% empty %}
+            <p style="color: var(--text-muted, #6f7f90);">No verified properties yet.</p>
+            {% endfor %}
         </div>
         <div class="carousel-arrows">
             <button class="carousel-arrow">←</button>

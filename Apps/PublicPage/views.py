@@ -4,10 +4,24 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from .models import Inquiry, Property, PropertyInquiry, PropertyImage, WebsiteEnquiry
 
+# def home(request):
+#     featured_properties = Property.objects.filter(is_featured=True).order_by('-created_at')[:6]
+#     return render(request, 'public/home.html', {
+#         'featured_properties': featured_properties
+#     })
+
+    
 def home(request):
-    featured_properties = Property.objects.filter(is_featured=True).order_by('-created_at')[:6]
+    # Show latest properties automatically — no manual "featured" toggling needed
+    all_properties = Property.objects.all().order_by('-created_at')
+    print("=== HOME VIEW CALLED, COUNT:", all_properties.count(), "===")
+
+    farmland_listings = all_properties[:5]
+    verified_properties = all_properties[5:9]
+
     return render(request, 'public/home.html', {
-        'featured_properties': featured_properties
+        'farmland_listings': farmland_listings,
+        'verified_properties': verified_properties,
     })
 
 
