@@ -36,6 +36,7 @@ jobs:
           ssh -i ~/.ssh/ec2_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'ENDSSH'
             # Set project directory
             PROJECT_DIR="/home/ubuntu/HDR"
+            BRANCH="HDR-New"
             
             # Create project directory if it doesn't exist
             sudo mkdir -p $PROJECT_DIR
@@ -63,6 +64,21 @@ jobs:
               echo "Error: docker-compose.yml not found in HDR directory"
               exit 1
             fi
+
+            echo "Current directory:"
+            pwd
+
+            echo "Fetching latest code..."
+            git fetch origin
+
+            echo "Checking out $BRANCH..."
+            git checkout $BRANCH
+
+            echo "Resetting to latest origin/$BRANCH..."
+            git reset --hard origin/$BRANCH
+
+            echo "Pulling latest changes..."
+            git pull origin $BRANCH
             
             # Stop existing containers
             docker compose down || true
