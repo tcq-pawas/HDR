@@ -78,7 +78,11 @@ jobs:
             fi
             
             # Clone repository if it doesn't exist, otherwise pull latest
-            if [ ! -d "$PROJECT_DIR/HDR/.git" ]; then
+            if [ ! -d "$PROJECT_DIR/HDR" ] || [ ! -d "$PROJECT_DIR/HDR/.git" ]; then
+              # Remove existing HDR directory if it exists but is not a git repo
+              if [ -d "$PROJECT_DIR/HDR" ]; then
+                rm -rf $PROJECT_DIR/HDR
+              fi
               cd $PROJECT_DIR
               git clone ${{ secrets.GITHUB_REPO_URL }} HDR
               cd HDR
@@ -92,16 +96,14 @@ jobs:
             
             # Create .env file from secrets if it doesn't exist
             if [ ! -f .env ]; then
-              cat > .env << ENVEOF
-            SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}
-            DEBUG=False
-            DB_ENGINE=django.db.backends.postgresql
-            DB_NAME=${{ secrets.DB_NAME }}
-            DB_USER=${{ secrets.DB_USER }}
-            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-            DB_HOST=postgres
-            DB_PORT=5432
-            ENVEOF
+              echo "SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" > .env
+              echo "DEBUG=False" >> .env
+              echo "DB_ENGINE=django.db.backends.postgresql" >> .env
+              echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
+              echo "DB_USER=${{ secrets.DB_USER }}" >> .env
+              echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+              echo "DB_HOST=postgres" >> .env
+              echo "DB_PORT=5432" >> .env
             fi
             
             # Stop existing containers
