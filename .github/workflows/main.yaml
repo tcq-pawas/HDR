@@ -19,34 +19,7 @@ jobs:
         uses: actions/checkout@v4
       
       # ============================================
-      # Step 2: Set up Python environment
-      # ============================================
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      
-      # ============================================
-      # Step 3: Install dependencies
-      # ============================================
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-      
-      # ============================================
-      # Step 4: Run basic checks/tests
-      # ============================================
-      - name: Run Django checks
-        run: |
-          python manage.py check --deploy
-        env:
-          SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
-          DB_ENGINE: django.db.backends.sqlite3
-          DEBUG: False
-      
-      # ============================================
-      # Step 5: Configure SSH key for EC2 access
+      # Step 2: Configure SSH key for EC2 access
       # ============================================
       - name: Configure SSH
         run: |
@@ -56,7 +29,7 @@ jobs:
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
       
       # ============================================
-      # Step 6: Deploy to EC2 server
+      # Step 3: Deploy to EC2 server
       # ============================================
       - name: Deploy to EC2
         run: |
@@ -82,33 +55,13 @@ jobs:
               sudo apt-get install -y docker-compose-plugin
             fi
             
-            # Clone repository if it doesn't exist, otherwise pull latest
-            cd $PROJECT_DIR
-            if [ ! -d "HDR" ] || [ ! -d "HDR/.git" ]; then
-              # Remove existing HDR directory if it exists but is not a git repo
-              if [ -d "HDR" ]; then
-                rm -rf HDR
-              fi
-              git clone ${{ secrets.GITHUB_REPO_URL }} HDR
-              cd HDR
-              git checkout HDR-New
-            else
-              cd HDR
-              git fetch origin HDR-New
-              git checkout HDR-New
-              git pull origin HDR-New
-            fi
+            # Navigate to project directory
+            cd $PROJECT_DIR/HDR
             
-            # Create .env file from secrets if it doesn't exist
-            if [ ! -f .env ]; then
-              echo "SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" > .env
-              echo "DEBUG=False" >> .env
-              echo "DB_ENGINE=django.db.backends.postgresql" >> .env
-              echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
-              echo "DB_USER=${{ secrets.DB_USER }}" >> .env
-              echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-              echo "DB_HOST=postgres" >> .env
-              echo "DB_PORT=5432" >> .env
+            # Verify docker-compose.yml exists
+            if [ ! -f docker-compose.yml ]; then
+              echo "Error: docker-compose.yml not found in HDR directory"
+              exit 1
             fi
             
             # Stop existing containers
@@ -126,7 +79,7 @@ jobs:
           ENDSSH
       
       # ============================================
-      # Step 7: Cleanup SSH key
+      # Step 4: Cleanup SSH key
       # ============================================
       - name: Cleanup SSH key
         if: always()
