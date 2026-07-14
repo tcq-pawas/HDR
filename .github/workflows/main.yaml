@@ -56,7 +56,7 @@ jobs:
             fi
             
             # Navigate to project directory
-            cd $PROJECT_DIR/HDR
+            cd $PROJECT_DIR
             
             # Verify docker-compose.yml exists
             if [ ! -f docker-compose.yml ]; then
