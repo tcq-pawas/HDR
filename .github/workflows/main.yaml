@@ -39,7 +39,6 @@ jobs:
       # ============================================
       - name: Run Django checks
         run: |
-          cd HDR
           python manage.py check --deploy
         env:
           SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
