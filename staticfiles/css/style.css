@@ -3547,7 +3547,7 @@ footer {
 /* Hero Section */
 .hero-section {
     width: 100vw;
-    height: 400px;
+    /* height: 400px; */
     background: var(--background);
     position: relative;
     overflow: visible;
