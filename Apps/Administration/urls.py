@@ -7,6 +7,7 @@ from .dashboard_views import (
     InquiryBulkActionView, InquiryExportCSVView, InquiryExportExcelView,  InquiryDeleteView
 )
 from . import investor_views
+from . import communication_views
 
 app_name = 'admin_dash'
 
@@ -35,6 +36,9 @@ urlpatterns = [
     path('inquiries/bulk-action/', InquiryBulkActionView.as_view(), name='inquiry-bulk-action'),
     path('inquiries/export/csv/', InquiryExportCSVView.as_view(), name='inquiry-export-csv'),
     path('inquiries/export/excel/', InquiryExportExcelView.as_view(), name='inquiry-export-excel'),
+    # Communication
+    path('communications/', communication_views.AdminCommunicationListView.as_view(), name='communication-list'),
+    path('communications/send/', communication_views.AdminCommunicationSendView.as_view(), name='communication-send'),
       
     # Property Review System
     path('property-review/', PropertyReviewCenterView.as_view(), name='property-review'),

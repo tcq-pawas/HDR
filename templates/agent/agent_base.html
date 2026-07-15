@@ -29,7 +29,7 @@
                     {% block header_title %}{% endblock %}
                 </div>
 
-                
+
 
                 <!-- Header Right -->
                 <div class="header-right">
@@ -38,7 +38,8 @@
                     <div class="header-center">
                         <div class="search-box">
                             <i class="bi bi-search"></i>
-                            <input type="text" placeholder="Search properties, leads, inquiries..." class="search-input">
+                            <input type="text" placeholder="Search properties, leads, inquiries..."
+                                class="search-input">
                         </div>
                     </div>
                     <!-- Notifications -->
@@ -106,8 +107,10 @@
                     <div class="header-item">
                         <button class="profile-toggle" id="profileToggle">
                             <div class="profile-avatar">
-                                {% if user.agent_profile and user.agent_profile.profile_image and user.agent_profile.profile_image.name %}
-                                <img src="{{ user.agent_profile.profile_image.url }}" alt="Profile" style="width:100%; height:100%; object-fit:cover;">
+                                {% if user.agent_profile and user.agent_profile.profile_image and
+                                user.agent_profile.profile_image.name %}
+                                <img src="{{ user.agent_profile.profile_image.url }}" alt="Profile"
+                                    style="width:100%; height:100%; object-fit:cover;">
                                 {% else %}
                                 <div class="avatar-placeholder">
                                     {{ user.first_name|default:user.username|slice:":1"|upper }}
@@ -121,8 +124,8 @@
                             <i class="bi bi-chevron-down"></i>
                         </button>
                         <div class="dropdown-menu profile-dropdown" id="profileDropdown">
-                            <a href="{% url 'agent:settings' %}" class="dropdown-item">
-                                <i class="bi bi-gear"></i> Settings
+                            <a href="{% url 'agent:profile' %}" class="dropdown-item">
+                                <i class="bi bi-person"></i> Profile
                             </a>
                             <div class="dropdown-divider"></div>
                             <a href="{% url 'auth:logout' %}" class="dropdown-item text-danger">
@@ -245,13 +248,6 @@
                             </a>
                         </li>
 
-                        <li class="nav-item">
-                            <a href="{% url 'agent:settings' %}"
-                                class="nav-link {% if request.resolver_match.url_name == 'settings' %}active{% endif %}">
-                                <i class="bi bi-gear"></i>
-                                <span>Settings</span>
-                            </a>
-                        </li>
                     </ul>
                 </nav>
 
