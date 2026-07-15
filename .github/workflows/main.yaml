@@ -83,6 +83,8 @@ jobs:
             # Stop existing containers
             docker compose down || true
             
+            docker system prune -a
+
             # Build and start containers
             docker compose build
             docker compose up -d
