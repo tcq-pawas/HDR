@@ -107,8 +107,7 @@
                     <div class="header-item">
                         <button class="profile-toggle" id="profileToggle">
                             <div class="profile-avatar">
-                                {% if user.agent_profile and user.agent_profile.profile_image and
-                                user.agent_profile.profile_image.name %}
+                                {% if user.agent_profile and user.agent_profile.profile_image and user.agent_profile.profile_image.name %}
                                 <img src="{{ user.agent_profile.profile_image.url }}" alt="Profile"
                                     style="width:100%; height:100%; object-fit:cover;">
                                 {% else %}

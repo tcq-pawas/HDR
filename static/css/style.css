@@ -1,7 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-<<<<<<< HEAD
+    /* Brand Colors - HeyDay Realty */
     --forest: #1B4332;
     --emerald: #2D6A4F;
     --mid: #40916C;
@@ -19,41 +19,6 @@
 
     --font-heading: 'Playfair Display', serif;
     --font-body: 'Inter', sans-serif;
-=======
-    /* Brand Colors - HeyDay Realty */
-    --primary-green: #004526;
-    --primary-green-light: #006638;
-    --primary-green-dark: #002815;
-    --dark-header: #1F2937;
-    --secondary-green: #005530;
-    --accent-gold: #FFA500;
-
-    /* Extended palette for accessibility and design */
-    --primary-color: var(--primary-green);
-    --accent-color: var(--primary-green);
-    --secondary-color: #333333;
-    --text-color: #555555;
-    --light-bg: #ffffff;
-    --section-bg: #f8f9fa;
-    --white: #ffffff;
-    --cloud-white: #F8FAFC;
-
-    /* Lighter variants */
-    --primary-green-light: rgba(0, 69, 38, 0.1);
-    --primary-green-medium: rgba(0, 69, 38, 0.2);
-    --primary-green-dark: rgba(0, 40, 21, 0.1);
-    --dark-header-light: rgba(31, 41, 55, 0.95);
-
-    --font-heading: 'Playfair Display', serif;
-    --font-body: 'Outfit', sans-serif;
-
-    /* Brand-based gradients */
-    --gradient-btn: linear-gradient(135deg, rgba(0, 69, 38, 0.85) 0%, rgba(0, 40, 21, 0.85) 100%);
-    --gradient-btn-hover: linear-gradient(135deg, rgba(0, 40, 21, 0.95) 0%, rgba(0, 69, 38, 0.95) 100%);
-    --gradient-overlay: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.7));
-    --gradient-brand: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-light) 100%);
-    --gradient-dark: linear-gradient(135deg, var(--dark-header) 0%, #111827 100%);
->>>>>>> f25d19253666b48006a98b4bcf2bbaedd618a11f
 }
 
 body {
@@ -3549,4 +3514,158 @@ footer {
 .swiper-pagination {
     position: relative;
     margin-bottom: 16px;
+}
+
+/* ============================================
+   ABOUT PAGE RESPONSIVE STYLES
+   ============================================ */
+
+/* Tablet (768px - 1024px) */
+@media (max-width: 1024px) {
+    /* Statistics: 2x2 grid */
+    .container .row .col-3 {
+        width: 50% !important;
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+    
+    .container .row .col-3:nth-child(2),
+    .container .row .col-3:nth-child(4) {
+        border-left: none !important;
+    }
+    
+    /* Why Invest: 2x2 grid */
+    .col-lg-3 {
+        width: 50% !important;
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+    
+    /* Mission & Vision: Stack vertically */
+    .col-lg-6 {
+        width: 100% !important;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    
+    /* CTA: Stack vertically */
+    .cta-inner {
+        flex-direction: column !important;
+        text-align: center;
+        padding: 40px 32px !important;
+    }
+    
+    .cta-inner > div:first-child {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .cta-inner > div:first-child > div:last-child {
+        justify-content: center;
+    }
+    
+    .cta-inner > div:last-child:not(:nth-child(2)) {
+        display: none;
+    }
+}
+
+/* Mobile (max-width: 767px) */
+@media (max-width: 767px) {
+    /* Hero: Adjust height and padding */
+    .inner-hero {
+        height: 220px !important;
+    }
+    
+    .inner-hero-content {
+        padding-left: 24px !important;
+        padding-right: 24px;
+    }
+    
+    .inner-hero-title {
+        font-size: 1.8rem !important;
+    }
+    
+    .inner-hero-quote {
+        font-size: 1rem !important;
+    }
+    
+    /* About: Stack vertically */
+    .col-lg-6 {
+        width: 100% !important;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    
+    .section-title {
+        font-size: 1.8rem !important;
+    }
+    
+    /* Statistics: 2x2 grid */
+    .container .row .col-3 {
+        width: 50% !important;
+        flex: 0 0 50%;
+        max-width: 50%;
+        padding: 16px !important;
+    }
+    
+    .container .row .col-3:nth-child(2),
+    .container .row .col-3:nth-child(4) {
+        border-left: none !important;
+    }
+    
+    /* Why Invest: Single column */
+    .col-lg-3,
+    .col-md-6 {
+        width: 100% !important;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    
+    .invest-card {
+        padding: 24px 20px !important;
+    }
+    
+    /* Mission & Vision: Stack vertically */
+    .col-lg-6 {
+        width: 100% !important;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    
+    .invest-card {
+        padding: 32px 24px !important;
+    }
+    
+    /* CTA: Stack vertically */
+    .cta-banner {
+        padding: 32px 24px 64px !important;
+    }
+    
+    .cta-inner {
+        padding: 32px 24px !important;
+        flex-direction: column !important;
+        text-align: center;
+    }
+    
+    .cta-inner > div:first-child {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .cta-inner > div:first-child > div:last-child {
+        flex-direction: column !important;
+        gap: 12px !important;
+        align-items: center;
+    }
+    
+    .cta-inner > div:last-child:not(:nth-child(2)) {
+        display: none;
+    }
+    
+    .cta-inner .btn-cta-primary {
+        width: 100%;
+        text-align: center;
+    }
 }
