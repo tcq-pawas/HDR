@@ -12,14 +12,14 @@
 
 
 
-{% block page_subtitle %}Manage users, properties, investments, leads, and business operations from a single dashboard.{% endblock %}
+{% block page_subtitle %}Manage users, properties, investments, leads, and business operations from a single
+dashboard.{% endblock %}
 
 
 
 {% block content %}
 
 <style>
-
     .kpi-card {
 
         background: var(--surface);
@@ -38,7 +38,7 @@
 
     }
 
-    
+
 
     .kpi-card:hover {
 
@@ -48,7 +48,7 @@
 
     }
 
-    
+
 
     .kpi-icon {
 
@@ -70,7 +70,7 @@
 
     }
 
-    
+
 
     .kpi-value {
 
@@ -86,7 +86,7 @@
 
     }
 
-    
+
 
     .kpi-label {
 
@@ -100,7 +100,7 @@
 
     }
 
-    
+
 
     .kpi-trend {
 
@@ -116,7 +116,7 @@
 
     }
 
-    
+
 
     .kpi-trend.positive {
 
@@ -124,7 +124,7 @@
 
     }
 
-    
+
 
     .kpi-trend.negative {
 
@@ -132,7 +132,7 @@
 
     }
 
-    
+
 
     .quick-action-card {
 
@@ -158,7 +158,7 @@
 
     }
 
-    
+
 
     .quick-action-card:hover {
 
@@ -172,7 +172,7 @@
 
     }
 
-    
+
 
     .quick-action-icon {
 
@@ -198,7 +198,7 @@
 
     }
 
-    
+
 
     .quick-action-title {
 
@@ -212,7 +212,7 @@
 
     }
 
-    
+
 
     .quick-action-desc {
 
@@ -222,7 +222,7 @@
 
     }
 
-    
+
 
     .chart-container {
 
@@ -232,7 +232,7 @@
 
     }
 
-    
+
 
     .activity-timeline {
 
@@ -242,7 +242,7 @@
 
     }
 
-    
+
 
     .activity-timeline::before {
 
@@ -262,7 +262,7 @@
 
     }
 
-    
+
 
     .activity-item {
 
@@ -272,7 +272,7 @@
 
     }
 
-    
+
 
     .activity-item::before {
 
@@ -296,7 +296,7 @@
 
     }
 
-    
+
 
     .property-card {
 
@@ -316,7 +316,7 @@
 
     }
 
-    
+
 
     .property-card:hover {
 
@@ -326,7 +326,7 @@
 
     }
 
-    
+
 
     .property-image {
 
@@ -346,7 +346,7 @@
 
     }
 
-    
+
 
     .property-details {
 
@@ -354,7 +354,7 @@
 
     }
 
-    
+
 
     .property-name {
 
@@ -370,7 +370,7 @@
 
     }
 
-    
+
 
     .property-location {
 
@@ -382,7 +382,7 @@
 
     }
 
-    
+
 
     .property-price {
 
@@ -396,7 +396,7 @@
 
     }
 
-    
+
 
     .system-health-item {
 
@@ -412,7 +412,7 @@
 
     }
 
-    
+
 
     .system-health-item:last-child {
 
@@ -420,7 +420,7 @@
 
     }
 
-    
+
 
     .health-status {
 
@@ -432,7 +432,7 @@
 
     }
 
-    
+
 
     .health-indicator {
 
@@ -444,7 +444,7 @@
 
     }
 
-    
+
 
     .health-indicator.online {
 
@@ -452,7 +452,7 @@
 
     }
 
-    
+
 
     .health-indicator.warning {
 
@@ -460,7 +460,7 @@
 
     }
 
-    
+
 
     .health-indicator.offline {
 
@@ -468,7 +468,7 @@
 
     }
 
-    
+
 
     .mini-chart {
 
@@ -476,7 +476,7 @@
 
     }
 
-    
+
 
     .welcome-header {
 
@@ -494,7 +494,7 @@
 
     }
 
-    
+
 
     .welcome-header h2 {
 
@@ -504,7 +504,7 @@
 
     }
 
-    
+
 
     .welcome-header p {
 
@@ -514,7 +514,7 @@
 
     }
 
-    
+
 
     .header-actions {
 
@@ -526,7 +526,7 @@
 
     }
 
-    
+
 
     .header-btn {
 
@@ -544,7 +544,7 @@
 
     }
 
-    
+
 
     .header-btn:hover {
 
@@ -554,7 +554,7 @@
 
     }
 
-    
+
 
     .date-badge {
 
@@ -567,14 +567,13 @@
         font-size: 0.9rem;
 
     }
-
 </style>
 
 
 
 <!-- Welcome Header -->
 
-<div class="welcome-header">
+<!-- <div class="welcome-header">
 
     <div class="row align-items-center">
 
@@ -596,10 +595,13 @@
 
                 </div>
 
-                <a href="{% url 'admin_dash:inquiry-management-page' %}" class="header-btn position-relative text-decoration-none" id="header-bell-btn" title="View Inquiries" style="display:inline-flex; align-items:center;">
+                <a href="{% url 'admin_dash:inquiry-management-page' %}"
+                    class="header-btn position-relative text-decoration-none" id="header-bell-btn"
+                    title="View Inquiries" style="display:inline-flex; align-items:center;">
 
                     <i class="fas fa-bell"></i>
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none" id="bell-notification-badge" style="font-size: 0.65rem; padding: 0.25em 0.5em;">0</span>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none"
+                        id="bell-notification-badge" style="font-size: 0.65rem; padding: 0.25em 0.5em;">0</span>
 
                 </a>
 
@@ -615,7 +617,7 @@
 
     </div>
 
-</div>
+</div> -->
 
 
 
@@ -909,7 +911,8 @@
 
                             <div>
 
-                                <div class="fw-semibold" style="font-family: 'Poppins', sans-serif;">{{ activity.action }}</div>
+                                <div class="fw-semibold" style="font-family: 'Poppins', sans-serif;">{{ activity.action
+                                    }}</div>
 
                                 <div class="small text-muted">{{ activity.description|default:"" }}</div>
 
@@ -1077,7 +1080,9 @@
 
                         <div class="text-center">
 
-                            <div class="display-6 fw-bold" style="color: var(--primary); font-family: 'Poppins', sans-serif;">{{ customer_engagement.inquiries_this_month|default:0 }}</div>
+                            <div class="display-6 fw-bold"
+                                style="color: var(--primary); font-family: 'Poppins', sans-serif;">{{
+                                customer_engagement.inquiries_this_month|default:0 }}</div>
 
                             <div class="text-muted small">New Leads</div>
 
@@ -1089,7 +1094,9 @@
 
                         <div class="text-center">
 
-                            <div class="display-6 fw-bold" style="color: var(--warning); font-family: 'Poppins', sans-serif;">{{ business_metrics.pending_inquiries|default:0 }}</div>
+                            <div class="display-6 fw-bold"
+                                style="color: var(--warning); font-family: 'Poppins', sans-serif;">{{
+                                business_metrics.pending_inquiries|default:0 }}</div>
 
                             <div class="text-muted small">Follow-ups Due</div>
 
@@ -1101,7 +1108,9 @@
 
                         <div class="text-center">
 
-                            <div class="display-6 fw-bold" style="color: var(--info); font-family: 'Poppins', sans-serif;">{{ business_metrics.scheduled_viewings|default:0 }}</div>
+                            <div class="display-6 fw-bold"
+                                style="color: var(--info); font-family: 'Poppins', sans-serif;">{{
+                                business_metrics.scheduled_viewings|default:0 }}</div>
 
                             <div class="text-muted small">Site Visits Scheduled</div>
 
@@ -1113,7 +1122,9 @@
 
                         <div class="text-center">
 
-                            <div class="display-6 fw-bold" style="color: var(--success); font-family: 'Poppins', sans-serif;">{{ customer_engagement.conversion_rate|default:0 }}%</div>
+                            <div class="display-6 fw-bold"
+                                style="color: var(--success); font-family: 'Poppins', sans-serif;">{{
+                                customer_engagement.conversion_rate|default:0 }}%</div>
 
                             <div class="text-muted small">Conversion Rate</div>
 
@@ -1153,7 +1164,8 @@
 
                         <div class="kpi-label">Total Investments</div>
 
-                        <div class="kpi-value" style="font-size: 1.5rem;">${{ business_metrics.total_investment_amount|default:0|intcomma }}</div>
+                        <div class="kpi-value" style="font-size: 1.5rem;">${{
+                            business_metrics.total_investment_amount|default:0|intcomma }}</div>
 
                     </div>
 
@@ -1161,7 +1173,8 @@
 
                         <div class="kpi-label">Active Investors</div>
 
-                        <div class="kpi-value" style="font-size: 1.5rem;">{{ business_metrics.active_investments|default:0 }}</div>
+                        <div class="kpi-value" style="font-size: 1.5rem;">{{
+                            business_metrics.active_investments|default:0 }}</div>
 
                     </div>
 
@@ -1391,7 +1404,7 @@
 
     Chart.defaults.color = '#64748B';
 
-    
+
 
     // User Growth Chart
 
@@ -1483,7 +1496,7 @@
 
     });
 
-    
+
 
     // Property Status Chart
 
@@ -1531,7 +1544,7 @@
 
     });
 
-    
+
 
     // Investment Chart
 
@@ -1605,7 +1618,7 @@
 
     });
 
-    
+
 
     // Lead Chart
 
@@ -1679,7 +1692,7 @@
 
     });
 
-    
+
 
     // User Distribution Chart
 
@@ -1725,7 +1738,7 @@
 
     });
 
-    
+
 
     // Conversion Chart
 
@@ -1803,7 +1816,7 @@
 
     });
 
-    
+
 
     // ROI Chart
 
@@ -1884,4 +1897,3 @@
 </script>
 
 {% endblock %}
-

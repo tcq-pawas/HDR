@@ -18,6 +18,7 @@ class AdminProfile(models.Model):
     ])
     position = models.CharField(max_length=100)
     phone = models.CharField(max_length=20, blank=True, null=True)
+    profile_picture = models.ImageField(upload_to='admin_profiles/', blank=True, null=True)
     is_super_admin = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

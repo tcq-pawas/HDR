@@ -12,6 +12,8 @@ app_name = 'admin_dash'
 
 urlpatterns = [
     # Dashboard (strict admin-only access)
+    path('profile/', views.view_profile, name="view_profile"),
+    path('profile/update/', views.update_admin_profile, name="update_profile"),
     path('dashboard/', AdminDashboardView.as_view(), name='dashboard'),
     path('users/', UserManagementView.as_view(), name='user-management-page'),
     path('users/<int:user_id>/', UserProfileView.as_view(), name='user-profile'),
