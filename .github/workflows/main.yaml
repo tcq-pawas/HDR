@@ -83,9 +83,9 @@ jobs:
             # Stop existing containers
             docker compose down || true
             
-            # Build and start containers
-            docker compose build
-            docker compose up -d
+            docker compose up -d --build
+
+            docker image prune -af || true
             
             # Wait for services to be healthy
             sleep 10
