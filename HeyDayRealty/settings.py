@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'Apps.Agent',
     'Apps.buy',
     'Apps.sell',
+    'Apps.Subscriptions',
 ]
 
 MIDDLEWARE = [
