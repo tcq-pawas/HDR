@@ -109,6 +109,7 @@ urlpatterns = [
     path('customer/', include(('Apps.Customer.urls', 'customer'), namespace='customer')),
     path('investor/', include(('Apps.Investor.urls', 'investor'), namespace='investor')),
     path('admin-dashboard/', include(('Apps.Administration.urls', 'admin_dash'), namespace='admin_dash')),
+    path('subscriptions/', include(('Apps.Subscriptions.urls', 'subscriptions'), namespace='subscriptions')),
     
     # API endpoints with role-based filtering
     path('api/customer/', include(('Apps.Customer.urls', 'api_customer'), namespace='api_customer')),
