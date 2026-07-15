@@ -1,0 +1,513 @@
+{% extends 'public/base.html' %}
+{% load static %}
+
+{% block title %}Subscription Plans - HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'public/css/subscription.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Banner -->
+<section class="subscription-hero">
+    <div class="subscription-hero-overlay"></div>
+    <div class="container">
+        <div class="subscription-hero-content">
+            <div class="subscription-hero-left">
+                <h1 class="subscription-hero-title">Agent Subscription Plans</h1>
+                <p class="subscription-hero-description">Power up your property business with the right plan. List more. Get more leads. Grow more.</p>
+                <div class="subscription-hero-features">
+                    <div class="subscription-hero-feature">
+                        <i class="fa fa-shield"></i>
+                        <span>Secure Payments</span>
+                    </div>
+                    <div class="subscription-hero-feature">
+                        <i class="fa fa-users"></i>
+                        <span>Trusted by Landowners</span>
+                    </div>
+                    <div class="subscription-hero-feature">
+                        <i class="fa fa-user-tie"></i>
+                        <span>10,000+ Active Agents</span>
+                    </div>
+                    <div class="subscription-hero-feature">
+                        <i class="fa fa-headset"></i>
+                        <span>24/7 Priority Support</span>
+                    </div>
+                </div>
+            </div>
+            <div class="subscription-hero-right">
+                <img src="{% static 'images/hero.png' %}" alt="Premium Farmhouse" class="subscription-hero-image">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Annual Billing Banner -->
+<section class="annual-billing-banner">
+    <div class="container">
+        <div class="annual-billing-content">
+            <i class="fa fa-trophy annual-billing-icon"></i>
+            <span class="annual-billing-text">Choose Annual Plan – Save Up to 20%</span>
+        </div>
+    </div>
+</section>
+
+<!-- Billing Toggle -->
+<section class="billing-toggle-section">
+    <div class="container">
+        <div class="billing-toggle-wrapper">
+            <div class="billing-toggle" id="billingToggle">
+                <button class="billing-toggle-btn" data-period="1_month">1 Month</button>
+                <button class="billing-toggle-btn" data-period="3_months">3 Months</button>
+                <button class="billing-toggle-btn" data-period="6_months">6 Months</button>
+                <button class="billing-toggle-btn active" data-period="12_months">
+                    12 Months
+                    <span class="save-badge">Save 20%</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pricing Cards -->
+<section class="pricing-section">
+    <div class="container">
+        <div class="pricing-cards">
+            <!-- Seed Plan -->
+            <div class="pricing-card pricing-card-seed">
+                <div class="pricing-card-header">
+                    <h3 class="pricing-card-title">Seed</h3>
+                    <p class="pricing-card-subtitle">Forever Free</p>
+                </div>
+                <div class="pricing-card-price">
+                    <span class="price-currency">₹</span>
+                    <span class="price-amount" data-base-price="0">0</span>
+                    <span class="price-period">/month</span>
+                </div>
+                <p class="pricing-card-billing">₹0/month</p>
+                <ul class="pricing-card-features">
+                    <li class="feature-included">
+                        <i class="fa fa-check"></i>
+                        <span>5 Active Listings</span>
+                    </li>
+                    <li class="feature-included">
+                        <i class="fa fa-check"></i>
+                        <span>Basic Dashboard</span>
+                    </li>
+                    <li class="feature-included">
+                        <i class="fa fa-check"></i>
+                        <span>Buyer Inquiries</span>
+                    </li>
+                    <li class="feature-included">
+                        <i class="fa fa-check"></i>
+                        <span>WhatsApp Contact</span>
+                    </li>
+                    <li class="feature-included">
+                        <i class="fa fa-check"></i>
+                        <span>Basic Analytics</span>
+                    </li>
+                    <li class="feature-excluded">
+                        <i class="fa fa-times"></i>
+                        <span>Featured Listings</span>
+                    </li>
+                    <li class="feature-excluded">
+                        <i class="fa fa-times"></i>
+                        <span>Videos</span>
+                    </li>
+                    <li class="feature-excluded">
+                        <i class="fa fa-times"></i>
+                        <span>Brochure Upload</span>
+                    </li>
+                    <li class="feature-excluded">
+                        <i class="fa fa-times"></i>
+                        <span>Verified Agent Badge</span>
+                    </li>
+                    <li class="feature-excluded">
+                        <i class="fa fa-times"></i>
+                        <span>Priority in Search</span>
+                    </li>
+                    <li class="feature-excluded">
+                        <i class="fa fa-times"></i>
+                        <span>Advanced Lead Management</span>
+                    </li>
+                    <li class="feature-excluded">
+                        <i class="fa fa-times"></i>
+                        <span>Property Analytics (Advanced)</span>
+                    </li>
+                    <li class="feature-excluded">
+                        <i class="fa fa-times"></i>
+                        <span>Team Members (1 Only)</span>
+                    </li>
+                    <li class="feature-excluded">
+                        <i class="fa fa-times"></i>
+                        <span>Priority Support (Email)</span>
+                    </li>
+                </ul>
+                <a href="#" class="pricing-card-btn btn-outline">Get Started Free</a>
+            </div>
+
+            <!-- Harvest Plan -->
+            <div class="pricing-card pricing-card-harvest pricing-card-featured">
+                <div class="most-popular-badge">Most Popular</div>
+                <div class="pricing-card-header">
+                    <h3 class="pricing-card-title">Harvest</h3>
+                    <p class="pricing-card-subtitle">Billed annually at ₹4,799</p>
+                </div>
+                <div class="pricing-card-price">
+                    <span class="price-currency">₹</span>
+                    <span class="price-amount" data-base-price="499">499</span>
+                    <span class="price-period">/month</span>
+                </div>
+                <p class="pricing-card-billing">₹499/month</p>
+                <ul class="pricing-card-features">
+                    <li class="feature-included">
+                        <i class="fa fa-check"></i>
+                        <span>50 Active Listings</span>
+                    </li>
+                    <li class="feature-included">
+                        <i class="fa fa-check"></i>
+                        <span>5 Featured Listings</span>
+                    </li>
+                    <li class="feature-included">
+                        <i class="fa fa-check"></i>
+                        <span>25 Images per Property</span>
+                    </li>
+                    <li class="feature-included">
+                        <i class="fa fa-check"></i>
+                        <span>Videos</span>
+                    </li>
+                    <li class="feature-included">
+                        <i class="fa fa-check"></i>
+                        <span>Brochure Upload</span>
+                    </li>
+                    <li class="feature-included">
+                        <i class="fa fa-check"></i>
+                        <span>Verified Agent Badge</span>
+                    </li>
+                    <li class="feature-included">
+                        <i class="fa fa-check"></i>
+                        <span>High Priority in Search</span>
+                    </li>
+                    <li class="feature-included">
+                        <i class="fa fa-check"></i>
+                        <span>Advanced Lead Management</span>
+                    </li>
+                    <li class="feature-included">
+                        <i class="fa fa-check"></i>
+                        <span>Property Analytics (Advanced)</span>
+                    </li>
+                    <li class="feature-included">
+                        <i class="fa fa-check"></i>
+                        <span>WhatsApp Leads</span>
+                    </li>
+                    <li class="feature-included">
+                        <i class="fa fa-check"></i>
+                        <span>Team Members (Up to 3)</span>
+                    </li>
+                    <li class="feature-included">
+                        <i class="fa fa-check"></i>
+                        <span>Priority Support</span>
+                    </li>
+                </ul>
+                <a href="#" class="pricing-card-btn btn-primary">Choose Harvest Plan</a>
+            </div>
+
+            <!-- Legacy Plan -->
+            <div class="pricing-card pricing-card-legacy">
+                <div class="pricing-card-header">
+                    <h3 class="pricing-card-title">Legacy</h3>
+                    <p class="pricing-card-subtitle">Billed annually at ₹9,599</p>
+                </div>
+                <div class="pricing-card-price">
+                    <span class="price-currency">₹</span>
+                    <span class="price-amount" data-base-price="999">999</span>
+                    <span class="price-period">/month</span>
+                </div>
+                <p class="pricing-card-billing">₹999/month</p>
+                <ul class="pricing-card-features">
+                    <li class="feature-included">
+                        <i class="fa fa-check"></i>
+                        <span>Unlimited Active Listings</span>
+                    </li>
+                    <li class="feature-included">
+                        <i class="fa fa-check"></i>
+                        <span>Unlimited Featured Listings</span>
+                    </li>
+                    <li class="feature-included">
+                        <i class="fa fa-check"></i>
+                        <span>Unlimited Images per Property</span>
+                    </li>
+                    <li class="feature-included">
+                        <i class="fa fa-check"></i>
+                        <span>Videos</span>
+                    </li>
+                    <li class="feature-included">
+                        <i class="fa fa-check"></i>
+                        <span>Brochure Upload</span>
+                    </li>
+                    <li class="feature-included">
+                        <i class="fa fa-check"></i>
+                        <span>Premium Verified Badge</span>
+                    </li>
+                    <li class="feature-included">
+                        <i class="fa fa-check"></i>
+                        <span>Highest Priority in Search</span>
+                    </li>
+                    <li class="feature-included">
+                        <i class="fa fa-check"></i>
+                        <span>Premium CRM (Lead Management)</span>
+                    </li>
+                    <li class="feature-included">
+                        <i class="fa fa-check"></i>
+                        <span>Property Analytics (Advanced + Reports)</span>
+                    </li>
+                    <li class="feature-included">
+                        <i class="fa fa-check"></i>
+                        <span>WhatsApp Leads</span>
+                    </li>
+                    <li class="feature-included">
+                        <i class="fa fa-check"></i>
+                        <span>Unlimited Team Members</span>
+                    </li>
+                    <li class="feature-included">
+                        <i class="fa fa-check"></i>
+                        <span>Dedicated Support</span>
+                    </li>
+                </ul>
+                <a href="#" class="pricing-card-btn btn-outline">Choose Legacy Plan</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Compare Features Table -->
+<section class="compare-section">
+    <div class="container">
+        <h2 class="section-heading">Compare Features</h2>
+        <div class="compare-table-wrapper">
+            <table class="compare-table">
+                <thead>
+                    <tr>
+                        <th class="feature-column">Features</th>
+                        <th class="plan-column plan-seed">Seed</th>
+                        <th class="plan-column plan-harvest">Harvest</th>
+                        <th class="plan-column plan-legacy">Legacy</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="category-row">
+                        <td colspan="4" class="category-header">Listings & Content</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">Active Listings</td>
+                        <td class="feature-value">5</td>
+                        <td class="feature-value">50</td>
+                        <td class="feature-value">Unlimited</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">Featured Listings</td>
+                        <td class="feature-value"><i class="fa fa-times text-cross"></i></td>
+                        <td class="feature-value">5</td>
+                        <td class="feature-value">Unlimited</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">Images per Property</td>
+                        <td class="feature-value">Basic</td>
+                        <td class="feature-value">25</td>
+                        <td class="feature-value">Unlimited</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">Videos</td>
+                        <td class="feature-value"><i class="fa fa-times text-cross"></i></td>
+                        <td class="feature-value"><i class="fa fa-check text-check"></i></td>
+                        <td class="feature-value"><i class="fa fa-check text-check"></i></td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">Brochure Upload</td>
+                        <td class="feature-value"><i class="fa fa-times text-cross"></i></td>
+                        <td class="feature-value"><i class="fa fa-check text-check"></i></td>
+                        <td class="feature-value"><i class="fa fa-check text-check"></i></td>
+                    </tr>
+                    <tr class="category-row">
+                        <td colspan="4" class="category-header">Visibility & Growth</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">Search Priority</td>
+                        <td class="feature-value">Basic</td>
+                        <td class="feature-value">High</td>
+                        <td class="feature-value">Highest</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">Agent Badge</td>
+                        <td class="feature-value"><i class="fa fa-times text-cross"></i></td>
+                        <td class="feature-value">Verified</td>
+                        <td class="feature-value">Premium</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">Property Analytics</td>
+                        <td class="feature-value">Basic</td>
+                        <td class="feature-value">Advanced</td>
+                        <td class="feature-value">Advanced + Reports</td>
+                    </tr>
+                    <tr class="category-row">
+                        <td colspan="4" class="category-header">Lead Management</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">Buyer Inquiries</td>
+                        <td class="feature-value"><i class="fa fa-check text-check"></i></td>
+                        <td class="feature-value"><i class="fa fa-check text-check"></i></td>
+                        <td class="feature-value"><i class="fa fa-check text-check"></i></td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">WhatsApp Leads</td>
+                        <td class="feature-value">Contact</td>
+                        <td class="feature-value"><i class="fa fa-check text-check"></i></td>
+                        <td class="feature-value"><i class="fa fa-check text-check"></i></td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">Lead Management</td>
+                        <td class="feature-value"><i class="fa fa-times text-cross"></i></td>
+                        <td class="feature-value">Advanced</td>
+                        <td class="feature-value">Premium CRM</td>
+                    </tr>
+                    <tr class="category-row">
+                        <td colspan="4" class="category-header">Team & Support</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">Team Members</td>
+                        <td class="feature-value">1 Only</td>
+                        <td class="feature-value">Up to 3</td>
+                        <td class="feature-value">Unlimited</td>
+                    </tr>
+                    <tr>
+                        <td class="feature-name">Support</td>
+                        <td class="feature-value">Email</td>
+                        <td class="feature-value">Priority</td>
+                        <td class="feature-value">Dedicated</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- Billing Comparison Table -->
+<section class="billing-comparison-section">
+    <div class="container">
+        <h2 class="section-heading">Billing Comparison</h2>
+        <div class="billing-table-wrapper">
+            <table class="billing-table">
+                <thead>
+                    <tr>
+                        <th class="plan-name-column">Plan</th>
+                        <th class="billing-column">1 Month</th>
+                        <th class="billing-column">3 Months (Save 10%)</th>
+                        <th class="billing-column">6 Months (Save 15%)</th>
+                        <th class="billing-column">12 Months (Save 20%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="billing-plan-name">Seed</td>
+                        <td class="billing-price">
+                            <span class="current-price">₹0</span>
+                        </td>
+                        <td class="billing-price">
+                            <span class="current-price">₹0</span>
+                        </td>
+                        <td class="billing-price">
+                            <span class="current-price">₹0</span>
+                        </td>
+                        <td class="billing-price">
+                            <span class="current-price">₹0</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="billing-plan-name">Harvest</td>
+                        <td class="billing-price">
+                            <span class="current-price">₹499</span>
+                        </td>
+                        <td class="billing-price">
+                            <span class="old-price">₹1,497</span>
+                            <span class="current-price">₹1,349</span>
+                            <span class="save-badge-small">Save 10%</span>
+                        </td>
+                        <td class="billing-price">
+                            <span class="old-price">₹2,994</span>
+                            <span class="current-price">₹2,549</span>
+                            <span class="save-badge-small">Save 15%</span>
+                        </td>
+                        <td class="billing-price">
+                            <span class="old-price">₹5,988</span>
+                            <span class="current-price">₹4,799</span>
+                            <span class="save-badge-small">Save 20%</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="billing-plan-name">Legacy</td>
+                        <td class="billing-price">
+                            <span class="current-price">₹999</span>
+                        </td>
+                        <td class="billing-price">
+                            <span class="old-price">₹2,997</span>
+                            <span class="current-price">₹2,699</span>
+                            <span class="save-badge-small">Save 10%</span>
+                        </td>
+                        <td class="billing-price">
+                            <span class="old-price">₹5,998</span>
+                            <span class="current-price">₹5,099</span>
+                            <span class="save-badge-small">Save 15%</span>
+                        </td>
+                        <td class="billing-price">
+                            <span class="old-price">₹11,988</span>
+                            <span class="current-price">₹9,599</span>
+                            <span class="save-badge-small">Save 20%</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose Section -->
+<section class="why-choose-subscription-section">
+    <div class="container">
+        <h2 class="section-heading">Why Choose HeyDay Realty?</h2>
+        <div class="why-choose-cards">
+            <div class="why-choose-card">
+                <div class="why-choose-card-icon">
+                    <i class="fa fa-eye"></i>
+                </div>
+                <h3 class="why-choose-card-title">More Exposure</h3>
+                <p class="why-choose-card-description">Get your properties in front of thousands of verified buyers and investors across India.</p>
+            </div>
+            <div class="why-choose-card">
+                <div class="why-choose-card-icon">
+                    <i class="fa fa-users"></i>
+                </div>
+                <h3 class="why-choose-card-title">Quality Leads</h3>
+                <p class="why-choose-card-description">Connect with serious buyers actively looking for farmland and agricultural properties.</p>
+            </div>
+            <div class="why-choose-card">
+                <div class="why-choose-card-icon">
+                    <i class="fa fa-chart-line"></i>
+                </div>
+                <h3 class="why-choose-card-title">Smart Tools</h3>
+                <p class="why-choose-card-description">Advanced analytics and management tools to grow your property business efficiently.</p>
+            </div>
+            <div class="why-choose-card">
+                <div class="why-choose-card-icon">
+                    <i class="fa fa-shield"></i>
+                </div>
+                <h3 class="why-choose-card-title">Trusted Platform</h3>
+                <p class="why-choose-card-description">Join 10,000+ agents who trust HeyDay Realty for their property business needs.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'public/js/subscription.js' %}"></script>
+{% endblock %}

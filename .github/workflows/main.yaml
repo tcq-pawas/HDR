@@ -1,0 +1,102 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - HDR-New
+  workflow_dispatch: # Allow manual trigger from GitHub UI
+
+jobs:
+  deploy:
+    name: Deploy Django App to EC2
+    runs-on: ubuntu-latest
+
+    steps:
+      # ============================================
+      # Step 1: Checkout the code from GitHub
+      # ============================================
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # ============================================
+      # Step 2: Configure SSH key for EC2 access
+      # ============================================
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/ec2_key.pem
+          chmod 600 ~/.ssh/ec2_key.pem
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+      # ============================================
+      # Step 3: Deploy to EC2 server
+      # ============================================
+      - name: Deploy to EC2
+        run: |
+          ssh -i ~/.ssh/ec2_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'ENDSSH'
+            # Set project directory
+            PROJECT_DIR="/home/ubuntu/HDR"
+            BRANCH="HDR-New"
+            
+            # Create project directory if it doesn't exist
+            sudo mkdir -p $PROJECT_DIR
+            sudo chown $USER:$USER $PROJECT_DIR
+            
+            # Install Docker if not present
+            if ! command -v docker &> /dev/null; then
+              sudo apt-get update
+              sudo apt-get install -y docker.io
+              sudo usermod -aG docker $USER
+              sudo systemctl start docker
+              sudo systemctl enable docker
+            fi
+            
+            # Install Docker Compose plugin if not present
+            if ! docker compose version &> /dev/null; then
+              sudo apt-get install -y docker-compose-plugin
+            fi
+            
+            # Navigate to project directory
+            cd $PROJECT_DIR
+            
+            # Verify docker-compose.yml exists
+            if [ ! -f docker-compose.yml ]; then
+              echo "Error: docker-compose.yml not found in HDR directory"
+              exit 1
+            fi
+
+            echo "Current directory:"
+            pwd
+
+            echo "Fetching latest code..."
+            git fetch origin
+
+            echo "Checking out $BRANCH..."
+            git checkout $BRANCH
+
+            echo "Resetting to latest origin/$BRANCH..."
+            git reset --hard origin/$BRANCH
+
+            echo "Pulling latest changes..."
+            git pull origin $BRANCH
+            
+            # Stop existing containers
+            docker compose down || true
+            
+            # Build and start containers
+            docker compose build
+            docker compose up -d
+            
+            # Wait for services to be healthy
+            sleep 10
+            
+            # Show running containers
+            docker compose ps
+          ENDSSH
+
+      # ============================================
+      # Step 4: Cleanup SSH key
+      # ============================================
+      - name: Cleanup SSH key
+        if: always()
+        run: rm -f ~/.ssh/ec2_key.pem

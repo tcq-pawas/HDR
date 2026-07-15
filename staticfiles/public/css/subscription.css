@@ -1,0 +1,723 @@
+/* Subscription Plans Page Styles */
+
+:root {
+    --subscription-primary: #0F6A3C;
+    --subscription-accent: #F4B400;
+    --subscription-bg: #FAFAF7;
+    --subscription-card-bg: #FFFFFF;
+    --subscription-text-dark: #1F1F1F;
+    --subscription-text-muted: #666666;
+    --subscription-border: rgba(15, 106, 60, 0.1);
+    --subscription-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    --subscription-shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.12);
+    --subscription-radius: 18px;
+    --subscription-max-width: 1700px;
+}
+
+/* Container override for subscription page */
+.subscription-hero .container,
+.annual-billing-banner .container,
+.billing-toggle-section .container,
+.pricing-section .container,
+.compare-section .container,
+.billing-comparison-section .container,
+.why-choose-subscription-section .container {
+    max-width: var(--subscription-max-width);
+}
+
+/* Hero Banner */
+.subscription-hero {
+    position: relative;
+    min-height: 340px;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+.subscription-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        90deg,
+        rgba(15, 106, 60, 0.85) 0%,
+        rgba(15, 106, 60, 0.65) 40%,
+        rgba(15, 106, 60, 0.25) 100%
+    );
+    z-index: 1;
+}
+
+.subscription-hero-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 40px;
+}
+
+.subscription-hero-left {
+    flex: 1;
+    color: #ffffff;
+}
+
+.subscription-hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    color: #ffffff;
+}
+
+.subscription-hero-description {
+    font-size: 18px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.subscription-hero-features {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.subscription-hero-feature {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.subscription-hero-feature i {
+    color: var(--subscription-accent);
+    font-size: 16px;
+}
+
+.subscription-hero-right {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.subscription-hero-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--subscription-radius);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Annual Billing Banner */
+.annual-billing-banner {
+    background: linear-gradient(135deg, #F4B400 0%, #D49400 100%);
+    padding: 16px 0;
+}
+
+.annual-billing-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
+
+.annual-billing-icon {
+    font-size: 24px;
+    color: #ffffff;
+}
+
+.annual-billing-text {
+    font-size: 18px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+/* Billing Toggle */
+.billing-toggle-section {
+    padding: 40px 0;
+    background: var(--subscription-bg);
+}
+
+.billing-toggle-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.billing-toggle {
+    display: flex;
+    background: #ffffff;
+    border-radius: 50px;
+    padding: 6px;
+    box-shadow: var(--subscription-shadow);
+    gap: 4px;
+}
+
+.billing-toggle-btn {
+    padding: 12px 24px;
+    border: none;
+    background: transparent;
+    border-radius: 40px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--subscription-text-muted);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    font-family: 'Outfit', sans-serif;
+}
+
+.billing-toggle-btn:hover {
+    color: var(--subscription-primary);
+}
+
+.billing-toggle-btn.active {
+    background: var(--subscription-primary);
+    color: #ffffff;
+}
+
+.save-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--subscription-accent);
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 12px;
+    text-transform: uppercase;
+}
+
+/* Pricing Section */
+.pricing-section {
+    padding: 60px 0;
+    background: var(--subscription-bg);
+}
+
+.pricing-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    align-items: stretch;
+}
+
+.pricing-card {
+    background: var(--subscription-card-bg);
+    border-radius: var(--subscription-radius);
+    padding: 40px 30px;
+    box-shadow: var(--subscription-shadow);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    border: 2px solid transparent;
+}
+
+.pricing-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--subscription-shadow-hover);
+}
+
+.pricing-card-seed {
+    border-top: 4px solid var(--subscription-primary);
+}
+
+.pricing-card-harvest {
+    border: 3px solid var(--subscription-accent);
+    transform: scale(1.05);
+    z-index: 2;
+}
+
+.pricing-card-harvest:hover {
+    transform: scale(1.05) translateY(-8px);
+}
+
+.pricing-card-legacy {
+    border-top: 4px solid #0D4A2A;
+}
+
+.most-popular-badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--subscription-accent);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 8px 20px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.pricing-card-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.pricing-card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--subscription-text-dark);
+    margin-bottom: 8px;
+}
+
+.pricing-card-subtitle {
+    font-size: 14px;
+    color: var(--subscription-text-muted);
+    font-weight: 500;
+}
+
+.pricing-card-price {
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+.price-currency {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--subscription-text-dark);
+}
+
+.price-amount {
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--subscription-text-dark);
+}
+
+.price-period {
+    font-size: 16px;
+    color: var(--subscription-text-muted);
+}
+
+.pricing-card-billing {
+    text-align: center;
+    font-size: 14px;
+    color: var(--subscription-text-muted);
+    margin-bottom: 30px;
+}
+
+.pricing-card-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 30px 0;
+    flex: 1;
+}
+
+.pricing-card-features li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    font-size: 14px;
+    color: var(--subscription-text-dark);
+}
+
+.pricing-card-features li:last-child {
+    border-bottom: none;
+}
+
+.feature-included i {
+    color: var(--subscription-primary);
+    font-size: 16px;
+}
+
+.feature-excluded i {
+    color: #ccc;
+    font-size: 16px;
+}
+
+.feature-excluded span {
+    color: var(--subscription-text-muted);
+}
+
+.pricing-card-btn {
+    display: block;
+    text-align: center;
+    padding: 14px 32px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-family: 'Outfit', sans-serif;
+}
+
+.pricing-card-btn.btn-primary {
+    background: var(--subscription-primary);
+    color: #ffffff;
+    border: 2px solid var(--subscription-primary);
+}
+
+.pricing-card-btn.btn-primary:hover {
+    background: #0D4A2A;
+    border-color: #0D4A2A;
+    transform: translateY(-2px);
+}
+
+.pricing-card-btn.btn-outline {
+    background: transparent;
+    color: var(--subscription-primary);
+    border: 2px solid var(--subscription-primary);
+}
+
+.pricing-card-btn.btn-outline:hover {
+    background: var(--subscription-primary);
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+
+/* Compare Section */
+.compare-section {
+    padding: 80px 0;
+    background: #ffffff;
+}
+
+.section-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 700;
+    color: var(--subscription-text-dark);
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.compare-table-wrapper {
+    background: var(--subscription-bg);
+    border-radius: var(--subscription-radius);
+    padding: 30px;
+    overflow-x: auto;
+}
+
+.compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+
+.compare-table th,
+.compare-table td {
+    padding: 16px 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.compare-table th {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--subscription-text-dark);
+}
+
+.feature-column {
+    text-align: left;
+    width: 30%;
+}
+
+.plan-column {
+    font-weight: 600;
+}
+
+.plan-seed {
+    color: var(--subscription-primary);
+}
+
+.plan-harvest {
+    color: var(--subscription-accent);
+}
+
+.plan-legacy {
+    color: #0D4A2A;
+}
+
+.category-row {
+    background: rgba(15, 106, 60, 0.05);
+}
+
+.category-header {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--subscription-primary);
+    text-align: left;
+    padding: 20px;
+}
+
+.feature-name {
+    text-align: left;
+    font-weight: 500;
+    color: var(--subscription-text-dark);
+}
+
+.feature-value {
+    font-weight: 500;
+    color: var(--subscription-text-dark);
+}
+
+.text-check {
+    color: var(--subscription-primary);
+}
+
+.text-cross {
+    color: #ccc;
+}
+
+/* Billing Comparison Section */
+.billing-comparison-section {
+    padding: 80px 0;
+    background: var(--subscription-bg);
+}
+
+.billing-table-wrapper {
+    background: #ffffff;
+    border-radius: var(--subscription-radius);
+    padding: 30px;
+    overflow-x: auto;
+}
+
+.billing-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px;
+}
+
+.billing-table th,
+.billing-table td {
+    padding: 16px 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.billing-table th {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--subscription-text-dark);
+}
+
+.plan-name-column {
+    text-align: left;
+    width: 20%;
+    font-weight: 600;
+}
+
+.billing-column {
+    font-weight: 600;
+}
+
+.billing-plan-name {
+    text-align: left;
+    font-weight: 600;
+    color: var(--subscription-text-dark);
+}
+
+.billing-price {
+    position: relative;
+}
+
+.old-price {
+    text-decoration: line-through;
+    color: var(--subscription-text-muted);
+    font-size: 14px;
+    margin-right: 8px;
+}
+
+.current-price {
+    font-weight: 700;
+    color: var(--subscription-primary);
+    font-size: 18px;
+}
+
+.save-badge-small {
+    display: inline-block;
+    background: var(--subscription-accent);
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 8px;
+    margin-left: 8px;
+    text-transform: uppercase;
+}
+
+/* Why Choose Section */
+.why-choose-subscription-section {
+    padding: 80px 0;
+    background: #ffffff;
+}
+
+.why-choose-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+}
+
+.why-choose-card {
+    background: var(--subscription-bg);
+    border-radius: var(--subscription-radius);
+    padding: 30px 24px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.why-choose-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--subscription-shadow-hover);
+}
+
+.why-choose-card-icon {
+    width: 64px;
+    height: 64px;
+    background: rgba(15, 106, 60, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+}
+
+.why-choose-card-icon i {
+    font-size: 24px;
+    color: var(--subscription-primary);
+}
+
+.why-choose-card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--subscription-text-dark);
+    margin-bottom: 12px;
+}
+
+.why-choose-card-description {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--subscription-text-muted);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .subscription-hero-title {
+        font-size: 36px;
+    }
+    
+    .pricing-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .pricing-card-harvest {
+        transform: none;
+    }
+    
+    .pricing-card-harvest:hover {
+        transform: translateY(-8px);
+    }
+    
+    .why-choose-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .subscription-hero {
+        min-height: auto;
+        padding: 60px 0;
+    }
+    
+    .subscription-hero-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .subscription-hero-left {
+        order: 2;
+    }
+    
+    .subscription-hero-right {
+        order: 1;
+        justify-content: center;
+    }
+    
+    .subscription-hero-title {
+        font-size: 28px;
+    }
+    
+    .subscription-hero-description {
+        font-size: 16px;
+    }
+    
+    .subscription-hero-features {
+        justify-content: center;
+    }
+    
+    .subscription-hero-image {
+        max-width: 200px;
+    }
+    
+    .annual-billing-text {
+        font-size: 14px;
+    }
+    
+    .billing-toggle {
+        flex-wrap: wrap;
+        justify-content: center;
+        border-radius: 12px;
+    }
+    
+    .billing-toggle-btn {
+        flex: 1;
+        min-width: 80px;
+        padding: 10px 16px;
+        font-size: 12px;
+    }
+    
+    .pricing-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .pricing-card {
+        padding: 30px 20px;
+    }
+    
+    .section-heading {
+        font-size: 32px;
+    }
+    
+    .why-choose-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .compare-table-wrapper,
+    .billing-table-wrapper {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .subscription-hero-features {
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .billing-toggle-btn {
+        padding: 8px 12px;
+        font-size: 11px;
+    }
+    
+    .save-badge {
+        display: none;
+    }
+    
+    .pricing-card-title {
+        font-size: 24px;
+    }
+    
+    .price-amount {
+        font-size: 36px;
+    }
+}
