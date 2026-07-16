@@ -3,7 +3,7 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - HDR-New
+      - Production
   workflow_dispatch: # Allow manual trigger from GitHub UI
 
 jobs:
@@ -36,7 +36,7 @@ jobs:
           ssh -i ~/.ssh/ec2_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'ENDSSH'
             # Set project directory
             PROJECT_DIR="/home/ubuntu/HDR"
-            BRANCH="HDR-New"
+            BRANCH="Production"
             
             # Create project directory if it doesn't exist
             sudo mkdir -p $PROJECT_DIR
