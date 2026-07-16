@@ -297,86 +297,66 @@ def subscription_plans(request):
     Subscription plans page for agents.
     Displays pricing tiers and billing options.
     """
-    # Pricing data - prepared for future Stripe integration
-    pricing_plans = {
-        'seed': {
-            'name': 'Seed',
-            'subtitle': 'Forever Free',
-            'price': 0,
-            'billing': '₹0/month',
-            'button_text': 'Get Started Free',
-            'features': [
-                {'text': '5 Active Listings', 'included': True},
-                {'text': 'Basic Dashboard', 'included': True},
-                {'text': 'Buyer Inquiries', 'included': True},
-                {'text': 'WhatsApp Contact', 'included': True},
-                {'text': 'Basic Analytics', 'included': True},
-                {'text': 'Featured Listings', 'included': False},
-                {'text': 'Videos', 'included': False},
-                {'text': 'Brochure Upload', 'included': False},
-                {'text': 'Verified Agent Badge', 'included': False},
-                {'text': 'Priority in Search', 'included': False},
-                {'text': 'Advanced Lead Management', 'included': False},
-                {'text': 'Property Analytics (Advanced)', 'included': False},
-                {'text': 'Team Members (1 Only)', 'included': False},
-                {'text': 'Priority Support (Email)', 'included': False},
-            ]
-        },
-        'harvest': {
-            'name': 'Harvest',
-            'subtitle': 'Billed annually at ₹4,799',
-            'price': 499,
-            'billing': '₹499/month',
-            'button_text': 'Choose Harvest Plan',
-            'features': [
-                {'text': '50 Active Listings', 'included': True},
-                {'text': '5 Featured Listings', 'included': True},
-                {'text': '25 Images per Property', 'included': True},
-                {'text': 'Videos', 'included': True},
-                {'text': 'Brochure Upload', 'included': True},
-                {'text': 'Verified Agent Badge', 'included': True},
-                {'text': 'High Priority in Search', 'included': True},
-                {'text': 'Advanced Lead Management', 'included': True},
-                {'text': 'Property Analytics (Advanced)', 'included': True},
-                {'text': 'WhatsApp Leads', 'included': True},
-                {'text': 'Team Members (Up to 3)', 'included': True},
-                {'text': 'Priority Support', 'included': True},
-            ]
-        },
-        'legacy': {
-            'name': 'Legacy',
-            'subtitle': 'Billed annually at ₹9,599',
-            'price': 999,
-            'billing': '₹999/month',
-            'button_text': 'Choose Legacy Plan',
-            'features': [
-                {'text': 'Unlimited Active Listings', 'included': True},
-                {'text': 'Unlimited Featured Listings', 'included': True},
-                {'text': 'Unlimited Images per Property', 'included': True},
-                {'text': 'Videos', 'included': True},
-                {'text': 'Brochure Upload', 'included': True},
-                {'text': 'Premium Verified Badge', 'included': True},
-                {'text': 'Highest Priority in Search', 'included': True},
-                {'text': 'Premium CRM (Lead Management)', 'included': True},
-                {'text': 'Property Analytics (Advanced + Reports)', 'included': True},
-                {'text': 'WhatsApp Leads', 'included': True},
-                {'text': 'Unlimited Team Members', 'included': True},
-                {'text': 'Dedicated Support', 'included': True},
-            ]
-        }
+    from Apps.Subscriptions.models import SubscriptionPlan
+    
+    plans = SubscriptionPlan.objects.prefetch_related('features', 'pricing_options').filter(is_active=True).order_by('display_order')
+    
+    # 1. Prepare Compare Features Matrix
+    CATEGORIES = {
+        'Listings & Content': ['Active Listings', 'Featured Listings', 'Images per Property', 'Videos', 'Brochure Upload'],
+        'Visibility & Growth': ['Search Priority', 'Agent Badge', 'Property Analytics'],
+        'Lead Management': ['Buyer Inquiries', 'WhatsApp Leads', 'Lead Management'],
+        'Team & Support': ['Team Members', 'Support']
     }
     
-    # Billing periods with discounts
-    billing_periods = {
-        '1_month': {'label': '1 Month', 'discount': 0},
-        '3_months': {'label': '3 Months', 'discount': 10},
-        '6_months': {'label': '6 Months', 'discount': 15},
-        '12_months': {'label': '12 Months', 'discount': 20},
-    }
+    all_feature_names = []
+    for plan in plans:
+        for f in plan.features.all():
+            if f.feature_name not in all_feature_names:
+                all_feature_names.append(f.feature_name)
+                
+    categorized_matrix = {cat: [] for cat in CATEGORIES.keys()}
+    categorized_matrix['Other Features'] = []
+    
+    for f_name in all_feature_names:
+        row = {'name': f_name, 'values': []}
+        for plan in plans:
+            pf = next((f for f in plan.features.all() if f.feature_name == f_name), None)
+            if pf:
+                row['values'].append({'is_available': pf.is_available, 'value': pf.feature_value})
+            else:
+                row['values'].append({'is_available': False, 'value': None})
+                
+        found_cat = 'Other Features'
+        for cat, features in CATEGORIES.items():
+            if any(f.lower() in f_name.lower() for f in features):
+                found_cat = cat
+                break
+        categorized_matrix[found_cat].append(row)
+        
+    categorized_matrix = {k: v for k, v in categorized_matrix.items() if v}
+        
+    # 2. Prepare Billing Comparison Matrix
+    billing_cycles = [
+        ('1M', '1 Month'),
+        ('3M', '3 Months(Save 10%)'),
+        ('6M', '6 Months(Save 15%)'),
+        ('12M', '12 Months(Save 20%)'),
+    ]
+    
+    billing_matrix = []
+    for plan in plans:
+        row = {'plan_name': plan.name, 'prices': []}
+        for code, label in billing_cycles:
+            pricing = next((p for p in plan.pricing_options.all() if p.billing_cycle == code), None)
+            row['prices'].append(pricing)
+        billing_matrix.append(row)
     
     return render(request, 'public/subscription/subscription.html', {
-        'pricing_plans': pricing_plans,
-        'billing_periods': billing_periods,
+        'plans': plans,
+        'categorized_matrix': categorized_matrix,
+        'billing_cycles': billing_cycles,
+        'billing_matrix': billing_matrix,
     })
 
 def agent_profile(request, agent_id=None):

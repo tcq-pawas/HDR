@@ -117,6 +117,7 @@ urlpatterns = [
     path('api/admin/', include(('Apps.Administration.urls', 'api_admin'), namespace='api_admin')),
     path('api-auth/', include('rest_framework.urls')),
     
+    path('admin-dashboard/subscriptions/', include('Apps.Subscriptions.urls')),
 ]
 
 # Custom error handlers for unauthorized access
