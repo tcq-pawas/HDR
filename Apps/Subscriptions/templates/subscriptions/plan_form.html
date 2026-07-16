@@ -1,0 +1,154 @@
+{% extends "administration/admin_base.html" %}
+{% load static %}
+
+{% block page_title %}Manage Subscriptions{% endblock %}
+{% block page_subtitle %}Create and manage subscription plans, pricing and features.{% endblock %}
+
+{% block content %}
+<div class="mb-3 ps-3">
+    <h4 class="fw-bold mb-1">{{ page_title }}</h4>
+    <p class="text-muted mb-0">Fill in the plan details, pricing options and features below.</p>
+</div>
+
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }}">{{ message }}</div>
+{% endfor %}
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+
+    <!-- PLAN DETAILS -->
+    <div class="card shadow-sm border-0 rounded-4 mb-4">
+        <div class="card-header bg-white border-0 pt-3">
+            <h6 class="fw-bold mb-0">Plan Details</h6>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">Plan Name</label>
+                    {{ form.name }}
+                    {{ form.name.errors }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Slug</label>
+                    {{ form.slug }}
+                    {{ form.slug.errors }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Badge Text</label>
+                    {{ form.badge_text }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Short Description</label>
+                    {{ form.short_description }}
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Button Text</label>
+                    {{ form.button_text }}
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Button URL</label>
+                    {{ form.button_url }}
+                </div>
+                <div class="col-md-3 d-flex align-items-center mt-4">
+                    <div class="form-check">
+                        {{ form.is_active }}
+                        <label class="form-check-label ms-1">Active</label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Display Order</label>
+                    {{ form.display_order }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRICING OPTIONS -->
+    <div class="card shadow-sm border-0 rounded-4 mb-4">
+        <div class="card-header bg-white border-0 pt-3">
+            <h6 class="fw-bold mb-0">Pricing Options</h6>
+        </div>
+        <div class="card-body">
+            {{ pricing_formset.management_form }}
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead class="small text-muted">
+                        <tr>
+                            <th>Billing Cycle</th>
+                            <th>Price</th>
+                            <th>Original Price</th>
+                            <th>Save %</th>
+                            <th>Default</th>
+                            <th>Stripe Price ID</th>
+                            <th>Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pform in pricing_formset %}
+                        <tr>
+                            {% for hidden in pform.hidden_fields %}{{ hidden }}{% endfor %}
+                            <td>{{ pform.billing_cycle }}</td>
+                            <td>{{ pform.price }}</td>
+                            <td>{{ pform.original_price }}</td>
+                            <td>{{ pform.save_percentage }}</td>
+                            <td class="text-center">{{ pform.is_default }}</td>
+                            <td>{{ pform.stripe_price_id }}</td>
+                            <td class="text-center">
+                                {% if pform.instance.pk %}{{ pform.DELETE }}{% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- FEATURES -->
+    <div class="card shadow-sm border-0 rounded-4 mb-4">
+        <div class="card-header bg-white border-0 pt-3">
+            <h6 class="fw-bold mb-0">Plan Features</h6>
+        </div>
+        <div class="card-body">
+            {{ feature_formset.management_form }}
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead class="small text-muted">
+                        <tr>
+                            <th>Feature Name</th>
+                            <th>Value</th>
+                            <th>Available</th>
+                            <th>Order</th>
+                            <th>Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for fform in feature_formset %}
+                        <tr>
+                            {% for hidden in fform.hidden_fields %}{{ hidden }}{% endfor %}
+                            <td>{{ fform.feature_name }}</td>
+                            <td>{{ fform.feature_value }}</td>
+                            <td class="text-center">{{ fform.is_available }}</td>
+                            <td>{{ fform.display_order }}</td>
+                            <td class="text-center">
+                                {% if fform.instance.pk %}{{ fform.DELETE }}{% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-success px-4">
+            {% if is_edit %}Update Plan{% else %}Create Plan{% endif %}
+        </button>
+        <a href="{% url 'subscriptions:manage-subscriptions' %}" class="btn btn-outline-secondary px-4">Cancel</a>
+    </div>
+</form>
+{% endblock %}

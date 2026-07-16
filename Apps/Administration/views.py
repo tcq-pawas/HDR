@@ -13,6 +13,8 @@ from .models import (
     ActivityLog, SystemBackup, SystemMaintenance, Report, GeneratedReport,
     Notification, SystemMetrics, PropertyReview
 )
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
@@ -35,6 +37,7 @@ from .serializers import (
     CreateSystemMaintenanceSerializer, CreateReportSerializer,
     CreateNotificationSerializer, CreateSystemMetricsSerializer
 )
+
 
 
 class AdminProfileView(generics.RetrieveUpdateAPIView):
@@ -379,6 +382,54 @@ class SystemMetricsListCreateView(generics.ListCreateAPIView):
             return CreateSystemMetricsSerializer
         return SystemMetricsSerializer
 
+
+@login_required
+def view_profile(request):
+    admin_profile, _ = AdminProfile.objects.get_or_create(
+        user=request.user,
+        defaults={'department': 'management', 'position': 'Administrator'}
+    )
+    context = {
+        "user": request.user,
+        "admin_profile": admin_profile,
+    }
+    return render(request, "administration/view_profile.html", context)
+
+
+@login_required
+def update_admin_profile(request):
+    if request.method == 'POST':
+        user = request.user
+        username = request.POST.get('username', '').strip()
+        email = request.POST.get('email', '').strip()
+        phone = request.POST.get('phone_number', '').strip()
+
+        if username and username != user.username:
+            from django.contrib.auth.models import User as UserModel
+            if UserModel.objects.filter(username=username).exclude(pk=user.pk).exists():
+                from django.http import JsonResponse
+                return JsonResponse({'success': False, 'message': 'Username already taken.'})
+            user.username = username
+
+        if email:
+            user.email = email
+        user.save()
+
+        admin_profile, _ = AdminProfile.objects.get_or_create(
+            user=user,
+            defaults={'department': 'management', 'position': 'Administrator'}
+        )
+        if phone:
+            admin_profile.phone = phone
+        if 'profile_picture' in request.FILES:
+            admin_profile.profile_picture = request.FILES['profile_picture']
+        admin_profile.save()
+
+        from django.http import JsonResponse
+        return JsonResponse({'success': True, 'message': 'Profile updated successfully!'})
+
+    from django.http import JsonResponse
+    return JsonResponse({'success': False, 'message': 'Invalid request method.'}, status=405)
 
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
@@ -1143,6 +1194,14 @@ def save_security_settings(request):
 def save_general_settings(request):
     try:
         from Apps.Administration.models import SystemSettings
+
+        username = request.data.get('username', '').strip()
+        if username and username != request.user.username:
+            from django.contrib.auth.models import User
+            if User.objects.filter(username=username).exclude(pk=request.user.pk).exists():
+                return Response({'success': False, 'message': 'Username already taken.'}, status=400)
+            request.user.username = username
+            request.user.save()
         
         site_name = request.data.get('siteName', 'HeyDay Realty')
         site_description = request.data.get('siteDescription', 'Professional real estate investment platform')

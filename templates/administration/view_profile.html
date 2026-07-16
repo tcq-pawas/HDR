@@ -1,0 +1,276 @@
+{% extends "administration/admin_base.html" %}
+{% load static %}
+
+{% block page_title %}
+<div class="d-flex align-items-center breadcrumb-custom">
+    <span class="breadcrumb-active">Administration</span>
+    <span class="mx-2 text-muted breadcrumb-separator">/</span>
+    <span class="breadcrumb-current">View Profile</span>
+</div>
+{% endblock %}
+{% block page_subtitle %}{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'admin/css/view_profile.css' %}">
+
+<div class="profile-container">
+    <!-- Header Card -->
+    <div class="profile-header-card">
+        <div class="profile-header-bg">
+            <svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                <path fill="#d1fae5" fill-opacity="0.8"
+                    d="M0,256L48,229.3C96,203,192,149,288,154.7C384,160,480,224,576,224C672,224,768,160,864,138.7C960,117,1056,139,1152,165.3C1248,192,1344,224,1392,240L1440,256L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z">
+                </path>
+            </svg>
+        </div>
+        <div class="profile-header-content">
+            <div class="d-flex align-items-center position-relative z-1">
+                <div class="dropdown me-4" title="Profile Photo Options">
+                    <div class="profile-avatar-large" id="avatarWrapper" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;">
+                        {% if admin_profile.profile_picture %}
+                        <img src="{{ admin_profile.profile_picture.url }}" alt="Profile Picture" id="avatarPreview">
+                        {% else %}
+                        <i class="fas fa-user default-avatar-icon" id="avatarPreview"></i>
+                        {% endif %}
+                        <div class="avatar-upload-overlay"><i class="fas fa-camera"></i></div>
+                    </div>
+                    <ul class="dropdown-menu mt-2">
+                        <li>
+                            <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('avatarInput').click();">
+                                <i class="fas fa-camera me-2"></i> Change Photo
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item text-danger" href="#" onclick="event.preventDefault(); removeProfilePhoto();">
+                                <i class="fas fa-trash me-2"></i> Remove Photo
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.body.click();">
+                                <i class="fas fa-times me-2"></i> Cancel
+                            </a>
+                        </li>
+                    </ul>
+                    <input type="file" id="avatarInput" accept="image/*" style="display:none;" onchange="previewAvatar(this)">
+                </div>
+                <div class="profile-header-text flex-grow-1">
+                    <h2 class="mb-2">{{ user.username|default:"admin_test" }}</h2>
+                    <span class="badge-role">Administrator</span>
+                    <div class="profile-joined mt-3 text-muted">
+                        <i class="far fa-calendar-alt me-2 calendar-icon"></i>
+                        Joined On {{ user.date_joined|date:"M d, Y" }}
+                    </div>
+                </div>
+                <!-- <div class="align-self-start">
+                    <button class="btn btn-edit-profile" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                        <i class="fas fa-pencil-alt me-2"></i> Edit
+                    </button>
+                </div> -->
+
+                <div class="align-self-start">
+                    <a href="{% url 'admin_dash:system-settings-page' %}" class="btn btn-edit-profile">
+                        <i class="fas fa-pencil-alt me-2"></i> Edit
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Card -->
+    <div class="profile-info-card">
+        <div class="row info-grid g-0">
+            <div class="col-md-6 info-item">
+                <div class="info-icon">
+                    <i class="fas fa-building"></i>
+                </div>
+                <div class="info-details">
+                    <label>Site Name</label>
+                    <p>HeyDay Realty</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 info-item">
+                <div class="info-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <div class="info-details">
+                    <label>Address</label>
+                    <p>123 Business Ave, Suite 100<br>New York, NY 10001</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 info-item">
+                <div class="info-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="info-details">
+                    <label>Site Description</label>
+                    <p>Professional real estate investment platform</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 info-item">
+                <div class="info-icon">
+                    <i class="far fa-clock"></i>
+                </div>
+                <div class="info-details">
+                    <label>Timezone</label>
+                    <p>Eastern Time (ET)</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 info-item border-bottom-0 border-md-bottom">
+                <div class="info-icon">
+                    <i class="far fa-envelope"></i>
+                </div>
+                <div class="info-details">
+                    <label>Contact Email</label>
+                    <p>{{ user.email|default:"info@heydayrealty.com" }}</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 info-item border-bottom-0">
+                <div class="info-icon">
+                    <i class="fas fa-phone-alt"></i>
+                </div>
+                <div class="info-details">
+                    <label>Phone Number</label>
+                    <p>+1 (555) 123-4567</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Profile Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editProfileForm" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <!-- Profile Picture Upload -->
+                    <div class="mb-3 text-center">
+                        <div class="modal-avatar-wrapper" onclick="document.getElementById('modalAvatarInput').click()"
+                            title="Click to change photo">
+                            {% if admin_profile.profile_picture %}
+                            <img src="{{ admin_profile.profile_picture.url }}" alt="Profile" id="modalAvatarPreview"
+                                class="modal-avatar-img">
+                            {% else %}
+                            <i class="fas fa-user modal-avatar-placeholder" id="modalAvatarPlaceholder"></i>
+                            {% endif %}
+                            <div class="avatar-upload-overlay"><i class="fas fa-camera"></i></div>
+                        </div>
+                        <input type="file" id="modalAvatarInput" name="profile_picture" accept="image/*"
+                            style="display:none;" onchange="previewModalAvatar(this)">
+                        <small class="text-muted d-block mt-1">Click avatar to change photo</small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Username</label>
+                        <input type="text" class="form-control" name="username" value="{{ user.username }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Contact Email</label>
+                        <input type="email" class="form-control" name="email" value="{{ user.email }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Phone Number</label>
+                        <input type="text" class="form-control" name="phone_number"
+                            value="{{ admin_profile.phone|default:'' }}">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" id="saveProfileBtn">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Preview avatar image on the profile page before save
+    function previewAvatar(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                const wrapper = document.getElementById('avatarWrapper');
+                wrapper.innerHTML = `<img src="${e.target.result}" alt="Preview" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
+                    + '<div class="avatar-upload-overlay"><i class="fas fa-camera"></i></div>';
+            };
+            reader.readAsDataURL(input.files[0]);
+            // Also sync to modal
+            document.getElementById('modalAvatarInput').files = input.files;
+        }
+    }
+
+    // Preview avatar in modal
+    function previewModalAvatar(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                const placeholder = document.getElementById('modalAvatarPlaceholder');
+                if (placeholder) placeholder.style.display = 'none';
+                let preview = document.getElementById('modalAvatarPreview');
+                if (!preview) {
+                    preview = document.createElement('img');
+                    preview.id = 'modalAvatarPreview';
+                    preview.className = 'modal-avatar-img';
+                    document.querySelector('.modal-avatar-wrapper').prepend(preview);
+                }
+                preview.src = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    document.getElementById('saveProfileBtn').addEventListener('click', function () {
+        const form = document.getElementById('editProfileForm');
+        const formData = new FormData(form);
+
+        fetch("{% url 'admin_dash:update_profile' %}", {
+            method: 'POST',
+            headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+            body: formData
+        })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Profile updated successfully!');
+                    window.location.reload();
+                } else {
+                    alert('Error: ' + (data.message || 'Unknown error'));
+                }
+            })
+            .catch(() => alert('An error occurred while updating profile.'));
+    });
+
+    function removeProfilePhoto() {
+        if (confirm("Are you sure you want to remove your profile photo?")) {
+            const formData = new FormData();
+            formData.append('remove_photo', 'true');
+            // Assuming the same endpoint handles removal when 'remove_photo' is passed.
+            // If it doesn't, this will just simulate the success for now, or update as intended.
+            fetch("{% url 'admin_dash:update_profile' %}", {
+                method: 'POST',
+                headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+                body: formData
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Photo removed successfully!');
+                    window.location.reload();
+                } else {
+                    alert('Error: ' + (data.message || 'Unknown error. Profile update API may not support photo removal yet.'));
+                }
+            })
+            .catch(() => alert('An error occurred while removing the photo.'));
+        }
+    }
+</script>
+{% endblock %}

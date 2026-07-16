@@ -1,0 +1,259 @@
+/* view_profile.css */
+
+/* Avatar upload overlay */
+#avatarWrapper {
+    cursor: pointer;
+    position: relative;
+}
+
+.avatar-upload-overlay {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: #059669;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    border: 2px solid #fff;
+    pointer-events: none;
+}
+
+/* Modal avatar */
+.modal-avatar-wrapper {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background-color: #004526;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    border: 3px solid #e2e8f0;
+}
+
+.modal-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.modal-avatar-placeholder {
+    font-size: 36px;
+    color: white;
+}
+
+
+.page-title .breadcrumb-custom {
+    font-size: 1rem !important;
+}
+
+/* Breadcrumb */
+.breadcrumb-active {
+    color: #059669;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.breadcrumb-separator {
+    font-size: 1rem;
+}
+
+.breadcrumb-current {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+/* Default avatar icon (no profile picture) */
+.default-avatar-icon {
+    font-size: 52px;
+    transform: translateY(8px);
+}
+
+/* Calendar icon colour */
+.calendar-icon {
+    color: #059669;
+}
+
+.profile-container {
+    padding: 10px 0;
+    font-family: 'Inter', sans-serif;
+}
+
+.profile-header-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    position: relative;
+    margin-bottom: 24px;
+    border: 1px solid #edf2f7;
+    min-height: 220px;
+}
+
+.profile-header-bg {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 140px;
+    z-index: 0;
+    opacity: 0.7;
+    overflow: hidden;
+    border-radius: 0 0 12px 12px;
+}
+
+.profile-header-bg svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: bottom;
+}
+
+.profile-header-content {
+    padding: 40px;
+    position: relative;
+    z-index: 1;
+}
+
+.profile-avatar-large {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background-color: #004526;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 50px;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 4px solid #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.profile-avatar-large img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-header-text h2 {
+    font-weight: 700;
+    color: #1a202c;
+    font-size: 1.8rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+.badge-role {
+    background-color: #d1fae5;
+    color: #065f46;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.profile-joined {
+    font-size: 0.9rem;
+    color: #4a5568 !important;
+}
+
+.btn-edit-profile {
+    background-color: #004526;
+    color: #fff;
+    padding: 10px 28px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s;
+    border: none;
+}
+
+.btn-edit-profile:hover {
+    background-color: #00331a;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 69, 38, 0.2);
+}
+
+.profile-info-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    border: 1px solid #edf2f7;
+    margin-bottom: 24px;
+    overflow: hidden;
+}
+
+.info-grid {
+    margin: 0;
+}
+
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 28px 32px;
+    border-bottom: 1px solid #edf2f7;
+}
+
+.info-item:nth-child(odd) {
+    border-right: 1px solid #edf2f7;
+}
+
+.info-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: #f0fdf4;
+    color: #059669;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    margin-right: 20px;
+    flex-shrink: 0;
+}
+
+.info-details label {
+    font-weight: 700;
+    color: #1a202c;
+    font-size: 0.95rem;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.info-details p {
+    color: #4a5568;
+    font-size: 0.95rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .info-item:nth-child(odd) {
+        border-right: none;
+    }
+    
+    .border-md-bottom {
+        border-bottom: 1px solid #edf2f7 !important;
+    }
+    
+    .profile-header-content {
+        padding: 30px 20px;
+    }
+    
+    .profile-avatar-large {
+        width: 80px;
+        height: 80px;
+        font-size: 36px;
+    }
+}

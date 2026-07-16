@@ -1,5 +1,6 @@
 /* DASHBOARD */
-.dashboard td, .dashboard th {
+.dashboard td,
+.dashboard th {
     word-break: break-word;
 }
 

@@ -752,6 +752,19 @@ select:focus {
     color: #333;
 }
 
+.property-card-image{
+    width: 100%;
+    height: 280px;
+    overflow: hidden;
+}
+
+.property-card-image img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;   
+    display: block;
+}
+
 /* Featured Scroll Container - Brand Theme */
 .featured-scroll-container::-webkit-scrollbar {
     height: 8px;
@@ -3547,21 +3560,23 @@ footer {
 /* Hero Section */
 .hero-section {
     width: 100vw;
-    /* height: 400px; */
+    min-height: 650px;
     background: var(--background);
     position: relative;
     overflow: visible;
     padding: 0;
     margin-top: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
 .hero-container {
     display: grid;
     grid-template-columns: 42% 58%;
     gap: 0;
-    align-items: center;
+    align-items: stretch;
     width: 100%;
-    height: 100%;
+    flex: 1;
     margin: 0;
     padding: 0;
 }
@@ -4127,7 +4142,7 @@ footer {
 .property-card-image img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     display: block;
 }
 
