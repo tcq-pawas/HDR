@@ -14,7 +14,7 @@ from Apps.Agent.models import AgentProfile
     
 def home(request):
     # Show latest properties automatically — no manual "featured" toggling needed
-    all_properties = Property.objects.all().order_by('-created_at')
+    all_properties = Property.objects.filter(is_admin_list=False).order_by('-created_at')
     print("=== HOME VIEW CALLED, COUNT:", all_properties.count(), "===")
 
     farmland_listings = all_properties[:5]
@@ -42,7 +42,7 @@ def website_enquiry_list(request):
     
 def property_list(request):
     query = request.GET.get('q', '')
-    properties = Property.objects.all().order_by('-created_at')
+    properties = Property.objects.filter(is_admin_list=False).order_by('-created_at')
     
     if query:
         properties = properties.filter(
@@ -61,6 +61,16 @@ def property_list(request):
 
 def property_detail(request, slug):
     property_obj = get_object_or_404(Property, slug=slug)
+    
+    from Apps.Administration.auth_utils import get_user_role
+    is_user_admin = False
+    if request.user.is_authenticated:
+        role = get_user_role(request.user)
+        is_user_admin = (role == 'admin' or request.user.is_superuser or request.user.is_staff)
+        
+    if property_obj.is_admin_list and not is_user_admin:
+        from django.http import Http404
+        raise Http404("Property not found")
     
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -374,7 +384,8 @@ def agent_profile(request, agent_id=None):
         seller=agent.user,
         is_active=True,
         status='approved',
-        show_to_public=True
+        show_to_public=True,
+        is_admin_list=False
     ).prefetch_related('images').order_by('-created_at')
     
     # Calculate statistics

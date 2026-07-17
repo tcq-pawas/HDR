@@ -4,7 +4,8 @@ from .dashboard_views import (
     AdminDashboardView, UserManagementView, InquiryManagementView,
     InvestmentManagementView, SystemSettingsView, ReportsView, ActivityLogView,
     UserProfileView, PropertyReviewCenterView, PropertyReviewDetailPageView, InquiryDetailPageView,
-    InquiryBulkActionView, InquiryExportCSVView, InquiryExportExcelView,  InquiryDeleteView
+    InquiryBulkActionView, InquiryExportCSVView, InquiryExportExcelView, InquiryDeleteView,
+    AdminPropertyListView
 )
 from . import investor_views
 from . import communication_views
@@ -45,6 +46,8 @@ urlpatterns = [
     # Property Review System
     path('property-review/', PropertyReviewCenterView.as_view(), name='property-review'),
     path('property-review/<int:property_id>/', PropertyReviewDetailPageView.as_view(), name='property-review-detail'),
+    # Admin-managed property list
+    path('admin-properties/', AdminPropertyListView.as_view(), name='admin-property-list'),
     
     # API endpoints (admin-only access)
     path('api/profile/', views.AdminProfileView.as_view(), name='profile'),

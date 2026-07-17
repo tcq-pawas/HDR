@@ -83,7 +83,7 @@ class CustomerDashboardView(CustomerDashboardMixin, TemplateView):
         
         # Available properties (limited data for public view)
         context['featured_properties'] = Property.objects.filter(
-            is_featured=True, is_active=True
+            is_featured=True, is_active=True, is_admin_list=False
         ).values('id', 'title', 'price', 'location', 'property_type', 'area_sqft')[:6]
         
         return context
@@ -275,7 +275,7 @@ class CustomerDashboardView(CustomerDashboardMixin, TemplateView):
         if not saved_properties:
             # No preferences yet, show featured properties
             return Property.objects.filter(
-                is_featured=True, is_active=True
+                is_featured=True, is_active=True, is_admin_list=False
             ).values('id', 'title', 'price', 'location', 'property_type', 'area_sqft')[:4]
         
         # Get preferred locations and types
@@ -299,6 +299,7 @@ class CustomerDashboardView(CustomerDashboardMixin, TemplateView):
         # Find properties matching preferences (excluding already saved)
         recommended = Property.objects.filter(
             is_active=True,
+            is_admin_list=False,
             location__in=preferred_locations,
             property_type__in=preferred_types,
             price__lte=float(avg_price) * 1.2 if avg_price else 0  # Allow 20% above average

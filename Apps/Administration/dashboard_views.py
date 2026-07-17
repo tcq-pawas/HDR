@@ -635,8 +635,10 @@ class PropertyReviewCenterView(AdminDashboardMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
-        # Get all properties with review status
-        properties = Property.objects.select_related('seller', 'assigned_agent').order_by('-created_at')
+        # Get ONLY agent-submitted properties (exclude admin-added listings)
+        properties = Property.objects.select_related('seller', 'assigned_agent').filter(
+            is_admin_list=False
+        ).order_by('-created_at')
         
         # Apply filters
         status_filter = self.request.GET.get('status')
@@ -658,13 +660,14 @@ class PropertyReviewCenterView(AdminDashboardMixin, TemplateView):
         context['properties'] = properties
         context['total_properties'] = properties.count()
         
-        # Statistics
+        # Statistics — agent properties only
+        agent_props = Property.objects.filter(is_admin_list=False)
         context['stats'] = {
-            'total_submitted': Property.objects.count(),
-            'pending_review': Property.objects.filter(status='pending').count(),
-            'approved': Property.objects.filter(status='approved').count(),
-            'rejected': Property.objects.filter(status='rejected').count(),
-            'needing_review': Property.objects.filter(status__in=['pending', 'rejected']).count(),
+            'total_submitted': agent_props.count(),
+            'pending_review': agent_props.filter(status='pending').count(),
+            'approved': agent_props.filter(status='approved').count(),
+            'rejected': agent_props.filter(status='rejected').count(),
+            'needing_review': agent_props.filter(status__in=['pending', 'rejected']).count(),
         }
         
         # Filter options
@@ -693,6 +696,25 @@ class PropertyReviewCenterView(AdminDashboardMixin, TemplateView):
         # Get all agents for filter
         context['agents'] = User.objects.filter(groups__name='agent').order_by('username')
         
+        return context
+
+
+class AdminPropertyListView(AdminDashboardMixin, TemplateView):
+    """List of properties added directly by admins (is_admin_list=True)"""
+    template_name = 'administration/admin_property_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        properties = Property.objects.filter(is_admin_list=True).order_by('-created_at')
+
+        status_filter = self.request.GET.get('status', '')
+        if status_filter:
+            properties = properties.filter(status=status_filter)
+
+        context['properties'] = properties
+        context['total_properties'] = properties.count()
+        context['status_filter'] = status_filter
         return context
 
 

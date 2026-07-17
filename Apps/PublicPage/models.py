@@ -386,6 +386,10 @@ class Property(models.Model):
         default=False,
         help_text="Require authentication to view full details"
     )
+    is_admin_list = models.BooleanField(
+        default=False,
+        help_text="If True, the property is for Admin only and will not show on the public web page"
+    )
     
     # Access control
     allowed_roles = models.CharField(
