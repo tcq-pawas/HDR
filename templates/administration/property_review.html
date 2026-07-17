@@ -18,6 +18,9 @@
                     <button class="btn btn-outline-primary" onclick="refreshProperties()">
                         <i class="fas fa-sync-alt me-2"></i>Refresh
                     </button>
+                    <!-- <a href="{% url 'agent:property_type_select' %}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Add Property
+                    </a> -->
                 </div>
             </div>
         </div>
@@ -103,7 +106,8 @@
                     <label class="form-label fw-semibold">Status</label>
                     <select name="status" class="form-select">
                         {% for value, label in status_choices %}
-                            <option value="{{ value }}" {% if request.GET.status == value %}selected{% endif %}>{{ label }}</option>
+                        <option value="{{ value }}" {% if request.GET.status == value %}selected{% endif %}>{{ label }}
+                        </option>
                         {% endfor %}
                     </select>
                 </div>
@@ -111,7 +115,8 @@
                     <label class="form-label fw-semibold">Property Type</label>
                     <select name="property_type" class="form-select">
                         {% for value, label in property_type_choices %}
-                            <option value="{{ value }}" {% if request.GET.property_type == value %}selected{% endif %}>{{ label }}</option>
+                        <option value="{{ value }}" {% if request.GET.property_type == value %}selected{% endif %}>{{
+                            label }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -119,7 +124,8 @@
                     <label class="form-label fw-semibold">Category</label>
                     <select name="category" class="form-select">
                         {% for value, label in category_choices %}
-                            <option value="{{ value }}" {% if request.GET.category == value %}selected{% endif %}>{{ label }}</option>
+                        <option value="{{ value }}" {% if request.GET.category == value %}selected{% endif %}>{{ label }}
+                        </option>
                         {% endfor %}
                     </select>
                 </div>
@@ -128,7 +134,7 @@
                     <select name="seller" class="form-select">
                         <option value="">All Agents</option>
                         {% for agent in agents %}
-                            <option value="{{ agent.id }}" {% if request.GET.seller == agent.id|stringformat:"s" %}selected{% endif %}>{{ agent.username }}</option>
+                        <option value="{{ agent.id }}" {% if request.GET.seller == agent.id|stringformat:"s" %}selected{% endif %}>{{ agent.username }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -178,11 +184,13 @@
                             <td>
                                 <div class="d-flex align-items-center">
                                     {% if property.featured_image %}
-                                        <img src="{{ property.featured_image.url }}" alt="{{ property.title }}" class="rounded me-3" style="width: 60px; height: 60px; object-fit: cover;">
+                                    <img src="{{ property.featured_image.url }}" alt="{{ property.title }}"
+                                        class="rounded me-3" style="width: 60px; height: 60px; object-fit: cover;">
                                     {% else %}
-                                        <div class="bg-light rounded me-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
-                                            <i class="fas fa-building text-muted"></i>
-                                        </div>
+                                    <div class="bg-light rounded me-3 d-flex align-items-center justify-content-center"
+                                        style="width: 60px; height: 60px;">
+                                        <i class="fas fa-building text-muted"></i>
+                                    </div>
                                     {% endif %}
                                     <div>
                                         <h6 class="mb-0">{{ property.title }}</h6>
@@ -197,28 +205,37 @@
                             <td>₹{{ property.price|intcomma }}</td>
                             <td>
                                 {% if property.area_sqft %}
-                                    {{ property.area_sqft|intcomma }} sq.ft
+                                {{ property.area_sqft|intcomma }} sq.ft
                                 {% elif property.total_area %}
-                                    {{ property.total_area|intcomma }} {{ property.get_area_unit_display }}
+                                {{ property.total_area|intcomma }} {{ property.get_area_unit_display }}
                                 {% else %}
-                                    -
+                                -
                                 {% endif %}
                             </td>
                             <td>{{ property.seller.username }}</td>
                             <td>{{ property.created_at|date:"M d, Y" }}</td>
                             <td>
                                 {% if property.status == 'pending' %}
-                                    <span class="badge bg-warning">Pending Review</span>
+                                <span class="badge bg-warning">Pending Review</span>
                                 {% elif property.status == 'approved' %}
-                                    <span class="badge bg-success">Approved</span>
+                                <span class="badge bg-success">Approved</span>
                                 {% elif property.status == 'rejected' %}
-                                    <span class="badge bg-danger">Rejected</span>
+                                <span class="badge bg-danger">Rejected</span>
                                 {% endif %}
                             </td>
                             <td>
                                 <div class="btn-group">
-                                    <a href="{% url 'admin_dash:property-review-detail' property.id %}" class="btn btn-sm btn-outline-primary">
+                                    <a href="{% url 'admin_dash:property-review-detail' property.id %}"
+                                        class="btn btn-sm btn-outline-primary" title="Review">
                                         <i class="fas fa-eye me-1"></i>Review
+                                    </a>
+                                    <a href="{% url 'agent:property_edit' property.id %}"
+                                        class="btn btn-sm btn-outline-secondary" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{% url 'agent:property_delete' property.id %}"
+                                        class="btn btn-sm btn-outline-danger" title="Delete">
+                                        <i class="fas fa-trash"></i>
                                     </a>
                                 </div>
                             </td>
@@ -239,8 +256,8 @@
 </div>
 
 <script>
-function refreshProperties() {
-    location.reload();
-}
+    function refreshProperties() {
+        location.reload();
+    }
 </script>
 {% endblock %}

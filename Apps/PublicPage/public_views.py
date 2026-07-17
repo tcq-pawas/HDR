@@ -16,7 +16,7 @@ from .public_serializers import (
 
 class PublicPropertyViewSet(viewsets.ReadOnlyModelViewSet):
     """ViewSet for public property access with role-based data filtering"""
-    queryset = Property.objects.filter(is_active=True)
+    queryset = Property.objects.filter(is_active=True, is_admin_list=False)
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['property_type', 'category', 'bedrooms', 'bathrooms']
     search_fields = ['title', 'location', 'public_description']
@@ -35,7 +35,7 @@ class PublicPropertyViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         """Filter queryset based on user authentication and role"""
         request = self.request
-        queryset = Property.objects.filter(is_active=True)
+        queryset = Property.objects.filter(is_active=True, is_admin_list=False)
         
         if not request.user.is_authenticated:
             # Public users can only see properties marked for public viewing
@@ -143,7 +143,8 @@ def public_property_list(request):
     """Template view for public property listing page"""
     properties = Property.objects.filter(
         is_active=True, 
-        show_to_public=True
+        show_to_public=True,
+        is_admin_list=False
     ).order_by('-created_at')
     
     context = {
@@ -188,7 +189,8 @@ def public_property_detail(request, slug):
 def public_home(request):
     """Template view for public home page - only approved properties shown"""
     approved_properties = Property.objects.filter(
-        status='approved'
+        status='approved',
+        is_admin_list=False
     ).order_by('-created_at')
 
     farmland_listings = approved_properties

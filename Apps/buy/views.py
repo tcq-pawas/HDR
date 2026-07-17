@@ -14,7 +14,8 @@ def property_search(request):
     properties = Property.objects.filter(
         is_active=True, 
         status='approved',
-        show_to_public=True
+        show_to_public=True,
+        is_admin_list=False
     ).prefetch_related('images').order_by('-created_at')
     
     # Extract search filters
@@ -105,7 +106,17 @@ def property_search(request):
 
 def property_detail(request, pk):
     """View details of a property listing and allow submitting an inquiry"""
-    property_obj = get_object_or_404(Property, pk=pk, is_active=True, status='approved')
+    from Apps.Administration.auth_utils import get_user_role
+    is_user_admin = False
+    if request.user.is_authenticated:
+        role = get_user_role(request.user)
+        is_user_admin = (role == 'admin' or request.user.is_superuser or request.user.is_staff)
+        
+    kwargs = {'pk': pk, 'is_active': True, 'status': 'approved'}
+    if not is_user_admin:
+        kwargs['is_admin_list'] = False
+        
+    property_obj = get_object_or_404(Property, **kwargs)
     form = InquiryForm()
     
     # Check if this property is saved by current user
@@ -118,6 +129,7 @@ def property_detail(request, pk):
         is_active=True,
         status='approved',
         show_to_public=True,
+        is_admin_list=False,
         category=property_obj.category
     ).exclude(pk=pk).prefetch_related('images')[:6]
         
@@ -138,7 +150,17 @@ def saved_properties(request):
 @login_required
 def save_property(request, pk):
     """Save a property to the user's saved properties list"""
-    property_obj = get_object_or_404(Property, pk=pk, is_active=True, status='approved')
+    from Apps.Administration.auth_utils import get_user_role
+    is_user_admin = False
+    if request.user.is_authenticated:
+        role = get_user_role(request.user)
+        is_user_admin = (role == 'admin' or request.user.is_superuser or request.user.is_staff)
+        
+    kwargs = {'pk': pk, 'is_active': True, 'status': 'approved'}
+    if not is_user_admin:
+        kwargs['is_admin_list'] = False
+        
+    property_obj = get_object_or_404(Property, **kwargs)
     SavedProperty.objects.get_or_create(customer=request.user, property=property_obj)
     messages.success(request, f'"{property_obj.title}" has been saved to your list.')
     return redirect('buy:property_detail', pk=pk)
@@ -158,7 +180,17 @@ def remove_saved_property(request, pk):
 
 def send_inquiry(request, pk):
     """Handle inquiry submission for a specific property listing"""
-    property_obj = get_object_or_404(Property, pk=pk, is_active=True, status='approved')
+    from Apps.Administration.auth_utils import get_user_role
+    is_user_admin = False
+    if request.user.is_authenticated:
+        role = get_user_role(request.user)
+        is_user_admin = (role == 'admin' or request.user.is_superuser or request.user.is_staff)
+        
+    kwargs = {'pk': pk, 'is_active': True, 'status': 'approved'}
+    if not is_user_admin:
+        kwargs['is_admin_list'] = False
+        
+    property_obj = get_object_or_404(Property, **kwargs)
     if request.method == 'POST':
         form = InquiryForm(request.POST)
         if form.is_valid():
