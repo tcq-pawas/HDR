@@ -158,19 +158,21 @@ def property_list(request):
 def property_type_select(request):
     """Select property type before adding"""
     user_role = get_user_role(request.user)
-    if user_role not in ['agent', 'owner']:
-        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
+    if user_role not in ['agent', 'owner', 'admin'] and not request.user.is_superuser and not request.user.is_staff:
+        raise PermissionDenied("Access denied. This page is only accessible to agents, owners, or admins.")
     
-    return render(request, 'agent/property_type_select.html')
+    base_template = 'administration/admin_base.html' if (user_role == 'admin' or request.user.is_superuser or request.user.is_staff) else 'agent/agent_base.html'
+    return render(request, 'agent/property_type_select.html', {'base_template': base_template})
 
 
 @login_required
 def property_add(request, property_type):
     # Check if user is an agent
     user_role = get_user_role(request.user)
-    if user_role not in ['agent', 'owner']:
-        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
+    if user_role not in ['agent', 'owner', 'admin'] and not request.user.is_superuser and not request.user.is_staff:
+        raise PermissionDenied("Access denied. This page is only accessible to agents, owners, or admins.")
     """Add a new property"""
+    is_admin = user_role == 'admin' or request.user.is_superuser or request.user.is_staff
     if request.method == 'POST':
         # Use AgriculturalLandForm for land properties
         if property_type == 'land':
@@ -181,7 +183,11 @@ def property_add(request, property_type):
         if form.is_valid():
             property_obj = form.save(commit=False)
             property_obj.seller = request.user
-            property_obj.status = 'pending'
+            if is_admin:
+                property_obj.status = 'approved'
+                property_obj.is_admin_list = True
+            else:
+                property_obj.status = 'pending'
             property_obj.created_by = request.user
             property_obj.last_updated_by = request.user
             
@@ -196,14 +202,12 @@ def property_add(request, property_type):
             # Slug will be automatically generated and deduplicated in the Property.save() method
             
             property_obj.save()
-            
-            # Save multiple images to the PropertyImage gallery table
-            images = request.FILES.getlist('featured_image')
-            for image in images:
-                PropertyImage.objects.create(property=property_obj, image=image, category='General')
-            
-            messages.success(request, "Property created successfully! It's pending admin approval.")
-            return redirect('agent:property_list')
+            if is_admin:
+                messages.success(request, "Property created successfully!")
+                return redirect('admin_dash:admin-property-list')
+            else:
+                messages.success(request, "Property created successfully! It's pending admin approval.")
+                return redirect('agent:property_list')
         else:
             print("Form errors:", form.errors)
             messages.error(request, f"Please fix the errors below: {form.errors}")
@@ -215,10 +219,12 @@ def property_add(request, property_type):
             initial_category = 'Apartments' if property_type == 'house' else 'Plots'
             form = PropertyForm(initial={'property_type': 'sale', 'category': initial_category})
     
+    base_template = 'administration/admin_base.html' if is_admin else 'agent/agent_base.html'
     context = {
         'form': form,
         'property_type': property_type,
-        'title': f'Add {property_type.title()}'
+        'title': f'Add {property_type.title()}',
+        'base_template': base_template
     }
     
     # Use different template for agricultural land
@@ -232,10 +238,14 @@ def property_add(request, property_type):
 def property_edit(request, pk):
     # Check if user is an agent
     user_role = get_user_role(request.user)
-    if user_role not in ['agent', 'owner']:
-        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
+    if user_role not in ['agent', 'owner', 'admin'] and not request.user.is_superuser and not request.user.is_staff:
+        raise PermissionDenied("Access denied. This page is only accessible to agents, owners, or admins.")
     """Edit an existing property"""
-    property_obj = get_object_or_404(Property.objects.select_related('seller'), pk=pk, seller=request.user)
+    is_admin = user_role == 'admin' or request.user.is_superuser or request.user.is_staff
+    if is_admin:
+        property_obj = get_object_or_404(Property.objects.select_related('seller'), pk=pk)
+    else:
+        property_obj = get_object_or_404(Property.objects.select_related('seller'), pk=pk, seller=request.user)
     
     # Determine property_type from category for field visibility
     if property_obj.category == 'Plots':
@@ -261,7 +271,10 @@ def property_edit(request, pk):
                 PropertyImage.objects.create(property=property_obj, image=image, category='General')
                 
             messages.success(request, "Property updated successfully!")
-            return redirect('agent:property_list')
+            if is_admin:
+                return redirect('admin_dash:admin-property-list')
+            else:
+                return redirect('agent:property_list')
     else:
         # Use appropriate form based on property_type
         if property_type == 'land':
@@ -272,12 +285,14 @@ def property_edit(request, pk):
     # Get property images
     images = property_obj.images.all()
     
+    base_template = 'administration/admin_base.html' if is_admin else 'agent/agent_base.html'
     context = {
         'form': form,
         'property': property_obj,
         'images': images,
         'property_type': property_type,
-        'title': f'Edit Property - {property_obj.title}'
+        'title': f'Edit Property - {property_obj.title}',
+        'base_template': base_template
     }
     
     # Use different template for agricultural land
@@ -302,19 +317,30 @@ def get_cities_by_state(request):
 def property_delete(request, pk):
     # Check if user is an agent
     user_role = get_user_role(request.user)
-    if user_role not in ['agent', 'owner']:
-        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
+    if user_role not in ['agent', 'owner', 'admin'] and not request.user.is_superuser and not request.user.is_staff:
+        raise PermissionDenied("Access denied. This page is only accessible to agents, owners, or admins.")
     """Delete a property"""
-    property_obj = get_object_or_404(Property.objects.select_related('seller'), pk=pk, seller=request.user)
+    is_admin = user_role == 'admin' or request.user.is_superuser or request.user.is_staff
+    if is_admin:
+        property_obj = get_object_or_404(Property.objects.select_related('seller'), pk=pk)
+    else:
+        property_obj = get_object_or_404(Property.objects.select_related('seller'), pk=pk, seller=request.user)
     
     if request.method == 'POST':
         property_title = property_obj.title
         property_obj.delete()
         messages.success(request, f"Property '{property_title}' deleted successfully!")
-        return redirect('agent:property_list')
+        if is_admin:
+            return redirect('admin_dash:admin-property-list')
+        else:
+            return redirect('agent:property_list')
     
+    base_template = 'administration/admin_base.html' if is_admin else 'agent/agent_base.html'
+    cancel_url = 'admin_dash:admin-property-list' if is_admin else 'agent:property_list'
     context = {
-        'property': property_obj
+        'property': property_obj,
+        'base_template': base_template,
+        'cancel_url': cancel_url
     }
     
     return render(request, 'agent/property_confirm_delete.html', context)

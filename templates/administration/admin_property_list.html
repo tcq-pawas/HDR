@@ -1,0 +1,113 @@
+{% extends 'administration/admin_base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}My Properties - Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h3 mb-1">My Properties</h1>
+                    <p class="text-muted mb-0">Properties you have added (admin-only, not visible on public website)</p>
+                </div>
+                <a href="{% url 'admin_dash:property_type_select' %}" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Add New Property
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-0 py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Property List</h5>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="text-muted small fw-semibold">Sort by</span>
+                    <select class="form-select form-select-sm" style="width: auto;">
+                        <option>Date Added (Newest)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th>Property</th>
+                            <th>ID</th>
+                            <th>Category</th>
+                            <th>Location</th>
+                            <th>Price</th>
+                            <th>Date Added</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for property in properties %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    {% if property.featured_image %}
+                                    <img src="{{ property.featured_image.url }}" alt="{{ property.title }}"
+                                        class="rounded me-3" style="width:50px;height:50px;object-fit:cover;">
+                                    {% else %}
+                                    <div class="bg-light rounded me-3 d-flex align-items-center justify-content-center"
+                                        style="width:50px;height:50px;">
+                                        <i class="fas fa-building text-muted"></i>
+                                    </div>
+                                    {% endif %}
+                                    <div>
+                                        <h6 class="mb-0">{{ property.title }}</h6>
+                                        <small class="text-muted">{{ property.slug }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="badge bg-light text-dark">#{{ property.id }}</span></td>
+                            <td>{{ property.get_category_display }}</td>
+                            <td>{{ property.location }}</td>
+                            <td>₹{{ property.price|intcomma }}</td>
+                            <td>{{ property.created_at|date:"M d, Y" }}</td>
+
+                            <td>
+                                <div class="btn-group">
+                                    <a href="{% url 'admin_dash:property-review-detail' property.id %}"
+                                        class="btn btn-sm btn-outline-success" title="View">
+                                        <i class="fas fa-eye me-1"></i>View
+                                    </a>
+                                    <a href="{% url 'admin_dash:property_edit' property.id %}"
+                                        class="btn btn-sm btn-outline-secondary" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{% url 'admin_dash:property_delete' property.id %}"
+                                        class="btn btn-sm btn-outline-danger" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center py-5">
+                                <i class="fas fa-inbox fa-3x text-muted mb-3 d-block"></i>
+                                <p class="text-muted mb-3">No properties added yet.</p>
+                                <a href="{% url 'agent:property_type_select' %}" class="btn btn-primary">
+                                    <i class="fas fa-plus me-2"></i>Add Your First Property
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

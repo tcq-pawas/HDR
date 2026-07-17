@@ -18,116 +18,36 @@
 
 {% block content %}
 
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        {% endfor %}
-    {% endif %}
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+{% endfor %}
+{% endif %}
 
-    <!-- Statistics Cards -->
+<!-- Statistics Cards -->
 
-    <div class="row mb-4">
+<div class="row mb-4">
 
-        <div class="col-md-3">
+    <div class="col-md-3">
 
-            <div class="card stat-card bg-primary text-white">
+        <div class="card stat-card bg-primary text-white">
 
-                <div class="card-body">
+            <div class="card-body">
 
-                    <div class="d-flex justify-content-between">
+                <div class="d-flex justify-content-between">
 
-                        <div>
+                    <div>
 
-                            <h4 class="card-title">{{ total_investments|default:"0" }}</h4>
+                        <h4 class="card-title">{{ total_investments|default:"0" }}</h4>
 
-                            <p class="card-text">Total Investments</p>
-
-                        </div>
-
-                        <i class="fas fa-coins fa-2x opacity-75"></i>
+                        <p class="card-text">Total Investments</p>
 
                     </div>
 
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-md-3">
-
-            <div class="card stat-card bg-success text-white">
-
-                <div class="card-body">
-
-                    <div class="d-flex justify-content-between">
-
-                        <div>
-
-                            <h4 class="card-title">${{ total_amount|default:"0"|intcomma }}</h4>
-
-                            <p class="card-text">Total Amount</p>
-
-                        </div>
-
-                        <i class="fas fa-dollar-sign fa-2x opacity-75"></i>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-md-3">
-
-            <div class="card stat-card bg-warning text-white">
-
-                <div class="card-body">
-
-                    <div class="d-flex justify-content-between">
-
-                        <div>
-
-                            <h4 class="card-title">{{ pending_investments|default:"0" }}</h4>
-
-                            <p class="card-text">Pending</p>
-
-                        </div>
-
-                        <i class="fas fa-clock fa-2x opacity-75"></i>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-md-3">
-
-            <div class="card stat-card bg-info text-white">
-
-                <div class="card-body">
-
-                    <div class="d-flex justify-content-between">
-
-                        <div>
-
-                            <h4 class="card-title">{{ approved_investments|default:"0" }}</h4>
-
-                            <p class="card-text">Approved</p>
-
-                        </div>
-
-                        <i class="fas fa-check-circle fa-2x opacity-75"></i>
-
-                    </div>
+                    <i class="fas fa-coins fa-2x opacity-75"></i>
 
                 </div>
 
@@ -137,39 +57,23 @@
 
     </div>
 
+    <div class="col-md-3">
 
+        <div class="card stat-card bg-success text-white">
 
-    <!-- Action Buttons -->
+            <div class="card-body">
 
-    <div class="row mb-4">
+                <div class="d-flex justify-content-between">
 
-        <div class="col-12">
+                    <div>
 
-            <div class="card">
+                        <h4 class="card-title">${{ total_amount|default:"0"|intcomma }}</h4>
 
-                <div class="card-body">
-
-                    <div class="d-flex gap-2 flex-wrap">
-
-                        <button class="btn btn-primary" onclick="approveInvestments()">
-
-                            <i class="fas fa-check"></i> Approve Selected
-
-                        </button>
-
-                        <button class="btn btn-success" onclick="exportInvestments()">
-
-                            <i class="fas fa-download"></i> Export Data
-
-                        </button>
-
-                        <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#createInvestmentModal">
-
-                            <i class="fas fa-plus"></i> Add Investment
-
-                        </button>
+                        <p class="card-text">Total Amount</p>
 
                     </div>
+
+                    <i class="fas fa-dollar-sign fa-2x opacity-75"></i>
 
                 </div>
 
@@ -179,195 +83,23 @@
 
     </div>
 
+    <div class="col-md-3">
 
+        <div class="card stat-card bg-warning text-white">
 
-    <!-- Investments Table -->
+            <div class="card-body">
 
-    <div class="row">
+                <div class="d-flex justify-content-between">
 
-        <div class="col-12">
+                    <div>
 
-            <div class="card">
+                        <h4 class="card-title">{{ pending_investments|default:"0" }}</h4>
 
-                <div class="card-header d-flex justify-content-between align-items-center">
-
-                    <h5 class="mb-0">Recent Investments</h5>
-
-                    <div class="d-flex gap-2">
-
-                        <input type="text" class="form-control form-control-sm" placeholder="Search investments..." style="width: 200px;">
-
-                        <select class="form-select form-select-sm" style="width: 150px;">
-
-                            <option value="">All Status</option>
-
-                            <option value="pending">Pending</option>
-
-                            <option value="approved">Approved</option>
-
-                            <option value="rejected">Rejected</option>
-
-                        </select>
+                        <p class="card-text">Pending</p>
 
                     </div>
 
-                </div>
-
-                <div class="card-body">
-
-                    <div class="table-responsive">
-
-                        <table class="table table-hover">
-
-                            <thead>
-
-                                <tr>
-
-                                    <th><input type="checkbox" class="form-check-input"></th>
-
-                                    <th>Investor</th>
-
-                                    <th>Property</th>
-
-                                    <th>Amount</th>
-
-                                    <th>ROI</th>
-
-                                    <th>Status</th>
-
-                                    <th>Date</th>
-
-                                    <th>Actions</th>
-
-                                </tr>
-
-                            </thead>
-
-                            <tbody>
-
-                                {% for investment in investments %}
-
-                                    <tr>
-
-                                        <td><input type="checkbox" class="form-check-input"></td>
-
-                                        <td>
-
-                                            <div class="d-flex align-items-center">
-
-                                                <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px; font-size: 0.8rem;">
-
-                                                    {{ investment.investor.username|first|upper }}
-
-                                                </div>
-
-                                                <div>
-
-                                                    <div class="fw-bold">{{ investment.investor.get_full_name|default:investment.investor.username }}</div>
-
-                                                    <small class="text-muted">{{ investment.investor.email }}</small>
-
-                                                </div>
-
-                                            </div>
-
-                                        </td>
-
-                                        <td>
-
-                                            <div>
-
-                                                <div class="fw-bold">{{ investment.listing.property_obj.title }}</div>
-
-                                                <small class="text-muted">{{ investment.listing.property_obj.location|default:"N/A" }}</small>
-
-                                            </div>
-
-                                        </td>
-
-                                        <td>
-
-                                            <span class="fw-bold text-success">${{ investment.amount|intcomma }}</span>
-
-                                        </td>
-
-                                        <td>
-
-                                            <span class="badge bg-info">{{ investment.listing.expected_roi_percentage|default:"0" }}%</span>
-
-                                        </td>
-
-                                        <td>
-
-                                            <span class="badge bg-{% if investment.status == 'confirmed' %}success{% elif investment.status == 'pending' %}warning{% elif investment.status == 'completed' %}info{% else %}secondary{% endif %}">
-
-                                                {{ investment.get_status_display }}
-
-                                            </span>
-
-                                        </td>
-
-                                        <td>{{ investment.investment_date|date:"M d, Y" }}</td>
-
-                                        <td>
-
-                                            <div class="btn-group" role="group">
-
-                                                <button class="btn btn-sm btn-outline-primary action-btn" data-action="viewInvestment" data-id="{{ investment.id }}">
-
-                                                    <i class="fas fa-eye"></i>
-
-                                                </button>
-
-                                                {% if investment.status == 'pending' %}
-
-                                                    <button class="btn btn-sm btn-outline-success action-btn" data-action="approveInvestment" data-id="{{ investment.id }}">
-
-                                                        <i class="fas fa-check"></i>
-
-                                                    </button>
-
-                                                    <button class="btn btn-sm btn-outline-danger action-btn" data-action="rejectInvestment" data-id="{{ investment.id }}">
-
-                                                        <i class="fas fa-times"></i>
-
-                                                    </button>
-
-                                                {% endif %}
-
-                                                <button class="btn btn-sm btn-outline-secondary action-btn" data-action="editInvestment" data-id="{{ investment.id }}">
-
-                                                    <i class="fas fa-edit"></i>
-
-                                                </button>
-
-                                            </div>
-
-                                        </td>
-
-                                    </tr>
-
-                                {% empty %}
-
-                                    <tr>
-
-                                        <td colspan="8" class="text-center py-4">
-
-                                            <i class="fas fa-coins fa-3x text-muted mb-3"></i>
-
-                                            <p class="text-muted">No investments found</p>
-
-                                        </td>
-
-                                    </tr>
-
-                                {% endfor %}
-
-                            </tbody>
-
-                        </table>
-
-                    </div>
+                    <i class="fas fa-clock fa-2x opacity-75"></i>
 
                 </div>
 
@@ -377,39 +109,23 @@
 
     </div>
 
+    <div class="col-md-3">
 
+        <div class="card stat-card bg-info text-white">
 
-    <!-- Investment Details Modal -->
+            <div class="card-body">
 
-    <div class="modal fade" id="investmentDetailsModal" tabindex="-1">
+                <div class="d-flex justify-content-between">
 
-        <div class="modal-dialog modal-lg">
+                    <div>
 
-            <div class="modal-content">
+                        <h4 class="card-title">{{ approved_investments|default:"0" }}</h4>
 
-                <div class="modal-header">
-
-                    <h5 class="modal-title">Investment Details</h5>
-
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-
-                </div>
-
-                <div class="modal-body">
-
-                    <div id="investmentDetailsContent">
-
-                        <!-- Content will be loaded dynamically -->
+                        <p class="card-text">Approved</p>
 
                     </div>
 
-                </div>
-
-                <div class="modal-footer">
-
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-
-                    <button type="button" class="btn btn-primary" onclick="editInvestment()">Edit Investment</button>
+                    <i class="fas fa-check-circle fa-2x opacity-75"></i>
 
                 </div>
 
@@ -419,117 +135,412 @@
 
     </div>
 
+</div>
 
 
-    <!-- Create Investment Modal -->
 
-    <div class="modal fade" id="createInvestmentModal" tabindex="-1">
+<!-- Action Buttons -->
 
-        <div class="modal-dialog">
+<div class="row mb-4">
 
-            <div class="modal-content">
+    <div class="col-12">
 
-                <div class="modal-header">
+        <div class="card">
 
-                    <h5 class="modal-title">Create Investment</h5>
+            <div class="card-body">
 
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <div class="d-flex gap-2 flex-wrap">
+
+                    <button class="btn btn-primary" onclick="approveInvestments()">
+
+                        <i class="fas fa-check"></i> Approve Selected
+
+                    </button>
+
+                    <button class="btn btn-success" onclick="exportInvestments()">
+
+                        <i class="fas fa-download"></i> Export Data
+
+                    </button>
+
+                    <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#createInvestmentModal">
+
+                        <i class="fas fa-plus"></i> Add Investment
+
+                    </button>
 
                 </div>
 
-                <div class="modal-body">
+            </div>
 
-                    <form method="post" action="{% url 'admin_dash:investment-management-page' %}" id="investmentForm">
+        </div>
 
-                        {% csrf_token %}
+    </div>
 
-                        <div class="mb-3">
+</div>
 
-                            <label class="form-label">{{ form.investor.label }}</label>
 
-                            {{ form.investor }}
 
-                            {% if form.investor.errors %}
+<!-- Investments Table -->
 
-                                <div class="text-danger small">{{ form.investor.errors }}</div>
+<div class="row">
 
-                            {% endif %}
+    <div class="col-12">
 
-                        </div>
+        <div class="card">
 
-                        <div class="mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
 
-                            <label class="form-label">{{ form.property.label }}</label>
+                <h5 class="mb-0">Recent Investments</h5>
 
-                            {{ form.property }}
+                <div class="d-flex gap-2">
 
-                            {% if form.property.errors %}
+                    <input type="text" class="form-control form-control-sm" placeholder="Search investments..."
+                        style="width: 200px;">
 
-                                <div class="text-danger small">{{ form.property.errors }}</div>
+                    <select class="form-select form-select-sm" style="width: 150px;">
 
-                            {% endif %}
+                        <option value="">All Status</option>
 
-                        </div>
+                        <option value="pending">Pending</option>
 
-                        <div class="mb-3">
+                        <option value="approved">Approved</option>
 
-                            <label class="form-label">{{ form.amount.label }}</label>
+                        <option value="rejected">Rejected</option>
 
-                            {{ form.amount }}
+                    </select>
 
-                            {% if form.amount.errors %}
+                </div>
 
-                                <div class="text-danger small">{{ form.amount.errors }}</div>
+            </div>
 
-                            {% endif %}
+            <div class="card-body">
 
-                        </div>
+                <div class="table-responsive">
 
-                        <div class="mb-3">
+                    <table class="table table-hover">
 
-                            <label class="form-label">{{ form.notes.label }}</label>
+                        <thead>
 
-                            {{ form.notes }}
+                            <tr>
 
-                            {% if form.notes.errors %}
+                                <th><input type="checkbox" class="form-check-input"></th>
 
-                                <div class="text-danger small">{{ form.notes.errors }}</div>
+                                <th>Investor</th>
 
-                            {% endif %}
+                                <th>Property</th>
 
-                        </div>
+                                <th>Amount</th>
 
-                        {% if form.non_field_errors %}
+                                <th>ROI</th>
 
-                            <div class="alert alert-danger">
+                                <th>Status</th>
 
-                                {% for error in form.non_field_errors %}
+                                <th>Date</th>
 
-                                    {{ error }}
+                                <th>Actions</th>
 
-                                {% endfor %}
+                            </tr>
 
-                            </div>
+                        </thead>
+
+                        <tbody>
+
+                            {% for investment in investments %}
+
+                            <tr>
+
+                                <td><input type="checkbox" class="form-check-input"></td>
+
+                                <td>
+
+                                    <div class="d-flex align-items-center">
+
+                                        <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2"
+                                            style="width: 32px; height: 32px; font-size: 0.8rem;">
+
+                                            {{ investment.investor.username|first|upper }}
+
+                                        </div>
+
+                                        <div>
+
+                                            <div class="fw-bold">{{
+                                                investment.investor.get_full_name|default:investment.investor.username
+                                                }}</div>
+
+                                            <small class="text-muted">{{ investment.investor.email }}</small>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+                                <td>
+
+                                    <div>
+
+                                        <div class="fw-bold">{{ investment.listing.property_obj.title }}</div>
+
+                                        <small class="text-muted">{{
+                                            investment.listing.property_obj.location|default:"N/A" }}</small>
+
+                                    </div>
+
+                                </td>
+
+                                <td>
+
+                                    <span class="fw-bold text-success">${{ investment.amount|intcomma }}</span>
+
+                                </td>
+
+                                <td>
+
+                                    <span class="badge bg-info">{{
+                                        investment.listing.expected_roi_percentage|default:"0" }}%</span>
+
+                                </td>
+
+                                <td>
+
+                                    <span
+                                        class="badge bg-{% if investment.status == 'confirmed' %}success{% elif investment.status == 'pending' %}warning{% elif investment.status == 'completed' %}info{% else %}secondary{% endif %}">
+
+                                        {{ investment.get_status_display }}
+
+                                    </span>
+
+                                </td>
+
+                                <td>{{ investment.investment_date|date:"M d, Y" }}</td>
+
+                                <td>
+
+                                    <div class="btn-group" role="group">
+
+                                        <button class="btn btn-sm btn-outline-primary action-btn"
+                                            data-action="viewInvestment" data-id="{{ investment.id }}">
+
+                                            <i class="fas fa-eye"></i>
+
+                                        </button>
+
+                                        {% if investment.status == 'pending' %}
+
+                                        <button class="btn btn-sm btn-outline-success action-btn"
+                                            data-action="approveInvestment" data-id="{{ investment.id }}">
+
+                                            <i class="fas fa-check"></i>
+
+                                        </button>
+
+                                        <button class="btn btn-sm btn-outline-danger action-btn"
+                                            data-action="rejectInvestment" data-id="{{ investment.id }}">
+
+                                            <i class="fas fa-times"></i>
+
+                                        </button>
+
+                                        {% endif %}
+
+                                        <button class="btn btn-sm btn-outline-secondary action-btn"
+                                            data-action="editInvestment" data-id="{{ investment.id }}">
+
+                                            <i class="fas fa-edit"></i>
+
+                                        </button>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                            {% empty %}
+
+                            <tr>
+
+                                <td colspan="8" class="text-center py-4">
+
+                                    <i class="fas fa-coins fa-3x text-muted mb-3"></i>
+
+                                    <p class="text-muted">No investments found</p>
+
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- Investment Details Modal -->
+
+<div class="modal fade" id="investmentDetailsModal" tabindex="-1">
+
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">Investment Details</h5>
+
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <div id="investmentDetailsContent">
+
+                    <!-- Content will be loaded dynamically -->
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                <button type="button" class="btn btn-primary" onclick="editInvestment()">Edit Investment</button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- Create Investment Modal -->
+
+<div class="modal fade" id="createInvestmentModal" tabindex="-1">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">Create Investment</h5>
+
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <form method="post" action="{% url 'admin_dash:investment-management-page' %}" id="investmentForm">
+
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+
+                        <label class="form-label">{{ form.investor.label }}</label>
+
+                        {{ form.investor }}
+
+                        {% if form.investor.errors %}
+
+                        <div class="text-danger small">{{ form.investor.errors }}</div>
 
                         {% endif %}
 
-                    </form>
+                    </div>
 
-                </div>
+                    <div class="mb-3">
 
-                <div class="modal-footer">
+                        <label class="form-label">{{ form.property.label }}</label>
 
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        {{ form.property }}
 
-                    <button type="submit" form="investmentForm" class="btn btn-primary">Create Investment</button>
+                        {% if form.property.errors %}
 
-                </div>
+                        <div class="text-danger small">{{ form.property.errors }}</div>
+
+                        {% endif %}
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">{{ form.amount.label }}</label>
+
+                        {{ form.amount }}
+
+                        {% if form.amount.errors %}
+
+                        <div class="text-danger small">{{ form.amount.errors }}</div>
+
+                        {% endif %}
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">{{ form.notes.label }}</label>
+
+                        {{ form.notes }}
+
+                        {% if form.notes.errors %}
+
+                        <div class="text-danger small">{{ form.notes.errors }}</div>
+
+                        {% endif %}
+
+                    </div>
+
+                    {% if form.non_field_errors %}
+
+                    <div class="alert alert-danger">
+
+                        {% for error in form.non_field_errors %}
+
+                        {{ error }}
+
+                        {% endfor %}
+
+                    </div>
+
+                    {% endif %}
+
+                </form>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+
+                <button type="submit" form="investmentForm" class="btn btn-primary">Create Investment</button>
 
             </div>
 
         </div>
 
     </div>
+
+</div>
 
 {% endblock %}
 
@@ -541,9 +552,9 @@
 
     // Event delegation for action buttons
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
 
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
 
             const button = e.target.closest('.action-btn');
 
@@ -553,9 +564,9 @@
 
                 const id = button.dataset.id;
 
-                
 
-                switch(action) {
+
+                switch (action) {
 
                     case 'viewInvestment':
 
@@ -589,7 +600,7 @@
 
     });
 
-    
+
 
     function viewInvestment(investmentId) {
 
@@ -609,7 +620,7 @@
 
         `;
 
-        
+
 
         // Simulate loading
 
@@ -669,13 +680,13 @@
 
         }, 1000);
 
-        
+
 
         new bootstrap.Modal(document.getElementById('investmentDetailsModal')).show();
 
     }
 
-    
+
 
     function approveInvestment(investmentId) {
 
@@ -689,7 +700,7 @@
 
     }
 
-    
+
 
     function rejectInvestment(investmentId) {
 
@@ -703,7 +714,7 @@
 
     }
 
-    
+
 
     function editInvestment(investmentId) {
 
@@ -713,7 +724,7 @@
 
     }
 
-    
+
 
     function approveInvestments() {
 
@@ -721,7 +732,7 @@
 
     }
 
-    
+
 
     function exportInvestments() {
 
@@ -732,4 +743,3 @@
 </script>
 
 {% endblock %}
-

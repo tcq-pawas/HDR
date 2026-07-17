@@ -1,4 +1,4 @@
-{% extends "agent/agent_base.html" %}
+{% extends base_template %}
 
 {% load static %}
 
@@ -70,7 +70,7 @@
 
                 </button>
 
-                <a href="{% url 'agent:property_list' %}" class="cancel-btn">
+                <a href="{% url cancel_url %}" class="cancel-btn">
 
                     <i class="bi bi-x-circle"></i> Cancel
 

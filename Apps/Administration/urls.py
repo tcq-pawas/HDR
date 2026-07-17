@@ -4,10 +4,12 @@ from .dashboard_views import (
     AdminDashboardView, UserManagementView, InquiryManagementView,
     InvestmentManagementView, SystemSettingsView, ReportsView, ActivityLogView,
     UserProfileView, PropertyReviewCenterView, PropertyReviewDetailPageView, InquiryDetailPageView,
-    InquiryBulkActionView, InquiryExportCSVView, InquiryExportExcelView,  InquiryDeleteView
+    InquiryBulkActionView, InquiryExportCSVView, InquiryExportExcelView, InquiryDeleteView,
+    AdminPropertyListView
 )
 from . import investor_views
 from . import communication_views
+from Apps.Agent import views as agent_views
 
 app_name = 'admin_dash'
 
@@ -42,9 +44,17 @@ urlpatterns = [
     path('communications/', communication_views.AdminCommunicationListView.as_view(), name='communication-list'),
     path('communications/send/', communication_views.AdminCommunicationSendView.as_view(), name='communication-send'),
       
+    #Add Property
+    path('property/add/', agent_views.property_type_select, name='property_type_select'),
+    path('property/add/<slug:property_type>/', agent_views.property_add, name='property_add'),
+    path('property/<int:pk>/edit/',agent_views.property_edit,name='property_edit'),
+    path('property/<int:pk>/delete', agent_views.property_delete, name='property_delete'),
+    
     # Property Review System
     path('property-review/', PropertyReviewCenterView.as_view(), name='property-review'),
     path('property-review/<int:property_id>/', PropertyReviewDetailPageView.as_view(), name='property-review-detail'),
+    # Admin-managed property list
+    path('admin-properties/', AdminPropertyListView.as_view(), name='admin-property-list'),
     
     # API endpoints (admin-only access)
     path('api/profile/', views.AdminProfileView.as_view(), name='profile'),
