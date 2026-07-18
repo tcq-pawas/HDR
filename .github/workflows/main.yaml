@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - Production
-  workflow_dispatch: # Allow manual trigger from GitHub UI
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -13,13 +13,13 @@ jobs:
 
     steps:
       # ============================================
-      # Step 1: Checkout the code from GitHub
+      # Step 1: Checkout Repository
       # ============================================
-      - name: Checkout code
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
       # ============================================
-      # Step 2: Configure SSH key for EC2 access
+      # Step 2: Configure SSH
       # ============================================
       - name: Configure SSH
         run: |
@@ -29,75 +29,117 @@ jobs:
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
       # ============================================
-      # Step 3: Deploy to EC2 server
+      # Step 3: Deploy to EC2
       # ============================================
-      - name: Deploy to EC2
+      - name: Deploy Application
         run: |
           ssh -i ~/.ssh/ec2_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'ENDSSH'
-            # Set project directory
-            PROJECT_DIR="/home/ubuntu/HDR"
-            BRANCH="Production"
-            
-            # Create project directory if it doesn't exist
-            sudo mkdir -p $PROJECT_DIR
-            sudo chown $USER:$USER $PROJECT_DIR
-            
-            # Install Docker if not present
-            if ! command -v docker &> /dev/null; then
-              sudo apt-get update
-              sudo apt-get install -y docker.io
-              sudo usermod -aG docker $USER
-              sudo systemctl start docker
-              sudo systemctl enable docker
-            fi
-            
-            # Install Docker Compose plugin if not present
-            if ! docker compose version &> /dev/null; then
-              sudo apt-get install -y docker-compose-plugin
-            fi
-            
-            # Navigate to project directory
-            cd $PROJECT_DIR
-            
-            # Verify docker-compose.yml exists
-            if [ ! -f docker-compose.yml ]; then
-              echo "Error: docker-compose.yml not found in HDR directory"
-              exit 1
-            fi
 
-            echo "Current directory:"
-            pwd
+          set -e
 
-            echo "Fetching latest code..."
-            git fetch origin
+          PROJECT_DIR="/home/ubuntu/HDR"
+          BRANCH="Production"
 
-            echo "Checking out $BRANCH..."
-            git checkout $BRANCH
+          echo "======================================"
+          echo "Starting Deployment"
+          echo "======================================"
 
-            echo "Resetting to latest origin/$BRANCH..."
-            git reset --hard origin/$BRANCH
+          # Install Docker if missing
+          if ! command -v docker >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y docker.io
+            sudo systemctl enable docker
+            sudo systemctl start docker
+            sudo usermod -aG docker $USER
+          fi
 
-            echo "Pulling latest changes..."
-            git pull origin $BRANCH
-            
-            # Stop existing containers
-            docker compose down || true
-            
-            docker compose down --remove-orphans
-            docker image prune -af
-            docker builder prune -af
-            docker compose up -d --build
+          # Install Docker Compose Plugin
+          if ! docker compose version >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y docker-compose-plugin
+          fi
 
-            # Wait for services to be healthy
-            sleep 10
-            
-            # Show running containers
-            docker compose ps
+          # Go to project
+          cd "$PROJECT_DIR"
+
+          if [ ! -f docker-compose.yml ]; then
+            echo "docker-compose.yml not found!"
+            exit 1
+          fi
+
+          echo "Current Directory:"
+          pwd
+
+          echo "Fetching latest code..."
+          git fetch origin
+
+          echo "Checkout branch..."
+          git checkout $BRANCH
+
+          echo "Resetting repository..."
+          git reset --hard origin/$BRANCH
+
+          echo "Cleaning repository..."
+          git clean -fd
+
+          echo "======================================"
+          echo "Git Status"
+          echo "======================================"
+          git status
+
+          echo "======================================"
+          echo "Current Commit"
+          echo "======================================"
+          git rev-parse HEAD
+
+          echo "======================================"
+          echo "Recent Commits"
+          echo "======================================"
+          git log --oneline -5
+
+          echo "======================================"
+          echo "Stopping Containers"
+          echo "======================================"
+          docker compose down --remove-orphans || true
+
+          echo "======================================"
+          echo "Removing Old Images"
+          echo "======================================"
+          docker image prune -af || true
+          docker builder prune -af || true
+
+          echo "======================================"
+          echo "Building New Image"
+          echo "======================================"
+          docker compose build --no-cache
+
+          echo "======================================"
+          echo "Starting Containers"
+          echo "======================================"
+          docker compose up -d --force-recreate
+
+          sleep 10
+
+          echo "======================================"
+          echo "Running Containers"
+          echo "======================================"
+          docker compose ps
+
+          echo "======================================"
+          echo "Container Logs"
+          echo "======================================"
+          docker compose logs --tail=100
+
+          echo "======================================"
+          echo "Deployment Completed Successfully"
+          echo "======================================"
+
           ENDSSH
 
       # ============================================
-      # Step 4: Cleanup SSH key
+      # Step 4: Cleanup
       # ============================================
-      - name: Cleanup SSH key
+      - name: Cleanup SSH Key
         if: always()
-        run: rm -f ~/.ssh/ec2_key.pem
+        run: |
+          rm -f ~/.ssh/ec2_key.pem
