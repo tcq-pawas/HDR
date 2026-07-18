@@ -80,6 +80,10 @@ jobs:
           echo "Fetching latest code..."
           git fetch origin
 
+          echo "Discarding local changes..."
+          git reset --hard HEAD
+          git clean -fd
+
           echo "Checkout branch..."
           git checkout $BRANCH
 
