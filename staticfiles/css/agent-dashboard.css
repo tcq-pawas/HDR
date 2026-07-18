@@ -214,12 +214,17 @@ body {
     left: 0;
     z-index: 1001;
     overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
 }
 
 .sidebar-content {
     display: flex;
     flex-direction: column;
     padding: 24px 20px;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .sidebar-content .brand-logo {
@@ -264,6 +269,9 @@ body {
     list-style: none;
     padding: 0;
     margin: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: calc(100vh - 200px);
 }
 
 .sidebar-nav .nav-item {
@@ -691,4 +699,349 @@ body {
 
 .breadcrumb::after {
     content: "";
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Mobile Menu Toggle */
+.agent-mobile-toggle {
+    display: none;
+}
+
+/* Tablets and below */
+@media (max-width: 992px) {
+    .agent-header {
+        left: 0;
+        right: 0;
+    }
+
+    .agent-sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+
+    .agent-sidebar.show {
+        transform: translateX(0);
+    }
+
+    .agent-main {
+        margin-left: 0;
+        padding: 1rem;
+    }
+
+    .agent-layout {
+        margin-top: 80px;
+    }
+
+    .sidebar-overlay {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .sidebar-overlay.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .agent-mobile-toggle {
+        display: block !important;
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        z-index: 1002;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 15px;
+        cursor: pointer;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        font-size: 1.25rem;
+    }
+}
+
+@media (min-width: 993px) {
+    .agent-mobile-toggle {
+        display: none !important;
+    }
+
+    .sidebar-overlay {
+        display: none;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .agent-sidebar {
+        width: 100%;
+        max-width: 280px;
+        height: 100vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .sidebar-content {
+        padding: 1rem;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .sidebar-nav {
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .sidebar-content .brand-logo {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+    }
+
+    .sidebar-content .brand-logo img {
+        height: 28px;
+    }
+
+    .sidebar-nav .nav-link {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+
+    .sidebar-nav .nav-link i {
+        font-size: 1rem;
+    }
+
+    .logout-btn {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+
+    .agent-header {
+        height: 70px;
+    }
+
+    .header-content {
+        padding: 0 15px;
+    }
+
+    .header-left {
+        padding-top: 0;
+    }
+
+    .header-left .page-title {
+        font-size: 1.1rem;
+    }
+
+    .header-left .welcome-message {
+        display: none;
+    }
+
+    .header-center {
+        display: none;
+    }
+
+    .quick-add-btn {
+        display: none;
+    }
+
+    .header-right {
+        gap: 8px;
+        padding: 8px;
+    }
+
+    .profile-info {
+        display: none;
+    }
+
+    .profile-avatar {
+        width: 32px;
+        height: 32px;
+    }
+
+    .icon-btn {
+        font-size: 1rem;
+        padding: 8px;
+    }
+}
+
+/* KPI Cards Responsive */
+@media (max-width: 1400px) {
+    .kpi-cards-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .kpi-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .kpi-cards-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .kpi-card {
+        padding: 1.25rem;
+    }
+
+    .kpi-value {
+        font-size: 1.5rem;
+    }
+
+    .kpi-label {
+        font-size: 0.8rem;
+    }
+}
+
+/* Dashboard Grid */
+@media (max-width: 992px) {
+    .dashboard-main-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+/* Leads Section */
+@media (max-width: 768px) {
+    .leads-section {
+        padding: 1rem;
+        border-radius: 10px;
+    }
+
+    .leads-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .leads-controls {
+        flex-wrap: wrap;
+        width: 100%;
+        gap: 0.5rem;
+    }
+
+    .leads-search {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .leads-filter {
+        width: 100%;
+    }
+
+    .leads-export {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .leads-title h2 {
+        font-size: 0.95rem;
+    }
+
+    .view-all-link {
+        font-size: 0.8rem;
+    }
+}
+
+/* Analytics Widget */
+@media (max-width: 768px) {
+    .analytics-widget {
+        padding: 1rem;
+        border-radius: 10px;
+    }
+
+    .analytics-widget-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .analytics-widget-header h3 {
+        font-size: 0.95rem;
+    }
+
+    .lead-overview-chart {
+        height: 150px;
+    }
+
+    .property-stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .property-stat-item {
+        padding: 1rem;
+    }
+
+    .property-stat-value {
+        font-size: 1.25rem;
+    }
+
+    .property-stat-label {
+        font-size: 0.7rem;
+    }
+}
+
+/* Table Responsive */
+@media (max-width: 768px) {
+    .leads-table {
+        font-size: 0.8rem;
+    }
+
+    .leads-table th,
+    .leads-table td {
+        padding: 10px 8px;
+    }
+
+    .leads-table th {
+        font-size: 0.7rem;
+    }
+
+    .status-badge {
+        font-size: 0.7rem;
+        padding: 4px 8px;
+    }
+
+    .leads-action-btn {
+        width: 28px;
+        height: 28px;
+    }
+}
+
+@media (max-width: 576px) {
+    .leads-table {
+        font-size: 0.75rem;
+    }
+
+    .leads-table th,
+    .leads-table td {
+        padding: 8px 6px;
+    }
+}
+
+/* Breadcrumb */
+@media (max-width: 768px) {
+    .breadcrumb {
+        font-size: 0.8rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .breadcrumb a {
+        font-size: 0.8rem;
+    }
 }
