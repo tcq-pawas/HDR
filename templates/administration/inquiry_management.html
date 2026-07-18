@@ -510,10 +510,10 @@
                                 <tr id="inquiry-row-{{ inquiry.id }}">
 
                                     <td>
-    <input type="checkbox" class="form-check-input inquiry-select" value="{{ inquiry.id }}">
-</td>
+                                        <input type="checkbox" class="form-check-input inquiry-select" value="{{ inquiry.id }}">
+                                    </td>
 
-                                    <td class="enquiry-id-cell">#{{ inquiry.enquiry_id }}</td>
+                                    <td class="enquiry-id-cell">{{ inquiry.enquiry_id }}</td>
 
                                     <td>
                                         
@@ -527,7 +527,7 @@
                                            
                                                 <div class="customer-name">{{ inquiry.full_name }}</div>
                                            
-                                                <div class="customer-sub">{{ inquiry.phone_number }}</div>
+                                                <div class="customer-sub">{{ inquiry.phone }}</div>
                                            
                                                 <div class="customer-sub">{{ inquiry.email|default:"-" }}</div>
                                            
@@ -537,7 +537,7 @@
                                     
                                     </td>
 
-                                    <td>{{ inquiry.investment_budget|default:"-" }}</td>
+                                    <td>{{ inquiry.budget|default:"-" }}</td>
 
                                     <td>
 
@@ -555,34 +555,10 @@
                                             
                                             <span class="status-pill status-new"><span class="dot"></span>New</span>
                                         
-                                        {% elif inquiry.status == 'contacted' %}
-                                            
-                                            <span class="status-pill status-contacted"><span class="dot"></span>Contacted</span>
-                                        
-                                        {% elif inquiry.status == 'follow_up' %}
-                                            
-                                            <span class="status-pill status-follow_up"><span class="dot"></span>Follow Up</span>
-                                        
-                                        {% elif inquiry.status == 'interested' %}
-                                            
-                                            <span class="status-pill status-interested"><span class="dot"></span>Interested</span>
-                                        
-                                        {% elif inquiry.status == 'site_visit_scheduled' %}
+                                        {% elif inquiry.status == 'viewed' %}
 
-                                            <span class="status-pill status-site_visit_scheduled"><span class="dot"></span>Site Visit Scheduled</span>
-                                        
-                                        {% elif inquiry.status == 'converted' %}
+                                            <span class="status-pill status-contacted"> <span class="dot"></span>Viewed </span>                                               
                                            
-                                            <span class="status-pill status-converted"><span class="dot"></span>Converted</span>
-                                        
-                                        {% elif inquiry.status == 'closed' %}
-                                        
-                                            <span class="status-pill status-closed"><span class="dot"></span>Closed</span>
-                                        
-                                        {% elif inquiry.status == 'spam' %}
-                                    
-                                            <span class="status-pill status-spam"><span class="dot"></span>Spam</span>
-                                        
                                         {% endif %}
 
                                     </td>
@@ -613,7 +589,7 @@
                                             
                                             <form method="POST" action="{% url 'admin_dash:inquiry-delete' inquiry.id %}" class="m-0"
                                             
-                                                onsubmit="return confirm('Delete enquiry #{{ inquiry.enquiry_id }} permanently?');">
+                                                onsubmit="return confirm('Delete enquiry {{ inquiry.enquiry_id }} permanently?');">
                                                 
                                                 {% csrf_token %}
                                                 
