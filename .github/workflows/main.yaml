@@ -70,6 +70,10 @@ jobs:
           echo "Current Directory:"
           pwd
 
+          echo "Fixing git repository permissions..."
+          sudo chown -R $USER:$USER "$PROJECT_DIR"
+          sudo chmod -R 755 "$PROJECT_DIR"
+
           echo "Configuring git to use HTTPS with token..."
           git config --global url."https://${{ secrets.GIT_TOKEN }}@github.com/".insteadOf "git@github.com:"
 
