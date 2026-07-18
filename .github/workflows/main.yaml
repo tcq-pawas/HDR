@@ -70,6 +70,9 @@ jobs:
           echo "Current Directory:"
           pwd
 
+          echo "Configuring git to use HTTPS with token..."
+          git config --global url."https://${{ secrets.GIT_TOKEN }}@github.com/".insteadOf "git@github.com:"
+
           echo "Fetching latest code..."
           git fetch origin
 
