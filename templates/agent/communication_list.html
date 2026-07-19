@@ -88,17 +88,17 @@
         <select name="property" class="comm-filter-select" onchange="location.href='?property='+this.value">
             <option value="">All Properties</option>
             {% for property in properties %}
-            <option value="{{ property.id }}" {% if property_filter==property.id|stringformat:"s" %}selected{% endif %}>
+            <option value="{{ property.id }}" {% if property_filter == property.id|stringformat:"s" %}selected{% endif %}>
                 {{ property.title }}</option>
             {% endfor %}
         </select>
 
         <select name="status" class="comm-filter-select" onchange="location.href='?status='+this.value">
             <option value="">All Status</option>
-            <option value="delivered" {% if status_filter=='delivered' %}selected{% endif %}>Delivered</option>
-            <option value="opened" {% if status_filter=='opened' %}selected{% endif %}>Opened</option>
-            <option value="pending" {% if status_filter=='pending' %}selected{% endif %}>Pending</option>
-            <option value="failed" {% if status_filter=='failed' %}selected{% endif %}>Failed</option>
+            <option value="delivered" {% if status_filter == 'delivered' %}selected{% endif %}>Delivered</option>
+            <option value="opened" {% if status_filter == 'opened' %}selected{% endif %}>Opened</option>
+            <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+            <option value="failed" {% if status_filter == 'failed' %}selected{% endif %}>Failed</option>
         </select>
 
         <button class="comm-date-range-btn">
