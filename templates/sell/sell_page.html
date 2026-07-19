@@ -41,7 +41,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0,0,0,0.55);
+    /* background: rgba(0,0,0,0.55); */
 }
 
 .sell-hero-content {
@@ -496,6 +496,9 @@
 
 /* Responsive */
 @media (max-width: 991px) {
+    .sell-hero {
+        height: 350px;
+    }
     .sell-hero-title {
         font-size: 2.25rem;
     }
@@ -601,6 +604,20 @@
     .cta-buttons a {
         padding: 0 20px;
         font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .sell-hero {
+        height: 220px;
+    }
+
+    .sell-hero-title {
+        font-size: 1.5rem;
+    }
+
+    .sell-hero-subtitle {
+        font-size: 0.9rem;
     }
 }
 </style>

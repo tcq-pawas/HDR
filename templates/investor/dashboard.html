@@ -13,15 +13,41 @@
   }
 
   .hero-banner {
-    background:
-      linear-gradient(rgba(0, 0, 0, .35), rgba(0, 0, 0, .35)),
-      url('https://images.unsplash.com/photo-1500382017468-9049fed747ef');
+    background: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef');
     background-size: cover;
     background-position: center;
   }
 
   .card-shadow {
     box-shadow: 0 4px 20px rgba(0, 0, 0, .08);
+  }
+
+  @media (max-width: 768px) {
+    .hero-banner {
+      height: 150px !important;
+    }
+    .hero-banner h2 {
+      font-size: 1.5rem !important;
+    }
+    .hero-banner p {
+      font-size: 0.9rem !important;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .hero-banner {
+      height: 120px !important;
+      padding: 0 1rem !important;
+    }
+    .hero-banner h2 {
+      font-size: 1.25rem !important;
+    }
+    .hero-banner p {
+      font-size: 0.85rem !important;
+    }
+    .hero-banner > div:last-child {
+      display: none;
+    }
   }
 </style>
 {% endblock %}

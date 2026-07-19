@@ -3593,8 +3593,8 @@ footer {
         display: inline-flex;
     align-items: center;
     background: rgba(15, 106, 60, 0.1);
-    color: var(--primary);
-    border: 1px solid var(--primary);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
     padding: 4px 12px;
     border-radius: var(--button-radius);
     font-size: 12px;
@@ -3608,7 +3608,7 @@ footer {
     font-size: 55px;
     font-weight: 700;
     line-height: 1.05;
-    color: var(--text-dark);
+    color: #ffffff;
     margin-bottom: 54px;
 }
 
@@ -3619,7 +3619,7 @@ footer {
 
 .hero-description {
         font-size: 14px;
-    color: var(--text-muted);
+    color: rgba(255, 255, 255, 0.9);
     line-height: 1.4;
     margin-bottom: 16px;
     max-width: 380px;
@@ -3663,7 +3663,7 @@ footer {
 .hero-feature-title {
     font-size: 11px;
     font-weight: 600;
-    color: var(--text-dark);
+    color: #ffffff;
     white-space: nowrap;
 }
 

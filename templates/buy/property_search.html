@@ -82,55 +82,72 @@
             grid-template-columns: 1fr !important;
             gap: 16px !important;
         }
-        
-        /* Filters become horizontally scrollable */
+
+        /* Search panel padding adjustment */
+        div[style*="margin-top: -60px"] {
+            margin-top: 0 !important;
+            padding: 0 16px !important;
+        }
+
+        /* Search form stacks vertically on mobile */
         form[style*="flex-wrap: wrap"] {
-            flex-wrap: nowrap !important;
-            overflow-x: auto !important;
-            padding-bottom: 8px;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
+            flex-direction: column !important;
+            flex-wrap: wrap !important;
+            gap: 12px !important;
         }
-        
-        form[style*="flex-wrap: wrap"]::-webkit-scrollbar {
-            display: none;
-        }
-        
+
         form[style*="flex-wrap: wrap"] > div {
-            min-width: 140px !important;
-            flex-shrink: 0;
+            width: 100% !important;
+            min-width: 100% !important;
+            flex: 1 1 100% !important;
         }
-        
+
+        form[style*="flex-wrap: wrap"] > div[style*="flex-shrink: 0"] {
+            width: 100% !important;
+            display: flex !important;
+            justify-content: center !important;
+        }
+
+        form[style*="flex-wrap: wrap"] > div[style*="flex-shrink: 0"] a {
+            width: 100% !important;
+            justify-content: center !important;
+        }
+
         /* CTA stacks vertically */
         div[style*="display: flex; align-items: center; gap: 48px"] {
             flex-direction: column !important;
             text-align: center;
             gap: 24px !important;
         }
-        
+
         div[style*="flex-shrink: 0; display: flex; gap: 16px"] {
             flex-direction: column !important;
             width: 100%;
         }
-        
+
         div[style*="flex-shrink: 0; display: flex; gap: 16px"] a {
             width: 100%;
             text-align: center;
         }
-        
+
         /* Hero text size adjustment */
         .hero-banner h1 {
             font-size: 1.75rem !important;
         }
-        
+
         .hero-banner p {
             font-size: 0.95rem !important;
         }
-        
+
         /* Map height adjustment */
         div[style*="position: sticky"] {
             height: 300px !important;
             min-height: 300px !important;
+        }
+
+        /* Main content stacks vertically */
+        div[style*="grid-template-columns: 38% 62%"] {
+            grid-template-columns: 1fr !important;
         }
     }
     

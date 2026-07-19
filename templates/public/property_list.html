@@ -34,7 +34,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.3));
+        /* background: linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.3)); */
     }
     .hero-content {
         position: absolute;
@@ -104,16 +104,45 @@
         font-family: serif;
     }
     @media (max-width: 768px) {
+        .hero-carousel {
+            height: 50vh;
+        }
+        .carousel-item {
+            height: 50vh;
+        }
         .hero-title {
-            font-size: 2.5rem;
+            font-size: 2rem;
+        }
+        .hero-text {
+            font-size: 1rem;
         }
         .hero-content {
             left: 5%;
             bottom: 15%;
+            max-width: 90%;
         }
         .lifestyle-item {
             min-width: 240px;
             height: 300px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .hero-carousel {
+            height: 40vh;
+        }
+        .carousel-item {
+            height: 40vh;
+        }
+        .hero-title {
+            font-size: 1.5rem;
+        }
+        .hero-text {
+            font-size: 0.9rem;
+        }
+        .hero-content {
+            left: 5%;
+            bottom: 10%;
         }
     }
 </style>
