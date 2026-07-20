@@ -2,8 +2,9 @@ from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.db.models import Q
-from .models import Inquiry, Property, PropertyInquiry, PropertyImage, WebsiteEnquiry
+from .models import Inquiry, Property, PropertyInquiry, PropertyImage, WebsiteEnquiry, ContactInquiry
 from Apps.Agent.models import AgentProfile
+import random
 
 # def home(request):
 #     featured_properties = Property.objects.filter(is_featured=True).order_by('-created_at')[:6]
@@ -223,17 +224,24 @@ def contact(request):
         message = request.POST.get('message')
 
         # Clean budget choice placeholder
+        budget = request.POST.get('budget') or '-'
         if budget == 'Select Budget Range':
             budget = '-'
+            
+        while True:
+            enquiry_id = f"#{random.randint(10000, 99999)}"
+            if not ContactInquiry.objects.filter(enquiry_id=enquiry_id).exists():
+                break
 
-        enquiry = Inquiry.objects.create(
+        enquiry = ContactInquiry.objects.create(
+            # enquiry_id=enquiry_id,
             full_name=full_name,
-            phone_number=phone,
+            phone=phone,
             email=email,
-            investment_budget=budget,
+            budget=budget,
             message=message,
-            ip_address=get_client_ip(request),
-            user_agent=request.META.get('HTTP_USER_AGENT', ''),
+            # ip_address=get_client_ip(request),
+            # user_agent=request.META.get('HTTP_USER_AGENT', ''),
         )
         
         # Trigger email notification

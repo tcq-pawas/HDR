@@ -513,12 +513,36 @@ class PropertyInquiry(models.Model):
 
 # contact form
 class ContactInquiry(models.Model):
+    
+    STATUS_CHOICES = [
+        ('new', 'New'),
+        ('viewed', 'Viewed'),
+    ]
+    enquiry_id = models.CharField(max_length=5, blank=True)
+    
     full_name = models.CharField(max_length=100)
     phone = models.CharField(max_length=20)
     email = models.EmailField(blank=True, null=True)
     budget = models.CharField(max_length=50, blank=True, null=True)
     message = models.TextField(blank=True, null=True)
+    
+    status = models.CharField(
+        max_length=10,
+        choices=STATUS_CHOICES,
+        default='new'
+    )
+    
     created_at = models.DateTimeField(auto_now_add=True)
+    
+    def save(self, *args, **kwargs):
+        if not self.enquiry_id:
+            while True:
+                enquiry = f"#{random.randint(10000,99999)}"
+                if not ContactInquiry.objects.filter(enquiry_id=enquiry).exists():
+                    self.enquiry_id = enquiry
+                    break
+
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.full_name} - {self.phone}"
