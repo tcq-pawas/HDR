@@ -62,14 +62,14 @@
         border: 1px solid rgba(255,255,255,0.22);
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
-        font-weight: 1000;
+        font-weight: 600;
         letter-spacing: .2px;
         margin-bottom: .85rem;
         font-size: .95rem;
     }
 
-    .hero-title{ font-size: clamp(1.6rem, 2.6vw, 2.2rem); font-weight: 1000; margin: 0 0 .35rem 0; line-height: 1.15; }
-    .hero-subtitle{ margin: 0; color: rgba(255,255,255,0.92); font-weight: 700; max-width: 760px; }
+    .hero-title{ font-size: 28px; font-weight: 700; margin: 0 0 .35rem 0; line-height: 1.15; }
+    .hero-subtitle{ margin: 0; color: rgba(255,255,255,0.92); font-weight: 400; max-width: 760px; font-size: 14px; }
 
     .hero-meta{
         display:grid;
@@ -105,8 +105,8 @@
         color:#fff;
     }
 
-    .meta-label{ font-size: .82rem; opacity: .92; text-transform: uppercase; letter-spacing: .08em; font-weight: 1000; margin-bottom: .35rem; }
-    .meta-value{ font-weight: 1000; font-size: 1.1rem; margin: 0; }
+    .meta-label{ font-size: 12px; opacity: .92; text-transform: uppercase; letter-spacing: .08em; font-weight: 600; margin-bottom: .35rem; }
+    .meta-value{ font-weight: 500; font-size: 16px; margin: 0; }
 
     /* KPI cards */
     .kpi-grid{ display:grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .95rem; }
@@ -131,8 +131,8 @@
     }
     .kpi-card-inner{ position: relative; z-index: 1; padding: 1rem 1rem; display:flex; align-items:center; justify-content: space-between; gap: .85rem; }
     .kpi-icon{ width: 46px; height: 46px; border-radius: 16px; display:flex; align-items:center; justify-content:center; background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.24); font-size: 1.15rem; }
-    .kpi-count{ font-size: 2rem; font-weight: 1000; line-height: 1; margin-top: .15rem; }
-    .kpi-label{ font-weight: 950; opacity: .98; }
+    .kpi-count{ font-size: 32px; font-weight: 600; line-height: 1; margin-top: .15rem; }
+    .kpi-label{ font-weight: 400; opacity: .98; font-size: 13px; }
 
     /* Toolbar */
     .toolbar-grid{ display:grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .95rem; }
@@ -156,8 +156,8 @@
     .action-card:hover{ transform: translateY(-4px); box-shadow: 0 26px 80px rgba(15,118,110,0.16); }
     .action-left{ display:flex; gap: .8rem; align-items:center; }
     .action-icon{ width: 44px; height: 44px; border-radius: 16px; display:flex; align-items:center; justify-content:center; color:#fff; }
-    .action-title{ font-weight: 1000; margin:0; }
-    .action-sub{ margin: .15rem 0 0 0; color: rgba(2,6,23,0.62); font-weight: 800; font-size: .9rem; }
+    .action-title{ font-weight: 700; margin:0; font-size: 14px; }
+    .action-sub{ margin: .15rem 0 0 0; color: rgba(2,6,23,0.62); font-weight: 400; font-size: 13px; }
 
     /* Table */
     .panel{ border-radius: var(--radius); overflow:hidden; border: 1px solid rgba(15,118,110,0.12); box-shadow: 0 16px 50px rgba(15,118,110,0.08); background: rgba(255,255,255,0.75); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
@@ -165,12 +165,12 @@
     .panel-body{ padding: 1.1rem 1.3rem; }
 
     .table-modern{ width:100%; border-collapse: separate; border-spacing: 0 10px; }
-    .table-modern th{ text-align:left; color:#64748b; font-size:.85rem; font-weight: 1000; padding: 0 10px; }
-    .table-modern td{ background:#fff; padding: 12px 10px; vertical-align: middle; border-top: 1px solid rgba(15,118,110,0.08); border-bottom: 1px solid rgba(15,118,110,0.08); }
+    .table-modern th{ text-align:left; color:#64748b; font-size:12px; font-weight: 600; padding: 0 10px; }
+    .table-modern td{ background:#fff; padding: 14px 10px; vertical-align: middle; border-top: 1px solid rgba(15,118,110,0.08); border-bottom: 1px solid rgba(15,118,110,0.08); font-size: 13px; }
 
     .row-card{ border-radius: 16px; box-shadow: 0 10px 30px rgba(15,118,110,0.10); }
 
-    .status-badge{ padding: .38rem .7rem; border-radius: 999px; font-weight: 1000; font-size: .86rem; border: 1px solid rgba(0,0,0,0.06); white-space: nowrap; }
+    .status-badge{ padding: .5rem .85rem; border-radius: 999px; font-weight: 500; font-size: 12px; border: 1px solid rgba(0,0,0,0.06); white-space: nowrap; }
     .s-pending{ background: rgba(245,158,11,0.15); color: #b45309; border-color: rgba(245,158,11,0.25); }
     .s-responded{ background: rgba(59,130,246,0.15); color: #1d4ed8; border-color: rgba(59,130,246,0.25); }
     .s-site{ background: rgba(139,92,246,0.15); color: #6d28d9; border-color: rgba(139,92,246,0.25); }
@@ -184,7 +184,7 @@
 
     .btn-premium{
         border-radius: 14px;
-        font-weight: 950;
+        font-weight: 500;
         padding: .65rem .9rem;
         border: 1px solid rgba(15,118,110,0.15);
         background: linear-gradient(180deg, rgba(15,118,110,0.96), rgba(6,78,59,0.96));
@@ -199,7 +199,7 @@
 
     .btn-outline-premium{
         border-radius: 14px;
-        font-weight: 950;
+        font-weight: 500;
         padding: .65rem .9rem;
         border: 1px solid rgba(15,118,110,0.25);
         background: rgba(255,255,255,0.7);
@@ -224,11 +224,11 @@
     .timeline::before{ content:""; position:absolute; left: 7px; top: 4px; bottom: 4px; width: 3px; background: linear-gradient(180deg, rgba(15,118,110,0.65), rgba(16,185,129,0.25)); border-radius: 999px; }
     .timeline-item{ position: relative; margin-bottom: 1rem; padding-left: 1.15rem; }
     .timeline-item:last-child{ margin-bottom: 0; }
-    .timeline-dot{ position:absolute; left: -18px; top: 10px; width: 26px; height: 26px; border-radius: 10px; background: rgba(15,118,110,0.16); border: 1px solid rgba(15,118,110,0.28); display:flex; align-items:center; justify-content:center; color: var(--primary); font-weight: 1000; }
+    .timeline-dot{ position:absolute; left: -18px; top: 10px; width: 26px; height: 26px; border-radius: 10px; background: rgba(15,118,110,0.16); border: 1px solid rgba(15,118,110,0.28); display:flex; align-items:center; justify-content:center; color: var(--primary); font-weight: 400; }
     .timeline-card{ background: rgba(255,255,255,0.94); border: 1px solid rgba(15,118,110,0.10); border-radius: 18px; padding: .85rem .95rem; box-shadow: 0 14px 35px rgba(15,118,110,0.06); }
-    .timeline-title{ font-weight: 1000; margin-bottom: .25rem; }
-    .timeline-desc{ color: #64748b; font-weight: 900; font-size: .92rem; margin-bottom: .35rem; }
-    .timeline-date{ color: #94a3b8; font-weight: 1000; font-size: .85rem; }
+    .timeline-title{ font-weight: 700; margin-bottom: .25rem; font-size: 14px; }
+    .timeline-desc{ color: #64748b; font-weight: 400; font-size: 13px; margin-bottom: .35rem; }
+    .timeline-date{ color: #94a3b8; font-weight: 400; font-size: 12px; }
 
     /* Recommended properties */
     .property-grid{ display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 1rem; }
@@ -239,14 +239,14 @@
     .property-card:hover{ transform: translateY(-4px); box-shadow: 0 26px 80px rgba(15,118,110,0.16); }
     .property-media{ height: 165px; background: linear-gradient(180deg, rgba(15,118,110,0.18), rgba(16,185,129,0.04)); border-bottom: 1px solid rgba(15,118,110,0.10); position: relative; overflow:hidden; }
     .property-media img{ width:100%; height:100%; object-fit: cover; display:block; opacity: .95; }
-    .property-media .tag{ position:absolute; top: 12px; left: 12px; padding: .32rem .62rem; border-radius: 999px; background: rgba(15,118,110,0.92); color:#fff; font-weight: 1000; font-size: .86rem; box-shadow: 0 16px 40px rgba(15,118,110,0.22); }
+    .property-media .tag{ position:absolute; top: 12px; left: 12px; padding: .4rem .75rem; border-radius: 999px; background: rgba(15,118,110,0.92); color:#fff; font-weight: 500; font-size: 12px; box-shadow: 0 16px 40px rgba(15,118,110,0.22); }
     .property-body{ padding: 1rem; display:flex; flex-direction: column; gap: .55rem; flex: 1; }
-    .property-title{ font-weight: 1000; line-height: 1.25; margin: 0; }
-    .property-meta{ color: #64748b; font-weight: 900; font-size: .95rem; margin: 0; }
+    .property-title{ font-weight: 700; line-height: 1.25; margin: 0; font-size: 15px; }
+    .property-meta{ color: #64748b; font-weight: 400; font-size: 13px; margin: 0; }
     .price-line{ display:flex; align-items:center; justify-content: space-between; gap: .85rem; margin-top: auto; }
-    .price{ font-weight: 1000; color: var(--primary); font-size: 1.15rem; }
+    .price{ font-weight: 600; color: var(--primary); font-size: 18px; }
 
-    .badge-pill{ border-radius: 999px; font-weight: 950; border: 1px solid rgba(15,118,110,0.18); background: rgba(15,118,110,0.08); padding: .35rem .6rem; color: #0b5a4c; white-space: nowrap; }
+    .badge-pill{ border-radius: 999px; font-weight: 500; border: 1px solid rgba(15,118,110,0.18); background: rgba(15,118,110,0.08); padding: .45rem .75rem; color: #0b5a4c; white-space: nowrap; font-size: 12px; }
 </style>
 {% endblock %}
 
@@ -405,10 +405,10 @@
     <div class="panel mb-4">
         <div class="panel-header">
             <div>
-                <p class="section-title mb-0" style="font-weight:1000;letter-spacing:.2px;">Inquiry Management</p>
-                <div class="text-muted" style="font-weight:900;">View details, track status, and contact agents</div>
+                <p class="section-title mb-0" style="font-weight:700;letter-spacing:.2px;">Inquiry Management</p>
+                <div class="text-muted" style="font-weight:400;">View details, track status, and contact agents</div>
             </div>
-            <span class="badge bg-light text-dark" style="font-weight:1000;">{{ inquiries.count|default:0 }} total</span>
+            <span class="badge bg-light text-dark" style="font-weight:400;">{{ inquiries.count|default:0 }} total</span>
         </div>
         <div class="panel-body">
             {% if inquiries %}
@@ -459,10 +459,10 @@
                                     <td class="text-muted fw-bold">{{ inquiry.updated_at|default:inquiry.created_at|date:"M d, Y H:i" }}</td>
                                     <td class="text-end">
                                         <div class="btn-group" role="group">
-                                            <button class="btn btn-sm btn-primary" style="border-radius: 14px; font-weight:1000;" onclick="viewInquiry({{ inquiry.id }})">
+                                            <button class="btn btn-sm btn-primary" style="border-radius: 14px; font-weight:500;" onclick="viewInquiry({{ inquiry.id }})">
                                                 <i class="fas fa-eye"></i> View Inquiry
                                             </button>
-                                            <button class="btn btn-sm btn-outline-primary" style="border-radius: 14px; font-weight:1000;" onclick="alert('Property view flow not implemented on this page UI. Backend URLs unchanged.')">
+                                            <button class="btn btn-sm btn-outline-primary" style="border-radius: 14px; font-weight:500;" onclick="alert('Property view flow not implemented on this page UI. Backend URLs unchanged.')">
                                                 <i class="fas fa-landmark"></i> View Property
                                             </button>
                                             <button class="btn btn-sm btn-outline-success" style="border-radius: 14px; font-weight:1000;" onclick="window.location.href='mailto:support@heydayrealty.com?subject=Inquiry%20Agent%20Contact%20-#{{ inquiry.id }}'">
