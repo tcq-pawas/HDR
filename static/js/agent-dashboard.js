@@ -1,27 +1,8 @@
 // Agent Dashboard JavaScript
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Menu Toggle
-    const menuToggle = document.getElementById('menuToggle');
-    const agentSidebar = document.getElementById('agentSidebar');
-    const agentMain = document.getElementById('agentMain');
-    const sidebarOverlay = document.getElementById('sidebarOverlay');
-
-    if (menuToggle) {
-        menuToggle.addEventListener('click', function() {
-            agentSidebar.classList.toggle('show');
-            agentMain.classList.toggle('expanded');
-            sidebarOverlay.classList.toggle('show');
-        });
-    }
-
-    if (sidebarOverlay) {
-        sidebarOverlay.addEventListener('click', function() {
-            agentSidebar.classList.remove('show');
-            agentMain.classList.remove('expanded');
-            sidebarOverlay.classList.remove('show');
-        });
-    }
+    // Bootstrap Offcanvas is automatically initialized by Bootstrap JS
+    // No custom toggle logic needed for sidebar anymore
 
     // Submenu Toggle
     const submenuToggles = document.querySelectorAll('.submenu-toggle');
@@ -33,43 +14,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Notification Dropdown
-    const notificationBtn = document.getElementById('notificationBtn');
-    const notificationDropdown = document.getElementById('notificationDropdown');
-
-    if (notificationBtn && notificationDropdown) {
-        notificationBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            notificationDropdown.classList.toggle('show');
-        });
-
-        document.addEventListener('click', function() {
-            notificationDropdown.classList.remove('show');
-        });
-
-        notificationDropdown.addEventListener('click', function(e) {
-            e.stopPropagation();
-        });
-    }
-
-    // Profile Dropdown
-    const profileToggle = document.getElementById('profileToggle');
-    const profileDropdown = document.getElementById('profileDropdown');
-
-    if (profileToggle && profileDropdown) {
-        profileToggle.addEventListener('click', function(e) {
-            e.stopPropagation();
-            profileDropdown.classList.toggle('show');
-        });
-
-        document.addEventListener('click', function() {
-            profileDropdown.classList.remove('show');
-        });
-
-        profileDropdown.addEventListener('click', function(e) {
-            e.stopPropagation();
-        });
-    }
+    // Note: Notification and Profile dropdowns are now handled by Bootstrap Dropdown API
+    // No custom JS needed for dropdown toggles
 
     // Mark notification as read
     const notificationItems = document.querySelectorAll('.notification-item');

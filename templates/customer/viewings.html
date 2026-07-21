@@ -98,7 +98,7 @@
 
     inset:0;
 
-    background: linear-gradient(90deg, rgba(15,118,110,0.80) 0%, rgba(16,185,129,0.45) 40%, rgba(59,130,246,0.25) 70%, rgba(6,78,59,0.75) 100%);
+    /* background: linear-gradient(90deg, rgba(15,118,110,0.80) 0%, rgba(16,185,129,0.45) 40%, rgba(59,130,246,0.25) 70%, rgba(6,78,59,0.75) 100%); */
 
   }
 
@@ -129,6 +129,25 @@
   @media (max-width: 992px){
 
     .premium-hero-inner{ grid-template-columns: 1fr; }
+    .premium-hero{ height: 280px; }
+
+  }
+
+  @media (max-width: 768px){
+
+    .premium-hero{ height: 240px; }
+    .premium-hero-inner{ padding: 1.2rem 1.4rem; }
+    .hero-title{ font-size: 1.5rem; }
+    .hero-subtitle{ font-size: 0.9rem; }
+
+  }
+
+  @media (max-width: 480px){
+
+    .premium-hero{ height: 200px; }
+    .premium-hero-inner{ padding: 1rem 1.2rem; }
+    .hero-title{ font-size: 1.25rem; }
+    .hero-subtitle{ font-size: 0.85rem; }
 
   }
 
@@ -154,7 +173,7 @@
 
     -webkit-backdrop-filter: blur(14px);
 
-    font-weight: 1000;
+    font-weight: 600;
 
     letter-spacing: .2px;
 
@@ -166,9 +185,9 @@
 
   .premium-title{
 
-    font-size: clamp(1.7rem, 2.6vw, 2.3rem);
+    font-size: 28px;
 
-    font-weight: 1000;
+    font-weight: 700;
 
     line-height: 1.15;
 
@@ -184,9 +203,11 @@
 
     color: rgba(255,255,255,0.94);
 
-    font-weight: 700;
+    font-weight: 400;
 
     max-width: 720px;
+
+    font-size: 14px;
 
   }
 
@@ -236,11 +257,11 @@
 
     letter-spacing: .08em;
 
-    font-weight: 1100;
+    font-weight: 600;
 
     opacity: .92;
 
-    font-size: .78rem;
+    font-size: 12px;
 
     margin-bottom: .35rem;
 
@@ -250,9 +271,9 @@
 
   .hero-stat .v{
 
-    font-size: 1.05rem;
+    font-size: 16px;
 
-    font-weight: 1000;
+    font-weight: 600;
 
     margin: 0;
 
@@ -274,7 +295,7 @@
 
     border-radius: 14px;
 
-    font-weight: 1000;
+    font-weight: 600;
 
     padding: .75rem 1rem;
 
@@ -388,11 +409,11 @@
 
 
 
-  .kpi-count{ font-size: 2rem; font-weight: 1100; line-height: 1; margin-top: .55rem; }
+  .kpi-count{ font-size: 32px; font-weight: 600; line-height: 1; margin-top: .55rem; }
 
-  .kpi-label{ font-weight: 1000; opacity: .98; margin-top: .3rem; }
+  .kpi-label{ font-weight: 400; opacity: .98; margin-top: .3rem; font-size: 13px; }
 
-  .kpi-trend{ margin-top: .75rem; font-weight: 900; font-size: .88rem; display:flex; align-items:center; gap:.5rem; }
+  .kpi-trend{ margin-top: .75rem; font-weight: 400; font-size: 12px; display:flex; align-items:center; gap:.5rem; }
 
 
 
@@ -434,9 +455,9 @@
 
 
 
-  .panel-title{ margin:0; font-weight: 1100; letter-spacing: .2px; }
+  .panel-title{ margin:0; font-weight: 700; letter-spacing: .2px; font-size: 18px; }
 
-  .panel-subtitle{ margin: .15rem 0 0 0; color: rgba(15,118,110,0.85); font-weight: 900; }
+  .panel-subtitle{ margin: .15rem 0 0 0; color: rgba(15,118,110,0.85); font-weight: 400; font-size: 13px; }
 
 
 
@@ -530,9 +551,9 @@
 
     color:#64748b;
 
-    font-weight: 1100;
+    font-weight: 600;
 
-    font-size: .82rem;
+    font-size: 12px;
 
     padding: 0 .75rem;
 
@@ -544,7 +565,7 @@
 
     background:#fff;
 
-    padding: 12px .75rem;
+    padding: 14px .75rem;
 
     vertical-align: middle;
 
@@ -552,11 +573,13 @@
 
     border-bottom: 1px solid rgba(15,118,110,0.08);
 
+    font-size: 13px;
+
   }
 
 
 
-  .row-pill{ border-radius: 999px; padding: .3rem .65rem; font-weight: 1100; font-size: .85rem; border: 1px solid rgba(0,0,0,0.06); white-space: nowrap; }
+  .row-pill{ border-radius: 999px; padding: .5rem .85rem; font-weight: 500; font-size: 12px; border: 1px solid rgba(0,0,0,0.06); white-space: nowrap; }
 
   .s-scheduled{ background: rgba(59,130,246,0.15); color:#1d4ed8; border-color: rgba(59,130,246,0.25); }
 
@@ -660,7 +683,7 @@
 
     color: var(--primary);
 
-    font-weight: 1100;
+    font-weight: 600;
 
   }
 
@@ -682,11 +705,11 @@
 
 
 
-  .timeline-date{ color:#94a3b8; font-weight: 1100; font-size: .85rem; }
+  .timeline-date{ color:#94a3b8; font-weight: 400; font-size: 12px; }
 
-  .timeline-title{ font-weight: 1100; margin: .25rem 0 .15rem 0; }
+  .timeline-title{ font-weight: 700; margin: .25rem 0 .15rem 0; font-size: 14px; }
 
-  .timeline-desc{ color: rgba(15,118,110,0.78); font-weight: 900; font-size: .92rem; }
+  .timeline-desc{ color: rgba(15,118,110,0.78); font-weight: 400; font-size: 13px; }
 
 
 
@@ -702,7 +725,7 @@
 
   .cal-head{
 
-    color:#64748b; font-weight: 1100; font-size: .8rem; text-align:center;
+    color:#64748b; font-weight: 600; font-size: 12px; text-align:center;
 
   }
 
@@ -722,7 +745,7 @@
 
     justify-content:center;
 
-    font-weight: 1000;
+    font-weight: 600;
 
     color: rgba(15,118,110,0.85);
 

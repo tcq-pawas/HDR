@@ -9,6 +9,8 @@ from .dashboard_views import (
 )
 from . import investor_views
 from . import communication_views
+from . import contact_views
+contact_docs_view = contact_views.ContactAPIDocumentationView()
 from Apps.Agent import views as agent_views
 
 app_name = 'admin_dash'
@@ -98,4 +100,10 @@ urlpatterns = [
     path('api/settings/save-general/', views.save_general_settings, name='save-general-settings'),
     path('api/inquiries/unread-count/', views.get_unread_inquiries, name='unread-inquiries-count'),
     path('api/investments/create/', views.create_investment, name='create-investment'),
+    
+    # Contact Inquiry API (public endpoint for multiple websites)
+    path('api/contact/', contact_views.ContactInquiryAPIView.as_view(), name='contact-inquiry-api'),
+    
+    # Contact API Documentation
+    path('api/contact/docs/', contact_docs_view, name='contact-api-docs'),
 ]

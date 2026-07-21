@@ -259,7 +259,13 @@ def property_add(request, property_type):
                 return redirect('agent:property_list')
         else:
             print("Form errors:", form.errors)
-            messages.error(request, f"Please fix the errors below: {form.errors}")
+            # Build a clean, human-readable error message
+            error_fields = []
+            for field, errors in form.errors.items():
+                field_label = form.fields[field].label or field.replace('_', ' ').title()
+                error_fields.append(f"{field_label}: {', '.join(errors)}")
+            error_summary = " | ".join(error_fields)
+            messages.error(request, f"Please fix the following errors: {error_summary}")
     else:
         # Use appropriate form based on property_type
         if property_type == 'land':

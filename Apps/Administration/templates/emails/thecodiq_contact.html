@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>New Website Inquiry - {{ company_name }}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+            margin: -30px -30px 30px -30px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .content {
+            padding: 0 10px;
+        }
+        .section {
+            margin-bottom: 25px;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #3a7bd5;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #3a7bd5;
+            padding-bottom: 5px;
+        }
+        .field {
+            margin-bottom: 12px;
+        }
+        .field-label {
+            font-weight: 600;
+            color: #555;
+            display: inline-block;
+            width: 180px;
+            vertical-align: top;
+        }
+        .field-value {
+            color: #333;
+            display: inline-block;
+            max-width: 350px;
+        }
+        .message-box {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-left: 4px solid #3a7bd5;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        .message-text {
+            white-space: pre-wrap;
+            font-style: italic;
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+        }
+        .footer a {
+            color: #3a7bd5;
+            text-decoration: none;
+        }
+        .meta-info {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-size: 13px;
+        }
+        .meta-info p {
+            margin: 5px 0;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background-color: #3a7bd5;
+            color: white;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        @media only screen and (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            .field-label {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+            .field-value {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>New Website Inquiry Received</h1>
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <div class="section-title">Contact Information</div>
+                
+                <div class="field">
+                    <span class="field-label">Name:</span>
+                    <span class="field-value">{{ full_name }}</span>
+                </div>
+                
+                <div class="field">
+                    <span class="field-label">Phone Number:</span>
+                    <span class="field-value">{{ phone_number }}</span>
+                </div>
+                
+                <div class="field">
+                    <span class="field-label">Email:</span>
+                    <span class="field-value">{{ email }}</span>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">Message</div>
+                <div class="message-box">
+                    <div class="message-text">{{ message }}</div>
+                </div>
+            </div>
+            
+            <div class="meta-info">
+                <p><strong>Website:</strong> <span class="badge">{{ website|title }}</span></p>
+                <p><strong>Source URL:</strong> {{ source_url }}</p>
+                <p><strong>IP Address:</strong> {{ ip_address }}</p>
+                <p><strong>Browser:</strong> {{ browser }}</p>
+                <p><strong>Submitted At:</strong> {{ submitted_at|date:"F d, Y \a\t g:i A" }}</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>This inquiry was submitted through the {{ company_name }} website.</p>
+            <p>&copy; {% now "Y" %} {{ company_name }}. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -431,7 +431,8 @@
 <!-- ── Table ── -->
 <div class="leads-table-card">
     {% if leads %}
-    <table class="leads-data-table">
+    <div class="table-responsive">
+    <table class="table table-hover leads-data-table">
         <thead>
             <tr>
                 <th>Customer</th>
@@ -534,6 +535,7 @@
             {% endfor %}
         </tbody>
     </table>
+    </div>
 
     <!-- Pagination -->
     <div class="leads-pagination">

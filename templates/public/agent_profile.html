@@ -484,7 +484,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
+        /* background: rgba(0, 0, 0, 0.5); */
     }
 
     /* Profile Card Section */
@@ -1266,6 +1266,9 @@
     }
 
     @media (max-width: 992px) {
+        .agent-hero {
+            height: 320px;
+        }
         .profile-card {
             grid-template-columns: 1fr;
             text-align: center;
@@ -1309,6 +1312,9 @@
     }
 
     @media (max-width: 768px) {
+        .agent-hero {
+            height: 240px;
+        }
         .property-grid {
             grid-template-columns: 1fr;
         }
@@ -1336,6 +1342,15 @@
         .highlights {
             flex-direction: column;
             gap: 16px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .agent-hero {
+            height: 200px;
+        }
+        .agent-name {
+            font-size: 18px;
         }
     }
 </style>

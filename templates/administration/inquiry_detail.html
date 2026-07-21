@@ -2,9 +2,9 @@
 
 {% load humanize %}
 
-{% block title %}Enquiry #{{ enquiry.enquiry_id }} - Admin Dashboard{% endblock %}
+{% block title %}Enquiry {{ enquiry.enquiry_id }} - Admin Dashboard{% endblock %}
 
-{% block page_title %}Enquiry #{{ enquiry.enquiry_id }}{% endblock %}
+{% block page_title %}Enquiry {{ enquiry.enquiry_id }}{% endblock %}
 
 {% block page_subtitle %}Full enquiry details{% endblock %}
 
@@ -28,7 +28,7 @@
 
                 <p><strong>Full Name:</strong> {{ enquiry.full_name }}</p>
 
-                <p><strong>Phone Number:</strong> {{ enquiry.phone_number|default:"-" }}</p>
+                <p><strong>Phone Number:</strong> {{ enquiry.phone|default:"-" }}</p>
 
                 <p><strong>Email Address:</strong> {{ enquiry.email|default:"-" }}</p>
 
@@ -47,7 +47,7 @@
 
             <div class="card-body">
 
-                <p><strong>Investment Budget:</strong> {{ enquiry.investment_budget|default:"-" }}</p>
+                <p><strong>Investment Budget:</strong> {{ enquiry.budget|default:"-" }}</p>
 
                 <p><strong>Customer Message:</strong></p>
 
@@ -78,21 +78,19 @@
             <div class="card-body">
 
                 <div class="mb-3" id="status-badge-container">
-
-                    {% if enquiry.status == 'new' %}<span class="badge bg-primary fs-6" id="status-badge">New</span>
-
-                    {% elif enquiry.status == 'contacted' %}<span class="badge bg-warning text-dark fs-6" id="status-badge">Contacted</span>
-
-                    {% elif enquiry.status == 'follow_up' %}<span class="badge bg-secondary fs-6" id="status-badge">Follow Up</span>
-
-                    {% elif enquiry.status == 'interested' %}<span class="badge fs-6" style="background-color:#6f42c1;color:#fff;" id="status-badge">Interested</span>
-
-                    {% elif enquiry.status == 'site_visit_scheduled' %}<span class="badge fs-6" style="background-color:#0d6efd;color:#fff;" id="status-badge">Site Visit Scheduled</span>
-
-                    {% elif enquiry.status == 'converted' %}<span class="badge bg-success fs-6" id="status-badge">Converted</span>
-
-                    {% elif enquiry.status == 'closed' %}<span class="badge bg-dark fs-6" id="status-badge">Closed</span>
-
+                    
+                    {% if enquiry.status == 'new' %}
+                    
+                        <span class="badge bg-primary fs-6" id="status-badge">{{ enquiry.get_status_display }}</span>
+                    
+                    {% elif enquiry.status == 'viewed' %}
+                   
+                        <span class="badge bg-secondary fs-6" id="status-badge">{{ enquiry.get_status_display }}</span>
+                    
+                    {% else %}
+                
+                        <span class="badge bg-light text-dark fs-6" id="status-badge">{{ enquiry.get_status_display }}</span>
+                   
                     {% endif %}
 
                 </div>
@@ -117,8 +115,11 @@
                     </div>
 
                     <button type="submit" class="btn btn-primary w-100" id="update-status-btn">
+
                         <span id="btn-text">Update Status</span>
+
                         <span id="btn-spinner" class="spinner-border spinner-border-sm d-none" role="status"></span>
+
                     </button>
 
                 </form>
@@ -140,7 +141,7 @@
 
             <div class="card-body">
 
-                <p><strong>Enquiry ID:</strong> #{{ enquiry.enquiry_id }}</p>
+                <p><strong>Enquiry ID:</strong> {{ enquiry.enquiry_id }}</p>
 
                 <p><strong>Source:</strong> {{ enquiry.source }}</p>
 
@@ -148,9 +149,9 @@
 
                 <p><strong>Last Updated:</strong> {{ enquiry.updated_at|date:"d M, Y g:i A" }}</p>
 
-                <p><strong>IP Address:</strong> {{ enquiry.ip_address|default:"-" }}</p>
+                <!-- <p><strong>IP Address:</strong> {{ enquiry.ip_address|default:"-" }}</p>
 
-                <p><strong>Browser/User Agent:</strong> <small class="text-muted">{{ enquiry.user_agent|default:"-"|truncatechars:80 }}</small></p>
+                <p><strong>Browser/User Agent:</strong> <small class="text-muted">{{ enquiry.user_agent|default:"-"|truncatechars:80 }}</small></p> -->
 
             </div>
 
@@ -167,7 +168,7 @@
 </a>
 
 
-<div class="card mt-4">
+<!-- <div class="card mt-4">
     <div class="card-header">
         <h5 class="mb-0"><i class="fas fa-sticky-note"></i> Internal Notes <small class="text-muted">(Admin only)</small></h5>
     </div>
@@ -190,7 +191,7 @@
             <p class="text-muted mb-0">No notes added yet.</p>
         {% endif %}
     </div>
-</div>
+</div> -->
 
 {% endblock %}
 

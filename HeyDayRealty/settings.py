@@ -29,7 +29,10 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost, x-realtors.in').split(',')
+
+# CSRF trusted origins for HTTPS
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', 'https://x-realtors.in').split(',')
 
 
 # Application definition
@@ -46,6 +49,7 @@ INSTALLED_APPS = [
     # Third-party apps
     'rest_framework',
     'django_filters',
+    'drf_spectacular',
     
     # Custom Apps
     'Apps.PublicPage',
@@ -138,7 +142,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
+
 
 USE_I18N = True
 
@@ -189,6 +194,47 @@ REST_FRAMEWORK = {
         'rest_framework.filters.SearchFilter',
         'rest_framework.filters.OrderingFilter',
     ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+# drf-spectacular settings
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'HeyDay Realty API',
+    'DESCRIPTION': 'Comprehensive API for HeyDay Realty platform including Administration, Customer, Investor, Agent, and Property management',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'COMPONENT_SPLIT_REQUEST': True,
+    'COMPONENT_NO_READ_ONLY_REQUIRED': True,
+    'TAGS': [
+        {
+            'name': 'Administration',
+            'description': 'Admin dashboard, user management, system settings, and contact inquiry APIs'
+        },
+        {
+            'name': 'Contact Inquiry',
+            'description': 'Public contact form submissions from multiple websites'
+        },
+        {
+            'name': 'Customer',
+            'description': 'Customer-facing APIs for property browsing and inquiries'
+        },
+        {
+            'name': 'Investor',
+            'description': 'Investor portal APIs for investment management'
+        },
+        {
+            'name': 'Agent',
+            'description': 'Agent dashboard and property management APIs'
+        },
+        {
+            'name': 'Properties',
+            'description': 'Property listing, search, and management APIs'
+        },
+        {
+            'name': 'Authentication',
+            'description': 'User authentication and authorization'
+        },
+    ],
 }
 
 # Authentication Settings
@@ -200,3 +246,7 @@ LOGOUT_REDIRECT_URL = '/auth/login/'
 # Email settings
 EMAIL_BACKEND = 'Apps.Administration.email_backend.SystemSettingsEmailBackend'
 DEFAULT_FROM_EMAIL = 'noreply@heydayrealty.com'
+
+# Contact API Keys for external website submissions
+CONTACT_API_KEY_HEYDAY = os.getenv('CONTACT_API_KEY_HEYDAY', 'xKhrhdxHYL271hWtOndxc0jTOdIh3DsQPwE102rxIOnBBDqa5kP45bCJKQyQPdhI')
+CONTACT_API_KEY_CODIQ = os.getenv('CONTACT_API_KEY_CODIQ', 'xKhrhdxHYL271hWtOndxc0jTOdIh3DsQPwE102rxIOnBBDqa5kP45bCJKQyQPdhI')

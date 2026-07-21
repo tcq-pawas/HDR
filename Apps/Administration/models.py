@@ -284,3 +284,40 @@ class PropertyReview(models.Model):
     
     def __str__(self):
         return f"Review for {self.property.title} - {self.status}"
+
+
+
+class WebsiteInquiry(models.Model):
+    website = models.CharField(max_length=50)  # HeyDay Realty / TheCodiQ Global
+
+    full_name = models.CharField(max_length=150)
+    phone_number = models.CharField(max_length=20)
+    email = models.EmailField()
+
+    subject = models.CharField(max_length=255)
+    preferred_contact_method = models.CharField(max_length=100)
+
+    property_type = models.CharField(max_length=100, blank=True)
+    preferred_location = models.CharField(max_length=255, blank=True)
+
+    budget_range = models.CharField(max_length=100, blank=True)
+    area_size = models.CharField(max_length=100, blank=True)
+
+    message = models.TextField(blank=True)
+
+    source_url = models.URLField(blank=True)
+
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    user_agent = models.TextField(blank=True)
+
+    is_contacted = models.BooleanField(default=False)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "website_inquiries"
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.full_name} ({self.website})"

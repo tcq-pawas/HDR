@@ -1,6 +1,7 @@
 from rest_framework import generics, permissions, status, filters
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiTypes
 from django.shortcuts import get_object_or_404
 from django.db.models import Count, Sum, Avg, Q
 from django.contrib.auth.models import User
@@ -54,7 +55,11 @@ class AdminProfileView(generics.RetrieveUpdateAPIView):
         return profile
 
 
+@extend_schema(tags=['Administration'])
 class SystemSettingsListCreateView(generics.ListCreateAPIView):
+    """
+    List and create system settings
+    """
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
@@ -72,7 +77,11 @@ class SystemSettingsListCreateView(generics.ListCreateAPIView):
         return SystemSettingsSerializer
 
 
+@extend_schema(tags=['Administration'])
 class SystemSettingsDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Retrieve, update, or delete system settings
+    """
     serializer_class = SystemSettingsSerializer
     permission_classes = [permissions.IsAuthenticated]
     queryset = SystemSettings.objects.all()
@@ -87,7 +96,11 @@ class SystemSettingsDetailView(generics.RetrieveUpdateDestroyAPIView):
         return obj
 
 
+@extend_schema(tags=['Administration'])
 class DashboardWidgetListCreateView(generics.ListCreateAPIView):
+    """
+    List and create dashboard widgets
+    """
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
@@ -105,7 +118,11 @@ class DashboardWidgetListCreateView(generics.ListCreateAPIView):
         return DashboardWidgetSerializer
 
 
+@extend_schema(tags=['Administration'])
 class DashboardWidgetDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Retrieve, update, or delete dashboard widgets
+    """
     serializer_class = DashboardWidgetSerializer
     permission_classes = [permissions.IsAuthenticated]
     queryset = DashboardWidget.objects.all()
@@ -120,7 +137,11 @@ class DashboardWidgetDetailView(generics.RetrieveUpdateDestroyAPIView):
         return obj
 
 
+@extend_schema(tags=['Administration'])
 class UserPermissionListCreateView(generics.ListCreateAPIView):
+    """
+    List and create user permissions
+    """
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
@@ -147,7 +168,11 @@ class UserPermissionListCreateView(generics.ListCreateAPIView):
         serializer.save(granted_by=self.request.user)
 
 
+@extend_schema(tags=['Administration'])
 class UserPermissionDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Retrieve, update, or delete user permissions
+    """
     serializer_class = UserPermissionSerializer
     permission_classes = [permissions.IsAuthenticated]
     queryset = UserPermission.objects.select_related('user', 'granted_by')
@@ -162,7 +187,11 @@ class UserPermissionDetailView(generics.RetrieveUpdateDestroyAPIView):
         return obj
 
 
+@extend_schema(tags=['Administration'])
 class ActivityLogListView(generics.ListAPIView):
+    """
+    List activity logs with filtering and search
+    """
     serializer_class = ActivityLogSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
@@ -846,8 +875,11 @@ def delete_user(request, user_id):
 
 # ==================== Property Review Views ====================
 
+@extend_schema(tags=['Properties'])
 class PropertyReviewListView(generics.ListAPIView):
-    """List all properties for admin review with filtering"""
+    """
+    List all properties for admin review with filtering
+    """
     serializer_class = PropertyListSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
@@ -896,8 +928,11 @@ class PropertyReviewListView(generics.ListAPIView):
         return queryset
 
 
+@extend_schema(tags=['Properties'])
 class PropertyReviewDetailView(generics.RetrieveAPIView):
-    """Get detailed property information for review"""
+    """
+    Get detailed property information for review
+    """
     serializer_class = PropertyDetailSerializer
     permission_classes = [permissions.IsAuthenticated]
     queryset = Property.objects.select_related('seller', 'assigned_agent', 'created_by', 'last_updated_by')
@@ -912,6 +947,7 @@ class PropertyReviewDetailView(generics.RetrieveAPIView):
         return obj
 
 
+@extend_schema(tags=['Properties'])
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
 def approve_property(request, property_id):
@@ -980,6 +1016,7 @@ def approve_property(request, property_id):
     })
 
 
+@extend_schema(tags=['Properties'])
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
 def reject_property(request, property_id):
@@ -1057,6 +1094,7 @@ def reject_property(request, property_id):
     })
 
 
+@extend_schema(tags=['Properties'])
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
 def property_review_stats(request):

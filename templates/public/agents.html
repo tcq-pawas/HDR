@@ -183,7 +183,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(15, 106, 60, 0.85);
+        /* background: rgba(15, 106, 60, 0.85); */
     }
 
     .hero-content {
@@ -198,6 +198,7 @@
         font-weight: 700;
         margin-bottom: 12px;
         font-family: var(--font-heading);
+        color: #fff;
     }
 
     .hero-subtitle {
@@ -226,7 +227,7 @@
 
     /* Search Section */
     .search-section {
-        margin-top: -70px;
+        margin-top: 30px;
         position: relative;
         z-index: 2;
         padding-bottom: 40px;
@@ -650,8 +651,14 @@
         .agents-grid {
             grid-template-columns: repeat(3, 1fr);
         }
+        .agents-hero {
+            height: 280px;
+        }
         .hero-title {
             font-size: 36px;
+        }
+        .hero-subtitle {
+            font-size: 16px;
         }
         .hero-features {
             gap: 24px;
@@ -672,15 +679,35 @@
         .agents-grid {
             grid-template-columns: 1fr;
         }
+        .agents-hero {
+            height: auto;
+            min-height: 300px;
+            padding: 40px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .hero-content {
+            padding: 0;
+            max-width: 100%;
+        }
         .hero-title {
             font-size: 28px;
+            margin-bottom: 8px;
+            color: #fff;
         }
         .hero-subtitle {
-            font-size: 16px;
+            font-size: 14px;
+            margin-bottom: 20px;
         }
         .hero-features {
             flex-direction: column;
-            gap: 16px;
+            gap: 12px;
+            font-size: 14px;
+            align-items: center;
+        }
+        .hero-feature {
+            justify-content: center;
         }
         .search-card {
             width: 100%;
@@ -701,6 +728,32 @@
         .popular-searches {
             flex-direction: column;
             align-items: flex-start;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .agents-hero {
+            height: auto;
+            min-height: 260px;
+            padding: 30px 15px;
+        }
+        .hero-title {
+            font-size: 22px;
+            margin-bottom: 6px;
+        }
+        .hero-subtitle {
+            font-size: 13px;
+            margin-bottom: 16px;
+        }
+        .hero-features {
+            gap: 10px;
+            font-size: 13px;
+        }
+        .hero-feature {
+            gap: 6px;
+        }
+        .hero-feature i {
+            font-size: 18px;
         }
     }
 </style>

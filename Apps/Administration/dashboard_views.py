@@ -14,6 +14,7 @@ from Apps.Administration.models import ActivityLog, SystemMetrics, UserPermissio
 from Apps.Customer.models import CustomerProfile, Inquiry, SavedProperty, PropertyViewing
 from Apps.Investor.models import InvestorProfile, Investment, InvestmentListing, ROIData
 from Apps.PublicPage.models import Property
+from Apps.PublicPage.models import ContactInquiry
 
 
 class AdminDashboardView(AdminDashboardMixin, TemplateView):
@@ -302,8 +303,8 @@ class InquiryManagementView(AdminDashboardMixin, TemplateView):
         from datetime import timedelta
         from django.core.paginator import Paginator
         
-        enquiries = WebsiteContactInquiry.objects.all().order_by('-created_at')
-        all_enquiries = WebsiteContactInquiry.objects.all()
+        enquiries = ContactInquiry.objects.all().order_by('-created_at')
+        all_enquiries = ContactInquiry.objects.all()
 
         # Search
         search = self.request.GET.get('search', '').strip()
@@ -363,7 +364,7 @@ class InquiryManagementView(AdminDashboardMixin, TemplateView):
         context['pending_count'] = all_enquiries.filter(status='new').count()
         context['today_count'] = all_enquiries.filter(created_at__date=timezone.now().date()).count()
 
-        context['status_choices'] = WebsiteContactInquiry.STATUS_CHOICES
+        context['status_choices'] = ContactInquiry.STATUS_CHOICES
         context['search'] = search
         context['selected_status'] = status
         context['selected_budget'] = budget
@@ -371,9 +372,9 @@ class InquiryManagementView(AdminDashboardMixin, TemplateView):
         context['current_sort'] = sort_by
         
         # Get distinct budget values for filter dropdown
-        budget_list = list(set(WebsiteContactInquiry.objects.exclude(
-            investment_budget__isnull=True
-        ).exclude(investment_budget='').values_list('investment_budget', flat=True)))
+        budget_list = list(set(ContactInquiry.objects.exclude(
+            budget__isnull=True
+        ).exclude(budget='').values_list('budget', flat=True)))
         
         # Sort budgets - put "Below" first, then sort by size
         def budget_sort_key(budget_str):
@@ -794,17 +795,17 @@ class InquiryBulkActionView(AdminDashboardMixin, TemplateView):
 
         selected_ids = request.POST.getlist('selected_ids')
         bulk_action = request.POST.get('bulk_action')
-        queryset = WebsiteContactInquiry.objects.filter(id__in=selected_ids)
+        queryset = ContactInquiry.objects.filter(id__in=selected_ids)
 
-        if bulk_action == 'mark_contacted':
-            queryset.update(status='contacted')
-        elif bulk_action == 'mark_follow_up':
-            queryset.update(status='follow_up')
-        elif bulk_action == 'mark_converted':
-            queryset.update(status='converted')
-        elif bulk_action == 'mark_closed':
-            queryset.update(status='closed')
-        elif bulk_action == 'delete':
+        # if bulk_action == 'mark_contacted':
+        #     queryset.update(status='contacted')
+        # elif bulk_action == 'mark_follow_up':
+        #     queryset.update(status='follow_up')
+        # elif bulk_action == 'mark_converted':
+        #     queryset.update(status='converted')
+        # elif bulk_action == 'mark_closed':
+        #     queryset.update(status='closed')
+        if bulk_action == 'delete':
             queryset.delete()
 
         return redirect('admin_dash:inquiry-management-page')
@@ -812,7 +813,7 @@ class InquiryBulkActionView(AdminDashboardMixin, TemplateView):
 
 class InquiryExportCSVView(AdminDashboardMixin, TemplateView):
     def get(self, request, *args, **kwargs):
-        from Apps.PublicPage.models import Inquiry as WebsiteContactInquiry
+        # from Apps.PublicPage.models import Inquiry as ContactInquiry
         from django.http import HttpResponse
         import csv
 
@@ -821,10 +822,10 @@ class InquiryExportCSVView(AdminDashboardMixin, TemplateView):
         writer = csv.writer(response)
         writer.writerow(['Enquiry ID', 'Full Name', 'Phone', 'Email', 'Budget', 'Message', 'Status', 'Submitted At'])
 
-        for e in WebsiteContactInquiry.objects.all().order_by('-created_at'):
+        for e in ContactInquiry.objects.all().order_by('-created_at'):
             writer.writerow([
-                e.enquiry_id, e.full_name, e.phone_number, e.email,
-                e.investment_budget, e.message, e.get_status_display(),
+                e.enquiry_id, e.full_name, e.phone, e.email,
+                e.budget, e.message, e.get_status_display(),
                 e.created_at.strftime('%d %b %Y, %I:%M %p')
             ])
         return response
@@ -832,7 +833,7 @@ class InquiryExportCSVView(AdminDashboardMixin, TemplateView):
 
 class InquiryExportExcelView(AdminDashboardMixin, TemplateView):
     def get(self, request, *args, **kwargs):
-        from Apps.PublicPage.models import Inquiry as WebsiteContactInquiry
+        # from Apps.PublicPage.models import Inquiry as ContactInquiry
         from django.http import HttpResponse
         import openpyxl # type: ignore
 
@@ -841,10 +842,10 @@ class InquiryExportExcelView(AdminDashboardMixin, TemplateView):
         ws.title = "Enquiries"
         ws.append(['Enquiry ID', 'Full Name', 'Phone', 'Email', 'Budget', 'Message', 'Status', 'Submitted At'])
 
-        for e in WebsiteContactInquiry.objects.all().order_by('-created_at'):
+        for e in ContactInquiry.objects.all().order_by('-created_at'):
             ws.append([
-                e.enquiry_id, e.full_name, e.phone_number, e.email,
-                e.investment_budget, e.message, e.get_status_display(),
+                e.enquiry_id, e.full_name, e.phone, e.email,
+                e.budget, e.message, e.get_status_display(),
                 e.created_at.strftime('%d %b %Y, %I:%M %p')
             ])
 
@@ -860,28 +861,33 @@ class InquiryDetailPageView(AdminDashboardMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        from Apps.PublicPage.models import Inquiry as WebsiteContactInquiry
+        # from Apps.PublicPage.models import Inquiry as ContactInquiry
         
         enquiry_pk = kwargs.get('pk')
-        enquiry = get_object_or_404(WebsiteContactInquiry, pk=enquiry_pk)
+        enquiry = get_object_or_404(ContactInquiry, pk=enquiry_pk)
         
+        # Automatically mark as viewed
+        if enquiry.status == "new":
+            enquiry.status = "viewed"
+            enquiry.save(update_fields=["status"])
+    
         context['enquiry'] = enquiry
-        context['status_choices'] = WebsiteContactInquiry.STATUS_CHOICES
+        context['status_choices'] = ContactInquiry.STATUS_CHOICES
         return context
 
     def post(self, request, *args, **kwargs):
         
-        from Apps.PublicPage.models import Inquiry as WebsiteContactInquiry
+        from Apps.PublicPage.models import Inquiry as ContactInquiry
         from django.utils import timezone
         from django.http import JsonResponse
 
-        enquiry = get_object_or_404(WebsiteContactInquiry, pk=kwargs.get('pk'))
+        enquiry = get_object_or_404(ContactInquiry, pk=kwargs.get('pk'))
         action = request.POST.get('action')
         is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
 
         if action == 'update_status':
             new_status = request.POST.get('status')
-            if new_status in dict(WebsiteContactInquiry.STATUS_CHOICES):
+            if new_status in dict(ContactInquiry.STATUS_CHOICES):
                 enquiry.status = new_status
                 enquiry.save()
                 if is_ajax:
@@ -911,9 +917,9 @@ class InquiryDetailPageView(AdminDashboardMixin, TemplateView):
 class InquiryDeleteView(AdminDashboardMixin, TemplateView):
 
     def post(self, request, *args, **kwargs):
-        from Apps.PublicPage.models import Inquiry as WebsiteContactInquiry
+        # from Apps.PublicPage.models import Inquiry as ContactInquiry
 
-        enquiry = get_object_or_404(WebsiteContactInquiry, pk=kwargs.get('pk'))
+        enquiry = get_object_or_404(ContactInquiry, pk=kwargs.get('pk'))
         enquiry.delete()
 
         return redirect('admin_dash:inquiry-management-page')
