@@ -8,6 +8,8 @@ import os
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
+from drf_spectacular.types import OpenApiTypes
 from django.db import transaction
 from django.shortcuts import render
 from django.conf import settings
@@ -27,6 +29,48 @@ class ContactInquiryAPIView(APIView):
     
     Accepts JSON requests with dynamic validation based on website configuration.
     """
+    
+    @extend_schema(
+        tags=['Contact Inquiry'],
+        summary='Submit contact inquiry',
+        description='Submit a contact inquiry from any configured website (HeyDay Realty or TheCodiQ Global). The API dynamically validates fields based on the website configuration.',
+        request=ContactInquirySerializer,
+        responses={
+            200: ContactInquiryResponseSerializer,
+            400: ContactInquiryResponseSerializer,
+            500: ContactInquiryResponseSerializer,
+        },
+        examples=[
+            OpenApiExample(
+                'HeyDay Realty Inquiry',
+                summary='Submit a property inquiry for HeyDay Realty',
+                value={
+                    'website': 'heyday',
+                    'full_name': 'John Doe',
+                    'phone_number': '+1234567890',
+                    'email': 'john@example.com',
+                    'subject': 'Property Inquiry',
+                    'preferred_contact_method': 'email',
+                    'property_type': 'apartment',
+                    'preferred_location': 'Downtown',
+                    'budget_range': '10m_20m',
+                    'area_size': '1000_2000',
+                    'message': 'I am interested in this property.'
+                }
+            ),
+            OpenApiExample(
+                'TheCodiQ Global Inquiry',
+                summary='Submit a website inquiry for TheCodiQ Global',
+                value={
+                    'website': 'thecodiq',
+                    'full_name': 'Jane Smith',
+                    'phone_number': '+9876543210',
+                    'email': 'jane@example.com',
+                    'message': 'I would like to discuss a project.'
+                }
+            )
+        ]
+    )
     
     def post(self, request):
         """

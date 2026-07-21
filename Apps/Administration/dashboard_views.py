@@ -164,7 +164,7 @@ class AdminDashboardView(AdminDashboardMixin, TemplateView):
                 status='converted',
                 created_at__gte=thirty_days_ago
             ).count(),
-            'lost_leads': jects.filter(
+            'lost_leads': Inquiry.objects.filter(
                 status='lost',
                 created_at__gte=thirty_days_ago
             ).count(),
@@ -581,7 +581,7 @@ class UserProfileView(AdminDashboardMixin, TemplateView):
                 context['customer_data'] = {
                     'purchased_properties': 0,  # Would come from property purchase tracking
                     'saved_properties': SavedProperty.objects.filter(customer=user).count(),
-                    'inquiries': jects.filter(customer=user).count(),
+                    'inquiries': Inquiry.objects.filter(customer=user).count(),
                     'documents': 0,  # Would come from a document model
                 }
             except CustomerProfile.DoesNotExist:

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     # Third-party apps
     'rest_framework',
     'django_filters',
+    'drf_spectacular',
     
     # Custom Apps
     'Apps.PublicPage',
@@ -183,6 +184,47 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend',
         'rest_framework.filters.SearchFilter',
         'rest_framework.filters.OrderingFilter',
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+# drf-spectacular settings
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'HeyDay Realty API',
+    'DESCRIPTION': 'Comprehensive API for HeyDay Realty platform including Administration, Customer, Investor, Agent, and Property management',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'COMPONENT_SPLIT_REQUEST': True,
+    'COMPONENT_NO_READ_ONLY_REQUIRED': True,
+    'TAGS': [
+        {
+            'name': 'Administration',
+            'description': 'Admin dashboard, user management, system settings, and contact inquiry APIs'
+        },
+        {
+            'name': 'Contact Inquiry',
+            'description': 'Public contact form submissions from multiple websites'
+        },
+        {
+            'name': 'Customer',
+            'description': 'Customer-facing APIs for property browsing and inquiries'
+        },
+        {
+            'name': 'Investor',
+            'description': 'Investor portal APIs for investment management'
+        },
+        {
+            'name': 'Agent',
+            'description': 'Agent dashboard and property management APIs'
+        },
+        {
+            'name': 'Properties',
+            'description': 'Property listing, search, and management APIs'
+        },
+        {
+            'name': 'Authentication',
+            'description': 'User authentication and authorization'
+        },
     ],
 }
 
