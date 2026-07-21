@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>{% block title %}{% if 'owner' in request.user.groups.all|stringformat:"s" %}Owner{% else %}Agent{% endif %}
         Dashboard | HeyDay Realty{% endblock %}</title>
     <link rel="icon" href="{% static 'img/favicon.ico' %}">
@@ -15,9 +15,122 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{% static 'css/agent-dashboard.css' %}?v=2">
-    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+    <link rel="stylesheet" href="{% static 'css/agent-dashboard.css' %}?v=4">
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}?v=3">
     {% block extra_css %}{% endblock %}
+    <style>
+        /* Critical Mobile Fixes - Inline to ensure they load */
+        @media (max-width: 992px) {
+            .agent-mobile-toggle {
+                display: block !important;
+            }
+            /* Fix offcanvas active state for tablet */
+            .agent-sidebar-offcanvas .nav-link.active {
+                background: #ffffff !important;
+                color: #0d9488 !important;
+                font-weight: 600 !important;
+            }
+            .agent-sidebar-offcanvas .nav-link.active i {
+                color: #0d9488 !important;
+            }
+        }
+        @media (min-width: 993px) {
+            .agent-mobile-toggle {
+                display: none !important;
+            }
+        }
+        @media (max-width: 768px) {
+            .agent-header {
+                left: 0 !important;
+                width: 100% !important;
+                max-width: 100vw !important;
+            }
+            .agent-sidebar {
+                display: none !important;
+            }
+            .agent-main {
+                margin-left: 0 !important;
+                padding: 15px !important;
+                width: 100% !important;
+                max-width: 100vw !important;
+            }
+            .agent-layout {
+                margin-top: 60px !important;
+                width: 100% !important;
+                max-width: 100vw !important;
+            }
+            .header-center {
+                display: none !important;
+            }
+            .kpi-cards-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 0.5rem !important;
+            }
+            /* Ensure mobile toggle button is visible */
+            .agent-mobile-toggle {
+                display: block !important;
+                position: fixed !important;
+                top: 12px !important;
+                left: 12px !important;
+                z-index: 9999 !important;
+                background: #0abfa0 !important;
+                color: white !important;
+                border: none !important;
+                border-radius: 8px !important;
+                padding: 10px 15px !important;
+                cursor: pointer !important;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2) !important;
+                font-size: 1.25rem !important;
+            }
+            /* Ensure offcanvas is visible */
+            .agent-sidebar-offcanvas {
+                display: block !important;
+                background: #5ecdc0 !important;
+                width: 280px !important;
+            }
+            .agent-sidebar-offcanvas .nav-link {
+                color: white !important;
+                padding: 12px 20px !important;
+                display: block !important;
+                text-decoration: none !important;
+            }
+            .agent-sidebar-offcanvas .nav-link i {
+                margin-right: 10px !important;
+            }
+            .agent-sidebar-offcanvas .nav-link.active {
+                background: #ffffff !important;
+                color: #0d9488 !important;
+                font-weight: 600 !important;
+            }
+            .agent-sidebar-offcanvas .nav-link.active i {
+                color: #0d9488 !important;
+            }
+            .agent-sidebar-offcanvas .brand-logo {
+                color: white !important;
+                font-size: 1.2rem !important;
+            }
+        }
+        @media (max-width: 480px) {
+            .kpi-cards-grid {
+                grid-template-columns: 1fr !important;
+            }
+            .agent-main {
+                padding: 10px !important;
+            }
+            .agent-mobile-toggle {
+                padding: 8px 12px !important;
+                font-size: 1.1rem !important;
+            }
+        }
+        html, body {
+            overflow-x: hidden !important;
+            max-width: 100vw !important;
+        }
+        * {
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -140,33 +253,119 @@
 
     <!-- Main Layout -->
     <div class="agent-layout">
-        <!-- Sidebar -->
-        <aside class="agent-sidebar" id="agentSidebar">
-            <div class="sidebar-content">
+        <!-- Bootstrap Offcanvas Sidebar -->
+        <div class="offcanvas offcanvas-start agent-sidebar-offcanvas" tabindex="-1" id="agentSidebarOffcanvas" aria-labelledby="agentSidebarOffcanvasLabel">
+            <div class="offcanvas-header">
+                <a class="brand-logo" href="{% url 'agent:dashboard' %}" onclick="closeOffcanvasAndNavigate(event, this.href)">
+                    <img src="{% static 'img/logo.png' %}" alt="HeyDay Realty">
+                    <span>HeyDay Realty</span>
+                </a>
+                <button type="button" class="btn-close text-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body sidebar-content">
+                <nav class="sidebar-nav">
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="{% url 'agent:dashboard' %}"
+                                class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" onclick="closeOffcanvasAndNavigate(event, this.href)">
+                                <i class="bi bi-speedometer2"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
 
+                        <li class="nav-item">
+                            <a href="{% url 'agent:property_list' %}"
+                                class="nav-link {% if request.resolver_match.url_name in 'property_list property_add property_edit property_type_select' %}active{% endif %}" onclick="closeOffcanvasAndNavigate(event, this.href)">
+                                <i class="bi bi-houses"></i>
+                                <span>Properties</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{% url 'agent:lead_list' %}"
+                                class="nav-link {% if request.resolver_match.url_name in 'lead_list lead_detail lead_edit' %}active{% endif %}" onclick="closeOffcanvasAndNavigate(event, this.href)">
+                                <i class="bi bi-people"></i>
+                                <span>Leads</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{% url 'agent:site_visit_list' %}"
+                                class="nav-link {% if request.resolver_match.url_name in 'site_visit_list site_visit_add site_visit_detail' %}active{% endif %}" onclick="closeOffcanvasAndNavigate(event, this.href)">
+                                <i class="bi bi-calendar-event"></i>
+                                <span>Site Visits</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{% url 'agent:booking_list' %}"
+                                class="nav-link {% if request.resolver_match.url_name in 'booking_list booking_add booking_detail' %}active{% endif %}" onclick="closeOffcanvasAndNavigate(event, this.href)">
+                                <i class="bi bi-cash-stack"></i>
+                                <span>Bookings</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{% url 'agent:commission_list' %}"
+                                class="nav-link {% if request.resolver_match.url_name in 'commission_list commission_detail' %}active{% endif %}" onclick="closeOffcanvasAndNavigate(event, this.href)">
+                                <i class="bi bi-currency-dollar"></i>
+                                <span>Commissions</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{% url 'agent:customer_list' %}"
+                                class="nav-link {% if request.resolver_match.url_name in 'customer_list customer_detail' %}active{% endif %}" onclick="closeOffcanvasAndNavigate(event, this.href)">
+                                <i class="bi bi-person-lines-fill"></i>
+                                <span>Customers</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{% url 'agent:document_list' %}"
+                                class="nav-link {% if request.resolver_match.url_name in 'document_list document_add' %}active{% endif %}" onclick="closeOffcanvasAndNavigate(event, this.href)">
+                                <i class="bi bi-file-earmark"></i>
+                                <span>Documents</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{% url 'agent:communication_list' %}"
+                                class="nav-link {% if request.resolver_match.url_name in 'communication_list communication_send message_template_list' %}active{% endif %}" onclick="closeOffcanvasAndNavigate(event, this.href)">
+                                <i class="bi bi-chat-dots"></i>
+                                <span>Communication</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{% url 'agent:reports' %}"
+                                class="nav-link {% if request.resolver_match.url_name == 'reports' %}active{% endif %}" onclick="closeOffcanvasAndNavigate(event, this.href)">
+                                <i class="bi bi-graph-up"></i>
+                                <span>Reports</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <div class="sidebar-footer mt-auto">
+                    <a href="{% url 'auth:logout' %}" class="logout-btn" onclick="closeOffcanvasAndNavigate(event, this.href)">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Desktop Sidebar -->
+        <aside class="agent-sidebar d-none d-lg-flex" id="agentSidebar">
+            <div class="sidebar-content">
                 <!-- Logo -->
                 <a class="brand-logo" href="{% url 'agent:dashboard' %}">
                     <img src="{% static 'img/logo.png' %}" alt="HeyDay Realty">
                     <span>HeyDay Realty</span>
                 </a>
 
-                <!-- Profile -->
-                <!-- <div class="sidebar-profile">
-                    <div class="profile-avatar">
-                        {% if agent_profile.profile_image %}
-                        <img src="{{ agent_profile.profile_image.url }}" alt="Profile">
-                        {% else %}
-                        {{ user.first_name|default:user.username|slice:":1"|upper }}
-                        {% endif %}
-                    </div>
-                    <div class="profile-info">
-                        <span class="profile-name">{{ user.first_name|default:user.username }}</span>
-                        <span class="profile-role">Agent</span>
-                    </div>
-                </div> -->
-
                 <nav class="sidebar-nav">
-
                     <ul class="nav-list">
                         <li class="nav-item">
                             <a href="{% url 'agent:dashboard' %}"
@@ -247,7 +446,6 @@
                                 <span>Reports</span>
                             </a>
                         </li>
-
                     </ul>
                 </nav>
 
@@ -275,17 +473,28 @@
     </div>
 
     <!-- Mobile Menu Toggle Button -->
-    <button class="agent-mobile-toggle" id="agentMobileToggle">
+    <button class="agent-mobile-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#agentSidebarOffcanvas" aria-controls="agentSidebarOffcanvas" style="display: none;">
         <i class="bi bi-list"></i>
     </button>
-
-    <!-- Overlay for mobile -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
     <script src="{% static 'js/agent-dashboard.js' %}"></script>
+    <script>
+        // Function to close offcanvas and navigate
+        function closeOffcanvasAndNavigate(event, url) {
+            event.preventDefault();
+            const offcanvasElement = document.getElementById('agentSidebarOffcanvas');
+            const offcanvasInstance = bootstrap.Offcanvas.getInstance(offcanvasElement);
+            if (offcanvasInstance) {
+                offcanvasInstance.hide();
+            }
+            setTimeout(() => {
+                window.location.href = url;
+            }, 300);
+        }
+    </script>
     {% block extra_js %}{% endblock %}
 </body>
 
