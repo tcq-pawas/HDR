@@ -28,16 +28,30 @@ class ContactInquiryAPIView(APIView):
     POST /api/contact/
     
     Accepts JSON requests with dynamic validation based on website configuration.
+    
+    Authentication: API key via X-API-Key header
     """
+    authentication_classes = []
+    permission_classes = []
     
     @extend_schema(
         tags=['Contact Inquiry'],
         summary='Submit contact inquiry',
-        description='Submit a contact inquiry from any configured website (HeyDay Realty or TheCodiQ Global). The API dynamically validates fields based on the website configuration.',
+        description='Submit a contact inquiry from any configured website (HeyDay Realty or TheCodiQ Global). The API dynamically validates fields based on the website configuration. Requires X-API-Key header for authentication.',
+        parameters=[
+            OpenApiParameter(
+                name='X-API-Key',
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.HEADER,
+                description='API key for authentication (HeyDay or CodiQ key)',
+                required=True
+            )
+        ],
         request=ContactInquirySerializer,
         responses={
             200: ContactInquiryResponseSerializer,
             400: ContactInquiryResponseSerializer,
+            401: ContactInquiryResponseSerializer,
             500: ContactInquiryResponseSerializer,
         },
         examples=[
@@ -76,15 +90,46 @@ class ContactInquiryAPIView(APIView):
         """
         Handle contact inquiry submission
         
+        Request headers must include:
+        - X-API-Key: Valid API key for the website
+        
         Request body must include:
         - website: 'heyday' or 'thecodiq'
         - Other required fields based on website configuration
         
         Returns:
             - 200: Success response
+            - 401: Invalid API key
             - 400: Validation error
             - 500: Unexpected error
         """
+        # Validate API key
+        api_key = request.headers.get('X-API-Key')
+        if not api_key:
+            response_serializer = ContactInquiryResponseSerializer({
+                'success': False,
+                'message': 'API key is required. Please provide X-API-Key header.'
+            })
+            return Response(
+                response_serializer.data,
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+        
+        valid_keys = [
+            getattr(settings, 'CONTACT_API_KEY_HEYDAY', ''),
+            getattr(settings, 'CONTACT_API_KEY_CODIQ', '')
+        ]
+        
+        if api_key not in valid_keys:
+            response_serializer = ContactInquiryResponseSerializer({
+                'success': False,
+                'message': 'Invalid API key. Access denied.'
+            })
+            return Response(
+                response_serializer.data,
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+        
         try:
             # Validate and deserialize request
             serializer = ContactInquirySerializer(

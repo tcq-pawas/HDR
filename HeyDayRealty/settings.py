@@ -240,3 +240,7 @@ LOGOUT_REDIRECT_URL = '/auth/login/'
 # Email settings
 EMAIL_BACKEND = 'Apps.Administration.email_backend.SystemSettingsEmailBackend'
 DEFAULT_FROM_EMAIL = 'noreply@heydayrealty.com'
+
+# Contact API Keys for external website submissions
+CONTACT_API_KEY_HEYDAY = os.getenv('CONTACT_API_KEY_HEYDAY', 'xKhrhdxHYL271hWtOndxc0jTOdIh3DsQPwE102rxIOnBBDqa5kP45bCJKQyQPdhI')
+CONTACT_API_KEY_CODIQ = os.getenv('CONTACT_API_KEY_CODIQ', 'xKhrhdxHYL271hWtOndxc0jTOdIh3DsQPwE102rxIOnBBDqa5kP45bCJKQyQPdhI')
