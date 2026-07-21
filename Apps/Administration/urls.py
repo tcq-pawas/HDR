@@ -8,6 +8,7 @@ from .dashboard_views import (
     AdminPropertyListView
 )
 from . import investor_views
+from . import communication_views
 from Apps.Agent import views as agent_views
 
 app_name = 'admin_dash'
@@ -39,6 +40,9 @@ urlpatterns = [
     path('inquiries/bulk-action/', InquiryBulkActionView.as_view(), name='inquiry-bulk-action'),
     path('inquiries/export/csv/', InquiryExportCSVView.as_view(), name='inquiry-export-csv'),
     path('inquiries/export/excel/', InquiryExportExcelView.as_view(), name='inquiry-export-excel'),
+    # Communication
+    path('communications/', communication_views.AdminCommunicationListView.as_view(), name='communication-list'),
+    path('communications/send/', communication_views.AdminCommunicationSendView.as_view(), name='communication-send'),
       
     #Add Property
     path('property/add/', agent_views.property_type_select, name='property_type_select'),

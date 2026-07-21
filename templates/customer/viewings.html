@@ -98,7 +98,7 @@
 
     inset:0;
 
-    background: linear-gradient(90deg, rgba(15,118,110,0.80) 0%, rgba(16,185,129,0.45) 40%, rgba(59,130,246,0.25) 70%, rgba(6,78,59,0.75) 100%);
+    /* background: linear-gradient(90deg, rgba(15,118,110,0.80) 0%, rgba(16,185,129,0.45) 40%, rgba(59,130,246,0.25) 70%, rgba(6,78,59,0.75) 100%); */
 
   }
 
@@ -129,6 +129,25 @@
   @media (max-width: 992px){
 
     .premium-hero-inner{ grid-template-columns: 1fr; }
+    .premium-hero{ height: 280px; }
+
+  }
+
+  @media (max-width: 768px){
+
+    .premium-hero{ height: 240px; }
+    .premium-hero-inner{ padding: 1.2rem 1.4rem; }
+    .hero-title{ font-size: 1.5rem; }
+    .hero-subtitle{ font-size: 0.9rem; }
+
+  }
+
+  @media (max-width: 480px){
+
+    .premium-hero{ height: 200px; }
+    .premium-hero-inner{ padding: 1rem 1.2rem; }
+    .hero-title{ font-size: 1.25rem; }
+    .hero-subtitle{ font-size: 0.85rem; }
 
   }
 

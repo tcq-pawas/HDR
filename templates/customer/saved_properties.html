@@ -51,7 +51,7 @@
         content:"";
         position:absolute;
         inset:0;
-        background: linear-gradient(90deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.06) 35%, rgba(255,255,255,0) 70%);
+        /* background: linear-gradient(90deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.06) 35%, rgba(255,255,255,0) 70%); */
         pointer-events:none;
     }
     .sp-hero-inner{
@@ -115,6 +115,16 @@
     @media (max-width: 768px){
         .sp-meta{ grid-template-columns: 1fr; min-width: unset; }
         .sp-hero-inner{ padding: 1.1rem 1.05rem; }
+        .sp-hero{ height: 240px; }
+        .sp-title{ font-size: 1.5rem; }
+        .sp-subtitle{ font-size: 0.9rem; }
+    }
+
+    @media (max-width: 480px){
+        .sp-hero{ height: 200px; }
+        .sp-hero-inner{ padding: 1rem 1.2rem; }
+        .sp-title{ font-size: 1.25rem; }
+        .sp-subtitle{ font-size: 0.85rem; }
     }
 
     /* KPI Cards */

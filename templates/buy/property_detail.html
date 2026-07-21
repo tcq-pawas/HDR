@@ -73,7 +73,7 @@
         background: white;
         border-radius: 18px;
         border: 1px solid #EAEAEA;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
         padding: 24px;
         margin-bottom: 24px;
     }
@@ -86,15 +86,17 @@
 
     .main-image-container {
         position: relative;
-        background: #f5f5f5;
-        border-radius: 18px 18px 0 0;
+        background: var(--cloud-white);
+        border-radius: 28px 28px 0 0;
         overflow: hidden;
     }
 
     .main-image {
         width: 100%;
-        height: 450px;
-        object-fit: cover;
+        aspect-ratio: 16 / 9;
+        max-height: 600px;
+        object-fit: contain;
+        background: #f5f5f5;
         display: block;
     }
 
@@ -102,7 +104,7 @@
         position: absolute;
         top: 16px;
         left: 16px;
-        background: rgba(0,0,0,0.6);
+        background: rgba(0, 0, 0, 0.6);
         color: white;
         padding: 6px 14px;
         border-radius: 20px;
@@ -118,7 +120,7 @@
         right: 16px;
         width: 44px;
         height: 44px;
-        background: rgba(255,255,255,0.95);
+        background: rgba(255, 255, 255, 0.95);
         border: none;
         border-radius: 50%;
         cursor: pointer;
@@ -127,7 +129,7 @@
         align-items: center;
         justify-content: center;
         z-index: 10;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         transition: all 0.2s;
         color: #6b7a7a;
     }
@@ -157,13 +159,13 @@
     .nav-btn {
         width: 44px;
         height: 44px;
-        background: rgba(255,255,255,0.95);
+        background: rgba(255, 255, 255, 0.95);
         border: none;
         border-radius: 50%;
         cursor: pointer;
         font-size: 1.2rem;
         transition: all 0.2s;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         color: #0F6A3C;
         font-weight: 700;
     }
@@ -183,8 +185,8 @@
     }
 
     .thumbnail {
-        width: 80px;
-        height: 80px;
+        width: 100%;
+        aspect-ratio: 1;
         object-fit: cover;
         border-radius: 12px;
         cursor: pointer;
@@ -735,7 +737,7 @@
 
     .similar-card:hover {
         transform: translateY(-4px);
-        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
     }
 
     .similar-image {
@@ -892,50 +894,58 @@
                 <div class="card gallery-section">
                     <div class="main-image-container">
                         {% if property.featured_image %}
-                            <img src="{{ property.featured_image.url }}" alt="{{ property.title }}" class="main-image" id="mainImage">
+                        <img src="{{ property.featured_image.url }}" alt="{{ property.title }}" class="main-image"
+                            id="mainImage">
                         {% elif property.images.all %}
-                            <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}" class="main-image" id="mainImage">
-                            {% if property.images.count > 1 %}
-                                <div class="image-navigation">
-                                    <button class="nav-btn" onclick="prevImage()">&lt;</button>
-                                    <button class="nav-btn" onclick="nextImage()">&gt;</button>
-                                </div>
-                            {% endif %}
+                        <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}" class="main-image"
+                            id="mainImage">
+                        {% if property.images.count > 1 %}
+                        <div class="image-navigation">
+                            <button class="nav-btn" onclick="prevImage()">&lt;</button>
+                            <button class="nav-btn" onclick="nextImage()">&gt;</button>
+                        </div>
+                        {% endif %}
                         {% else %}
-                            <div style="width:100%; height:450px; background:#f5f5f5; display:flex; align-items:center; justify-content:center; color:#999;">
-                                <i class="bi bi-image" style="font-size:4rem;"></i>
-                            </div>
+                        <div
+                            style="width:100%; height:450px; background:#f5f5f5; display:flex; align-items:center; justify-content:center; color:#999;">
+                            <i class="bi bi-image" style="font-size:4rem;"></i>
+                        </div>
                         {% endif %}
 
                         <div class="posted-badge">Posted 1 day ago</div>
 
                         <!-- Wishlist Button -->
                         {% if user.is_authenticated %}
-                            <form method="post" style="display:inline;" action="{% url 'buy:save_property' property.id %}">
-                                {% csrf_token %}
-                                <button type="submit" class="wishlist-btn {% if is_saved %}saved{% endif %}" title="Add to Wishlist">
-                                    <i class="bi bi-heart-fill"></i>
-                                </button>
-                            </form>
-                        {% else %}
-                            <button class="wishlist-btn" title="Login to save" onclick="alert('Please login to save properties')">
-                                <i class="bi bi-heart"></i>
+                        <form method="post" style="display:inline;" action="{% url 'buy:save_property' property.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="wishlist-btn {% if is_saved %}saved{% endif %}"
+                                title="Add to Wishlist">
+                                <i class="bi bi-heart-fill"></i>
                             </button>
+                        </form>
+                        {% else %}
+                        <button class="wishlist-btn" title="Login to save"
+                            onclick="alert('Please login to save properties')">
+                            <i class="bi bi-heart"></i>
+                        </button>
                         {% endif %}
                     </div>
 
                     <!-- Thumbnail Gallery -->
                     {% if property.images.count > 1 %}
-                        <div class="thumbnail-gallery">
-                            {% for image in property.images.all %}
-                                <img src="{{ image.image.url }}" alt="Thumbnail" class="thumbnail {% if forloop.first %}active{% endif %}" data-index="{{ forloop.counter0 }}" onclick="changeImage(this.src, this.dataset.index)">
-                            {% endfor %}
-                            {% if property.images.count > 5 %}
-                                <div class="thumbnail thumbnail-more" style="background-image: url('{{ property.images.5.image.url }}');">
-                                    +{{ property.images.count|add:"-5" }}
-                                </div>
-                            {% endif %}
+                    <div class="thumbnail-gallery">
+                        {% for image in property.images.all %}
+                        <img src="{{ image.image.url }}" alt="Thumbnail"
+                            class="thumbnail {% if forloop.first %}active{% endif %}"
+                            data-index="{{ forloop.counter0 }}" onclick="changeImage(this.src, this.dataset.index)">
+                        {% endfor %}
+                        {% if property.images.count > 5 %}
+                        <div class="thumbnail thumbnail-more"
+                            style="background-image: url('{{ property.images.5.image.url }}');">
+                            +{{ property.images.count|add:"-5" }}
                         </div>
+                        {% endif %}
+                    </div>
                     {% endif %}
                 </div>
 
@@ -1086,15 +1096,16 @@
                     </p>
                     <div class="map-container">
                         {% if property.google_map_link %}
-                            <iframe src="{{ property.google_map_link }}" allowfullscreen></iframe>
-                            <a href="{{ property.google_map_link }}" target="_blank" class="map-button">
-                                <i class="bi bi-map"></i> Google Maps
-                            </a>
+                        <iframe src="{{ property.google_map_link }}" allowfullscreen></iframe>
+                        <a href="{{ property.google_map_link }}" target="_blank" class="map-button">
+                            <i class="bi bi-map"></i> Google Maps
+                        </a>
                         {% else %}
-                            <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #6b7a7a;">
-                                <i class="bi bi-map" style="font-size: 3rem; margin-right: 12px;"></i>
-                                <span>Map not available</span>
-                            </div>
+                        <div
+                            style="display: flex; align-items: center; justify-content: center; height: 100%; color: #6b7a7a;">
+                            <i class="bi bi-map" style="font-size: 3rem; margin-right: 12px;"></i>
+                            <span>Map not available</span>
+                        </div>
                         {% endif %}
                     </div>
                 </div>
@@ -1116,11 +1127,13 @@
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
                         <div style="background: #f8fafc; padding: 12px; border-radius: 12px;">
                             <div style="font-size: 0.75rem; color: #6b7a7a; margin-bottom: 4px;">Property Type</div>
-                            <div style="font-size: 0.9rem; font-weight: 600; color: #1a2e2a;">{{ property.category|default:"N/A" }}</div>
+                            <div style="font-size: 0.9rem; font-weight: 600; color: #1a2e2a;">{{
+                                property.category|default:"N/A" }}</div>
                         </div>
                         <div style="background: #f8fafc; padding: 12px; border-radius: 12px;">
                             <div style="font-size: 0.75rem; color: #6b7a7a; margin-bottom: 4px;">Area</div>
-                            <div style="font-size: 0.9rem; font-weight: 600; color: #1a2e2a;">{{ property.project_size_acre|default:"N/A" }}</div>
+                            <div style="font-size: 0.9rem; font-weight: 600; color: #1a2e2a;">{{
+                                property.project_size_acre|default:"N/A" }}</div>
                         </div>
                     </div>
                     <div class="price-large">₹{{ property.price|floatformat:0 }}</div>
@@ -1185,7 +1198,7 @@
                             <label for="{{ form.name.id_for_label }}">Name</label>
                             {{ form.name }}
                             {% if form.name.errors %}
-                                <small style="color:#dc3545;">{{ form.name.errors }}</small>
+                            <small style="color:#dc3545;">{{ form.name.errors }}</small>
                             {% endif %}
                         </div>
                         <div class="form-group">
@@ -1196,7 +1209,7 @@
                             <label for="{{ form.email.id_for_label }}">Email</label>
                             {{ form.email }}
                             {% if form.email.errors %}
-                                <small style="color:#dc3545;">{{ form.email.errors }}</small>
+                            <small style="color:#dc3545;">{{ form.email.errors }}</small>
                             {% endif %}
                         </div>
                         <div class="form-group">
@@ -1211,11 +1224,12 @@
                             <label for="{{ form.message.id_for_label }}">Message</label>
                             {{ form.message }}
                             {% if form.message.errors %}
-                                <small style="color:#dc3545;">{{ form.message.errors }}</small>
+                            <small style="color:#dc3545;">{{ form.message.errors }}</small>
                             {% endif %}
                         </div>
                         <button type="submit" class="submit-btn-full">Submit Inquiry</button>
-                        <p class="privacy-note">Your information is secure and will not be shared with third parties.</p>
+                        <p class="privacy-note">Your information is secure and will not be shared with third parties.
+                        </p>
                     </form>
                 </div>
 
@@ -1227,30 +1241,32 @@
                     </div>
                     <div class="similar-scroll">
                         {% for similar in similar_properties|slice:":3" %}
-                            <a href="{% url 'buy:property_detail' similar.id %}" class="similar-card">
-                                {% if similar.featured_image %}
-                                    <img src="{{ similar.featured_image.url }}" alt="{{ similar.title }}" class="similar-image">
-                                {% elif similar.images.all %}
-                                    <img src="{{ similar.images.first.image.url }}" alt="{{ similar.title }}" class="similar-image">
-                                {% else %}
-                                    <div class="similar-image" style="background: #f5f5f5; display: flex; align-items: center; justify-content: center;">
-                                        <i class="bi bi-image" style="font-size: 2rem; color: #999;"></i>
-                                    </div>
-                                {% endif %}
-                                <div class="similar-content">
-                                    <div class="similar-price">₹{{ similar.price|floatformat:0 }}</div>
-                                    <div class="similar-price-label">Total Price</div>
-                                    <h4 class="similar-title">{{ similar.title }}</h4>
-                                    <div class="similar-location">
-                                        <i class="bi bi-geo-alt"></i> {{ similar.location }}
-                                    </div>
-                                    <button class="similar-view-btn">View Details</button>
-                                </div>
-                            </a>
-                        {% empty %}
-                            <div style="padding: 24px; text-align: center; color: #6b7a7a;">
-                                No similar properties available
+                        <a href="{% url 'buy:property_detail' similar.id %}" class="similar-card">
+                            {% if similar.featured_image %}
+                            <img src="{{ similar.featured_image.url }}" alt="{{ similar.title }}" class="similar-image">
+                            {% elif similar.images.all %}
+                            <img src="{{ similar.images.first.image.url }}" alt="{{ similar.title }}"
+                                class="similar-image">
+                            {% else %}
+                            <div class="similar-image"
+                                style="background: #f5f5f5; display: flex; align-items: center; justify-content: center;">
+                                <i class="bi bi-image" style="font-size: 2rem; color: #999;"></i>
                             </div>
+                            {% endif %}
+                            <div class="similar-content">
+                                <div class="similar-price">₹{{ similar.price|floatformat:0 }}</div>
+                                <div class="similar-price-label">Total Price</div>
+                                <h4 class="similar-title">{{ similar.title }}</h4>
+                                <div class="similar-location">
+                                    <i class="bi bi-geo-alt"></i> {{ similar.location }}
+                                </div>
+                                <button class="similar-view-btn">View Details</button>
+                            </div>
+                        </a>
+                        {% empty %}
+                        <div style="padding: 24px; text-align: center; color: #6b7a7a;">
+                            No similar properties available
+                        </div>
                         {% endfor %}
                     </div>
                 </div>

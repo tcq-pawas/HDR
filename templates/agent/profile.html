@@ -1,114 +1,91 @@
 {% extends "agent/agent_base.html" %}
 {% load static %}
 
-{% block title %}Profile | HeyDay Realty{% endblock %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/agent/settings.css' %}">
-<style>
-    .profile-header {
-        display: flex;
-        align-items: center;
-        margin-bottom: 2rem;
-        gap: 1.5rem;
-    }
-    .profile-avatar-large {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        object-fit: cover;
-        background-color: #e2e8f0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2.5rem;
-        color: #64748b;
-    }
-    .profile-info h2 {
-        margin: 0;
-        color: #1e293b;
-    }
-    .profile-info p {
-        margin: 0;
-        color: #64748b;
-    }
-    .profile-details {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 1.5rem;
-        margin-bottom: 2rem;
-    }
-    .detail-group {
-        margin-bottom: 1rem;
-    }
-    .detail-label {
-        font-weight: 600;
-        color: #475569;
-        font-size: 0.9rem;
-        margin-bottom: 0.25rem;
-    }
-    .detail-value {
-        color: #1e293b;
-    }
-</style>
-{% endblock %}
+{% block title %}My Profile | HeyDay Realty{% endblock %}
 
 {% block content %}
-<div class="settings-container">
-    <div class="page-header d-flex justify-content-between align-items-center">
-        <h1>Agent Profile</h1>
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="h4 mb-0 fw-bold text-dark">My Profile</h2>
         <a href="{% url 'agent:settings' %}" class="btn btn-primary">
-            <i class="bi bi-pencil"></i> Edit Profile
+            <i class="bi bi-pencil-square me-2"></i>Edit Profile
         </a>
     </div>
 
-    <div class="settings-card">
-        <div class="profile-header">
-            {% if agent_profile.profile_image %}
-                <img src="{{ agent_profile.profile_image.url }}" alt="Profile" class="profile-avatar-large">
-            {% else %}
-                <div class="profile-avatar-large">
-                    {{ request.user.first_name|default:request.user.username|slice:":1"|upper }}
-                </div>
-            {% endif %}
-            <div class="profile-info">
-                <h2>{{ request.user.get_full_name|default:request.user.username }}</h2>
-                <p>{{ agent_profile.company_name|default:"Independent Agent" }}</p>
-                <p><i class="bi bi-geo-alt"></i> {{ agent_profile.territory|default:"Not specified" }}</p>
-            </div>
-        </div>
-
-        <div class="profile-details">
-            <div>
-                <div class="detail-group">
-                    <div class="detail-label">Email</div>
-                    <div class="detail-value">{{ request.user.email|default:"Not provided" }}</div>
-                </div>
-                <div class="detail-group">
-                    <div class="detail-label">Phone</div>
-                    <div class="detail-value">{{ agent_profile.phone|default:"Not provided" }}</div>
-                </div>
-                <div class="detail-group">
-                    <div class="detail-label">Employee ID</div>
-                    <div class="detail-value">{{ agent_profile.employee_id|default:"Not provided" }}</div>
-                </div>
-            </div>
-            <div>
-                <div class="detail-group">
-                    <div class="detail-label">Commission Rate</div>
-                    <div class="detail-value">{{ agent_profile.commission_rate|default:"0" }}%</div>
-                </div>
-                <div class="detail-group">
-                    <div class="detail-label">Target Sales</div>
-                    <div class="detail-value">₹{{ agent_profile.target_sales|default:"0" }}</div>
+    <div class="row">
+        <div class="col-lg-4 mb-4">
+            <!-- Profile Card -->
+            <div class="card shadow-sm border-0 rounded-4 text-center">
+                <div class="card-body p-5">
+                    <div class="mb-4">
+                        {% if agent_profile.profile_image %}
+                            <img src="{{ agent_profile.profile_image.url }}" alt="Profile Image" class="rounded-circle img-thumbnail" style="width: 150px; height: 150px; object-fit: cover;">
+                        {% else %}
+                            <div class="rounded-circle bg-light d-inline-flex align-items-center justify-content-center text-primary fw-bold" style="width: 150px; height: 150px; font-size: 3rem;">
+                                {{ user.first_name|default:user.username|slice:":1"|upper }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <h4 class="fw-bold mb-1">{{ user.first_name }} {{ user.last_name }}</h4>
+                    <p class="text-muted mb-3">{% if 'owner' in request.user.groups.all|stringformat:"s" %}Property Owner{% else %}Real Estate Agent{% endif %}</p>
+                    
+                    <div class="d-flex justify-content-center gap-2">
+                        {% if agent_profile.is_verified %}
+                            <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill">
+                                <i class="bi bi-patch-check-fill me-1"></i> Verified
+                            </span>
+                        {% else %}
+                            <span class="badge bg-warning bg-opacity-10 text-warning px-3 py-2 rounded-pill">
+                                <i class="bi bi-exclamation-circle-fill me-1"></i> Unverified
+                            </span>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="detail-group">
-            <div class="detail-label">Bio</div>
-            <div class="detail-value">
-                {{ agent_profile.bio|default:"No bio provided."|linebreaks }}
+        <div class="col-lg-8">
+            <!-- Details Card -->
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4">
+                    <h5 class="fw-bold text-dark mb-0">Personal Information</h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row mb-4">
+                        <div class="col-sm-4 text-muted fw-semibold">Full Name</div>
+                        <div class="col-sm-8 text-dark">{{ user.first_name }} {{ user.last_name }}</div>
+                    </div>
+                    <hr class="text-muted opacity-25">
+                    
+                    <div class="row mb-4">
+                        <div class="col-sm-4 text-muted fw-semibold">Email Address</div>
+                        <div class="col-sm-8 text-dark">{{ user.email }}</div>
+                    </div>
+                    <hr class="text-muted opacity-25">
+                    
+                    <div class="row mb-4">
+                        <div class="col-sm-4 text-muted fw-semibold">Phone Number</div>
+                        <div class="col-sm-8 text-dark">{{ agent_profile.phone|default:"Not provided" }}</div>
+                    </div>
+                    <hr class="text-muted opacity-25">
+
+                    <div class="row mb-4">
+                        <div class="col-sm-4 text-muted fw-semibold">Company Name</div>
+                        <div class="col-sm-8 text-dark">{{ agent_profile.company_name|default:"Independent" }}</div>
+                    </div>
+                    <hr class="text-muted opacity-25">
+
+                    <div class="row mb-4">
+                        <div class="col-sm-4 text-muted fw-semibold">Bio</div>
+                        <div class="col-sm-8 text-dark">
+                            {% if agent_profile.bio %}
+                                {{ agent_profile.bio|linebreaks }}
+                            {% else %}
+                                <span class="text-muted fst-italic">No bio provided yet.</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

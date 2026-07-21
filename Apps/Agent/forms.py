@@ -1,14 +1,28 @@
 from django import forms
 from django.contrib.auth.models import User
-from Apps.PublicPage.models import Property
+from Apps.PublicPage.models import Property, LocationData
 from .models import (
     AgentProfile, Lead, LeadFollowUp, SiteVisit, Booking, 
     Installment, Commission, Document, Communication, MessageTemplate
 )
 
+class MultipleFileInput(forms.ClearableFileInput):
+    allow_multiple_selected = True
+
+class MultipleFileField(forms.ImageField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("widget", MultipleFileInput(attrs={'class': 'form-control', 'accept': 'image/*'}))
+        super().__init__(*args, **kwargs)
+
+    def to_python(self, data):
+        if isinstance(data, list) and data:
+            data = data[0]
+        return super().to_python(data)
+
 
 class PropertyForm(forms.ModelForm):
     """Form for creating and editing properties"""
+    featured_image = MultipleFileField(required=False)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -61,7 +75,27 @@ class PropertyForm(forms.ModelForm):
             self.fields['total_area'].required = False
             self.fields['area_unit'].required = False
             self.fields['bedrooms'].required = False
-            self.fields['bathrooms'].required = False
+        # Populate state choices dynamically
+        state_choices = [('', 'Select State')]
+        try:
+            states = LocationData.objects.values_list('state', flat=True).distinct().order_by('state')
+            state_choices += [(s, s) for s in states if s]
+        except Exception:
+            pass
+        self.fields['state'] = forms.ChoiceField(choices=state_choices, required=True, widget=forms.Select(attrs={'class': 'form-select', 'id': 'state_select'}))
+        
+        # Populate city choices dynamically based on existing instance state, or empty
+        city_choices = [('', 'Select City')]
+        try:
+            if self.instance and self.instance.pk and self.instance.state:
+                cities = LocationData.objects.filter(state=self.instance.state).values_list('city', flat=True).distinct().order_by('city')
+                city_choices += [(c, c) for c in cities if c]
+            elif self.data and self.data.get('state'):
+                cities = LocationData.objects.filter(state=self.data.get('state')).values_list('city', flat=True).distinct().order_by('city')
+                city_choices += [(c, c) for c in cities if c]
+        except Exception:
+            pass
+        self.fields['city'] = forms.ChoiceField(choices=city_choices, required=True, widget=forms.Select(attrs={'class': 'form-select', 'id': 'city_select'}))
     
     class Meta:
         model = Property
@@ -161,7 +195,6 @@ class PropertyForm(forms.ModelForm):
             'down_payment': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Down Payment', 'step': '0.01'}),
             'emi_availability': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             # Media Management
-            'featured_image': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
             'property_video': forms.FileInput(attrs={'class': 'form-control', 'accept': 'video/*'}),
             'drone_video': forms.FileInput(attrs={'class': 'form-control', 'accept': 'video/*'}),
             'virtual_tour_360': forms.URLInput(attrs={'class': 'form-control', 'placeholder': '360° Virtual Tour URL'}),
@@ -200,6 +233,7 @@ class PropertyForm(forms.ModelForm):
 
 class AgriculturalLandForm(forms.ModelForm):
     """Form specifically for Agricultural Land properties"""
+    featured_image = MultipleFileField(required=False)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -221,6 +255,15 @@ class AgriculturalLandForm(forms.ModelForm):
             self.fields['featured_image'].required = True
         else:
             self.fields['featured_image'].required = False
+            
+        # Populate state choices dynamically
+        state_choices = [('', 'Select State')]
+        try:
+            states = LocationData.objects.values_list('state', flat=True).distinct().order_by('state')
+            state_choices += [(s, s) for s in states if s]
+        except Exception:
+            pass
+        self.fields['state'] = forms.ChoiceField(choices=state_choices, required=True, widget=forms.Select(attrs={'class': 'form-select', 'id': 'state_select'}))
     
     class Meta:
         model = Property
@@ -339,7 +382,6 @@ class AgriculturalLandForm(forms.ModelForm):
             'appreciation_potential': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Appreciation Potential'}),
             'investment_type': forms.Select(attrs={'class': 'form-select'}),
             # Media
-            'featured_image': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
             'property_video': forms.FileInput(attrs={'class': 'form-control', 'accept': 'video/*'}),
             'drone_video': forms.FileInput(attrs={'class': 'form-control', 'accept': 'video/*'}),
             'virtual_tour_360': forms.URLInput(attrs={'class': 'form-control', 'placeholder': '360° Virtual Tour URL'}),
@@ -589,14 +631,17 @@ class CommunicationForm(forms.ModelForm):
     
     class Meta:
         model = Communication
-        fields = ['communication_type', 'recipient', 'subject', 'message', 'template_used']
+        fields = ['communication_type', 'recipient', 'subject', 'message']
         widgets = {
             'communication_type': forms.Select(attrs={'class': 'form-select'}),
-            'recipient': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Recipient (Phone or Email)'}),
+            'recipient': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Recipient Email Address'}),
             'subject': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Subject'}),
             'message': forms.Textarea(attrs={'class': 'form-control', 'rows': 5, 'placeholder': 'Message'}),
-            'template_used': forms.Select(attrs={'class': 'form-select'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['communication_type'].choices = [('email', 'Email')]
 
 
 class MessageTemplateForm(forms.ModelForm):

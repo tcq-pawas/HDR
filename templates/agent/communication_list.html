@@ -88,7 +88,8 @@
         <select name="property" class="comm-filter-select" onchange="location.href='?property='+this.value">
             <option value="">All Properties</option>
             {% for property in properties %}
-            <option value="{{ property.id }}" {% if property_filter == property.id|stringformat:"s" %}selected{% endif %}>{{ property.title }}</option>
+            <option value="{{ property.id }}" {% if property_filter == property.id|stringformat:"s" %}selected{% endif %}>
+                {{ property.title }}</option>
             {% endfor %}
         </select>
 
@@ -127,8 +128,7 @@
             <tbody>
                 {% if communications %}
                 {% for communication in communications %}
-                <tr class="comm-row"
-                    data-comm-id="{{ communication.id }}"
+                <tr class="comm-row" data-comm-id="{{ communication.id }}"
                     data-customer-name="{{ communication.recipient_name|default:communication.recipient }}"
                     data-customer-email="{{ communication.recipient }}"
                     data-customer-url="{% if communication.lead_id %}{% url 'agent:lead_detail' communication.lead_id %}{% endif %}"
@@ -146,7 +146,8 @@
                     data-attachment-url="{% if communication.attachment %}{{ communication.attachment.url }}{% endif %}">
                     <td>
                         <div class="comm-customer-cell">
-                            <div class="comm-avatar">{{ communication.recipient_name|default:communication.recipient|slice:":1"|upper }}</div>
+                            <div class="comm-avatar">{{
+                                communication.recipient_name|default:communication.recipient|slice:":1"|upper }}</div>
                             <span>{{ communication.recipient_name|default:communication.recipient }}</span>
                         </div>
                     </td>
@@ -158,12 +159,16 @@
                         </div>
                     </td>
                     <td>{{ communication.subject|truncatewords:5|default:"N/A" }}</td>
-                    <td>{{ communication.sent_at|date:"d M Y" }}<br><span class="comm-time">{{ communication.sent_at|date:"h:i A" }}</span></td>
-                    <td><span class="comm-status-badge status-{{ communication.status }}">{{ communication.get_status_display }}</span></td>
+                    <td>{{ communication.sent_at|date:"d M Y" }}<br><span class="comm-time">{{
+                            communication.sent_at|date:"h:i A" }}</span></td>
+                    <td><span class="comm-status-badge status-{{ communication.status }}">{{
+                            communication.get_status_display }}</span></td>
                     <td>
                         <div class="comm-actions">
-                            <button class="comm-action-btn comm-view-btn" title="View"><i class="bi bi-eye"></i></button>
-                            <button class="comm-action-btn" title="More"><i class="bi bi-three-dots-vertical"></i></button>
+                            <button class="comm-action-btn comm-view-btn" title="View"><i
+                                    class="bi bi-eye"></i></button>
+                            <button class="comm-action-btn" title="More"><i
+                                    class="bi bi-three-dots-vertical"></i></button>
                         </div>
                     </td>
                 </tr>
@@ -191,21 +196,24 @@
     <!-- Pagination -->
     {% if page_obj.has_other_pages %}
     <div class="comm-pagination">
-        <span class="comm-pagination-info">Showing {{ page_obj.start_index }} to {{ page_obj.end_index }} of {{ page_obj.paginator.count }} emails</span>
+        <span class="comm-pagination-info">Showing {{ page_obj.start_index }} to {{ page_obj.end_index }} of {{
+            page_obj.paginator.count }} emails</span>
         <div class="comm-pagination-controls">
             {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}" class="comm-page-btn"><i class="bi bi-chevron-left"></i></a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="comm-page-btn"><i
+                    class="bi bi-chevron-left"></i></a>
             {% endif %}
             {% for num in page_obj.paginator.page_range %}
-                {% if page_obj.number == num %}
-                <span class="comm-page-btn active">{{ num }}</span>
-                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                <a href="?page={{ num }}" class="comm-page-btn">{{ num }}</a>
+            {% if page_obj.number == num %}
+            <span class="comm-page-btn active">{{ num }}</span>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %} <a href="?page={{ num }}"
+                class="comm-page-btn">{{ num }}</a>
                 {% endif %}
-            {% endfor %}
-            {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}" class="comm-page-btn"><i class="bi bi-chevron-right"></i></a>
-            {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="comm-page-btn"><i
+                        class="bi bi-chevron-right"></i></a>
+                {% endif %}
         </div>
     </div>
     {% endif %}
@@ -236,7 +244,8 @@
             <div class="ed-property-info">
                 <div class="ed-property-title" id="edPropertyTitle"></div>
                 <div class="ed-property-category" id="edPropertyCategory"></div>
-                <div class="ed-property-location"><i class="bi bi-geo-alt"></i> <span id="edPropertyLocation"></span></div>
+                <div class="ed-property-location"><i class="bi bi-geo-alt"></i> <span id="edPropertyLocation"></span>
+                </div>
             </div>
         </div>
 
@@ -284,75 +293,75 @@
 
 {% block extra_js %}
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const panel = document.getElementById('emailDetailPanel');
-    const overlay = document.getElementById('emailDetailOverlay');
-    const closeBtn = document.getElementById('closeEmailDetail');
-    const viewBtns = document.querySelectorAll('.comm-view-btn');
+    document.addEventListener('DOMContentLoaded', function () {
+        const panel = document.getElementById('emailDetailPanel');
+        const overlay = document.getElementById('emailDetailOverlay');
+        const closeBtn = document.getElementById('closeEmailDetail');
+        const viewBtns = document.querySelectorAll('.comm-view-btn');
 
-    function openPanel(row) {
-        const d = row.dataset;
+        function openPanel(row) {
+            const d = row.dataset;
 
-        document.getElementById('edAvatar').textContent = (d.customerName || d.customerEmail || '?').charAt(0).toUpperCase();
-        document.getElementById('edCustomerName').textContent = d.customerName || 'N/A';
-        document.getElementById('edCustomerEmail').textContent = d.customerEmail || '';
+            document.getElementById('edAvatar').textContent = (d.customerName || d.customerEmail || '?').charAt(0).toUpperCase();
+            document.getElementById('edCustomerName').textContent = d.customerName || 'N/A';
+            document.getElementById('edCustomerEmail').textContent = d.customerEmail || '';
 
-        const profileLink = document.getElementById('edProfileLink');
-        if (d.customerUrl) {
-            profileLink.href = d.customerUrl;
-            profileLink.style.display = 'inline-flex';
-        } else {
-            profileLink.style.display = 'none';
+            const profileLink = document.getElementById('edProfileLink');
+            if (d.customerUrl) {
+                profileLink.href = d.customerUrl;
+                profileLink.style.display = 'inline-flex';
+            } else {
+                profileLink.style.display = 'none';
+            }
+
+            const propertyBlock = document.getElementById('edPropertyBlock');
+            if (d.propertyTitle) {
+                propertyBlock.style.display = 'flex';
+                document.getElementById('edPropertyImg').src = d.propertyImage || '';
+                document.getElementById('edPropertyTitle').textContent = d.propertyTitle;
+                document.getElementById('edPropertyCategory').textContent = d.propertyCategory || '';
+                document.getElementById('edPropertyLocation').textContent = d.propertyLocation || '';
+            } else {
+                propertyBlock.style.display = 'none';
+            }
+
+            document.getElementById('edSubject').textContent = d.subject || 'N/A';
+            document.getElementById('edSentOn').textContent = d.sentOn || '';
+
+            const statusEl = document.getElementById('edStatus');
+            statusEl.textContent = d.status || '';
+            statusEl.className = 'comm-status-badge ' + (d.statusClass || '');
+
+            document.getElementById('edMessage').innerHTML = (d.message || 'No content available.').replace(/\n/g, '<br>');
+
+            const attachBlock = document.getElementById('edAttachmentBlock');
+            if (d.attachmentName) {
+                attachBlock.style.display = 'block';
+                document.getElementById('edAttachmentName').textContent = d.attachmentName;
+                document.getElementById('edAttachmentSize').textContent = d.attachmentSize || '';
+                document.getElementById('edAttachmentLink').href = d.attachmentUrl || '#';
+            } else {
+                attachBlock.style.display = 'none';
+            }
+
+            panel.classList.add('open');
+            overlay.classList.add('show');
         }
 
-        const propertyBlock = document.getElementById('edPropertyBlock');
-        if (d.propertyTitle) {
-            propertyBlock.style.display = 'flex';
-            document.getElementById('edPropertyImg').src = d.propertyImage || '';
-            document.getElementById('edPropertyTitle').textContent = d.propertyTitle;
-            document.getElementById('edPropertyCategory').textContent = d.propertyCategory || '';
-            document.getElementById('edPropertyLocation').textContent = d.propertyLocation || '';
-        } else {
-            propertyBlock.style.display = 'none';
-        }
-
-        document.getElementById('edSubject').textContent = d.subject || 'N/A';
-        document.getElementById('edSentOn').textContent = d.sentOn || '';
-
-        const statusEl = document.getElementById('edStatus');
-        statusEl.textContent = d.status || '';
-        statusEl.className = 'comm-status-badge ' + (d.statusClass || '');
-
-        document.getElementById('edMessage').innerHTML = (d.message || 'No content available.').replace(/\n/g, '<br>');
-
-        const attachBlock = document.getElementById('edAttachmentBlock');
-        if (d.attachmentName) {
-            attachBlock.style.display = 'block';
-            document.getElementById('edAttachmentName').textContent = d.attachmentName;
-            document.getElementById('edAttachmentSize').textContent = d.attachmentSize || '';
-            document.getElementById('edAttachmentLink').href = d.attachmentUrl || '#';
-        } else {
-            attachBlock.style.display = 'none';
-        }
-
-        panel.classList.add('open');
-        overlay.classList.add('show');
-    }
-
-    viewBtns.forEach(btn => {
-        btn.addEventListener('click', function (e) {
-            e.stopPropagation();
-            openPanel(this.closest('.comm-row'));
+        viewBtns.forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                openPanel(this.closest('.comm-row'));
+            });
         });
+
+        function closePanel() {
+            panel.classList.remove('open');
+            overlay.classList.remove('show');
+        }
+
+        closeBtn.addEventListener('click', closePanel);
+        overlay.addEventListener('click', closePanel);
     });
-
-    function closePanel() {
-        panel.classList.remove('open');
-        overlay.classList.remove('show');
-    }
-
-    closeBtn.addEventListener('click', closePanel);
-    overlay.addEventListener('click', closePanel);
-});
 </script>
 {% endblock %}

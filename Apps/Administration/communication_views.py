@@ -4,33 +4,41 @@ from django.utils.decorators import method_decorator
 from django.views.generic import ListView, View
 from django.core.exceptions import PermissionDenied
 from django.contrib import messages
-from Apps.Agent.models import Communication
-from .forms import AdminCommunicationForm
 from django.core.mail import send_mail
 from django.conf import settings
+from Apps.Agent.models import Communication
+from .forms import AdminCommunicationForm
 import urllib.parse
-from django.core.paginator import Paginator
-from Apps.Administration.smart_dashboard_views import AdminDashboardMixin
+from .smart_dashboard_views import AdminDashboardMixin
 
+@method_decorator(login_required, name='dispatch')
 class AdminCommunicationListView(AdminDashboardMixin, ListView):
+    """View to list all communications sent by admin"""
     model = Communication
     template_name = 'administration/communication_list.html'
     context_object_name = 'communications'
-    paginate_by = 10
-    
+    paginate_by = 20
+
     def get_queryset(self):
+        # We only want to see communications sent by this admin user
         queryset = Communication.objects.filter(agent=self.request.user).order_by('-sent_at')
+        
         type_filter = self.request.GET.get('type')
         if type_filter:
             queryset = queryset.filter(communication_type=type_filter)
+            
         return queryset
-        
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['type_filter'] = self.request.GET.get('type', '')
         return context
 
+
+@method_decorator(login_required, name='dispatch')
 class AdminCommunicationSendView(AdminDashboardMixin, View):
+    """View to send a new communication via Email or WhatsApp"""
+    
     def get(self, request):
         form = AdminCommunicationForm()
         return render(request, 'administration/communication_form.html', {'form': form})
@@ -51,14 +59,15 @@ class AdminCommunicationSendView(AdminDashboardMixin, View):
                         fail_silently=False,
                     )
                     communication.status = 'sent'
+                    communication.save()
                     messages.success(request, "Email sent successfully!")
+                    return redirect('admin_dash:communication-list')
                 except Exception as e:
                     communication.status = 'failed'
-                    communication.notes = f"Failed to send email: {str(e)}"
+                    communication.save()
                     messages.error(request, f"Failed to send email: {str(e)}")
-                communication.save()
-                return redirect('admin_dash:communication-list')
-                
+                    return redirect('admin_dash:communication-list')
+                    
             elif communication.communication_type == 'whatsapp':
                 phone = communication.recipient.strip()
                 clean_phone = ''.join(c for c in phone if c.isdigit())

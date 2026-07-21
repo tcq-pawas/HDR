@@ -3,14 +3,24 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Menu Toggle
     const menuToggle = document.getElementById('menuToggle');
+    const agentMobileToggle = document.getElementById('agentMobileToggle');
     const agentSidebar = document.getElementById('agentSidebar');
     const agentMain = document.getElementById('agentMain');
     const sidebarOverlay = document.getElementById('sidebarOverlay');
 
+    // Handle desktop menu toggle
     if (menuToggle) {
         menuToggle.addEventListener('click', function() {
             agentSidebar.classList.toggle('show');
             agentMain.classList.toggle('expanded');
+            sidebarOverlay.classList.toggle('show');
+        });
+    }
+
+    // Handle mobile menu toggle
+    if (agentMobileToggle) {
+        agentMobileToggle.addEventListener('click', function() {
+            agentSidebar.classList.toggle('show');
             sidebarOverlay.classList.toggle('show');
         });
     }
@@ -22,6 +32,14 @@ document.addEventListener('DOMContentLoaded', function() {
             sidebarOverlay.classList.remove('show');
         });
     }
+
+    // Close sidebar on window resize if switching to desktop
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 992) {
+            agentSidebar.classList.remove('show');
+            sidebarOverlay.classList.remove('show');
+        }
+    });
 
     // Submenu Toggle
     const submenuToggles = document.querySelectorAll('.submenu-toggle');

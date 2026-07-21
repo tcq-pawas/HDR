@@ -1314,7 +1314,72 @@
 
     initializePropertyTypeFields();
 
+
+
+    // Dynamic Location Dropdowns
+
+    const stateSelect = document.getElementById('state_select');
+
+    const citySelect = document.getElementById('city_select');
+
+
+
+    if (stateSelect && citySelect) {
+
+        stateSelect.addEventListener('change', function() {
+
+            const state = this.value;
+
+            citySelect.innerHTML = '<option value="">Loading...</option>';
+
+            
+
+            if (state) {
+
+                fetch(`/agent/ajax/get-cities/?state=${encodeURIComponent(state)}`)
+
+                    .then(response => response.json())
+
+                    .then(data => {
+
+                        citySelect.innerHTML = '<option value="">Select City</option>';
+
+                        data.cities.forEach(city => {
+
+                            const option = document.createElement('option');
+
+                            option.value = city;
+
+                            option.textContent = city;
+
+                            citySelect.appendChild(option);
+
+                        });
+
+                    })
+
+                    .catch(error => {
+
+                        console.error('Error fetching cities:', error);
+
+                        citySelect.innerHTML = '<option value="">Error loading cities</option>';
+
+                    });
+
+            } else {
+
+                citySelect.innerHTML = '<option value="">Select City</option>';
+
+            }
+
+        });
+
+    }
+
+
+
 </script>
 
-{% endblock %}
 
+
+{% endblock %}
