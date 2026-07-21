@@ -490,14 +490,62 @@ class PropertyImage(models.Model):
         return f"Image for {self.property.title}"
 
 class PropertyInquiry(models.Model):
-    property = models.ForeignKey(Property, related_name='inquiries', on_delete=models.SET_NULL, null=True, blank=True)
+    
+    STATUS_CHOICES=[
+        ('new', 'New'),
+        ('viewed', 'Viewed'),     
+    ]
+    enquiry_id = models.CharField(max_length=6, unique=True, blank=True)
+    agent_profile = models.ForeignKey(
+        'Agent.AgentProfile',
+        related_name='property_inquiries',
+        on_delete=models.SET_NULL, null=True, blank=True)
+    
+    
+    related_property = models.ForeignKey(Property, related_name='property_inquiries_set', on_delete=models.SET_NULL, null=True, blank=True)
     name = models.CharField(max_length=100)
-    email = models.EmailField()
+    email = models.EmailField(blank = True, null = True)
+    phone_number = models.CharField(max_length=15, blank=True, null=True)
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='new')
+
+
+    def save(self, *args, **kwargs):
+        if not self.enquiry_id:
+            while True:
+                enquiry = f"#{random.randint(10000, 99999)}"
+                if not PropertyInquiry.objects.filter(enquiry_id=enquiry).exists():
+                    self.enquiry_id = enquiry
+                    break
+
+        super().save(*args, **kwargs)
     def __str__(self):
         return f"Inquiry from {self.name}"
+    
+    @property
+    def masked_phone(self):
+        if not self.phone_number:
+            return ""
+        phone = str(self.phone_number)
+        if len(phone) <= 4:
+            return phone
+        return phone[:2] + "*" * (len(phone) - 4) + phone[-2: ]
+    
+    @property
+    def masked_email(self):
+        if not self.email or "@" not in self.email:
+            return ""
+        
+        username, domain = self.email.split("@", 1)
+        
+        if len(username) <= 2:
+            masked_username = username[0] + "*" * (len(username) - 1)
+        else:
+            masked_username = username[:2] + "X" * (len(username) - 2)
+            
+        return f"{masked_username}@{domain}"
 
 # contact form
 class ContactInquiry(models.Model):
@@ -506,7 +554,7 @@ class ContactInquiry(models.Model):
         ('new', 'New'),
         ('viewed', 'Viewed'),
     ]
-    enquiry_id = models.CharField(max_length=5, blank=True)
+    enquiry_id = models.CharField(max_length=6, blank=True)
     
     full_name = models.CharField(max_length=100)
     phone = models.CharField(max_length=20)

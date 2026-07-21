@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='contactinquiry',
             name='enquiry_id',
-            field=models.CharField(blank=True, max_length=5),
+            field=models.CharField(blank=True, max_length=6),
         ),
     ]

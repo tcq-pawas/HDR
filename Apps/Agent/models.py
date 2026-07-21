@@ -14,6 +14,7 @@ class AgentProfile(models.Model):
     ]
     
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='agent_profile')
+    
     phone = models.CharField(max_length=20, blank=True)
     company_name = models.CharField(max_length=200, blank=True)
     bio = models.TextField(blank=True)
@@ -36,6 +37,33 @@ class AgentProfile(models.Model):
 
     def __str__(self):
         return f"{self.user.get_full_name() or self.user.username} - Agent"
+
+    def masked_phone(self):
+        if not self.phone:
+            return ""
+
+        phone = str(self.phone)
+
+        if len(phone) <= 4:
+            return phone
+
+        return phone[:2] + "*" * (len(phone) - 4) + phone[-2:]
+
+
+    def masked_email(self):
+        email = self.user.email
+
+        if not email or "@" not in email:
+            return ""
+
+        username, domain = email.split("@", 1)
+
+        if len(username) <= 2:
+            masked_username = username[0] + "*" * (len(username) - 1)
+        else:
+            masked_username = username[:2] + "X" * (len(username) - 2)
+
+        return f"{masked_username}@{domain}"
 
     class Meta:
         verbose_name = "Agent Profile"

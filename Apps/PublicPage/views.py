@@ -77,9 +77,13 @@ def property_detail(request, slug):
         name = request.POST.get('name')
         email = request.POST.get('email')
         message = request.POST.get('message')
+        phone_number = request.POST.get('phone_number')
+        
+        agent_profile = AgentProfile.objects.filter(user=property_obj.seller).first()
         
         PropertyInquiry.objects.create(
-            property=property_obj,
+            related_property=property_obj,
+            agent_profile=property_obj.seller.agentprofile, 
             name=name,
             email=email,
             message=message

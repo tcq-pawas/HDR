@@ -40,7 +40,7 @@ class PropertyAdmin(admin.ModelAdmin):
 
 @admin.register(PropertyInquiry)
 class PropertyInquiryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'property', 'created_at')
+    list_display = ('name', 'email', 'related_property', 'created_at')
     search_fields = ('name', 'email', 'message')
 
 

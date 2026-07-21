@@ -4,6 +4,8 @@
 {% block title %}{{ property.title }} | HeyDay Realty{% endblock %}
 
 {% block extra_css %}
+
+
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 
@@ -1145,11 +1147,11 @@
                     <div class="agent-contact">
                         <div class="agent-contact-item">
                             <i class="bi bi-telephone-fill"></i>
-                            <span>+91 9506 688 688</span>
+                            <span>Phone :{{ property.seller.agent_profile.masked_phone }}</span>
                         </div>
                         <div class="agent-contact-item">
                             <i class="bi bi-envelope-fill"></i>
-                            <span>info@heydayrealty.in</span>
+                            <span>Email :{{ property.seller.agent_profile.masked_email }}</span>
                         </div>
                         <div class="agent-contact-item">
                             <i class="bi bi-geo-alt-fill"></i>
@@ -1157,10 +1159,10 @@
                         </div>
                     </div>
                     <div class="agent-buttons">
-                        <a href="tel:+919506688688" class="btn-primary">
+                        <a href="tel: {{ property.seller.agent_profile.phone }}" class="btn-primary">
                             <i class="bi bi-telephone-fill"></i> Contact Agent
                         </a>
-                        <a href="https://wa.me/919506688688" target="_blank" class="btn-secondary">
+                        <a href="https://wa.me/{{ property.seller.agent_profile.phone }}" target="_blank" class="btn-secondary">
                             <i class="bi bi-whatsapp"></i> WhatsApp
                         </a>
                     </div>

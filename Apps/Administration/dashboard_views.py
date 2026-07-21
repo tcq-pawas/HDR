@@ -155,16 +155,16 @@ class AdminDashboardView(AdminDashboardMixin, TemplateView):
         # Growth metrics (month-over-month)
         context['growth_metrics'] = self._calculate_growth_metrics()
         
-        # Lead analytics
+        # Lead analytics (uses ContactInquiry — the public website enquiry model)
         context['lead_analytics'] = {
-            'new_leads': Inquiry.objects.filter(
+            'new_leads': ContactInquiry.objects.filter(
                 created_at__gte=thirty_days_ago
             ).count(),
-            'converted_leads': Inquiry.objects.filter(
+            'converted_leads': ContactInquiry.objects.filter(
                 status='converted',
                 created_at__gte=thirty_days_ago
             ).count(),
-            'lost_leads': jects.filter(
+            'lost_leads': ContactInquiry.objects.filter(
                 status='lost',
                 created_at__gte=thirty_days_ago
             ).count(),
@@ -581,7 +581,7 @@ class UserProfileView(AdminDashboardMixin, TemplateView):
                 context['customer_data'] = {
                     'purchased_properties': 0,  # Would come from property purchase tracking
                     'saved_properties': SavedProperty.objects.filter(customer=user).count(),
-                    'inquiries': jects.filter(customer=user).count(),
+                    'inquiries': Inquiry.objects.filter(customer=user).count(),
                     'documents': 0,  # Would come from a document model
                 }
             except CustomerProfile.DoesNotExist:
