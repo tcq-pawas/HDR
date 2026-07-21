@@ -7,18 +7,20 @@ class SubscriptionPlanForm(forms.ModelForm):
     class Meta:
         model = SubscriptionPlan
         fields = [
-            "name", "slug", "short_description", "badge_text",
-            "button_text", "button_url", "is_active", "display_order",
+            "name", "slug", "short_description", "badge_text", "badge_image",
+            "button_text", "button_url", "is_active", "display_order", "property_limit",
         ]
         widgets = {
             "name": forms.TextInput(attrs={"class": "form-control", "placeholder": "e.g. Harvest"}),
             "slug": forms.TextInput(attrs={"class": "form-control", "placeholder": "auto-generated if left blank"}),
             "short_description": forms.TextInput(attrs={"class": "form-control", "placeholder": "e.g. Forever Free"}),
             "badge_text": forms.TextInput(attrs={"class": "form-control", "placeholder": "e.g. Most Popular"}),
+            "badge_image": forms.FileInput(attrs={"class": "form-control"}),
             "button_text": forms.TextInput(attrs={"class": "form-control"}),
             "button_url": forms.TextInput(attrs={"class": "form-control", "placeholder": "/checkout"}),
             "is_active": forms.CheckboxInput(attrs={"class": "form-check-input"}),
             "display_order": forms.NumberInput(attrs={"class": "form-control"}),
+            "property_limit": forms.NumberInput(attrs={"class": "form-control"}),
         }
 
     def clean_slug(self):

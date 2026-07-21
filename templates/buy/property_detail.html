@@ -219,18 +219,29 @@
     /* Features Strip */
     .features-strip {
         display: grid;
-        grid-template-columns: repeat(6, 1fr);
-        gap: 0;
+        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+        gap: 16px;
+        padding: 20px !important;
     }
 
     .feature-item {
-        padding: 20px 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 16px 8px;
         text-align: center;
-        border-right: 1px solid #EAEAEA;
+        border: 1px solid #EAEAEA;
+        border-radius: 12px;
+        background: #f8fafc;
+        transition: all 0.2s;
+        min-width: 0;
     }
 
-    .feature-item:last-child {
-        border-right: none;
+    .feature-item:hover {
+        border-color: #0F6A3C;
+        background: white;
+        box-shadow: 0 4px 12px rgba(15, 106, 60, 0.08);
     }
 
     .feature-icon {
@@ -251,6 +262,8 @@
         font-size: 0.9rem;
         font-weight: 600;
         color: #1a2e2a;
+        width: 100%;
+        word-wrap: break-word;
     }
 
     /* Section Headings */
@@ -804,12 +817,7 @@
         }
 
         .features-strip {
-            grid-template-columns: repeat(3, 1fr);
-        }
-
-        .feature-item:nth-child(3),
-        .feature-item:nth-child(6) {
-            border-right: none;
+            gap: 12px;
         }
 
         .amenities-grid {
@@ -837,12 +845,7 @@
         }
 
         .features-strip {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .feature-item:nth-child(2),
-        .feature-item:nth-child(4) {
-            border-right: none;
+            gap: 8px;
         }
 
         .checklist {
@@ -1125,13 +1128,11 @@
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
                         <div style="background: #f8fafc; padding: 12px; border-radius: 12px;">
                             <div style="font-size: 0.75rem; color: #6b7a7a; margin-bottom: 4px;">Property Type</div>
-                            <div style="font-size: 0.9rem; font-weight: 600; color: #1a2e2a;">{{
-                                property.category|default:"N/A" }}</div>
+                            <div style="font-size: 0.9rem; font-weight: 600; color: #1a2e2a;">{{ property.category|default:"N/A" }}</div>
                         </div>
                         <div style="background: #f8fafc; padding: 12px; border-radius: 12px;">
                             <div style="font-size: 0.75rem; color: #6b7a7a; margin-bottom: 4px;">Area</div>
-                            <div style="font-size: 0.9rem; font-weight: 600; color: #1a2e2a;">{{
-                                property.project_size_acre|default:"N/A" }}</div>
+                            <div style="font-size: 0.9rem; font-weight: 600; color: #1a2e2a;">{{ property.project_size_acre|default:"N/A" }}</div>
                         </div>
                     </div>
                     <div class="price-large">₹{{ property.price|floatformat:0 }}</div>
@@ -1141,11 +1142,28 @@
                 <!-- Agent Card -->
                 <div class="card agent-card">
                     <div class="agent-photo">
-                        <i class="bi bi-person-fill"></i>
+                        {% if property.seller.agent_profile.profile_picture %}
+                            <img src="{{ property.seller.agent_profile.profile_picture.url }}" alt="{{ property.seller.get_full_name|default:property.seller.username }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                        {% else %}
+                            <i class="bi bi-person-fill"></i>
+                        {% endif %}
                     </div>
-                    <h3 class="agent-name-large">HeyDay Realty</h3>
-                    <div class="agent-verified">
-                        <i class="bi bi-check-circle-fill"></i> Verified Agent
+                    <h3 class="agent-name-large">{{ property.seller.get_full_name|default:property.seller.username|default:"HeyDay Realty" }}</h3>
+                    <div style="display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px;">
+                        {% if property.seller.agent_profile.is_verified %}
+                        <div class="agent-verified" style="margin-bottom: 0;">
+                            <i class="bi bi-check-circle-fill"></i> Verified Agent
+                        </div>
+                        {% endif %}
+                        {% if property.seller.user_subscription and property.seller.user_subscription.status == 'active' %}
+                            {% if property.seller.user_subscription.plan.badge_image %}
+                                <img src="{{ property.seller.user_subscription.plan.badge_image.url }}" alt="Plan" style="height: 24px; object-fit: contain;">
+                            {% else %}
+                                <div class="agent-verified" style="margin-bottom: 0; background: #fff8e1; color: #F4B400;">
+                                    <i class="bi bi-star-fill"></i> {{ property.seller.user_subscription.plan.name }}
+                                </div>
+                            {% endif %}
+                        {% endif %}
                     </div>
                     <div class="agent-rating">
                         <i class="bi bi-star-fill"></i>

@@ -95,6 +95,17 @@
                     <div class="section-label" style="margin: 0 auto 8px;">Price</div>
                     <h2 class="section-title" style="font-size: 2.4rem; color: var(--gold);">${{ property.price }}</h2>
                 </div>
+                
+                <div class="text-center mb-4">
+                    {% if property.seller.user_subscription and property.seller.user_subscription.status == 'active' %}
+                        {% if property.seller.user_subscription.plan.badge_image %}
+                            <img src="{{ property.seller.user_subscription.plan.badge_image.url }}" alt="{{ property.seller.user_subscription.plan.name }} Plan" style="height: 35px; object-fit: contain;" title="{{ property.seller.user_subscription.plan.name }} Plan">
+                        {% else %}
+                            <span class="badge bg-success px-3 py-2" style="font-size: 1rem;">{{ property.seller.user_subscription.plan.name }} Plan</span>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                
                 <h5 style="font-family: var(--font-heading); color: var(--forest); margin-bottom: 16px;">Interested? Contact Us</h5>
                 <form method="POST">
                     {% csrf_token %}

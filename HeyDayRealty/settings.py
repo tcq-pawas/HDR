@@ -151,6 +151,12 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
+# Cashfree API Settings
+
+CASHFREE_APP_ID = os.getenv('CASHFREE_APP_ID', "test_app_id_placeholder")
+CASHFREE_SECRET_KEY = os.getenv('CASHFREE_SECRET_KEY', "test_secret_key_placeholder")
+CASHFREE_ENVIRONMENT = os.getenv('CASHFREE_ENVIRONMENT', "SANDBOX")  # Set to "PRODUCTION" when going live
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 

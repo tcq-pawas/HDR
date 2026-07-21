@@ -16,7 +16,7 @@
 {% endfor %}
 {% endif %}
 
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
 
     <!-- PLAN DETAILS -->
@@ -40,7 +40,12 @@
                     <label class="form-label">Badge Text</label>
                     {{ form.badge_text }}
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
+                    <label class="form-label">Badge Image</label>
+                    {{ form.badge_image }}
+                    {{ form.badge_image.errors }}
+                </div>
+                <div class="col-md-4">
                     <label class="form-label">Short Description</label>
                     {{ form.short_description }}
                 </div>
@@ -52,8 +57,8 @@
                     <label class="form-label">Button URL</label>
                     {{ form.button_url }}
                 </div>
-                <div class="col-md-3 d-flex align-items-center mt-4">
-                    <div class="form-check">
+                <div class="col-md-3 mt-4">
+                    <div class="form-check d-inline-block">
                         {{ form.is_active }}
                         <label class="form-check-label ms-1">Active</label>
                     </div>
@@ -61,6 +66,10 @@
                 <div class="col-md-3">
                     <label class="form-label">Display Order</label>
                     {{ form.display_order }}
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Property Limit</label>
+                    {{ form.property_limit }}
                 </div>
             </div>
         </div>

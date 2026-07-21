@@ -1,0 +1,179 @@
+{% extends "administration/admin_base.html" %}
+{% load humanize %}
+
+{% block title %}Financial Management - HeyDay Realty{% endblock %}
+
+{% block page_title %}Financial Management{% endblock %}
+
+{% block page_subtitle %}View all payment transactions and global ledger entries across the platform.{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-12">
+        
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-tabs mb-4" id="financialTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="transactions-tab" data-bs-toggle="tab" data-bs-target="#transactions" type="button" role="tab" aria-controls="transactions" aria-selected="true">
+                    <i class="fas fa-credit-card me-2"></i>Payment Transactions
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="subscriptions-tab" data-bs-toggle="tab" data-bs-target="#subscriptions" type="button" role="tab" aria-controls="subscriptions" aria-selected="false">
+                    <i class="fas fa-id-badge me-2"></i>User Subscriptions
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="financialTabsContent">
+            
+            <!-- Transactions Tab -->
+            <div class="tab-pane fade show active" id="transactions" role="tabpanel" aria-labelledby="transactions-tab">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 text-primary fw-bold"><i class="fas fa-list me-2"></i>All Transactions</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="ps-4">Txn ID</th>
+                                        <th>User</th>
+                                        <th>Plan</th>
+                                        <th>Final Paid</th>
+                                        <th>Order/Original ID</th>
+                                        <th>Payment/Txn ID</th>
+                                        <th>Status</th>
+                                        <th class="text-end pe-4">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for tx in transactions %}
+                                    <tr>
+                                        <td class="ps-4 fw-bold text-muted">#{{ tx.id }}</td>
+                                        <td>
+                                            <div class="fw-semibold">{{ tx.user.get_full_name|default:tx.user.username }}</div>
+                                            <div class="small text-muted">{{ tx.user.email }}</div>
+                                        </td>
+                                        <td>
+                                            <div class="fw-semibold text-primary">{{ tx.subscription.plan.name|default:"-" }}</div>
+                                        </td>
+                                        <td class="fw-bold">₹{{ tx.amount|intcomma }}</td>
+                                        <td class="small text-muted">{{ tx.order_id }}</td>
+                                        <td class="small text-muted">{{ tx.cashfree_payment_id|default:"-" }}</td>
+                                        <td>
+                                            {% if tx.status == 'SUCCESS' %}
+                                                <span class="badge bg-success bg-opacity-10 text-success border border-success px-3 py-2 rounded-pill">SUCCESS</span>
+                                            {% elif tx.status == 'PENDING' %}
+                                                <span class="badge bg-warning bg-opacity-10 text-warning border border-warning px-3 py-2 rounded-pill">PENDING</span>
+                                            {% else %}
+                                                <span class="badge bg-danger bg-opacity-10 text-danger border border-danger px-3 py-2 rounded-pill">{{ tx.status }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-end pe-4 text-muted">{{ tx.created_at|date:"M d, Y H:i" }}</td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="8" class="text-center py-5 text-muted">
+                                            <i class="fas fa-inbox fa-3x mb-3 text-light"></i>
+                                            <h5>No transactions found</h5>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- User Subscriptions Tab -->
+            <div class="tab-pane fade" id="subscriptions" role="tabpanel" aria-labelledby="subscriptions-tab">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 text-success fw-bold"><i class="fas fa-id-badge me-2"></i>Active Subscriptions</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="ps-4">Sub ID</th>
+                                        <th>User Name / Email</th>
+                                        <th>Active Plan</th>
+                                        <th>Payment Reference</th>
+                                        <th>Start Date</th>
+                                        <th>Expiry Date</th>
+                                        <th class="text-end pe-4">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for sub in subscriptions %}
+                                    <tr>
+                                        <td class="ps-4 fw-bold text-muted">#{{ sub.id }}</td>
+                                        <td>
+                                            <div class="fw-semibold text-dark">{{ sub.user.get_full_name|default:sub.user.username }}</div>
+                                            <div class="small text-muted">{{ sub.user.email }}</div>
+                                        </td>
+                                        <td>
+                                            <div class="fw-bold text-primary">{{ sub.plan.name|default:"No Plan" }}</div>
+                                            <div class="small text-muted">
+                                                {% if sub.pricing %}
+                                                    ({{ sub.pricing.get_billing_cycle_display }})
+                                                {% else %}
+                                                    (Free / Lifetime)
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {% with latest_txn=sub.transactions.first %}
+                                                {% if latest_txn %}
+                                                    <div class="fw-semibold">Txn #{{ latest_txn.id }}</div>
+                                                    <div class="small text-muted">₹{{ latest_txn.amount|intcomma }}</div>
+                                                {% else %}
+                                                    <div class="text-muted fst-italic">No Payment</div>
+                                                {% endif %}
+                                            {% endwith %}
+                                        </td>
+                                        <td class="text-muted">{{ sub.start_date|date:"d M Y, h:i A" }}</td>
+                                        <td class="text-muted">
+                                            {% if sub.end_date %}
+                                                {{ sub.end_date|date:"d M Y, h:i A" }}
+                                            {% else %}
+                                                <span class="text-muted fst-italic">Lifetime / None</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-end pe-4">
+                                            {% if sub.status == 'active' %}
+                                                <span class="badge bg-success bg-opacity-10 text-success border border-success px-3 py-2 rounded-pill">Active</span>
+                                            {% elif sub.status == 'expired' %}
+                                                <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary px-3 py-2 rounded-pill">Expired</span>
+                                            {% else %}
+                                                <span class="badge bg-danger bg-opacity-10 text-danger border border-danger px-3 py-2 rounded-pill">{{ sub.status|title }}</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="7" class="text-center py-5 text-muted">
+                                            <i class="fas fa-id-badge fa-3x mb-3 text-light"></i>
+                                            <h5>No subscriptions found</h5>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+    </div>
+</div>
+
+{% endblock %}

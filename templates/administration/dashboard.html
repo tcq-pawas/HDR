@@ -714,14 +714,10 @@ dashboard.{% endblock %}
         <div class="kpi-card">
 
             <div class="kpi-icon stat-icon-warning">
-
-                <i class="fas fa-chart-line"></i>
-
+                <i class="fas fa-wallet"></i>
             </div>
-
-            <div class="kpi-value">${{ sales_analytics.monthly_investments|default:0|intcomma }}</div>
-
-            <div class="kpi-label">Monthly Revenue</div>
+            <div class="kpi-value">₹{{ subscription_revenue|default:0|intcomma }}</div>
+            <div class="kpi-label">Sub Revenue (30d)</div>
 
             <div class="kpi-trend positive">
 
@@ -739,6 +735,59 @@ dashboard.{% endblock %}
 
 </div>
 
+
+
+<!-- Global Ledger & Transactions -->
+<div class="row mb-4">
+    <!-- Payment Transactions -->
+    <div class="col-xl-12 mb-4">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0"><i class="fas fa-credit-card text-primary me-2"></i>Recent Transactions</h5>
+                <a href="{% url 'admin_dash:financials' %}" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-3 border-0">User</th>
+                                <th class="border-0">Amount</th>
+                                <th class="border-0">Status</th>
+                                <th class="border-0 text-end pe-3">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for tx in global_transactions %}
+                            <tr>
+                                <td class="ps-3">
+                                    <div class="fw-semibold">{{ tx.user.get_full_name|default:tx.user.username }}</div>
+                                    <div class="small text-muted">{{ tx.order_id|truncatechars:15 }}</div>
+                                </td>
+                                <td class="fw-bold">₹{{ tx.amount|intcomma }}</td>
+                                <td>
+                                    {% if tx.status == 'SUCCESS' %}
+                                        <span class="badge bg-success bg-opacity-10 text-success border border-success">SUCCESS</span>
+                                    {% elif tx.status == 'PENDING' %}
+                                        <span class="badge bg-warning bg-opacity-10 text-warning border border-warning">PENDING</span>
+                                    {% else %}
+                                        <span class="badge bg-danger bg-opacity-10 text-danger border border-danger">{{ tx.status }}</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end pe-3 small text-muted">{{ tx.created_at|date:"M d, H:i" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center py-4 text-muted">No transactions found</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <!-- Analytics Section -->

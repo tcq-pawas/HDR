@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import SubscriptionPlan, PlanPricing, PlanFeature
+from .models import SubscriptionPlan, PlanPricing, PlanFeature, UserSubscription, PaymentTransaction, LedgerEntry
 
 # Register your models here.
 
@@ -59,3 +59,27 @@ class PlanFeatureAdmin(admin.ModelAdmin):
     autocomplete_fields = ("plan",)
     list_editable = ("feature_value", "is_available", "display_order")
     ordering = ("plan", "display_order")
+
+@admin.register(UserSubscription)
+class UserSubscriptionAdmin(admin.ModelAdmin):
+    list_display = ("user", "plan", "status", "start_date", "end_date", "auto_renew")
+    list_filter = ("status", "auto_renew", "plan")
+    search_fields = ("user__username", "user__email", "user__first_name", "user__last_name", "stripe_subscription_id")
+    readonly_fields = ("created_at", "updated_at")
+    date_hierarchy = "start_date"
+
+@admin.register(PaymentTransaction)
+class PaymentTransactionAdmin(admin.ModelAdmin):
+    list_display = ("order_id", "user", "amount", "status", "created_at")
+    list_filter = ("status",)
+    search_fields = ("order_id", "cashfree_payment_id", "user__username", "user__email")
+    readonly_fields = ("created_at", "updated_at", "raw_response")
+    date_hierarchy = "created_at"
+
+@admin.register(LedgerEntry)
+class LedgerEntryAdmin(admin.ModelAdmin):
+    list_display = ("user", "transaction_type", "amount", "balance_after_transaction", "created_at")
+    list_filter = ("transaction_type",)
+    search_fields = ("user__username", "user__email", "description")
+    readonly_fields = ("created_at",)
+    date_hierarchy = "created_at"

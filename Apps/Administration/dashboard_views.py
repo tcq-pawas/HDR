@@ -71,6 +71,17 @@ class AdminDashboardView(AdminDashboardMixin, TemplateView):
             )['avg'] or 0,
         }
         
+        # Subscription revenue & Global Ledger
+        from Apps.Subscriptions.models import PaymentTransaction, LedgerEntry
+        subscription_revenue = PaymentTransaction.objects.filter(
+            status='SUCCESS', 
+            created_at__gte=thirty_days_ago
+        ).aggregate(total=Sum('amount'))['total'] or 0
+        context['subscription_revenue'] = subscription_revenue
+        
+        context['global_ledger'] = LedgerEntry.objects.select_related('user').order_by('-created_at')[:10]
+        context['global_transactions'] = PaymentTransaction.objects.select_related('user').order_by('-created_at')[:10]
+        
         # Property analytics
         context['property_analytics'] = {
             'active_properties': Property.objects.filter(is_active=True).count(),
@@ -624,6 +635,24 @@ class UserProfileView(AdminDashboardMixin, TemplateView):
                 'permissions': UserPermission.objects.filter(user=user).values_list('permission_level', flat=True),
                 'activity_logs': ActivityLog.objects.filter(user=user).order_by('-timestamp')[:5],
             }
+            
+        # Fetch subscription data
+        try:
+            from Apps.Subscriptions.models import UserSubscription, LedgerEntry
+            subscription = UserSubscription.objects.get(user=user)
+            context['subscription'] = subscription
+        except Exception:
+            context['subscription'] = None
+            
+        # Fetch ledger data
+        try:
+            from Apps.Subscriptions.models import LedgerEntry
+            ledger_entries = LedgerEntry.objects.filter(user=user).order_by('-created_at')[:20]
+            context['ledger_entries'] = ledger_entries
+            context['current_balance'] = ledger_entries[0].balance_after_transaction if ledger_entries else 0
+        except Exception:
+            context['ledger_entries'] = []
+            context['current_balance'] = 0
         
         return context
 
@@ -888,3 +917,14 @@ class InquiryDeleteView(AdminDashboardMixin, TemplateView):
         enquiry.delete()
 
         return redirect('admin_dash:inquiry-management-page')
+
+class AdminFinancialsView(AdminDashboardMixin, TemplateView):
+    """View all financial data including Payment Transactions and Ledger Entries"""
+    template_name = 'administration/admin_financials.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        from Apps.Subscriptions.models import PaymentTransaction, UserSubscription
+        context['transactions'] = PaymentTransaction.objects.select_related('user', 'subscription__plan').order_by('-created_at')
+        context['subscriptions'] = UserSubscription.objects.select_related('user', 'plan', 'pricing').prefetch_related('transactions').order_by('-start_date')
+        return context

@@ -40,6 +40,16 @@
                             </span>
                         {% endif %}
                     </div>
+                    
+                    <div class="d-flex justify-content-center gap-2 mt-3">
+                        {% if request.user.user_subscription and request.user.user_subscription.status == 'active' %}
+                            {% if request.user.user_subscription.plan.badge_image %}
+                                <img src="{{ request.user.user_subscription.plan.badge_image.url }}" alt="{{ request.user.user_subscription.plan.name }} Plan" style="height: 40px; object-fit: contain;" title="{{ request.user.user_subscription.plan.name }} Plan">
+                            {% else %}
+                                <span class="badge bg-primary px-3 py-2 rounded-pill">{{ request.user.user_subscription.plan.name }} Plan</span>
+                            {% endif %}
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>

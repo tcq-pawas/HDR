@@ -47,7 +47,13 @@
                         {% if agent.is_verified %}
                             <span class="badge verified-badge-text">Verified Agent</span>
                         {% endif %}
-                        <span class="badge premium-badge">Premium</span>
+                        {% if agent.user.user_subscription and agent.user.user_subscription.status == 'active' %}
+                            {% if agent.user.user_subscription.plan.badge_image %}
+                                <img src="{{ agent.user.user_subscription.plan.badge_image.url }}" alt="Plan" style="height:30px; vertical-align:middle; object-fit: contain;">
+                            {% else %}
+                                <span class="badge premium-badge">{{ agent.user.user_subscription.plan.name }} Plan</span>
+                            {% endif %}
+                        {% endif %}
                     </div>
                 </div>
                 <div class="agent-rating">
