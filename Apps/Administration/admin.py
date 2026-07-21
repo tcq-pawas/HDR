@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import (
     AdminProfile, SystemSettings, DashboardWidget, UserPermission,
     ActivityLog, SystemBackup, SystemMaintenance, Report, GeneratedReport,
-    Notification, SystemMetrics
+    Notification, SystemMetrics, WebsiteInquiry
 )
 
 
@@ -104,3 +104,47 @@ class SystemMetricsAdmin(admin.ModelAdmin):
     readonly_fields = ['recorded_at']
     date_hierarchy = 'recorded_at'
     ordering = ['-recorded_at']
+
+
+@admin.register(WebsiteInquiry)
+class WebsiteInquiryAdmin(admin.ModelAdmin):
+    list_display = ['full_name', 'email', 'website', 'phone_number', 'is_contacted', 'created_at']
+    list_filter = ['website', 'is_contacted', 'created_at', 'preferred_contact_method', 'property_type']
+    search_fields = ['full_name', 'email', 'phone_number', 'subject', 'message']
+    readonly_fields = ['ip_address', 'user_agent', 'source_url', 'created_at', 'updated_at']
+    date_hierarchy = 'created_at'
+    ordering = ['-created_at']
+    list_editable = ['is_contacted']
+    
+    fieldsets = (
+        ('Contact Information', {
+            'fields': ('website', 'full_name', 'email', 'phone_number', 'subject', 'preferred_contact_method')
+        }),
+        ('Property Details', {
+            'fields': ('property_type', 'preferred_location', 'budget_range', 'area_size'),
+            'classes': ('collapse',)
+        }),
+        ('Message', {
+            'fields': ('message',)
+        }),
+        ('Metadata', {
+            'fields': ('source_url', 'ip_address', 'user_agent', 'is_contacted'),
+            'classes': ('collapse',)
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    actions = ['mark_as_contacted', 'mark_as_uncontacted']
+    
+    def mark_as_contacted(self, request, queryset):
+        queryset.update(is_contacted=True)
+        self.message_user(request, f"{queryset.count} inquiry(ies) marked as contacted.")
+    mark_as_contacted.short_description = "Mark selected inquiries as contacted"
+    
+    def mark_as_uncontacted(self, request, queryset):
+        queryset.update(is_contacted=False)
+        self.message_user(request, f"{queryset.count} inquiry(ies) marked as uncontacted.")
+    mark_as_uncontacted.short_description = "Mark selected inquiries as uncontacted"
