@@ -1322,57 +1322,104 @@
 
     const citySelect = document.getElementById('city_select');
 
+    // The city value saved in the database (for edit mode pre-selection)
+    const savedCityValue = '{{ form.instance.city|default:"" }}';
+
+
+
+    function loadCitiesForState(state, selectCityValue) {
+
+        if (!state) {
+
+            citySelect.innerHTML = '<option value="">Select City</option>';
+
+            return;
+
+        }
+
+        citySelect.innerHTML = '<option value="">Loading...</option>';
+
+        fetch(`/agent/ajax/get-cities/?state=${encodeURIComponent(state)}`)
+
+            .then(response => response.json())
+
+            .then(data => {
+
+                citySelect.innerHTML = '<option value="">Select City</option>';
+
+                let cityFound = false;
+
+                data.cities.forEach(city => {
+
+                    const option = document.createElement('option');
+
+                    option.value = city;
+
+                    option.textContent = city;
+
+                    if (selectCityValue && city === selectCityValue) {
+
+                        option.selected = true;
+
+                        cityFound = true;
+
+                    }
+
+                    citySelect.appendChild(option);
+
+                });
+
+                // If city wasn't in list but we have a saved value, add it as an option
+
+                if (selectCityValue && !cityFound) {
+
+                    const option = document.createElement('option');
+
+                    option.value = selectCityValue;
+
+                    option.textContent = selectCityValue;
+
+                    option.selected = true;
+
+                    citySelect.appendChild(option);
+
+                }
+
+            })
+
+            .catch(error => {
+
+                console.error('Error fetching cities:', error);
+
+                citySelect.innerHTML = '<option value="">Error loading cities</option>';
+
+            });
+
+    }
+
 
 
     if (stateSelect && citySelect) {
 
+        // On state change: reload cities without pre-selection
+
         stateSelect.addEventListener('change', function() {
 
-            const state = this.value;
-
-            citySelect.innerHTML = '<option value="">Loading...</option>';
-
-            
-
-            if (state) {
-
-                fetch(`/agent/ajax/get-cities/?state=${encodeURIComponent(state)}`)
-
-                    .then(response => response.json())
-
-                    .then(data => {
-
-                        citySelect.innerHTML = '<option value="">Select City</option>';
-
-                        data.cities.forEach(city => {
-
-                            const option = document.createElement('option');
-
-                            option.value = city;
-
-                            option.textContent = city;
-
-                            citySelect.appendChild(option);
-
-                        });
-
-                    })
-
-                    .catch(error => {
-
-                        console.error('Error fetching cities:', error);
-
-                        citySelect.innerHTML = '<option value="">Error loading cities</option>';
-
-                    });
-
-            } else {
-
-                citySelect.innerHTML = '<option value="">Select City</option>';
-
-            }
+            loadCitiesForState(this.value, null);
 
         });
+
+
+
+        // On page load (edit mode): if state is set, reload cities and pre-select saved city
+
+        const initialState = stateSelect.value;
+
+        if (initialState && savedCityValue) {
+
+            loadCitiesForState(initialState, savedCityValue);
+
+        }
 
     }
 

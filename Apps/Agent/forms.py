@@ -79,23 +79,42 @@ class PropertyForm(forms.ModelForm):
         state_choices = [('', 'Select State')]
         try:
             states = LocationData.objects.values_list('state', flat=True).distinct().order_by('state')
-            state_choices += [(s, s) for s in states if s]
+            state_list = [s for s in states if s]
+            if self.instance and self.instance.pk and self.instance.state and self.instance.state not in state_list:
+                state_list.append(self.instance.state)
+            state_choices += [(s, s) for s in state_list]
         except Exception:
             pass
-        self.fields['state'] = forms.ChoiceField(choices=state_choices, required=True, widget=forms.Select(attrs={'class': 'form-select', 'id': 'state_select'}))
+        self.fields['state'] = forms.CharField(
+            required=True,
+            widget=forms.Select(choices=state_choices, attrs={'class': 'form-select', 'id': 'state_select'})
+        )
+        if hasattr(self, 'instance') and self.instance and self.instance.pk and self.instance.state:
+            self.fields['state'].initial = self.instance.state
         
         # Populate city choices dynamically based on existing instance state, or empty
         city_choices = [('', 'Select City')]
         try:
+            city_list = []
             if self.instance and self.instance.pk and self.instance.state:
                 cities = LocationData.objects.filter(state=self.instance.state).values_list('city', flat=True).distinct().order_by('city')
-                city_choices += [(c, c) for c in cities if c]
+                city_list = [c for c in cities if c]
             elif self.data and self.data.get('state'):
                 cities = LocationData.objects.filter(state=self.data.get('state')).values_list('city', flat=True).distinct().order_by('city')
-                city_choices += [(c, c) for c in cities if c]
+                city_list = [c for c in cities if c]
+            
+            if self.instance and self.instance.pk and self.instance.city and self.instance.city not in city_list:
+                city_list.append(self.instance.city)
+                
+            city_choices += [(c, c) for c in city_list]
         except Exception:
             pass
-        self.fields['city'] = forms.ChoiceField(choices=city_choices, required=True, widget=forms.Select(attrs={'class': 'form-select', 'id': 'city_select'}))
+        self.fields['city'] = forms.CharField(
+            required=True,
+            widget=forms.Select(choices=city_choices, attrs={'class': 'form-select', 'id': 'city_select'})
+        )
+        if self.instance and self.instance.pk and self.instance.city:
+            self.fields['city'].initial = self.instance.city
     
     class Meta:
         model = Property
@@ -260,10 +279,18 @@ class AgriculturalLandForm(forms.ModelForm):
         state_choices = [('', 'Select State')]
         try:
             states = LocationData.objects.values_list('state', flat=True).distinct().order_by('state')
-            state_choices += [(s, s) for s in states if s]
+            state_list = [s for s in states if s]
+            if self.instance and self.instance.pk and self.instance.state and self.instance.state not in state_list:
+                state_list.append(self.instance.state)
+            state_choices += [(s, s) for s in state_list]
         except Exception:
             pass
-        self.fields['state'] = forms.ChoiceField(choices=state_choices, required=True, widget=forms.Select(attrs={'class': 'form-select', 'id': 'state_select'}))
+        self.fields['state'] = forms.CharField(
+            required=True,
+            widget=forms.Select(choices=state_choices, attrs={'class': 'form-select', 'id': 'state_select'})
+        )
+        if hasattr(self, 'instance') and self.instance and self.instance.pk and self.instance.state:
+            self.fields['state'].initial = self.instance.state
     
     class Meta:
         model = Property

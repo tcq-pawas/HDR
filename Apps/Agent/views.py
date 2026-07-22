@@ -1157,7 +1157,7 @@ def customer_list(request):
     leads = Lead.objects.filter(agent=request.user).values('name', 'phone', 'email').distinct()
     inquiries = PropertyInquiry.objects.filter(
         agent_profile__user=request.user
-    ). values('name', 'phone_number', 'email', 'enquiry_id', 'status', 'agent_profile', 'agent_profile__user__username', 'related_property__title', 'related_property__price').order_by('-created_at')
+    ).values('name', 'phone_number', 'email', 'enquiry_id', 'status', 'agent_profile', 'agent_profile__user__username', 'related_property__title', 'related_property__price').order_by('-created_at')
     # Combine and deduplicate
     customers = []
     seen = set()

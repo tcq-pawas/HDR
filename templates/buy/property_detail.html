@@ -185,8 +185,9 @@
     }
 
     .thumbnail {
-        width: 100%;
-        aspect-ratio: 1;
+        width: 80px;
+        height: 80px;
+        min-width: 80px;
         object-fit: cover;
         border-radius: 12px;
         cursor: pointer;
@@ -954,7 +955,7 @@
                     <div class="feature-item">
                         <i class="bi bi-rulers feature-icon"></i>
                         <div class="feature-title">Area</div>
-                        <div class="feature-value">{{ property.project_size_acre|default:"N/A" }}</div>
+                        <div class="feature-value">{% if property.total_area %}{{ property.total_area }} {{ property.area_unit|default:"" }}{% elif property.project_size_acre %}{{ property.project_size_acre }}{% else %}N/A{% endif %}</div>
                     </div>
                     <div class="feature-item">
                         <i class="bi bi-house feature-icon"></i>
@@ -1011,7 +1012,7 @@
                         </tr>
                         <tr>
                             <td class="table-label">Area</td>
-                            <td class="table-value">{{ property.project_size_acre|default:"N/A" }}</td>
+                            <td class="table-value">{% if property.total_area %}{{ property.total_area }} {{ property.area_unit|default:"" }}{% elif property.project_size_acre %}{{ property.project_size_acre }}{% else %}N/A{% endif %}</td>
                         </tr>
                         <tr>
                             <td class="table-label">Price</td>
@@ -1133,7 +1134,7 @@
                         <div style="background: #f8fafc; padding: 12px; border-radius: 12px;">
                             <div style="font-size: 0.75rem; color: #6b7a7a; margin-bottom: 4px;">Area</div>
                             <div style="font-size: 0.9rem; font-weight: 600; color: #1a2e2a;">
-                               {{ property.project_size_acre|default:"N/A" }}</div>
+                               {% if property.total_area %}{{ property.total_area }} {{ property.area_unit|default:"" }}{% elif property.project_size_acre %}{{ property.project_size_acre }}{% else %}N/A{% endif %}</div>
                         </div>
                     </div>
                     <div class="price-large">₹{{ property.price|floatformat:0 }}</div>
