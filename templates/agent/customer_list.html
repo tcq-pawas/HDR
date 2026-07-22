@@ -19,10 +19,15 @@
         <table>
             <thead>
                 <tr>
+                    <th>Enquiry ID</th>
+                     <th>Property Name</th>
+                    <th>Price</th>
                     <th>Customer Name</th>
                     <th>Phone</th>
                     <th>Email</th>
+                    <th>Agent Profile</th>
                     <th>Source</th>
+                    <th>Status</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -30,15 +35,28 @@
                 {% if customers %}
                     {% for customer in customers %}
                         <tr>
+                            <td>{{ customer.enquiry_id }}</td>
+                            <td>{{ customer.property_title|default:"-" }}</td>
+                            <td>{{ customer.property_price|default:"-" }}</td>
                             <td><strong>{{ customer.name }}</strong></td>
                             <td>{{ customer.phone }}</td>
                             <td>{{ customer.email|default:"N/A" }}</td>
+                            <td>{{ customer.agent_name|default:"-" }}</td>
                             <td><span class="source-badge source-{{ customer.source|lower }}">{{ customer.source }}</span></td>
+                             <td>
+                                {% if customer.status != '-' %}
+                                    <span class="status-badge status-{{ customer.status|lower }}">{{ customer.status|title }}</span>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
                             <td>
                                 <div class="action-buttons">
-                                    <a href="{% url 'agent:customer_detail' customer.phone %}" class="action-btn" title="View Details">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
+                                    {% if customer.phone %}
+                                        <a href="{% url 'agent:customer_detail' customer.phone %}" class="action-btn" title="View Details">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                    {% endif %}
                                     <a href="tel:{{ customer.phone }}" class="action-btn" title="Call">
                                         <i class="bi bi-telephone"></i>
                                     </a>

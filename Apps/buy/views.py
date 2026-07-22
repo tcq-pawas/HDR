@@ -7,6 +7,8 @@ from django.http import JsonResponse
 from Apps.PublicPage.models import Property, PropertyInquiry
 from Apps.Customer.models import SavedProperty
 from .forms import InquiryForm
+from Apps.Agent.models import Lead, LeadFollowUp
+from django.utils import timezone
 
 def property_search(request):
     """Browse and search active and approved property listings with map integration"""
@@ -195,8 +197,42 @@ def send_inquiry(request, pk):
         form = InquiryForm(request.POST)
         if form.is_valid():
             inquiry = form.save(commit=False)
-            inquiry.property = property_obj
+            inquiry.related_property = property_obj
+            inquiry.phone_number = request.POST.get('phone')
+            if property_obj.seller:
+                agent_profile = getattr(property_obj.seller, 'agent_profile', None)
+                inquiry.agent_profile = agent_profile
             inquiry.save()
+            
+            #Lead create + follow up note
+            phone_value = getattr(inquiry, 'phone', None) or request.POST.get('phone')
+            message_value = getattr(inquiry, 'message', None) or request.POST.get('message')
+            
+            if property_obj.seller and phone_value:
+                lead, created = Lead.objects.get_or_create(
+                    agent=property_obj.seller,
+                    phone=phone_value,
+                    defaults={
+                        'name': getattr(inquiry, 'name', None) or 'Website Visitor',
+                        'email': getattr(inquiry, 'email', None),
+                        'property': property_obj,
+                        'source': 'website',
+                        'status': 'new',
+                    }                   
+                )
+                
+                if not created:
+                    lead.property = property_obj
+                    lead.save(update_fields=['property'])
+
+                # Add message
+                if message_value:
+                    LeadFollowUp.objects.create(
+                        lead=lead,
+                        agent=property_obj.seller,
+                        notes=f"Inquiry for '{property_obj.title}': {message_value}",
+                        scheduled_date=timezone.now(),
+                    )
             messages.success(request, "Your inquiry has been sent to the seller successfully!")
             return redirect('buy:property_detail', pk=pk)
             

@@ -1127,13 +1127,13 @@
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
                         <div style="background: #f8fafc; padding: 12px; border-radius: 12px;">
                             <div style="font-size: 0.75rem; color: #6b7a7a; margin-bottom: 4px;">Property Type</div>
-                            <div style="font-size: 0.9rem; font-weight: 600; color: #1a2e2a;">{{
-                                property.category|default:"N/A" }}</div>
+                            <div style="font-size: 0.9rem; font-weight: 600; color: #1a2e2a;">
+                                {{ property.category|default:"N/A" }}</div>
                         </div>
                         <div style="background: #f8fafc; padding: 12px; border-radius: 12px;">
                             <div style="font-size: 0.75rem; color: #6b7a7a; margin-bottom: 4px;">Area</div>
-                            <div style="font-size: 0.9rem; font-weight: 600; color: #1a2e2a;">{{
-                                property.project_size_acre|default:"N/A" }}</div>
+                            <div style="font-size: 0.9rem; font-weight: 600; color: #1a2e2a;">
+                               {{ property.project_size_acre|default:"N/A" }}</div>
                         </div>
                     </div>
                     <div class="price-large">₹{{ property.price|floatformat:0 }}</div>

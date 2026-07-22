@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.db.models import Q
 from .models import Inquiry, Property, PropertyInquiry, PropertyImage, WebsiteEnquiry, ContactInquiry
-from Apps.Agent.models import AgentProfile
+from Apps.Agent.models import AgentProfile, Lead
 import random
 
 # def home(request):
@@ -86,8 +86,25 @@ def property_detail(request, slug):
             agent_profile=property_obj.seller.agentprofile, 
             name=name,
             email=email,
+            phone_number=phone_number,
             message=message
         )
+        
+        if property_obj.seller and phone_number:
+            lead, created = Lead.objects.get_or_create(
+                agent=property_obj.seller,
+                phone=phone_number,
+                default={
+                    'name': name or 'Website Visitor',
+                    'email': email,
+                    'property': property_obj,
+                    'source': 'website',
+                    'status': 'new',
+                }
+            )
+            if not created:
+                pass
+            
         return redirect('public:property_detail', slug=slug)
 
     return render(request, 'public/property_detail.html', {

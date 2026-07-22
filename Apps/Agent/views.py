@@ -11,7 +11,7 @@ from datetime import timedelta
 import csv
 
 from django.views.decorators.http import require_GET
-from Apps.PublicPage.models import Property, LocationData, PropertyImage
+from Apps.PublicPage.models import Property, PropertyInquiry, LocationData, PropertyImage
 from Apps.Administration.auth_utils import get_user_role
 from .models import (
     AgentProfile, Lead, LeadFollowUp, SiteVisit,
@@ -1155,12 +1155,16 @@ def customer_list(request):
     # Get unique customers from bookings and leads
     bookings = Booking.objects.filter(agent=request.user).values('customer_name', 'customer_phone', 'customer_email').distinct()
     leads = Lead.objects.filter(agent=request.user).values('name', 'phone', 'email').distinct()
-    
+    inquiries = PropertyInquiry.objects.filter(
+        agent_profile__user=request.user
+    ). values('name', 'phone_number', 'email', 'enquiry_id', 'status', 'agent_profile', 'agent_profile__user__username', 'related_property__title', 'related_property__price').order_by('-created_at')
     # Combine and deduplicate
     customers = []
     seen = set()
     
     for booking in bookings:
+        if not booking['customer_phone']:
+            continue
         key = (booking['customer_phone'],)
         if key not in seen:
             customers.append({
@@ -1168,10 +1172,34 @@ def customer_list(request):
                 'phone': booking['customer_phone'],
                 'email': booking['customer_email'],
                 'source': 'Booking',
+                'enquiry_id': '-',
+                'status': '-',
+                'agent_profile': '-',
+            })
+            seen.add(key)
+            
+    for inquiry in inquiries:
+        if not inquiry['phone_number']:
+            continue
+        key = (inquiry['phone_number'],)
+        if key not in seen:
+            customers.append({
+                'name': inquiry['name'],
+                'phone': inquiry['phone_number'],
+                'email': inquiry['email'],
+                'source': 'Inquiry',
+                'enquiry_id': inquiry['enquiry_id'],
+                'status': inquiry['status'],
+                'agent_profile': inquiry['agent_profile'],
+                'agent_name': inquiry['agent_profile__user__username'],
+                'property_title': inquiry['related_property__title'],
+                'property_price': inquiry['related_property__price'],
             })
             seen.add(key)
     
     for lead in leads:
+        if not lead['phone']:
+            continue
         key = (lead['phone'],)
         if key not in seen:
             customers.append({
@@ -1179,8 +1207,13 @@ def customer_list(request):
                 'phone': lead['phone'],
                 'email': lead['email'],
                 'source': 'Lead',
+                'enquiry_id': '-',
+                'status': '-',
+                'agent_profile': '-',
             })
             seen.add(key)
+            
+   
     
     context = {
         'customers': customers,
@@ -1208,12 +1241,23 @@ def customer_detail(request, phone):
     # Get customer's communications
     communications = Communication.objects.filter(agent=request.user, recipient=phone)
     
+    
+    # Get customer's property inquiries
+    inquiries = PropertyInquiry.objects.filter(
+        agent_profile__user=request.user,
+        phone_number=phone
+    ).select_related('related_property')  
+
+    # Mark 'new' inquiries as 'viewed' since agent is now viewing them
+    inquiries.filter(status='new').update(status='viewed')  
+    
     context = {
         'phone': phone,
         'bookings': bookings,
         'leads': leads,
         'visits': visits,
         'communications': communications,
+        'inquiries': inquiries,
     }
     
     return render(request, 'agent/customer_detail.html', context)

@@ -11,7 +11,7 @@
 <div class="customer-detail-container">
     <!-- Header -->
     <div class="page-header">
-        <h1>Customer Details - {{ phone }}</h1>
+        <h3>Property & Customer Details</h3>
         <div class="action-buttons">
             <a href="tel:{{ phone }}" class="btn btn-success">
                 <i class="bi bi-telephone"></i> Call
@@ -24,6 +24,101 @@
             </a>
         </div>
     </div>
+
+   
+    {% if inquiries %}
+    <div class="card mb-4 property-inquiry-card">
+        <!-- <h3>Property &amp; Customer Details</h3> -->
+
+        {% for inquiry in inquiries %}
+            <!-- Row 1: Image + Basic Info side-by-side -->
+            <div class="row">
+                <div class="col-md-4">
+                    {% if inquiry.related_property.featured_image %}
+                        <img src="{{ inquiry.related_property.featured_image.url }}" class="img-fluid rounded">
+                    {% endif %}
+                </div>
+
+                <div class="col-md-8">
+                    <h5 class="property-title-large">{{ inquiry.related_property.title }}</h5>
+                    <div class="property-location-row">
+                        <i class="bi bi-geo-alt"></i> {{ inquiry.related_property.location }}
+                    </div>
+
+                    <div class="property-mini-grid">
+                        <div class="mini-box">
+                            <div class="mini-label">Property Type</div>
+                            <div class="mini-value">{{ inquiry.related_property.category|default:"N/A" }}</div>
+                        </div>
+                        <div class="mini-box">
+                            <div class="mini-label">Area</div>
+                            <div class="mini-value">{{ inquiry.related_property.project_size_acre|default:"N/A" }}</div>
+                        </div>
+                    </div>
+
+                    <div class="price-large">₹{{ inquiry.related_property.price|floatformat:0 }}</div>
+                    <div class="price-sub">Total Price: ₹{{ inquiry.related_property.price|floatformat:0 }}</div>
+                </div>
+            </div>
+
+            <!-- Row 2: Property Details table — FULL WIDTH, neeche -->
+            <div class="full-width-section">
+                <h5 class="section-label">Property Details</h5>
+                <table class="property-details-table">
+                    <tr>
+                        <td class="pd-label">Property ID</td>
+                        <td class="pd-value">{{ inquiry.related_property.id }}</td>
+                    </tr>
+                    <tr>
+                        <td class="pd-label">Type</td>
+                        <td class="pd-value">{{ inquiry.related_property.category|default:"N/A" }}</td>
+                    </tr>
+                    <tr>
+                        <td class="pd-label">Area</td>
+                        <td class="pd-value">{{ inquiry.related_property.project_size_acre|default:"N/A" }}</td>
+                    </tr>
+                    <tr>
+                        <td class="pd-label">Ownership</td>
+                        <td class="pd-value">{{ inquiry.related_property.ownership_type|default:"N/A" }}</td>
+                    </tr>
+                    <tr>
+                        <td class="pd-label">Possession</td>
+                        <td class="pd-value">{{ inquiry.related_property.possession_status|default:"Ready to Move" }}</td>
+                    </tr>
+                    <tr>
+                        <td class="pd-label">Road Access</td>
+                        <td class="pd-value">{{ inquiry.related_property.road_access|default:"N/A" }}</td>
+                    </tr>
+                    <tr>
+                        <td class="pd-label">Water Source</td>
+                        <td class="pd-value">{{ inquiry.related_property.water_source|default:"N/A" }}</td>
+                    </tr>
+                    <tr>
+                        <td class="pd-label">Soil Type</td>
+                        <td class="pd-value">{{ inquiry.related_property.soil_type|default:"N/A" }}</td>
+                    </tr>
+                    <tr>
+                        <td class="pd-label">Best For</td>
+                        <td class="pd-value">Agriculture, Investment</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Row 3: Customer Details — FULL WIDTH -->
+            <div class="full-width-section">
+                <hr>
+                <h5 class="section-label">Customer Details</h5>
+                <p><strong>Name:</strong> {{ inquiry.name }}</p>
+                <p><strong>Phone:</strong> {{ inquiry.phone_number }}</p>
+                <p><strong>Email:</strong> {{ inquiry.email }}</p>
+                <p><strong>Message:</strong> {{ inquiry.message }}</p>
+                <p><strong>Status:</strong> {{ inquiry.get_status_display }}</p>
+            </div>
+
+            {% if not forloop.last %}<hr class="inquiry-separator">{% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
 
     <!-- Detail Grid -->
     <div class="detail-grid">
