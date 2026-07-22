@@ -250,4 +250,3 @@ DEFAULT_FROM_EMAIL = 'noreply@heydayrealty.com'
 # Contact API Keys for external website submissions
 CONTACT_API_KEY_HEYDAY = os.getenv('CONTACT_API_KEY_HEYDAY')
 CONTACT_API_KEY_CODIQ = os.getenv('CONTACT_API_KEY_CODIQ')
-
