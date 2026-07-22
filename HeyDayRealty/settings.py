@@ -158,9 +158,9 @@ AUTHENTICATION_BACKENDS = [
 
 # Cashfree API Settings
 
-CASHFREE_APP_ID = os.getenv('CASHFREE_APP_ID', "test_app_id_placeholder")
-CASHFREE_SECRET_KEY = os.getenv('CASHFREE_SECRET_KEY', "test_secret_key_placeholder")
-CASHFREE_ENVIRONMENT = os.getenv('CASHFREE_ENVIRONMENT', "SANDBOX")  # Set to "PRODUCTION" when going live
+CASHFREE_APP_ID = os.getenv('CASHFREE_APP_ID')
+CASHFREE_SECRET_KEY = os.getenv('CASHFREE_SECRET_KEY')
+CASHFREE_ENVIRONMENT = os.getenv('CASHFREE_ENVIRONMENT')  # Set to "PRODUCTION" when going live
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
@@ -248,5 +248,5 @@ EMAIL_BACKEND = 'Apps.Administration.email_backend.SystemSettingsEmailBackend'
 DEFAULT_FROM_EMAIL = 'noreply@heydayrealty.com'
 
 # Contact API Keys for external website submissions
-CONTACT_API_KEY_HEYDAY = os.getenv('CONTACT_API_KEY_HEYDAY', 'xKhrhdxHYL271hWtOndxc0jTOdIh3DsQPwE102rxIOnBBDqa5kP45bCJKQyQPdhI')
-CONTACT_API_KEY_CODIQ = os.getenv('CONTACT_API_KEY_CODIQ', 'xKhrhdxHYL271hWtOndxc0jTOdIh3DsQPwE102rxIOnBBDqa5kP45bCJKQyQPdhI')
+CONTACT_API_KEY_HEYDAY = os.getenv('CONTACT_API_KEY_HEYDAY')
+CONTACT_API_KEY_CODIQ = os.getenv('CONTACT_API_KEY_CODIQ')
