@@ -40,43 +40,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Function to update prices based on billing period
     function updatePrices(period) {
-        const discount = discounts[period];
-        
-        priceElements.forEach(priceElement => {
-            const basePrice = parseInt(priceElement.getAttribute('data-base-price'));
-            
-            if (basePrice === 0) {
-                // Free plan - always show 0
-                priceElement.textContent = '0';
-            } else {
-                // Calculate discounted price
-                const discountedPrice = calculateDiscountedPrice(basePrice, discount);
-                priceElement.textContent = discountedPrice;
-            }
+        // Hide all price groups
+        document.querySelectorAll('.pricing-card-price-group').forEach(el => {
+            el.style.display = 'none';
         });
         
-        // Update billing period text
-        const billingTexts = document.querySelectorAll('.pricing-card-billing');
-        const periodLabels = {
-            '1_month': 'billed monthly',
-            '3_months': 'billed quarterly',
-            '6_months': 'billed semi-annually',
-            '12_months': 'billed annually'
-        };
-        
-        billingTexts.forEach(text => {
-            text.textContent = periodLabels[period];
+        // Show the selected price group
+        document.querySelectorAll('.pricing-' + period).forEach(el => {
+            el.style.display = 'block';
         });
-    }
-    
-    // Function to calculate discounted price
-    function calculateDiscountedPrice(basePrice, discountPercent) {
-        if (discountPercent === 0) {
-            return basePrice;
-        }
-        const discountAmount = (basePrice * discountPercent) / 100;
-        const discountedPrice = basePrice - discountAmount;
-        return Math.round(discountedPrice);
     }
     
     // Smooth scroll for anchor links
@@ -93,6 +65,21 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                 }
             }
+        });
+    });
+    
+    // Handle Checkout Buttons
+    const checkoutButtons = document.querySelectorAll('.checkout-btn');
+    checkoutButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const planId = this.getAttribute('data-plan-id');
+            const activePeriodBtn = document.querySelector('.billing-toggle-btn.active');
+            let cycle = '1M';
+            if (activePeriodBtn) {
+                cycle = activePeriodBtn.getAttribute('data-period');
+            }
+            window.location.href = `/subscriptions/checkout/paid/${planId}/?billing_cycle=${cycle}`;
         });
     });
     

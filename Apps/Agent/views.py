@@ -161,6 +161,30 @@ def property_type_select(request):
     if user_role not in ['agent', 'owner', 'admin'] and not request.user.is_superuser and not request.user.is_staff:
         raise PermissionDenied("Access denied. This page is only accessible to agents, owners, or admins.")
     
+    # Check subscription for agents
+    if user_role == 'agent':
+        if not hasattr(request.user, 'user_subscription') or request.user.user_subscription.status != 'active':
+            messages.warning(request, "You must select a subscription plan before adding properties.")
+            return redirect('public:subscription_plans')
+            
+        user_sub = request.user.user_subscription
+        plan = user_sub.plan
+        if plan:
+            limit = plan.property_limit
+            current_count = Property.objects.filter(seller=request.user).count()
+            if current_count >= limit:
+                limit_msg = f"You have reached your plan's maximum limit of {limit} properties. Please upgrade your plan to add more."
+                return render(request, 'agent/property_type_select.html', {'base_template': 'agent/agent_base.html', 'limit_message': limit_msg, 'limit_title': "Plan Limit Reached"})
+                
+            if plan.slug and 'seed' in plan.slug.lower():
+                last_property = Property.objects.filter(seller=request.user).order_by('-created_at').first()
+                if last_property:
+                    days_passed = (timezone.now() - last_property.created_at).days
+                    if days_passed < 4:
+                        days_left = 4 - days_passed
+                        limit_msg = f"Now your today limit is reached, you can add another property after {days_left} days (Seed Plan Limit)."
+                        return render(request, 'agent/property_type_select.html', {'base_template': 'agent/agent_base.html', 'limit_message': limit_msg, 'limit_title': "Seed Plan Cooldown"})
+    
     base_template = 'administration/admin_base.html' if (user_role == 'admin' or request.user.is_superuser or request.user.is_staff) else 'agent/agent_base.html'
     return render(request, 'agent/property_type_select.html', {'base_template': base_template})
 
@@ -171,6 +195,31 @@ def property_add(request, property_type):
     user_role = get_user_role(request.user)
     if user_role not in ['agent', 'owner', 'admin'] and not request.user.is_superuser and not request.user.is_staff:
         raise PermissionDenied("Access denied. This page is only accessible to agents, owners, or admins.")
+        
+    # Check subscription for agents
+    if user_role == 'agent':
+        if not hasattr(request.user, 'user_subscription') or request.user.user_subscription.status != 'active':
+            messages.warning(request, "You must select a subscription plan before adding properties.")
+            return redirect('public:subscription_plans')
+            
+        user_sub = request.user.user_subscription
+        plan = user_sub.plan
+        if plan:
+            limit = plan.property_limit
+            current_count = Property.objects.filter(seller=request.user).count()
+            if current_count >= limit:
+                limit_msg = f"You have reached your plan's maximum limit of {limit} properties. Please upgrade your plan to add more."
+                return render(request, 'agent/property_type_select.html', {'base_template': 'agent/agent_base.html', 'limit_message': limit_msg, 'limit_title': "Plan Limit Reached"})
+                
+            if plan.slug and 'seed' in plan.slug.lower():
+                last_property = Property.objects.filter(seller=request.user).order_by('-created_at').first()
+                if last_property:
+                    days_passed = (timezone.now() - last_property.created_at).days
+                    if days_passed < 4:
+                        days_left = 4 - days_passed
+                        limit_msg = f"Now your today limit is reached, you can add another property after {days_left} days (Seed Plan Limit)."
+                        return render(request, 'agent/property_type_select.html', {'base_template': 'agent/agent_base.html', 'limit_message': limit_msg, 'limit_title': "Seed Plan Cooldown"})
+            
     """Add a new property"""
     is_admin = user_role == 'admin' or request.user.is_superuser or request.user.is_staff
     if request.method == 'POST':

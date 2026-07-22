@@ -5,7 +5,7 @@ from .dashboard_views import (
     InvestmentManagementView, SystemSettingsView, ReportsView, ActivityLogView,
     UserProfileView, PropertyReviewCenterView, PropertyReviewDetailPageView, InquiryDetailPageView,
     InquiryBulkActionView, InquiryExportCSVView, InquiryExportExcelView, InquiryDeleteView,
-    AdminPropertyListView
+    AdminPropertyListView, AdminFinancialsView
 )
 from . import investor_views
 from . import communication_views
@@ -23,6 +23,7 @@ urlpatterns = [
     path('users/', UserManagementView.as_view(), name='user-management-page'),
     path('users/<int:user_id>/', UserProfileView.as_view(), name='user-profile'),
     path('inquiries/<int:pk>/delete/', InquiryDeleteView.as_view(), name='inquiry-delete'),
+    path('financials/', AdminFinancialsView.as_view(), name='financials'),
     
     
     # Investors
