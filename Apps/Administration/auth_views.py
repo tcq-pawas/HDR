@@ -156,7 +156,9 @@ class CustomerRegistrationView(TemplateView):
         form = CustomerRegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)
+            from django.contrib.auth import authenticate
+            user = authenticate(username=user.username, password=request.POST.get('password1'))
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             return redirect(get_role_based_redirect_url(user))
         else:
             messages.error(request, "Registration failed. Please correct the errors below.")

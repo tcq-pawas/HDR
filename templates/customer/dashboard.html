@@ -138,7 +138,7 @@
 
         -webkit-backdrop-filter: blur(12px);
 
-        font-weight: 900;
+        font-weight: 600;
 
         letter-spacing: .2px;
 
@@ -148,9 +148,9 @@
 
     .premium-title{
 
-        font-size: clamp(1.6rem, 2.6vw, 2.1rem);
+        font-size: 28px;
 
-        font-weight: 1000;
+        font-weight: 700;
 
         line-height: 1.15;
 
@@ -158,7 +158,7 @@
 
     }
 
-    .premium-subtitle{ color: rgba(255,255,255,0.92); margin: 0 0 1rem 0; max-width: 720px; font-weight: 700; }
+    .premium-subtitle{ color: rgba(255,255,255,0.92); margin: 0 0 1rem 0; max-width: 720px; font-weight: 400; font-size: 14px; }
 
 
 
@@ -198,7 +198,7 @@
 
     .meta-label{
 
-        font-size: .82rem;
+        font-size: 12px;
 
         opacity: .9;
 
@@ -206,13 +206,13 @@
 
         letter-spacing: .08em;
 
-        font-weight: 1000;
+        font-weight: 600;
 
         margin-bottom: .35rem;
 
     }
 
-    .meta-value{ font-size: 1.05rem; font-weight: 950; margin: 0; }
+    .meta-value{ font-size: 18px; font-weight: 500; margin: 0; }
 
 
 
@@ -238,7 +238,7 @@
 
         -webkit-backdrop-filter: blur(12px);
 
-        font-weight: 800;
+        font-weight: 400;
 
     }
 
@@ -250,7 +250,7 @@
 
         padding: .85rem 1.05rem;
 
-        font-weight: 950;
+        font-weight: 500;
 
         border: 1px solid rgba(255,255,255,0.24);
 
@@ -266,9 +266,11 @@
 
 
 
-    .kpi-grid{ display:grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: .95rem; margin-top: 1.1rem; }
+    .kpi-grid{ display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .95rem; margin-top: 1.1rem; }
 
-    @media (max-width: 1200px){ .kpi-grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (max-width: 768px){ .kpi-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+    @media (max-width: 576px){ .kpi-grid{ grid-template-columns: 1fr; } }
 
     @media (max-width: 992px){
         .premium-hero{ height: 280px; }
@@ -345,11 +347,11 @@
 
     }
 
-    .kpi-count{ font-size: 1.85rem; font-weight: 1000; margin-top: .45rem; line-height: 1; position: relative; z-index: 2; }
+    .kpi-count{ font-size: 32px; font-weight: 600; margin-top: .45rem; line-height: 1; position: relative; z-index: 2; }
 
-    .kpi-label{ font-weight: 950; margin-top: .25rem; color: rgba(255,255,255,0.95); position: relative; z-index: 2; }
+    .kpi-label{ font-weight: 400; margin-top: .25rem; color: rgba(255,255,255,0.95); position: relative; z-index: 2; font-size: 13px; }
 
-    .kpi-trend{ margin-top: .65rem; display:flex; align-items:center; gap: .45rem; font-weight: 900; font-size: .9rem; position: relative; z-index: 2; }
+    .kpi-trend{ margin-top: .65rem; display:flex; align-items:center; gap: .45rem; font-weight: 400; font-size: .9rem; position: relative; z-index: 2; }
 
     .trend-pill{ padding: .25rem .55rem; border-radius: 999px; background: rgba(255,255,255,0.16); border: 1px solid rgba(255,255,255,0.20); white-space: nowrap; }
 
@@ -361,23 +363,23 @@
 
     .panel-body{ padding: 1.1rem 1.3rem; }
 
-    .section-title{ font-weight: 1000; letter-spacing: .2px; margin: 0; }
+    .section-title{ font-weight: 700; letter-spacing: .2px; margin: 0; font-size: 18px; }
 
-    .muted-strong{ color: var(--muted); font-weight: 900; }
+    .muted-strong{ color: var(--muted); font-weight: 400; font-size: 13px; }
 
 
 
     .table-modern{ width:100%; border-collapse: separate; border-spacing: 0 10px; }
 
-    .table-modern th{ text-align:left; color:#64748b; font-size:.85rem; font-weight: 1000; padding: 0 10px; }
+    .table-modern th{ text-align:left; color:#64748b; font-size:12px; font-weight: 600; padding: 0 10px; }
 
-    .table-modern td{ background:#fff; padding: 12px 10px; vertical-align: middle; border-top: 1px solid rgba(15,118,110,0.08); border-bottom: 1px solid rgba(15,118,110,0.08); }
+    .table-modern td{ background:#fff; padding: 14px 10px; vertical-align: middle; border-top: 1px solid rgba(15,118,110,0.08); border-bottom: 1px solid rgba(15,118,110,0.08); font-size: 13px; }
 
     .row-card{ border-radius: 16px; box-shadow: 0 10px 30px rgba(15,118,110,0.10); }
 
 
 
-    .status-badge{ padding: .35rem .65rem; border-radius: 999px; font-weight: 1000; font-size: .86rem; border: 1px solid rgba(0,0,0,0.06); white-space: nowrap; }
+    .status-badge{ padding: .5rem .85rem; border-radius: 999px; font-weight: 500; font-size: 12px; border: 1px solid rgba(0,0,0,0.06); white-space: nowrap; }
 
     .s-pending{ background: rgba(245,158,11,0.15); color: #b45309; border-color: rgba(245,158,11,0.25); }
 
@@ -395,7 +397,7 @@
 
 
 
-    .btn-premium{ border-radius: 14px; font-weight: 950; padding: .6rem .85rem; border: 1px solid rgba(15,118,110,0.15); background: linear-gradient(180deg, rgba(15,118,110,0.96), rgba(6,78,59,0.96)); color:#fff; transition: transform .16s ease, filter .16s ease; display:inline-flex; align-items:center; gap:.5rem; justify-content:center; }
+    .btn-premium{ border-radius: 14px; font-weight: 500; padding: .7rem 1rem; border: 1px solid rgba(15,118,110,0.15); background: linear-gradient(180deg, rgba(15,118,110,0.96), rgba(6,78,59,0.96)); color:#fff; transition: transform .16s ease, filter .16s ease; display:inline-flex; align-items:center; gap:.5rem; justify-content:center; font-size: 13px; }
 
     .btn-premium:hover{ transform: translateY(-1px); filter: brightness(1.06); color:#fff; }
 
@@ -411,9 +413,9 @@
 
     .saved-info{ flex: 1; min-width: 0; }
 
-    .saved-name{ font-weight: 1000; white-space: nowrap; overflow:hidden; text-overflow: ellipsis; margin-bottom: .15rem; }
+    .saved-name{ font-weight: 600; white-space: nowrap; overflow:hidden; text-overflow: ellipsis; margin-bottom: .15rem; font-size: 14px; }
 
-    .saved-meta{ color: var(--muted); font-weight: 900; font-size: .95rem; white-space: nowrap; overflow:hidden; text-overflow: ellipsis; }
+    .saved-meta{ color: var(--muted); font-weight: 400; font-size: 13px; white-space: nowrap; overflow:hidden; text-overflow: ellipsis; }
 
 
 
@@ -433,19 +435,19 @@
 
     .property-media img{ width:100%; height:100%; object-fit: cover; display:block; opacity: .95; }
 
-    .property-media .tag{ position:absolute; top: 12px; left: 12px; padding: .32rem .62rem; border-radius: 999px; background: rgba(15,118,110,0.92); color:#fff; font-weight: 1000; font-size: .86rem; box-shadow: 0 16px 40px rgba(15,118,110,0.22); }
+    .property-media .tag{ position:absolute; top: 12px; left: 12px; padding: .4rem .75rem; border-radius: 999px; background: rgba(15,118,110,0.92); color:#fff; font-weight: 500; font-size: 12px; box-shadow: 0 16px 40px rgba(15,118,110,0.22); }
 
     .property-body{ padding: 1rem; display:flex; flex-direction: column; gap: .55rem; flex: 1; }
 
-    .property-title{ font-weight: 1000; line-height: 1.25; margin: 0; }
+    .property-title{ font-weight: 700; line-height: 1.25; margin: 0; font-size: 15px; }
 
-    .property-meta{ color: var(--muted); font-weight: 900; font-size: .95rem; margin: 0; }
+    .property-meta{ color: var(--muted); font-weight: 400; font-size: 13px; margin: 0; }
 
     .price-line{ display:flex; align-items:center; justify-content: space-between; gap: .85rem; margin-top: auto; }
 
-    .price{ font-weight: 1000; color: var(--primary); font-size: 1.15rem; }
+    .price{ font-weight: 600; color: var(--primary); font-size: 18px; }
 
-    .badge-pill{ border-radius: 999px; font-weight: 950; border: 1px solid rgba(15,118,110,0.18); background: rgba(15,118,110,0.08); padding: .35rem .6rem; color: #0b5a4c; white-space: nowrap; }
+    .badge-pill{ border-radius: 999px; font-weight: 500; border: 1px solid rgba(15,118,110,0.18); background: rgba(15,118,110,0.08); padding: .45rem .75rem; color: #0b5a4c; white-space: nowrap; font-size: 12px; }
 
 
 
@@ -457,15 +459,15 @@
 
     .timeline-item:last-child{ margin-bottom: 0; }
 
-    .timeline-dot{ position:absolute; left: -18px; top: 10px; width: 26px; height: 26px; border-radius: 10px; background: rgba(15,118,110,0.16); border: 1px solid rgba(15,118,110,0.28); display:flex; align-items:center; justify-content:center; color: var(--primary); font-weight: 1000; }
+    .timeline-dot{ position:absolute; left: -18px; top: 10px; width: 26px; height: 26px; border-radius: 10px; background: rgba(15,118,110,0.16); border: 1px solid rgba(15,118,110,0.28); display:flex; align-items:center; justify-content:center; color: var(--primary); font-weight: 400; font-size: 12px; }
 
     .timeline-card{ background: rgba(255,255,255,0.94); border: 1px solid rgba(15,118,110,0.10); border-radius: 18px; padding: .85rem .95rem; box-shadow: 0 14px 35px rgba(15,118,110,0.06); }
 
-    .timeline-title{ font-weight: 1000; margin-bottom: .25rem; }
+    .timeline-title{ font-weight: 700; margin-bottom: .25rem; font-size: 14px; }
 
-    .timeline-desc{ color: var(--muted); font-weight: 900; font-size: .92rem; margin-bottom: .35rem; }
+    .timeline-desc{ color: var(--muted); font-weight: 400; font-size: 13px; margin-bottom: .35rem; }
 
-    .timeline-date{ color: #94a3b8; font-weight: 1000; font-size: .85rem; }
+    .timeline-date{ color: #94a3b8; font-weight: 400; font-size: 12px; }
 
 </style>
 
@@ -475,99 +477,6 @@
 
 {% block content %}
 
-<div class="premium-hero mb-4">
-
-    <div class="premium-hero-inner">
-
-        <div class="premium-hero-left">
-
-            <div class="premium-eyebrow"><i class="fas fa-seedling"></i> Premium Agricultural Real Estate Portal</div>
-
-            <div class="premium-title">Welcome Back, {{ user.first_name|default:user.username }} 👋</div>
-
-            <p class="premium-subtitle">Explore premium agricultural land opportunities and manage your property interests.</p>
-
-            <div class="quick-search">
-
-                <input type="text" placeholder="Quick Search Properties..." aria-label="Quick Search Properties">
-
-                <button type="button"><i class="fas fa-search me-2"></i>Search</button>
-
-            </div>
-
-        </div>
-
-
-
-        <div class="hero-meta">
-
-            <div class="glass-card meta-box">
-
-                <div class="meta-label">Current Date</div>
-
-                <p class="meta-value">{% now "M d, Y" %}</p>
-
-            </div>
-
-
-
-            <div class="glass-card meta-box">
-
-                <div class="meta-label">Customer Status</div>
-
-                {% with ti=purchase_stats.total_inquiries|default:0 sp=purchase_stats.saved_properties|default:0 sv=purchase_stats.scheduled_viewings|default:0 %}
-
-                    {% if ti|add:sp|add:sv > 0 %}
-
-                        <p class="meta-value">Active</p>
-
-                    {% else %}
-
-                        <p class="meta-value">New Member</p>
-
-                    {% endif %}
-
-                {% endwith %}
-
-            </div>
-
-
-
-            <div class="glass-card meta-box">
-
-                <div class="meta-label">Member Since</div>
-
-                <p class="meta-value">{{ profile.created_at|date:"M Y" }}</p>
-
-            </div>
-
-
-
-            <div class="glass-card meta-box">
-
-                <div class="meta-label">Member Tier</div>
-
-                {% with ti=purchase_stats.total_inquiries|default:0 sp=purchase_stats.saved_properties|default:0 %}
-
-                    {% if ti|add:sp > 5 %}
-
-                        <p class="meta-value">Gold</p>
-
-                    {% else %}
-
-                        <p class="meta-value">Silver</p>
-
-                    {% endif %}
-
-                {% endwith %}
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
 
 
 
@@ -580,18 +489,6 @@
         <div class="kpi-count">{{ purchase_stats.total_inquiries }}</div><div class="kpi-label">Total Inquiries</div>
 
         <div class="kpi-trend"><span class="trend-pill">Upward Momentum</span></div>
-
-    </div>
-
-
-
-    <div class="kpi-card" style="background: linear-gradient(135deg, #F59E0B 0%, rgba(245,158,11,0.65) 100%);">
-
-        <div class="kpi-top"><div class="kpi-icon"><i class="fas fa-clock"></i></div><div class="trend-pill">▼ 2%</div></div>
-
-        <div class="kpi-count">{{ purchase_stats.pending_inquiries }}</div><div class="kpi-label">Pending Inquiries</div>
-
-        <div class="kpi-trend"><span class="trend-pill">Follow-up Needed</span></div>
 
     </div>
 
@@ -619,30 +516,6 @@
 
     </div>
 
-
-
-    <div class="kpi-card" style="background: linear-gradient(135deg, #EC4899 0%, rgba(236,72,153,0.65) 100%);">
-
-        <div class="kpi-top"><div class="kpi-icon"><i class="fas fa-eye"></i></div><div class="trend-pill">▲ 4%</div></div>
-
-        <div class="kpi-count">{{ activity_timeline|length }}</div><div class="kpi-label">Recently Viewed Properties</div>
-
-        <div class="kpi-trend"><span class="trend-pill">Active Research</span></div>
-
-    </div>
-
-
-
-    <div class="kpi-card" style="background: linear-gradient(135deg, #004526 0%, rgba(0,102,56,0.65) 100%);">
-
-        <div class="kpi-top"><div class="kpi-icon"><i class="fas fa-bullseye"></i></div><div class="trend-pill">▲ 6%</div></div>
-
-        <div class="kpi-count">{{ purchase_stats.scheduled_viewings }}</div><div class="kpi-label">Site Visits Scheduled</div>
-
-        <div class="kpi-trend"><span class="trend-pill">Booking Flow</span></div>
-
-    </div>
-
 </div>
 
 
@@ -663,7 +536,7 @@
 
                 </div>
 
-                <span class="badge bg-light text-dark" style="font-weight:1000;">{{ recent_inquiries|length }} items</span>
+                <span class="badge bg-light text-dark" style="font-weight:400;">{{ recent_inquiries|length }} items</span>
 
             </div>
 
@@ -795,7 +668,7 @@
 
                 </div>
 
-                <span class="badge bg-light text-dark" style="font-weight:1000;">{{ recent_saved_properties|length }} saved</span>
+                <span class="badge bg-light text-dark" style="font-weight:400;">{{ recent_saved_properties|length }} saved</span>
 
             </div>
 
@@ -1099,7 +972,7 @@
 
                 </div>
 
-                <span class="badge bg-light text-dark" style="font-weight:1000;">{{ activity_timeline|length }} events</span>
+                <span class="badge bg-light text-dark" style="font-weight:400;">{{ activity_timeline|length }} events</span>
 
             </div>
 

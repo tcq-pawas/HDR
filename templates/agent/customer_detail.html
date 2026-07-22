@@ -35,7 +35,14 @@
             <div class="row">
                 <div class="col-md-4">
                     {% if inquiry.related_property.featured_image %}
-                        <img src="{{ inquiry.related_property.featured_image.url }}" class="img-fluid rounded">
+                        <img id="mainImage-{{ inquiry.id }}" src="{{ inquiry.related_property.featured_image.url }}" class="img-fluid rounded mb-2" style="width: 100%; object-fit: cover; aspect-ratio: 16/9;">
+                    {% endif %}
+                    {% if inquiry.related_property.images.all %}
+                        <div style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px;">
+                            {% for img in inquiry.related_property.images.all %}
+                                <img src="{{ img.image.url }}" class="rounded" style="width: 80px; height: 80px; min-width: 80px; object-fit: cover; cursor: pointer;" onclick="document.getElementById('mainImage-{{ inquiry.id }}').src=this.src;">
+                            {% endfor %}
+                        </div>
                     {% endif %}
                 </div>
 
@@ -52,7 +59,7 @@
                         </div>
                         <div class="mini-box">
                             <div class="mini-label">Area</div>
-                            <div class="mini-value">{{ inquiry.related_property.project_size_acre|default:"N/A" }}</div>
+                            <div class="mini-value">{% if inquiry.related_property.total_area %}{{ inquiry.related_property.total_area }} {{ inquiry.related_property.area_unit|default:"" }}{% elif inquiry.related_property.project_size_acre %}{{ inquiry.related_property.project_size_acre }}{% else %}N/A{% endif %}</div>
                         </div>
                     </div>
 
@@ -75,7 +82,7 @@
                     </tr>
                     <tr>
                         <td class="pd-label">Area</td>
-                        <td class="pd-value">{{ inquiry.related_property.project_size_acre|default:"N/A" }}</td>
+                        <td class="pd-value">{% if inquiry.related_property.total_area %}{{ inquiry.related_property.total_area }} {{ inquiry.related_property.area_unit|default:"" }}{% elif inquiry.related_property.project_size_acre %}{{ inquiry.related_property.project_size_acre }}{% else %}N/A{% endif %}</td>
                     </tr>
                     <tr>
                         <td class="pd-label">Ownership</td>

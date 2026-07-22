@@ -46,11 +46,11 @@
 
 
 
-            <div class="form-row">
+            <div class="row">
 
-                <div class="form-group">
+                <div class="col-md-6 mb-3">
 
-                    <label for="{{ form.title.id_for_label }}" class="field-required">Title</label>
+                    <label for="{{ form.title.id_for_label }}" class="form-label">Title <span class="text-danger">*</span></label>
 
                     {{ form.title }}
 
@@ -58,9 +58,9 @@
 
                 </div>
 
-                <div class="form-group">
+                <div class="col-md-6 mb-3">
 
-                    <label for="{{ form.property_type.id_for_label }}" class="field-required">Property Type</label>
+                    <label for="{{ form.property_type.id_for_label }}" class="form-label">Property Type <span class="text-danger">*</span></label>
 
                     {{ form.property_type }}
 
@@ -72,11 +72,11 @@
 
 
 
-            <div class="form-row">
+            <div class="row">
 
-                <div class="form-group">
+                <div class="col-md-6 mb-3">
 
-                    <label for="{{ form.category.id_for_label }}" class="field-required">Category</label>
+                    <label for="{{ form.category.id_for_label }}" class="form-label">Category <span class="text-danger">*</span></label>
 
                     {{ form.category }}
 
@@ -84,9 +84,9 @@
 
                 </div>
 
-                <div class="form-group">
+                <div class="col-md-6 mb-3">
 
-                    <label for="{{ form.location.id_for_label }}" class="field-required">Location</label>
+                    <label for="{{ form.location.id_for_label }}" class="form-label">Location <span class="text-danger">*</span></label>
 
                     {{ form.location }}
 

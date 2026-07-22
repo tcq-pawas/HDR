@@ -76,13 +76,13 @@
         border:1px solid rgba(255,255,255,0.22);
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
-        font-weight:1000;
+        font-weight:600;
         letter-spacing:.2px;
         margin-bottom:.85rem;
         font-size:.95rem;
     }
-    .sp-title{ font-size: clamp(1.7rem, 2.8vw, 2.4rem); font-weight:1000; line-height:1.15; margin:0 0 .35rem 0; }
-    .sp-subtitle{ margin:0; color: rgba(255,255,255,0.92); font-weight:700; max-width: 760px; }
+    .sp-title{ font-size: 28px; font-weight:700; line-height:1.15; margin:0 0 .35rem 0; }
+    .sp-subtitle{ margin:0; color: rgba(255,255,255,0.92); font-weight:400; max-width: 760px; font-size: 14px; }
 
     .sp-meta{
         display:grid;
@@ -103,14 +103,14 @@
         color:#fff;
     }
     .sp-meta-label{
-        font-size:.82rem;
+        font-size:12px;
         opacity:.92;
         text-transform:uppercase;
         letter-spacing:.08em;
-        font-weight:1000;
+        font-weight:600;
         margin-bottom:.35rem;
     }
-    .sp-meta-value{ font-weight:1000; font-size: 1.1rem; margin:0; }
+    .sp-meta-value{ font-weight:500; font-size: 16px; margin:0; }
 
     @media (max-width: 768px){
         .sp-meta{ grid-template-columns: 1fr; min-width: unset; }
@@ -161,12 +161,12 @@
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
     }
-    .sp-kpi-count{ font-size: 2rem; font-weight:1000; line-height:1; }
-    .sp-kpi-label{ font-weight:950; opacity:.98; }
+    .sp-kpi-count{ font-size: 32px; font-weight:600; line-height:1; }
+    .sp-kpi-label{ font-weight:400; opacity:.98; font-size: 13px; }
     .sp-trend{
         margin-top:.65rem;
-        font-weight: 900;
-        font-size: .92rem;
+        font-weight: 400;
+        font-size: 12px;
         display:flex;
         gap:.45rem;
         align-items:center;
@@ -178,7 +178,7 @@
         background: rgba(255,255,255,0.16);
         border: 1px solid rgba(255,255,255,0.20);
         white-space:nowrap;
-        font-weight: 950;
+        font-weight: 500;
     }
 
     /* Toolbar */
@@ -211,8 +211,8 @@
         color:#fff;
         box-shadow: 0 14px 40px rgba(0,0,0,0.12);
     }
-    .sp-action-title{ font-weight: 1000; margin:0; }
-    .sp-action-sub{ margin: .18rem 0 0 0; color: rgba(2,6,23,0.62); font-weight: 900; font-size:.9rem; }
+    .sp-action-title{ font-weight: 700; margin:0; font-size: 14px; }
+    .sp-action-sub{ margin: .18rem 0 0 0; color: rgba(2,6,23,0.62); font-weight: 400; font-size: 13px; }
 
     /* Property Grid */
     .sp-property-grid{ display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 1rem; }
@@ -252,12 +252,12 @@
         position:absolute;
         top: 12px;
         left: 12px;
-        padding: .32rem .62rem;
+        padding: .4rem .75rem;
         border-radius: 999px;
         background: rgba(15,118,110,0.92);
         color:#fff;
-        font-weight:1000;
-        font-size:.86rem;
+        font-weight:600;
+        font-size:12px;
         box-shadow: 0 16px 40px rgba(15,118,110,0.22);
     }
 
@@ -283,22 +283,22 @@
 
     .sp-body{ padding: 1rem; display:flex; flex-direction:column; gap: .55rem; flex: 1; }
 
-    .sp-title{ font-weight: 1000; line-height: 1.2; margin:0; font-size:1.04rem; }
-    .sp-type-badge{ display:inline-flex; align-items:center; gap:.35rem; padding:.32rem .62rem; border-radius:999px; font-weight:1000; border: 1px solid rgba(15,118,110,0.18); background: rgba(15,118,110,0.08); color: #0b5a4c; white-space:nowrap; }
+    .sp-title{ font-weight: 700; line-height: 1.2; margin:0; font-size:15px; }
+    .sp-type-badge{ display:inline-flex; align-items:center; gap:.35rem; padding:.4rem .75rem; border-radius:999px; font-weight:500; border: 1px solid rgba(15,118,110,0.18); background: rgba(15,118,110,0.08); color: #0b5a4c; white-space:nowrap; font-size: 12px; }
 
-    .sp-loc{ color:#64748b; font-weight: 900; font-size: .95rem; display:flex; gap:.5rem; align-items:center; margin:0; flex-wrap:wrap; }
+    .sp-loc{ color:#64748b; font-weight: 400; font-size: 13px; display:flex; gap:.5rem; align-items:center; margin:0; flex-wrap:wrap; }
 
     .sp-metric-grid{ display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:.65rem; }
     .sp-metric{ background: rgba(255,255,255,0.80); border: 1px solid rgba(15,118,110,0.10); border-radius: 16px; padding: .6rem .7rem; }
-    .sp-metric-label{ color:#64748b; font-weight: 950; font-size: .78rem; text-transform: uppercase; letter-spacing: .02em; }
-    .sp-metric-value{ font-weight: 1000; margin-top:.25rem; }
+    .sp-metric-label{ color:#64748b; font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: .02em; }
+    .sp-metric-value{ font-weight: 600; margin-top:.25rem; font-size: 14px; }
 
     .sp-badges{ display:flex; flex-wrap:wrap; gap:.45rem; }
     .sp-badge{
-        padding:.33rem .62rem;
+        padding:.45rem .75rem;
         border-radius:999px;
-        font-weight: 1000;
-        font-size:.82rem;
+        font-weight: 500;
+        font-size:12px;
         border: 1px solid rgba(0,0,0,0.06);
         white-space:nowrap;
         background: rgba(2,6,23,0.02);
@@ -306,7 +306,7 @@
     }
 
     .sp-status-row{ display:flex; gap:.5rem; align-items:center; justify-content:space-between; }
-    .sp-status{ padding:.38rem .7rem; border-radius:999px; font-weight:1000; font-size:.86rem; border: 1px solid rgba(0,0,0,0.06); white-space:nowrap; }
+    .sp-status{ padding:.5rem .85rem; border-radius:999px; font-weight:500; font-size:12px; border: 1px solid rgba(0,0,0,0.06); white-space:nowrap; }
     .s-available{ background: rgba(16,185,129,0.15); color: #047857; border-color: rgba(16,185,129,0.25); }
     .s-reserved{ background: rgba(245,158,11,0.15); color: #b45309; border-color: rgba(245,158,11,0.25); }
     .s-sold{ background: rgba(239,68,68,0.15); color: #b91c1c; border-color: rgba(239,68,68,0.25); }
@@ -315,7 +315,7 @@
     .sp-action-row{ display:flex; gap:.6rem; }
     .sp-btn{
         border-radius: 16px;
-        font-weight: 950;
+        font-weight: 500;
         padding: .65rem .85rem;
         border: 1px solid rgba(15,118,110,0.15);
         background: rgba(255,255,255,0.90);
@@ -365,8 +365,8 @@
     }
     .sp-empty-illustration i{ position:relative; z-index:2; color: var(--primary); font-size: 2rem; }
 
-    .sp-empty h4{ font-weight:1000; font-size: 1.25rem; }
-    .sp-empty p{ color:#64748b; font-weight: 900; font-size: .98rem; max-width: 540px; margin: .25rem auto 0 auto; }
+    .sp-empty h4{ font-weight:700; font-size: 18px; }
+    .sp-empty p{ color:#64748b; font-weight: 400; font-size: 13px; max-width: 540px; margin: .25rem auto 0 auto; }
 
     .sp-empty-actions{ display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; margin-top: 1.15rem; }
 
@@ -393,8 +393,8 @@
     }
 
     .sp-section-head{ display:flex; align-items:baseline; justify-content:space-between; gap: 1rem; margin: 1.1rem 0 .9rem; flex-wrap:wrap; }
-    .sp-section-title{ font-weight:1000; margin:0; }
-    .sp-section-sub{ color:#64748b; font-weight: 900; margin: .25rem 0 0 0; }
+    .sp-section-title{ font-weight:700; margin:0; font-size: 18px; }
+    .sp-section-sub{ color:#64748b; font-weight: 400; margin: .25rem 0 0 0; font-size: 13px; }
 
     .sp-recent-wrap, .sp-recommended-wrap{ margin-top: 1.2rem; }
 </style>
@@ -555,7 +555,7 @@
             <p class="sp-section-title">Your Investment Shortlist</p>
             <p class="sp-section-sub">Professional cards with key financial metrics</p>
         </div>
-        <span class="badge bg-light text-dark" style="font-weight:1000; border-radius: 999px;">{{ saved_properties.count|default:0 }} saved</span>
+        <span class="badge bg-light text-dark" style="font-weight:400; border-radius: 999px;">{{ saved_properties.count|default:0 }} saved</span>
     </div>
 
     {% if saved_properties %}
@@ -628,7 +628,7 @@
                                 <div class="sp-status {% if status == 'available' %}s-available{% elif status == 'reserved' %}s-reserved{% else %}s-sold{% endif %}">
                                     {{ status|capfirst }}
                                 </div>
-                                <small class="text-muted" style="font-weight:900;">Saved {{ saved_property.saved_at|date:"M d, Y" }}</small>
+                                <small class="text-muted" style="font-weight:400;">Saved {{ saved_property.saved_at|date:"M d, Y" }}</small>
                             </div>
                         {% endwith %}
 
@@ -682,7 +682,7 @@
                 <p class="sp-section-sub">Your latest land research</p>
             </div>
             {% if recently_viewed %}
-                <span class="badge bg-light text-dark" style="font-weight:1000; border-radius: 999px;">{{ recently_viewed|length }} viewed</span>
+                <span class="badge bg-light text-dark" style="font-weight:400; border-radius: 999px;">{{ recently_viewed|length }} viewed</span>
             {% endif %}
         </div>
 
@@ -702,7 +702,7 @@
                             <p class="sp-loc"><i class="fas fa-map-marker-alt" style="color: var(--primary);"></i>{{ p.location|default:"—" }}</p>
                             <div class="d-flex align-items-center justify-content-between">
                                 <div class="fw-bold" style="color: var(--primary);">${{ p.price|default:0|intcomma }}</div>
-                                <button class="btn btn-sm btn-primary" style="border-radius: 14px; font-weight:1000;" onclick="makeInquiry()">
+                                <button class="btn btn-sm btn-primary" style="border-radius: 14px; font-weight:500;" onclick="makeInquiry()">
                                     <i class="fas fa-eye"></i>
                                 </button>
                             </div>
