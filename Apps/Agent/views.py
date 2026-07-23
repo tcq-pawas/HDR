@@ -188,8 +188,8 @@ def property_add(request, property_type):
                 property_obj.is_admin_list = True
             else:
                 property_obj.status = 'pending'
-            property_obj.created_by = request.user
-            property_obj.last_updated_by = request.user
+                property_obj.created_by = request.user
+                property_obj.last_updated_by = request.user
             
             # Set property type and category based on selection
             if property_type == 'land':
@@ -202,6 +202,12 @@ def property_add(request, property_type):
             # Slug will be automatically generated and deduplicated in the Property.save() method
             
             property_obj.save()
+            
+            #save gallery images
+            gallery_images = request.FILES.getlist('images')
+            for image in gallery_images:
+                PropertyImage.objects.create(property=property_obj, image=image, category='General')
+            
             if is_admin:
                 messages.success(request, "Property created successfully!")
                 return redirect('admin_dash:admin-property-list')

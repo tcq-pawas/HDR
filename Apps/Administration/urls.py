@@ -12,6 +12,12 @@ from . import communication_views
 from . import contact_views
 contact_docs_view = contact_views.ContactAPIDocumentationView()
 from Apps.Agent import views as agent_views
+from .views import AdminPropertyDetailAPIView, AdminPropertyListAPIView
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularSwaggerView,
+)
+
 
 app_name = 'admin_dash'
 
@@ -100,9 +106,21 @@ urlpatterns = [
     path('api/inquiries/unread-count/', views.get_unread_inquiries, name='unread-inquiries-count'),
     path('api/investments/create/', views.create_investment, name='create-investment'),
     
+    #Get all details of Admin
+    path('api/admin-properties/', AdminPropertyListAPIView.as_view(), name="admin-property-list-api"),
+    path('api/admin-properties/<int:pk>/', AdminPropertyDetailAPIView.as_view(), name="admin-property-detail"),
+    
     # Contact Inquiry API (public endpoint for multiple websites)
     path('api/contact/', contact_views.ContactInquiryAPIView.as_view(), name='contact-inquiry-api'),
     
     # Contact API Documentation
     path('api/contact/docs/', contact_docs_view, name='contact-api-docs'),
+    
+    #Swagger
+    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+    path(
+        "api/docs/",
+        SpectacularSwaggerView.as_view(url_name="schema"),
+        name="swagger-ui",
+    ),
 ]

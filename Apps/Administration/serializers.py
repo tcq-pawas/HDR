@@ -5,7 +5,7 @@ from .models import (
     ActivityLog, SystemBackup, SystemMaintenance, Report, GeneratedReport,
     Notification, SystemMetrics, PropertyReview
 )
-from Apps.PublicPage.models import Property
+from Apps.PublicPage.models import Property, PropertyImage
 
 
 class AdminProfileSerializer(serializers.ModelSerializer):
@@ -316,3 +316,24 @@ class PropertyDetailSerializer(serializers.ModelSerializer):
         if review:
             return PropertyReviewSerializer(review).data
         return None
+
+
+class PropertyImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PropertyImage
+        fields = "__all__"
+
+
+class AdminPropertyDetailSerializer(serializers.ModelSerializer):
+    images = PropertyImageSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Property
+        fields =  "__all__"
+        
+class AdminPropertyListSerializer(serializers.ModelSerializer):
+    images = PropertyImageSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Property
+        fields = "__all__"

@@ -36,7 +36,9 @@ from .serializers import (
     CreateSystemSettingsSerializer, CreateDashboardWidgetSerializer,
     CreateUserPermissionSerializer, CreateSystemBackupSerializer,
     CreateSystemMaintenanceSerializer, CreateReportSerializer,
-    CreateNotificationSerializer, CreateSystemMetricsSerializer
+    CreateNotificationSerializer, CreateSystemMetricsSerializer, AdminPropertyDetailSerializer,
+    AdminPropertyListSerializer
+    
 )
 
 
@@ -1322,3 +1324,25 @@ def create_investment(request):
             'success': False,
             'errors': form.errors
         }, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class AdminPropertyDetailAPIView(generics.RetrieveAPIView):
+    """
+    GET Admin Property Details API
+    """
+    serializer_class = AdminPropertyDetailSerializer
+    def get_queryset(self):
+        return Property.objects.filter(is_admin_list=True)
+    
+    
+    
+class AdminPropertyListAPIView(generics.ListAPIView):
+    """
+    GET list of ALL admin-added properties (no ID needed)
+    """
+    serializer_class = AdminPropertyListSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Property.objects.filter(is_admin_list=True).order_by('-created_at')
