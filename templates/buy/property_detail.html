@@ -936,13 +936,21 @@
                     </div>
 
                     <!-- Thumbnail Gallery -->
-                    {% if property.images.count > 1 %}
+                    {% if property.images.all %}
                     <div class="thumbnail-gallery">
+                        {% if property.featured_image %}
+                        <img src="{{ property.featured_image.url }}" alt="Cover Thumbnail"
+                            class="thumbnail active"
+                            data-index="0" onclick="changeImage(this.src, 0)">
+                        {% endif %}
+                        
                         {% for image in property.images.all %}
                         <img src="{{ image.image.url }}" alt="Thumbnail"
-                            class="thumbnail {% if forloop.first %}active{% endif %}"
-                            data-index="{{ forloop.counter0 }}" onclick="changeImage(this.src, this.dataset.index)">
+                            class="thumbnail {% if not property.featured_image and forloop.first %}active{% endif %}"
+                            data-index="{% if property.featured_image %}{{ forloop.counter }}{% else %}{{ forloop.counter0 }}{% endif %}" 
+                            onclick="changeImage(this.src, {% if property.featured_image %}{{ forloop.counter }}{% else %}{{ forloop.counter0 }}{% endif %})">
                         {% endfor %}
+                        
                         {% if property.images.count > 5 %}
                         <div class="thumbnail thumbnail-more"
                             style="background-image: url('{{ property.images.5.image.url }}');">
@@ -958,27 +966,27 @@
                     <div class="feature-item">
                         <i class="bi bi-rulers feature-icon"></i>
                         <div class="feature-title">Area</div>
-                        <div class="feature-value">{% if property.total_area %}{{ property.total_area }} {{ property.area_unit|default:"" }}{% elif property.project_size_acre %}{{ property.project_size_acre }}{% else %}N/A{% endif %}</div>
+                        <div class="feature-value">{% if property.total_area %}{{ property.total_area|floatformat:0 }} {{ property.get_area_unit_display|default:property.area_unit }}{% elif property.plot_area %}{{ property.plot_area|floatformat:0 }} Sq.Ft{% elif property.area_sqft %}{{ property.area_sqft }} Sq.Ft{% elif property.project_size_acre %}{{ property.project_size_acre }}{% else %}N/A{% endif %}</div>
                     </div>
                     <div class="feature-item">
                         <i class="bi bi-house feature-icon"></i>
                         <div class="feature-title">Type</div>
-                        <div class="feature-value">{{ property.category|default:"N/A" }}</div>
+                        <div class="feature-value">{{ property.get_category_display|default:property.category|default:"N/A" }}</div>
                     </div>
                     <div class="feature-item">
                         <i class="bi bi-signpost feature-icon"></i>
                         <div class="feature-title">Road</div>
-                        <div class="feature-value">{{ property.road_access|default:"N/A" }}</div>
+                        <div class="feature-value">{% if property.road_width %}{{ property.road_width|floatformat:0 }} ft{% elif property.road_access %}{{ property.road_access }}{% elif property.road_connectivity %}{{ property.road_connectivity }}{% else %}N/A{% endif %}</div>
                     </div>
                     <div class="feature-item">
                         <i class="bi bi-grid feature-icon"></i>
                         <div class="feature-title">Shape</div>
-                        <div class="feature-value">{{ property.land_shape|default:"N/A" }}</div>
+                        <div class="feature-value">{{ property.get_land_shape_display|default:property.land_shape|default:"N/A" }}</div>
                     </div>
                     <div class="feature-item">
                         <i class="bi bi-person-badge feature-icon"></i>
                         <div class="feature-title">Ownership</div>
-                        <div class="feature-value">{{ property.ownership_type|default:"N/A" }}</div>
+                        <div class="feature-value">{{ property.get_ownership_type_display|default:property.ownership_type|default:"N/A" }}</div>
                     </div>
                     <div class="feature-item">
                         <i class="bi bi-key feature-icon"></i>
@@ -1011,11 +1019,11 @@
                         </tr>
                         <tr>
                             <td class="table-label">Type</td>
-                            <td class="table-value">{{ property.category|default:"N/A" }}</td>
+                            <td class="table-value">{{ property.get_category_display|default:property.category|default:"N/A" }}</td>
                         </tr>
                         <tr>
                             <td class="table-label">Area</td>
-                            <td class="table-value">{% if property.total_area %}{{ property.total_area }} {{ property.area_unit|default:"" }}{% elif property.project_size_acre %}{{ property.project_size_acre }}{% else %}N/A{% endif %}</td>
+                            <td class="table-value">{% if property.total_area %}{{ property.total_area|floatformat:0 }} {{ property.get_area_unit_display|default:property.area_unit }}{% elif property.plot_area %}{{ property.plot_area|floatformat:0 }} Sq.Ft{% elif property.area_sqft %}{{ property.area_sqft }} Sq.Ft{% elif property.project_size_acre %}{{ property.project_size_acre }}{% else %}N/A{% endif %}</td>
                         </tr>
                         <tr>
                             <td class="table-label">Price</td>
@@ -1027,7 +1035,7 @@
                         </tr>
                         <tr>
                             <td class="table-label">Ownership</td>
-                            <td class="table-value">{{ property.ownership_type|default:"N/A" }}</td>
+                            <td class="table-value">{{ property.get_ownership_type_display|default:property.ownership_type|default:"N/A" }}</td>
                         </tr>
                         <tr>
                             <td class="table-label">Possession</td>
@@ -1035,7 +1043,7 @@
                         </tr>
                         <tr>
                             <td class="table-label">Road Access</td>
-                            <td class="table-value">{{ property.road_access|default:"N/A" }}</td>
+                            <td class="table-value">{% if property.road_width %}{{ property.road_width|floatformat:0 }} ft{% elif property.road_access %}{{ property.road_access }}{% elif property.road_connectivity %}{{ property.road_connectivity }}{% else %}N/A{% endif %}</td>
                         </tr>
                         <tr>
                             <td class="table-label">Water Source</td>
@@ -1132,12 +1140,12 @@
                         <div style="background: #f8fafc; padding: 12px; border-radius: 12px;">
                             <div style="font-size: 0.75rem; color: #6b7a7a; margin-bottom: 4px;">Property Type</div>
                             <div style="font-size: 0.9rem; font-weight: 600; color: #1a2e2a;">
-                                {{ property.category|default:"N/A" }}</div>
+                                {{ property.get_category_display|default:property.category|default:"N/A" }}</div>
                         </div>
                         <div style="background: #f8fafc; padding: 12px; border-radius: 12px;">
                             <div style="font-size: 0.75rem; color: #6b7a7a; margin-bottom: 4px;">Area</div>
                             <div style="font-size: 0.9rem; font-weight: 600; color: #1a2e2a;">
-                               {% if property.total_area %}{{ property.total_area }} {{ property.area_unit|default:"" }}{% elif property.project_size_acre %}{{ property.project_size_acre }}{% else %}N/A{% endif %}</div>
+                               {% if property.total_area %}{{ property.total_area|floatformat:0 }} {{ property.get_area_unit_display|default:property.area_unit }}{% elif property.plot_area %}{{ property.plot_area|floatformat:0 }} Sq.Ft{% elif property.area_sqft %}{{ property.area_sqft }} Sq.Ft{% elif property.project_size_acre %}{{ property.project_size_acre }}{% else %}N/A{% endif %}</div>
                             <div style="font-size: 0.9rem; font-weight: 600; color: #1a2e2a;">{{ property.category|default:"N/A" }}</div>
                         </div>
                         <div style="background: #f8fafc; padding: 12px; border-radius: 12px;">
@@ -1303,31 +1311,36 @@
 
 <script>
     let currentImageIndex = 0;
-    const images = document.querySelectorAll('.thumbnail');
-    const totalImages = images.length;
+
+    function getThumbnails() {
+        return document.querySelectorAll('img.thumbnail');
+    }
 
     function changeImage(src, index) {
         const mainImage = document.getElementById('mainImage');
+        const idx = parseInt(index);
         if (mainImage) {
             mainImage.src = src;
-            currentImageIndex = index;
+            currentImageIndex = idx;
             document.querySelectorAll('.thumbnail').forEach((thumb, i) => {
-                thumb.classList.toggle('active', i === index);
+                thumb.classList.toggle('active', i === idx);
             });
         }
     }
 
     function nextImage() {
-        if (images.length > 0) {
-            currentImageIndex = (currentImageIndex + 1) % images.length;
-            changeImage(images[currentImageIndex].src, currentImageIndex);
+        const thumbs = getThumbnails();
+        if (thumbs.length > 0) {
+            currentImageIndex = (currentImageIndex + 1) % thumbs.length;
+            changeImage(thumbs[currentImageIndex].src, currentImageIndex);
         }
     }
 
     function prevImage() {
-        if (images.length > 0) {
-            currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
-            changeImage(images[currentImageIndex].src, currentImageIndex);
+        const thumbs = getThumbnails();
+        if (thumbs.length > 0) {
+            currentImageIndex = (currentImageIndex - 1 + thumbs.length) % thumbs.length;
+            changeImage(thumbs[currentImageIndex].src, currentImageIndex);
         }
     }
 

@@ -477,12 +477,59 @@
 
             <div class="form-section">
                 <h3>Media Upload</h3>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="{{ form.featured_image.id_for_label }}" class="field-required">Featured Image</label>
-                        {{ form.featured_image }}
-                        {% if form.featured_image.errors %}<div class="error-message">{{ form.featured_image.errors }}</div>{% endif %}
+                
+                <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e2e8f0;">
+                    <h4 style="margin-top: 0; color: #1e293b; font-size: 1rem; margin-bottom: 5px;">Cover Photo (Featured Image)</h4>
+                    <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 15px;">Upload 1 main cover photo. This will be the primary image shown in search results and saved directly to the property record.</p>
+                    <div class="form-row">
+                        <div class="form-group" style="width: 100%;">
+                            <label for="{{ form.featured_image.id_for_label }}" class="field-required">Featured Image</label>
+                            {{ form.featured_image }}
+                            {% if form.featured_image.errors %}<div class="error-message">{{ form.featured_image.errors }}</div>{% endif %}
+                        </div>
                     </div>
+                    <div id="featured_preview_container" style="margin-top: 15px; display: none;">
+                        <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 10px;">Selected Cover Photo:</p>
+                        <div style="position: relative; display: inline-block;">
+                            <img id="featured_preview_image" src="" alt="Cover Preview" style="width: 120px; height: 90px; object-fit: cover; border-radius: 4px; border: 1px solid #cbd5e1;">
+                            <button id="clear_featured_btn" style="position: absolute; top: -8px; right: -8px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 22px; height: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; line-height: 1;">&times;</button>
+                        </div>
+                    </div>
+                    {% if form.instance.featured_image %}
+                        <div id="existing_featured_container" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #cbd5e1;">
+                            <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 10px;">Currently Uploaded Cover Photo:</p>
+                            <img src="{{ form.instance.featured_image.url }}" alt="Current Cover" style="width: 120px; height: 90px; object-fit: cover; border-radius: 4px; border: 1px solid #cbd5e1;">
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e2e8f0;">
+                    <h4 style="margin-top: 0; color: #1e293b; font-size: 1rem; margin-bottom: 5px;">Property Gallery Images</h4>
+                    <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 15px;">Select multiple additional photos (e.g., land views, surroundings) to create a gallery for this property.</p>
+                    <div class="form-row">
+                        <div class="form-group" style="width: 100%;">
+                            <label for="gallery_images_input">Select Multiple Gallery Images</label>
+                            <input type="file" id="gallery_images_input" class="form-control" multiple accept="image/*">
+                            <input type="file" name="gallery_images" id="gallery_images_final" multiple style="display: none;">
+                        </div>
+                    </div>
+                    <div id="gallery_preview_container" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px;"></div>
+                    
+                    {% if images %}
+                        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #cbd5e1;">
+                            <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 10px;">Currently Uploaded Gallery Images:</p>
+                            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                            {% for img in images %}
+                                <div style="position: relative;">
+                                    <img src="{{ img.image.url }}" alt="Gallery Image" style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px; border: 1px solid #cbd5e1;">
+                                </div>
+                            {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-row">
                     <div class="form-group">
                         <label for="{{ form.drone_video.id_for_label }}">Drone Video</label>
                         {{ form.drone_video }}
@@ -794,6 +841,171 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     } else {
         showStep(1);
+    }
+
+    // Dynamic District Dropdown
+    const stateSelect = document.getElementById('state_select');
+    const districtSelect = document.getElementById('district_select');
+    const savedDistrictValue = '{{ form.instance.district|default:"" }}';
+
+    function loadDistrictsForState(state, selectDistrictValue) {
+        if (!state) {
+            if(districtSelect) districtSelect.innerHTML = '<option value="">Select District</option>';
+            return;
+        }
+
+        if(districtSelect) districtSelect.innerHTML = '<option value="">Loading...</option>';
+
+        fetch(`/agent/ajax/get-cities/?state=${encodeURIComponent(state)}`)
+            .then(response => response.json())
+            .then(data => {
+                if(!districtSelect) return;
+                districtSelect.innerHTML = '<option value="">Select District</option>';
+                let districtFound = false;
+
+                data.cities.forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city;
+                    option.textContent = city;
+                    if (selectDistrictValue && city === selectDistrictValue) {
+                        option.selected = true;
+                        districtFound = true;
+                    }
+                    districtSelect.appendChild(option);
+                });
+
+                if (selectDistrictValue && !districtFound) {
+                    const option = document.createElement('option');
+                    option.value = selectDistrictValue;
+                    option.textContent = selectDistrictValue;
+                    option.selected = true;
+                    districtSelect.appendChild(option);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching districts:', error);
+                if(districtSelect) districtSelect.innerHTML = '<option value="">Error loading districts</option>';
+            });
+    }
+
+    if (stateSelect && districtSelect) {
+        stateSelect.addEventListener('change', function() {
+            loadDistrictsForState(this.value, null);
+        });
+    }
+
+    // Featured Image preview logic
+    const featuredInput = document.getElementById('{{ form.featured_image.id_for_label }}');
+    const featuredPreviewContainer = document.getElementById('featured_preview_container');
+    const featuredPreviewImage = document.getElementById('featured_preview_image');
+    const clearFeaturedBtn = document.getElementById('clear_featured_btn');
+    const existingFeaturedContainer = document.getElementById('existing_featured_container');
+
+    if (featuredInput && featuredPreviewContainer && featuredPreviewImage) {
+        featuredInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    featuredPreviewImage.src = ev.target.result;
+                    featuredPreviewContainer.style.display = 'block';
+                    if (existingFeaturedContainer) {
+                        existingFeaturedContainer.style.display = 'none';
+                    }
+                }
+                reader.readAsDataURL(file);
+            } else {
+                featuredPreviewContainer.style.display = 'none';
+                if (existingFeaturedContainer) {
+                    existingFeaturedContainer.style.display = 'block';
+                }
+            }
+        });
+
+        if (clearFeaturedBtn) {
+            clearFeaturedBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                featuredInput.value = '';
+                featuredPreviewContainer.style.display = 'none';
+                if (existingFeaturedContainer) {
+                    existingFeaturedContainer.style.display = 'block';
+                }
+            });
+        }
+    }
+
+    // Gallery images preview logic
+    const galleryInput = document.getElementById('gallery_images_input');
+    const finalInput = document.getElementById('gallery_images_final');
+    const previewContainer = document.getElementById('gallery_preview_container');
+    
+    if (galleryInput && finalInput && previewContainer) {
+        let dt = new DataTransfer();
+
+        galleryInput.addEventListener('change', function(e) {
+            const files = e.target.files;
+            for (let i = 0; i < files.length; i++) {
+                dt.items.add(files[i]);
+                const fileRef = files[i];
+                
+                const reader = new FileReader();
+                const previewDiv = document.createElement('div');
+                previewDiv.style.position = 'relative';
+                previewDiv.style.width = '100px';
+                previewDiv.style.height = '100px';
+                
+                const img = document.createElement('img');
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'cover';
+                img.style.borderRadius = '4px';
+                img.style.border = '1px solid #cbd5e1';
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.innerHTML = '×';
+                removeBtn.style.position = 'absolute';
+                removeBtn.style.top = '-5px';
+                removeBtn.style.right = '-5px';
+                removeBtn.style.background = '#ef4444';
+                removeBtn.style.color = 'white';
+                removeBtn.style.border = 'none';
+                removeBtn.style.borderRadius = '50%';
+                removeBtn.style.width = '20px';
+                removeBtn.style.height = '20px';
+                removeBtn.style.cursor = 'pointer';
+                removeBtn.style.display = 'flex';
+                removeBtn.style.alignItems = 'center';
+                removeBtn.style.justifyContent = 'center';
+                removeBtn.style.fontSize = '14px';
+                removeBtn.style.lineHeight = '1';
+                
+                removeBtn.addEventListener('click', function(ev) {
+                    ev.preventDefault();
+                    previewDiv.remove();
+                    
+                    let newDt = new DataTransfer();
+                    for(let j = 0; j < dt.files.length; j++) {
+                        if (dt.files[j] !== fileRef) {
+                            newDt.items.add(dt.files[j]);
+                        }
+                    }
+                    dt = newDt;
+                    finalInput.files = dt.files;
+                });
+                
+                reader.onload = function(ev) {
+                    img.src = ev.target.result;
+                }
+                reader.readAsDataURL(files[i]);
+                
+                previewDiv.appendChild(img);
+                previewDiv.appendChild(removeBtn);
+                previewContainer.appendChild(previewDiv);
+            }
+            
+            finalInput.files = dt.files;
+            galleryInput.value = '';
+        });
     }
 });
 </script>
