@@ -14,6 +14,31 @@
     </div>
 </div>
 
+{% if limit_message %}
+<!-- Limit Reached Modal -->
+<div class="modal fade show" style="display: block; background: rgba(0,0,0,0.5);" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius: 16px; border: none; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+      <div class="modal-header" style="background: #fff8e1; border-bottom: none; padding: 20px 24px;">
+        <h5 class="modal-title" style="color: #F4B400; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+            <i class="bi bi-exclamation-triangle-fill"></i> {{ limit_title }}
+        </h5>
+        <a href="{% url 'agent:dashboard' %}" class="btn-close" style="opacity: 0.5;"></a>
+      </div>
+      <div class="modal-body text-center" style="padding: 30px 24px;">
+        <div style="background: #fff3cd; width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+            <i class="bi bi-shield-lock-fill" style="font-size: 2rem; color: #F4B400;"></i>
+        </div>
+        <p style="font-size: 1.1rem; color: #495057; font-weight: 500; margin-bottom: 0;">{{ limit_message }}</p>
+      </div>
+      <div class="modal-footer" style="border-top: 1px solid #f1f3f5; padding: 16px 24px; justify-content: center;">
+        <a href="{% url 'agent:dashboard' %}" class="btn btn-secondary px-4 py-2" style="border-radius: 8px; font-weight: 500;">Back to Dashboard</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
 <div class="row">
     <div class="col-md-6">
         {% if request.resolver_match.namespace == 'admin_dash' %}

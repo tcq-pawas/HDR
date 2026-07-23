@@ -1,0 +1,130 @@
+{% extends 'public/base.html' %}
+{% load static %}
+
+{% block title %}Checkout - {{ plan.name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .checkout-container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 30px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        text-align: center;
+    }
+    .checkout-header {
+        margin-bottom: 30px;
+    }
+    .checkout-header h2 {
+        color: #2c3e50;
+        margin-bottom: 10px;
+    }
+    .plan-summary {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        text-align: left;
+    }
+    .plan-summary-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-size: 16px;
+    }
+    .plan-summary-total {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 2px dashed #dee2e6;
+        font-weight: bold;
+        font-size: 20px;
+        color: #000;
+    }
+    .btn-pay {
+        background: #1a73e8;
+        color: #fff;
+        border: none;
+        padding: 15px 30px;
+        font-size: 18px;
+        font-weight: 600;
+        border-radius: 8px;
+        cursor: pointer;
+        width: 100%;
+        transition: background 0.3s ease;
+    }
+    .btn-pay:hover {
+        background: #1557b0;
+    }
+    .loading-text {
+        display: none;
+        margin-top: 15px;
+        color: #666;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="checkout-container">
+    <div class="checkout-header">
+        <h2>Complete Your Subscription</h2>
+        <p class="text-muted">You're almost there! Complete the payment to activate your plan.</p>
+    </div>
+    
+    <div class="plan-summary">
+        <div class="plan-summary-item">
+            <span>Plan Name</span>
+            <strong>{{ plan.name }}</strong>
+        </div>
+        <div class="plan-summary-item">
+            <span>Billing Cycle</span>
+            <strong>{{ pricing.get_billing_cycle_display }}</strong>
+        </div>
+        <div class="plan-summary-total">
+            <span>Total Amount to Pay</span>
+            <span>₹{{ pricing.price|floatformat:"0" }}</span>
+        </div>
+    </div>
+
+    <button id="pay-btn" class="btn-pay">Pay Now Securely</button>
+    <p id="loading-text" class="loading-text"><i class="fa fa-spinner fa-spin"></i> Initializing Payment Gateway...</p>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const payBtn = document.getElementById("pay-btn");
+        const loadingText = document.getElementById("loading-text");
+        
+        // Initialize Cashfree
+        const cashfree = Cashfree({
+            mode: "{{ environment|lower }}" // "sandbox" or "production"
+        });
+
+        payBtn.addEventListener("click", function() {
+            payBtn.disabled = true;
+            payBtn.style.opacity = '0.7';
+            loadingText.style.display = 'block';
+            
+            let checkoutOptions = {
+                paymentSessionId: "{{ payment_session_id }}",
+                redirectTarget: "_self"
+            };
+            
+            cashfree.checkout(checkoutOptions).then(function (result) {
+                if(result.error){
+                    alert(result.error.message);
+                    payBtn.disabled = false;
+                    payBtn.style.opacity = '1';
+                    loadingText.style.display = 'none';
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

@@ -10,3 +10,4 @@ gunicorn<23.1
 djangorestframework
 django-filter
 drf-spectacular
+django-cors-headers

@@ -5,7 +5,7 @@ Handles dynamic validation based on website configuration
 
 import logging
 from rest_framework import serializers
-from .constants import WEBSITE_CONFIG, CONTACT_METHOD_CHOICES, PROPERTY_TYPE_CHOICES, BUDGET_RANGE_CHOICES, AREA_SIZE_CHOICES
+from .constants import WEBSITE_CONFIG
 from .validators import WebsiteValidator, PhoneNumberValidator, EmailValidatorCustom, validate_required_fields_for_website
 
 
@@ -26,27 +26,11 @@ class ContactInquirySerializer(serializers.Serializer):
     
     # Optional fields (required based on website)
     subject = serializers.CharField(max_length=255, required=False, allow_blank=True)
-    preferred_contact_method = serializers.ChoiceField(
-        choices=CONTACT_METHOD_CHOICES,
-        required=False,
-        allow_blank=True
-    )
-    property_type = serializers.ChoiceField(
-        choices=PROPERTY_TYPE_CHOICES,
-        required=False,
-        allow_blank=True
-    )
+    preferred_contact_method = serializers.CharField(max_length=50, required=False, allow_blank=True)
+    property_type = serializers.CharField(max_length=50, required=False, allow_blank=True)
     preferred_location = serializers.CharField(max_length=255, required=False, allow_blank=True)
-    budget_range = serializers.ChoiceField(
-        choices=BUDGET_RANGE_CHOICES,
-        required=False,
-        allow_blank=True
-    )
-    area_size = serializers.ChoiceField(
-        choices=AREA_SIZE_CHOICES,
-        required=False,
-        allow_blank=True
-    )
+    budget_range = serializers.CharField(max_length=50, required=False, allow_blank=True)
+    area_size = serializers.CharField(max_length=50, required=False, allow_blank=True)
     message = serializers.CharField(required=False, allow_blank=True)
     
     # Metadata fields (auto-populated from request)

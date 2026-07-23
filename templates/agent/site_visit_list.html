@@ -8,33 +8,39 @@
 {% endblock %}
 
 {% block content %}
-<div class="visits-container">
+<div class="container-fluid py-4">
     <!-- Header -->
-    <div class="page-header">
-        <h1>Site Visits Management</h1>
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+        <h1 class="h4 fw-bold text-dark mb-0">Site Visits Management</h1>
         <a href="{% url 'agent:site_visit_add' %}" class="btn btn-primary">
-            <i class="bi bi-plus-lg"></i> Schedule Visit
+            <i class="bi bi-plus-lg me-2"></i> Schedule Visit
         </a>
     </div>
 
     <!-- Filters -->
-    <div class="filters-bar">
-        <select name="status" onchange="location.href='?status='+this.value">
-            <option value="">All Status</option>
-            <option value="scheduled" {% if status_filter == 'scheduled' %}selected{% endif %}>Scheduled</option>
-            <option value="confirmed" {% if status_filter == 'confirmed' %}selected{% endif %}>Confirmed</option>
-            <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>Completed</option>
-            <option value="cancelled" {% if status_filter == 'cancelled' %}selected{% endif %}>Cancelled</option>
-            <option value="no_show" {% if status_filter == 'no_show' %}selected{% endif %}>No Show</option>
-            <option value="rescheduled" {% if status_filter == 'rescheduled' %}selected{% endif %}>Rescheduled</option>
-        </select>
-        <input type="date" name="date_from" value="{{ date_from|default:'' }}" placeholder="From Date" onchange="location.href='?date_from='+this.value">
-        <input type="date" name="date_to" value="{{ date_to|default:'' }}" placeholder="To Date" onchange="location.href='?date_to='+this.value">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex gap-2 flex-wrap">
+                <select name="status" class="form-select w-auto" onchange="location.href='?status='+this.value">
+                    <option value="">All Status</option>
+                    <option value="scheduled" {% if status_filter == 'scheduled' %}selected{% endif %}>Scheduled</option>
+                    <option value="confirmed" {% if status_filter == 'confirmed' %}selected{% endif %}>Confirmed</option>
+                    <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>Completed</option>
+                    <option value="cancelled" {% if status_filter == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                    <option value="no_show" {% if status_filter == 'no_show' %}selected{% endif %}>No Show</option>
+                    <option value="rescheduled" {% if status_filter == 'rescheduled' %}selected{% endif %}>Rescheduled</option>
+                </select>
+                <input type="date" name="date_from" value="{{ date_from|default:'' }}" placeholder="From Date" class="form-control w-auto" onchange="location.href='?date_from='+this.value">
+                <input type="date" name="date_to" value="{{ date_to|default:'' }}" placeholder="To Date" class="form-control w-auto" onchange="location.href='?date_to='+this.value">
+            </div>
+        </div>
     </div>
 
     <!-- Visits Table -->
-    <div class="table-responsive visits-table">
-        <table class="table table-hover">
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
             <thead>
                 <tr>
                     <th>Customer Name</th>
@@ -55,17 +61,17 @@
                             <td>{{ visit.scheduled_date|date:"M d, Y H:i" }}</td>
                             <td><span class="status-badge status-{{ visit.status }}">{{ visit.get_status_display }}</span></td>
                             <td>
-                                <div class="action-buttons">
-                                    <a href="{% url 'agent:site_visit_detail' visit.id %}" class="action-btn" title="View">
+                                <div class="d-flex gap-2">
+                                    <a href="{% url 'agent:site_visit_detail' visit.id %}" class="btn btn-sm btn-outline-primary" title="View">
                                         <i class="bi bi-eye"></i>
                                     </a>
-                                    <a href="{% url 'agent:site_visit_edit' visit.id %}" class="action-btn" title="Edit">
+                                    <a href="{% url 'agent:site_visit_edit' visit.id %}" class="btn btn-sm btn-outline-secondary" title="Edit">
                                         <i class="bi bi-pencil"></i>
                                     </a>
-                                    <a href="tel:{{ visit.customer_phone }}" class="action-btn" title="Call">
+                                    <a href="tel:{{ visit.customer_phone }}" class="btn btn-sm btn-outline-success" title="Call">
                                         <i class="bi bi-telephone"></i>
                                     </a>
-                                    <a href="https://wa.me/{{ visit.customer_phone }}" target="_blank" class="action-btn" title="WhatsApp">
+                                    <a href="https://wa.me/{{ visit.customer_phone }}" target="_blank" class="btn btn-sm btn-outline-success" title="WhatsApp">
                                         <i class="bi bi-whatsapp"></i>
                                     </a>
                                 </div>
@@ -75,27 +81,29 @@
                 {% else %}
                     <tr>
                         <td colspan="6">
-                            <div class="empty-state">
-                                <div class="empty-state-icon">
-                                    <i class="bi bi-calendar-event"></i>
+                            <div class="text-center py-5">
+                                <div class="mb-3">
+                                    <i class="bi bi-calendar-event" style="font-size: 3rem; color: #cbd5e1;"></i>
                                 </div>
-                                <h3>No Site Visits Scheduled</h3>
-                                <p>Site visits will appear here when you schedule property viewings.</p>
+                                <h3 class="h4 text-dark mb-2">No Site Visits Scheduled</h3>
+                                <p class="text-muted mb-4">Site visits will appear here when you schedule property viewings.</p>
                                 <a href="{% url 'agent:site_visit_add' %}" class="btn btn-primary">
-                                    <i class="bi bi-plus-lg"></i> Schedule Your First Visit
+                                    <i class="bi bi-plus-lg me-2"></i> Schedule Your First Visit
                                 </a>
                             </div>
                         </td>
                     </tr>
                 {% endif %}
             </tbody>
-        </table>
+                </table>
+            </div>
+        </div>
     </div>
 
     <!-- Pagination -->
     {% if page_obj.has_other_pages %}
-    <nav aria-label="Page navigation" style="margin-top: 1rem;">
-        <ul class="pagination">
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
             {% if page_obj.has_previous %}
                 <li class="page-item">
                     <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}">Previous</a>

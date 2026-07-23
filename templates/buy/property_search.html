@@ -352,7 +352,12 @@
                             <!-- Property Info -->
                             <div style="padding: 20px; flex-grow: 1; display: flex; flex-direction: column;">
                                 <div style="flex-grow: 1;">
-                                    <div style="font-size: 1.5rem; font-weight: 700; color: #0F6A3C; margin-bottom: 4px;">₹{{ property.price|floatformat:0 }}</div>
+                                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 4px;">
+                                        <div style="font-size: 1.5rem; font-weight: 700; color: #0F6A3C;">₹{{ property.price|floatformat:0 }}</div>
+                                        {% if property.seller.user_subscription and property.seller.user_subscription.status == 'active' and property.seller.user_subscription.plan.badge_image %}
+                                            <img src="{{ property.seller.user_subscription.plan.badge_image.url }}" alt="{{ property.seller.user_subscription.plan.name }}" style="height: 28px; object-fit: contain;" title="{{ property.seller.user_subscription.plan.name }} Plan">
+                                        {% endif %}
+                                    </div>
                                     <div style="font-size: 0.8rem; color: #6b7a7a; background: #f1f5f4; padding: 4px 10px; border-radius: 12px; display: inline-block; margin-bottom: 8px;">Total Price</div>
                                     <h3 style="font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 600; color: #1a2e2a; margin-bottom: 8px; line-height: 1.4;">{{ property.title }}</h3>
                                     <div style="font-size: 0.9rem; color: #6b7a7a; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">

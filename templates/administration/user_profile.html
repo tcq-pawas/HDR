@@ -853,6 +853,55 @@
 
 {% endif %}
 
+<!-- Subscription Information -->
+{% if subscription %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="info-card" style="border-left: 4px solid #059669;">
+            <h5><i class="fas fa-gem text-success"></i> Subscription Details</h5>
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <div class="kpi-card">
+                        <div class="kpi-icon" style="background: #E0E7FF; color: #4338CA;">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <div class="kpi-value">{{ subscription.plan.name }}</div>
+                        <div class="kpi-label">Active Plan</div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="kpi-card">
+                        <div class="kpi-icon" style="background: #D1FAE5; color: #059669;">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="kpi-value">{{ subscription.status|title }}</div>
+                        <div class="kpi-label">Status</div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="kpi-card">
+                        <div class="kpi-icon" style="background: #FEF3C7; color: #D97706;">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="kpi-value" style="font-size: 1.2rem;">{{ subscription.start_date|date:"M d, Y" }}</div>
+                        <div class="kpi-label">Started On</div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="kpi-card">
+                        <div class="kpi-icon" style="background: #FEE2E2; color: #DC2626;">
+                            <i class="fas fa-hourglass-end"></i>
+                        </div>
+                        <div class="kpi-value" style="font-size: 1.2rem;">{{ subscription.end_date|date:"M d, Y" }}</div>
+                        <div class="kpi-label">Expires On</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
 <!-- Activity Timeline -->
 <div class="row mb-4">
     <div class="col-12">
@@ -870,6 +919,63 @@
                     <small>No recent activity</small>
                 </div>
                 {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Financial Ledger -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="info-card">
+            <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                <h5 class="mb-0 border-0 pb-0"><i class="fas fa-wallet text-primary"></i> Financial Ledger</h5>
+                <div>
+                    <span class="text-muted small me-2">Running Balance:</span>
+                    <span class="badge {% if current_balance >= 0 %}bg-success{% else %}bg-danger{% endif %} px-3 py-2" style="font-size: 1rem;">₹{{ current_balance }}</span>
+                </div>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="font-weight: 600; color: #64748B; font-size: 0.875rem;">Date</th>
+                            <th style="font-weight: 600; color: #64748B; font-size: 0.875rem;">Description</th>
+                            <th style="font-weight: 600; color: #64748B; font-size: 0.875rem;">Type</th>
+                            <th style="font-weight: 600; color: #64748B; font-size: 0.875rem;" class="text-end">Amount (₹)</th>
+                            <th style="font-weight: 600; color: #64748B; font-size: 0.875rem;" class="text-end">Balance (₹)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entry in ledger_entries %}
+                        <tr>
+                            <td style="color: #64748B; font-size: 0.875rem;">{{ entry.created_at|date:"M d, Y H:i" }}</td>
+                            <td style="color: #0F172A; font-size: 0.875rem; font-weight: 500;">{{ entry.description }}</td>
+                            <td>
+                                {% if entry.transaction_type == 'CREDIT' %}
+                                    <span class="badge bg-success bg-opacity-10 text-success border border-success">CREDIT</span>
+                                {% else %}
+                                    <span class="badge bg-danger bg-opacity-10 text-danger border border-danger">DEBIT</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end" style="font-size: 0.875rem; font-weight: 600; {% if entry.transaction_type == 'CREDIT' %}color: #059669;{% else %}color: #DC2626;{% endif %}">
+                                {% if entry.transaction_type == 'CREDIT' %}+{% else %}-{% endif %}{{ entry.amount }}
+                            </td>
+                            <td class="text-end" style="color: #0F172A; font-size: 0.875rem; font-weight: 700;">
+                                {{ entry.balance_after_transaction }}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">
+                                <i class="fas fa-receipt fa-2x mb-3 text-light"></i>
+                                <p class="mb-0">No financial transactions found.</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

@@ -12,11 +12,6 @@ WEBSITE_CONFIG = {
             "phone_number",
             "email",
             "subject",
-            "preferred_contact_method",
-            "property_type",
-            "preferred_location",
-            "budget_range",
-            "area_size",
             "message"
         ],
         "email_template": "emails/heyday_contact.html",
@@ -51,43 +46,6 @@ WEBSITE_CONFIG = {
         }
     }
 }
-
-# Contact method choices
-CONTACT_METHOD_CHOICES = [
-    ('email', 'Email'),
-    ('phone', 'Phone'),
-    ('whatsapp', 'WhatsApp'),
-    ('both', 'Both Email and Phone'),
-]
-
-# Property type choices
-PROPERTY_TYPE_CHOICES = [
-    ('apartment', 'Apartment'),
-    ('villa', 'Villa'),
-    ('penthouse', 'Penthouse'),
-    ('studio', 'Studio'),
-    ('commercial', 'Commercial'),
-    ('land', 'Land'),
-    ('other', 'Other'),
-]
-
-# Budget range choices
-BUDGET_RANGE_CHOICES = [
-    ('under_10m', 'Under 10 Million'),
-    ('10m_20m', '10-20 Million'),
-    ('20m_50m', '20-50 Million'),
-    ('50m_100m', '50-100 Million'),
-    ('above_100m', 'Above 100 Million'),
-]
-
-# Area size choices
-AREA_SIZE_CHOICES = [
-    ('under_1000', 'Under 1000 sqft'),
-    ('1000_2000', '1000-2000 sqft'),
-    ('2000_3000', '2000-3000 sqft'),
-    ('3000_5000', '3000-5000 sqft'),
-    ('above_5000', 'Above 5000 sqft'),
-]
 
 # API Response messages
 SUCCESS_MESSAGE = "Your inquiry has been submitted successfully."
