@@ -12,11 +12,6 @@ WEBSITE_CONFIG = {
             "phone_number",
             "email",
             "subject",
-            "preferred_contact_method",
-            "property_type",
-            "preferred_location",
-            "budget_range",
-            "area_size",
             "message"
         ],
         "email_template": "emails/heyday_contact.html",

@@ -1,536 +1,285 @@
 {% extends "agent/agent_base.html" %}
+
 {% load static %}
 
+
+
 {% block title %}{% if 'owner' in request.user.groups.all|stringformat:"s" %}Owner{% else %}Agent{% endif %} Dashboard |
+
 HeyDay Realty{% endblock %}
+
+
 
 {% block breadcrumb %}{% endblock %}
 
+
+
 {% block header_title %}
+
 <h1 class="page-title">Dashboard</h1>
+
 <p class="welcome-message">Welcome back, {{ user.first_name|default:user.username }}! Here's what's happening with your
+
     business today.</p>
+
 {% endblock %}
+
+
 
 {% block content %}
 
-<!-- KPI Statistics Cards -->
-<div class="kpi-cards-grid">
-    <div class="kpi-card kpi-card-teal">
-        <div class="kpi-card-icon">
-            <i class="bi bi-building"></i>
-        </div>
-        <div class="kpi-card-content">
-            <div class="kpi-value">{{ stats.total_properties }}</div>
-            <div class="kpi-label">Total Properties</div>
-            <div class="kpi-trend positive">
-                <i class="bi bi-arrow-up"></i>
-                <span>12.5% from last month</span>
+
+
+<!-- Property Metrics Cards -->
+
+<div class="row g-3 mb-4">
+
+    <div class="col-12 col-md-6 col-lg-3">
+
+        <div class="kpi-card kpi-card-teal h-100">
+
+            <div class="kpi-card-icon">
+
+                <i class="bi bi-building"></i>
+
             </div>
+
+            <div class="kpi-card-content">
+
+                <div class="kpi-value">{{ stats.total_properties }}</div>
+
+                <div class="kpi-label">Total Properties</div>
+
+            </div>
+
         </div>
-        <!-- <div class="kpi-mini-chart">
-            <canvas id="miniChart1"></canvas>
-        </div> -->
+
     </div>
 
-    <div class="kpi-card kpi-card-emerald">
-        <div class="kpi-card-icon">
-            <i class="bi bi-check-circle"></i>
-        </div>
-        <div class="kpi-card-content">
-            <div class="kpi-value">{{ stats.active_properties }}</div>
-            <div class="kpi-label">Active Properties</div>
-            <div class="kpi-trend positive">
-                <i class="bi bi-arrow-up"></i>
-                <span>8.2% from last month</span>
+
+
+    <div class="col-12 col-md-6 col-lg-3">
+
+        <div class="kpi-card kpi-card-emerald h-100">
+
+            <div class="kpi-card-icon">
+
+                <i class="bi bi-check-circle"></i>
+
             </div>
+
+            <div class="kpi-card-content">
+
+                <div class="kpi-value">{{ stats.active_properties }}</div>
+
+                <div class="kpi-label">Active</div>
+
+            </div>
+
         </div>
-        <!-- <div class="kpi-mini-chart">
-            <canvas id="miniChart2"></canvas>
-        </div> -->
+
     </div>
 
-    <div class="kpi-card kpi-card-blue">
-        <div class="kpi-card-icon">
-            <i class="bi bi-people"></i>
-        </div>
-        <div class="kpi-card-content">
-            <div class="kpi-value">{{ stats.total_leads }}</div>
-            <div class="kpi-label">Total Leads</div>
-            <div class="kpi-trend positive">
-                <i class="bi bi-arrow-up"></i>
-                <span>18.7% from last month</span>
+
+
+    <div class="col-12 col-md-6 col-lg-3">
+
+        <div class="kpi-card kpi-card-blue h-100">
+
+            <div class="kpi-card-icon">
+
+                <i class="bi bi-cash"></i>
+
             </div>
+
+            <div class="kpi-card-content">
+
+                <div class="kpi-value">{{ stats.sold_properties|default:0 }}</div>
+
+                <div class="kpi-label">Sold</div>
+
+            </div>
+
         </div>
-        <!-- <div class="kpi-mini-chart">
-            <canvas id="miniChart3"></canvas>
-        </div> -->
+
     </div>
 
-    <div class="kpi-card kpi-card-rose">
-        <div class="kpi-card-icon">
-            <i class="bi bi-person-plus"></i>
-        </div>
-        <div class="kpi-card-content">
-            <div class="kpi-value">{{ stats.new_leads_today }}</div>
-            <div class="kpi-label">New Leads Today</div>
-            <div class="kpi-trend positive">
-                <i class="bi bi-arrow-up"></i>
-                <span>21.2% from yesterday</span>
+
+
+    <div class="col-12 col-md-6 col-lg-3">
+
+        <div class="kpi-card kpi-card-purple h-100">
+
+            <div class="kpi-card-icon">
+
+                <i class="bi bi-clock"></i>
+
             </div>
+
+            <div class="kpi-card-content">
+
+                <div class="kpi-value">{{ stats.pending_approval|default:0 }}</div>
+
+                <div class="kpi-label">Pending</div>
+
+            </div>
+
         </div>
-        <!-- <div class="kpi-mini-chart">
-            <canvas id="miniChart4"></canvas>
-        </div> -->
+
     </div>
 
-    <div class="kpi-card kpi-card-purple">
-        <div class="kpi-card-icon">
-            <i class="bi bi-calendar-event"></i>
-        </div>
-        <div class="kpi-card-content">
-            <div class="kpi-value">{{ stats.scheduled_visits }}</div>
-            <div class="kpi-label">Scheduled Visits</div>
-            <div class="kpi-trend positive">
-                <i class="bi bi-arrow-up"></i>
-                <span>9.1% from last month</span>
-            </div>
-        </div>
-        <!-- <div class="kpi-mini-chart">
-            <canvas id="miniChart5"></canvas>
-        </div> -->
-    </div>
 
-    <div class="kpi-card kpi-card-green">
-        <div class="kpi-card-icon">
-            <i class="bi bi-briefcase"></i>
-        </div>
-        <div class="kpi-card-content">
-            <div class="kpi-value">{{ stats.bookings_this_month }}</div>
-            <div class="kpi-label">Bookings This Month</div>
-            <div class="kpi-trend positive">
-                <i class="bi bi-arrow-up"></i>
-                <span>15.4% from last month</span>
-            </div>
-        </div>
-        <!-- <div class="kpi-mini-chart">
-            <canvas id="miniChart6"></canvas>
-        </div> -->
-    </div>
-
-    <div class="kpi-card kpi-card-indigo">
-        <div class="kpi-card-icon">
-            <i class="bi bi-currency-dollar"></i>
-        </div>
-        <div class="kpi-card-content">
-            <div class="kpi-value">₹{{ stats.total_sales|floatformat:0 }}</div>
-            <div class="kpi-label">Total Sales</div>
-            <div class="kpi-trend positive">
-                <i class="bi bi-arrow-up"></i>
-                <span>16.3% from last month</span>
-            </div>
-        </div>
-        <!-- <div class="kpi-mini-chart">
-            <canvas id="miniChart7"></canvas>
-        </div> -->
-    </div>
-
-    <div class="kpi-card kpi-card-cyan">
-        <div class="kpi-card-icon">
-            <i class="bi bi-wallet2"></i>
-        </div>
-        <div class="kpi-card-content">
-            <div class="kpi-value">₹{{ stats.commission_earned|floatformat:0 }}</div>
-            <div class="kpi-label">Total Commission</div>
-            <div class="kpi-trend positive">
-                <i class="bi bi-arrow-up"></i>
-                <span>14.6% from last month</span>
-            </div>
-        </div>
-        <!-- <div class="kpi-mini-chart">
-            <canvas id="miniChart8"></canvas>
-        </div> -->
-    </div>
 
 </div>
 
-<!-- Main Content Grid -->
-<div class="dashboard-main-grid">
-    <!-- Left Column - Leads -->
-    <div class="dashboard-left-column">
-        <!-- Lead Management Section -->
-        <div class="leads-section">
-            <div class="leads-header">
-                <div class="leads-title">
-                    <h2>Recent Leads</h2>
-                    <a href="{% url 'agent:lead_list' %}" class="view-all-link">View All</a>
-                </div>
-                <div class="leads-controls">
-                    <div class="leads-search">
-                        <i class="bi bi-search"></i>
-                        <input type="text" placeholder="Search leads..." class="leads-search-input">
-                    </div>
-                    <select class="leads-filter">
-                        <option value="">All Status</option>
-                        <option value="new">New</option>
-                        <option value="contacted">Contacted</option>
-                        <option value="interested">Interested</option>
-                        <option value="site_visit">Site Visit</option>
-                        <option value="proposal">Proposal</option>
-                    </select>
-                    <button class="leads-export">
-                        <i class="bi bi-download"></i> Export
-                    </button>
-                </div>
-            </div>
-            <div class="leads-table-container table-responsive">
-                <table class="table table-hover leads-table">
-                    <thead>
-                        <tr>
-                            <th>Lead Name</th>
-                            <th>Phone</th>
-                            <th>Property Interest</th>
-                            <th>Location</th>
-                            <th>Status</th>
-                            <th>Created Date</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% if recent_leads %}
-                        {% for lead in recent_leads|slice:":5" %}
-                        <tr>
-                            <td><strong>{{ lead.name }}</strong></td>
-                            <td>{{ lead.phone|default:"N/A" }}</td>
-                            <td>{{ lead.property.title|truncatewords:3 }}</td>
-                            <td>{{ lead.property.location|default:"N/A" }}</td>
-                            <td><span class="status-badge status-new">New</span></td>
-                            <td>{{ lead.created_at|date:"M d, Y" }}</td>
-                            <td>
-                                <div class="leads-actions">
-                                    <button class="leads-action-btn" title="Call">
-                                        <i class="bi bi-telephone"></i>
-                                    </button>
-                                    <button class="leads-action-btn" title="Email">
-                                        <i class="bi bi-envelope"></i>
-                                    </button>
-                                    <button class="leads-action-btn" title="More">
-                                        <i class="bi bi-three-dots"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                        {% else %}
-                        <tr>
-                            <td colspan="7">
-                                <div class="empty-state">
-                                    <div class="empty-state-icon">
-                                        <i class="bi bi-people"></i>
-                                    </div>
-                                    <h3>No Leads Yet</h3>
-                                    <p>Leads will appear here when buyers show interest in your properties</p>
-                                    <a href="{% url 'agent:property_list' %}" class="btn btn-primary">
-                                        <i class="bi bi-plus-lg"></i> Add Property to Get Leads
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                        {% endif %}
-                    </tbody>
-                </table>
-            </div>
+
+
+<!-- Recent Properties Section -->
+
+<div class="leads-section">
+
+    <div class="leads-header">
+
+        <div class="leads-title">
+
+            <h2>Recent Properties</h2>
+
+            <a href="{% url 'agent:property_list' %}" class="view-all-link">View All</a>
+
         </div>
 
-        <!-- Recent Properties Section -->
-        <div class="leads-section">
-            <div class="leads-header">
-                <div class="leads-title">
-                    <h2>Recent Properties</h2>
-                    <a href="{% url 'agent:property_list' %}" class="view-all-link">View All</a>
-                </div>
-            </div>
-            <div class="leads-table-container table-responsive">
-                <table class="table table-hover leads-table">
-                    <thead>
-                        <tr>
-                            <th>Property Title</th>
-                            <th>Type</th>
-                            <th>Location</th>
-                            <th>Price</th>
-                            <th>Status</th>
-                            <th>Created Date</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% if recent_properties %}
-                        {% for property in recent_properties|slice:":5" %}
-                        <tr>
-                            <td><strong>{{ property.title }}</strong></td>
-                            <td>{{ property.property_type|default:"N/A" }}</td>
-                            <td>{{ property.location|default:"N/A" }}</td>
-                            <td>₹{{ property.price|floatformat:0|default:"N/A" }}</td>
-                            <td><span class="status-badge status-new">{{ property.status|default:"Active" }}</span></td>
-                            <td>{{ property.created_at|date:"M d, Y" }}</td>
-                            <td>
-                                <div class="leads-actions">
-                                    <button class="leads-action-btn" title="View">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
-                                    <button class="leads-action-btn" title="Edit">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
-                                    <button class="leads-action-btn" title="More">
-                                        <i class="bi bi-three-dots"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                        {% else %}
-                        <tr>
-                            <td colspan="7">
-                                <div class="empty-state">
-                                    <div class="empty-state-icon">
-                                        <i class="bi bi-building"></i>
-                                    </div>
-                                    <h3>No Properties Yet</h3>
-                                    <p>Your property listings will appear here</p>
-                                    <a href="{% url 'agent:property_type_select' %}" class="btn btn-primary">
-                                        <i class="bi bi-plus-lg"></i> Add Your First Property
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                        {% endif %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
     </div>
 
-    <!-- Right Column - Analytics -->
-    <div class="dashboard-right-column">
-        <!-- Lead Overview Widget -->
-        <div class="analytics-widget">
-            <div class="analytics-widget-header">
-                <h3>Lead Overview</h3>
-                <a href="{% url 'agent:lead_list' %}" class="view-all-link">View All</a>
-            </div>
-            <div class="lead-overview-chart">
-                <canvas id="leadOverviewChart"></canvas>
-                <div class="chart-center-text">
-                    <div class="chart-center-value">{{ stats.total_leads }}</div>
-                    <div class="chart-center-label">Total Leads</div>
-                </div>
-            </div>
-            <div class="analytics-legend">
-                <div class="analytics-legend-item">
-                    <span class="legend-dot legend-dot-new"></span>
-                    <span class="legend-label">New</span>
-                    <span class="legend-value">{{ stats.new_leads_today }} (13.9%)</span>
-                </div>
-                <div class="analytics-legend-item">
-                    <span class="legend-dot legend-dot-contacted"></span>
-                    <span class="legend-label">Contacted</span>
-                    <span class="legend-value">65 (26.5%)</span>
-                </div>
-                <div class="analytics-legend-item">
-                    <span class="legend-dot legend-dot-interested"></span>
-                    <span class="legend-label">Interested</span>
-                    <span class="legend-value">58 (23.7%)</span>
-                </div>
-                <div class="analytics-legend-item">
-                    <span class="legend-dot legend-dot-visit"></span>
-                    <span class="legend-label">Site Visit</span>
-                    <span class="legend-value">45 (18.4%)</span>
-                </div>
-                <div class="analytics-legend-item">
-                    <span class="legend-dot legend-dot-proposal"></span>
-                    <span class="legend-label">Proposal</span>
-                    <span class="legend-value">43 (17.6%)</span>
-                </div>
-            </div>
-        </div>
+    <div class="leads-table-container table-responsive">
 
-        <!-- Property Overview Widget -->
-        <div class="analytics-widget">
-            <div class="analytics-widget-header">
-                <h3>Property Overview</h3>
-            </div>
-            <div class="property-stats-grid">
-                <div class="property-stat-item property-stat-total">
-                    <div class="property-stat-icon">
-                        <i class="bi bi-building"></i>
-                    </div>
-                    <div class="property-stat-content">
-                        <div class="property-stat-value">{{ stats.total_properties }}</div>
-                        <div class="property-stat-label">Total Properties</div>
-                    </div>
-                </div>
-                <div class="property-stat-item property-stat-active">
-                    <div class="property-stat-icon">
-                        <i class="bi bi-check-circle"></i>
-                    </div>
-                    <div class="property-stat-content">
-                        <div class="property-stat-value">{{ stats.active_properties }}</div>
-                        <div class="property-stat-label">Active</div>
-                    </div>
-                </div>
-                <div class="property-stat-item property-stat-sold">
-                    <div class="property-stat-icon">
-                        <i class="bi bi-cash"></i>
-                    </div>
-                    <div class="property-stat-content">
-                        <div class="property-stat-value">{{ stats.sold_properties|default:0 }}</div>
-                        <div class="property-stat-label">Sold</div>
-                    </div>
-                </div>
-                <div class="property-stat-item property-stat-upcoming">
-                    <div class="property-stat-icon">
-                        <i class="bi bi-clock"></i>
-                    </div>
-                    <div class="property-stat-content">
-                        <div class="property-stat-value">{{ stats.pending_approval|default:0 }}</div>
-                        <div class="property-stat-label">Pending</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <table class="table table-hover leads-table">
 
-        <!-- Today's Site Visits Widget -->
-        <div class="analytics-widget">
-            <div class="analytics-widget-header">
-                <h3>Today's Site Visits</h3>
-                <span class="analytics-badge">{{ upcoming_visits|length }} visits</span>
-            </div>
-            <div class="site-visits-list">
-                {% if upcoming_visits %}
-                {% for visit in upcoming_visits|slice:":5" %}
-                <div class="site-visit-item">
-                    <div class="site-visit-time">
-                        <span class="visit-hour">{{ visit.scheduled_date|date:"H:i" }}</span>
-                        <span class="visit-ampm">{{ visit.scheduled_date|date:"A" }}</span>
-                    </div>
-                    <div class="site-visit-info">
-                        <div class="visit-customer">{{ visit.lead.name }}</div>
-                        <div class="visit-property">{{ visit.property.title|truncatewords:2 }}</div>
-                    </div>
-                    <button class="site-visit-contact-btn">
-                        <i class="bi bi-telephone"></i>
-                    </button>
-                </div>
+            <thead>
+
+                <tr>
+
+                    <th>Property Title</th>
+
+                    <th>Type</th>
+
+                    <th>Location</th>
+
+                    <th>Price</th>
+
+                    <th>Status</th>
+
+                    <th>Created Date</th>
+
+                    <th>Actions</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% if recent_properties %}
+
+                {% for property in recent_properties|slice:":5" %}
+
+                <tr>
+
+                    <td><strong>{{ property.title }}</strong></td>
+
+                    <td>{{ property.property_type|default:"N/A" }}</td>
+
+                    <td>{{ property.location|default:"N/A" }}</td>
+
+                    <td>₹{{ property.price|floatformat:0|default:"N/A" }}</td>
+
+                    <td><span class="status-badge status-new">{{ property.status|default:"Active" }}</span></td>
+
+                    <td>{{ property.created_at|date:"M d, Y" }}</td>
+
+                    <td>
+
+                        <div class="leads-actions">
+
+                            <button class="leads-action-btn" title="View">
+
+                                <i class="bi bi-eye"></i>
+
+                            </button>
+
+                            <button class="leads-action-btn" title="Edit">
+
+                                <i class="bi bi-pencil"></i>
+
+                            </button>
+
+                            <button class="leads-action-btn" title="More">
+
+                                <i class="bi bi-three-dots"></i>
+
+                            </button>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
                 {% endfor %}
+
                 {% else %}
-                <div class="site-visits-empty">
-                    <i class="bi bi-calendar-x"></i>
-                    <p>No site visits scheduled for today</p>
-                </div>
+
+                <tr>
+
+                    <td colspan="7">
+
+                        <div class="empty-state">
+
+                            <div class="empty-state-icon">
+
+                                <i class="bi bi-building"></i>
+
+                            </div>
+
+                            <h3>No Properties Yet</h3>
+
+                            <p>Your property listings will appear here</p>
+
+                            <a href="{% url 'agent:property_type_select' %}" class="btn btn-primary">
+
+                                <i class="bi bi-plus-lg"></i> Add Your First Property
+
+                            </a>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
                 {% endif %}
-            </div>
-            <div class="analytics-widget-footer">
-                <a href="{% url 'agent:site_visit_list' %}" class="view-all-link">View All Visits →</a>
-            </div>
-        </div>
+
+            </tbody>
+
+        </table>
+
     </div>
+
 </div>
+
+
 
 {% endblock %}
+
+
 
 {% block extra_css %}
+
 <link rel="stylesheet" href="{% static 'css/agent/dashboard.css' %}">
+
 {% endblock %}
 
+
+
 {% block extra_js %}
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Initialize mini charts
-        initMiniCharts();
 
-        // Initialize lead overview chart
-        initLeadOverviewChart();
-    });
-
-    // Initialize Mini Charts
-    function initMiniCharts() {
-        const miniCharts = [
-            { id: 'miniChart1', color: '#0F766E' },
-            { id: 'miniChart2', color: '#10B981' },
-            { id: 'miniChart3', color: '#3B82F6' },
-            { id: 'miniChart4', color: '#F43F5E' },
-            { id: 'miniChart5', color: '#8B5CF6' },
-            { id: 'miniChart6', color: '#10B981' },
-            { id: 'miniChart7', color: '#4F46E5' },
-            { id: 'miniChart8', color: '#0891B2' }
-        ];
-
-        miniCharts.forEach(chart => {
-            const ctx = document.getElementById(chart.id);
-            if (ctx) {
-                new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: ['', '', '', '', '', ''],
-                        datasets: [{
-                            data: [Math.random() * 10, Math.random() * 10, Math.random() * 10, Math.random() * 10, Math.random() * 10, Math.random() * 10],
-                            borderColor: chart.color,
-                            backgroundColor: chart.color + '20',
-                            fill: true,
-                            tension: 0.4,
-                            borderWidth: 2,
-                            pointRadius: 0
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false }
-                        },
-                        scales: {
-                            x: { display: false },
-                            y: { display: false }
-                        }
-                    }
-                });
-            }
-        });
-    }
-
-    // Initialize Lead Overview Chart
-    function initLeadOverviewChart() {
-        const ctx = document.getElementById('leadOverviewChart');
-        if (ctx) {
-            new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['New', 'Contacted', 'Interested', 'Site Visit', 'Proposal'],
-                    datasets: [{
-                        data: [34, 65, 58, 45, 43],
-                        backgroundColor: ['#0F766E', '#10B981', '#3B82F6', '#8B5CF6', '#F59E0B'],
-                        borderWidth: 0,
-                        cutout: '75%'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function (context) {
-                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const percentage = ((context.raw / total) * 100).toFixed(1);
-                                    return context.label + ': ' + context.raw + ' (' + percentage + '%)';
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-    }
-</script>
 {% endblock %}

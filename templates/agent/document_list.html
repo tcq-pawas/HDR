@@ -8,60 +8,52 @@
 {% endblock %}
 
 {% block content %}
-<div class="documents-container">
-
-    <!-- Breadcrumb -->
-    <!-- <nav class="breadcrumb-nav">
-        <a href="{% url 'agent:dashboard' %}">Dashboard</a>
-        <i class="bi bi-chevron-right"></i>
-        <span>Documents</span>
-    </nav> -->
-
+<div class="container-fluid py-4">
     <!-- Header -->
-    <div class="verification-header">
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
         <div>
-            <h1>Documents Verification</h1>
-            <p class="subtitle">Complete your identity and address verification to unlock all agent features.</p>
+            <h1 class="h4 fw-bold text-dark mb-0">Documents Verification</h1>
+            <p class="text-muted mb-0">Complete your identity and address verification to unlock all agent features.</p>
         </div>
+    </div>
 
         {% if verification_status == 'approved' %}
-        <div class="status-banner status-approved">
-            <i class="bi bi-check-circle-fill"></i>
+        <div class="alert alert-success d-flex align-items-center mb-4">
+            <i class="bi bi-check-circle-fill me-3 fs-4"></i>
             <div>
                 <strong>Verification Status: <span>Approved</span></strong>
-                <p>Your account is fully verified.</p>
+                <p class="mb-0">Your account is fully verified.</p>
             </div>
         </div>
         {% elif verification_status == 'rejected' %}
-        <div class="status-banner status-rejected">
-            <i class="bi bi-x-circle-fill"></i>
+        <div class="alert alert-danger d-flex align-items-center mb-4">
+            <i class="bi bi-x-circle-fill me-3 fs-4"></i>
             <div>
                 <strong>Verification Status: <span>Rejected</span></strong>
-                <p>{{ agent_profile.verification_remarks|default:"Please re-upload correct documents." }}</p>
+                <p class="mb-0">{{ agent_profile.verification_remarks|default:"Please re-upload correct documents." }}</p>
             </div>
         </div>
         {% elif verification_status == 'pending' %}
-        <div class="status-banner status-pending">
-            <i class="bi bi-exclamation-circle-fill"></i>
+        <div class="alert alert-warning d-flex align-items-center mb-4">
+            <i class="bi bi-exclamation-circle-fill me-3 fs-4"></i>
             <div>
                 <strong>Verification Status: <span>Pending</span></strong>
-                <p>Your documents are under review by admin.</p>
+                <p class="mb-0">Your documents are under review by admin.</p>
             </div>
         </div>
         {% else %}
-        <div class="status-banner status-not-started">
-            <i class="bi bi-info-circle-fill"></i>
+        <div class="alert alert-info d-flex align-items-center mb-4">
+            <i class="bi bi-info-circle-fill me-3 fs-4"></i>
             <div>
                 <strong>Verification Status: <span>Not Started</span></strong>
-                <p>Upload your documents to begin verification.</p>
+                <p class="mb-0">Upload your documents to begin verification.</p>
             </div>
         </div>
         {% endif %}
-    </div>
 
     <!-- Stepper -->
-    <div class="stepper-card">
-        <div class="stepper">
+    <div class="card shadow-sm border-0 rounded-4 mb-4">
+        <div class="card-body p-4">
             <div class="step {% if id_proof_uploaded %}completed{% else %}active{% endif %}">
                 <div class="step-icon-wrap">
                     <div class="step-icon"><i class="bi bi-person-vcard"></i></div>
@@ -107,15 +99,16 @@
     </div>
 
     <!-- Upload Cards + Checklist -->
-    <div class="verification-grid">
-
+    <div class="row">
         <!-- ID Proof Card -->
-        <div class="upload-card">
-            <div class="upload-card-header">
-                <i class="bi bi-person-vcard"></i>
-                <h3>ID Proof</h3>
-            </div>
-            <p class="upload-card-desc">Upload any one valid government ID proof.</p>
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-0 rounded-4 h-100">
+                <div class="card-body p-4">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="bi bi-person-vcard me-2 fs-4 text-primary"></i>
+                    <h3 class="h5 fw-bold mb-0">ID Proof</h3>
+                </div>
+                <p class="text-muted mb-4">Upload any one valid government ID proof.</p>
 
             <form method="post" enctype="multipart/form-data" class="upload-form">
                 {% csrf_token %}
@@ -137,15 +130,19 @@
                     <i class="bi bi-upload"></i> Upload ID Proof
                 </button>
             </form>
+                </div>
+            </div>
         </div>
 
         <!-- Address Proof Card -->
-        <div class="upload-card">
-            <div class="upload-card-header">
-                <i class="bi bi-geo-alt"></i>
-                <h3>Address Proof</h3>
-            </div>
-            <p class="upload-card-desc">Upload any one valid address proof.</p>
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-0 rounded-4 h-100">
+                <div class="card-body p-4">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="bi bi-geo-alt me-2 fs-4 text-primary"></i>
+                    <h3 class="h5 fw-bold mb-0">Address Proof</h3>
+                </div>
+                <p class="text-muted mb-4">Upload any one valid address proof.</p>
 
             <form method="post" enctype="multipart/form-data" class="upload-form">
                 {% csrf_token %}
@@ -168,74 +165,70 @@
                     <i class="bi bi-upload"></i> Upload Address Proof
                 </button>
             </form>
+                </div>
+            </div>
         </div>
 
         <!-- Sidebar -->
-        <div class="verification-sidebar">
-            <div class="checklist-card">
-                <h4>Verification Checklist</h4>
-                <ul class="checklist">
-                    <li>
-                        <i
-                            class="bi {% if id_proof_uploaded %}bi-check-circle-fill checked{% else %}bi-circle{% endif %}"></i>
-                        <span>ID Proof Uploaded</span>
-                        <em class="{% if id_proof_uploaded %}done{% else %}pending{% endif %}">
-                            {% if id_proof_uploaded %}Done{% else %}Pending{% endif %}
-                        </em>
-                    </li>
-                    <li>
-                        <i
-                            class="bi {% if address_proof_uploaded %}bi-check-circle-fill checked{% else %}bi-circle{% endif %}"></i>
-                        <span>Address Proof Uploaded</span>
-                        <em class="{% if address_proof_uploaded %}done{% else %}pending{% endif %}">
-                            {% if address_proof_uploaded %}Done{% else %}Pending{% endif %}
-                        </em>
-                    </li>
-                    <li>
-                        <i
-                            class="bi {% if admin_review_done %}bi-check-circle-fill checked{% else %}bi-circle{% endif %}"></i>
-                        <span>Admin Review</span>
-                        <em class="{% if admin_review_done %}done{% else %}pending{% endif %}">
-                            {% if admin_review_done %}Done{% else %}Pending{% endif %}
-                        </em>
-                    </li>
-                    <li class="{% if not is_verified %}locked-item{% endif %}">
-                        <i class="bi {% if is_verified %}bi-check-circle-fill checked{% else %}bi-lock{% endif %}"></i>
-                        <span>Verification Complete</span>
-                        <em class="{% if is_verified %}done{% else %}locked{% endif %}">
-                            {% if is_verified %}Done{% else %}Locked{% endif %}
-                        </em>
-                    </li>
-                </ul>
-            </div>
+        <div class="col-12">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-4">
+                    <h4 class="h5 fw-bold mb-3">Verification Checklist</h4>
+                    <ul class="list-group list-group-flush mb-4">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>ID Proof Uploaded</span>
+                            <span class="badge {% if id_proof_uploaded %}bg-success{% else %}bg-secondary{% endif %}">
+                                {% if id_proof_uploaded %}Done{% else %}Pending{% endif %}
+                            </span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>Address Proof Uploaded</span>
+                            <span class="badge {% if address_proof_uploaded %}bg-success{% else %}bg-secondary{% endif %}">
+                                {% if address_proof_uploaded %}Done{% else %}Pending{% endif %}
+                            </span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>Admin Review</span>
+                            <span class="badge {% if admin_review_done %}bg-success{% else %}bg-secondary{% endif %}">
+                                {% if admin_review_done %}Done{% else %}Pending{% endif %}
+                            </span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center {% if not is_verified %}opacity-50{% endif %}">
+                            <span>Verification Complete</span>
+                            <span class="badge {% if is_verified %}bg-success{% else %}bg-secondary{% endif %}">
+                                {% if is_verified %}Done{% else %}Locked{% endif %}
+                            </span>
+                        </li>
+                    </ul>
 
-            <div class="info-card">
-                <div class="info-card-header">
-                    <i class="bi bi-shield-check"></i>
-                    <strong>Why is verification required?</strong>
+                    <div class="alert alert-info">
+                        <div class="d-flex align-items-start">
+                            <i class="bi bi-shield-check me-2 fs-4"></i>
+                            <div>
+                                <strong>Why is verification required?</strong>
+                                <p class="mb-2 mt-1">Verification helps us ensure a safe and trusted platform for our customers and agents.</p>
+                                <ul class="mb-0 ps-3">
+                                    <li>Build customer trust</li>
+                                    <li>Get more leads</li>
+                                    <li>Unlock all agent features</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <p>Verification helps us ensure a safe and trusted platform for our customers and agents.</p>
-                <ul class="info-list">
-                    <li><i class="bi bi-check-circle-fill"></i> Build customer trust</li>
-                    <li><i class="bi bi-check-circle-fill"></i> Get more leads</li>
-                    <li><i class="bi bi-check-circle-fill"></i> Unlock all agent features</li>
-                </ul>
             </div>
         </div>
     </div>
 
     <!-- Bottom Banner -->
     {% if not is_verified %}
-    <div class="pending-banner">
-        <div class="pending-banner-left">
-            <i class="bi bi-lock-fill"></i>
-            <div>
-                <strong>Your account is under verification</strong>
-                <p>You will be able to add properties, manage leads, site visits and use other features once your
-                    documents are verified by our admin team.</p>
-            </div>
+    <div class="alert alert-warning d-flex align-items-center mt-4">
+        <i class="bi bi-lock-fill me-3 fs-4"></i>
+        <div>
+            <strong>Your account is under verification</strong>
+            <p class="mb-0">You will be able to add properties, manage leads, site visits and use other features once your documents are verified by our admin team.</p>
         </div>
-        <a href="#" class="btn btn-outline">
+        <a href="#" class="btn btn-outline-warning ms-auto">
             <i class="bi bi-question-circle"></i> Need Help?
         </a>
     </div>

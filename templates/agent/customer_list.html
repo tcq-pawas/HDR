@@ -8,15 +8,17 @@
 {% endblock %}
 
 {% block content %}
-<div class="customers-container">
+<div class="container-fluid py-4">
     <!-- Header -->
-    <div class="page-header">
-        <h1>Customers</h1>
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+        <h1 class="h4 fw-bold text-dark mb-0">Customers</h1>
     </div>
 
     <!-- Customers Table -->
-    <div class="customers-table">
-        <table>
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
             <thead>
                 <tr>
                     <th>Enquiry ID</th>
@@ -51,16 +53,16 @@
                                 {% endif %}
                             </td>
                             <td>
-                                <div class="action-buttons">
+                                <div class="d-flex gap-2">
                                     {% if customer.phone %}
-                                        <a href="{% url 'agent:customer_detail' customer.phone %}" class="action-btn" title="View Details">
+                                        <a href="{% url 'agent:customer_detail' customer.phone %}" class="btn btn-sm btn-outline-primary" title="View Details">
                                             <i class="bi bi-eye"></i>
                                         </a>
                                     {% endif %}
-                                    <a href="tel:{{ customer.phone }}" class="action-btn" title="Call">
+                                    <a href="tel:{{ customer.phone }}" class="btn btn-sm btn-outline-success" title="Call">
                                         <i class="bi bi-telephone"></i>
                                     </a>
-                                    <a href="https://wa.me/{{ customer.phone }}" target="_blank" class="action-btn" title="WhatsApp">
+                                    <a href="https://wa.me/{{ customer.phone }}" target="_blank" class="btn btn-sm btn-outline-success" title="WhatsApp">
                                         <i class="bi bi-whatsapp"></i>
                                     </a>
                                 </div>
@@ -70,18 +72,20 @@
                 {% else %}
                     <tr>
                         <td colspan="5">
-                            <div class="empty-state">
-                                <div class="empty-state-icon">
-                                    <i class="bi bi-people"></i>
+                            <div class="text-center py-5">
+                                <div class="mb-3">
+                                    <i class="bi bi-people" style="font-size: 3rem; color: #cbd5e1;"></i>
                                 </div>
-                                <h3>No Customers Yet</h3>
-                                <p>Customers will appear here when you create bookings or add leads.</p>
+                                <h3 class="h4 text-dark mb-2">No Customers Yet</h3>
+                                <p class="text-muted mb-4">Customers will appear here when you create bookings or add leads.</p>
                             </div>
                         </td>
                     </tr>
                 {% endif %}
             </tbody>
-        </table>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
