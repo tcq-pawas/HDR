@@ -128,9 +128,11 @@
 
                                 <div class="d-flex gap-2">
 
-                                    <a href="{% url 'agent:property_edit' property.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                    <a href="{% url 'agent:property_edit' property.id %}"
+                                        class="btn btn-sm btn-outline-primary">Edit</a>
 
-                                    <a href="{% url 'agent:property_delete' property.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                                    <a href="{% url 'agent:property_delete' property.id %}"
+                                        class="btn btn-sm btn-outline-danger">Delete</a>
 
                                 </div>
 
@@ -188,35 +190,33 @@
 
             </li>
 
-            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-
-            <li class="page-item">
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %} <li class="page-item">
 
                 <a class="page-link" href="?page={{ num }}">{{ num }}</a>
 
-            </li>
+                </li>
 
-            {% endif %}
+                {% endif %}
 
-            {% endfor %}
+                {% endfor %}
 
 
 
-            {% if page_obj.has_next %}
+                {% if page_obj.has_next %}
 
-            <li class="page-item">
+                <li class="page-item">
 
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
 
-            </li>
+                </li>
 
-            <li class="page-item">
+                <li class="page-item">
 
-                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
 
-            </li>
+                </li>
 
-            {% endif %}
+                {% endif %}
 
         </ul>
 
@@ -240,7 +240,8 @@
 
             <h3 class="h4 text-dark mb-2">No Properties Yet</h3>
 
-            <p class="text-muted mb-4">You haven't added any properties yet. Start by creating your first property listing!</p>
+            <p class="text-muted mb-4">You haven't added any properties yet. Start by creating your first property
+                listing!</p>
 
             <a href="{% url 'agent:property_type_select' %}" class="btn btn-primary">
 

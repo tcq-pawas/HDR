@@ -22,7 +22,7 @@
 
 
 
-    --primary-color: #0abfa0;
+    --primary-color: #005427;
 
 
 
@@ -30,7 +30,7 @@
 
 
 
-    --sidebar-bg: #5ecdc0;
+    --sidebar-bg: #005427;
 
 
 
@@ -38,7 +38,7 @@
 
 
 
-    --sidebar-active-bg: #ffffff;
+    --sidebar-active-bg: #6AAE48;
 
 
 
@@ -46,7 +46,7 @@
 
 
 
-    --sidebar-active-text: #0d9488;
+    --sidebar-active-text: #005427;
 
 
 
@@ -54,7 +54,7 @@
 
 
 
-    --sidebar-text: #ffffff;
+    --sidebar-text: #FFFFFF;
 
 
 
@@ -70,7 +70,7 @@
 
 
 
-    --bg-white: #ffffff;
+    --bg-white: #FFFFFF;
 
 
 
@@ -208,6 +208,15 @@
 
 }
 
+
+.quick-add-btn:hover,
+.quick-add-btn:focus,
+.quick-add-btn:active {
+    background-color: #6AAE48 !important;
+    border-color: #4ade80 !important;
+    color: #14532d !important;
+    box-shadow: none !important;
+}
 
 
 
@@ -742,7 +751,7 @@ body {
 
 
 
-    background: #ffffff;
+    background: #FFFFFF;
 
 
 
@@ -2238,7 +2247,7 @@ body {
 
 
 
-    color: #ffffff;
+    color: #FFFFFF;
 
 
 
@@ -2446,7 +2455,7 @@ body {
 
 
 
-    color: #ffffff;
+    color: #005427;
 
 
 

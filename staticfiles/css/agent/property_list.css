@@ -15,7 +15,7 @@
 }
 
 .add-property-btn {
-    background: #1E73BE;
+    background: #005427;
     color: white;
     padding: 0.6rem 1.2rem;
     border-radius: 6px;
@@ -29,7 +29,7 @@
 }
 
 .add-property-btn:hover {
-    background: #155a9e;
+    background: #005427;
 }
 
 .filter-section {
@@ -106,6 +106,18 @@ tbody tr:hover {
     color: #065f46;
 }
 
+.btn-primary {
+    background-color: #005427 !important;
+    border-color: #005427 !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+    background-color: #003d1c !important;
+    border-color: #003d1c !important;
+}
+
 .status-sold {
     background: #dbeafe;
     color: #1e40af;
@@ -133,7 +145,7 @@ tbody tr:hover {
 }
 
 .action-btn.edit {
-    color: #1E73BE;
+    color: #005427;
     border-color: #1E73BE;
 }
 
@@ -215,7 +227,7 @@ tbody tr:hover {
 }
 
 .pagination span.current {
-    background: #1E73BE;
+    background: #005427;
     color: white;
-    border-color: #1E73BE;
+    border-color: #005427;
 }

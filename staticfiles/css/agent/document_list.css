@@ -9,7 +9,7 @@
 }
 
 .breadcrumb-nav a {
-    color: #0d9488;
+    color: #005427;
     text-decoration: none;
     font-weight: 500;
 }
@@ -162,15 +162,15 @@
 }
 
 .step.active .step-icon {
-    background: #0d9488;
+    background: #005427;
     color: white;
-    border-color: #0d9488;
+    border-color: #005427;
 }
 
 .step.completed .step-icon {
-    background: #0d9488;
+    background: #005427;
     color: white;
-    border-color: #0d9488;
+    border-color: #005427;
 }
 
 .step.locked .step-icon {
@@ -220,7 +220,7 @@
 }
 
 .step-line.completed {
-    background: #0d9488;
+    background: #005427;
 }
 
 /* Grid layout: upload cards + sidebar */
@@ -252,7 +252,7 @@
 }
 
 .upload-card-header i {
-    color: #0d9488;
+    color: #005427;
     font-size: 1.1rem;
 }
 
@@ -285,7 +285,7 @@
 
 .dropzone i {
     font-size: 2rem;
-    color: #0d9488;
+    color: #005427;
     margin-bottom: 0.5rem;
 }
 
@@ -302,7 +302,7 @@
 
 .btn-upload {
     width: 100%;
-    background: #0d9488;
+    background: #005427;
     color: white;
     border: none;
     padding: 0.75rem;
@@ -317,7 +317,7 @@
 }
 
 .btn-upload:hover {
-    background: #0f766e;
+    background: #6AAE48;
 }
 
 /* Sidebar */
@@ -402,7 +402,7 @@
 }
 
 .info-card-header i {
-    color: #0d9488;
+    color: #005427;
 }
 
 .info-card p {
