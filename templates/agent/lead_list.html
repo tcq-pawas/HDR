@@ -4,11 +4,11 @@
 {% block title %}Leads Management | HeyDay Realty{% endblock %}
 
 {% block extra_css %}
-<style>
+<!-- <style>
     /* Stat icon wraps - keep custom styling */
     .stat-icon-wrap {
-        width: 44px;
-        height: 44px;
+        width: 40px;
+        height: 40px;
         border-radius: 10px;
         display: flex;
         align-items: center;
@@ -100,7 +100,9 @@
         transition: all 0.2s;
     }
     .btn-more:hover { background: #f5f5f5; }
-</style>
+</style> -->
+
+<link rel="stylesheet" href="{% static 'css/agent/lead_list.css' %}">
 {% endblock %}
 
 {% block breadcrumb %}
@@ -131,9 +133,9 @@
 
     <!-- Stat Cards -->
     <div class="row mb-4">
-        <div class="col-6 col-md-4 col-lg-2 mb-3">
+        <div class="col-6 col-md-3 col-xl-2 mb-3">
             <div class="card shadow-sm border-0 rounded-4 h-100">
-                <div class="card-body d-flex align-items-center gap-3">
+                <div class="card-body d-flex align-items-center gap-2 p-3">
                     <div class="stat-icon-wrap teal"><i class="bi bi-people-fill"></i></div>
                     <div class="stat-info">
                         <div class="stat-label">Total Leads</div>
@@ -143,21 +145,21 @@
                 </div>
             </div>
         </div>
-        <div class="col-6 col-lg-2-4 mb-3">
+        <div class="col-6 col-md-3 col-xl-2 mb-3">
             <div class="card shadow-sm border-0 rounded-4 h-100">
-                <div class="card-body d-flex align-items-center gap-3">
+                <div class="card-body d-flex align-items-center gap-2 p-3">
                     <div class="stat-icon-wrap blue"><i class="bi bi-person-plus-fill"></i></div>
                     <div class="stat-info">
-                        <div class="stat-label">New Leads</div>
+                        <div class="stat-label">Today Leads</div>
                         <div class="stat-value">{{ stats.new_leads }}</div>
                         <div class="stat-trend"><i class="bi bi-arrow-up-short"></i> Uncontacted</div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-6 col-lg-2-4 mb-3">
+        <!-- <div class="col-6 col-md-3 col-xl-2 mb-3">
             <div class="card shadow-sm border-0 rounded-4 h-100">
-                <div class="card-body d-flex align-items-center gap-3">
+                <div class="card-body d-flex align-items-center gap-2 p-3">
                     <div class="stat-icon-wrap orange"><i class="bi bi-telephone-fill"></i></div>
                     <div class="stat-info">
                         <div class="stat-label">Contacted</div>
@@ -167,9 +169,9 @@
                 </div>
             </div>
         </div>
-        <div class="col-6 col-lg-2-4 mb-3">
+        <div class="col-6 col-md-3 col-xl-2 mb-3">
             <div class="card shadow-sm border-0 rounded-4 h-100">
-                <div class="card-body d-flex align-items-center gap-3">
+                <div class="card-body d-flex align-items-center gap-2 p-3">
                     <div class="stat-icon-wrap purple"><i class="bi bi-calendar-check-fill"></i></div>
                     <div class="stat-info">
                         <div class="stat-label">Site Visit</div>
@@ -179,9 +181,9 @@
                 </div>
             </div>
         </div>
-        <div class="col-6 col-lg-2-4 mb-3">
+        <div class="col-6 col-md-3 col-xl-2 mb-3">
             <div class="card shadow-sm border-0 rounded-4 h-100">
-                <div class="card-body d-flex align-items-center gap-3">
+                <div class="card-body d-flex align-items-center gap-2 p-3">
                     <div class="stat-icon-wrap green"><i class="bi bi-check-circle-fill"></i></div>
                     <div class="stat-info">
                         <div class="stat-label">Closed Won</div>
@@ -190,7 +192,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 
     <!-- Filters -->

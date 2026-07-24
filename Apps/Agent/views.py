@@ -454,9 +454,10 @@ def lead_list(request):
     leads = all_leads.select_related('property').order_by('-created_at')
     
     # Stats for the top cards
+    today = timezone.now().date()
     stats = {
         'total_leads': all_leads.count(),
-        'new_leads': all_leads.filter(status='new').count(),
+        'new_leads': all_leads.filter(created_at__date=today).count(),
         'contacted_leads': all_leads.filter(status='contacted').count(),
         'qualified_leads': all_leads.filter(status='qualified').count(),
         'closed_won_leads': all_leads.filter(status='closed_won').count(),
