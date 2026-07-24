@@ -252,11 +252,11 @@ def property_add(request, property_type):
             
             property_obj.save()
             
-            #save gallery images
-            gallery_images = request.FILES.getlist('images')
+            # Save multiple images to the PropertyImage gallery table
+            gallery_images = request.FILES.getlist('gallery_images')
             for image in gallery_images:
                 PropertyImage.objects.create(property=property_obj, image=image, category='General')
-            
+                
             if is_admin:
                 messages.success(request, "Property created successfully!")
                 return redirect('admin_dash:admin-property-list')
@@ -327,8 +327,8 @@ def property_edit(request, pk):
             property_obj.save()
             
             # Save multiple images to the PropertyImage gallery table
-            images = request.FILES.getlist('featured_image')
-            for image in images:
+            gallery_images = request.FILES.getlist('gallery_images')
+            for image in gallery_images:
                 PropertyImage.objects.create(property=property_obj, image=image, category='General')
                 
             messages.success(request, "Property updated successfully!")

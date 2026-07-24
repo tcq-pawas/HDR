@@ -22,7 +22,6 @@ class MultipleFileField(forms.ImageField):
 
 class PropertyForm(forms.ModelForm):
     """Form for creating and editing properties"""
-    featured_image = MultipleFileField(required=False)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -214,6 +213,7 @@ class PropertyForm(forms.ModelForm):
             'down_payment': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Down Payment', 'step': '0.01'}),
             'emi_availability': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             # Media Management
+            'featured_image': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
             'property_video': forms.FileInput(attrs={'class': 'form-control', 'accept': 'video/*'}),
             'drone_video': forms.FileInput(attrs={'class': 'form-control', 'accept': 'video/*'}),
             'virtual_tour_360': forms.URLInput(attrs={'class': 'form-control', 'placeholder': '360° Virtual Tour URL'}),
@@ -252,7 +252,6 @@ class PropertyForm(forms.ModelForm):
 
 class AgriculturalLandForm(forms.ModelForm):
     """Form specifically for Agricultural Land properties"""
-    featured_image = MultipleFileField(required=False)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -291,6 +290,31 @@ class AgriculturalLandForm(forms.ModelForm):
         )
         if hasattr(self, 'instance') and self.instance and self.instance.pk and self.instance.state:
             self.fields['state'].initial = self.instance.state
+
+        # Populate district choices dynamically based on existing instance state, or empty
+        district_choices = [('', 'Select District')]
+        try:
+            district_list = []
+            if self.instance and self.instance.pk and self.instance.state:
+                districts = LocationData.objects.filter(state=self.instance.state).values_list('city', flat=True).distinct().order_by('city')
+                district_list = [d for d in districts if d]
+            elif self.data and self.data.get('state'):
+                districts = LocationData.objects.filter(state=self.data.get('state')).values_list('city', flat=True).distinct().order_by('city')
+                district_list = [d for d in districts if d]
+            
+            if self.instance and self.instance.pk and self.instance.district and self.instance.district not in district_list:
+                district_list.append(self.instance.district)
+                
+            district_choices += [(d, d) for d in district_list]
+        except Exception:
+            pass
+            
+        self.fields['district'] = forms.CharField(
+            required=True,
+            widget=forms.Select(choices=district_choices, attrs={'class': 'form-select', 'id': 'district_select'})
+        )
+        if self.instance and self.instance.pk and self.instance.district:
+            self.fields['district'].initial = self.instance.district
     
     class Meta:
         model = Property
@@ -409,6 +433,7 @@ class AgriculturalLandForm(forms.ModelForm):
             'appreciation_potential': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Appreciation Potential'}),
             'investment_type': forms.Select(attrs={'class': 'form-select'}),
             # Media
+            'featured_image': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
             'property_video': forms.FileInput(attrs={'class': 'form-control', 'accept': 'video/*'}),
             'drone_video': forms.FileInput(attrs={'class': 'form-control', 'accept': 'video/*'}),
             'virtual_tour_360': forms.URLInput(attrs={'class': 'form-control', 'placeholder': '360° Virtual Tour URL'}),
