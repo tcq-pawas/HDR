@@ -32,13 +32,218 @@
 
     <!-- Custom CSS -->
 
-    <link rel="stylesheet" href="{% static 'css/agent-dashboard.css' %}?v=4">
+    <link rel="stylesheet" href="{% static 'css/agent-dashboard.css' %}?v=9">
 
-    <link rel="stylesheet" href="{% static 'css/responsive.css' %}?v=3">
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}?v=5">
 
     {% block extra_css %}{% endblock %}
 
     <style>
+
+        .agent-header {
+
+            background: #FFFFFF !important;
+
+        }
+
+        .logout-btn{
+
+            border-radius: 8px !important;
+
+            transition: background-color 0.3s ease,
+
+            color 0.3s ease, transform 0.3s ease !important ;
+
+        }
+
+        .logout-btn:hover {
+
+            background-color: #6AAE48 !important;
+
+            color: #005427 !important;
+
+            transform: translateX(6px) !important;
+
+            box-shadow: 0 4px 12px rgba(106, 174, 72, 0.25) !important;
+
+        }
+
+        .logout-btn:hover i,
+
+        .logout-btn:hover span {
+         
+            color: #005427 !important;
+
+        }
+        
+        .btn-primary {
+
+            background-color: #005427 !important;
+
+            border-color: #005427 !important;
+
+            color: #FFFFFF !important;
+
+            transition: all 0.2s ease-in-out !important;
+
+        }
+
+        .btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+
+            background-color: #6AAE48 !important;
+            
+            border-color: #6AAE48 !important;
+            
+            color: #FFFFFF !important;
+            
+            box-shadow: 0 4px 12px rgba(106, 174, 72, 0.3) !important;
+
+        }
+
+        .sidebar-nav .nav-link {
+
+            padding: 12px 20px !important;
+
+            font-size: 14px !important;
+            
+            gap: 15px !important;
+            
+            border-radius: 8px !important;
+            
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease !important;
+        
+        }
+
+        .sidebar-nav .nav-link i {
+
+            font-size: 18px !important;
+            
+            transition: color 0.3s ease, transform 0.3s ease !important;
+        
+        }
+
+        .sidebar-nav .nav-link span {
+
+            transition: color 0.3s ease !important;
+
+        }
+
+        .sidebar-nav .nav-link:hover {
+
+            background-color: #6AAE48 !important;
+            
+            color: #005427 !important;
+            
+            transform: translateX(6px) !important;
+            
+            box-shadow: 0 4px 12px rgba(106, 174, 72, 0.25) !important;
+
+        }
+
+        .sidebar-nav .nav-link:hover i {
+        
+            color: #005427 !important;
+        
+            transform: scale(1.15) !important;
+        
+        }
+        
+        .sidebar-nav .nav-link:hover span {
+        
+            color: #005427 !important;
+        
+        }
+        
+
+        /* Status Badge Colors Global Override */
+        
+        .status-badge {
+        
+            padding: 4px 12px !important;
+        
+            border-radius: 20px !important;
+        
+            font-size: 12px !important;
+        
+            display: inline-block !important;
+        
+            text-transform: capitalize !important;
+        
+        }
+
+        /* Pending status badge color (Light Orange background + Dark Orange text) */
+        
+        .status-badge.status-pending,
+        
+        span.status-pending {
+        
+            background-color: #FFEDD5 !important;
+        
+            color: #C2410C !important;
+        
+            font-weight: 600 !important;
+        
+        }
+
+        /* Approved / Active status badge color (Light Green background + Dark Green text) */
+        
+        .status-badge.status-approved,
+        
+        .status-badge.status-active,
+        
+        
+        .status-badge.status-new,
+        
+        span.status-approved,
+        
+        span.status-active {
+        
+            background-color: #c0f4d9 !important;
+        
+            color: #0b4230 !important;
+        
+            font-weight: 600 !important;
+        }
+
+        /* Rejected status badge color (Light Red background + Red text) */
+        
+        .status-badge.status-rejected,
+        
+        span.status-rejected {
+        
+            background-color: #FEE2E2 !important;
+        
+            color: #DC2626 !important;
+        
+            font-weight: 600 !important;
+        
+        }
+
+        @media (min-width: 993px) {
+        
+            .agent-sidebar {
+        
+                width: 260px !important;
+        
+                min-width: 260px !important;
+        
+                max-width: 260px !important;
+        
+            }
+        
+            .agent-main {
+        
+                margin-left: 260px !important;
+        
+            }
+        
+            .agent-header {
+        
+                left: 260px !important;
+        
+            }
+        
+        }
 
         /* Critical Mobile Fixes - Inline to ensure they load */
 
@@ -54,9 +259,9 @@
 
             .agent-sidebar-offcanvas .nav-link.active {
 
-                background: #ffffff !important;
+                background: #FFFFFF !important;
 
-                color: #0d9488 !important;
+                color: #005427 !important;
 
                 font-weight: 600 !important;
 
@@ -64,7 +269,7 @@
 
             .agent-sidebar-offcanvas .nav-link.active i {
 
-                color: #0d9488 !important;
+                color: #005427 !important;
 
             }
 
@@ -97,6 +302,8 @@
                 display: none !important;
 
             }
+
+
 
             .agent-main {
 
@@ -148,7 +355,7 @@
 
                 z-index: 9999 !important;
 
-                background: #0abfa0 !important;
+                background: #005427 !important;
 
                 color: white !important;
 
@@ -172,7 +379,7 @@
 
                 display: block !important;
 
-                background: #5ecdc0 !important;
+                background: #005427 !important;
 
                 width: 280px !important;
 
@@ -198,9 +405,9 @@
 
             .agent-sidebar-offcanvas .nav-link.active {
 
-                background: #ffffff !important;
+                background: #005427 !important;
 
-                color: #0d9488 !important;
+                color: #FFFFFF !important;
 
                 font-weight: 600 !important;
 
@@ -208,7 +415,7 @@
 
             .agent-sidebar-offcanvas .nav-link.active i {
 
-                color: #0d9488 !important;
+                color: #FFFFFF !important;
 
             }
 
@@ -246,7 +453,8 @@
 
         }
 
-        html, body {
+        html,
+        body {
 
             overflow-x: hidden !important;
 
@@ -261,7 +469,6 @@
             box-sizing: border-box !important;
 
         }
-
     </style>
 
 </head>
@@ -307,7 +514,6 @@
                             <i class="bi bi-search"></i>
 
                             <input type="text" placeholder="Search properties, leads, inquiries..."
-
                                 class="search-input">
 
                         </div>
@@ -447,7 +653,6 @@
                                 {% if user.agent_profile and user.agent_profile.profile_image and user.agent_profile.profile_image.name %}
 
                                 <img src="{{ user.agent_profile.profile_image.url }}" alt="Profile"
-
                                     style="width:100%; height:100%; object-fit:cover;">
 
                                 {% else %}
@@ -510,11 +715,13 @@
 
         <!-- Bootstrap Offcanvas Sidebar -->
 
-        <div class="offcanvas offcanvas-start agent-sidebar-offcanvas" tabindex="-1" id="agentSidebarOffcanvas" aria-labelledby="agentSidebarOffcanvasLabel">
+        <div class="offcanvas offcanvas-start agent-sidebar-offcanvas" tabindex="-1" id="agentSidebarOffcanvas"
+            aria-labelledby="agentSidebarOffcanvasLabel">
 
             <div class="offcanvas-header">
 
-                <a class="brand-logo" href="{% url 'agent:dashboard' %}" onclick="closeOffcanvasAndNavigate(event, this.href)">
+                <a class="brand-logo" href="{% url 'agent:dashboard' %}"
+                    onclick="closeOffcanvasAndNavigate(event, this.href)">
 
                     <img src="{% static 'img/logo.png' %}" alt="HeyDay Realty">
 
@@ -522,7 +729,8 @@
 
                 </a>
 
-                <button type="button" class="btn-close text-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                <button type="button" class="btn-close text-white" data-bs-dismiss="offcanvas"
+                    aria-label="Close"></button>
 
             </div>
 
@@ -535,8 +743,8 @@
                         <li class="nav-item">
 
                             <a href="{% url 'agent:dashboard' %}"
-
-                                class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" onclick="closeOffcanvasAndNavigate(event, this.href)">
+                                class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"
+                                onclick="closeOffcanvasAndNavigate(event, this.href)">
 
                                 <i class="bi bi-speedometer2"></i>
 
@@ -552,11 +760,15 @@
 
                             <a href="{% url 'agent:property_list' %}"
 
-                                class="nav-link {% if request.resolver_match.url_name in 'property_list property_add property_edit property_type_select' %}active{% endif %}" onclick="closeOffcanvasAndNavigate(event, this.href)">
+                                class="nav-link {% if request.resolver_match.url_name in 'property_list property_add property_edit property_type_select' %}active{% endif %}"
+                                
+                                onclick="closeOffcanvasAndNavigate(event, this.href)">
 
                                 <i class="bi bi-houses"></i>
 
                                 <span>Properties</span>
+
+                                {% if sidebar_property_count %}<span class="badge bg-white text-dark ms-auto" style="font-size:11px; min-width:22px; padding:2px 6px; border-radius:10px;">{{ sidebar_property_count }}</span>{% endif %}
 
                             </a>
 
@@ -568,11 +780,15 @@
 
                             <a href="{% url 'agent:lead_list' %}"
 
-                                class="nav-link {% if request.resolver_match.url_name in 'lead_list lead_detail lead_edit' %}active{% endif %}" onclick="closeOffcanvasAndNavigate(event, this.href)">
+                                class="nav-link {% if request.resolver_match.url_name in 'lead_list lead_detail lead_edit' %}active{% endif %}"
+
+                                onclick="closeOffcanvasAndNavigate(event, this.href)">
 
                                 <i class="bi bi-people"></i>
 
                                 <span>Leads</span>
+
+                                {% if sidebar_lead_count %}<span class="badge bg-white text-dark ms-auto" style="font-size:11px; min-width:22px; padding:2px 6px; border-radius:10px;">{{ sidebar_lead_count }}</span>{% endif %}
 
                             </a>
 
@@ -584,11 +800,15 @@
 
                             <a href="{% url 'agent:site_visit_list' %}"
 
-                                class="nav-link {% if request.resolver_match.url_name in 'site_visit_list site_visit_add site_visit_detail' %}active{% endif %}" onclick="closeOffcanvasAndNavigate(event, this.href)">
+                                class="nav-link {% if request.resolver_match.url_name in 'site_visit_list site_visit_add site_visit_detail' %}active{% endif %}"
+
+                                onclick="closeOffcanvasAndNavigate(event, this.href)">
 
                                 <i class="bi bi-calendar-event"></i>
 
                                 <span>Site Visits</span>
+
+                                {% if sidebar_site_visit_count %}<span class="badge bg-white text-dark ms-auto" style="font-size:11px; min-width:22px; padding:2px 6px; border-radius:10px;">{{ sidebar_site_visit_count }}</span>{% endif %}
 
                             </a>
 
@@ -599,12 +819,16 @@
                         <li class="nav-item">
 
                             <a href="{% url 'agent:booking_list' %}"
-
-                                class="nav-link {% if request.resolver_match.url_name in 'booking_list booking_add booking_detail' %}active{% endif %}" onclick="closeOffcanvasAndNavigate(event, this.href)">
+                            
+                                class="nav-link {% if request.resolver_match.url_name in 'booking_list booking_add booking_detail' %}active{% endif %}"
+                            
+                                onclick="closeOffcanvasAndNavigate(event, this.href)">
 
                                 <i class="bi bi-cash-stack"></i>
 
                                 <span>Bookings</span>
+
+                                {% if sidebar_booking_count %}<span class="badge bg-white text-dark ms-auto" style="font-size:11px; min-width:22px; padding:2px 6px; border-radius:10px;">{{ sidebar_booking_count }}</span>{% endif %}
 
                             </a>
 
@@ -616,11 +840,15 @@
 
                             <a href="{% url 'agent:commission_list' %}"
 
-                                class="nav-link {% if request.resolver_match.url_name in 'commission_list commission_detail' %}active{% endif %}" onclick="closeOffcanvasAndNavigate(event, this.href)">
+                                class="nav-link {% if request.resolver_match.url_name in 'commission_list commission_detail' %}active{% endif %}"
+
+                                onclick="closeOffcanvasAndNavigate(event, this.href)">
 
                                 <i class="bi bi-currency-dollar"></i>
 
                                 <span>Commissions</span>
+
+                                {% if sidebar_commission_count %}<span class="badge bg-white text-dark ms-auto" style="font-size:11px; min-width:22px; padding:2px 6px; border-radius:10px;">{{ sidebar_commission_count }}</span>{% endif %}
 
                             </a>
 
@@ -632,11 +860,15 @@
 
                             <a href="{% url 'agent:customer_list' %}"
 
-                                class="nav-link {% if request.resolver_match.url_name in 'customer_list customer_detail' %}active{% endif %}" onclick="closeOffcanvasAndNavigate(event, this.href)">
+                                class="nav-link {% if request.resolver_match.url_name in 'customer_list customer_detail' %}active{% endif %}"
+
+                                onclick="closeOffcanvasAndNavigate(event, this.href)">
 
                                 <i class="bi bi-person-lines-fill"></i>
 
                                 <span>Customers</span>
+
+                                {% if sidebar_customer_count %}<span class="badge bg-white text-dark ms-auto" style="font-size:11px; min-width:22px; padding:2px 6px; border-radius:10px;">{{ sidebar_customer_count }}</span>{% endif %}
 
                             </a>
 
@@ -648,7 +880,9 @@
 
                             <a href="{% url 'agent:document_list' %}"
 
-                                class="nav-link {% if request.resolver_match.url_name in 'document_list document_add' %}active{% endif %}" onclick="closeOffcanvasAndNavigate(event, this.href)">
+                                class="nav-link {% if request.resolver_match.url_name in 'document_list document_add' %}active{% endif %}"
+
+                                onclick="closeOffcanvasAndNavigate(event, this.href)">
 
                                 <i class="bi bi-file-earmark"></i>
 
@@ -658,33 +892,17 @@
 
                         </li>
 
-
-
                         <li class="nav-item">
 
                             <a href="{% url 'agent:communication_list' %}"
 
-                                class="nav-link {% if request.resolver_match.url_name in 'communication_list communication_send message_template_list' %}active{% endif %}" onclick="closeOffcanvasAndNavigate(event, this.href)">
+                                class="nav-link {% if request.resolver_match.url_name in 'communication_list communication_send message_template_list' %}active{% endif %}"
+
+                                onclick="closeOffcanvasAndNavigate(event, this.href)">
 
                                 <i class="bi bi-chat-dots"></i>
 
                                 <span>Communication</span>
-
-                            </a>
-
-                        </li>
-
-
-
-                        <li class="nav-item">
-
-                            <a href="{% url 'agent:reports' %}"
-
-                                class="nav-link {% if request.resolver_match.url_name == 'reports' %}active{% endif %}" onclick="closeOffcanvasAndNavigate(event, this.href)">
-
-                                <i class="bi bi-graph-up"></i>
-
-                                <span>Reports</span>
 
                             </a>
 
@@ -695,10 +913,11 @@
                 </nav>
 
 
-
                 <div class="sidebar-footer mt-auto">
 
-                    <a href="{% url 'auth:logout' %}" class="logout-btn" onclick="closeOffcanvasAndNavigate(event, this.href)">
+                    <a href="{% url 'auth:logout' %}" class="logout-btn"
+
+                        onclick="closeOffcanvasAndNavigate(event, this.href)">
 
                         <i class="bi bi-box-arrow-right"></i>
 
@@ -762,6 +981,8 @@
 
                                 <span>Properties</span>
 
+                                {% if sidebar_property_count %}<span class="badge bg-white text-dark ms-auto" style="font-size:11px; min-width:22px; padding:2px 6px; border-radius:10px;">{{ sidebar_property_count }}</span>{% endif %}
+
                             </a>
 
                         </li>
@@ -777,6 +998,8 @@
                                 <i class="bi bi-people"></i>
 
                                 <span>Leads</span>
+
+                                {% if sidebar_lead_count %}<span class="badge bg-white text-dark ms-auto" style="font-size:11px; min-width:22px; padding:2px 6px; border-radius:10px;">{{ sidebar_lead_count }}</span>{% endif %}
 
                             </a>
 
@@ -794,6 +1017,8 @@
 
                                 <span>Site Visits</span>
 
+                                {% if sidebar_site_visit_count %}<span class="badge bg-white text-dark ms-auto" style="font-size:11px; min-width:22px; padding:2px 6px; border-radius:10px;">{{ sidebar_site_visit_count }}</span>{% endif %}
+
                             </a>
 
                         </li>
@@ -809,6 +1034,8 @@
                                 <i class="bi bi-cash-stack"></i>
 
                                 <span>Bookings</span>
+
+                                {% if sidebar_booking_count %}<span class="badge bg-white text-dark ms-auto" style="font-size:11px; min-width:22px; padding:2px 6px; border-radius:10px;">{{ sidebar_booking_count }}</span>{% endif %}
 
                             </a>
 
@@ -826,6 +1053,8 @@
 
                                 <span>Commissions</span>
 
+                                {% if sidebar_commission_count %}<span class="badge bg-white text-dark ms-auto" style="font-size:11px; min-width:22px; padding:2px 6px; border-radius:10px;">{{ sidebar_commission_count }}</span>{% endif %}
+
                             </a>
 
                         </li>
@@ -841,6 +1070,8 @@
                                 <i class="bi bi-person-lines-fill"></i>
 
                                 <span>Customers</span>
+
+                                {% if sidebar_customer_count %}<span class="badge bg-white text-dark ms-auto" style="font-size:11px; min-width:22px; padding:2px 6px; border-radius:10px;">{{ sidebar_customer_count }}</span>{% endif %}
 
                             </a>
 
@@ -867,28 +1098,14 @@
                         <li class="nav-item">
 
                             <a href="{% url 'agent:communication_list' %}"
-
+                            
                                 class="nav-link {% if request.resolver_match.url_name in 'communication_list communication_send message_template_list' %}active{% endif %}">
 
                                 <i class="bi bi-chat-dots"></i>
 
                                 <span>Communication</span>
 
-                            </a>
-
-                        </li>
-
-
-
-                        <li class="nav-item">
-
-                            <a href="{% url 'agent:reports' %}"
-
-                                class="nav-link {% if request.resolver_match.url_name == 'reports' %}active{% endif %}">
-
-                                <i class="bi bi-graph-up"></i>
-
-                                <span>Reports</span>
+                                {% if sidebar_communication_count %}<span class="badge bg-white text-dark ms-auto" style="font-size:11px; min-width:22px; padding:2px 6px; border-radius:10px;">{{ sidebar_communication_count }}</span>{% endif %}
 
                             </a>
 
@@ -936,34 +1153,40 @@
 
                 {% endblock %}
 
-                
+
 
                 {% if messages %}
+                    <div class="mb-4" style="position: relative; z-index: 1000;">
+                        
+                        {% for message in messages %}
+                        
+                        <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} alert-dismissible fade show shadow-sm" role="alert">
+                            
+                            {% if message.tags == 'success' %}
+                            
+                                <i class="bi bi-check-circle-fill me-2 text-success"></i>
+                            
+                            {% elif message.tags == 'warning' %}
 
-                <div class="mb-4" style="position: relative; z-index: 1000;">
+                                <i class="bi bi-exclamation-triangle-fill me-2 text-warning"></i>
+                            
+                            {% elif message.tags == 'error' %}
 
-                    {% for message in messages %}
+                                <i class="bi bi-x-circle-fill me-2 text-danger"></i>
 
-                    <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} alert-dismissible fade show shadow-sm" role="alert">
+                            {% endif %}
 
-                        {% if message.tags == 'success' %}<i class="bi bi-check-circle-fill me-2 text-success"></i>{% endif %}
+                            {{ message }}
 
-                        {% if message.tags == 'warning' %}<i class="bi bi-exclamation-triangle-fill me-2 text-warning"></i>{% endif %}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 
-                        {% if message.tags == 'error' %}<i class="bi bi-x-circle-fill me-2 text-danger"></i>{% endif %}
+                        </div>
 
-                        {{ message }}
-
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        {% endfor %}
 
                     </div>
-
-                    {% endfor %}
-
-                </div>
-
-                {% endif %}
-
+                    
+                    {% endif %}
 
 
                 {% block content %}{% endblock %}
@@ -978,7 +1201,9 @@
 
     <!-- Mobile Menu Toggle Button -->
 
-    <button class="agent-mobile-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#agentSidebarOffcanvas" aria-controls="agentSidebarOffcanvas" style="display: none;">
+    <button class="agent-mobile-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#agentSidebarOffcanvas"
+
+        aria-controls="agentSidebarOffcanvas" style="display: none;">
 
         <i class="bi bi-list"></i>
 

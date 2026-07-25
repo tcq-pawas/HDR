@@ -15,9 +15,6 @@
 
 
 
-
-
-
 /* ============================================
 
 
@@ -45,17 +42,11 @@ html, body {
     overflow-x: hidden;
 
 
-
     max-width: 100%;
 
 
 
 }
-
-
-
-
-
 
 
 * {
@@ -71,10 +62,6 @@ html, body {
 
 
 }
-
-
-
-
 
 
 
@@ -102,10 +89,6 @@ img {
 
 
 
-
-
-
-
 /* Responsive videos */
 
 
@@ -123,9 +106,6 @@ iframe, embed, object, video {
 
 
 }
-
-
-
 
 
 
@@ -435,9 +415,6 @@ iframe, embed, object, video {
 
 
     }
-
-
-
 
 
 
@@ -5118,7 +5095,7 @@ iframe, embed, object, video {
 
 
 
-        width: 240px;
+        width: 260px;
 
 
 
@@ -5134,7 +5111,7 @@ iframe, embed, object, video {
 
 
 
-        margin-left: 240px;
+        margin-left: 260px;
 
 
 
@@ -5150,7 +5127,7 @@ iframe, embed, object, video {
 
 
 
-        left: 240px;
+        left: 260px;
 
 
 

@@ -1,213 +1,63 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 :root {
 
 
+    --primary-color: #005427;
 
+    --sidebar-bg: #005427;
 
+    --sidebar-active-bg: #6AAE48;
 
+    --sidebar-active-text: #005427;
 
+    --sidebar-text: #FFFFFF;
 
-    --primary-color: #0abfa0;
-
-
-
-
-
-
-
-    --sidebar-bg: #5ecdc0;
-
-
-
-
-
-
-
-    --sidebar-active-bg: #ffffff;
-
-
-
-
-
-
-
-    --sidebar-active-text: #0d9488;
-
-
-
-
-
-
-
-    --sidebar-text: #ffffff;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    --bg-white: #ffffff;
-
-
-
-
-
-
+    --bg-white: #FFFFFF;
 
     --bg-light: #f9f9fb;
 
-
-
-
-
-
-
     --bg-gray: #f2f3f5;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     --text-dark: #2c3e50;
 
-
-
-
-
-
-
     --text-gray: #6f7f90;
-
-
-
-
-
-
 
     --text-light: #a3abb3;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     --border-color: #ecf0f1;
-
-
-
-
-
-
 
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
 
-
-
-
-
-
-
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     --radius-sm: 6px;
 
-
-
-
-
-
-
     --radius-md: 10px;
-
-
-
-
-
-
 
     --radius-lg: 16px;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     --transition: all 0.3s ease;
-
-
-
-
-
-
 
 }
 
+
+.quick-add-btn:hover,
+
+.quick-add-btn:focus,
+
+.quick-add-btn:active {
+
+    background-color: #6AAE48 !important;
+
+    border-color: #4ade80 !important;
+
+    color: #14532d !important;
+
+    box-shadow: none !important;
+
+}
 
 
 
@@ -742,7 +592,7 @@ body {
 
 
 
-    background: #ffffff;
+    background: #FFFFFF;
 
 
 
@@ -1009,640 +859,163 @@ body {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 .icon-btn .badge {
-
-
-
-
-
-
 
     position: absolute;
 
-
-
-
-
-
-
     top: -5px;
-
-
-
-
-
-
 
     right: -5px;
 
-
-
-
-
-
-
     background: #ff4757;
-
-
-
-
-
-
 
     color: white;
 
-
-
-
-
-
-
     font-size: 10px;
 
-
-
-
-
-
-
     padding: 2px 5px;
-
-
-
-
-
-
 
     border-radius: 10px;
 
 
-
-
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 .icon-btn.with-badge .badge.lead-badge {
 
-
-
-
-
-
-
     background: #11cdad;
 
 
-
-
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 .btn-add-property,
 
-
-
-
-
-
-
 .quick-add-btn {
-
-
-
-
-
-
 
     background: var(--primary-color);
 
-
-
-
-
-
-
     color: white;
-
-
-
-
-
-
 
     border: none;
 
-
-
-
-
-
-
     padding: 10px 20px;
-
-
-
-
-
-
 
     border-radius: 6px;
 
-
-
-
-
-
-
     font-weight: 500;
-
-
-
-
-
-
 
     text-decoration: none;
 
-
-
-
-
-
-
     display: inline-flex;
-
-
-
-
-
-
 
     align-items: center;
 
-
-
-
-
-
-
     gap: 8px;
-
-
-
-
-
-
 
     font-size: 14px;
 
 
-
-
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 .profile-toggle {
 
 
 
-
-
-
-
     display: flex;
-
-
-
-
-
-
 
     align-items: center;
 
-
-
-
-
-
-
     gap: 12px;
-
-
-
-
-
-
 
     background: none;
 
-
-
-
-
-
-
     border: none;
 
-
-
-
-
-
-
     cursor: pointer;
-
-
-
-
-
-
 
     text-align: left;
 
 
-
-
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
 .profile-avatar {
 
-
-
-
-
-
-
     width: 38px;
-
-
-
-
-
-
 
     height: 38px;
 
-
-
-
-
-
-
     border-radius: 50%;
-
-
-
-
-
-
 
     background: var(--primary-color);
 
-
-
-
-
-
-
     color: white;
-
-
-
-
-
-
 
     display: flex;
 
-
-
-
-
-
-
     align-items: center;
-
-
-
-
-
-
 
     justify-content: center;
 
-
-
-
-
-
-
     font-weight: 600;
-
-
-
-
-
-
 
     overflow: hidden;
 
-
-
-
-
-
-
     position: relative;
 
-
-
-
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 .profile-avatar img {
 
-
-
-
-
-
-
     width: 100%;
-
-
-
-
-
-
 
     height: 100%;
 
-
-
-
-
-
-
     object-fit: cover;
-
-
-
-
-
-
 
     border-radius: 50%;
 
-
-
-
-
-
-
     position: absolute;
-
-
-
-
-
-
 
     top: 0;
 
-
-
-
-
-
-
     left: 0;
 
-
-
-
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
 .profile-avatar .avatar-placeholder {
 
-
-
-
-
-
-
     z-index: 1;
 
-
-
-
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
 .profile-info {
 
-
-
-
-
-
-
     display: flex;
-
-
-
-
-
-
 
     flex-direction: column;
 
 
-
-
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
 .profile-name {
 
 
-
-
-
-
-
     font-weight: 600;
-
-
-
-
-
-
 
     color: var(--text-dark);
 
 
-
-
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1940,16 +1313,6 @@ body {
 
 
 
-
-
-
-
-
-
-
-
-
-
 .agent-sidebar-offcanvas .sidebar-content {
 
 
@@ -2238,7 +1601,7 @@ body {
 
 
 
-    color: #ffffff;
+    color: #FFFFFF;
 
 
 
@@ -2446,7 +1809,7 @@ body {
 
 
 
-    color: #ffffff;
+    color: #005427;
 
 
 

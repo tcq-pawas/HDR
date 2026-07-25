@@ -146,8 +146,7 @@
                     data-attachment-url="{% if communication.attachment %}{{ communication.attachment.url }}{% endif %}">
                     <td>
                         <div class="comm-customer-cell">
-                            <div class="comm-avatar">{{
-                                communication.recipient_name|default:communication.recipient|slice:":1"|upper }}</div>
+                            <div class="comm-avatar">{{ communication.recipient_name|default:communication.recipient|slice:":1"|upper }}</div>
                             <span>{{ communication.recipient_name|default:communication.recipient }}</span>
                         </div>
                     </td>
@@ -159,16 +158,13 @@
                         </div>
                     </td>
                     <td>{{ communication.subject|truncatewords:5|default:"N/A" }}</td>
-                    <td>{{ communication.sent_at|date:"d M Y" }}<br><span class="comm-time">{{
-                            communication.sent_at|date:"h:i A" }}</span></td>
-                    <td><span class="comm-status-badge status-{{ communication.status }}">{{
-                            communication.get_status_display }}</span></td>
+                    <td>{{ communication.sent_at|date:"d M Y" }}<br><span class="comm-time">{{ communication.sent_at|date:"h:i A" }}</span></td>
+                    <td><span class="comm-status-badge status-{{ communication.status }}">{{ communication.get_status_display }}</span></td>
                     <td>
                         <div class="comm-actions">
                             <button class="comm-action-btn comm-view-btn" title="View"><i
                                     class="bi bi-eye"></i></button>
-                            <button class="comm-action-btn" title="More"><i
-                                    class="bi bi-three-dots-vertical"></i></button>
+                            <button class="comm-action-btn" title="More"><i class="bi bi-three-dots-vertical"></i></button>
                         </div>
                     </td>
                 </tr>
@@ -178,10 +174,10 @@
                     <td colspan="7">
                         <div class="empty-state">
                             <div class="empty-state-icon">
-                                <i class="bi bi-chat-dots"></i>
+                                <i class="bi bi-inbox"></i>
                             </div>
-                            <h3>No Communications Yet</h3>
-                            <p>Communication history will appear here when you send messages to leads or customers.</p>
+                            <h3>No Emails Found</h3>
+                            <p>There are no email communications matching your filters.</p>
                             <a href="{% url 'agent:communication_send' %}" class="btn btn-primary">
                                 <i class="bi bi-plus-lg"></i> Send Your First Message
                             </a>
@@ -196,8 +192,7 @@
     <!-- Pagination -->
     {% if page_obj.has_other_pages %}
     <div class="comm-pagination">
-        <span class="comm-pagination-info">Showing {{ page_obj.start_index }} to {{ page_obj.end_index }} of {{
-            page_obj.paginator.count }} emails</span>
+        <span class="comm-pagination-info">Showing {{ page_obj.start_index }} to {{ page_obj.end_index }} of {{ page_obj.paginator.count }} emails</span>
         <div class="comm-pagination-controls">
             {% if page_obj.has_previous %}
             <a href="?page={{ page_obj.previous_page_number }}" class="comm-page-btn"><i
