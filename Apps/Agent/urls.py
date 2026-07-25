@@ -15,6 +15,7 @@ urlpatterns = [
     path('property/add/<str:property_type>/', views.property_add, name='property_add'),
     path('property/<int:pk>/edit/', views.property_edit, name='property_edit'),
     path('property/<int:pk>/delete/', views.property_delete, name='property_delete'),
+    path('properties/<int:pk>/view/', views.property_view_details, name='property_view'),
     
     # AJAX
     path('ajax/get-cities/', views.get_cities_by_state, name='get_cities'),

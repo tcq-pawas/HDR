@@ -138,15 +138,14 @@ HeyDay Realty{% endblock %}
 
 <div class="leads-section">
 
-    <div class="leads-header">
+    <div class="leads-header leads-header-flex">
 
-        <div class="leads-title">
-
+        
             <h2>Recent Properties</h2>
 
             <a href="{% url 'agent:property_list' %}" class="view-all-link">View All</a>
 
-        </div>
+
 
     </div>
 
@@ -207,25 +206,7 @@ HeyDay Realty{% endblock %}
                     <td>
 
                         <div class="leads-actions">
-
-                            <button class="leads-action-btn" title="View">
-
-                                <i class="bi bi-eye"></i>
-
-                            </button>
-
-                            <button class="leads-action-btn" title="Edit">
-
-                                <i class="bi bi-pencil"></i>
-
-                            </button>
-
-                            <button class="leads-action-btn" title="More">
-
-                                <i class="bi bi-three-dots"></i>
-
-                            </button>
-
+                            <a href="{% url 'agent:property_view' property.id %}" class="btn btn-sm btn-outline-primary" style="border-radius: 6px; padding: 3px 12px; font-weight: 500;">View</a>
                         </div>
 
                     </td>

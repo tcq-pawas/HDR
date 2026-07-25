@@ -296,6 +296,28 @@ def property_add(request, property_type):
 
 
 @login_required
+def property_view_details(request, pk):
+    """View single property details"""
+    user_role = get_user_role(request.user)
+    if user_role not in ['agent', 'owner', 'admin'] and not request.user.is_superuser and not request.user.is_staff:
+        raise PermissionDenied("Access denied. This page is only accessible to agents, owners, or admins.")
+
+    is_admin = user_role == 'admin' or request.user.is_superuser or request.user.is_staff
+    if is_admin:
+        property_obj = get_object_or_404(Property.objects.select_related('seller'), pk=pk)
+    else:
+        property_obj = get_object_or_404(Property.objects.select_related('seller'), pk=pk, seller=request.user)
+
+    images = property_obj.images.all()
+
+    context = {
+        'property': property_obj,
+        'images': images,
+    }
+
+    return render(request, 'agent/property_detail.html', context)
+
+@login_required
 def property_edit(request, pk):
     # Check if user is an agent
     user_role = get_user_role(request.user)
