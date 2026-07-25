@@ -100,6 +100,8 @@ class AdminDashboardView(AdminDashboardMixin, TemplateView):
         
         # Recent activities
         context['recent_activities'] = ActivityLog.objects.select_related('user').order_by('-timestamp')[:10]
+        # Recent registered agents
+        context['recent_agents'] = User.objects.filter(groups__name='agent').order_by('-date_joined')[:10]
         
         # Recent property submissions needing review
         context['pending_properties'] = Property.objects.select_related('seller').filter(
@@ -745,6 +747,72 @@ class AdminPropertyListView(AdminDashboardMixin, TemplateView):
         context['properties'] = properties
         context['total_properties'] = properties.count()
         context['status_filter'] = status_filter
+        return context
+
+
+class CustomerListView(AdminDashboardMixin, TemplateView):
+    """List of customers for admin management"""
+    template_name = 'administration/customer_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        customers = User.objects.filter(groups__name='customer').select_related('customer_profile').order_by('-date_joined')
+
+        # Search
+        search = self.request.GET.get('search', '').strip()
+        if search:
+            customers = customers.filter(
+                Q(username__icontains=search) |
+                Q(email__icontains=search) |
+                Q(first_name__icontains=search) |
+                Q(last_name__icontains=search)
+            )
+
+        # Status filter
+        status = self.request.GET.get('status', '')
+        if status == 'active':
+            customers = customers.filter(is_active=True)
+        elif status == 'inactive':
+            customers = customers.filter(is_active=False)
+
+        context['customers'] = customers
+        context['total_customers'] = customers.count()
+        context['search'] = search
+        context['selected_status'] = status
+        return context
+
+
+class AgentListView(AdminDashboardMixin, TemplateView):
+    """List of agents for admin management"""
+    template_name = 'administration/agent_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        agents = User.objects.filter(groups__name='agent').order_by('-date_joined')
+
+        # Search
+        search = self.request.GET.get('search', '').strip()
+        if search:
+            agents = agents.filter(
+                Q(username__icontains=search) |
+                Q(email__icontains=search) |
+                Q(first_name__icontains=search) |
+                Q(last_name__icontains=search)
+            )
+
+        # Status filter
+        status = self.request.GET.get('status', '')
+        if status == 'active':
+            agents = agents.filter(is_active=True)
+        elif status == 'inactive':
+            agents = agents.filter(is_active=False)
+
+        context['agents'] = agents
+        context['total_agents'] = agents.count()
+        context['search'] = search
+        context['selected_status'] = status
         return context
 
 
