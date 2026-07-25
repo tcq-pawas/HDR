@@ -192,7 +192,15 @@ HeyDay Realty{% endblock %}
 
                     <td>₹{{ property.price|floatformat:0|default:"N/A" }}</td>
 
-                    <td><span class="status-badge status-new">{{ property.status|default:"Active" }}</span></td>
+                    <td>
+                        {% if property.status|lower == 'pending' %}
+                            <span class="status-badge status-pending">Pending</span>
+                        {% elif property.status|lower == 'approved' or property.status|lower == 'active' %}
+                            <span class="status-badge status-approved">Approved</span>
+                        {% else %}
+                            <span class="status-badge status-approved">{{ property.status|default:"Approved"|title }}</span>
+                        {% endif %}
+                    </td>
 
                     <td>{{ property.created_at|date:"M d, Y" }}</td>
 

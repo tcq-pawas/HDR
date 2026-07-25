@@ -39,63 +39,210 @@
     {% block extra_css %}{% endblock %}
 
     <style>
+
         .agent-header {
+
             background: #FFFFFF !important;
+
         }
-        .logout-btn, .logout-btn span, .logout-btn i {
-            color: #FFFFFF !important;
-        }
-        .btn-primary {
-            background-color: #005427 !important;
-            border-color: #005427 !important;
-            color: #FFFFFF !important;
-            transition: all 0.2s ease-in-out !important;
-        }
-        .btn-primary:hover, .btn-primary:focus, .btn-primary:active {
-            background-color: #6AAE48 !important;
-            border-color: #6AAE48 !important;
-            color: #FFFFFF !important;
-            box-shadow: 0 4px 12px rgba(106, 174, 72, 0.3) !important;
-        }
-        .sidebar-nav .nav-link {
-            padding: 12px 20px !important;
-            font-size: 14px !important;
-            gap: 15px !important;
+
+        .logout-btn{
+
             border-radius: 8px !important;
-            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease !important;
+
+            transition: background-color 0.3s ease,
+
+            color 0.3s ease, transform 0.3s ease !important ;
+
         }
-        .sidebar-nav .nav-link i {
-            font-size: 18px !important;
-            transition: color 0.3s ease, transform 0.3s ease !important;
-        }
-        .sidebar-nav .nav-link span {
-            transition: color 0.3s ease !important;
-        }
-        .sidebar-nav .nav-link:hover {
+
+        .logout-btn:hover {
+
             background-color: #6AAE48 !important;
+
             color: #005427 !important;
+
             transform: translateX(6px) !important;
+
             box-shadow: 0 4px 12px rgba(106, 174, 72, 0.25) !important;
+
         }
+
+        .logout-btn:hover i,
+
+        .logout-btn:hover span {
+         
+            color: #005427 !important;
+
+        }
+        
+        .btn-primary {
+
+            background-color: #005427 !important;
+
+            border-color: #005427 !important;
+
+            color: #FFFFFF !important;
+
+            transition: all 0.2s ease-in-out !important;
+
+        }
+
+        .btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+
+            background-color: #6AAE48 !important;
+            
+            border-color: #6AAE48 !important;
+            
+            color: #FFFFFF !important;
+            
+            box-shadow: 0 4px 12px rgba(106, 174, 72, 0.3) !important;
+
+        }
+
+        .sidebar-nav .nav-link {
+
+            padding: 12px 20px !important;
+
+            font-size: 14px !important;
+            
+            gap: 15px !important;
+            
+            border-radius: 8px !important;
+            
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease !important;
+        
+        }
+
+        .sidebar-nav .nav-link i {
+
+            font-size: 18px !important;
+            
+            transition: color 0.3s ease, transform 0.3s ease !important;
+        
+        }
+
+        .sidebar-nav .nav-link span {
+
+            transition: color 0.3s ease !important;
+
+        }
+
+        .sidebar-nav .nav-link:hover {
+
+            background-color: #6AAE48 !important;
+            
+            color: #005427 !important;
+            
+            transform: translateX(6px) !important;
+            
+            box-shadow: 0 4px 12px rgba(106, 174, 72, 0.25) !important;
+
+        }
+
         .sidebar-nav .nav-link:hover i {
+        
             color: #005427 !important;
+        
             transform: scale(1.15) !important;
+        
         }
+        
         .sidebar-nav .nav-link:hover span {
+        
             color: #005427 !important;
+        
         }
+        
+
+        /* Status Badge Colors Global Override */
+        
+        .status-badge {
+        
+            padding: 4px 12px !important;
+        
+            border-radius: 20px !important;
+        
+            font-size: 12px !important;
+        
+            display: inline-block !important;
+        
+            text-transform: capitalize !important;
+        
+        }
+
+        /* Pending status badge color (Light Orange background + Dark Orange text) */
+        
+        .status-badge.status-pending,
+        
+        span.status-pending {
+        
+            background-color: #FFEDD5 !important;
+        
+            color: #C2410C !important;
+        
+            font-weight: 600 !important;
+        
+        }
+
+        /* Approved / Active status badge color (Light Green background + Dark Green text) */
+        
+        .status-badge.status-approved,
+        
+        .status-badge.status-active,
+        
+        
+        .status-badge.status-new,
+        
+        span.status-approved,
+        
+        span.status-active {
+        
+            background-color: #c0f4d9 !important;
+        
+            color: #0b4230 !important;
+        
+            font-weight: 600 !important;
+        }
+
+        /* Rejected status badge color (Light Red background + Red text) */
+        
+        .status-badge.status-rejected,
+        
+        span.status-rejected {
+        
+            background-color: #FEE2E2 !important;
+        
+            color: #DC2626 !important;
+        
+            font-weight: 600 !important;
+        
+        }
+
         @media (min-width: 993px) {
+        
             .agent-sidebar {
+        
                 width: 260px !important;
+        
                 min-width: 260px !important;
+        
                 max-width: 260px !important;
+        
             }
+        
             .agent-main {
+        
                 margin-left: 260px !important;
+        
             }
+        
             .agent-header {
+        
                 left: 260px !important;
+        
             }
+        
         }
 
         /* Critical Mobile Fixes - Inline to ensure they load */
@@ -155,6 +302,8 @@
                 display: none !important;
 
             }
+
+
 
             .agent-main {
 
@@ -610,7 +759,9 @@
                         <li class="nav-item">
 
                             <a href="{% url 'agent:property_list' %}"
+
                                 class="nav-link {% if request.resolver_match.url_name in 'property_list property_add property_edit property_type_select' %}active{% endif %}"
+                                
                                 onclick="closeOffcanvasAndNavigate(event, this.href)">
 
                                 <i class="bi bi-houses"></i>
@@ -628,7 +779,9 @@
                         <li class="nav-item">
 
                             <a href="{% url 'agent:lead_list' %}"
+
                                 class="nav-link {% if request.resolver_match.url_name in 'lead_list lead_detail lead_edit' %}active{% endif %}"
+
                                 onclick="closeOffcanvasAndNavigate(event, this.href)">
 
                                 <i class="bi bi-people"></i>
@@ -646,7 +799,9 @@
                         <li class="nav-item">
 
                             <a href="{% url 'agent:site_visit_list' %}"
+
                                 class="nav-link {% if request.resolver_match.url_name in 'site_visit_list site_visit_add site_visit_detail' %}active{% endif %}"
+
                                 onclick="closeOffcanvasAndNavigate(event, this.href)">
 
                                 <i class="bi bi-calendar-event"></i>
@@ -664,7 +819,9 @@
                         <li class="nav-item">
 
                             <a href="{% url 'agent:booking_list' %}"
+                            
                                 class="nav-link {% if request.resolver_match.url_name in 'booking_list booking_add booking_detail' %}active{% endif %}"
+                            
                                 onclick="closeOffcanvasAndNavigate(event, this.href)">
 
                                 <i class="bi bi-cash-stack"></i>
@@ -682,7 +839,9 @@
                         <li class="nav-item">
 
                             <a href="{% url 'agent:commission_list' %}"
+
                                 class="nav-link {% if request.resolver_match.url_name in 'commission_list commission_detail' %}active{% endif %}"
+
                                 onclick="closeOffcanvasAndNavigate(event, this.href)">
 
                                 <i class="bi bi-currency-dollar"></i>
@@ -700,7 +859,9 @@
                         <li class="nav-item">
 
                             <a href="{% url 'agent:customer_list' %}"
+
                                 class="nav-link {% if request.resolver_match.url_name in 'customer_list customer_detail' %}active{% endif %}"
+
                                 onclick="closeOffcanvasAndNavigate(event, this.href)">
 
                                 <i class="bi bi-person-lines-fill"></i>
@@ -718,7 +879,9 @@
                         <li class="nav-item">
 
                             <a href="{% url 'agent:document_list' %}"
+
                                 class="nav-link {% if request.resolver_match.url_name in 'document_list document_add' %}active{% endif %}"
+
                                 onclick="closeOffcanvasAndNavigate(event, this.href)">
 
                                 <i class="bi bi-file-earmark"></i>
@@ -753,6 +916,7 @@
                 <div class="sidebar-footer mt-auto">
 
                     <a href="{% url 'auth:logout' %}" class="logout-btn"
+
                         onclick="closeOffcanvasAndNavigate(event, this.href)">
 
                         <i class="bi bi-box-arrow-right"></i>
@@ -794,6 +958,7 @@
                         <li class="nav-item">
 
                             <a href="{% url 'agent:dashboard' %}"
+
                                 class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
 
                                 <i class="bi bi-speedometer2"></i>
@@ -809,6 +974,7 @@
                         <li class="nav-item">
 
                             <a href="{% url 'agent:property_list' %}"
+
                                 class="nav-link {% if request.resolver_match.url_name in 'property_list property_add property_edit property_type_select' %}active{% endif %}">
 
                                 <i class="bi bi-houses"></i>
@@ -826,6 +992,7 @@
                         <li class="nav-item">
 
                             <a href="{% url 'agent:lead_list' %}"
+
                                 class="nav-link {% if request.resolver_match.url_name in 'lead_list lead_detail lead_edit' %}active{% endif %}">
 
                                 <i class="bi bi-people"></i>
@@ -931,6 +1098,7 @@
                         <li class="nav-item">
 
                             <a href="{% url 'agent:communication_list' %}"
+                            
                                 class="nav-link {% if request.resolver_match.url_name in 'communication_list communication_send message_template_list' %}active{% endif %}">
 
                                 <i class="bi bi-chat-dots"></i>
@@ -942,22 +1110,6 @@
                             </a>
 
                         </li>
-
-
-
-                        <!-- <li class="nav-item">
-
-                            <a href="{% url 'agent:reports' %}"
-
-                                class="nav-link {% if request.resolver_match.url_name == 'reports' %}active{% endif %}">
-
-                                <i class="bi bi-graph-up"></i>
-
-                                <span>Reports</span>
-
-                            </a>
-
-                        </li> -->
 
                     </ul>
 
@@ -1050,6 +1202,7 @@
     <!-- Mobile Menu Toggle Button -->
 
     <button class="agent-mobile-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#agentSidebarOffcanvas"
+
         aria-controls="agentSidebarOffcanvas" style="display: none;">
 
         <i class="bi bi-list"></i>

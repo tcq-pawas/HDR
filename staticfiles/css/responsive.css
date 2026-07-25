@@ -15,9 +15,6 @@
 
 
 
-
-
-
 /* ============================================
 
 
@@ -45,17 +42,11 @@ html, body {
     overflow-x: hidden;
 
 
-
     max-width: 100%;
 
 
 
 }
-
-
-
-
-
 
 
 * {
@@ -71,10 +62,6 @@ html, body {
 
 
 }
-
-
-
-
 
 
 
@@ -102,10 +89,6 @@ img {
 
 
 
-
-
-
-
 /* Responsive videos */
 
 
@@ -123,9 +106,6 @@ iframe, embed, object, video {
 
 
 }
-
-
-
 
 
 
@@ -435,9 +415,6 @@ iframe, embed, object, video {
 
 
     }
-
-
-
 
 
 

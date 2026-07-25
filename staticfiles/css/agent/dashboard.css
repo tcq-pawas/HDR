@@ -699,32 +699,54 @@ body {
 }
 
 .search-box {
+
     display: flex;
+    
     align-items: center;
+    
     background: #f8fafc;
+    
     border: 1px solid #e2e8f0;
+    
     border-radius: 8px;
+    
     padding: 10px 14px;
+    
     width: 100%;
+
 }
 
+
 .search-box i {
+    
     color: var(--text-gray);
+    
     font-size: 14px;
+    
     margin-right: 6px;
+
 }
 
 .search-input {
+
     border: none;
+
     outline: none;
+
     background: transparent;
+
     width: 90%;
+
     font-family: 'Inter', sans-serif;
+
     font-size: 12px;
+
     color: var(--text-dark);
+
 }
 
 .search-input::placeholder {
+
     color: var(--text-light);
 }
 
