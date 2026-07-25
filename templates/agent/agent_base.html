@@ -61,9 +61,28 @@
             padding: 12px 20px !important;
             font-size: 14px !important;
             gap: 15px !important;
+            border-radius: 8px !important;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease !important;
         }
         .sidebar-nav .nav-link i {
             font-size: 18px !important;
+            transition: color 0.3s ease, transform 0.3s ease !important;
+        }
+        .sidebar-nav .nav-link span {
+            transition: color 0.3s ease !important;
+        }
+        .sidebar-nav .nav-link:hover {
+            background-color: #6AAE48 !important;
+            color: #005427 !important;
+            transform: translateX(6px) !important;
+            box-shadow: 0 4px 12px rgba(106, 174, 72, 0.25) !important;
+        }
+        .sidebar-nav .nav-link:hover i {
+            color: #005427 !important;
+            transform: scale(1.15) !important;
+        }
+        .sidebar-nav .nav-link:hover span {
+            color: #005427 !important;
         }
         @media (min-width: 993px) {
             .agent-sidebar {

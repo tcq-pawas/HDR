@@ -1264,67 +1264,57 @@ body {
 
 .profile-toggle {
 
-
-
-
-
-
-
     display: flex;
-
-
-
-
-
-
 
     align-items: center;
 
-
-
-
-
-
-
     gap: 12px;
-
-
-
-
-
-
 
     background: none;
 
-
-
-
-
-
-
     border: none;
-
-
-
-
-
-
 
     cursor: pointer;
 
-
-
-
-
-
-
     text-align: left;
 
+    padding: 6px 10px;
+
+    border-radius: 8px;
+
+    transition: background 0.2s ease;
+
+}
 
 
 
+.profile-toggle:hover,
+
+.profile-toggle.active {
+
+    background: rgba(0, 84, 39, 0.08);
+
+}
 
 
+
+.profile-toggle .bi-chevron-down {
+
+    transition: transform 0.3s ease, color 0.2s ease;
+
+    color: #666;
+
+}
+
+
+
+.profile-toggle:hover .bi-chevron-down,
+
+.profile-toggle.active .bi-chevron-down {
+
+    color: #005427;
+
+    transform: rotate(180deg);
 
 }
 

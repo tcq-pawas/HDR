@@ -573,7 +573,7 @@ body {
 
 
 .sidebar-nav .nav-link:hover {
-    background: var(--sidebar-hover-bg);
+    background: var(--sidebar-active-bg);
     color: var(--sidebar-active-text);
 }
 

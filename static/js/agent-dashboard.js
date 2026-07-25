@@ -60,16 +60,19 @@ document.addEventListener('DOMContentLoaded', function() {
         profileToggle.addEventListener('click', function(e) {
             e.stopPropagation();
             profileDropdown.classList.toggle('show');
+            profileToggle.classList.toggle('active');
         });
 
         document.addEventListener('click', function() {
             profileDropdown.classList.remove('show');
+            profileToggle.classList.remove('active');
         });
 
         profileDropdown.addEventListener('click', function(e) {
             e.stopPropagation();
         });
     }
+
 
     // Mark notification as read
     const notificationItems = document.querySelectorAll('.notification-item');
