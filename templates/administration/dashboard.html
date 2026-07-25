@@ -326,12 +326,12 @@ dashboard.{% endblock %}
         </div>
     </div>
 </div>
-<!-- Recent Registered Agents & Recent Activities -->
+<!-- Recent Listings & Recent Activities -->
 <div class="row mb-4">
     <div class="col-xl-8 mb-4">
         <div class="card h-100">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="card-title mb-0">Recent Registered Agents</h5>
+                <h5 class="card-title mb-0">Recent Listings</h5>
                 <a href="#" class="btn btn-sm btn-outline-primary">View All</a>
             </div>
             <div class="card-body">
@@ -339,33 +339,37 @@ dashboard.{% endblock %}
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th class="ps-3 border-0">Agent Name</th>
-                                <th class="border-0">Email</th>
-                                <th class="border-0">Phone</th>
-                                <th class="border-0">Registration Date</th>
+                                <th class="ps-3 border-0">Property Title</th>
+                                <th class="border-0">Type</th>
+                                <th class="border-0">Price</th>
+                                <th class="border-0">Location</th>
                                 <th class="border-0">Status</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for agent in recent_agents|slice:":10" %}
+                            {% for property in recent_properties|slice:":10" %}
                             <tr>
                                 <td class="ps-3">
-                                    <div class="fw-semibold">{{ agent.get_full_name|default:agent.username }}</div>
+                                    <div class="fw-semibold">{{ property.title }}</div>
                                 </td>
-                                <td class="small text-muted">{{ agent.email }}</td>
-                                <td class="small text-muted">{{ agent.phone|default:"-" }}</td>
-                                <td class="small text-muted">{{ agent.date_joined|date:"M d, Y" }}</td>
+                                <td class="small text-muted">{{ property.property_type|default:"-" }}</td>
+                                <td class="small text-muted">₹{{ property.price|default:0|intcomma }}</td>
+                                <td class="small text-muted">{{ property.city|default:"-" }}</td>
                                 <td>
-                                    {% if agent.is_active %}
-                                        <span class="badge bg-success bg-opacity-10 text-success border border-success">Active</span>
+                                    {% if property.status == 'approved' %}
+                                        <span class="badge bg-success bg-opacity-10 text-success border border-success">Approved</span>
+                                    {% elif property.status == 'pending' %}
+                                        <span class="badge bg-warning bg-opacity-10 text-warning border border-warning">Pending</span>
+                                    {% elif property.status == 'rejected' %}
+                                        <span class="badge bg-danger bg-opacity-10 text-danger border border-danger">Rejected</span>
                                     {% else %}
-                                        <span class="badge bg-warning bg-opacity-10 text-warning border border-warning">Inactive</span>
+                                        <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary">{{ property.status|title }}</span>
                                     {% endif %}
                                 </td>
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="5" class="text-center py-4 text-muted">No agents found</td>
+                                <td colspan="5" class="text-center py-4 text-muted">No properties found</td>
                             </tr>
                             {% endfor %}
                         </tbody>

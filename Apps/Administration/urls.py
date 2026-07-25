@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 from .dashboard_views import (
     AdminDashboardView, UserManagementView, InquiryManagementView,
-    InvestmentManagementView, SystemSettingsView, ReportsView, ActivityLogView,
+    InvestmentManagementView, SystemSettingsView, ReportsView,
     UserProfileView, PropertyReviewCenterView, PropertyReviewDetailPageView, InquiryDetailPageView,
     InquiryBulkActionView, InquiryExportCSVView, InquiryExportExcelView, InquiryDeleteView,
     AdminPropertyListView, AdminFinancialsView, CustomerListView, AgentListView
@@ -46,7 +46,6 @@ urlpatterns = [
     path('investments/', InvestmentManagementView.as_view(), name='investment-management-page'),
     path('settings/', SystemSettingsView.as_view(), name='system-settings-page'),
     path('reports/', ReportsView.as_view(), name='reports-page'),
-    path('activity/', ActivityLogView.as_view(), name='activity-page'),
     path('inquiries/<int:pk>/', InquiryDetailPageView.as_view(), name='inquiry-detail-page'),
     path('inquiries/bulk-action/', InquiryBulkActionView.as_view(), name='inquiry-bulk-action'),
     path('inquiries/export/csv/', InquiryExportCSVView.as_view(), name='inquiry-export-csv'),

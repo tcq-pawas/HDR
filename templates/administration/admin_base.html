@@ -1405,39 +1405,11 @@
 
 
                             <div class="small text-white-50">Administrator</div>
-
-
-
+                            <a href="{% url 'admin_dash:view_profile' %}" class="btn btn-xs mt-2 w-100" style="font-size: 0.75rem; padding: 0.15rem 0.4rem; background: rgba(255, 255, 255, 0.15); border: none; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);">
+                                View Profile
+                            </a>
                         </div>
-
-
-
                     </div>
-
-
-
-                </div>
-
-
-
-                <div>
-
-
-
-                    <a href="{% url 'admin_dash:view_profile' %}" class="btn btn-success w-100 profile-btn">
-
-
-
-                        <i class="fas fa-user me-2"></i>
-
-
-
-                        View Profile
-
-                    </a>
-
-
-
                 </div>
 
 
@@ -1524,11 +1496,6 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'subscriptions:manage-subscriptions' %}">
                             <i class="fas fa-credit-card"></i> Manage Subscriptions
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'admin_dash:activity-page' %}">
-                            <i class="fas fa-history"></i> Activity Log
                         </a>
                     </li>
                 </ul>

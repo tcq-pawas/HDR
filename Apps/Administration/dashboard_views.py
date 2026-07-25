@@ -100,8 +100,8 @@ class AdminDashboardView(AdminDashboardMixin, TemplateView):
         
         # Recent activities
         context['recent_activities'] = ActivityLog.objects.select_related('user').order_by('-timestamp')[:10]
-        # Recent registered agents
-        context['recent_agents'] = User.objects.filter(groups__name='agent').order_by('-date_joined')[:10]
+        # Recent properties
+        context['recent_properties'] = Property.objects.select_related('seller').order_by('-created_at')[:10]
         
         # Recent property submissions needing review
         context['pending_properties'] = Property.objects.select_related('seller').filter(
@@ -466,67 +466,6 @@ class ReportsView(AdminDashboardMixin, TemplateView):
         context['generated_reports'] = GeneratedReport.objects.select_related(
             'report', 'generated_by'
         ).order_by('-generated_at')[:10]
-        
-        return context
-
-
-class ActivityLogView(AdminDashboardMixin, TemplateView):
-    """Activity log view for admins with strict access control"""
-    template_name = 'administration/activity_log.html'
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        
-        activities = ActivityLog.objects.select_related('user').order_by('-timestamp')
-        
-        # Apply filters
-        date_range = self.request.GET.get('date_range')
-        user_type = self.request.GET.get('user_type')
-        activity_type = self.request.GET.get('activity_type')
-        search_query = self.request.GET.get('search')
-        
-        if date_range:
-            from django.utils import timezone
-            from datetime import timedelta
-            now = timezone.now()
-            if date_range == 'today':
-                activities = activities.filter(timestamp__date=now.date())
-            elif date_range == 'week':
-                activities = activities.filter(timestamp__gte=now - timedelta(days=7))
-            elif date_range == 'month':
-                activities = activities.filter(timestamp__gte=now - timedelta(days=30))
-                
-        if user_type:
-            activities = activities.filter(user__groups__name=user_type)
-            
-        if search_query:
-            from django.db.models import Q
-            activities = activities.filter(
-                Q(user__username__icontains=search_query) |
-                Q(user__email__icontains=search_query) |
-                Q(user__first_name__icontains=search_query) |
-                Q(user__last_name__icontains=search_query)
-            )
-        from django.core.paginator import Paginator
-        paginator = Paginator(activities, 20)
-        page_number = self.request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-        
-        for activity in page_obj:
-            location = "N/A"
-            if activity.description and "Location: " in activity.description:
-                location = activity.description.split("Location: ")[-1].strip()
-            activity.parsed_location = location
-            
-        context['activities'] = page_obj
-        context['page_obj'] = page_obj
-        
-        # Calculate user statistics
-        from django.contrib.auth.models import User
-        users = User.objects.all()
-        context['total_users'] = users.count()
-        context['active_users'] = users.filter(is_active=True).count()
-        context['inactive_users'] = users.filter(is_active=False).count()
         
         return context
 
