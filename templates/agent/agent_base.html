@@ -128,24 +128,21 @@
 
         }
 
-        .sidebar-nav .nav-link:hover {
+       .sidebar-nav .nav-link:hover,
 
-            background-color: #6AAE48 !important;
+        .sidebar-nav .nav-link.active {
             
-            color: #005427 !important;
-            
-            transform: translateX(6px) !important;
-            
-            box-shadow: 0 4px 12px rgba(106, 174, 72, 0.25) !important;
-
+        background-color: #6AAE48 !important;
+        color: #005427 !important;
+        transform: translateX(6px) !important;
+        box-shadow: 0 4px 12px rgba(106, 174, 72, 0.25) !important;
         }
+        
 
-        .sidebar-nav .nav-link:hover i {
-        
+        .sidebar-nav .nav-link:hover i,
+        .sidebar-nav .nav-link.active i {
             color: #005427 !important;
-        
             transform: scale(1.15) !important;
-        
         }
         
         .sidebar-nav .nav-link:hover span {
@@ -494,16 +491,9 @@
                 </div>
 
 
-
-
-
-
-
                 <!-- Header Right -->
 
                 <div class="header-right">
-
-
 
                     <!-- Search Bar -->
 
@@ -721,6 +711,7 @@
             <div class="offcanvas-header">
 
                 <a class="brand-logo" href="{% url 'agent:dashboard' %}"
+
                     onclick="closeOffcanvasAndNavigate(event, this.href)">
 
                     <img src="{% static 'img/logo.png' %}" alt="HeyDay Realty">
@@ -729,8 +720,7 @@
 
                 </a>
 
-                <button type="button" class="btn-close text-white" data-bs-dismiss="offcanvas"
-                    aria-label="Close"></button>
+                <button type="button" class="btn-close text-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 
             </div>
 
@@ -743,7 +733,9 @@
                         <li class="nav-item">
 
                             <a href="{% url 'agent:dashboard' %}"
+
                                 class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"
+                                
                                 onclick="closeOffcanvasAndNavigate(event, this.href)">
 
                                 <i class="bi bi-speedometer2"></i>

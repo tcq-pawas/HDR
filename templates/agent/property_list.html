@@ -127,13 +127,20 @@
                             <td>
 
                                 <div class="d-flex gap-2">
+                                    <a href="{% url 'agent:property_view' property.id %}"
+                                        class="btn btn-sm btn-outline-primary" title="View Property">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
 
                                     <a href="{% url 'agent:property_edit' property.id %}"
-                                        class="btn btn-sm btn-outline-primary">Edit</a>
+                                        class="btn btn-sm btn-outline-secondary" title="Edit Property">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
 
                                     <a href="{% url 'agent:property_delete' property.id %}"
-                                        class="btn btn-sm btn-outline-danger">Delete</a>
-
+                                        class="btn btn-sm btn-outline-danger" title="Delete Property">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
                                 </div>
 
                             </td>
