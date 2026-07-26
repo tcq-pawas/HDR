@@ -26,6 +26,11 @@
 
     .saved-properties-page{
         background: transparent;
+        padding: 24px 30px;
+    }
+    
+    .page-header-white {
+        display: none;
     }
 
     /* Hero */
@@ -35,7 +40,7 @@
         border-radius: 20px;
         box-shadow: 0 16px 50px rgba(15,118,110,0.14);
         border: 1px solid rgba(15,118,110,0.22);
-        background: linear-gradient(135deg, rgba(15,118,110,.90) 0%, rgba(16,185,129,.70) 45%, rgba(59,130,246,.35) 100%);
+        background: linear-gradient(180deg, #004526 0%, #002815 50%, #002200 100%);
         min-height: 235px;
     }
     .sp-hero::before{
@@ -431,61 +436,6 @@
                     <div class="sp-meta-label">Last Saved Date</div>
                     <p class="sp-meta-value">{{ last_saved_at|default:"—" }}</p>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Statistics Cards -->
-    <div class="sp-kpi-grid mb-4">
-        <div class="sp-kpi-card" style="background: linear-gradient(135deg, #3B82F6 0%, rgba(59,130,246,0.65) 100%);">
-            <div class="sp-kpi-inner">
-                <div class="sp-kpi-left">
-                    <div class="sp-kpi-icon"><i class="fas fa-heart"></i></div>
-                    <div>
-                        <div class="sp-kpi-count">{{ saved_properties.count|default:0 }}</div>
-                        <div class="sp-kpi-label">Saved Properties</div>
-                    </div>
-                </div>
-                <div class="sp-trend"><span class="sp-trend-pill">▲ Stable Interest</span></div>
-            </div>
-        </div>
-
-        <div class="sp-kpi-card" style="background: linear-gradient(135deg, #10B981 0%, rgba(16,185,129,0.65) 100%);">
-            <div class="sp-kpi-inner">
-                <div class="sp-kpi-left">
-                    <div class="sp-kpi-icon"><i class="fas fa-sparkles"></i></div>
-                    <div>
-                        <div class="sp-kpi-count">{{ added_this_week|default:0 }}</div>
-                        <div class="sp-kpi-label">Added This Week</div>
-                    </div>
-                </div>
-                <div class="sp-trend"><span class="sp-trend-pill">▲ Quick Adds</span></div>
-            </div>
-        </div>
-
-        <div class="sp-kpi-card" style="background: linear-gradient(135deg, #F59E0B 0%, rgba(245,158,11,0.65) 100%);">
-            <div class="sp-kpi-inner">
-                <div class="sp-kpi-left">
-                    <div class="sp-kpi-icon"><i class="fas fa-tag"></i></div>
-                    <div>
-                        <div class="sp-kpi-count">{{ price_reduced|default:0 }}</div>
-                        <div class="sp-kpi-label">Price Reduced</div>
-                    </div>
-                </div>
-                <div class="sp-trend"><span class="sp-trend-pill">▼ Better Deals</span></div>
-            </div>
-        </div>
-
-        <div class="sp-kpi-card" style="background: linear-gradient(135deg, #8B5CF6 0%, rgba(139,92,246,0.65) 100%);">
-            <div class="sp-kpi-inner">
-                <div class="sp-kpi-left">
-                    <div class="sp-kpi-icon"><i class="fas fa-calendar-check"></i></div>
-                    <div>
-                        <div class="sp-kpi-count">{{ scheduled_viewings|default:0 }}</div>
-                        <div class="sp-kpi-label">Scheduled Viewings</div>
-                    </div>
-                </div>
-                <div class="sp-trend"><span class="sp-trend-pill">▲ Up Next</span></div>
             </div>
         </div>
     </div>

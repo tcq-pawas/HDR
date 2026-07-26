@@ -5,8 +5,39 @@
 
 {% block page_title %}My Profile{% endblock %}
 
-{% block content %}
+{% block extra_css %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/agent/dashboard.css' %}">
 <style>
+    .profile-content {
+        padding: 0;
+    }
+    
+    .hero-banner {
+        background: linear-gradient(180deg, #004526 0%, #002815 50%, #002200 100%);
+        padding: 40px 30px;
+        border-radius: 12px;
+        margin: 24px 30px 24px 30px;
+        box-shadow: 0 4px 15px rgba(0, 84, 39, 0.15);
+    }
+    
+    .hero-banner h1 {
+        color: white;
+        font-weight: 700;
+        font-size: 28px;
+        margin-bottom: 8px;
+    }
+    
+    .hero-banner p {
+        color: rgba(255, 255, 255, 0.9);
+        margin: 0;
+        font-size: 14px;
+    }
+    
+    .page-header-white {
+        display: none;
+    }
+    
     :root{
         --primary:#004526;
         --secondary:#006638;
@@ -20,34 +51,26 @@
         --shadow-soft: 0 8px 20px rgba(2, 6, 23, 0.06);
     }
 
-    .profile-wrap{
-        background: var(--bg);
-        padding: 1.25rem 0;
-    }
-
     /* Premium banner */
     .profile-banner{
-        background: linear-gradient(135deg, rgba(15,118,110,0.95), rgba(16,185,129,0.95));
+        background: #FFFFFF;
         border-radius: var(--radius);
-        box-shadow: var(--shadow);
+        box-shadow: var(--shadow-soft);
+        border: 1px solid rgba(2, 6, 23, 0.06);
         padding: 1.75rem;
         position: relative;
         overflow: hidden;
-        color: white;
+        color: #0B1220;
+        margin-bottom: 24px;
     }
     .profile-banner::before{
-        content:"";
-        position:absolute;
-        inset:-40%;
-        background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.18), transparent 55%);
-        transform: rotate(12deg);
-        pointer-events:none;
+        display: none;
     }
 
     .glass{
-        background: rgba(255,255,255,0.10);
-        border: 1px solid rgba(255,255,255,0.18);
-        backdrop-filter: blur(10px);
+        background: rgba(248, 250, 252, 0.8);
+        border: 1px solid rgba(2, 6, 23, 0.06);
+        backdrop-filter: none;
         border-radius: calc(var(--radius) - 6px);
         padding: 1rem;
     }
@@ -56,9 +79,9 @@
         width: 92px;
         height: 92px;
         border-radius: 50%;
-        background: rgba(255,255,255,0.18);
+        background: #FFFFFF;
         padding: 6px;
-        border: 1px solid rgba(255,255,255,0.25);
+        border: 1px solid rgba(2, 6, 23, 0.06);
         display:flex;
         align-items:center;
         justify-content:center;
@@ -158,13 +181,13 @@
         display:flex;
         align-items:center;
         justify-content:center;
-        color:white;
-        background: linear-gradient(135deg, rgba(15,118,110,0.95), rgba(16,185,129,0.95));
+        color:#004526;
+        background: rgba(0, 69, 38, 0.08);
     }
 
     .info-grid .info-item{
-        background: rgba(15,118,110,0.04);
-        border: 1px solid rgba(15,118,110,0.10);
+        background: #FFFFFF;
+        border: 1px solid rgba(2, 6, 23, 0.06);
         border-radius: 16px;
         padding: .95rem;
         display:flex;
@@ -180,9 +203,9 @@
         display:flex;
         align-items:center;
         justify-content:center;
-        color:white;
+        color:#004526;
         flex-shrink:0;
-        background: linear-gradient(135deg, rgba(15,118,110,0.95), rgba(16,185,129,0.95));
+        background: rgba(0, 69, 38, 0.08);
     }
     .info-grid .info-item .label{
         font-weight: 600;
@@ -265,8 +288,8 @@
 
     .widget-grid .w-item{
         border-radius: 16px;
-        border: 1px solid rgba(59,130,246,0.12);
-        background: rgba(59,130,246,0.04);
+        border: 1px solid rgba(2, 6, 23, 0.06);
+        background: #FFFFFF;
         padding: .95rem;
         min-height: 84px;
     }
@@ -287,8 +310,8 @@
     .widget-grid .w-item i{ color: var(--blue); }
 
     .edit-profile-btn{
-        background: rgba(255,255,255,0.16);
-        border: 1px solid rgba(255,255,255,0.28);
+        background: #004526;
+        border: 1px solid #004526;
         color: #fff;
         border-radius: 16px;
         padding: .7rem 1rem;
@@ -302,7 +325,8 @@
     }
     .edit-profile-btn:hover{
         transform: translateY(-2px);
-        background: rgba(255,255,255,0.22);
+        background: #006638;
+        border-color: #006638;
     }
 
     /* Responsive */
@@ -315,7 +339,18 @@
     }
 </style>
 
-<div class="profile-wrap">
+{% endblock %}
+
+{% block content %}
+<div class="profile-content">
+
+<!-- Hero Banner -->
+<div class="hero-banner">
+    <h1>My Profile</h1>
+    <p>Welcome back, {{ user.first_name|default:user.username }}! Here's what's happening with your property search today.</p>
+</div>
+
+<div class="profile-wrap" style="padding: 0 30px;">
     <!-- Profile Banner -->
     <div class="profile-banner mb-3">
         <div class="row align-items-center g-3" style="position:relative; z-index:1;">
@@ -401,55 +436,6 @@
         </div>
     </div>
 
-    <!-- KPI Cards -->
-    <div class="row g-3 mb-3">
-        <div class="col-xl-3 col-md-6">
-            <div class="kpi-card">
-                <div class="kpi-pill" style="background: radial-gradient(circle, var(--purple), transparent);"></div>
-                <div class="kpi-icon" style="background: linear-gradient(135deg, rgba(139,92,246,1), rgba(59,130,246,1));">
-                    <i class="fas fa-calendar-alt"></i>
-                </div>
-                <div class="kpi-value">{{ profile.created_at|date:'M Y' }}</div>
-                <div class="kpi-label">Member Since</div>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6">
-            <div class="kpi-card">
-                <div class="kpi-pill" style="background: radial-gradient(circle, var(--pink), transparent);"></div>
-                <div class="kpi-icon" style="background: linear-gradient(135deg, rgba(236,72,153,1), rgba(245,158,11,0.85));">
-                    <i class="fas fa-clock"></i>
-                </div>
-                <div class="kpi-value">{% if user.last_login %}{{ user.last_login|naturaltime }}{% else %}N/A{% endif %}</div>
-                <div class="kpi-label">Last Login</div>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6">
-            <div class="kpi-card">
-                <div class="kpi-pill" style="background: radial-gradient(circle, var(--secondary), transparent);"></div>
-                <div class="kpi-icon" style="background: linear-gradient(135deg, rgba(16,185,129,1), rgba(15,118,110,1));">
-                    <i class="fas fa-shield-alt"></i>
-                </div>
-                <div class="kpi-value">
-                    {% if user.is_active %}Active{% else %}Inactive{% endif %}
-                </div>
-                <div class="kpi-label">Account Status</div>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6">
-            <div class="kpi-card">
-                <div class="kpi-pill" style="background: radial-gradient(circle, var(--blue), transparent);"></div>
-                <div class="kpi-icon" style="background: linear-gradient(135deg, rgba(59,130,246,1), rgba(16,185,129,0.9));">
-                    <i class="fas fa-home"></i>
-                </div>
-                <div class="kpi-value">12</div>
-                <div class="kpi-label">Saved Properties</div>
-            </div>
-        </div>
-    </div>
-
     <div class="row g-3">
         <!-- Personal Information -->
         <div class="col-lg-7">
@@ -467,9 +453,6 @@
                                 <div class="label">Full Name</div>
                                 <div class="value" data-field="full_name">{{ profile.user.get_full_name|default:'Not set' }}</div>
                             </div>
-                            <button class="btn btn-link edit-btn" style="color:#004526; text-decoration:none;" onclick="openFieldEdit('full_name')">
-                                <i class="fas fa-pen"></i>
-                            </button>
                         </div>
                     </div>
 
@@ -480,9 +463,6 @@
                                 <div class="label">Email Address</div>
                                 <div class="value" data-field="email">{{ profile.user.email }}</div>
                             </div>
-                            <button class="btn btn-link edit-btn" style="color:#004526; text-decoration:none;" onclick="openFieldEdit('email')">
-                                <i class="fas fa-pen"></i>
-                            </button>
                         </div>
                     </div>
 
@@ -493,9 +473,6 @@
                                 <div class="label">Phone Number</div>
                                 <div class="value" data-field="phone">{{ profile.phone|default:'Not set' }}</div>
                             </div>
-                            <button class="btn btn-link edit-btn" style="color:#004526; text-decoration:none;" onclick="openFieldEdit('phone')">
-                                <i class="fas fa-pen"></i>
-                            </button>
                         </div>
                     </div>
 
@@ -506,9 +483,6 @@
                                 <div class="label">Preferred Contact</div>
                                 <div class="value" data-field="contact_method">{{ profile.get_preferred_contact_method_display|default:'Not set' }}</div>
                             </div>
-                            <button class="btn btn-link edit-btn" style="color:#004526; text-decoration:none;" onclick="openFieldEdit('contact_method')">
-                                <i class="fas fa-pen"></i>
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -574,6 +548,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 
 <!-- Drawer/Slide-over for Field Editing -->

@@ -162,19 +162,13 @@
 
                 {% block header %}
 
-                <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="page-header-white mb-4">
 
                     <div>
 
-                        <h2>{% block page_title %}Customer Dashboard{% endblock %}</h2>
+                        <h1 class="page-title">{% block page_title %}Customer Dashboard{% endblock %}</h1>
 
-                        <p class="text-muted">Welcome back, {{ user.first_name|default:user.username }}!</p>
-
-                    </div>
-
-                    <div class="text-end">
-
-                        <span class="badge bg-primary">Customer</span>
+                        <p class="welcome-message">Welcome back, {{ user.first_name|default:user.username }}! Here's what's happening with your property search today.</p>
 
                     </div>
 

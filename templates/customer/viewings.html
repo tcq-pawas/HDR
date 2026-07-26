@@ -42,15 +42,16 @@
 
   }
 
-
-
   .page-bg{
 
     background: linear-gradient(180deg, rgba(248,250,252,1) 0%, rgba(248,250,252,0.55) 100%);
 
+    padding: 24px 30px;
   }
-
-
+  
+  .page-header-white {
+    display: none;
+  }
 
   .premium-hero{
 
@@ -64,7 +65,7 @@
 
     border: 1px solid rgba(15,118,110,0.18);
 
-    background: rgba(255,255,255,0.55);
+    background: linear-gradient(180deg, #004526 0%, #002815 50%, #002200 100%);
 
     min-height: 260px;
 
@@ -950,108 +951,6 @@
           </div>
 
         </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-
-  <!-- Statistics Cards (KPI) -->
-
-  <div class="kpi-grid mb-4">
-
-    <div class="kpi-card" style="background: linear-gradient(135deg, rgba(59,130,246,0.98) 0%, rgba(59,130,246,0.55) 100%);">
-
-      <div class="kpi-body">
-
-        <div class="kpi-top">
-
-          <div class="kpi-icon"><i class="fas fa-calendar-alt"></i></div>
-
-          <div class="trend-pill">▲ Live</div>
-
-        </div>
-
-        <div class="kpi-count">{{ viewings.count|default:0 }}</div>
-
-        <div class="kpi-label">Total Viewings</div>
-
-        <div class="kpi-trend"><span class="trend-pill">Track scheduled visits</span></div>
-
-      </div>
-
-    </div>
-
-
-
-    <div class="kpi-card" style="background: linear-gradient(135deg, rgba(16,185,129,0.98) 0%, rgba(16,185,129,0.55) 100%);">
-
-      <div class="kpi-body">
-
-        <div class="kpi-top">
-
-          <div class="kpi-icon"><i class="fas fa-route"></i></div>
-
-          <div class="trend-pill">▲ Active</div>
-
-        </div>
-
-        <div class="kpi-count">{{ viewings.count|default:0 }}</div>
-
-        <div class="kpi-label">Upcoming</div>
-
-        <div class="kpi-trend"><span class="trend-pill">Next inspections</span></div>
-
-      </div>
-
-    </div>
-
-
-
-    <div class="kpi-card" style="background: linear-gradient(135deg, rgba(139,92,246,0.98) 0%, rgba(139,92,246,0.55) 100%);">
-
-      <div class="kpi-body">
-
-        <div class="kpi-top">
-
-          <div class="kpi-icon"><i class="fas fa-flag-checkered"></i></div>
-
-          <div class="trend-pill">▲ Done</div>
-
-        </div>
-
-        <div class="kpi-count">0</div>
-
-        <div class="kpi-label">Completed</div>
-
-        <div class="kpi-trend"><span class="trend-pill">Feedback ready</span></div>
-
-      </div>
-
-    </div>
-
-
-
-    <div class="kpi-card" style="background: linear-gradient(135deg, rgba(239,68,68,0.98) 0%, rgba(239,68,68,0.55) 100%);">
-
-      <div class="kpi-body">
-
-        <div class="kpi-top">
-
-          <div class="kpi-icon"><i class="fas fa-ban"></i></div>
-
-          <div class="trend-pill">▼ Closed</div>
-
-        </div>
-
-        <div class="kpi-count">0</div>
-
-        <div class="kpi-label">Cancelled</div>
-
-        <div class="kpi-trend"><span class="trend-pill">Reschedule anytime</span></div>
 
       </div>
 

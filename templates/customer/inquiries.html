@@ -21,7 +21,11 @@
     }
 
     /* Premium layout blocks */
-    .inquiries-page{ background: transparent; }
+    .inquiries-page{ background: transparent; padding: 24px 30px; }
+    
+    .page-header-white {
+        display: none;
+    }
 
     .premium-hero{
         position: relative;
@@ -29,7 +33,7 @@
         border-radius: var(--radius);
         box-shadow: 0 16px 50px rgba(15,118,110,0.14);
         border: 1px solid rgba(15,118,110,0.22);
-        background: linear-gradient(135deg, rgba(15,118,110,.92) 0%, rgba(16,185,129,.72) 45%, rgba(59,130,246,.35) 100%);
+        background: linear-gradient(180deg, #004526 0%, #002815 50%, #002200 100%);
         min-height: 210px;
     }
 
@@ -292,66 +296,6 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Statistics Cards (Premium KPI) -->
-    <div class="kpi-grid mb-4">
-        <div class="kpi-card" style="background: linear-gradient(135deg, #3B82F6 0%, rgba(59,130,246,0.65) 100%);">
-            <div class="kpi-card-inner">
-                <div>
-                    <div class="kpi-count">{{ inquiries.count|default:0 }}</div>
-                    <div class="kpi-label">Total Inquiries</div>
-                </div>
-                <div class="kpi-icon"><i class="fas fa-envelope"></i></div>
-            </div>
-        </div>
-
-        {# Best-effort counts based on status display text #}
-        {% with responded=0 pending=0 closed=0 site=0 %}
-            {% for inquiry in inquiries %}
-                {% if inquiry.status == 'responded' %}
-                    {% with responded=responded|add:1 %}{% endwith %}
-                {% elif inquiry.status == 'pending' %}
-                    {% with pending=pending|add:1 %}{% endwith %}
-                {% elif inquiry.status == 'closed' %}
-                    {% with closed=closed|add:1 %}{% endwith %}
-                {% elif inquiry.status == 'in_progress' %}
-                    {% with pending=pending|add:1 %}{% endwith %}
-                {% else %}
-                    {# do nothing #}
-                {% endif %}
-            {% endfor %}
-
-            <div class="kpi-card" style="background: linear-gradient(135deg, #10B981 0%, rgba(16,185,129,0.65) 100%);">
-                <div class="kpi-card-inner">
-                    <div>
-                        <div class="kpi-count">{% if responded %}{{ responded }}{% else %}0{% endif %}</div>
-                        <div class="kpi-label">Responded</div>
-                    </div>
-                    <div class="kpi-icon"><i class="fas fa-check-circle"></i></div>
-                </div>
-            </div>
-
-            <div class="kpi-card" style="background: linear-gradient(135deg, #F59E0B 0%, rgba(245,158,11,0.65) 100%);">
-                <div class="kpi-card-inner">
-                    <div>
-                        <div class="kpi-count">{% if pending %}{{ pending }}{% else %}0{% endif %}</div>
-                        <div class="kpi-label">Pending</div>
-                    </div>
-                    <div class="kpi-icon"><i class="fas fa-clock"></i></div>
-                </div>
-            </div>
-
-            <div class="kpi-card" style="background: linear-gradient(135deg, #8B5CF6 0%, rgba(139,92,246,0.65) 100%);">
-                <div class="kpi-card-inner">
-                    <div>
-                        <div class="kpi-count">{% if closed %}{{ closed }}{% else %}0{% endif %}</div>
-                        <div class="kpi-label">Closed</div>
-                    </div>
-                    <div class="kpi-icon"><i class="fas fa-archive"></i></div>
-                </div>
-            </div>
-        {% endwith %}
     </div>
 
     <!-- Quick Actions Section -->
