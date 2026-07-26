@@ -416,6 +416,13 @@ class SystemMetricsListCreateView(generics.ListCreateAPIView):
 
 @login_required
 def view_profile(request):
+    from .auth_utils import get_user_role, get_role_based_redirect_url
+    user_role = get_user_role(request.user)
+    if user_role != 'admin':
+        from django.contrib import messages
+        messages.error(request, "Access denied. Admin access required.")
+        return redirect(get_role_based_redirect_url(request.user))
+    
     admin_profile, _ = AdminProfile.objects.get_or_create(
         user=request.user,
         defaults={'department': 'management', 'position': 'Administrator'}
@@ -429,6 +436,13 @@ def view_profile(request):
 
 @login_required
 def update_admin_profile(request):
+    from .auth_utils import get_user_role, get_role_based_redirect_url
+    user_role = get_user_role(request.user)
+    if user_role != 'admin':
+        from django.contrib import messages
+        messages.error(request, "Access denied. Admin access required.")
+        return redirect(get_role_based_redirect_url(request.user))
+    
     if request.method == 'POST':
         user = request.user
         username = request.POST.get('username', '').strip()

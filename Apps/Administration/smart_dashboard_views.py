@@ -53,15 +53,18 @@ class RoleBasedDashboardMixin:
                 "Your account is not assigned to any user group. "
                 "Please contact an administrator to get proper access."
             )
-            return redirect('auth:unauthorized')
+            return redirect('auth:login')
         
         # Check if this view allows the user's role
         if not self.has_role_access(user_role):
-            from django.core.exceptions import PermissionDenied
-            raise PermissionDenied(
-                f"Access denied. You don't have permission to access this dashboard. "
-                f"Your role: {user_role or 'None'}"
+            from django.contrib import messages
+            messages.error(
+                request, 
+                "Access denied. You don't have permission to access this page."
             )
+            # Redirect to appropriate dashboard based on user's role
+            redirect_url = get_role_based_redirect_url(request.user)
+            return redirect(redirect_url)
         
         return super().dispatch(request, *args, **kwargs)
     

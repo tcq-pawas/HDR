@@ -11,3 +11,4 @@ djangorestframework
 django-filter
 drf-spectacular
 django-cors-headers
+cashfree_pg

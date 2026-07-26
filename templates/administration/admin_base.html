@@ -1805,6 +1805,10 @@
 
                     .then(response => {
 
+                        if (response.status === 403) {
+                            // User not authenticated as admin, silently skip
+                            return null;
+                        }
                         if (!response.ok) throw new Error('Unregistered user or server error');
 
                         return response.json();
@@ -1812,6 +1816,8 @@
                     })
 
                     .then(data => {
+
+                        if (!data) return; // Skip if data is null (403 case)
 
                         const count = data.unread_count;
 
