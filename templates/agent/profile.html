@@ -3,97 +3,350 @@
 
 {% block title %}My Profile | HeyDay Realty{% endblock %}
 
+{% block extra_css %}
+<style>
+    .profile-hero {
+        background: linear-gradient(135deg, #005427 0%, #6AAE48 100%);
+        padding: 60px 30px;
+        border-radius: 12px;
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .profile-hero::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -20%;
+        width: 400px;
+        height: 400px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+    }
+    
+    .profile-hero::after {
+        content: '';
+        position: absolute;
+        bottom: -30%;
+        left: -10%;
+        width: 300px;
+        height: 300px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 50%;
+    }
+    
+    .profile-avatar-large {
+        width: 140px;
+        height: 140px;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+    }
+    
+    .profile-avatar-large img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .profile-stat-card {
+        background: white;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .profile-stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    }
+    
+    .profile-stat-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        margin-bottom: 16px;
+    }
+    
+    .profile-stat-value {
+        font-size: 32px;
+        font-weight: 700;
+        color: #005427;
+        margin-bottom: 4px;
+    }
+    
+    .profile-stat-label {
+        font-size: 13px;
+        color: #64748b;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .info-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+    }
+    
+    .info-card-header {
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        padding: 20px 24px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .info-card-header h5 {
+        margin: 0;
+        font-weight: 600;
+        color: #1e293b;
+        font-size: 16px;
+    }
+    
+    .info-row {
+        padding: 16px 24px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        display: flex;
+        align-items: flex-start;
+    }
+    
+    .info-row:last-child {
+        border-bottom: none;
+    }
+    
+    .info-label {
+        width: 140px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        flex-shrink: 0;
+    }
+    
+    .info-value {
+        flex: 1;
+        font-size: 14px;
+        color: #1e293b;
+        font-weight: 500;
+    }
+    
+    .verified-badge {
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    
+    .unverified-badge {
+        background: rgba(245, 158, 11, 0.1);
+        color: #f59e0b;
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="h4 mb-0 fw-bold text-dark">My Profile</h2>
-        <a href="{% url 'agent:settings' %}" class="btn btn-primary">
-            <i class="bi bi-pencil-square me-2"></i>Edit Profile
-        </a>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-4 mb-4">
-            <!-- Profile Card -->
-            <div class="card shadow-sm border-0 rounded-4 text-center">
-                <div class="card-body p-5">
-                    <div class="mb-4">
+    <!-- Profile Hero Section -->
+    <div class="profile-hero">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <div class="d-flex align-items-center gap-4">
+                    <div class="profile-avatar-large rounded-circle overflow-hidden">
                         {% if agent_profile.profile_image %}
-                            <img src="{{ agent_profile.profile_image.url }}" alt="Profile Image" class="rounded-circle img-thumbnail" style="width: 150px; height: 150px; object-fit: cover;">
+                            <img src="{{ agent_profile.profile_image.url }}" alt="Profile Image">
                         {% else %}
-                            <div class="rounded-circle bg-light d-inline-flex align-items-center justify-content-center text-primary fw-bold" style="width: 150px; height: 150px; font-size: 3rem;">
+                            <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-white bg-opacity-20 text-white fw-bold" style="font-size: 3rem;">
                                 {{ user.first_name|default:user.username|slice:":1"|upper }}
                             </div>
                         {% endif %}
                     </div>
-                    <h4 class="fw-bold mb-1">{{ user.first_name }} {{ user.last_name }}</h4>
-                    <p class="text-muted mb-3">{% if 'owner' in request.user.groups.all|stringformat:"s" %}Property Owner{% else %}Real Estate Agent{% endif %}</p>
-                    
-                    <div class="d-flex justify-content-center gap-2">
-                        {% if agent_profile.is_verified %}
-                            <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill">
-                                <i class="bi bi-patch-check-fill me-1"></i> Verified
-                            </span>
-                        {% else %}
-                            <span class="badge bg-warning bg-opacity-10 text-warning px-3 py-2 rounded-pill">
-                                <i class="bi bi-exclamation-circle-fill me-1"></i> Unverified
-                            </span>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="d-flex justify-content-center gap-2 mt-3">
-                        {% if request.user.user_subscription and request.user.user_subscription.status == 'active' %}
-                            {% if request.user.user_subscription.plan.badge_image %}
-                                <img src="{{ request.user.user_subscription.plan.badge_image.url }}" alt="{{ request.user.user_subscription.plan.name }} Plan" style="height: 40px; object-fit: contain;" title="{{ request.user.user_subscription.plan.name }} Plan">
+                    <div class="text-white">
+                        <h1 class="h3 mb-2 fw-bold">{{ user.first_name }} {{ user.last_name }}</h1>
+                        <p class="mb-2 text-white-80">
+                            {% if 'owner' in request.user.groups.all|stringformat:"s" %}Property Owner{% else %}Real Estate Agent{% endif %}
+                        </p>
+                        <div class="d-flex gap-2">
+                            {% if agent_profile.is_verified %}
+                                <span class="verified-badge">
+                                    <i class="bi bi-patch-check-fill"></i> Verified
+                                </span>
                             {% else %}
-                                <span class="badge bg-primary px-3 py-2 rounded-pill">{{ request.user.user_subscription.plan.name }} Plan</span>
+                                <span class="unverified-badge">
+                                    <i class="bi bi-exclamation-circle-fill"></i> Unverified
+                                </span>
                             {% endif %}
+                            {% if request.user.user_subscription and request.user.user_subscription.status == 'active' %}
+                                <span class="badge bg-white text-success fw-semibold px-3 py-2 rounded-pill">
+                                    {{ request.user.user_subscription.plan.name }} Plan
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                <a href="{% url 'agent:settings' %}" class="btn btn-light text-success fw-semibold px-4 py-2 rounded-pill">
+                    <i class="bi bi-pencil-square me-2"></i>Edit Profile
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Section -->
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+            <div class="profile-stat-card">
+                <div class="profile-stat-icon" style="background: linear-gradient(135deg, #e6f6f0 0%, #d4efdf 100%); color: #005427;">
+                    <i class="bi bi-building"></i>
+                </div>
+                <div class="profile-stat-value">{{ stats.total_properties|default:0 }}</div>
+                <div class="profile-stat-label">Total Properties</div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="profile-stat-card">
+                <div class="profile-stat-icon" style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); color: #2563eb;">
+                    <i class="bi bi-people"></i>
+                </div>
+                <div class="profile-stat-value">{{ stats.total_leads|default:0 }}</div>
+                <div class="profile-stat-label">Total Leads</div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="profile-stat-card">
+                <div class="profile-stat-icon" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); color: #d97706;">
+                    <i class="bi bi-calendar-check"></i>
+                </div>
+                <div class="profile-stat-value">{{ user.date_joined|date:"Y" }}</div>
+                <div class="profile-stat-label">Member Since</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Personal Information Card -->
+            <div class="info-card mb-4">
+                <div class="info-card-header">
+                    <h5><i class="bi bi-person me-2 text-success"></i>Personal Information</h5>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Full Name</div>
+                    <div class="info-value">{{ user.first_name }} {{ user.last_name }}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Email Address</div>
+                    <div class="info-value">{{ user.email }}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Phone Number</div>
+                    <div class="info-value">{{ agent_profile.phone|default:"Not provided" }}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Company Name</div>
+                    <div class="info-value">{{ agent_profile.company_name|default:"Independent" }}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Bio</div>
+                    <div class="info-value">
+                        {% if agent_profile.bio %}
+                            {{ agent_profile.bio|linebreaks }}
+                        {% else %}
+                            <span class="text-muted fst-italic">No bio provided yet.</span>
                         {% endif %}
                     </div>
                 </div>
             </div>
+
+            <!-- Contact Information Card -->
+            <div class="info-card mb-4">
+                <div class="info-card-header">
+                    <h5><i class="bi bi-geo-alt me-2 text-success"></i>Contact Information</h5>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Address</div>
+                    <div class="info-value">{{ agent_profile.address|default:"Not provided" }}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">City</div>
+                    <div class="info-value">{{ agent_profile.city|default:"Not provided" }}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">State</div>
+                    <div class="info-value">{{ agent_profile.state|default:"Not provided" }}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Pin Code</div>
+                    <div class="info-value">{{ agent_profile.pincode|default:"Not provided" }}</div>
+                </div>
+            </div>
         </div>
 
-        <div class="col-lg-8">
-            <!-- Details Card -->
-            <div class="card shadow-sm border-0 rounded-4">
-                <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4">
-                    <h5 class="fw-bold text-dark mb-0">Personal Information</h5>
+        <div class="col-lg-4">
+            <!-- Quick Actions Card -->
+            <div class="info-card mb-4">
+                <div class="info-card-header">
+                    <h5><i class="bi bi-lightning me-2 text-success"></i>Quick Actions</h5>
                 </div>
-                <div class="card-body p-4">
-                    <div class="row mb-4">
-                        <div class="col-sm-4 text-muted fw-semibold">Full Name</div>
-                        <div class="col-sm-8 text-dark">{{ user.first_name }} {{ user.last_name }}</div>
-                    </div>
-                    <hr class="text-muted opacity-25">
-                    
-                    <div class="row mb-4">
-                        <div class="col-sm-4 text-muted fw-semibold">Email Address</div>
-                        <div class="col-sm-8 text-dark">{{ user.email }}</div>
-                    </div>
-                    <hr class="text-muted opacity-25">
-                    
-                    <div class="row mb-4">
-                        <div class="col-sm-4 text-muted fw-semibold">Phone Number</div>
-                        <div class="col-sm-8 text-dark">{{ agent_profile.phone|default:"Not provided" }}</div>
-                    </div>
-                    <hr class="text-muted opacity-25">
+                <div class="p-3">
+                    <a href="{% url 'agent:property_type_select' %}" class="btn btn-outline-success w-100 mb-2 py-3 rounded-3 d-flex align-items-center justify-content-center gap-2">
+                        <i class="bi bi-plus-circle"></i> Add New Property
+                    </a>
+                    <a href="{% url 'agent:settings' %}" class="btn btn-outline-secondary w-100 mb-2 py-3 rounded-3 d-flex align-items-center justify-content-center gap-2">
+                        <i class="bi bi-gear"></i> Account Settings
+                    </a>
+                    <a href="{% url 'agent:property_list' %}" class="btn btn-outline-primary w-100 py-3 rounded-3 d-flex align-items-center justify-content-center gap-2">
+                        <i class="bi bi-list-ul"></i> View My Properties
+                    </a>
+                </div>
+            </div>
 
-                    <div class="row mb-4">
-                        <div class="col-sm-4 text-muted fw-semibold">Company Name</div>
-                        <div class="col-sm-8 text-dark">{{ agent_profile.company_name|default:"Independent" }}</div>
+            <!-- Account Status Card -->
+            <div class="info-card">
+                <div class="info-card-header">
+                    <h5><i class="bi bi-shield-check me-2 text-success"></i>Account Status</h5>
+                </div>
+                <div class="p-3">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <span class="text-muted">Verification Status</span>
+                        {% if agent_profile.is_verified %}
+                            <span class="verified-badge"><i class="bi bi-check-circle-fill"></i> Verified</span>
+                        {% else %}
+                            <span class="unverified-badge"><i class="bi bi-exclamation-circle-fill"></i> Pending</span>
+                        {% endif %}
                     </div>
-                    <hr class="text-muted opacity-25">
-
-                    <div class="row mb-4">
-                        <div class="col-sm-4 text-muted fw-semibold">Bio</div>
-                        <div class="col-sm-8 text-dark">
-                            {% if agent_profile.bio %}
-                                {{ agent_profile.bio|linebreaks }}
-                            {% else %}
-                                <span class="text-muted fst-italic">No bio provided yet.</span>
-                            {% endif %}
-                        </div>
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <span class="text-muted">Subscription</span>
+                        {% if request.user.user_subscription and request.user.user_subscription.status == 'active' %}
+                            <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill">{{ request.user.user_subscription.plan.name }}</span>
+                        {% else %}
+                            <span class="badge bg-secondary px-3 py-2 rounded-pill">Free Plan</span>
+                        {% endif %}
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <span class="text-muted">Member Since</span>
+                        <span class="fw-semibold">{{ user.date_joined|date:"M d, Y" }}</span>
                     </div>
                 </div>
             </div>

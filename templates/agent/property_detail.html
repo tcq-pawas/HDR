@@ -13,37 +13,213 @@
         background: transparent !important;
         display: block !important;
     }
+    
+    /* Premium Gallery Styles */
+    .gallery-container {
+        position: relative;
+    }
+    
+    .gallery-main-image {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        margin-bottom: 20px;
+    }
+    
+    .gallery-main-image img {
+        width: 100%;
+        height: 500px;
+        object-fit: contain;
+        transition: transform 0.5s ease;
+        background: #f8f9fa;
+    }
+    
+    .gallery-main-image:hover img {
+        transform: scale(1.02);
+    }
+    
+    .gallery-main-image .image-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0,0,0,0.7));
+        padding: 20px;
+        color: white;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .gallery-main-image:hover .image-overlay {
+        opacity: 1;
+    }
+    
+    .gallery-thumbnails {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 12px;
+    }
+    
+    .gallery-thumbnail {
+        position: relative;
+        border-radius: 8px;
+        overflow: hidden;
+        cursor: pointer;
+        border: 3px solid transparent;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .gallery-thumbnail:hover,
+    .gallery-thumbnail.active {
+        border-color: #0d6efd;
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+    
+    .gallery-thumbnail img {
+        width: 100%;
+        height: 100px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+        aspect-ratio: 1 / 1;
+    }
+    
+    .gallery-thumbnail:hover img {
+        transform: scale(1.1);
+    }
+    
+    .gallery-thumbnail .category-badge {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: rgba(0,0,0,0.7);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        backdrop-filter: blur(4px);
+    }
+    
+    /* Lightbox Styles */
+    .lightbox {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.95);
+        backdrop-filter: blur(5px);
+    }
+    
+    .lightbox.active {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .lightbox-content {
+        max-width: 90%;
+        max-height: 90%;
+        border-radius: 8px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    
+    .lightbox-close {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        color: white;
+        font-size: 40px;
+        cursor: pointer;
+        transition: color 0.3s ease;
+        z-index: 10000;
+    }
+    
+    .lightbox-close:hover {
+        color: #0d6efd;
+    }
+    
+    .lightbox-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        color: white;
+        font-size: 50px;
+        cursor: pointer;
+        padding: 20px;
+        transition: all 0.3s ease;
+        user-select: none;
+    }
+    
+    .lightbox-nav:hover {
+        color: #0d6efd;
+        background: rgba(255,255,255,0.1);
+    }
+    
+    .lightbox-prev {
+        left: 20px;
+    }
+    
+    .lightbox-next {
+        right: 20px;
+    }
+    
+    .lightbox-counter {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: white;
+        font-size: 18px;
+        font-weight: 500;
+        background: rgba(0,0,0,0.5);
+        padding: 8px 20px;
+        border-radius: 20px;
+    }
+    
+    .gallery-empty {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        padding: 60px 20px;
+        text-align: center;
+        color: white;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid py-4">
-    <!-- Page Header (without Approve/Reject buttons) -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-start">
-                <div>
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb mb-2">
-                            <li class="breadcrumb-item"><a href="{% url 'agent:property_list' %}">My Properties</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">{{ property.title }}</li>
-                        </ol>
-                    </nav>
-                    <h1 class="h3 mb-2">{{ property.title }}</h1>
-                    <p class="text-muted mb-0">Property ID: #{{ property.id }} | Submitted by: {{ property.seller.username|default:"Agent" }}</p>
-                </div>
-                <div class="d-flex gap-2">
-                    <a href="{% url 'agent:property_edit' property.id %}" class="btn btn-outline-primary">
-                        <i class="bi bi-pencil-square me-2"></i>Edit Property
-                    </a>
-                    <a href="{% url 'agent:property_list' %}" class="btn btn-outline-secondary">
-                        <i class="bi bi-arrow-left me-2"></i>Back to List
-                    </a>
-                </div>
+<!-- Hero Banner -->
+<div class="hero-banner mb-4" style="background: #005427; padding: 40px 30px; border-radius: 12px; margin: 0 0 24px 0;">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-2">
+                    <li class="breadcrumb-item"><a href="{% url 'agent:property_list' %}" class="text-white-50 text-decoration-none">My Properties</a></li>
+                    <li class="breadcrumb-item active text-white" aria-current="page">{{ property.title }}</li>
+                </ol>
+            </nav>
+            <h1 class="h2 text-white mb-2">{{ property.title }}</h1>
+            <p class="text-white-50 mb-0">Property ID: #{{ property.id }} | Submitted by: {{ property.seller.username|default:"Agent" }}</p>
+        </div>
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+            <div class="d-flex gap-2 justify-content-md-end">
+                <a href="{% url 'agent:property_edit' property.id %}" class="btn btn-light text-success fw-semibold">
+                    <i class="bi bi-pencil-square me-2"></i>Edit Property
+                </a>
+                <a href="{% url 'agent:property_list' %}" class="btn btn-outline-light">
+                    <i class="bi bi-arrow-left me-2"></i>Back to List
+                </a>
             </div>
         </div>
     </div>
+</div>
 
+<div class="container-fluid py-4">
     <!-- Status Banner -->
     {% if property.status == 'pending' %}
         <div class="alert alert-warning d-flex align-items-center mb-4" role="alert">
@@ -70,22 +246,47 @@
 
     <div class="row">
         <!-- Left Column - Property Details -->
-        <div class="col-lg-8">
-            <!-- Featured Image -->
+        <div class="col-lg-6">
+            <!-- Featured Image Section -->
+            {% if property.featured_image %}
             <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0">Featured Image</h5>
+                </div>
                 <div class="card-body">
-                    <h5 class="card-title mb-3">Featured Image</h5>
-                    {% if property.featured_image %}
-                        <img src="{{ property.featured_image.url }}" alt="{{ property.title }}" class="img-fluid rounded w-100" style="max-height: 400px; object-fit: cover;">
-                    {% elif images %}
-                        <img src="{{ images.0.image.url }}" alt="{{ property.title }}" class="img-fluid rounded w-100" style="max-height: 400px; object-fit: cover;">
-                    {% else %}
-                        <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 300px;">
-                            <i class="bi bi-image fs-1 text-muted"></i>
-                        </div>
-                    {% endif %}
+                    <div class="gallery-main-image">
+                        <img src="{{ property.featured_image.url }}" alt="{{ property.title }}">
+                    </div>
                 </div>
             </div>
+            {% endif %}
+            
+            <!-- Property Image Gallery -->
+            {% if images %}
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0">Property Gallery <span class="badge bg-primary ms-2">{{ images|length }} Photos</span></h5>
+                </div>
+                <div class="card-body">
+                    <div class="gallery-container">
+                        <!-- Main Gallery Image -->
+                        <div class="gallery-main-image">
+                            <img src="{{ images.0.image.url }}" alt="{{ property.title }}" id="mainImage">
+                        </div>
+                        
+                        <!-- Thumbnail Grid -->
+                        <div class="gallery-thumbnails">
+                            {% for img in images %}
+                                <div class="gallery-thumbnail" data-image="{{ img.image.url }}">
+                                    <img src="{{ img.image.url }}" alt="Property Image {{ forloop.counter }}">
+                                    <span class="category-badge">{{ img.category }}</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
 
             <!-- Basic Information -->
             <div class="card border-0 shadow-sm mb-4">
@@ -126,45 +327,6 @@
                 </div>
             </div>
 
-            <!-- Pricing Information -->
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-header bg-white border-0 py-3">
-                    <h5 class="mb-0">Pricing Information</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="text-muted small">Property Price</label>
-                            <p class="mb-0 fw-semibold fs-5 text-success">₹{{ property.price|floatformat:0 }}</p>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="text-muted small">Price per Sq.ft</label>
-                            <p class="mb-0 fw-semibold">
-                                {% if property.price_per_sqft %}₹{{ property.price_per_sqft|floatformat:0 }}{% else %}-{% endif %}
-                            </p>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="text-muted small">Area</label>
-                            <p class="mb-0 fw-semibold">
-                                {% if property.area_sqft %}{{ property.area_sqft }} sq.ft{% elif property.total_area %}{{ property.total_area }} {{ property.area_unit|default:"" }}{% else %}-{% endif %}
-                            </p>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="text-muted small">Negotiable</label>
-                            <p class="mb-0 fw-semibold">
-                                {% if property.negotiable %}<span class="text-success">Yes</span>{% else %}<span class="text-muted">No</span>{% endif %}
-                            </p>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="text-muted small">Booking Amount</label>
-                            <p class="mb-0 fw-semibold">
-                                {% if property.booking_amount %}₹{{ property.booking_amount|floatformat:0 }}{% else %}-{% endif %}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- Location Information -->
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-header bg-white border-0 py-3">
@@ -199,24 +361,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Media Gallery -->
-            {% if images %}
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-header bg-white border-0 py-3">
-                    <h5 class="mb-0">Media Gallery</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row g-2">
-                        {% for img in images %}
-                        <div class="col-md-3 col-6">
-                            <img src="{{ img.image.url }}" class="img-fluid rounded border" style="height: 120px; width: 100%; object-fit: cover;" alt="Property Image">
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-            {% endif %}
 
             <!-- Documents -->
             <div class="card border-0 shadow-sm mb-4">
@@ -290,8 +434,49 @@
             </div>
         </div>
 
-        <!-- Right Column - Information & Performance -->
-        <div class="col-lg-4">
+        <!-- Right Column - Pricing & Features -->
+        <div class="col-lg-6">
+            <!-- Pricing Banner -->
+            <div class="card border-0 shadow-sm mb-4" style="background: #005427;">
+                <div class="card-body text-white">
+                    <h5 class="mb-3">Pricing Details</h5>
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label class="text-white-50 small">Property Price</label>
+                            <p class="mb-0 fw-bold fs-4">₹{{ property.price|floatformat:0 }}</p>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="text-white-50 small">Price per Sq.ft</label>
+                            <p class="mb-0 fw-semibold">
+                                {% if property.price_per_sqft %}₹{{ property.price_per_sqft|floatformat:0 }}{% else %}-{% endif %}
+                            </p>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="text-white-50 small">Area</label>
+                            <p class="mb-0 fw-semibold">
+                                {% if property.area_sqft %}{{ property.area_sqft }} sq.ft{% elif property.total_area %}{{ property.total_area }} {{ property.area_unit|default:"" }}{% else %}-{% endif %}
+                            </p>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="text-white-50 small">Negotiable</label>
+                            <p class="mb-0 fw-semibold">
+                                {% if property.negotiable %}<i class="bi bi-check-circle-fill"></i> Yes{% else %}<i class="bi bi-x-circle"></i> No{% endif %}
+                            </p>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="text-white-50 small">Booking Amount</label>
+                            <p class="mb-0 fw-semibold">
+                                {% if property.booking_amount %}₹{{ property.booking_amount|floatformat:0 }}{% else %}-{% endif %}
+                            </p>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="text-white-50 small">Property Type</label>
+                            <p class="mb-0 fw-semibold">{{ property.get_property_type_display|default:property.property_type }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Agent / Seller Information -->
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-header bg-white border-0 py-3">
@@ -348,7 +533,45 @@
                     </ul>
                 </div>
             </div>
+
+            <!-- Farmland Details (if applicable) -->
+            {% if property.category in 'Managed Farmland,Agricultural Land,Farm Plots,Weekend Farm,Investment Farmland' %}
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0">Farmland Details</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Project Size</label>
+                            <p class="mb-0 fw-semibold">{{ property.project_size_acre|default:"-" }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Plot Sizes</label>
+                            <p class="mb-0 fw-semibold">{{ property.plot_sizes|default:"-" }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Water Source</label>
+                            <p class="mb-0 fw-semibold">{{ property.water_source|default:"-" }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Road Access</label>
+                            <p class="mb-0 fw-semibold">{{ property.road_access|default:"-" }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Soil Type</label>
+                            <p class="mb-0 fw-semibold">{{ property.soil_type|default:"-" }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-muted small">Plantation Type</label>
+                            <p class="mb-0 fw-semibold">{{ property.plantation_type|default:"-" }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>
+
 {% endblock %}

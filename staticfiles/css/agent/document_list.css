@@ -1,133 +1,133 @@
-/* Breadcrumb */
-.breadcrumb-nav {
+/* Premium Container */
+.premium-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    min-height: 100vh;
+}
+
+/* Premium Header */
+.premium-header {
+    background: linear-gradient(135deg, #005427 0%, #003d1c 100%);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 40px rgba(0, 84, 39, 0.15);
+}
+
+.header-content {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-    color: #64748b;
-    margin-bottom: 1rem;
 }
 
-.breadcrumb-nav a {
-    color: #005427;
-    text-decoration: none;
-    font-weight: 500;
+.header-title h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 0.5rem 0;
+    letter-spacing: -0.5px;
 }
 
-.breadcrumb-nav span {
+.header-subtitle {
+    color: #e2e8f0;
+    font-size: 0.95rem;
+    margin: 0;
+    font-weight: 400;
+}
+
+/* Premium Status Banner */
+.verification-status-wrapper {
+    margin-bottom: 2rem;
+}
+
+.premium-status-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.25rem 1.75rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.premium-status-banner i {
+    font-size: 1.5rem;
+    margin-top: 0.15rem;
+}
+
+.premium-status-banner strong {
+    display: block;
+    font-size: 1rem;
     color: #1e293b;
     font-weight: 600;
 }
 
-/* Verification Header */
-.verification-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
-    flex-wrap: wrap;
-}
-
-.verification-header h1 {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: #0f172a;
-    margin: 0 0 0.35rem 0;
-}
-
-.verification-header .subtitle {
-    color: #64748b;
-    margin: 0;
-    font-size: 0.95rem;
-}
-
-.status-banner {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
-    padding: 0.9rem 1.25rem;
-    border-radius: 10px;
-    min-width: 300px;
-    border: 1px solid transparent;
-}
-
-.status-banner i {
-    font-size: 1.25rem;
-    margin-top: 0.15rem;
-}
-
-.status-banner strong {
-    display: block;
-    font-size: 0.95rem;
-    color: #1e293b;
-}
-
-.status-banner p {
-    margin: 0.2rem 0 0 0;
-    font-size: 0.8rem;
+.premium-status-banner p {
+    margin: 0.3rem 0 0 0;
+    font-size: 0.9rem;
     color: #64748b;
 }
 
-.status-pending {
-    background: #fff7ed;
-    border-color: #fed7aa;
+.premium-status-banner.status-pending {
+    background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+    border: 2px solid #fed7aa;
 }
 
-.status-pending i {
+.premium-status-banner.status-pending i {
     color: #ea580c;
 }
 
-.status-pending span {
+.premium-status-banner.status-pending span {
     color: #ea580c;
 }
 
-.status-approved {
-    background: #f0fdf4;
-    border-color: #bbf7d0;
+.premium-status-banner.status-approved {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border: 2px solid #bbf7d0;
 }
 
-.status-approved i {
+.premium-status-banner.status-approved i {
     color: #16a34a;
 }
 
-.status-approved span {
+.premium-status-banner.status-approved span {
     color: #16a34a;
 }
 
-.status-rejected {
-    background: #fef2f2;
-    border-color: #fecaca;
+.premium-status-banner.status-rejected {
+    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+    border: 2px solid #fecaca;
 }
 
-.status-rejected i {
+.premium-status-banner.status-rejected i {
     color: #dc2626;
 }
 
-.status-rejected span {
+.premium-status-banner.status-rejected span {
     color: #dc2626;
 }
 
-.status-not-started {
-    background: #f1f5f9;
-    border-color: #e2e8f0;
+.premium-status-banner.status-not-started {
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    border: 2px solid #cbd5e1;
 }
 
-.status-not-started i {
+.premium-status-banner.status-not-started i {
     color: #475569;
 }
 
-.status-not-started span {
+.premium-status-banner.status-not-started span {
     color: #475569;
 }
 
-/* Stepper */
+/* Premium Stepper */
 .stepper-card {
     background: white;
-    border-radius: 10px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     padding: 2rem 1.5rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
 }
 
 .stepper {
@@ -239,9 +239,15 @@
 
 .upload-card {
     background: white;
-    border-radius: 10px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.upload-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
 }
 
 .upload-card-header {
@@ -330,8 +336,8 @@
 .checklist-card,
 .info-card {
     background: white;
-    border-radius: 10px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     padding: 1.5rem;
 }
 
@@ -432,58 +438,63 @@
     color: #16a34a;
 }
 
-/* Bottom pending banner */
+/* Premium Bottom Banner */
 .pending-banner {
-    background: #fff7ed;
-    border: 1px solid #fed7aa;
-    border-radius: 10px;
-    padding: 1.25rem 1.5rem;
+    background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+    border: 2px solid #fed7aa;
+    border-radius: 16px;
+    padding: 1.5rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 1.5rem;
     flex-wrap: wrap;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 .pending-banner-left {
     display: flex;
     align-items: flex-start;
-    gap: 0.75rem;
+    gap: 1rem;
 }
 
 .pending-banner-left i {
     color: #ea580c;
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     margin-top: 0.2rem;
 }
 
 .pending-banner-left strong {
     color: #9a3412;
-    font-size: 0.95rem;
+    font-size: 1rem;
+    font-weight: 700;
 }
 
 .pending-banner-left p {
-    margin: 0.25rem 0 0 0;
+    margin: 0.3rem 0 0 0;
     color: #92400e;
-    font-size: 0.82rem;
+    font-size: 0.9rem;
     max-width: 600px;
 }
 
 .btn-outline {
-    border: 1px solid #ea580c;
+    border: 2px solid #ea580c;
     color: #ea580c;
     background: white;
-    padding: 0.6rem 1.1rem;
-    border-radius: 8px;
-    font-size: 0.85rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
     font-weight: 600;
     text-decoration: none;
     display: flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 0.5rem;
     white-space: nowrap;
+    transition: all 0.2s ease;
 }
 
 .btn-outline:hover {
-    background: #fff7ed;
+    background: #ea580c;
+    color: white;
+    transform: translateY(-2px);
 }

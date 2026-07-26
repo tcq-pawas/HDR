@@ -227,6 +227,24 @@ body {
     -webkit-overflow-scrolling: touch;
 }
 
+.agent-sidebar .sidebar-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 1rem;
+}
+
+.agent-sidebar .sidebar-nav {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.agent-sidebar .sidebar-footer {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 /* Offcanvas Sidebar for Mobile */
 .agent-sidebar-offcanvas {
     background: var(--sidebar-bg);
@@ -249,7 +267,19 @@ body {
 .agent-sidebar-offcanvas .sidebar-content {
     padding: 1rem;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.agent-sidebar-offcanvas .sidebar-nav {
+    flex: 1;
     overflow-y: auto;
+}
+
+.agent-sidebar-offcanvas .sidebar-footer {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .agent-sidebar-offcanvas .sidebar-nav .nav-link {

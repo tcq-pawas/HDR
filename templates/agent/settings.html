@@ -44,30 +44,60 @@
 
             <div class="row">
                 <div class="col-md-6 mb-3">
+                    <label for="{{ form.alternate_phone.id_for_label }}" class="form-label">Alternate Phone</label>
+                    {{ form.alternate_phone }}
+                </div>
+                <div class="col-md-6 mb-3">
                     <label for="{{ form.company_name.id_for_label }}" class="form-label">Company Name</label>
                     {{ form.company_name }}
                 </div>
+            </div>
+
+            <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="{{ form.employee_id.id_for_label }}" class="form-label">Employee ID</label>
                     {{ form.employee_id }}
                 </div>
-            </div>
-
-            <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="{{ form.territory.id_for_label }}" class="form-label">Territory</label>
                     {{ form.territory }}
                 </div>
-                <div class="col-md-6 mb-3">
-                    <label for="{{ form.commission_rate.id_for_label }}" class="form-label">Commission Rate (%)</label>
-                    {{ form.commission_rate }}
-                </div>
             </div>
 
             <div class="row">
                 <div class="col-md-6 mb-3">
+                    <label for="{{ form.commission_rate.id_for_label }}" class="form-label">Commission Rate (%)</label>
+                    {{ form.commission_rate }}
+                </div>
+                <div class="col-md-6 mb-3">
                     <label for="{{ form.target_sales.id_for_label }}" class="form-label">Target Sales (₹)</label>
                     {{ form.target_sales }}
+                </div>
+            </div>
+
+            <!-- Contact Information Section -->
+            <div class="contact-section-divider"></div>
+            <h4 class="section-subtitle">Contact Information</h4>
+            
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label for="{{ form.address.id_for_label }}" class="form-label">Address</label>
+                    {{ form.address }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label for="{{ form.city.id_for_label }}" class="form-label">City</label>
+                    {{ form.city }}
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="{{ form.state.id_for_label }}" class="form-label">State</label>
+                    {{ form.state }}
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="{{ form.pincode.id_for_label }}" class="form-label">Pincode</label>
+                    {{ form.pincode }}
                 </div>
             </div>
 
@@ -89,66 +119,6 @@
 
     <!-- Settings Grid -->
     <div class="settings-grid">
-        <!-- Notification Settings -->
-        <div class="settings-card">
-            <h3>Notifications</h3>
-            <div class="settings-item">
-                <div>
-                    <div class="settings-item-label">Email Notifications</div>
-                    <div class="settings-item-description">Receive email updates for new leads</div>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" checked>
-                    <span class="toggle-slider"></span>
-                </label>
-            </div>
-            <div class="settings-item">
-                <div>
-                    <div class="settings-item-label">SMS Notifications</div>
-                    <div class="settings-item-description">Receive SMS for urgent inquiries</div>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox">
-                    <span class="toggle-slider"></span>
-                </label>
-            </div>
-            <div class="settings-item">
-                <div>
-                    <div class="settings-item-label">Property Approval Alerts</div>
-                    <div class="settings-item-description">Get notified when properties are approved</div>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" checked>
-                    <span class="toggle-slider"></span>
-                </label>
-            </div>
-        </div>
-
-        <!-- Privacy Settings -->
-        <div class="settings-card">
-            <h3>Privacy</h3>
-            <div class="settings-item">
-                <div>
-                    <div class="settings-item-label">Profile Visibility</div>
-                    <div class="settings-item-description">Make your profile visible to buyers</div>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" checked>
-                    <span class="toggle-slider"></span>
-                </label>
-            </div>
-            <div class="settings-item">
-                <div>
-                    <div class="settings-item-label">Show Contact Information</div>
-                    <div class="settings-item-description">Display phone and email on listings</div>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" checked>
-                    <span class="toggle-slider"></span>
-                </label>
-            </div>
-        </div>
-
         <!-- Account Settings -->
         <div class="settings-card">
             <h3>Account</h3>
@@ -157,21 +127,14 @@
                     <div class="settings-item-label">Change Password</div>
                     <div class="settings-item-description">Update your account password</div>
                 </div>
-                <button class="settings-btn secondary">Change</button>
-            </div>
-            <div class="settings-item">
-                <div>
-                    <div class="settings-item-label">Two-Factor Authentication</div>
-                    <div class="settings-item-description">Add extra security to your account</div>
-                </div>
-                <button class="settings-btn secondary">Enable</button>
+                <a href="{% url 'agent:change_password' %}" class="settings-btn secondary">Change</a>
             </div>
             <div class="settings-item">
                 <div>
                     <div class="settings-item-label">Delete Account</div>
                     <div class="settings-item-description">Permanently delete your account</div>
                 </div>
-                <button class="settings-btn" style="background: #ef4444;">Delete</button>
+                <a href="{% url 'agent:delete_account' %}" class="settings-btn" style="background: #ef4444;">Delete</a>
             </div>
         </div>
     </div>

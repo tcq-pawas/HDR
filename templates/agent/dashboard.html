@@ -30,105 +30,96 @@ HeyDay Realty{% endblock %}
 
 
 
-<!-- Property Metrics Cards -->
+<!-- Premium Metrics Cards -->
+<div class="premium-metrics-container">
 
-<div class="row g-3 mb-4">
+    <div class="premium-metrics-grid">
 
-    <div class="col-12 col-md-6 col-lg-3">
-
-        <div class="kpi-card kpi-card-teal h-100">
-
-            <div class="kpi-card-icon">
-
-                <i class="bi bi-building"></i>
-
+        <!-- Total Properties -->
+        <div class="premium-metric-card metric-card-primary">
+            <div class="metric-card-bg"></div>
+            <div class="metric-progress-bar" style="width: 85%;"></div>
+            <div class="metric-card-content">
+                <div class="metric-header-row">
+                    <div class="metric-icon-wrapper">
+                        <i class="bi bi-building"></i>
+                    </div>
+                    <div class="metric-value">{{ stats.total_properties }}</div>
+                </div>
+                <div class="metric-label">Total Properties</div>
+                <div class="metric-trend">
+                    <span class="trend-indicator">
+                        <i class="bi bi-graph-up-arrow"></i>
+                    </span>
+                    <span class="trend-text">All Listings</span>
+                </div>
             </div>
+        </div>
 
-            <div class="kpi-card-content">
-
-                <div class="kpi-value">{{ stats.total_properties }}</div>
-
-                <div class="kpi-label">Total Properties</div>
-
+        <!-- Total Leads -->
+        <div class="premium-metric-card metric-card-info">
+            <div class="metric-card-bg"></div>
+            <div class="metric-progress-bar" style="width: 72%;"></div>
+            <div class="metric-card-content">
+                <div class="metric-header-row">
+                    <div class="metric-icon-wrapper">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <div class="metric-value">{{ stats.total_leads }}</div>
+                </div>
+                <div class="metric-label">Total Leads</div>
+                <div class="metric-trend">
+                    <span class="trend-indicator positive">
+                        <i class="bi bi-plus-circle-fill"></i>
+                    </span>
+                    <span class="trend-text">{{ stats.new_leads_today }} new today</span>
+                </div>
             </div>
+        </div>
 
+        <!-- Total Customers -->
+        <div class="premium-metric-card metric-card-success">
+            <div class="metric-card-bg"></div>
+            <div class="metric-progress-bar" style="width: 68%;"></div>
+            <div class="metric-card-content">
+                <div class="metric-header-row">
+                    <div class="metric-icon-wrapper">
+                        <i class="bi bi-person-badge-fill"></i>
+                    </div>
+                    <div class="metric-value">{{ stats.total_customers }}</div>
+                </div>
+                <div class="metric-label">Total Customers</div>
+                <div class="metric-trend">
+                    <span class="trend-indicator positive">
+                        <i class="bi bi-people"></i>
+                    </span>
+                    <span class="trend-text">Unique Clients</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Active Properties -->
+        <div class="premium-metric-card metric-card-warning">
+            <div class="metric-card-bg"></div>
+            <div class="metric-progress-bar" style="width: 92%;"></div>
+            <div class="metric-card-content">
+                <div class="metric-header-row">
+                    <div class="metric-icon-wrapper">
+                        <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                    <div class="metric-value">{{ stats.active_properties }}</div>
+                </div>
+                <div class="metric-label">Active Properties</div>
+                <div class="metric-trend">
+                    <span class="trend-indicator">
+                        <i class="bi bi-lightning-fill"></i>
+                    </span>
+                    <span class="trend-text">Live on Platform</span>
+                </div>
+            </div>
         </div>
 
     </div>
-
-
-
-    <div class="col-12 col-md-6 col-lg-3">
-
-        <div class="kpi-card kpi-card-emerald h-100">
-
-            <div class="kpi-card-icon">
-
-                <i class="bi bi-check-circle"></i>
-
-            </div>
-
-            <div class="kpi-card-content">
-
-                <div class="kpi-value">{{ stats.active_properties }}</div>
-
-                <div class="kpi-label">Active</div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-
-    <div class="col-12 col-md-6 col-lg-3">
-
-        <div class="kpi-card kpi-card-blue h-100">
-
-            <div class="kpi-card-icon">
-
-                <i class="bi bi-cash"></i>
-
-            </div>
-
-            <div class="kpi-card-content">
-
-                <div class="kpi-value">{{ stats.sold_properties|default:0 }}</div>
-
-                <div class="kpi-label">Sold</div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-
-    <div class="col-12 col-md-6 col-lg-3">
-
-        <div class="kpi-card kpi-card-purple h-100">
-
-            <div class="kpi-card-icon">
-
-                <i class="bi bi-clock"></i>
-
-            </div>
-
-            <div class="kpi-card-content">
-
-                <div class="kpi-value">{{ stats.pending_approval|default:0 }}</div>
-
-                <div class="kpi-label">Pending</div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
 
 </div>
 

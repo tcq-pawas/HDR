@@ -8,20 +8,26 @@
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid py-4">
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
-        <h1 class="h4 fw-bold text-dark mb-0">Site Visits Management</h1>
-        <a href="{% url 'agent:site_visit_add' %}" class="btn btn-primary">
-            <i class="bi bi-plus-lg me-2"></i> Schedule Visit
-        </a>
+<div class="premium-container">
+    <!-- Premium Header -->
+    <div class="premium-header">
+        <div class="header-content">
+            <div class="header-title">
+                <h1>Site Visits Management</h1>
+                <p class="header-subtitle">Manage your property site visits and viewings</p>
+            </div>
+            <a href="{% url 'agent:site_visit_add' %}" class="premium-btn">
+                <i class="bi bi-plus-lg"></i>
+                <span>Schedule Visit</span>
+            </a>
+        </div>
     </div>
 
-    <!-- Filters -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="d-flex gap-2 flex-wrap">
-                <select name="status" class="form-select w-auto" onchange="location.href='?status='+this.value">
+    <!-- Premium Filter Section -->
+    <div class="premium-filter">
+        <div class="filter-grid">
+            <div class="filter-item">
+                <select name="status" class="premium-select" onchange="location.href='?status='+this.value">
                     <option value="">All Status</option>
                     <option value="scheduled" {% if status_filter == 'scheduled' %}selected{% endif %}>Scheduled</option>
                     <option value="confirmed" {% if status_filter == 'confirmed' %}selected{% endif %}>Confirmed</option>
@@ -30,99 +36,104 @@
                     <option value="no_show" {% if status_filter == 'no_show' %}selected{% endif %}>No Show</option>
                     <option value="rescheduled" {% if status_filter == 'rescheduled' %}selected{% endif %}>Rescheduled</option>
                 </select>
-                <input type="date" name="date_from" value="{{ date_from|default:'' }}" placeholder="From Date" class="form-control w-auto" onchange="location.href='?date_from='+this.value">
-                <input type="date" name="date_to" value="{{ date_to|default:'' }}" placeholder="To Date" class="form-control w-auto" onchange="location.href='?date_to='+this.value">
+            </div>
+            <div class="filter-item">
+                <div class="filter-input-wrapper">
+                    <i class="bi bi-calendar3"></i>
+                    <input type="date" name="date_from" value="{{ date_from|default:'' }}" class="premium-input" placeholder="From Date" onchange="location.href='?date_from='+this.value">
+                </div>
+            </div>
+            <div class="filter-item">
+                <div class="filter-input-wrapper">
+                    <i class="bi bi-calendar3"></i>
+                    <input type="date" name="date_to" value="{{ date_to|default:'' }}" class="premium-input" placeholder="To Date" onchange="location.href='?date_to='+this.value">
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Visits Table -->
-    <div class="card shadow-sm border-0 rounded-4">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover mb-0">
-            <thead>
-                <tr>
-                    <th>Customer Name</th>
-                    <th>Phone</th>
-                    <th>Property</th>
-                    <th>Scheduled Date</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% if visits %}
-                    {% for visit in visits %}
+    <!-- Premium Table -->
+    <div class="premium-table-wrapper">
+        <div class="premium-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Customer Name</th>
+                        <th>Phone</th>
+                        <th>Property</th>
+                        <th>Scheduled Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if visits %}
+                        {% for visit in visits %}
+                            <tr class="property-row">
+                                <td class="customer-name">{{ visit.customer_name }}</td>
+                                <td class="phone-cell">{{ visit.customer_phone }}</td>
+                                <td class="property-title">{{ visit.property.title|truncatewords:3 }}</td>
+                                <td class="date-cell">{{ visit.scheduled_date|date:"M d, Y H:i" }}</td>
+                                <td class="status-cell">
+                                    <span class="status-badge status-{{ visit.status }}">{{ visit.get_status_display }}</span>
+                                </td>
+                                <td class="actions-cell">
+                                    <div class="action-buttons">
+                                        <a href="{% url 'agent:site_visit_detail' visit.id %}" class="action-btn view-btn" title="View">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a href="{% url 'agent:site_visit_edit' visit.id %}" class="action-btn edit-btn" title="Edit">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="tel:{{ visit.customer_phone }}" class="action-btn call-btn" title="Call">
+                                            <i class="bi bi-telephone"></i>
+                                        </a>
+                                        <a href="https://wa.me/{{ visit.customer_phone }}" target="_blank" class="action-btn whatsapp-btn" title="WhatsApp">
+                                            <i class="bi bi-whatsapp"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
                         <tr>
-                            <td><strong>{{ visit.customer_name }}</strong></td>
-                            <td>{{ visit.customer_phone }}</td>
-                            <td>{{ visit.property.title|truncatewords:3 }}</td>
-                            <td>{{ visit.scheduled_date|date:"M d, Y H:i" }}</td>
-                            <td><span class="status-badge status-{{ visit.status }}">{{ visit.get_status_display }}</span></td>
-                            <td>
-                                <div class="d-flex gap-2">
-                                    <a href="{% url 'agent:site_visit_detail' visit.id %}" class="btn btn-sm btn-outline-primary" title="View">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-                                    <a href="{% url 'agent:site_visit_edit' visit.id %}" class="btn btn-sm btn-outline-secondary" title="Edit">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
-                                    <a href="tel:{{ visit.customer_phone }}" class="btn btn-sm btn-outline-success" title="Call">
-                                        <i class="bi bi-telephone"></i>
-                                    </a>
-                                    <a href="https://wa.me/{{ visit.customer_phone }}" target="_blank" class="btn btn-sm btn-outline-success" title="WhatsApp">
-                                        <i class="bi bi-whatsapp"></i>
+                            <td colspan="6">
+                                <div class="premium-empty-state">
+                                    <div class="empty-icon">
+                                        <i class="bi bi-calendar-event"></i>
+                                    </div>
+                                    <h2>No Site Visits Scheduled</h2>
+                                    <p>Site visits will appear here when you schedule property viewings.</p>
+                                    <a href="{% url 'agent:site_visit_add' %}" class="premium-btn">
+                                        <i class="bi bi-plus-lg"></i>
+                                        <span>Schedule Your First Visit</span>
                                     </a>
                                 </div>
                             </td>
                         </tr>
-                    {% endfor %}
-                {% else %}
-                    <tr>
-                        <td colspan="6">
-                            <div class="text-center py-5">
-                                <div class="mb-3">
-                                    <i class="bi bi-calendar-event" style="font-size: 3rem; color: #cbd5e1;"></i>
-                                </div>
-                                <h3 class="h4 text-dark mb-2">No Site Visits Scheduled</h3>
-                                <p class="text-muted mb-4">Site visits will appear here when you schedule property viewings.</p>
-                                <a href="{% url 'agent:site_visit_add' %}" class="btn btn-primary">
-                                    <i class="bi bi-plus-lg me-2"></i> Schedule Your First Visit
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                {% endif %}
-            </tbody>
-                </table>
-            </div>
+                    {% endif %}
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <!-- Pagination -->
+    <!-- Premium Pagination -->
     {% if page_obj.has_other_pages %}
-    <nav aria-label="Page navigation" class="mt-4">
-        <ul class="pagination justify-content-center">
-            {% if page_obj.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}">Previous</a>
-                </li>
+    <div class="premium-pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}" class="pagination-link">Previous</a>
+        {% endif %}
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <span class="pagination-link active">{{ num }}</span>
+            {% else %}
+                <a href="?page={{ num }}{% if status_filter %}&status={{ status_filter }}{% endif %}" class="pagination-link">{{ num }}</a>
             {% endif %}
-            {% for num in page_obj.paginator.page_range %}
-                {% if page_obj.number == num %}
-                    <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
-                {% else %}
-                    <li class="page-item"><a class="page-link" href="?page={{ num }}{% if status_filter %}&status={{ status_filter }}{% endif %}">{{ num }}</a></li>
-                {% endif %}
-            {% endfor %}
-            {% if page_obj.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}">Next</a>
-                </li>
-            {% endif %}
-        </ul>
-    </nav>
+        {% endfor %}
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}" class="pagination-link">Next</a>
+        {% endif %}
+    </div>
     {% endif %}
 </div>
 {% endblock %}

@@ -8,36 +8,42 @@
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid py-4">
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
-        <h1 class="h4 fw-bold text-dark mb-0">Commission Management</h1>
-    </div>
-
-    <!-- Summary Cards -->
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0 rounded-4">
-                <div class="card-body">
-                    <h4 class="text-muted mb-2">Total Earned</h4>
-                    <div class="h3 fw-bold text-dark">₹{{ total_earned|floatformat:0 }}</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0 rounded-4">
-                <div class="card-body">
-                    <h4 class="text-muted mb-2">Pending Commission</h4>
-                    <div class="h3 fw-bold" style="color: #f59e0b;">₹{{ total_pending|floatformat:0 }}</div>
-                </div>
+<div class="premium-container">
+    <!-- Premium Header -->
+    <div class="premium-header">
+        <div class="header-content">
+            <div class="header-title">
+                <h1>Commission Management</h1>
+                <p class="header-subtitle">Track your earnings and commission payments</p>
             </div>
         </div>
     </div>
 
-    <!-- Filters -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <select name="status" class="form-select w-auto d-inline-block" onchange="location.href='?status='+this.value">
+    <!-- Premium Summary Cards -->
+    <div class="premium-stats-grid">
+        <div class="premium-stat-card">
+            <div class="stat-icon-wrap green"><i class="bi bi-currency-dollar"></i></div>
+            <div class="stat-info">
+                <div class="stat-label">Total Earned</div>
+                <div class="stat-value">₹{{ total_earned|floatformat:0 }}</div>
+                <div class="stat-trend">All time earnings</div>
+            </div>
+        </div>
+        <div class="premium-stat-card">
+            <div class="stat-icon-wrap orange"><i class="bi bi-clock-history"></i></div>
+            <div class="stat-info">
+                <div class="stat-label">Pending Commission</div>
+                <div class="stat-value">₹{{ total_pending|floatformat:0 }}</div>
+                <div class="stat-trend">Awaiting payment</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Premium Filter Section -->
+    <div class="premium-filter">
+        <div class="filter-wrapper">
+            <label class="filter-label">Filter by Status:</label>
+            <select name="status" class="premium-select" onchange="location.href='?status='+this.value">
                 <option value="">All Status</option>
                 <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
                 <option value="approved" {% if status_filter == 'approved' %}selected{% endif %}>Approved</option>
@@ -47,85 +53,79 @@
         </div>
     </div>
 
-    <!-- Commissions Table -->
-    <div class="card shadow-sm border-0 rounded-4">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover mb-0">
-            <thead>
-                <tr>
-                    <th>Property</th>
-                    <th>Commission Amount</th>
-                    <th>Commission Rate</th>
-                    <th>Sale Amount</th>
-                    <th>Status</th>
-                    <th>Due Date</th>
-                    <th>Paid Date</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% if commissions %}
-                    {% for commission in commissions %}
+    <!-- Premium Table -->
+    <div class="premium-table-wrapper">
+        <div class="premium-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Property</th>
+                        <th>Commission Amount</th>
+                        <th>Commission Rate</th>
+                        <th>Sale Amount</th>
+                        <th>Status</th>
+                        <th>Due Date</th>
+                        <th>Paid Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if commissions %}
+                        {% for commission in commissions %}
+                            <tr class="property-row">
+                                <td class="property-title">{{ commission.property.title|truncatewords:3 }}</td>
+                                <td class="amount-cell">₹{{ commission.commission_amount|floatformat:0 }}</td>
+                                <td class="rate-cell">{{ commission.commission_rate }}%</td>
+                                <td class="sale-cell">₹{{ commission.sale_amount|floatformat:0 }}</td>
+                                <td class="status-cell">
+                                    <span class="status-badge status-{{ commission.status }}">{{ commission.get_status_display }}</span>
+                                </td>
+                                <td class="date-cell">{{ commission.due_date|date:"M d, Y"|default:"N/A" }}</td>
+                                <td class="date-cell">{{ commission.paid_date|date:"M d, Y"|default:"N/A" }}</td>
+                                <td class="actions-cell">
+                                    <div class="action-buttons">
+                                        <a href="{% url 'agent:commission_detail' commission.id %}" class="action-btn view-btn" title="View">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
                         <tr>
-                            <td>{{ commission.property.title|truncatewords:3 }}</td>
-                            <td><strong>₹{{ commission.commission_amount|floatformat:0 }}</strong></td>
-                            <td>{{ commission.commission_rate }}%</td>
-                            <td>₹{{ commission.sale_amount|floatformat:0 }}</td>
-                            <td><span class="status-badge status-{{ commission.status }}">{{ commission.get_status_display }}</span></td>
-                            <td>{{ commission.due_date|date:"M d, Y"|default:"N/A" }}</td>
-                            <td>{{ commission.paid_date|date:"M d, Y"|default:"N/A" }}</td>
-                            <td>
-                                <div class="d-flex gap-2">
-                                    <a href="{% url 'agent:commission_detail' commission.id %}" class="btn btn-sm btn-outline-primary" title="View">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
+                            <td colspan="8">
+                                <div class="premium-empty-state">
+                                    <div class="empty-icon">
+                                        <i class="bi bi-currency-dollar"></i>
+                                    </div>
+                                    <h2>No Commissions Yet</h2>
+                                    <p>Commissions will appear here when you complete property sales.</p>
                                 </div>
                             </td>
                         </tr>
-                    {% endfor %}
-                {% else %}
-                    <tr>
-                        <td colspan="8">
-                            <div class="text-center py-5">
-                                <div class="mb-3">
-                                    <i class="bi bi-currency-dollar" style="font-size: 3rem; color: #cbd5e1;"></i>
-                                </div>
-                                <h3 class="h4 text-dark mb-2">No Commissions Yet</h3>
-                                <p class="text-muted mb-4">Commissions will appear here when you complete property sales.</p>
-                            </div>
-                        </td>
-                    </tr>
-                {% endif %}
-            </tbody>
-                </table>
-            </div>
+                    {% endif %}
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <!-- Pagination -->
+    <!-- Premium Pagination -->
     {% if page_obj.has_other_pages %}
-    <nav aria-label="Page navigation" class="mt-4">
-        <ul class="pagination justify-content-center">
-            {% if page_obj.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}">Previous</a>
-                </li>
+    <div class="premium-pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}" class="pagination-link">Previous</a>
+        {% endif %}
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <span class="pagination-link active">{{ num }}</span>
+            {% else %}
+                <a href="?page={{ num }}{% if status_filter %}&status={{ status_filter }}{% endif %}" class="pagination-link">{{ num }}</a>
             {% endif %}
-            {% for num in page_obj.paginator.page_range %}
-                {% if page_obj.number == num %}
-                    <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
-                {% else %}
-                    <li class="page-item"><a class="page-link" href="?page={{ num }}{% if status_filter %}&status={{ status_filter }}{% endif %}">{{ num }}</a></li>
-                {% endif %}
-            {% endfor %}
-            {% if page_obj.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}">Next</a>
-                </li>
-            {% endif %}
-        </ul>
-    </nav>
+        {% endfor %}
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}" class="pagination-link">Next</a>
+        {% endif %}
+    </div>
     {% endif %}
 </div>
 {% endblock %}

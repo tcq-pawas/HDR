@@ -8,18 +8,25 @@
 {% endblock %}
 
 {% block content %}
-<div class="templates-container">
-    <!-- Header -->
-    <div class="page-header">
-        <h1>Message Templates</h1>
-        <a href="{% url 'agent:message_template_add' %}" class="btn btn-primary">
-            <i class="bi bi-plus-lg"></i> Create Template
-        </a>
+<div class="premium-container">
+    <!-- Premium Header -->
+    <div class="premium-header">
+        <div class="header-content">
+            <div class="header-title">
+                <h1>Message Templates</h1>
+                <p class="header-subtitle">Create and manage reusable message templates for quick communication</p>
+            </div>
+            <a href="{% url 'agent:message_template_add' %}" class="premium-btn">
+                <i class="bi bi-plus-lg"></i>
+                <span>Create Template</span>
+            </a>
+        </div>
     </div>
 
-    <!-- Templates Table -->
-    <div class="templates-table">
-        <table>
+    <!-- Premium Table -->
+    <div class="premium-table-wrapper">
+        <div class="premium-table">
+            <table>
             <thead>
                 <tr>
                     <th>Template Name</th>
@@ -53,21 +60,23 @@
                 {% else %}
                     <tr>
                         <td colspan="7">
-                            <div class="empty-state">
-                                <div class="empty-state-icon">
+                            <div class="premium-empty-state">
+                                <div class="empty-icon">
                                     <i class="bi bi-file-text"></i>
                                 </div>
-                                <h3>No Templates Yet</h3>
+                                <h2>No Templates Yet</h2>
                                 <p>Create message templates to quickly send common communications to leads and customers.</p>
-                                <a href="{% url 'agent:message_template_add' %}" class="btn btn-primary">
-                                    <i class="bi bi-plus-lg"></i> Create Your First Template
+                                <a href="{% url 'agent:message_template_add' %}" class="premium-btn">
+                                    <i class="bi bi-plus-lg"></i>
+                                    <span>Create Your First Template</span>
                                 </a>
                             </div>
                         </td>
                     </tr>
                 {% endif %}
             </tbody>
-        </table>
+            </table>
+        </div>
     </div>
 </div>
 {% endblock %}

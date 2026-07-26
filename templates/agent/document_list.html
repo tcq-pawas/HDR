@@ -8,22 +8,22 @@
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid py-4">
+<div class="premium-container">
 
-    <!-- Breadcrumb -->
-    <!-- <div class="breadcrumb-nav">
-        <a href="{% url 'agent:dashboard' %}">Dashboard</a>
-    </div> -->
-
-    <!-- Header -->
-    <div class="verification-header">
-        <div>
-            <h1>Documents Verification</h1>
-            <p class="subtitle">Complete your identity and address verification to unlock all agent features.</p>
+    <!-- Premium Header -->
+    <div class="premium-header">
+        <div class="header-content">
+            <div class="header-title">
+                <h1>Documents Verification</h1>
+                <p class="header-subtitle">Complete your identity and address verification to unlock all agent features</p>
+            </div>
         </div>
+    </div>
 
+    <!-- Status Banner -->
+    <div class="verification-status-wrapper">
         {% if verification_status == 'approved' %}
-        <div class="status-banner status-approved">
+        <div class="premium-status-banner status-approved">
             <i class="bi bi-check-circle-fill"></i>
             <div>
                 <strong>Verification Status: <span>Approved</span></strong>
@@ -31,7 +31,7 @@
             </div>
         </div>
         {% elif verification_status == 'rejected' %}
-        <div class="status-banner status-rejected">
+        <div class="premium-status-banner status-rejected">
             <i class="bi bi-x-circle-fill"></i>
             <div>
                 <strong>Verification Status: <span>Rejected</span></strong>
@@ -39,7 +39,7 @@
             </div>
         </div>
         {% elif verification_status == 'pending' %}
-        <div class="status-banner status-pending">
+        <div class="premium-status-banner status-pending">
             <i class="bi bi-exclamation-circle-fill"></i>
             <div>
                 <strong>Verification Status: <span>Pending</span></strong>
@@ -47,7 +47,7 @@
             </div>
         </div>
         {% else %}
-        <div class="status-banner status-not-started">
+        <div class="premium-status-banner status-not-started">
             <i class="bi bi-info-circle-fill"></i>
             <div>
                 <strong>Verification Status: <span>Not Started</span></strong>
@@ -57,7 +57,7 @@
         {% endif %}
     </div>
 
-    <!-- Stepper -->
+    <!-- Premium Stepper -->
     <div class="stepper-card">
         <div class="stepper">
             <div class="step {% if id_proof_uploaded %}completed{% else %}active{% endif %}">

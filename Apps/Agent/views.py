@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
 from django.core.paginator import Paginator
 from django.http import HttpResponse, JsonResponse
 from django.db.models import Q, Count, Sum
@@ -53,6 +55,7 @@ def dashboard(request):
         'sold_properties': properties.filter(status='sold').count(),
         # New CRM metrics
         'total_leads': Lead.objects.filter(agent=request.user).count(),
+        'total_customers': Lead.objects.filter(agent=request.user).values('email').distinct().count(),
         'new_leads_today': Lead.objects.filter(
             agent=request.user,
             created_at__date=today
@@ -118,9 +121,19 @@ def profile(request):
         
     agent_profile = get_object_or_404(AgentProfile, user=request.user)
     
+    # Get statistics
+    total_properties = Property.objects.filter(seller=request.user).count()
+    total_leads = Lead.objects.filter(property__seller=request.user).count()
+    
+    stats = {
+        'total_properties': total_properties,
+        'total_leads': total_leads,
+    }
+    
     context = {
         'agent_profile': agent_profile,
         'user': request.user,
+        'stats': stats,
     }
     
     return render(request, 'agent/profile.html', context)
@@ -1430,3 +1443,52 @@ def export_report(request, report_type):
             writer.writerow([visit.customer_name, visit.property.title, visit.scheduled_date, visit.status])
     
     return response
+
+
+@login_required
+def change_password(request):
+    """Change user password"""
+    user_role = get_user_role(request.user)
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
+    
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, "Your password was successfully updated!")
+            return redirect('agent:settings')
+    else:
+        form = PasswordChangeForm(request.user)
+    
+    # Add form-control class to all fields
+    for field in form.fields:
+        form.fields[field].widget.attrs['class'] = 'form-control'
+    
+    context = {
+        'form': form,
+    }
+    
+    return render(request, 'agent/change_password.html', context)
+
+
+@login_required
+def delete_account(request):
+    """Delete user account"""
+    user_role = get_user_role(request.user)
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
+    
+    if request.method == 'POST':
+        # Delete the user account
+        user = request.user
+        user.delete()
+        messages.success(request, "Your account has been permanently deleted.")
+        return redirect('public:home')
+    
+    context = {
+        'user': request.user,
+    }
+    
+    return render(request, 'agent/delete_account.html', context)

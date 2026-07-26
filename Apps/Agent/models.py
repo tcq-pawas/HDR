@@ -16,6 +16,7 @@ class AgentProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='agent_profile')
     
     phone = models.CharField(max_length=20, blank=True)
+    alternate_phone = models.CharField(max_length=20, blank=True, help_text="Alternate contact number")
     company_name = models.CharField(max_length=200, blank=True)
     bio = models.TextField(blank=True)
     profile_image = models.ImageField(upload_to='agent_profiles/', null=True, blank=True)
@@ -33,6 +34,11 @@ class AgentProfile(models.Model):
     address_proof_document = models.FileField(upload_to='agent_verification/address_proof/', blank=True, null=True)
     verification_status = models.CharField(max_length=20, choices=VERIFICATION_STATUS_CHOICES, default='not_started')
     verification_remarks = models.TextField(blank=True, null=True)
+    # Contact Information
+    address = models.TextField(blank=True, help_text="Full address")
+    city = models.CharField(max_length=100, blank=True)
+    state = models.CharField(max_length=100, blank=True)
+    pincode = models.CharField(max_length=10, blank=True)
 
 
     def __str__(self):

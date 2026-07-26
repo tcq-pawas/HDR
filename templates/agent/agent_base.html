@@ -466,6 +466,122 @@
             box-sizing: border-box !important;
 
         }
+
+        /* Sidebar Profile Card */
+        .sidebar-profile-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 10px;
+            margin-bottom: 24px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            position: relative;
+        }
+
+        .profile-image-wrapper {
+            width: 70px;
+            height: 70px;
+            margin-bottom: 12px;
+        }
+
+        .profile-circle-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .profile-circle-placeholder {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6AAE48 0%, #005427 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .profile-name-text {
+            font-size: 15px;
+            font-weight: 600;
+            color: #FFFFFF;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .profile-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 12px;
+        }
+
+        .profile-group-name {
+            font-size: 11px;
+            font-weight: 600;
+            color: #FFFFFF;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+
+        .profile-verification-status {
+            position: static;
+        }
+
+        .verified-badge {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #10b981;
+            background: rgba(16, 185, 129, 0.2);
+            padding: 4px 8px;
+            border-radius: 12px;
+        }
+
+        .not-verified-badge {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #f59e0b;
+            background: rgba(245, 158, 11, 0.2);
+            padding: 4px 8px;
+            border-radius: 12px;
+        }
+
+        .view-profile-link {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            padding: 6px 16px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .view-profile-link:hover {
+            background: rgba(255, 255, 255, 0.25);
+            color: #FFFFFF;
+            transform: translateY(-1px);
+        }
     </style>
 
 </head>
@@ -491,205 +607,6 @@
                 </div>
 
 
-                <!-- Header Right -->
-
-                <div class="header-right">
-
-                    <!-- Search Bar -->
-
-                    <div class="header-center">
-
-                        <div class="search-box">
-
-                            <i class="bi bi-search"></i>
-
-                            <input type="text" placeholder="Search properties, leads, inquiries..."
-                                class="search-input">
-
-                        </div>
-
-                    </div>
-
-                    <!-- Notifications -->
-
-                    <div class="header-item">
-
-                        <button class="icon-btn" id="notificationBtn">
-
-                            <i class="bi bi-bell"></i>
-
-                            <span class="badge notification-badge">3</span>
-
-                        </button>
-
-                        <div class="dropdown-menu notification-dropdown" id="notificationDropdown">
-
-                            <div class="dropdown-header">
-
-                                <h6>Notifications</h6>
-
-                                <a href="#" class="mark-all-read">Mark all as read</a>
-
-                            </div>
-
-                            <div class="dropdown-body">
-
-                                <div class="notification-item unread">
-
-                                    <div class="notification-icon">
-
-                                        <i class="bi bi-person-plus"></i>
-
-                                    </div>
-
-                                    <div class="notification-content">
-
-                                        <p class="notification-text">New lead received for Premium Farm Land</p>
-
-                                        <span class="notification-time">2 min ago</span>
-
-                                    </div>
-
-                                </div>
-
-                                <div class="notification-item unread">
-
-                                    <div class="notification-icon">
-
-                                        <i class="bi bi-calendar-check"></i>
-
-                                    </div>
-
-                                    <div class="notification-content">
-
-                                        <p class="notification-text">Site visit scheduled for tomorrow</p>
-
-                                        <span class="notification-time">1 hour ago</span>
-
-                                    </div>
-
-                                </div>
-
-                                <div class="notification-item">
-
-                                    <div class="notification-icon">
-
-                                        <i class="bi bi-check-circle"></i>
-
-                                    </div>
-
-                                    <div class="notification-content">
-
-                                        <p class="notification-text">Property "Green Valley Plot" approved</p>
-
-                                        <span class="notification-time">3 hours ago</span>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                            <div class="dropdown-footer">
-
-                                <a href="#" class="view-all">View all notifications</a>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-
-                    <!-- New Lead Count -->
-
-                    <div class="header-item">
-
-                        <a href="#" class="icon-btn with-badge">
-
-                            <i class="bi bi-person-lines-fill"></i>
-
-                            <span class="badge lead-badge">5</span>
-
-                        </a>
-
-                    </div>
-
-
-
-                    <!-- Quick Add Property -->
-
-                    <div class="header-item">
-
-                        <a href="{% url 'agent:property_type_select' %}" class="btn btn-primary btn-sm quick-add-btn">
-
-                            <i class="bi bi-plus-lg"></i> Add Property
-
-                        </a>
-
-                    </div>
-
-
-
-                    <!-- Profile Dropdown -->
-
-                    <div class="header-item">
-
-                        <button class="profile-toggle" id="profileToggle">
-
-                            <div class="profile-avatar">
-
-                                {% if user.agent_profile and user.agent_profile.profile_image and user.agent_profile.profile_image.name %}
-
-                                <img src="{{ user.agent_profile.profile_image.url }}" alt="Profile"
-                                    style="width:100%; height:100%; object-fit:cover;">
-
-                                {% else %}
-
-                                <div class="avatar-placeholder">
-
-                                    {{ user.first_name|default:user.username|slice:":1"|upper }}
-
-                                </div>
-
-                                {% endif %}
-
-                            </div>
-
-                            <div class="profile-info">
-
-                                <span class="profile-name">{{ user.first_name|default:user.username }}</span>
-
-                                <span class="profile-role">Agent</span>
-
-                            </div>
-
-                            <i class="bi bi-chevron-down"></i>
-
-                        </button>
-
-                        <div class="dropdown-menu profile-dropdown" id="profileDropdown">
-
-                            <a href="{% url 'agent:profile' %}" class="dropdown-item">
-
-                                <i class="bi bi-person"></i> Profile
-
-                            </a>
-
-                            <div class="dropdown-divider"></div>
-
-                            <a href="{% url 'auth:logout' %}" class="dropdown-item text-danger">
-
-                                <i class="bi bi-box-arrow-right"></i> Logout
-
-                            </a>
-
-                        </div>
-
-                    </div>
-
-                </div>
 
             </div>
 
@@ -725,6 +642,33 @@
             </div>
 
             <div class="offcanvas-body sidebar-content">
+
+                <!-- Profile Card -->
+                <div class="sidebar-profile-card">
+                    <div class="profile-top-row">
+                        <div class="profile-group-name">{% if 'owner' in request.user.groups.all|stringformat:"s" %}Owner{% else %}Agent{% endif %}</div>
+                        <div class="profile-verification-status">
+                            {% if user.agent_profile and user.agent_profile.is_verified %}
+                            <span class="verified-badge"><i class="bi bi-patch-check-fill"></i> Verified</span>
+                            {% else %}
+                            <span class="not-verified-badge"><i class="bi bi-patch-exclamation"></i> Not Verified</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="profile-image-wrapper">
+                        {% if user.agent_profile and user.agent_profile.profile_image and user.agent_profile.profile_image.name %}
+                        <img src="{{ user.agent_profile.profile_image.url }}" alt="Profile" class="profile-circle-img">
+                        {% else %}
+                        <div class="profile-circle-placeholder">
+                            {{ user.first_name|default:user.username|slice:":1"|upper }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="profile-name-text">{{ user.get_full_name|default:user.username }}</div>
+                    <a href="{% url 'agent:profile' %}" class="view-profile-link" onclick="closeOffcanvasAndNavigate(event, this.href)">
+                        <i class="bi bi-person"></i> View Profile
+                    </a>
+                </div>
 
                 <nav class="sidebar-nav">
 
@@ -941,6 +885,32 @@
 
                 </a>
 
+                <!-- Profile Card -->
+                <div class="sidebar-profile-card">
+                    <div class="profile-top-row">
+                        <div class="profile-group-name">{% if 'owner' in request.user.groups.all|stringformat:"s" %}Owner{% else %}Agent{% endif %}</div>
+                        <div class="profile-verification-status">
+                            {% if user.agent_profile and user.agent_profile.is_verified %}
+                            <span class="verified-badge"><i class="bi bi-patch-check-fill"></i> Verified</span>
+                            {% else %}
+                            <span class="not-verified-badge"><i class="bi bi-patch-exclamation"></i> Not Verified</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="profile-image-wrapper">
+                        {% if user.agent_profile and user.agent_profile.profile_image and user.agent_profile.profile_image.name %}
+                        <img src="{{ user.agent_profile.profile_image.url }}" alt="Profile" class="profile-circle-img">
+                        {% else %}
+                        <div class="profile-circle-placeholder">
+                            {{ user.first_name|default:user.username|slice:":1"|upper }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="profile-name-text">{{ user.get_full_name|default:user.username }}</div>
+                    <a href="{% url 'agent:profile' %}" class="view-profile-link">
+                        <i class="bi bi-person"></i> View Profile
+                    </a>
+                </div>
 
 
                 <nav class="sidebar-nav">

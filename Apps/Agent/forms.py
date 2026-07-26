@@ -502,11 +502,15 @@ class AgentProfileForm(forms.ModelForm):
     
     class Meta:
         model = AgentProfile
-        fields = ['phone', 'company_name', 'bio', 'profile_image', 'employee_id', 'territory', 'commission_rate', 'target_sales', 'notification_email', 'notification_sms', 'notification_whatsapp']
+        fields = ['phone', 'alternate_phone', 'company_name', 'bio', 'profile_image', 'employee_id', 'territory', 'commission_rate', 'target_sales', 'notification_email', 'notification_sms', 'notification_whatsapp', 'address', 'city', 'state', 'pincode']
         widgets = {
             'phone': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Phone Number'
+            }),
+            'alternate_phone': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Alternate Phone Number'
             }),
             'company_name': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -542,6 +546,23 @@ class AgentProfileForm(forms.ModelForm):
             'notification_email': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'notification_sms': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'notification_whatsapp': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'address': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Full Address'
+            }),
+            'city': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'City'
+            }),
+            'state': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'State'
+            }),
+            'pincode': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Pincode'
+            }),
         }
 
     def __init__(self, *args, **kwargs):

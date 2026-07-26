@@ -18,102 +18,111 @@
 {% endblock %}
 
 {% block content %}
-<div class="communication-container">
+<div class="premium-container">
 
-    <!-- Page Header -->
-    <div class="comm-page-header">
-        <div>
-            <h1><i class="bi bi-envelope"></i> Email Communication</h1>
-            <p>Manage all emails sent to customers regarding your properties.</p>
+    <!-- Premium Header -->
+    <div class="premium-header">
+        <div class="header-content">
+            <div class="header-title">
+                <h1>Email Communication</h1>
+                <p class="header-subtitle">Manage all emails sent to customers regarding your properties</p>
+            </div>
+            <a href="{% url 'agent:communication_send' %}" class="premium-btn">
+                <i class="bi bi-plus-lg"></i>
+                <span>Compose Email</span>
+            </a>
         </div>
-        <a href="{% url 'agent:communication_send' %}" class="btn-compose">
-            <i class="bi bi-plus-lg"></i> Compose Email
-        </a>
     </div>
 
-    <!-- Stats Cards -->
-    <div class="comm-stats-grid">
-        <div class="comm-stat-card">
-            <div class="comm-stat-icon icon-sent">
-                <i class="bi bi-send"></i>
-            </div>
-            <div class="comm-stat-content">
-                <div class="comm-stat-label">Total Emails Sent</div>
-                <div class="comm-stat-value">{{ stats.total_sent|default:0 }}</div>
-                <div class="comm-stat-trend positive">{{ stats.sent_change|default:"18.5%" }} from last month</div>
+    <!-- Premium Stats Grid -->
+    <div class="premium-stats-grid">
+        <div class="premium-stat-card">
+            <div class="stat-icon-wrap green"><i class="bi bi-send"></i></div>
+            <div class="stat-info">
+                <div class="stat-label">Total Emails Sent</div>
+                <div class="stat-value">{{ stats.total_sent|default:0 }}</div>
+                <div class="stat-trend">{{ stats.sent_change|default:"18.5%" }} from last month</div>
             </div>
         </div>
 
-        <div class="comm-stat-card">
-            <div class="comm-stat-icon icon-delivered">
-                <i class="bi bi-envelope-check"></i>
-            </div>
-            <div class="comm-stat-content">
-                <div class="comm-stat-label">Delivered Emails</div>
-                <div class="comm-stat-value">{{ stats.delivered|default:0 }}</div>
-                <div class="comm-stat-trend positive">{{ stats.delivery_rate|default:"87.5%" }} Delivery Rate</div>
+        <div class="premium-stat-card">
+            <div class="stat-icon-wrap blue"><i class="bi bi-envelope-check"></i></div>
+            <div class="stat-info">
+                <div class="stat-label">Delivered Emails</div>
+                <div class="stat-value">{{ stats.delivered|default:0 }}</div>
+                <div class="stat-trend">{{ stats.delivery_rate|default:"87.5%" }} Delivery Rate</div>
             </div>
         </div>
 
-        <div class="comm-stat-card">
-            <div class="comm-stat-icon icon-opened">
-                <i class="bi bi-eye"></i>
-            </div>
-            <div class="comm-stat-content">
-                <div class="comm-stat-label">Opened Emails</div>
-                <div class="comm-stat-value">{{ stats.opened|default:0 }}</div>
-                <div class="comm-stat-trend positive">{{ stats.open_rate|default:"53.1%" }} Open Rate</div>
+        <div class="premium-stat-card">
+            <div class="stat-icon-wrap purple"><i class="bi bi-eye"></i></div>
+            <div class="stat-info">
+                <div class="stat-label">Opened Emails</div>
+                <div class="stat-value">{{ stats.opened|default:0 }}</div>
+                <div class="stat-trend">{{ stats.open_rate|default:"53.1%" }} Open Rate</div>
             </div>
         </div>
 
-        <div class="comm-stat-card">
-            <div class="comm-stat-icon icon-failed">
-                <i class="bi bi-exclamation-triangle"></i>
-            </div>
-            <div class="comm-stat-content">
-                <div class="comm-stat-label">Failed Emails</div>
-                <div class="comm-stat-value">{{ stats.failed|default:0 }}</div>
-                <div class="comm-stat-trend negative">{{ stats.failure_rate|default:"6.3%" }} Failure Rate</div>
+        <div class="premium-stat-card">
+            <div class="stat-icon-wrap red"><i class="bi bi-exclamation-triangle"></i></div>
+            <div class="stat-info">
+                <div class="stat-label">Failed Emails</div>
+                <div class="stat-value">{{ stats.failed|default:0 }}</div>
+                <div class="stat-trend">{{ stats.failure_rate|default:"6.3%" }} Failure Rate</div>
             </div>
         </div>
     </div>
 
-    <!-- Filters -->
-    <div class="comm-filters-bar">
-        <div class="comm-search-box">
-            <i class="bi bi-search"></i>
-            <input type="text" id="commSearchInput" placeholder="Search by customer name or email...">
+    <!-- Premium Filter Section -->
+    <div class="premium-filter">
+        <div class="filter-grid">
+            <div class="filter-item">
+                <div class="filter-input-wrapper">
+                    <i class="bi bi-search"></i>
+                    <input type="text" id="commSearchInput" class="premium-input" placeholder="Search by customer name or email...">
+                </div>
+            </div>
+
+            <div class="filter-item">
+                <select name="property" class="premium-select" onchange="location.href='?property='+this.value">
+                    <option value="">All Properties</option>
+                    {% for property in properties %}
+                    <option value="{{ property.id }}" {% if property_filter == property.id|stringformat:"s" %}selected{% endif %}>
+                        {{ property.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="filter-item">
+                <select name="status" class="premium-select" onchange="location.href='?status='+this.value">
+                    <option value="">All Status</option>
+                    <option value="delivered" {% if status_filter == 'delivered' %}selected{% endif %}>Delivered</option>
+                    <option value="opened" {% if status_filter == 'opened' %}selected{% endif %}>Opened</option>
+                    <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+                    <option value="failed" {% if status_filter == 'failed' %}selected{% endif %}>Failed</option>
+                </select>
+            </div>
+
+            <div class="filter-item">
+                <button class="premium-btn secondary">
+                    <i class="bi bi-calendar3"></i>
+                    <span>{{ date_range|default:"Select Date Range" }}</span>
+                </button>
+            </div>
+
+            <div class="filter-item">
+                <a href="{% url 'agent:communication_list' %}" class="premium-btn secondary">
+                    <i class="bi bi-arrow-counterclockwise"></i>
+                    <span>Reset</span>
+                </a>
+            </div>
         </div>
-
-        <select name="property" class="comm-filter-select" onchange="location.href='?property='+this.value">
-            <option value="">All Properties</option>
-            {% for property in properties %}
-            <option value="{{ property.id }}" {% if property_filter == property.id|stringformat:"s" %}selected{% endif %}>
-                {{ property.title }}</option>
-            {% endfor %}
-        </select>
-
-        <select name="status" class="comm-filter-select" onchange="location.href='?status='+this.value">
-            <option value="">All Status</option>
-            <option value="delivered" {% if status_filter == 'delivered' %}selected{% endif %}>Delivered</option>
-            <option value="opened" {% if status_filter == 'opened' %}selected{% endif %}>Opened</option>
-            <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
-            <option value="failed" {% if status_filter == 'failed' %}selected{% endif %}>Failed</option>
-        </select>
-
-        <button class="comm-date-range-btn">
-            <i class="bi bi-calendar3"></i>
-            <span>{{ date_range|default:"Select Date Range" }}</span>
-        </button>
-
-        <a href="{% url 'agent:communication_list' %}" class="comm-reset-btn">
-            <i class="bi bi-arrow-clockwise"></i> Reset
-        </a>
     </div>
 
-    <!-- Communications Table -->
-    <div class="table-responsive comm-table-wrapper">
-        <table class="table table-hover comm-table">
+    <!-- Premium Table -->
+    <div class="premium-table-wrapper">
+        <div class="premium-table">
+            <table>
             <thead>
                 <tr>
                     <th>Customer</th>
@@ -172,14 +181,15 @@
                 {% else %}
                 <tr>
                     <td colspan="7">
-                        <div class="empty-state">
-                            <div class="empty-state-icon">
+                        <div class="premium-empty-state">
+                            <div class="empty-icon">
                                 <i class="bi bi-inbox"></i>
                             </div>
-                            <h3>No Emails Found</h3>
+                            <h2>No Emails Found</h2>
                             <p>There are no email communications matching your filters.</p>
-                            <a href="{% url 'agent:communication_send' %}" class="btn btn-primary">
-                                <i class="bi bi-plus-lg"></i> Send Your First Message
+                            <a href="{% url 'agent:communication_send' %}" class="premium-btn">
+                                <i class="bi bi-plus-lg"></i>
+                                <span>Send Your First Message</span>
                             </a>
                         </div>
                     </td>
@@ -189,24 +199,24 @@
         </table>
     </div>
 
-    <!-- Pagination -->
+    <!-- Premium Pagination -->
     {% if page_obj.has_other_pages %}
-    <div class="comm-pagination">
-        <span class="comm-pagination-info">Showing {{ page_obj.start_index }} to {{ page_obj.end_index }} of {{ page_obj.paginator.count }} emails</span>
-        <div class="comm-pagination-controls">
+    <div class="premium-pagination">
+        <span class="pagination-info">Showing {{ page_obj.start_index }} to {{ page_obj.end_index }} of {{ page_obj.paginator.count }} emails</span>
+        <div class="pagination-controls">
             {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}" class="comm-page-btn"><i
+            <a href="?page={{ page_obj.previous_page_number }}" class="pagination-link"><i
                     class="bi bi-chevron-left"></i></a>
             {% endif %}
             {% for num in page_obj.paginator.page_range %}
             {% if page_obj.number == num %}
-            <span class="comm-page-btn active">{{ num }}</span>
+            <span class="pagination-link active">{{ num }}</span>
             {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %} <a href="?page={{ num }}"
-                class="comm-page-btn">{{ num }}</a>
+                class="pagination-link">{{ num }}</a>
                 {% endif %}
                 {% endfor %}
                 {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}" class="comm-page-btn"><i
+                <a href="?page={{ page_obj.next_page_number }}" class="pagination-link"><i
                         class="bi bi-chevron-right"></i></a>
                 {% endif %}
         </div>

@@ -114,75 +114,43 @@
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid py-4">
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-start mb-4 pb-3 border-bottom">
-        <div>
-            <h1 class="h4 fw-bold text-dark mb-1">Leads Management</h1>
-            <p class="text-muted mb-0">Manage and track your customer leads effectively.</p>
-        </div>
-        <div class="d-flex gap-2">
-            <a href="?export=csv{% if status_filter %}&status={{ status_filter }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" class="btn btn-outline-secondary">
-                <i class="bi bi-download me-2"></i> Export Leads
-            </a>
-            <a href="{% url 'agent:lead_add' %}" class="btn btn-primary">
-                <i class="bi bi-plus me-2"></i> Add Lead
-            </a>
+<div class="premium-container">
+    <!-- Premium Header -->
+    <div class="premium-header">
+        <div class="header-content">
+            <div class="header-title">
+                <h1>Leads Management</h1>
+                <p class="header-subtitle">Manage and track your customer leads effectively</p>
+            </div>
+            <div class="header-actions">
+                <a href="?export=csv{% if status_filter %}&status={{ status_filter }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" class="premium-btn secondary">
+                    <i class="bi bi-download"></i>
+                    <span>Export Leads</span>
+                </a>
+                <a href="{% url 'agent:lead_add' %}" class="premium-btn">
+                    <i class="bi bi-plus-lg"></i>
+                    <span>Add Lead</span>
+                </a>
+            </div>
         </div>
     </div>
 
-    <!-- Stat Cards -->
-    <div class="row mb-4">
-        <div class="col-12 col-md-6 mb-3">
-            <div class="card shadow-sm border-0 rounded-4 h-100">
-                <div class="card-body d-flex align-items-center justify-content-between p-3">
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="stat-icon-wrap teal"><i class="bi bi-people-fill"></i></div>
-                        <div class="stat-info">
-                            <div class="stat-label">TOTAL LEADS</div>
-                            <div class="stat-value">{{ stats.total_leads }}</div>
-                            <div class="stat-trend text-success"><span class="stat-dot green-dot"></span> All time</div>
-                        </div>
-                    </div>
-                    <div class="stat-chart-wrap">
-                        <svg width="110" height="42" viewBox="0 0 110 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M2 30 Q 25 38, 45 22 T 85 18 T 108 6" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-                            <path d="M2 30 Q 25 38, 45 22 T 85 18 T 108 6 V 42 H 2 Z" fill="url(#greenGrad)" opacity="0.18"/>
-                            <defs>
-                                <linearGradient id="greenGrad" x1="0" y1="0" x2="0" y2="42">
-                                    <stop offset="0%" stop-color="#10b981"/>
-                                    <stop offset="100%" stop-color="#10b981" stop-opacity="0"/>
-                                </linearGradient>
-                            </defs>
-                        </svg>
-                    </div>
-                </div>
+    <!-- Premium Stat Cards -->
+    <div class="premium-stats-grid">
+        <div class="premium-stat-card">
+            <div class="stat-icon-wrap green"><i class="bi bi-people-fill"></i></div>
+            <div class="stat-info">
+                <div class="stat-label">Total Leads</div>
+                <div class="stat-value">{{ stats.total_leads }}</div>
+                <div class="stat-trend">All time</div>
             </div>
         </div>
-        <div class="col-12 col-md-6 mb-3">
-            <div class="card shadow-sm border-0 rounded-4 h-100">
-                <div class="card-body d-flex align-items-center justify-content-between p-3">
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="stat-icon-wrap blue"><i class="bi bi-person-plus-fill"></i></div>
-                        <div class="stat-info">
-                            <div class="stat-label">TODAY LEADS</div>
-                            <div class="stat-value">{{ stats.new_leads }}</div>
-                            <div class="stat-trend text-primary"><span class="stat-dot blue-dot"></span> {{ stats.new_leads }} uncontacted</div>
-                        </div>
-                    </div>
-                    <div class="stat-chart-wrap">
-                        <svg width="110" height="42" viewBox="0 0 110 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M2 28 Q 28 36, 50 18 T 88 12 T 108 16" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-                            <path d="M2 28 Q 28 36, 50 18 T 88 12 T 108 16 V 42 H 2 Z" fill="url(#blueGrad)" opacity="0.18"/>
-                            <defs>
-                                <linearGradient id="blueGrad" x1="0" y1="0" x2="0" y2="42">
-                                    <stop offset="0%" stop-color="#3b82f6"/>
-                                    <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
-                                </linearGradient>
-                            </defs>
-                        </svg>
-                    </div>
-                </div>
+        <div class="premium-stat-card">
+            <div class="stat-icon-wrap blue"><i class="bi bi-person-plus-fill"></i></div>
+            <div class="stat-info">
+                <div class="stat-label">Today Leads</div>
+                <div class="stat-value">{{ stats.new_leads }}</div>
+                <div class="stat-trend">{{ stats.new_leads }} uncontacted</div>
             </div>
         </div>
         <!-- <div class="col-6 col-md-3 col-xl-2 mb-3">
@@ -223,68 +191,66 @@
         </div> -->
     </div>
 
-    <!-- Filters -->
+    <!-- Premium Filter Section -->
     <form method="GET" id="leadFilterForm">
-    <div class="card shadow-sm border-0 rounded-4 mb-4">
-        <div class="card-body p-3">
-            <div class="row g-3">
-                <div class="col-12 col-md-6 col-lg-3">
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-search"></i></span>
-                        <input type="text" name="search" class="form-control" placeholder="Search by customer name, phone or property..." value="{{ request.GET.search }}">
-                    </div>
+    <div class="premium-filter">
+        <div class="filter-grid">
+            <div class="filter-item">
+                <div class="filter-input-wrapper">
+                    <i class="bi bi-search"></i>
+                    <input type="text" name="search" class="premium-input" placeholder="Search by customer name, phone or property..." value="{{ request.GET.search }}">
                 </div>
-                <div class="col-6 col-md-3 col-lg-2">
-                    <select name="status" class="form-select" onchange="document.getElementById('leadFilterForm').submit()">
-                        <option value="">All Status</option>
-                        <option value="new"         {% if status_filter == 'new' %}selected{% endif %}>New</option>
-                        <option value="contacted"   {% if status_filter == 'contacted' %}selected{% endif %}>Contacted</option>
-                        <option value="qualified"   {% if status_filter == 'qualified' %}selected{% endif %}>Qualified</option>
-                        <option value="proposal"    {% if status_filter == 'proposal' %}selected{% endif %}>Proposal</option>
-                        <option value="negotiation" {% if status_filter == 'negotiation' %}selected{% endif %}>Negotiation</option>
-                        <option value="closed_won"  {% if status_filter == 'closed_won' %}selected{% endif %}>Closed Won</option>
-                        <option value="closed_lost" {% if status_filter == 'closed_lost' %}selected{% endif %}>Closed Lost</option>
-                    </select>
+            </div>
+            <div class="filter-item">
+                <select name="status" class="premium-select" onchange="document.getElementById('leadFilterForm').submit()">
+                    <option value="">All Status</option>
+                    <option value="new"         {% if status_filter == 'new' %}selected{% endif %}>New</option>
+                    <option value="contacted"   {% if status_filter == 'contacted' %}selected{% endif %}>Contacted</option>
+                    <option value="qualified"   {% if status_filter == 'qualified' %}selected{% endif %}>Qualified</option>
+                    <option value="proposal"    {% if status_filter == 'proposal' %}selected{% endif %}>Proposal</option>
+                    <option value="negotiation" {% if status_filter == 'negotiation' %}selected{% endif %}>Negotiation</option>
+                    <option value="closed_won"  {% if status_filter == 'closed_won' %}selected{% endif %}>Closed Won</option>
+                    <option value="closed_lost" {% if status_filter == 'closed_lost' %}selected{% endif %}>Closed Lost</option>
+                </select>
+            </div>
+            <div class="filter-item">
+                <select name="source" class="premium-select" onchange="document.getElementById('leadFilterForm').submit()">
+                    <option value="">All Sources</option>
+                    <option value="website"     {% if source_filter == 'website' %}selected{% endif %}>Website</option>
+                    <option value="referral"    {% if source_filter == 'referral' %}selected{% endif %}>Referral</option>
+                    <option value="social_media"{% if source_filter == 'social_media' %}selected{% endif %}>Social Media</option>
+                    <option value="cold_call"   {% if source_filter == 'cold_call' %}selected{% endif %}>Cold Call</option>
+                    <option value="walk_in"     {% if source_filter == 'walk_in' %}selected{% endif %}>Walk In</option>
+                    <option value="other"       {% if source_filter == 'other' %}selected{% endif %}>Other</option>
+                </select>
+            </div>
+            <div class="filter-item">
+                <div class="filter-input-wrapper">
+                    <i class="bi bi-calendar3"></i>
+                    <input type="date" name="date_from" class="premium-input" value="{{ request.GET.date_from }}" placeholder="From Date">
                 </div>
-                <div class="col-6 col-md-3 col-lg-2">
-                    <select name="source" class="form-select" onchange="document.getElementById('leadFilterForm').submit()">
-                        <option value="">All Sources</option>
-                        <option value="website"     {% if source_filter == 'website' %}selected{% endif %}>Website</option>
-                        <option value="referral"    {% if source_filter == 'referral' %}selected{% endif %}>Referral</option>
-                        <option value="social_media"{% if source_filter == 'social_media' %}selected{% endif %}>Social Media</option>
-                        <option value="cold_call"   {% if source_filter == 'cold_call' %}selected{% endif %}>Cold Call</option>
-                        <option value="walk_in"     {% if source_filter == 'walk_in' %}selected{% endif %}>Walk In</option>
-                        <option value="other"       {% if source_filter == 'other' %}selected{% endif %}>Other</option>
-                    </select>
+            </div>
+            <div class="filter-item">
+                <div class="filter-input-wrapper">
+                    <i class="bi bi-calendar3"></i>
+                    <input type="date" name="date_to" class="premium-input" value="{{ request.GET.date_to }}" placeholder="To Date">
                 </div>
-                <div class="col-6 col-md-4 col-lg-2">
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
-                        <input type="date" name="date_from" class="form-control" value="{{ request.GET.date_from }}" placeholder="From Date">
-                    </div>
-                </div>
-                <div class="col-6 col-md-4 col-lg-2">
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
-                        <input type="date" name="date_to" class="form-control" value="{{ request.GET.date_to }}" placeholder="To Date">
-                    </div>
-                </div>
-                <div class="col-12 col-md-4 col-lg-1">
-                    <a href="{% url 'agent:lead_list' %}" class="btn btn-outline-secondary w-100">
-                        <i class="bi bi-arrow-counterclockwise"></i> Reset
-                    </a>
-                </div>
+            </div>
+            <div class="filter-item">
+                <a href="{% url 'agent:lead_list' %}" class="premium-btn secondary">
+                    <i class="bi bi-arrow-counterclockwise"></i>
+                    <span>Reset</span>
+                </a>
             </div>
         </div>
     </div>
     </form>
 
-    <!-- Table -->
-    <div class="card shadow-sm border-0 rounded-4">
-        <div class="card-body p-0">
+    <!-- Premium Table -->
+    <div class="premium-table-wrapper">
+        <div class="premium-table">
             {% if leads %}
-            <div class="table-responsive">
-            <table class="table table-hover mb-0 leads-data-table">
+            <table>
         <thead>
             <tr>
                 <th>Customer</th>
@@ -292,9 +258,7 @@
                 <th>Email</th>
                 <th>Interested Property</th>
                 <th>Location</th>
-                <th class="sortable">
-                    Created Date <i class="bi bi-arrow-down-up" style="font-size:10px;"></i>
-                </th>
+                <th>Created Date</th>
                 <th>Status</th>
                 <th>Actions</th>
             </tr>
@@ -387,59 +351,45 @@
             {% endfor %}
         </tbody>
             </table>
-            </div>
 
-            <!-- Pagination -->
-            <div class="d-flex justify-content-between align-items-center p-3 border-top">
-                <div class="text-muted small">
+            <!-- Premium Pagination -->
+            <div class="premium-pagination">
+                <div class="pagination-info">
                     Showing {{ page_obj.start_index }} to {{ page_obj.end_index }} of {{ page_obj.paginator.count }} leads
                 </div>
-                <nav>
-                    <ul class="pagination pagination-sm mb-0">
+                <div class="pagination-controls">
             {% if page_obj.has_previous %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if source_filter %}&source={{ source_filter }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
-                    <i class="bi bi-chevron-left"></i>
-                </a>
-            </li>
-            {% else %}
-            <li class="page-item disabled">
-                <span class="page-link"><i class="bi bi-chevron-left"></i></span>
-            </li>
+            <a href="?page={{ page_obj.previous_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if source_filter %}&source={{ source_filter }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" class="pagination-link">
+                <i class="bi bi-chevron-left"></i>
+            </a>
             {% endif %}
 
             {% for num in page_obj.paginator.page_range %}
                 {% if num == page_obj.number %}
-                    <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
+                    <span class="pagination-link active">{{ num }}</span>
                 {% elif num == 1 or num == page_obj.paginator.num_pages or num|add:"-1" == page_obj.number or num|add:"1" == page_obj.number %}
-                    <li class="page-item"><a class="page-link" href="?page={{ num }}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if source_filter %}&source={{ source_filter }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">{{ num }}</a></li>
+                    <a href="?page={{ num }}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if source_filter %}&source={{ source_filter }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" class="pagination-link">{{ num }}</a>
                 {% elif num == page_obj.number|add:"-2" or num == page_obj.number|add:"2" %}
-                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                    <span class="pagination-link">...</span>
                 {% endif %}
             {% endfor %}
 
             {% if page_obj.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if source_filter %}&source={{ source_filter }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
-                    <i class="bi bi-chevron-right"></i>
-                </a>
-            </li>
-            {% else %}
-            <li class="page-item disabled">
-                <span class="page-link"><i class="bi bi-chevron-right"></i></span>
-            </li>
+            <a href="?page={{ page_obj.next_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if source_filter %}&source={{ source_filter }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" class="pagination-link">
+                <i class="bi bi-chevron-right"></i>
+            </a>
             {% endif %}
-                    </ul>
-                </nav>
+                </div>
             </div>
 
     {% else %}
-    <div class="text-center py-5">
-        <div class="mb-3">
-            <i class="bi bi-people" style="font-size: 3rem; color: #cbd5e1;"></i>
+    <!-- Premium Empty State -->
+    <div class="premium-empty-state">
+        <div class="empty-icon">
+            <i class="bi bi-people"></i>
         </div>
-        <h3 class="h4 text-dark mb-2">No Leads Found</h3>
-        <p class="text-muted mb-4">Leads will appear here when customers show interest in your properties.</p>
+        <h2>No Leads Found</h2>
+        <p>Leads will appear here when customers show interest in your properties.</p>
     </div>
     {% endif %}
         </div>

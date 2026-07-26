@@ -8,17 +8,21 @@
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid py-4">
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
-        <h1 class="h4 fw-bold text-dark mb-0">Customers</h1>
+<div class="premium-container">
+    <!-- Premium Header -->
+    <div class="premium-header">
+        <div class="header-content">
+            <div class="header-title">
+                <h1>Customers</h1>
+                <p class="header-subtitle">Manage your customer inquiries and interactions</p>
+            </div>
+        </div>
     </div>
 
-    <!-- Customers Table -->
-    <div class="card shadow-sm border-0 rounded-4">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover mb-0">
+    <!-- Premium Table -->
+    <div class="premium-table-wrapper">
+        <div class="premium-table">
+            <table>
             <thead>
                 <tr>
                     <th>Enquiry ID</th>
@@ -71,20 +75,19 @@
                     {% endfor %}
                 {% else %}
                     <tr>
-                        <td colspan="5">
-                            <div class="text-center py-5">
-                                <div class="mb-3">
-                                    <i class="bi bi-people" style="font-size: 3rem; color: #cbd5e1;"></i>
+                        <td colspan="10">
+                            <div class="premium-empty-state">
+                                <div class="empty-icon">
+                                    <i class="bi bi-people"></i>
                                 </div>
-                                <h3 class="h4 text-dark mb-2">No Customers Yet</h3>
-                                <p class="text-muted mb-4">Customers will appear here when you create bookings or add leads.</p>
+                                <h2>No Customers Yet</h2>
+                                <p>Customers will appear here when you create bookings or add leads.</p>
                             </div>
                         </td>
                     </tr>
                 {% endif %}
             </tbody>
-                </table>
-            </div>
+            </table>
         </div>
     </div>
 </div>

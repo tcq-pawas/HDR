@@ -1,0 +1,51 @@
+{% extends "agent/agent_base.html" %}
+{% load static %}
+
+{% block title %}Delete Account | HeyDay Realty{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/agent/settings.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="settings-container">
+    <!-- Header -->
+    <div class="page-header" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
+        <h1>Delete Account</h1>
+    </div>
+
+    <!-- Delete Account Confirmation -->
+    <div class="settings-card" style="max-width: 600px; margin: 0 auto; border: 2px solid #ef4444;">
+        <h3 style="color: #ef4444; border-bottom-color: #ef4444;">⚠️ Permanent Account Deletion</h3>
+        
+        <div style="background-color: #fef2f2; border-left: 4px solid #ef4444; padding: 1rem; margin-bottom: 1.5rem; border-radius: 8px;">
+            <p style="color: #991b1b; margin: 0; font-weight: 600;">Warning: This action cannot be undone!</p>
+        </div>
+        
+        <p style="color: #64748b; margin-bottom: 1.5rem; line-height: 1.6;">
+            You are about to permanently delete your account and all associated data. This includes:
+        </p>
+        
+        <ul style="color: #64748b; margin-bottom: 1.5rem; padding-left: 1.5rem;">
+            <li style="margin-bottom: 0.5rem;">Your profile information and settings</li>
+            <li style="margin-bottom: 0.5rem;">All your properties and listings</li>
+            <li style="margin-bottom: 0.5rem;">Lead and customer data</li>
+            <li style="margin-bottom: 0.5rem;">Booking and commission records</li>
+            <li style="margin-bottom: 0.5rem;">All documents and communications</li>
+        </ul>
+        
+        <p style="color: #64748b; margin-bottom: 2rem; font-weight: 600;">
+            Please confirm that you want to proceed with this action.
+        </p>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                <a href="{% url 'agent:settings' %}" class="settings-btn secondary" style="text-decoration: none; display: inline-block;">Cancel</a>
+                <button type="submit" class="settings-btn" style="background: #ef4444;">Yes, Delete My Account</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
