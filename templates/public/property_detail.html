@@ -126,11 +126,15 @@ endblock %}
                     {% csrf_token %}
                     <div class="mb-3">
                         <label class="form-label" style="font-weight: 600; color: var(--forest);">Name</label>
-                        <input type="text" name="name" class="form-control" required>
+                        <input type="text" name="name" class="form-control" value="{% if user.is_authenticated %}{{ user.get_full_name|default:user.username }}{% endif %}" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" style="font-weight: 600; color: var(--forest);">Email</label>
-                        <input type="email" name="email" class="form-control" required>
+                        <input type="email" name="email" class="form-control" value="{% if user.is_authenticated %}{{ user.email }}{% endif %}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" style="font-weight: 600; color: var(--forest);">Phone Number</label>
+                        <input type="text" name="phone_number" class="form-control" value="{% if user.is_authenticated and user.customer_profile.phone %}{{ user.customer_profile.phone }}{% endif %}" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" style="font-weight: 600; color: var(--forest);">Message</label>

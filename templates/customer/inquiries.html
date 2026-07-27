@@ -37,6 +37,12 @@
         min-height: 210px;
     }
 
+    a:focus,
+    a:active {
+        outline: none;
+        box-shadow: none;
+    }
+
     .premium-hero::before{
         content:"";
         position:absolute;
@@ -290,9 +296,9 @@
                 </div>
                 <div class="glass">
                     <div class="meta-label">Quick Create</div>
-                    <button class="btn-premium" type="button" data-bs-toggle="modal" data-bs-target="#newInquiryModal">
+                    <a href="{% url 'customer:create_inquiry' %}" class="btn-premium">
                         <i class="fas fa-plus"></i> Create Inquiry
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -311,7 +317,7 @@
             <i class="fas fa-chevron-right" style="color:#004526;"></i>
         </div>
 
-        <div class="action-card" onclick="window.location.href='{% url "customer:saved-properties-page" %}'">
+        <div class="action-card" onclick="window.location.href='{% url "buy:property_search" %}'">
             <div class="action-left">
                 <div class="action-icon" style="background: linear-gradient(135deg, #3B82F6, rgba(59,130,246,0.6));"><i class="fas fa-house-chimney"></i></div>
                 <div>
@@ -374,33 +380,27 @@
                         <tbody>
                             {% for inquiry in inquiries %}
                                 <tr class="row-card">
-                                    <td><span class="fw-bold" style="color: var(--primary);">#{{ inquiry.id }}</span></td>
+                                    <td><span class="fw-bold" style="color: var(--primary);">{{ inquiry.enquiry_id|default:inquiry.id }}</span></td>
                                     <td>
-                                        <div class="fw-bold" style="line-height:1.2;">{{ inquiry.property.title|default:inquiry.subject }}</div>
+                                        <div class="fw-bold" style="line-height:1.2;">{{ inquiry.related_property.title|default:"General Inquiry" }}</div>
                                         <div class="text-muted fw-bold" style="font-size:.9rem;">{{ inquiry.message|truncatechars:55 }}</div>
                                     </td>
-                                    <td class="text-muted fw-bold">{{ inquiry.property.property_type|default:"Agricultural Land" }}</td>
-                                    <td class="text-muted fw-bold">{{ inquiry.property.location|default:"—" }}</td>
+                                    <td class="text-muted fw-bold">{{ inquiry.related_property.property_type|default:"Agricultural Land" }}</td>
+                                    <td class="text-muted fw-bold">{{ inquiry.related_property.location|default:"—" }}</td>
                                     <td class="text-muted fw-bold">{{ inquiry.created_at|date:"M d, Y H:i" }}</td>
-                                    <td class="text-muted fw-bold">—</td>
+                                    <td class="text-muted fw-bold">{{ inquiry.phone_number|default:"—" }}</td>
                                     <td>
                                         {% with st=inquiry.status %}
-                                            {% if st == 'pending' %}
-                                                <span class="status-badge s-pending">Pending</span>
-                                            {% elif st == 'responded' %}
-                                                <span class="status-badge s-responded">Responded</span>
-                                            {% elif st == 'in_progress' or st == 'site_visit_scheduled' %}
-                                                <span class="status-badge s-site">Site Visit Scheduled</span>
-                                            {% elif st == 'closed' %}
-                                                <span class="status-badge s-closed">Closed</span>
-                                            {% elif st == 'rejected' %}
-                                                <span class="status-badge s-rejected">Rejected</span>
+                                            {% if st == 'new' %}
+                                                <span class="status-badge s-pending">⏳ Pending</span>
+                                            {% elif st == 'viewed' %}
+                                                <span class="status-badge s-responded">✅ Seen by Agent</span>
                                             {% else %}
                                                 <span class="status-badge s-pending">{{ inquiry.get_status_display }}</span>
                                             {% endif %}
                                         {% endwith %}
                                     </td>
-                                    <td class="text-muted fw-bold">{{ inquiry.updated_at|default:inquiry.created_at|date:"M d, Y H:i" }}</td>
+                                    <td class="text-muted fw-bold">{{ inquiry.created_at|date:"M d, Y H:i" }}</td>
                                     <td class="text-end">
                                         <div class="btn-group" role="group">
                                             <button class="btn btn-sm btn-primary" style="border-radius: 14px; font-weight:500;" onclick="viewInquiry({{ inquiry.id }})">
@@ -429,7 +429,7 @@
                         Start exploring premium agricultural land opportunities and submit your first inquiry.
                     </p>
                     <div class="d-flex gap-3 justify-content-center flex-wrap mt-3">
-                        <button class="btn-outline-premium" type="button" onclick="window.location.href='{% url "customer:saved-properties-page" %}'">
+                        <button class="btn-outline-premium" type="button" onclick="window.location.href='{% url "buy:property_search" %}'">
                             <i class="fas fa-search"></i> Browse Properties
                         </button>
                         <button class="btn-premium" type="button" data-bs-toggle="modal" data-bs-target="#newInquiryModal">
@@ -464,8 +464,8 @@
                                 {% else %}<i class="fas fa-clipboard"></i>{% endif %}
                             </div>
                             <div class="timeline-card">
-                                <div class="timeline-title">#{{ inquiry.id }} • {{ inquiry.get_status_display }}</div>
-                                <div class="timeline-desc">{{ inquiry.property.title|default:inquiry.subject }}</div>
+                                <div class="timeline-title">{{ inquiry.enquiry_id|default:inquiry.id }} • {{ inquiry.get_status_display }}</div>
+                                <div class="timeline-desc">{{ inquiry.related_property.title|default:"General Inquiry" }}</div>
                                 <div class="timeline-date">{{ inquiry.created_at|date:"M d, Y" }}</div>
                             </div>
                         </div>
@@ -527,7 +527,7 @@
     </div>
 
     <!-- New Inquiry Modal (unchanged workflow/ids) -->
-    <div class="modal fade" id="newInquiryModal" tabindex="-1">
+    <!-- <div class="modal fade" id="newInquiryModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -563,7 +563,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <!-- View Inquiry Drawer Modal (same ids + function names) -->
     <div class="modal fade drawer-modal" id="viewInquiryModal" tabindex="-1" aria-hidden="true">
@@ -726,21 +726,21 @@
             }
         }
 
-        function submitInquiry() {
-            const subject = document.getElementById('inquirySubject').value;
-            const message = document.getElementById('inquiryMessage').value;
+        // function submitInquiry() {
+        //     const subject = document.getElementById('inquirySubject').value;
+        //     const message = document.getElementById('inquiryMessage').value;
 
-            if (!subject || !message) {
-                alert('Please fill in all required fields.');
-                return;
-            }
+        //     if (!subject || !message) {
+        //         alert('Please fill in all required fields.');
+        //         return;
+        //     }
 
-            alert('Inquiry submitted successfully! We will get back to you soon.');
-            bootstrap.Modal.getInstance(document.getElementById('newInquiryModal')).hide();
+        //     alert('Inquiry submitted successfully! We will get back to you soon.');
+        //     bootstrap.Modal.getInstance(document.getElementById('newInquiryModal')).hide();
 
-            document.getElementById('inquirySubject').value = '';
-            document.getElementById('inquiryMessage').value = '';
-        }
+        //     document.getElementById('inquirySubject').value = '';
+        //     document.getElementById('inquiryMessage').value = '';
+        // }
 
         document.addEventListener('DOMContentLoaded', function() {
             const propertySelect = document.getElementById('propertySelect');

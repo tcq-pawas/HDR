@@ -99,12 +99,18 @@ def dashboard(request):
     
     # Recent bookings
     recent_bookings = Booking.objects.filter(agent=request.user).select_related('property', 'lead').order_by('-booking_date')[:5]
+
+    # Recent inquiries
+    recent_inquiries = PropertyInquiry.objects.filter(
+        agent_profile__user=request.user
+    ).select_related('related_property').order_by('-created_at')[:5]
     
     context = {
         'agent_profile': agent_profile,
         'stats': stats,
         'recent_properties': recent_properties,
         'recent_leads': recent_leads,
+        'recent_inquiries': recent_inquiries,
         'upcoming_visits': upcoming_visits,
         'recent_bookings': recent_bookings,
     }

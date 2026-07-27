@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Property, PropertyImage
+from .models import Property, PropertyImage, PropertyInquiry
 
 
 class PublicPropertySerializer(serializers.ModelSerializer):
@@ -103,3 +103,31 @@ class PublicPropertyListSerializer(serializers.ModelSerializer):
         if primary_image and primary_image.image:
             return primary_image.image.url
         return None
+
+
+class PropertyInquirySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PropertyInquiry
+        fields = [
+            'enquiry_id', 'related_property', 'name', 'email',
+            'phone_number', 'message', 'status', 'created_at',
+        ]
+        read_only_fields = ['enquiry_id', 'status', 'created_at']
+        extra_kwargs = {
+            'name': {'required': False},
+            'email': {'required': False},
+            'phone_number': {'required': False},
+        }
+
+    def create(self, validated_data):
+        request = self.context['request']
+        user = request.user
+
+        # Assuming a related Customer profile, e.g. user.customer_profile
+        customer = getattr(user, 'customer_profile', None)
+        if customer:
+            validated_data.setdefault('name', customer.full_name)
+            validated_data.setdefault('email', customer.email)
+            validated_data.setdefault('phone_number', customer.phone_number)
+
+        return super().create(validated_data)

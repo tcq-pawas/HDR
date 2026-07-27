@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 from Apps.Administration.smart_dashboard_views import CustomerDashboardMixin
 from Apps.Administration.auth_utils import get_user_role, role_required
 from .models import CustomerProfile, Inquiry, SavedProperty, PropertyViewing
-from Apps.PublicPage.models import Property
+from Apps.PublicPage.models import Property, PropertyInquiry
 
 
 class CustomerDashboardView(CustomerDashboardMixin, TemplateView):
@@ -28,9 +28,16 @@ class CustomerDashboardView(CustomerDashboardMixin, TemplateView):
         context['profile'] = profile
         
         # Personal purchase statistics
+        q_filter = Q(email=user.email)
+        if profile and profile.phone:
+            q_filter |= Q(phone_number=profile.phone)
+
+        total_inquiries = PropertyInquiry.objects.filter(q_filter).count()
+        pending_inquiries = PropertyInquiry.objects.filter(q_filter, status='new').count()
+
         context['purchase_stats'] = {
-            'total_inquiries': Inquiry.objects.filter(customer=user).count(),
-            'pending_inquiries': Inquiry.objects.filter(customer=user, status='pending').count(),
+            'total_inquiries': total_inquiries,
+            'pending_inquiries': pending_inquiries,
             'saved_properties': SavedProperty.objects.filter(customer=user).count(),
             'scheduled_viewings': PropertyViewing.objects.filter(
                 customer=user, status='scheduled'
@@ -47,9 +54,9 @@ class CustomerDashboardView(CustomerDashboardMixin, TemplateView):
         context['property_interests'] = self._analyze_property_interests(user)
         
         # Recent activities
-        context['recent_inquiries'] = Inquiry.objects.filter(
-            customer=user
-        ).select_related('property').order_by('-created_at')[:5]
+        context['recent_inquiries'] = PropertyInquiry.objects.filter(
+            q_filter
+        ).select_related('related_property').order_by('-created_at')[:5]
         
         context['recent_saved_properties'] = SavedProperty.objects.filter(
             customer=user
@@ -325,6 +332,21 @@ class CustomerProfileView(CustomerDashboardMixin, TemplateView):
         return context
 
 
+class CustomerEditProfileView(CustomerDashboardMixin, TemplateView):
+    """Customer edit profile page - full page editing view"""
+    template_name = 'customer/edit_profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+
+        profile, created = CustomerProfile.objects.get_or_create(user=user)
+        context['profile'] = profile
+        context['created'] = created
+
+        return context
+
+
 class CustomerInquiriesView(CustomerDashboardMixin, TemplateView):
     """Customer inquiries management view with strict access control"""
     template_name = 'customer/inquiries.html'
@@ -332,10 +354,14 @@ class CustomerInquiriesView(CustomerDashboardMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
-        
-        context['inquiries'] = Inquiry.objects.filter(
-            customer=user
-        ).select_related('property').order_by('-created_at')
+        profile, _ = CustomerProfile.objects.get_or_create(user=user)
+        q_filter = Q(email=user.email)
+        if profile and profile.phone:
+            q_filter |= Q(phone_number=profile.phone)
+
+        context['inquiries'] = PropertyInquiry.objects.filter(
+            q_filter
+        ).select_related('related_property').order_by('-created_at')
         
         return context
 

@@ -329,9 +329,29 @@
         border-color: #006638;
     }
 
+    a:focus,
+    a:active {
+        outline: none;
+        box-shadow: none;
+    }
+
+
+    /* ── Profile banner stats ────────────────────────────── */
+    .banner-stats{
+        display: flex;
+        gap: .75rem;
+        flex-wrap: nowrap;
+        margin-top: .75rem;
+    }
+    .banner-stats .glass{
+        flex: 1;
+        min-width: 0;
+    }
+
     /* Responsive */
     @media (max-width: 991px){
         .kpi-card{ min-height: 92px; }
+        .banner-stats{ flex-wrap: wrap; }
     }
     @media (max-width: 768px){
         .profile-banner{ padding: 1.2rem; }
@@ -384,49 +404,45 @@
                 </div>
             </div>
 
-            <div class="col-lg-4 text-lg-end">
-                <button class="edit-profile-btn justify-content-lg-end" onclick="openDrawer('profile')">
-                    <i class="fas fa-pen"></i> Edit Profile
-                </button>
+            <div class="col-lg-4">
+                <div class="d-flex justify-content-lg-end mb-2">
+                    <a href="{% url 'customer:edit-profile-page' %}" class="edit-profile-btn" style="text-decoration:none;">
+                        <i class="fas fa-pen"></i> Edit Profile
+                    </a>
+                </div>
 
-                <div class="d-flex justify-content-lg-end gap-3 mt-3 flex-wrap">
-                    <div class="glass" style="min-width: 210px;">
-                        <div class="d-flex align-items-center justify-content-between">
+                <div class="banner-stats">
+                    <div class="glass">
+                        <div class="d-flex align-items-center justify-content-between gap-2">
                             <div>
-                                <div style="font-weight:600; opacity:.9; font-size:.9rem;">Member Since</div>
-                                <div style="font-weight:500; font-size:1.05rem;">
-                                    {{ profile.created_at|date:'M Y' }}
-                                </div>
+                                <div style="font-weight:600; opacity:.75; font-size:.75rem;">Member Since</div>
+                                <div style="font-weight:600; font-size:.95rem;">{{ profile.created_at|date:'M Y' }}</div>
                             </div>
-                            <div style="width: 40px; height: 40px; border-radius: 16px; background: rgba(255,255,255,0.18); display:flex; align-items:center; justify-content:center;">
+                            <div style="width:36px;height:36px;border-radius:12px;background:rgba(0,69,38,0.1);display:flex;align-items:center;justify-content:center;color:#004526;flex-shrink:0;">
                                 <i class="fas fa-calendar-alt"></i>
                             </div>
                         </div>
                     </div>
 
-                    <div class="glass" style="min-width: 210px;">
-                        <div class="d-flex align-items-center justify-content-between">
+                    <div class="glass">
+                        <div class="d-flex align-items-center justify-content-between gap-2">
                             <div>
-                                <div style="font-weight:600; opacity:.9; font-size:.9rem;">Last Login</div>
-                                <div style="font-weight:500; font-size:1.05rem;">
-                                    {% if user.last_login %}{{ user.last_login|naturaltime }}{% else %}N/A{% endif %}
-                                </div>
+                                <div style="font-weight:600; opacity:.75; font-size:.75rem;">Last Login</div>
+                                <div style="font-weight:600; font-size:.95rem;">{% if user.last_login %}{{ user.last_login|naturaltime }}{% else %}N/A{% endif %}</div>
                             </div>
-                            <div style="width: 40px; height: 40px; border-radius: 16px; background: rgba(255,255,255,0.18); display:flex; align-items:center; justify-content:center;">
+                            <div style="width:36px;height:36px;border-radius:12px;background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center;color:#3B82F6;flex-shrink:0;">
                                 <i class="fas fa-clock"></i>
                             </div>
                         </div>
                     </div>
 
-                    <div class="glass" style="min-width: 210px;">
-                        <div class="d-flex align-items-center justify-content-between">
+                    <div class="glass">
+                        <div class="d-flex align-items-center justify-content-between gap-2">
                             <div>
-                                <div style="font-weight:600; opacity:.9; font-size:.9rem;">Account Status</div>
-                                <div style="font-weight:500; font-size:1.05rem;">
-                                    {% if user.is_active %}Active{% else %}Inactive{% endif %}
-                                </div>
+                                <div style="font-weight:600; opacity:.75; font-size:.75rem;">Status</div>
+                                <div style="font-weight:600; font-size:.95rem;">{% if user.is_active %}Active{% else %}Inactive{% endif %}</div>
                             </div>
-                            <div style="width: 40px; height: 40px; border-radius: 16px; background: rgba(255,255,255,0.18); display:flex; align-items:center; justify-content:center;">
+                            <div style="width:36px;height:36px;border-radius:12px;background:rgba(16,185,129,0.1);display:flex;align-items:center;justify-content:center;color:#10B981;flex-shrink:0;">
                                 <i class="fas fa-check-circle"></i>
                             </div>
                         </div>
@@ -551,336 +567,12 @@
 </div>
 </div>
 
-<!-- Drawer/Slide-over for Field Editing -->
-<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
-<div class="drawer" id="drawer">
-    <div class="drawer-header">
-        <h4 class="mb-0" id="drawerTitle">Edit Field</h4>
-        <button class="btn btn-link text-decoration-none" onclick="closeDrawer()">
-            <i class="fas fa-times fa-lg"></i>
-        </button>
-    </div>
-    <div class="drawer-body" id="drawerBody">
-        <!-- Dynamic content will be loaded here -->
-    </div>
-</div>
 
-<!-- Profile Picture Upload Modal -->
-<div class="modal fade" id="profilePictureModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title text-white mb-0">Update Profile Picture</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body text-center">
-                <div class="profile-upload-container mx-auto mb-4" style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden; border: 4px solid #667eea; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3); position: relative;">
-                    {% if profile.profile_picture %}
-                        <img src="{{ profile.profile_picture.url }}" alt="Current Profile Picture" class="w-100 h-100" style="object-fit: cover;" id="modalProfileImage">
-                    {% else %}
-                        <div class="w-100 h-100 bg-light text-primary d-flex align-items-center justify-content-center">
-                            <i class="fas fa-user fa-3x"></i>
-                        </div>
-                    {% endif %}
-                    <label for="modalProfilePicture" class="position-absolute bottom-0 end-0 m-2" style="cursor: pointer; background: #667eea; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);">
-                        <i class="fas fa-camera"></i>
-                    </label>
-                    <input type="file" id="modalProfilePicture" class="d-none" accept="image/*" onchange="previewModalProfileImage(event)">
-                </div>
-                <p class="text-muted mb-4">Click the camera icon to upload a new profile picture</p>
-                <div class="d-flex gap-2 justify-content-center">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: white;" onclick="uploadProfilePicture()">
-                        <i class="fas fa-upload me-2"></i>Upload Picture
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-
-    // Drawer Functions
-    function openDrawer(type) {
-        const drawer = document.getElementById('drawer');
-        const overlay = document.getElementById('drawerOverlay');
-        const title = document.getElementById('drawerTitle');
-        const body = document.getElementById('drawerBody');
-
-        let content = '';
-        let drawerTitle = '';
-
-        switch(type) {
-            case 'profile':
-                drawerTitle = 'Edit Profile';
-                content = `
-                    <form id="editProfileForm">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">First Name</label>
-                            <input type="text" name="first_name" class="form-control" value="{{ profile.user.first_name|default:'' }}" style="border-radius: 12px; border: 1px solid #e5e7eb; padding: 0.75rem 1rem;">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Last Name</label>
-                            <input type="text" name="last_name" class="form-control" value="{{ profile.user.last_name|default:'' }}" style="border-radius: 12px; border: 1px solid #e5e7eb; padding: 0.75rem 1rem;">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Phone Number</label>
-                            <input type="tel" name="phone" class="form-control" value="{{ profile.phone|default:'' }}" style="border-radius: 12px; border: 1px solid #e5e7eb; padding: 0.75rem 1rem;">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Preferred Contact Method</label>
-                            <select name="preferred_contact_method" class="form-select" style="border-radius: 12px; border: 1px solid #e5e7eb; padding: 0.75rem 1rem;">
-                                <option value="email" {% if profile.preferred_contact_method == 'email' %}selected{% endif %}>Email</option>
-                                <option value="phone" {% if profile.preferred_contact_method == 'phone' %}selected{% endif %}>Phone</option>
-                                <option value="both" {% if profile.preferred_contact_method == 'both' %}selected{% endif %}>Both</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn w-100" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: white; border-radius: 12px; padding: 0.75rem 1rem;">
-                            <i class="fas fa-save me-2"></i>Save Changes
-                        </button>
-                    </form>
-                `;
-                break;
-            default:
-                drawerTitle = 'Edit';
-                content = '<p>Feature coming soon</p>';
-        }
-
-        title.textContent = drawerTitle;
-        body.innerHTML = content;
-        drawer.classList.add('active');
-        overlay.classList.add('active');
-
-        // Attach event listeners to forms
-        if (type === 'profile') {
-            document.getElementById('editProfileForm').addEventListener('submit', handleProfileUpdate);
-        }
-    }
-
-    function closeDrawer() {
-        document.getElementById('drawer').classList.remove('active');
-        document.getElementById('drawerOverlay').classList.remove('active');
-    }
-
-    function openFieldEdit(field) {
-        const currentValue = document.querySelector(`[data-field="${field}"]`)?.textContent || '';
-        const drawer = document.getElementById('drawer');
-        const overlay = document.getElementById('drawerOverlay');
-        const title = document.getElementById('drawerTitle');
-        const body = document.getElementById('drawerBody');
-
-        let content = '';
-        let drawerTitle = '';
-
-        switch(field) {
-            case 'full_name':
-                drawerTitle = 'Edit Full Name';
-                content = `
-                    <form id="fieldEditForm">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Full Name</label>
-                            <input type="text" name="value" class="form-control" value="${currentValue}" style="border-radius: 12px; border: 1px solid #e5e7eb; padding: 0.75rem 1rem;">
-                        </div>
-                        <button type="submit" class="btn w-100" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: white; border-radius: 12px; padding: 0.75rem 1rem;">
-                            <i class="fas fa-save me-2"></i>Save
-                        </button>
-                    </form>
-                `;
-                break;
-            case 'phone':
-                drawerTitle = 'Edit Phone Number';
-                content = `
-                    <form id="fieldEditForm">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Phone Number</label>
-                            <input type="tel" name="value" class="form-control" value="${currentValue}" style="border-radius: 12px; border: 1px solid #e5e7eb; padding: 0.75rem 1rem;">
-                        </div>
-                        <button type="submit" class="btn w-100" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: white; border-radius: 12px; padding: 0.75rem 1rem;">
-                            <i class="fas fa-save me-2"></i>Save
-                        </button>
-                    </form>
-                `;
-                break;
-            case 'contact_method':
-                drawerTitle = 'Edit Contact Method';
-                content = `
-                    <form id="fieldEditForm">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Preferred Contact Method</label>
-                            <select name="value" class="form-select" style="border-radius: 12px; border: 1px solid #e5e7eb; padding: 0.75rem 1rem;">
-                                <option value="email">Email</option>
-                                <option value="phone">Phone</option>
-                                <option value="both">Both</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn w-100" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: white; border-radius: 12px; padding: 0.75rem 1rem;">
-                            <i class="fas fa-save me-2"></i>Save
-                        </button>
-                    </form>
-                `;
-                break;
-            default:
-                drawerTitle = 'Edit Field';
-                content = '<p>Feature coming soon</p>';
-        }
-
-        title.textContent = drawerTitle;
-        body.innerHTML = content;
-        drawer.classList.add('active');
-        overlay.classList.add('active');
-
-        document.getElementById('fieldEditForm').addEventListener('submit', (e) => handleFieldEdit(e, field));
-    }
-
-    function handleProfileUpdate(e) {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-        const csrftoken = getCookie('csrftoken');
-
-        fetch('{% url "customer:update-profile" %}', {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': csrftoken
-            },
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                closeDrawer();
-                location.reload();
-            } else {
-                alert('Error: ' + data.error);
-            }
-        })
-        .catch(error => {
-            alert('Error: ' + error);
-        });
-    }
-
-    function handlePasswordChange(e) {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-        const csrftoken = getCookie('csrftoken');
-
-        fetch('{% url "customer:change-password" %}', {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': csrftoken
-            },
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                closeDrawer();
-                alert('Password updated successfully!');
-            } else {
-                alert('Error: ' + data.error);
-            }
-        })
-        .catch(error => {
-            alert('Error: ' + error);
-        });
-    }
-
-    function handleFieldEdit(e, field) {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-        const csrftoken = getCookie('csrftoken');
-
-        // Add field name to form data
-        formData.append('field', field);
-
-        fetch('{% url "customer:update-profile" %}', {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': csrftoken
-            },
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                closeDrawer();
-                location.reload();
-            } else {
-                alert('Error: ' + data.error);
-            }
-        })
-        .catch(error => {
-            alert('Error: ' + error);
-        });
-    }
-
-    // Profile Picture Functions
-    function previewModalProfileImage(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = document.getElementById('modalProfileImage');
-                if (img) {
-                    img.src = e.target.result;
-                }
-            };
-            reader.readAsDataURL(file);
-        }
-    }
-
-    function uploadProfilePicture() {
-        const fileInput = document.getElementById('modalProfilePicture');
-        if (fileInput.files.length === 0) {
-            alert('Please select a file first');
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('profile_picture', fileInput.files[0]);
-        const csrftoken = getCookie('csrftoken');
-
-        fetch('{% url "customer:update-profile" %}', {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': csrftoken
-            },
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                bootstrap.Modal.getInstance(document.getElementById('profilePictureModal')).hide();
-                location.reload();
-            } else {
-                alert('Error: ' + data.error);
-            }
-        })
-        .catch(error => {
-            alert('Error: ' + error);
-        });
-    }
-
-    // Add click handler for profile picture
-    document.querySelector('.profile-avatar-container').addEventListener('click', function() {
-        new bootstrap.Modal(document.getElementById('profilePictureModal')).show();
-    });
-    document.querySelector('.profile-avatar-container').style.cursor = 'pointer';
+    // Profile page — all editing is now handled on the dedicated Edit Profile page.
+    // No drawer or modal logic needed here.
 </script>
 {% endblock %}
