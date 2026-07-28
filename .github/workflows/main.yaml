@@ -40,145 +40,73 @@ jobs:
           PROJECT_DIR="/home/ubuntu/HDR"
           BRANCH="Production"
 
-          echo "======================================"
-          echo "Starting Deployment"
-          echo "======================================"
+          echo "🚀 Starting deployment..."
 
           # Install Docker if missing
           if ! command -v docker >/dev/null 2>&1; then
-            sudo apt-get update
-            sudo apt-get install -y docker.io
-            sudo systemctl enable docker
-            sudo systemctl start docker
+            sudo apt-get update -qq
+            sudo apt-get install -y docker.io >/dev/null
+            sudo systemctl enable docker >/dev/null
+            sudo systemctl start docker >/dev/null
             sudo usermod -aG docker $USER
           fi
 
           # Install Docker Compose Plugin
           if ! docker compose version >/dev/null 2>&1; then
-            sudo apt-get update
-            sudo apt-get install -y docker-compose-plugin
+            sudo apt-get update -qq
+            sudo apt-get install -y docker-compose-plugin >/dev/null
           fi
 
-          # Go to project
           cd "$PROJECT_DIR"
 
           if [ ! -f docker-compose.yml ]; then
-            echo "docker-compose.yml not found!"
+            echo "❌ docker-compose.yml not found!"
             exit 1
           fi
 
-          echo "Current Directory:"
-          pwd
+          sudo chown -R $USER:$USER "$PROJECT_DIR" >/dev/null
+          sudo chmod -R 755 "$PROJECT_DIR" >/dev/null
 
-          echo "Fixing git repository permissions..."
-          sudo chown -R $USER:$USER "$PROJECT_DIR"
-          sudo chmod -R 755 "$PROJECT_DIR"
-
-          echo "Configuring git to use HTTPS with token..."
           git config --global url."https://${{ secrets.GIT_TOKEN }}@github.com/".insteadOf "git@github.com:"
 
-          echo "Fetching latest code..."
-          git fetch origin
+          echo "📥 Pulling latest code..."
+          git fetch origin >/dev/null
+          git reset --hard HEAD >/dev/null
+          git clean -fd >/dev/null
+          git checkout $BRANCH >/dev/null
+          git reset --hard origin/$BRANCH >/dev/null
+          git clean -fd >/dev/null
 
-          echo "Discarding local changes..."
-          git reset --hard HEAD
-          git clean -fd
+          echo "📦 Current commit: $(git rev-parse --short HEAD)"
 
-          echo "Checkout branch..."
-          git checkout $BRANCH
+          echo "🛑 Stopping containers..."
+          docker compose down --remove-orphans >/dev/null 2>&1 || true
 
-          echo "Resetting repository..."
-          git reset --hard origin/$BRANCH
+          echo "🧹 Cleaning up resources..."
+          docker system prune -af --volumes >/dev/null 2>&1 || true
+          docker builder prune -af >/dev/null 2>&1 || true
+          docker volume prune -af >/dev/null 2>&1 || true
+          sudo apt-get autoremove -y >/dev/null 2>&1 || true
+          sudo apt-get autoclean -y >/dev/null 2>&1 || true
+          sudo rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* >/dev/null 2>&1 || true
+          sudo journalctl --vacuum-time=3d >/dev/null 2>&1 || true
+          sudo rm -rf /var/log/*.gz /tmp/* /var/tmp/* >/dev/null 2>&1 || true
 
-          echo "Cleaning repository..."
-          git clean -fd
+          echo "🔨 Building Docker image..."
+          DOCKER_BUILDKIT=1 docker compose build --progress=auto
 
-          echo "======================================"
-          echo "Git Status"
-          echo "======================================"
-          git status
-
-          echo "======================================"
-          echo "Current Commit"
-          echo "======================================"
-          git rev-parse HEAD
-
-          echo "======================================"
-          echo "Recent Commits"
-          echo "======================================"
-          git log --oneline -5
-
-          echo "======================================"
-          echo "Stopping Containers"
-          echo "======================================"
-          docker compose down --remove-orphans || true
-
-          echo "======================================"
-          echo "Disk Space Before Cleanup"
-          echo "======================================"
-          df -h
-
-          echo "======================================"
-          echo "Cleaning Docker Resources"
-          echo "======================================"
-          docker system prune -af --volumes || true
-          docker builder prune -af || true
-          docker volume prune -af || true
-
-          echo "======================================"
-          echo "Removing Unused System Packages"
-          echo "======================================"
-          sudo apt-get autoremove -y || true
-          sudo apt-get autoclean -y || true
-
-          echo "======================================"
-          echo "Cleaning Package Cache"
-          echo "======================================"
-          sudo rm -rf /var/lib/apt/lists/* || true
-          sudo rm -rf /var/cache/apt/archives/* || true
-
-          echo "======================================"
-          echo "Removing Unused Logs"
-          echo "======================================"
-          sudo journalctl --vacuum-time=3d || true
-          sudo rm -rf /var/log/*.gz || true
-
-          echo "======================================"
-          echo "Cleaning Temporary Files"
-          echo "======================================"
-          sudo rm -rf /tmp/* || true
-          sudo rm -rf /var/tmp/* || true
-
-          echo "======================================"
-          echo "Disk Space After Cleanup"
-          echo "======================================"
-          df -h
-
-          echo "======================================"
-          echo "Building New Image"
-          echo "======================================"
-          DOCKER_BUILDKIT=1 docker compose build --progress=plain
-
-          echo "======================================"
-          echo "Starting Containers"
-          echo "======================================"
-          docker compose up -d --force-recreate
+          echo "▶️  Starting containers..."
+          docker compose up -d --force-recreate >/dev/null
 
           sleep 10
 
-          echo "======================================"
-          echo "Running Containers"
-          echo "======================================"
+          echo "📊 Container status:"
           docker compose ps
 
-          echo "======================================"
-          echo "Container Logs"
-          echo "======================================"
-          docker compose logs --tail=100
+          echo "📋 Recent container logs:"
+          docker compose logs --tail=50 web
 
-          echo "======================================"
-          echo "Deployment Completed Successfully"
-          echo "======================================"
+          echo "✅ Deployment completed successfully"
 
           ENDSSH
 
