@@ -74,16 +74,24 @@ def property_detail(request, slug):
         raise Http404("Property not found")
     
     if request.method == 'POST':
-        name = request.POST.get('name')
-        email = request.POST.get('email')
+        # If logged in, prefer profile data; fallback to submitted form values
+        if request.user.is_authenticated:
+            name = f"{request.user.first_name} {request.user.last_name}".strip() or request.user.username
+            email = request.user.email or request.POST.get('email')
+            # Agar CustomerProfile model hai to yahan se lo, warna POST se
+            phone_number = getattr(getattr(request.user, 'customer_profile', None), 'phone', None) or request.POST.get('phone_number')
+        else:
+            name = request.POST.get('name')
+            email = request.POST.get('email')
+            phone_number = request.POST.get('phone_number')
+
         message = request.POST.get('message')
-        phone_number = request.POST.get('phone_number')
         
         agent_profile = AgentProfile.objects.filter(user=property_obj.seller).first()
         
         PropertyInquiry.objects.create(
             related_property=property_obj,
-            agent_profile=property_obj.seller.agentprofile, 
+            agent_profile=agent_profile, 
             name=name,
             email=email,
             phone_number=phone_number,
@@ -110,6 +118,8 @@ def property_detail(request, slug):
     return render(request, 'public/property_detail.html', {
         'property': property_obj
     })
+
+
 
 def about(request):
     return render(request, 'public/about.html')

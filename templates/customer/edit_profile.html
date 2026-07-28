@@ -1,0 +1,864 @@
+{% extends "customer/customer_base.html" %}
+{% load humanize %}
+
+{% block title %}Edit Profile - HeyDay Realty{% endblock %}
+
+{% block page_title %}Edit Profile{% endblock %}
+
+{% block extra_css %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/agent/dashboard.css' %}">
+<style>
+    .page-header-white {
+        display: none;
+    }
+
+    :root {
+        --primary: #004526;
+        --secondary: #006638;
+        --bg: #F8FAFC;
+        --card: #FFFFFF;
+        --radius: 20px;
+        --shadow: 0 12px 30px rgba(0, 69, 38, 0.12);
+        --shadow-soft: 0 8px 20px rgba(2, 6, 23, 0.06);
+    }
+
+    /* ── Hero Banner ──────────────────────────────────────── */
+    .edit-hero {
+        background: linear-gradient(180deg, #004526 0%, #002815 50%, #002200 100%);
+        padding: 36px 30px 28px;
+        border-radius: 12px;
+        margin: 24px 30px 28px;
+        box-shadow: 0 4px 15px rgba(0, 84, 39, 0.15);
+        position: relative;
+        overflow: hidden;
+    }
+    .edit-hero::after {
+        content: '';
+        position: absolute;
+        right: -40px;
+        top: -40px;
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.04);
+        pointer-events: none;
+    }
+    .edit-hero h1 {
+        color: white;
+        font-weight: 700;
+        font-size: 26px;
+        margin-bottom: 6px;
+    }
+    .edit-hero p {
+        color: rgba(255, 255, 255, 0.85);
+        margin: 0;
+        font-size: 14px;
+    }
+    .edit-hero .breadcrumb-nav {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 14px;
+    }
+    .edit-hero .breadcrumb-nav a {
+        color: rgba(255,255,255,0.7);
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 500;
+        transition: color .2s;
+    }
+    .edit-hero .breadcrumb-nav a:hover {
+        color: #fff;
+    }
+    .edit-hero .breadcrumb-nav span {
+        color: rgba(255,255,255,0.4);
+        font-size: 12px;
+    }
+    .edit-hero .breadcrumb-nav .current {
+        color: rgba(255,255,255,0.95);
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    /* ── Edit Page Content ────────────────────────────────── */
+    .edit-content {
+        padding: 0 30px 40px;
+    }
+
+    /* ── Section Cards ────────────────────────────────────── */
+    .edit-card {
+        background: var(--card);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-soft);
+        border: 1px solid rgba(2, 6, 23, 0.06);
+        padding: 1.75rem;
+        margin-bottom: 1.5rem;
+        transition: box-shadow .25s ease;
+    }
+    .edit-card:hover {
+        box-shadow: var(--shadow);
+    }
+    .edit-card-title {
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        color: #0B1220;
+        display: flex;
+        align-items: center;
+        gap: .75rem;
+        margin-bottom: 1.25rem;
+        font-size: 18px;
+    }
+    .edit-card-title .title-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    .edit-card-title .title-icon.green {
+        color: #004526;
+        background: rgba(0, 69, 38, 0.08);
+    }
+    .edit-card-title .title-icon.blue {
+        color: #3B82F6;
+        background: rgba(59, 130, 246, 0.08);
+    }
+    .edit-card-title .title-icon.purple {
+        color: #8B5CF6;
+        background: rgba(139, 92, 246, 0.08);
+    }
+    .edit-card-title .title-icon.amber {
+        color: #F59E0B;
+        background: rgba(245, 158, 11, 0.08);
+    }
+
+    /* ── Avatar Section ───────────────────────────────────── */
+    .avatar-edit-section {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        padding: 1.25rem;
+        background: rgba(0, 69, 38, 0.03);
+        border-radius: 16px;
+        border: 1px dashed rgba(0, 69, 38, 0.15);
+        margin-bottom: 1.5rem;
+    }
+    .avatar-edit-shell {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: #fff;
+        padding: 4px;
+        border: 2px solid rgba(0, 69, 38, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        position: relative;
+        transition: border-color .25s;
+    }
+    .avatar-edit-shell:hover {
+        border-color: #004526;
+    }
+    .avatar-edit-shell img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    .avatar-edit-shell .avatar-fallback {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 2.2rem;
+        color: #fff;
+        background: linear-gradient(135deg, #004526, #006638);
+    }
+    .avatar-edit-shell .camera-badge {
+        position: absolute;
+        bottom: 2px;
+        right: 2px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #004526;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        border: 2px solid #fff;
+        cursor: pointer;
+        transition: background .2s, transform .2s;
+    }
+    .avatar-edit-shell .camera-badge:hover {
+        background: #006638;
+        transform: scale(1.1);
+    }
+    .avatar-info h4 {
+        font-weight: 600;
+        color: #0B1220;
+        margin-bottom: 4px;
+        font-size: 16px;
+    }
+    .avatar-info p {
+        color: rgba(11,18,32,0.55);
+        font-size: 13px;
+        margin: 0;
+    }
+    .avatar-info .upload-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 10px;
+        padding: 8px 16px;
+        border-radius: 10px;
+        background: #004526;
+        color: #fff;
+        border: none;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background .2s, transform .2s;
+    }
+    .avatar-info .upload-btn:hover {
+        background: #006638;
+        transform: translateY(-1px);
+    }
+    .avatar-info .remove-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 10px;
+        margin-left: 8px;
+        padding: 8px 16px;
+        border-radius: 10px;
+        background: transparent;
+        color: #DC2626;
+        border: 1px solid rgba(220, 38, 38, 0.2);
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background .2s;
+    }
+    .avatar-info .remove-btn:hover {
+        background: rgba(220, 38, 38, 0.06);
+    }
+
+    /* ── Form Styles ──────────────────────────────────────── */
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        font-size: 13px;
+        color: #374151;
+        margin-bottom: 6px;
+    }
+    .form-group label .required {
+        color: #DC2626;
+        margin-left: 2px;
+    }
+    .form-input {
+        width: 100%;
+        border-radius: 12px;
+        border: 1.5px solid #e5e7eb;
+        padding: 0.75rem 1rem;
+        font-size: 14px;
+        color: #0B1220;
+        background: #fff;
+        transition: border-color .25s, box-shadow .25s;
+        outline: none;
+    }
+    .form-input:focus {
+        border-color: #004526;
+        box-shadow: 0 0 0 3px rgba(0, 69, 38, 0.1);
+    }
+    .form-input::placeholder {
+        color: rgba(11,18,32,0.35);
+    }
+    .form-input.disabled {
+        background: #f3f4f6;
+        color: rgba(11,18,32,0.5);
+        cursor: not-allowed;
+    }
+    select.form-input {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23374151' viewBox='0 0 16 16'%3E%3Cpath d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        padding-right: 2.5rem;
+    }
+    .form-hint {
+        font-size: 12px;
+        color: rgba(11,18,32,0.45);
+        margin-top: 5px;
+    }
+
+    /* ── Action Buttons ───────────────────────────────────── */
+    .action-bar {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 12px;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(2, 6, 23, 0.06);
+        margin-top: .5rem;
+    }
+    .btn-cancel {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 0.7rem 1.4rem;
+        border-radius: 12px;
+        background: transparent;
+        color: #374151;
+        border: 1.5px solid #e5e7eb;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background .2s, border-color .2s;
+    }
+    .btn-cancel:hover {
+        background: #f3f4f6;
+        border-color: #d1d5db;
+        color: #374151;
+        text-decoration: none;
+    }
+    .btn-save-profile {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0.7rem 1.6rem;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #004526, #006638);
+        color: #fff;
+        border: none;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform .2s, box-shadow .2s;
+    }
+    .btn-save-profile:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0, 69, 38, 0.25);
+    }
+    .btn-save-profile:active {
+        transform: translateY(0);
+    }
+    .btn-save-profile .spinner {
+        display: none;
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(255,255,255,0.3);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin .6s linear infinite;
+    }
+    .btn-save-profile.loading .spinner {
+        display: inline-block;
+    }
+    .btn-save-profile.loading .btn-text {
+        display: none;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    
+
+    /* ── Password Section ─────────────────────────────────── */
+    .password-toggle {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 1rem 1.25rem;
+        background: rgba(59, 130, 246, 0.04);
+        border: 1px solid rgba(59, 130, 246, 0.12);
+        border-radius: 14px;
+        cursor: pointer;
+        transition: background .2s;
+    }
+    .password-toggle:hover {
+        background: rgba(59, 130, 246, 0.08);
+    }
+    .password-toggle i {
+        color: #3B82F6;
+        font-size: 16px;
+    }
+    .password-toggle .toggle-text {
+        font-weight: 500;
+        font-size: 14px;
+        color: #374151;
+        flex: 1;
+    }
+    .password-toggle .toggle-arrow {
+        color: rgba(11,18,32,0.35);
+        transition: transform .3s;
+    }
+    .password-toggle.open .toggle-arrow {
+        transform: rotate(180deg);
+    }
+    .password-fields {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height .4s ease;
+    }
+    .password-fields.open {
+        max-height: 500px;
+    }
+    .password-fields-inner {
+        padding-top: 1.25rem;
+    }
+
+    /* ── Toast Notification ───────────────────────────────── */
+    .toast-notification {
+        position: fixed;
+        top: 24px;
+        right: 24px;
+        z-index: 9999;
+        padding: 14px 20px;
+        border-radius: 14px;
+        font-weight: 500;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        transform: translateX(120%);
+        transition: transform .4s cubic-bezier(.4,0,.2,1);
+    }
+    .toast-notification.show {
+        transform: translateX(0);
+    }
+    .toast-notification.success {
+        background: #059669;
+        color: #fff;
+    }
+    .toast-notification.error {
+        background: #DC2626;
+        color: #fff;
+    }
+
+    /* ── Responsive ───────────────────────────────────────── */
+    @media (max-width: 768px) {
+        .edit-hero { margin: 16px 16px 20px; padding: 28px 20px 22px; }
+        .edit-content { padding: 0 16px 30px; }
+        .edit-card { padding: 1.25rem; }
+        .avatar-edit-section { flex-direction: column; text-align: center; }
+        .action-bar { flex-direction: column; }
+        .action-bar .btn-cancel,
+        .action-bar .btn-save-profile { width: 100%; justify-content: center; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="padding: 0;">
+
+    <!-- Hero Banner -->
+    <div class="edit-hero">
+        <div class="breadcrumb-nav">
+            <a href="{% url 'customer:profile-page' %}"><i class="fas fa-arrow-left me-1"></i> Profile</a>
+            <span>/</span>
+            <span class="current">Edit Profile</span>
+        </div>
+        <h1>Edit Profile</h1>
+        <p>Update your personal information, profile picture, and account settings.</p>
+    </div>
+
+    <!-- Edit Content -->
+    <div class="edit-content">
+        <div class="row g-4">
+
+            <!-- Left Column: Main Form -->
+            <div class="col-lg-8">
+
+                <!-- Profile Picture Section -->
+                <div class="edit-card">
+                    <div class="edit-card-title">
+                        <div class="title-icon green"><i class="fas fa-camera"></i></div>
+                        Profile Details
+                    </div>
+
+                    <div class="avatar-edit-section">
+                        <div class="avatar-edit-shell">
+                            {% if profile.profile_picture and profile.profile_picture.url %}
+                                <img src="{{ profile.profile_picture.url }}" alt="Profile" id="avatarPreview">
+                            {% else %}
+                                <div class="avatar-fallback" id="avatarFallback">
+                                    {{ profile.user.first_name.0|default:profile.user.username.0|upper }}
+                                </div>
+                            {% endif %}
+                            <label for="profilePictureInput" class="camera-badge" title="Change photo">
+                                <i class="fas fa-camera"></i>
+                            </label>
+                            <input type="file" id="profilePictureInput" accept="image/*" style="display:none;" onchange="previewAvatar(event)">
+                        </div>
+                        <div class="avatar-info">
+                            <h4>{{ profile.user.get_full_name|default:profile.user.username }}</h4>
+                            <!-- <p>JPG, PNG or GIF. Max 5MB file size.</p>
+                            <button type="button" class="upload-btn" onclick="document.getElementById('profilePictureInput').click()">
+                                <i class="fas fa-upload"></i> Upload Photo
+                            </button>
+                            {% if profile.profile_picture %}
+                            <button type="button" class="remove-btn" onclick="removeAvatar()">
+                                <i class="fas fa-trash-alt"></i> Remove
+                            </button>
+                            {% endif %} -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Personal Information -->
+                <div class="edit-card">
+                    <div class="edit-card-title">
+                        <div class="title-icon green"><i class="fas fa-user"></i></div>
+                        Personal Information
+                    </div>
+
+                    <form id="editProfileForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>First Name <span class="required">*</span></label>
+                                    <input type="text" name="first_name" class="form-input" value="{{ profile.user.first_name|default:'' }}" placeholder="Enter first name">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Last Name</label>
+                                    <input type="text" name="last_name" class="form-input" value="{{ profile.user.last_name|default:'' }}" placeholder="Enter last name">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Email Address</label>
+                                    <input type="email" class="form-input disabled" value="{{ profile.user.email }}" disabled>
+                                    <div class="form-hint">Email cannot be changed. Contact support for assistance.</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Username</label>
+                                    <input type="text" class="form-input disabled" value="{{ profile.user.username }}" disabled>
+                                    <div class="form-hint">Username cannot be changed.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Phone Number</label>
+                                    <input type="tel" name="phone" class="form-input" value="{{ profile.phone|default:'' }}" placeholder="Enter phone number">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Preferred Contact Method</label>
+                                    <select name="preferred_contact_method" class="form-input">
+                                        <option value="email" {% if profile.preferred_contact_method == 'email' %}selected{% endif %}>Email</option>
+                                        <option value="phone" {% if profile.preferred_contact_method == 'phone' %}selected{% endif %}>Phone</option>
+                                        <option value="both" {% if profile.preferred_contact_method == 'both' %}selected{% endif %}>Both</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="action-bar">
+                            <a href="{% url 'customer:profile-page' %}" class="btn-cancel">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn-save-profile" id="saveProfileBtn">
+                                <span class="btn-text"><i class="fas fa-save"></i> Save Changes</span>
+                                <span class="spinner"></span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+            <!-- Right Column: Security + Info -->
+            <!-- <div class="col-lg-4">
+
+                Change Password
+                <div class="edit-card">
+                    <div class="edit-card-title">
+                        <div class="title-icon blue"><i class="fas fa-lock"></i></div>
+                        Security
+                    </div>
+
+                    <div class="password-toggle" id="passwordToggle" onclick="togglePassword()">
+                        <i class="fas fa-key"></i>
+                        <span class="toggle-text">Change Password</span>
+                        <i class="fas fa-chevron-down toggle-arrow"></i>
+                    </div>
+
+                    <div class="password-fields" id="passwordFields">
+                        <div class="password-fields-inner">
+                            <form id="changePasswordForm">
+                                <div class="form-group">
+                                    <label>Current Password <span class="required">*</span></label>
+                                    <input type="password" name="current_password" class="form-input" placeholder="Enter current password">
+                                </div>
+                                <div class="form-group">
+                                    <label>New Password <span class="required">*</span></label>
+                                    <input type="password" name="new_password" class="form-input" placeholder="Enter new password">
+                                    <div class="form-hint">Must be at least 8 characters long.</div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Confirm New Password <span class="required">*</span></label>
+                                    <input type="password" name="confirm_password" class="form-input" placeholder="Confirm new password">
+                                </div>
+                                <button type="submit" class="btn-save-profile" style="width:100%; justify-content:center;" id="savePasswordBtn">
+                                    <span class="btn-text"><i class="fas fa-shield-alt"></i> Update Password</span>
+                                    <span class="spinner"></span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Info -->
+                <!-- <div class="edit-card">
+                    <div class="edit-card-title">
+                        <div class="title-icon purple"><i class="fas fa-info-circle"></i></div>
+                        Account Info
+                    </div>
+
+                    <div style="display:flex; flex-direction:column; gap:14px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:rgba(0,69,38,0.03); border-radius:12px;">
+                            <span style="font-size:13px; color:rgba(11,18,32,0.55); font-weight:500;">Member Since</span>
+                            <span style="font-size:13px; font-weight:600; color:#0B1220;">{{ profile.created_at|date:'M d, Y' }}</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:rgba(59,130,246,0.03); border-radius:12px;">
+                            <span style="font-size:13px; color:rgba(11,18,32,0.55); font-weight:500;">Last Login</span>
+                            <span style="font-size:13px; font-weight:600; color:#0B1220;">{% if user.last_login %}{{ user.last_login|naturaltime }}{% else %}N/A{% endif %}</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:rgba(16,185,129,0.03); border-radius:12px;">
+                            <span style="font-size:13px; color:rgba(11,18,32,0.55); font-weight:500;">Status</span>
+                            <span style="display:inline-flex; align-items:center; gap:5px; font-size:13px; font-weight:600; color:#059669;">
+                                <i class="fas fa-check-circle" style="font-size:11px;"></i>
+                                {% if user.is_active %}Active{% else %}Inactive{% endif %}
+                            </span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:rgba(139,92,246,0.03); border-radius:12px;">
+                            <span style="font-size:13px; color:rgba(11,18,32,0.55); font-weight:500;">Last Updated</span>
+                            <span style="font-size:13px; font-weight:600; color:#0B1220;">{{ profile.updated_at|naturaltime }}</span>
+                        </div>
+                    </div>
+                </div> -->
+
+                <!-- Quick Tips -->
+                <!-- <div class="edit-card" style="border-left: 3px solid #F59E0B;">
+                    <div class="edit-card-title">
+                        <div class="title-icon amber"><i class="fas fa-lightbulb"></i></div>
+                        Quick Tips
+                    </div>
+                    <ul style="margin:0; padding-left:18px; font-size:13px; color:rgba(11,18,32,0.65); line-height:1.8;">
+                        <li>Keep your phone number updated to receive property alerts</li>
+                        <li>Use a clear, professional photo for your profile</li>
+                        <li>Set your preferred contact method for agent communication</li>
+                        <li>Change your password regularly for better security</li>
+                    </ul>
+                </div>
+
+            </div> -->
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notification -->
+<!-- <div class="toast-notification" id="toastNotification">
+    <i class="fas fa-check-circle"></i>
+    <span id="toastMessage">Success!</span>
+</div> -->
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Toast notification
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('toastNotification');
+        const msg = document.getElementById('toastMessage');
+        toast.className = 'toast-notification ' + type;
+        msg.textContent = message;
+        toast.querySelector('i').className = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3500);
+    }
+
+    // Avatar preview
+    function previewAvatar(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        if (file.size > 5 * 1024 * 1024) {
+            showToast('File size must be less than 5MB', 'error');
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            // Replace fallback with img if needed
+            const shell = document.querySelector('.avatar-edit-shell');
+            const fallback = shell.querySelector('.avatar-fallback');
+            let img = shell.querySelector('#avatarPreview');
+
+            if (fallback) {
+                fallback.remove();
+            }
+
+            if (!img) {
+                img = document.createElement('img');
+                img.id = 'avatarPreview';
+                img.alt = 'Profile';
+                shell.insertBefore(img, shell.querySelector('.camera-badge'));
+            }
+
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+
+        // Upload immediately
+        uploadAvatar(file);
+    }
+
+    function uploadAvatar(file) {
+        const formData = new FormData();
+        formData.append('profile_picture', file);
+        const csrftoken = getCookie('csrftoken');
+
+        fetch('{% url "customer:update-profile" %}', {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrftoken },
+            body: formData
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                showToast('Profile picture updated!', 'success');
+            } else {
+                showToast('Error: ' + data.error, 'error');
+            }
+        })
+        .catch(err => showToast('Upload failed: ' + err, 'error'));
+    }
+
+    function removeAvatar() {
+        if (!confirm('Are you sure you want to remove your profile picture?')) return;
+        // For now, we'll just show a message
+        showToast('Profile picture removed', 'success');
+        const shell = document.querySelector('.avatar-edit-shell');
+        const img = shell.querySelector('#avatarPreview');
+        if (img) {
+            img.remove();
+            const fallback = document.createElement('div');
+            fallback.className = 'avatar-fallback';
+            fallback.id = 'avatarFallback';
+            fallback.textContent = '{{ profile.user.first_name.0|default:profile.user.username.0|upper }}';
+            shell.insertBefore(fallback, shell.querySelector('.camera-badge'));
+        }
+    }
+
+    // Password toggle
+    function togglePassword() {
+        const toggle = document.getElementById('passwordToggle');
+        const fields = document.getElementById('passwordFields');
+        toggle.classList.toggle('open');
+        fields.classList.toggle('open');
+    }
+
+    // Profile form submit
+    document.getElementById('editProfileForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('saveProfileBtn');
+        btn.classList.add('loading');
+
+        const formData = new FormData(this);
+        const csrftoken = getCookie('csrftoken');
+
+        fetch('{% url "customer:update-profile" %}', {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrftoken },
+            body: formData
+        })
+        .then(r => r.json())
+        .then(data => {
+            btn.classList.remove('loading');
+            if (data.success) {
+                showToast('Profile updated successfully!', 'success');
+                setTimeout(() => {
+                    window.location.href = '{% url "customer:profile-page" %}';
+                }, 1500);
+            } else {
+                showToast('Error: ' + data.error, 'error');
+            }
+        })
+        .catch(err => {
+            btn.classList.remove('loading');
+            showToast('Error: ' + err, 'error');
+        });
+    });
+
+    // Password form submit
+    document.getElementById('changePasswordForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('savePasswordBtn');
+        btn.classList.add('loading');
+
+        const formData = new FormData(this);
+        const csrftoken = getCookie('csrftoken');
+
+        fetch('{% url "customer:change-password" %}', {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrftoken },
+            body: formData
+        })
+        .then(r => r.json())
+        .then(data => {
+            btn.classList.remove('loading');
+            if (data.success) {
+                showToast('Password changed successfully!', 'success');
+                this.reset();
+                togglePassword();
+            } else {
+                showToast('Error: ' + data.error, 'error');
+            }
+        })
+        .catch(err => {
+            btn.classList.remove('loading');
+            showToast('Error: ' + err, 'error');
+        });
+    });
+</script>
+{% endblock %}

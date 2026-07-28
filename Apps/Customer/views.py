@@ -2,7 +2,7 @@ from rest_framework import generics, permissions, status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.contrib.auth.models import User
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from .models import CustomerProfile, Inquiry, SavedProperty, PropertyViewing, CustomerFeedback
 from .serializers import (
     CustomerProfileSerializer, InquirySerializer, SavedPropertySerializer,
@@ -11,6 +11,7 @@ from .serializers import (
     CreatePropertyViewingSerializer, CreateCustomerFeedbackSerializer
 )
 from Apps.PublicPage.models import Property
+
 
 
 class CustomerProfileView(generics.RetrieveUpdateAPIView):
@@ -144,3 +145,7 @@ def unsave_property(request, property_id):
         return Response({'message': 'Property removed from saved list'}, status=status.HTTP_200_OK)
     except SavedProperty.DoesNotExist:
         return Response({'error': 'Property not found in saved list'}, status=status.HTTP_404_NOT_FOUND)
+
+
+def create_inquiry(request):
+    return render(request, "customer/create_inquiry.html")

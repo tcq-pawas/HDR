@@ -28,6 +28,17 @@
         background: transparent;
         padding: 24px 30px;
     }
+
+    .btn-primary{
+    background-color: var(--primary);
+    border-color: var(--primary);
+    }
+
+    .btn-primary:hover,
+    .btn-primary:focus{
+        background-color: var(--secondary);
+        border-color: var(--secondary);
+    }
     
     .page-header-white {
         display: none;
@@ -615,11 +626,10 @@
             <p>You haven't saved any properties yet.</p>
             <div class="sp-empty-actions">
                 <button class="btn btn-primary" type="button" onclick="browseProperties()">
+                    <!-- <a href="/properties/" ></a> -->
                     <i class="fas fa-search"></i> Browse Properties
                 </button>
-                <button class="btn btn-outline-primary" type="button" onclick="browseProperties()">
-                    <i class="fas fa-leaf"></i> Explore Agricultural Land
-                </button>
+
             </div>
         </div>
     {% endif %}
@@ -847,11 +857,11 @@
             viewProperty(propertyId);
         }
 
-        function scheduleViewing(propertyId) {
+        // function scheduleViewing(propertyId) {
             // If a viewing modal exists elsewhere, keep behaviour.
             // Otherwise, keep non-breaking frontend alert.
-            alert('Schedule visit flow. Backend URLs unchanged.');
-        }
+        //     alert('Schedule visit flow. Backend URLs unchanged.');
+        // }
 
         function submitViewing() {
             alert('Viewing scheduled successfully! We will contact you to confirm the details.');
@@ -870,21 +880,21 @@
             }
         }
 
-        function makeInquiry() {
-            alert('Redirecting to inquiry form...');
-        }
+        // function makeInquiry() {
+        //     alert('Redirecting to inquiry form...');
+        // }
 
         function browseProperties() {
-            alert('Redirecting to property browsing page...');
+            window.location.href = "{% url 'buy:property_search' %}";
         }
 
-        function compareProperties() {
-            alert('Compare feature would be implemented here...');
-        }
+        // function compareProperties() {
+        //     alert('Compare feature would be implemented here...');
+        // }
 
-        function exportWishlist(){
-            alert('Export wishlist (UI only). Backend URLs unchanged.');
-        }
+        // function exportWishlist(){
+        //     alert('Export wishlist (UI only). Backend URLs unchanged.');
+        // }
 
         // Preserve remove-from-saved action hook.
         function toggleSave(propertyId) {

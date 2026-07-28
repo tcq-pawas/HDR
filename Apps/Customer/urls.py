@@ -1,7 +1,8 @@
 from django.urls import path
 from . import views
 from .dashboard_views import (
-    CustomerDashboardView, CustomerProfileView, CustomerInquiriesView,
+    CustomerDashboardView, CustomerProfileView, CustomerEditProfileView,
+    CustomerInquiriesView,
     CustomerSavedPropertiesView, CustomerViewingsView,
     update_profile, change_password
 )
@@ -12,9 +13,11 @@ urlpatterns = [
     # Dashboard
     path('dashboard/', CustomerDashboardView.as_view(), name='dashboard'),
     path('profile/', CustomerProfileView.as_view(), name='profile-page'),
+    path('profile/edit/', CustomerEditProfileView.as_view(), name='edit-profile-page'),
     path('inquiries/', CustomerInquiriesView.as_view(), name='inquiries-page'),
     path('saved-properties/', CustomerSavedPropertiesView.as_view(), name='saved-properties-page'),
     path('viewings/', CustomerViewingsView.as_view(), name='viewings-page'),
+    path("create-inquiry/", views.create_inquiry, name="create_inquiry"),
 
     # Form submission endpoints
     path('update-profile/', update_profile, name='update-profile'),

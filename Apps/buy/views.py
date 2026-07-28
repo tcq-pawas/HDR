@@ -238,3 +238,5 @@ def send_inquiry(request, pk):
             
     messages.error(request, "Failed to submit inquiry. Please check the form fields.")
     return redirect('buy:property_detail', pk=pk)
+
+
