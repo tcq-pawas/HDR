@@ -1,0 +1,10 @@
+Django>=4.2
+python-dotenv
+Pillow
+psycopg2-binary
+gunicorn<23.1
+djangorestframework
+django-filter
+drf-spectacular
+django-cors-headers
+cashfree_pg

@@ -114,15 +114,50 @@ jobs:
           docker compose down --remove-orphans || true
 
           echo "======================================"
-          echo "Removing Old Images"
+          echo "Disk Space Before Cleanup"
           echo "======================================"
-          docker image prune -af || true
+          df -h
+
+          echo "======================================"
+          echo "Cleaning Docker Resources"
+          echo "======================================"
+          docker system prune -af --volumes || true
           docker builder prune -af || true
+          docker volume prune -af || true
+
+          echo "======================================"
+          echo "Removing Unused System Packages"
+          echo "======================================"
+          sudo apt-get autoremove -y || true
+          sudo apt-get autoclean -y || true
+
+          echo "======================================"
+          echo "Cleaning Package Cache"
+          echo "======================================"
+          sudo rm -rf /var/lib/apt/lists/* || true
+          sudo rm -rf /var/cache/apt/archives/* || true
+
+          echo "======================================"
+          echo "Removing Unused Logs"
+          echo "======================================"
+          sudo journalctl --vacuum-time=3d || true
+          sudo rm -rf /var/log/*.gz || true
+
+          echo "======================================"
+          echo "Cleaning Temporary Files"
+          echo "======================================"
+          sudo rm -rf /tmp/* || true
+          sudo rm -rf /var/tmp/* || true
+
+          echo "======================================"
+          echo "Disk Space After Cleanup"
+          echo "======================================"
+          df -h
 
           echo "======================================"
           echo "Building New Image"
           echo "======================================"
-          docker compose build
+          DOCKER_BUILDKIT=1 docker compose build --progress=plain
 
           echo "======================================"
           echo "Starting Containers"
