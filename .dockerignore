@@ -58,7 +58,7 @@ docker-compose.yml
 Dockerfile
 .dockerignore
 
-# Requirements (we use requirements-prod.txt in Dockerfile)
+# Requirements (we use requirements.txt in Dockerfile)
 requirements.txt
 
 # SSL Certificates
