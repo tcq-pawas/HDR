@@ -65,11 +65,13 @@ class PlanFeatureForm(forms.ModelForm):
 PlanPricingFormSet = inlineformset_factory(
     SubscriptionPlan, PlanPricing,
     form=PlanPricingForm,
-    extra=1, can_delete=True,
+    extra=0,
+    can_delete=True,
 )
 
 PlanFeatureFormSet = inlineformset_factory(
     SubscriptionPlan, PlanFeature,
     form=PlanFeatureForm,
-    extra=1, can_delete=True,
+    extra=0, 
+    can_delete=True,
 )
