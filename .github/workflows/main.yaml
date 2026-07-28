@@ -40,45 +40,44 @@ jobs:
           PROJECT_DIR="/home/ubuntu/HDR"
           BRANCH="Production"
 
-          if ! command -v docker >/dev/null 2>&1; then
-            sudo apt-get update -qq && sudo apt-get install -y docker.io >/dev/null
-            sudo systemctl enable docker >/dev/null && sudo systemctl start docker >/dev/null
-            sudo usermod -aG docker $USER
-          fi
-
-          if ! docker compose version >/dev/null 2>&1; then
-            sudo apt-get update -qq && sudo apt-get install -y docker-compose-plugin >/dev/null
-          fi
+          spinner() {
+            local pid=$1
+            local msg=$2
+            local delay=0.1
+            local spinstr='|/-\'
+            while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
+              local temp=${spinstr#?}
+              printf " [$temp] $msg  \r" 
+              local spinstr=$temp${spinstr%"$temp"}
+              sleep $delay
+            done
+            printf " \r"
+          }
 
           cd "$PROJECT_DIR"
 
-          sudo chown -R $USER:$USER "$PROJECT_DIR" >/dev/null 2>&1
-          sudo chmod -R 755 "$PROJECT_DIR" >/dev/null 2>&1
-
-          git config --global url."https://${{ secrets.GIT_TOKEN }}@github.com/".insteadOf "git@github.com:"
-
+          echo "→ Pulling code..."
+          git config --global url."https://${{ secrets.GIT_TOKEN }}@github.com/".insteadOf "git@github.com:" >/dev/null 2>&1
           git fetch origin >/dev/null 2>&1
-          git reset --hard HEAD >/dev/null 2>&1
-          git clean -fd >/dev/null 2>&1
-          git checkout $BRANCH >/dev/null 2>&1
           git reset --hard origin/$BRANCH >/dev/null 2>&1
           git clean -fd >/dev/null 2>&1
 
+          echo "→ Cleaning up..."
           docker compose down --remove-orphans >/dev/null 2>&1 || true
           docker system prune -af --volumes >/dev/null 2>&1 || true
-          docker builder prune -af >/dev/null 2>&1 || true
-          docker volume prune -af >/dev/null 2>&1 || true
-          sudo apt-get autoremove -y >/dev/null 2>&1 || true
-          sudo apt-get autoclean -y >/dev/null 2>&1 || true
-          sudo rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* >/dev/null 2>&1 || true
-          sudo journalctl --vacuum-time=3d >/dev/null 2>&1 || true
-          sudo rm -rf /var/log/*.gz /tmp/* /var/tmp/* >/dev/null 2>&1 || true
+          sudo rm -rf /tmp/* /var/tmp/* >/dev/null 2>&1 || true
 
+          echo "→ Building image..."
           DOCKER_BUILDKIT=1 docker compose build --progress=auto
+
+          echo "→ Starting containers..."
           docker compose up -d --force-recreate >/dev/null 2>&1
 
-          sleep 15
-          docker compose ps
+          echo "→ Waiting for startup..."
+          sleep 20
+
+          echo "→ Status:"
+          docker compose ps --format "table {{.Name}}\t{{.Status}}\t{{.Ports}}"
 
           ENDSSH
 
