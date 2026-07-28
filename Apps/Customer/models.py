@@ -7,6 +7,7 @@ from Apps.Agent.models import Lead
 class CustomerProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='customer_profile')
     phone = models.CharField(max_length=20, blank=True, null=True)
+    address = models.CharField(max_length=255, blank=True, null=True)
     profile_picture = models.ImageField(upload_to='customer_profiles/', blank=True, null=True)
     preferred_contact_method = models.CharField(
         max_length=20,

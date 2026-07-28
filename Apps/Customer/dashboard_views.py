@@ -431,9 +431,12 @@ def update_profile(request):
         if last_name:
             request.user.last_name = last_name
         request.user.save()
+        
+        profile.address = request.POST.get('address', profile.address)
 
         # Update profile fields
         phone = request.POST.get('phone')
+        
         preferred_contact_method = request.POST.get('preferred_contact_method')
 
         if phone:

@@ -78,6 +78,11 @@ def edit_subscription_plan(request, pk):
             messages.success(request, f"Plan '{plan.name}' updated successfully.")
             return redirect("subscriptions:manage-subscriptions")
         else:
+            print("FORM ERRORS:", form.errors)
+            print("PRICING ERRORS:", pricing_formset.errors)
+            print("PRICING NON FORM:", pricing_formset.non_form_errors())
+            print("FEATURE ERRORS:", feature_formset.errors)
+            print("FEATURE NON FORM:", feature_formset.non_form_errors())
             messages.error(request, "Please fix the errors below.")
     else:
         form = SubscriptionPlanForm(instance=plan)
@@ -424,4 +429,4 @@ def cashfree_webhook(request):
         
         return HttpResponse("OK")
     except Exception as e:
-        return HttpResponse(f"Error processing webhook: {str(e)}", status=500)
+        return HttpResponse(f"Error processing webhook: {str(e)}", status=500)

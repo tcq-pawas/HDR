@@ -18,6 +18,7 @@ urlpatterns = [
     path('saved-properties/', CustomerSavedPropertiesView.as_view(), name='saved-properties-page'),
     path('viewings/', CustomerViewingsView.as_view(), name='viewings-page'),
     path("create-inquiry/", views.create_inquiry, name="create_inquiry"),
+    path("api/advisor-properties/<int:agent_profile_id>/", views.get_advisor_properties,name="advisor-properties"),
 
     # Form submission endpoints
     path('update-profile/', update_profile, name='update-profile'),

@@ -11,7 +11,12 @@ from .serializers import (
     CreatePropertyViewingSerializer, CreateCustomerFeedbackSerializer
 )
 from Apps.PublicPage.models import Property
-
+from django.http import JsonResponse
+from django.contrib import messages
+from django.shortcuts import redirect
+from .forms import CreatePropertyInquiryForm
+from Apps.Agent.models import AgentProfile
+from django.db import models
 
 
 class CustomerProfileView(generics.RetrieveUpdateAPIView):
@@ -148,4 +153,61 @@ def unsave_property(request, property_id):
 
 
 def create_inquiry(request):
-    return render(request, "customer/create_inquiry.html")
+    """
+    Renders the 'Connect with a Property Expert' form (GET)
+    and saves a PropertyInquiry record on submit (POST).
+    """
+    if request.method == 'POST':
+        form = CreatePropertyInquiryForm(request.POST)
+        if form.is_valid():
+            inquiry = form.save(commit=False)
+            # Link the logged-in customer's email automatically if not provided
+            if not inquiry.email and request.user.is_authenticated:
+                inquiry.email = request.user.email
+            inquiry.save()
+            messages.success(request, "Your enquiry has been submitted successfully. Our property expert will get back to you shortly.")
+            return redirect('customer:inquiries-page')
+        else:
+            messages.error(request, "Please correct the errors below and try again.")
+    else:
+        initial = {}
+        if request.user.is_authenticated:
+            initial['name'] = request.user.get_full_name() or request.user.username
+            initial['email'] = request.user.email
+        form = CreatePropertyInquiryForm(initial=initial)
+ 
+    return render(request, "customer/create_inquiry.html", {"form": form})
+
+
+
+#  get_advisor_properties function :
+def get_advisor_properties(request, agent_profile_id):
+    try:
+        agent_profile = AgentProfile.objects.select_related('user').get(id=agent_profile_id)
+    except AgentProfile.DoesNotExist:
+        return JsonResponse({'error': 'Advisor not found'}, status=404)
+
+    properties = Property.objects.filter(
+        is_active=True
+    ).filter(
+        models.Q(assigned_agent=agent_profile.user) | models.Q(seller=agent_profile.user)
+    )
+
+    properties_data = []
+    for p in properties:
+        properties_data.append({
+            'id': p.id,
+            'title': p.title,
+            'location': p.location,
+            'category': p.get_category_display() if hasattr(p, 'get_category_display') else p.category,
+            'price': f"₹{p.price:,.0f}" if p.price else "Contact for price",
+            'image_url': p.featured_image.url if p.featured_image else (
+                p.images.first().image.url if p.images.exists() else None
+            ),
+        })
+
+    return JsonResponse({
+        'service_area': agent_profile.territory or 'Not specified',
+        'advisor_name': agent_profile.user.get_full_name() or agent_profile.user.username,
+        'properties': properties_data,
+    })

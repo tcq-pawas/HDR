@@ -578,6 +578,15 @@
                             </div>
                         </div>
 
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label>Address</label>
+                                    <input type="text" name="address" class="form-input" value="{{ profile.address|default:'' }}" placeholder="Enter your full address">
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="action-bar">
                             <a href="{% url 'customer:profile-page' %}" class="btn-cancel">
                                 <i class="fas fa-times"></i> Cancel
