@@ -114,7 +114,7 @@ else:
             'NAME': os.getenv('DB_NAME',  default='heyday_db'),
             'USER': os.getenv('DB_USER',  default='postgres'),
             'PASSWORD': os.getenv('DB_PASSWORD',  default='postgres'),
-            'HOST': os.getenv('DB_HOST',  default='localhost'),
+            'HOST': os.getenv('DB_HOST',  default='postgres'),
             'PORT': os.getenv('DB_PORT', default='5432'),
         }
     }
@@ -169,7 +169,7 @@ CASHFREE_ENVIRONMENT = os.getenv('CASHFREE_ENVIRONMENT')  # Set to "PRODUCTION" 
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'staticfiles')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Media files
 MEDIA_URL = '/media/'

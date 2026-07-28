@@ -32,13 +32,19 @@ services:
     container_name: hdr-web
     hostname: hdr-web
     volumes:
-      - static_volume:/app/static
-    command: >
-      sh -c " python manage.py migrate --noinput && python manage.py collectstatic --noinput && gunicorn HeyDayRealty.wsgi:application --workers 5 --bind 0.0.0.0:8000 --graceful-timeout 120 --timeout 120 "
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    command: gunicorn HeyDayRealty.wsgi:application --workers 3 --bind 0.0.0.0:8000 --graceful-timeout 120 --timeout 120
     expose:
       - "8000"
     env_file:
       - .env
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     depends_on:
       postgres:
         condition: service_healthy
@@ -59,7 +65,8 @@ services:
       - static_volume:/app/staticfiles
       - media_volume:/app/media
     depends_on:
-      - web
+      web:
+        condition: service_healthy
 
 networks:
   hdr_network:

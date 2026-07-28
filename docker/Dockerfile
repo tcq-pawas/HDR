@@ -33,6 +33,8 @@ WORKDIR /app
 # Install only runtime dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq5 \
+    curl \
+    postgresql-client \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
@@ -42,6 +44,10 @@ COPY --from=builder /root/.local /root/.local
 # Copy application code
 COPY . .
 
+# Copy entrypoint script
+COPY docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 # Create non-root user
 RUN useradd -m -u 1000 appuser && \
     chown -R appuser:appuser /app
@@ -49,3 +55,5 @@ USER appuser
 
 # Expose port
 EXPOSE 8000
+
+ENTRYPOINT ["/entrypoint.sh"]
