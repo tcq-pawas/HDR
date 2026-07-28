@@ -39,12 +39,6 @@ services:
       - "8000"
     env_file:
       - .env
-    healthcheck:
-      test: ["CMD-SHELL", "pgrep -f gunicorn || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 10
-      start_period: 120s
     depends_on:
       postgres:
         condition: service_healthy
@@ -65,8 +59,7 @@ services:
       - static_volume:/app/staticfiles
       - media_volume:/app/media
     depends_on:
-      web:
-        condition: service_healthy
+      - web
 
 networks:
   hdr_network:

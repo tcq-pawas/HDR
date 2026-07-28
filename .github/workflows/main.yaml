@@ -40,49 +40,31 @@ jobs:
           PROJECT_DIR="/home/ubuntu/HDR"
           BRANCH="Production"
 
-          echo "🚀 Starting deployment..."
-
-          # Install Docker if missing
           if ! command -v docker >/dev/null 2>&1; then
-            sudo apt-get update -qq
-            sudo apt-get install -y docker.io >/dev/null
-            sudo systemctl enable docker >/dev/null
-            sudo systemctl start docker >/dev/null
+            sudo apt-get update -qq && sudo apt-get install -y docker.io >/dev/null
+            sudo systemctl enable docker >/dev/null && sudo systemctl start docker >/dev/null
             sudo usermod -aG docker $USER
           fi
 
-          # Install Docker Compose Plugin
           if ! docker compose version >/dev/null 2>&1; then
-            sudo apt-get update -qq
-            sudo apt-get install -y docker-compose-plugin >/dev/null
+            sudo apt-get update -qq && sudo apt-get install -y docker-compose-plugin >/dev/null
           fi
 
           cd "$PROJECT_DIR"
 
-          if [ ! -f docker-compose.yml ]; then
-            echo "❌ docker-compose.yml not found!"
-            exit 1
-          fi
-
-          sudo chown -R $USER:$USER "$PROJECT_DIR" >/dev/null
-          sudo chmod -R 755 "$PROJECT_DIR" >/dev/null
+          sudo chown -R $USER:$USER "$PROJECT_DIR" >/dev/null 2>&1
+          sudo chmod -R 755 "$PROJECT_DIR" >/dev/null 2>&1
 
           git config --global url."https://${{ secrets.GIT_TOKEN }}@github.com/".insteadOf "git@github.com:"
 
-          echo "📥 Pulling latest code..."
-          git fetch origin >/dev/null
-          git reset --hard HEAD >/dev/null
-          git clean -fd >/dev/null
-          git checkout $BRANCH >/dev/null
-          git reset --hard origin/$BRANCH >/dev/null
-          git clean -fd >/dev/null
+          git fetch origin >/dev/null 2>&1
+          git reset --hard HEAD >/dev/null 2>&1
+          git clean -fd >/dev/null 2>&1
+          git checkout $BRANCH >/dev/null 2>&1
+          git reset --hard origin/$BRANCH >/dev/null 2>&1
+          git clean -fd >/dev/null 2>&1
 
-          echo "📦 Current commit: $(git rev-parse --short HEAD)"
-
-          echo "🛑 Stopping containers..."
           docker compose down --remove-orphans >/dev/null 2>&1 || true
-
-          echo "🧹 Cleaning up resources..."
           docker system prune -af --volumes >/dev/null 2>&1 || true
           docker builder prune -af >/dev/null 2>&1 || true
           docker volume prune -af >/dev/null 2>&1 || true
@@ -92,21 +74,11 @@ jobs:
           sudo journalctl --vacuum-time=3d >/dev/null 2>&1 || true
           sudo rm -rf /var/log/*.gz /tmp/* /var/tmp/* >/dev/null 2>&1 || true
 
-          echo "🔨 Building Docker image..."
           DOCKER_BUILDKIT=1 docker compose build --progress=auto
+          docker compose up -d --force-recreate >/dev/null 2>&1
 
-          echo "▶️  Starting containers..."
-          docker compose up -d --force-recreate >/dev/null
-
-          sleep 10
-
-          echo "📊 Container status:"
+          sleep 15
           docker compose ps
-
-          echo "📋 Recent container logs:"
-          docker compose logs --tail=50 web
-
-          echo "✅ Deployment completed successfully"
 
           ENDSSH
 
