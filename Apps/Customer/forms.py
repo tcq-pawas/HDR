@@ -43,3 +43,129 @@ class CustomerRegistrationForm(UserCreationForm):
                 phone=self.cleaned_data.get('phone', '')
             )
         return user
+
+from django import forms
+from Apps.PublicPage.models import PropertyInquiry, Property
+from Apps.Agent.models import AgentProfile
+
+
+class CreatePropertyInquiryForm(forms.ModelForm):
+    """
+    Form for the 'Connect with a Property Expert' page.
+    Sections:
+      1. Your Information      -> name, phone_number, email
+      2. Select Property Advisor -> agent_profile
+      3. Choose a Property     -> related_property (optional, only used if
+                                   'I am interested in an available property' is picked)
+      4. Your Enquiry          -> subject (mapped into message), message
+    """
+
+    # Section 1: Your Information
+    name = forms.CharField(
+        max_length=100,
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter your full name',
+        })
+    )
+    phone_number = forms.CharField(
+        max_length=15,
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter your phone number',
+        })
+    )
+    email = forms.EmailField(
+        required=False,
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter your email address',
+        })
+    )
+
+    # Section 2: Select Property Advisor
+    agent_profile = forms.ModelChoiceField(
+        queryset=AgentProfile.objects.select_related('user').all(),
+        required=True,
+        empty_label="Select an advisor",
+        widget=forms.Select(attrs={'class': 'form-select', 'id': 'id_agent_profile'}),
+        label="Select Property Advisor",
+    )
+
+    # Section 3: Choose a Property
+    # Radio choice: existing property vs "looking for another property"
+    property_choice = forms.ChoiceField(
+        choices=[
+            ('existing', 'I am interested in an available property'),
+            ('other', 'I am looking for another property'),
+        ],
+        initial='existing',
+        required=True,
+        widget=forms.RadioSelect,
+        label="Choose a Property",
+    )
+    related_property = forms.ModelChoiceField(
+        queryset=Property.objects.filter(is_active=True),
+        required=False,
+        empty_label="Select a property",
+        widget=forms.Select(attrs={'class': 'form-select', 'id': 'id_related_property'}),
+        label="Available Properties",
+    )
+
+    # Section 4: Your Enquiry
+    subject = forms.CharField(
+        max_length=200,
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter subject (e.g., Need agricultural land near Gorakhpur)',
+        })
+    )
+    message = forms.CharField(
+        max_length=1000,
+        required=True,
+        widget=forms.Textarea(attrs={
+            'class': 'form-control',
+            'placeholder': 'Describe your requirements in detail...',
+            'rows': 5,
+            'maxlength': 1000,
+            'id': 'id_message',
+        })
+    )
+
+    class Meta:
+        model = PropertyInquiry
+        fields = ['name', 'phone_number', 'email', 'agent_profile', 'related_property', 'message']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        property_choice = cleaned_data.get('property_choice')
+        related_property = cleaned_data.get('related_property')
+
+        # If user says they're interested in an existing property, require the property field.
+        if property_choice == 'existing' and not related_property:
+            self.add_error('related_property', "Please select a property, or choose 'I am looking for another property'.")
+
+        return cleaned_data
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+
+        # Prefix the subject into the message body so it's preserved
+        # (PropertyInquiry model has no separate subject field).
+        subject = self.cleaned_data.get('subject', '').strip()
+        message = self.cleaned_data.get('message', '').strip()
+        if subject:
+            instance.message = f"Subject: {subject}\n\n{message}"
+        else:
+            instance.message = message
+
+        # If the user picked "I am looking for another property", clear related_property.
+        if self.cleaned_data.get('property_choice') == 'other':
+            instance.related_property = None
+
+        if commit:
+            instance.save()
+        return instance

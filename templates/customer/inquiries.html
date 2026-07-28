@@ -371,7 +371,7 @@
                                 <th style="width: 140px;">Property Type</th>
                                 <th style="width: 160px;">Location</th>
                                 <th style="width: 150px;">Inquiry Date</th>
-                                <th style="width: 170px;">Assigned Agent</th>
+                                <th style="width: 170px;">Phone</th>
                                 <th style="width: 170px;">Current Status</th>
                                 <th style="width: 160px;">Last Updated</th>
                                 <th style="width: 240px;"></th>
@@ -403,15 +403,10 @@
                                     <td class="text-muted fw-bold">{{ inquiry.created_at|date:"M d, Y H:i" }}</td>
                                     <td class="text-end">
                                         <div class="btn-group" role="group">
-                                            <button class="btn btn-sm btn-primary" style="border-radius: 14px; font-weight:500;" onclick="viewInquiry({{ inquiry.id }})">
+                                            <button class="btn btn-sm btn-primary" style="border-radius: 14px; font-weight:500;" >
                                                 <i class="fas fa-eye"></i> View Inquiry
                                             </button>
-                                            <button class="btn btn-sm btn-outline-primary" style="border-radius: 14px; font-weight:500;" onclick="alert('Property view flow not implemented on this page UI. Backend URLs unchanged.')">
-                                                <i class="fas fa-landmark"></i> View Property
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-success" style="border-radius: 14px; font-weight:1000;" onclick="window.location.href='mailto:support@heydayrealty.com?subject=Inquiry%20Agent%20Contact%20-#{{ inquiry.id }}'">
-                                                <i class="fas fa-phone"></i> Contact Agent
-                                            </button>
+                                           
                                         </div>
                                     </td>
                                 </tr>

@@ -1,0 +1,523 @@
+{% extends "customer/customer_base.html" %}
+{% load static %}
+
+{% block title %}Connect with a Property Expert - HeyDay Realty{% endblock %}
+{% block page_title %}Connect with a Property Expert{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root{
+        --primary:#004526;
+        --secondary:#006638;
+        --radius:20px;
+    }
+
+    .inquiry-page{ padding: 24px 30px; }
+
+    .inquiry-hero{
+        border-radius: var(--radius);
+        background: linear-gradient(180deg, #004526 0%, #002815 50%, #002200 100%);
+        color:#fff;
+        padding: 1.6rem 1.8rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 16px 50px rgba(15,118,110,0.14);
+    }
+    .inquiry-hero h1{ font-size: 26px; font-weight: 700; margin: 0 0 .4rem 0; }
+    .inquiry-hero p{ margin:0; opacity:.92; font-size: 14px; }
+
+    .form-section{
+        border-radius: var(--radius);
+        overflow: hidden;
+        border: 1px solid rgba(15,118,110,0.12);
+        box-shadow: 0 16px 45px rgba(15,118,110,0.08);
+        background: #fff;
+        margin-bottom: 1.5rem;
+    }
+    .section-header{
+        background: linear-gradient(135deg, #004526, #006638);
+        color: #fff;
+        padding: .85rem 1.3rem;
+        font-weight: 700;
+        font-size: 15px;
+    }
+    .section-body{ padding: 1.4rem 1.5rem; }
+
+    .form-label{ font-weight: 600; font-size: 14px; color:#111827; margin-bottom:.4rem; }
+    .form-control, .form-select{
+        border-radius: 12px;
+        border: 1px solid #E2E8F0;
+        padding: .65rem .9rem;
+        font-size: 14px;
+    }
+    .form-control:focus, .form-select:focus{
+        border-color: var(--primary);
+        box-shadow: 0 0 0 .2rem rgba(0,69,38,0.12);
+    }
+
+    .service-area-box{
+        background: #F1F5F4;
+        border-radius: 14px;
+        padding: 1rem 1.1rem;
+        height: 100%;
+    }
+    .service-area-box .label{ color: var(--primary); font-weight: 700; font-size: 14px; margin-bottom:.3rem; }
+    .service-area-box .value{ color:#374151; font-size: 14px; }
+
+    .property-choice-card{
+        border: 1.5px solid #E2E8F0;
+        border-radius: 16px;
+        padding: 1rem 1.1rem;
+        cursor: pointer;
+        transition: all .15s ease;
+        height: 100%;
+    }
+    .property-choice-card.active{
+        border-color: var(--primary);
+        background: rgba(0,69,38,0.05);
+    }
+    .property-choice-card .radio-row{ display:flex; align-items:center; gap:.6rem; font-weight:700; color:#111827; font-size:14px; }
+    .property-choice-card .sub-text{ color:#6B7280; font-size:13px; margin: .25rem 0 0 1.6rem; }
+
+    .available-properties-box{
+        background: #F8FAFC;
+        border-radius: 14px;
+        padding: 1rem 1.1rem;
+        border: 1px solid #E2E8F0;
+    }
+    .info-note{
+        background: #F0FDF4;
+        border: 1px solid rgba(0,69,38,0.15);
+        border-radius: 14px;
+        padding: .85rem 1.1rem;
+        font-size: 13px;
+        color:#065F46;
+        display:flex;
+        align-items:flex-start;
+        gap:.6rem;
+    }
+
+    .char-counter{ text-align:right; color:#94A3B8; font-size: 12px; margin-top:.3rem; }
+
+    .secure-note{
+        background: #F0FDF4;
+        border: 1px solid rgba(0,69,38,0.15);
+        border-radius: 14px;
+        padding: .9rem 1.1rem;
+        display:flex;
+        gap:.7rem;
+        align-items:flex-start;
+        margin-bottom: 1.2rem;
+    }
+    .secure-note i{ color: var(--primary); font-size: 1.1rem; margin-top: .1rem; }
+    .secure-note .title{ font-weight:700; font-size:14px; color:#111827; }
+    .secure-note .desc{ font-size:13px; color:#6B7280; }
+
+    .btn-send-enquiry{
+        width:100%;
+        padding: .9rem;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #004526, #006638);
+        border:none;
+        color:#fff;
+        font-weight:700;
+        font-size:15px;
+    }
+    .btn-send-enquiry:hover{ filter: brightness(1.08); color:#fff; }
+
+    .invalid-feedback{ display:block; font-size: 12px; }
+
+    /* Property selection cards (Choose a Property section) — sliding carousel */
+    .property-carousel-wrap{
+        position: relative;
+        margin-bottom: .5rem;
+    }
+    .property-select-grid{
+        display:flex;
+        gap: 1rem;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        scroll-snap-type: x mandatory;
+        padding-bottom: .5rem;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+    }
+    .property-select-grid::-webkit-scrollbar{ height: 6px; }
+    .property-select-grid::-webkit-scrollbar-thumb{ background: rgba(0,69,38,0.25); border-radius: 999px; }
+
+    .carousel-arrow{
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #fff;
+        border: 1px solid #E2E8F0;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        cursor:pointer;
+        z-index: 2;
+        color: var(--primary);
+        transition: background .15s;
+    }
+    .carousel-arrow:hover{ background: #F0FDF4; }
+    .carousel-arrow.prev{ left: -8px; }
+    .carousel-arrow.next{ right: -8px; }
+    @media (max-width: 600px){
+        .carousel-arrow{ width: 30px; height:30px; }
+    }
+
+    .property-select-card{
+        flex: 0 0 240px;
+        scroll-snap-align: start;
+        border: 1.5px solid #E2E8F0;
+        border-radius: 16px;
+        overflow: hidden;
+        background: #fff;
+        cursor: pointer;
+        transition: all .15s ease;
+        position: relative;
+    }
+    .property-select-card:hover{ border-color: rgba(0,69,38,0.4); transform: translateY(-2px); }
+    .property-select-card.selected{
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px rgba(0,69,38,0.15);
+    }
+    .property-select-card .prop-img{
+        width: 100%;
+        height: 110px;
+        object-fit: cover;
+        background: #E2E8F0;
+        display:block;
+    }
+    .property-select-card .prop-radio{
+        position:absolute;
+        top: 10px;
+        right: 10px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.9);
+        border: 2px solid #CBD5E1;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+    }
+    .property-select-card.selected .prop-radio{
+        border-color: var(--primary);
+        background: var(--primary);
+    }
+    .property-select-card.selected .prop-radio::after{
+        content:"";
+        width: 8px; height: 8px;
+        border-radius: 50%;
+        background: #fff;
+    }
+    .property-select-card .prop-body{ padding: .75rem .85rem; }
+    .property-select-card .prop-title{ font-weight: 700; font-size: 14px; margin: 0 0 .2rem 0; color:#111827; }
+    .property-select-card .prop-type{ color:#6B7280; font-size: 12px; margin: 0 0 .35rem 0; }
+    .property-select-card .prop-location{ color:#6B7280; font-size: 12px; display:flex; align-items:center; gap:.3rem; margin:0 0 .3rem 0; }
+    .property-select-card .prop-price{ color: var(--primary); font-weight: 700; font-size: 13px; margin:0; }
+    .property-select-loading, .property-select-empty{
+        flex: 1 1 100%;
+        text-align:center;
+        color:#6B7280;
+        font-size: 13px;
+        padding: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="inquiry-page">
+
+    <div class="inquiry-hero">
+        <h1>Connect with a Property Expert</h1>
+        <p>Our property experts are here to help you find the right property. Share your requirements and we will get back to you shortly.</p>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}" style="border-radius:14px;">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" action="{% url 'customer:create_inquiry' %}" id="inquiryForm" novalidate>
+        {% csrf_token %}
+
+        <!-- 1. Your Information -->
+        <div class="form-section">
+            <div class="section-header">1. Your Information</div>
+            <div class="section-body">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Full Name *</label>
+                        {{ form.name }}
+                        {% if form.name.errors %}<div class="invalid-feedback">{{ form.name.errors.0 }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Phone Number *</label>
+                        {{ form.phone_number }}
+                        {% if form.phone_number.errors %}<div class="invalid-feedback">{{ form.phone_number.errors.0 }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Email Address</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}<div class="invalid-feedback">{{ form.email.errors.0 }}</div>{% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Select Property Advisor -->
+        <div class="form-section">
+            <div class="section-header">2. Select Property Advisor</div>
+            <div class="section-body">
+                <div class="row g-3">
+                    <div class="col-md-7">
+                        <label class="form-label">Select Property Advisor *</label>
+                        {{ form.agent_profile }}
+                        {% if form.agent_profile.errors %}<div class="invalid-feedback">{{ form.agent_profile.errors.0 }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-5">
+                        <div class="service-area-box">
+                            <div class="label">Service Area</div>
+                            <div class="value" id="serviceAreaText">Will be shown here after advisor selection</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Choose a Property -->
+        <div class="form-section">
+            <div class="section-header">3. Choose a Property</div>
+            <div class="section-body">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="property-choice-card active" id="choiceExistingLabel">
+                            <div class="radio-row">
+                                <input type="radio" name="property_choice" value="existing" checked id="id_property_choice_existing">
+                                I am interested in an available property
+                            </div>
+                            <div class="sub-text">Choose from properties managed by this advisor</div>
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="property-choice-card" id="choiceOtherLabel">
+                            <div class="radio-row">
+                                <input type="radio" name="property_choice" value="other" id="id_property_choice_other">
+                                I am looking for another property
+                            </div>
+                            <div class="sub-text">I want to describe my requirements in detail</div>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="availablePropertiesSection">
+                    <label class="form-label" id="availablePropertiesLabel">Available Properties</label>
+
+                    <!-- Hidden select stays in the DOM so Django form submission / validation still works -->
+                    <div style="display:none;">
+                        {{ form.related_property }}
+                    </div>
+
+                    <div class="property-carousel-wrap">
+                        <div class="carousel-arrow prev" id="carouselPrev" style="display:none;">
+                            <i class="fas fa-chevron-left"></i>
+                        </div>
+                        <div class="property-select-grid mb-2" id="propertyCardGrid">
+                            <div class="property-select-empty" id="propertiesHint">
+                                Properties will be listed here after selecting an advisor
+                            </div>
+                        </div>
+                        <div class="carousel-arrow next" id="carouselNext" style="display:none;">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+                    {% if form.related_property.errors %}<div class="invalid-feedback mb-2">{{ form.related_property.errors.0 }}</div>{% endif %}
+                </div>
+
+                <div class="info-note">
+                    <i class="fas fa-circle-info mt-1"></i>
+                    <div>Can't find the right property? Choose "I am looking for another property" above and describe your requirements.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Your Enquiry -->
+        <div class="form-section">
+            <div class="section-header">4. Your Enquiry</div>
+            <div class="section-body">
+                <div class="mb-3">
+                    <label class="form-label">Subject *</label>
+                    {{ form.subject }}
+                    {% if form.subject.errors %}<div class="invalid-feedback">{{ form.subject.errors.0 }}</div>{% endif %}
+                </div>
+                <div>
+                    <label class="form-label">Requirements / Message *</label>
+                    {{ form.message }}
+                    <div class="char-counter"><span id="charCount">0</span> / 1000</div>
+                    {% if form.message.errors %}<div class="invalid-feedback">{{ form.message.errors.0 }}</div>{% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="secure-note">
+            <i class="fas fa-shield-halved"></i>
+            <div>
+                <div class="title">Your information is secure with us.</div>
+                <div class="desc">We respect your privacy and will never share your details with third parties.</div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-send-enquiry">Send Enquiry</button>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const advisorSelect = document.getElementById('id_agent_profile');
+    const serviceAreaText = document.getElementById('serviceAreaText');
+    const propertySelect = document.getElementById('id_related_property');
+    const propertiesHint = document.getElementById('propertiesHint');
+
+    const choiceExisting = document.getElementById('id_property_choice_existing');
+    const choiceOther = document.getElementById('id_property_choice_other');
+    const choiceExistingLabel = document.getElementById('choiceExistingLabel');
+    const choiceOtherLabel = document.getElementById('choiceOtherLabel');
+    const availablePropertiesSection = document.getElementById('availablePropertiesSection');
+
+    const messageBox = document.getElementById('id_message');
+    const charCount = document.getElementById('charCount');
+
+    // Character counter for Requirements / Message
+    if (messageBox && charCount) {
+        const updateCount = () => { charCount.textContent = messageBox.value.length; };
+        messageBox.addEventListener('input', updateCount);
+        updateCount();
+    }
+
+    // Toggle radio card active style + show/hide property picker
+    function refreshChoiceUI() {
+        if (choiceExisting.checked) {
+            choiceExistingLabel.classList.add('active');
+            choiceOtherLabel.classList.remove('active');
+            availablePropertiesSection.style.display = 'block';
+        } else {
+            choiceOtherLabel.classList.add('active');
+            choiceExistingLabel.classList.remove('active');
+            availablePropertiesSection.style.display = 'none';
+        }
+    }
+    choiceExisting.addEventListener('change', refreshChoiceUI);
+    choiceOther.addEventListener('change', refreshChoiceUI);
+    refreshChoiceUI();
+
+    const propertyCardGrid = document.getElementById('propertyCardGrid');
+    const availablePropertiesLabel = document.getElementById('availablePropertiesLabel');
+    const placeholderImg = "{% static 'img/agricultural_land_branding.jpg' %}";
+
+    // Carousel arrows for property cards
+    const carouselPrev = document.getElementById('carouselPrev');
+    const carouselNext = document.getElementById('carouselNext');
+
+    function updateCarouselArrows() {
+        const hasOverflow = propertyCardGrid.scrollWidth > propertyCardGrid.clientWidth + 5;
+        carouselPrev.style.display = hasOverflow ? 'flex' : 'none';
+        carouselNext.style.display = hasOverflow ? 'flex' : 'none';
+    }
+
+    if (carouselPrev && carouselNext) {
+        carouselPrev.addEventListener('click', () => {
+            propertyCardGrid.scrollBy({ left: -260, behavior: 'smooth' });
+        });
+        carouselNext.addEventListener('click', () => {
+            propertyCardGrid.scrollBy({ left: 260, behavior: 'smooth' });
+        });
+    }
+
+    function renderPropertyCards(properties) {
+        propertyCardGrid.innerHTML = '';
+
+        if (!properties || properties.length === 0) {
+            propertyCardGrid.innerHTML = '<div class="property-select-empty">No properties currently listed for this advisor.</div>';
+            propertySelect.value = '';
+            updateCarouselArrows();
+            return;
+        }
+
+        properties.forEach(p => {
+            const card = document.createElement('div');
+            card.className = 'property-select-card';
+            card.dataset.propertyId = p.id;
+
+            card.innerHTML = `
+                <img class="prop-img" src="${p.image_url || placeholderImg}" alt="${p.title}">
+                <div class="prop-radio"></div>
+                <div class="prop-body">
+                    <p class="prop-title">${p.title}</p>
+                    <p class="prop-type">${p.category || ''}</p>
+                    <p class="prop-location"><i class="fas fa-location-dot"></i> ${p.location || ''}</p>
+                    <p class="prop-price">${p.price || ''}</p>
+                </div>
+            `;
+
+            card.addEventListener('click', () => {
+                document.querySelectorAll('.property-select-card').forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                propertySelect.value = p.id;
+            });
+
+            propertyCardGrid.appendChild(card);
+        });
+
+        updateCarouselArrows();
+    }
+
+    // Load advisor's service area + properties via AJAX when advisor changes
+    if (advisorSelect) {
+        advisorSelect.addEventListener('change', function () {
+            const advisorId = this.value;
+            const advisorName = this.options[this.selectedIndex] ? this.options[this.selectedIndex].text : '';
+
+            propertySelect.value = '';
+
+            if (!advisorId) {
+                serviceAreaText.textContent = 'Will be shown here after advisor selection';
+                availablePropertiesLabel.textContent = 'Available Properties';
+                propertyCardGrid.innerHTML = '<div class="property-select-empty">Properties will be listed here after selecting an advisor</div>';
+                updateCarouselArrows();
+                return;
+            }
+
+            serviceAreaText.textContent = 'Loading...';
+            propertyCardGrid.innerHTML = '<div class="property-select-loading">Loading properties...</div>';
+
+            fetch(`/customer/api/advisor-properties/${advisorId}/`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.error) {
+                        serviceAreaText.textContent = 'Not available';
+                        propertyCardGrid.innerHTML = '<div class="property-select-empty">No properties found for this advisor.</div>';
+                        updateCarouselArrows();
+                        return;
+                    }
+                    serviceAreaText.textContent = data.service_area || 'Not specified';
+                    availablePropertiesLabel.textContent = `Available Properties by ${data.advisor_name || advisorName}`;
+                    renderPropertyCards(data.properties);
+                })
+                .catch(() => {
+                    serviceAreaText.textContent = 'Unable to load';
+                    propertyCardGrid.innerHTML = '<div class="property-select-empty">Something went wrong loading properties.</div>';
+                    updateCarouselArrows();
+                });
+        });
+    }
+});
+</script>
+{% endblock %}
