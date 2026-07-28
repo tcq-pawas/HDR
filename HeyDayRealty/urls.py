@@ -85,8 +85,16 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
+from django.http import JsonResponse
+
+def health_check(request):
+    """Health check endpoint for Docker healthcheck"""
+    return JsonResponse({'status': 'healthy'}, status=200)
 
 urlpatterns = [
+    # Health check endpoint for Docker healthcheck
+    path('health/', health_check),
+    
     # Smart dashboard entry point (must be first) - role-aware universal entry point
     path('dashboard/', include('Apps.Administration.smart_dashboard_urls')),
     
