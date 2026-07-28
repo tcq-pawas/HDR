@@ -66,4 +66,7 @@ urlpatterns = [
     # Reports
     path('reports/', views.reports, name='reports'),
     path('reports/export/<str:report_type>/', views.export_report, name='export_report'),
+    
+    # Subscription
+    path('subscription/', views.subscription_plans, name='subscription_plans'),
 ]

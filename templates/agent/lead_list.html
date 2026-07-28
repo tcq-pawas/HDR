@@ -105,12 +105,8 @@
 <link rel="stylesheet" href="{% static 'css/agent/lead_list.css' %}?v=2">
 {% endblock %}
 
-{% block breadcrumb %}
-<div class="breadcrumb">
-    <a href="{% url 'agent:dashboard' %}">Dashboard</a>
-    <i class="bi bi-chevron-right" style="font-size:10px; color:#a3abb3;"></i>
-    <span style="color:#2c3e50;">Leads</span>
-</div>
+{% block breadcrumb_items %}
+<span>Leads</span>
 {% endblock %}
 
 {% block content %}

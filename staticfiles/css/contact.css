@@ -405,12 +405,12 @@
 
 .location-right {
     display: flex;
-    align-items: center;
+    align-items: stretch;
 }
 
 .location-map {
     width: 100%;
-    height: 450px;
+    min-height: 500px;
     border-radius: 18px;
     overflow: hidden;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
