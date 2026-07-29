@@ -30,6 +30,8 @@ RUN chmod +x /entrypoint.sh
 RUN useradd -m -u 1000 appuser && \
     chown -R appuser:appuser /app
 
+USER appuser
+
 # Expose port
 EXPOSE 8000
 

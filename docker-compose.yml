@@ -31,9 +31,9 @@ services:
     container_name: hdr-web
     hostname: hdr-web
     volumes:
-      - ./staticfiles:/app/staticfiles
-      - static_volume:/app/static
+      - static_volume:/app/staticfiles
       - media_volume:/app/media
+
     command: gunicorn HeyDayRealty.wsgi:application --workers 3 --bind 0.0.0.0:8000 --graceful-timeout 120 --timeout 120
     expose:
       - "8000"
@@ -54,8 +54,10 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - static_volume:/app/static
+      - static_volume:/app/staticfiles
       - media_volume:/app/media
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      
     depends_on:
       - web
 
