@@ -20,6 +20,7 @@ urlpatterns = [
     path('about/', views.about, name='about'),
     path('contact/', views.contact, name='contact'),
     path('agents/', views.agents, name='agents'),
+    path('robots.txt', views.robots_txt, name='robots_txt'),
     path('agents/<int:agent_id>/', views.agent_profile, name='agent_profile'),
     path('career/', views.career, name='career'),
     path('nri/', views.nri, name='nri'),
