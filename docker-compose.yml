@@ -55,7 +55,7 @@ services:
     volumes:
       # - ./docker/nginx/ssl:/etc/nginx/ssl:rw
       - /etc/letsencrypt:/etc/letsencrypt:ro
-      - static_volume:/app/staticfiles
+      - static_volume:/app/static
       - media_volume:/app/media
     depends_on:
       - web
