@@ -27,7 +27,6 @@ services:
     build:
       context: .
       dockerfile: ./docker/Dockerfile
-      target: runtime
     restart: always
     container_name: hdr-web
     hostname: hdr-web
