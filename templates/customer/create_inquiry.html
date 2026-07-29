@@ -1,8 +1,9 @@
 {% extends "customer/customer_base.html" %}
 {% load static %}
 
-{% block title %}Connect with a Property Expert - HeyDay Realty{% endblock %}
-{% block page_title %}Connect with a Property Expert{% endblock %}
+{% block title %}{% endblock %}
+{% block page_title %}{% endblock %}
+{% block header %}{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -64,19 +65,23 @@
     .service-area-box .value{ color:#374151; font-size: 14px; }
 
     .property-choice-card{
-        border: 1.5px solid #E2E8F0;
+         border: 1.5px solid #E2E8F0;
         border-radius: 16px;
-        padding: 1rem 1.1rem;
+        padding: 1.4rem 1.6rem;
         cursor: pointer;
         transition: all .15s ease;
         height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 90px;
     }
     .property-choice-card.active{
         border-color: var(--primary);
         background: rgba(0,69,38,0.05);
     }
-    .property-choice-card .radio-row{ display:flex; align-items:center; gap:.6rem; font-weight:700; color:#111827; font-size:14px; }
-    .property-choice-card .sub-text{ color:#6B7280; font-size:13px; margin: .25rem 0 0 1.6rem; }
+    .property-choice-card .radio-row{ display:flex; align-items:center; gap:.6rem; font-weight:700; color:#111827; font-size:15px; }
+    .property-choice-card .sub-text{ color:#6B7280; font-size:13.5px; margin: .3rem 0 0 1.6rem; }
 
     .available-properties-box{
         background: #F8FAFC;
@@ -127,9 +132,10 @@
     .invalid-feedback{ display:block; font-size: 12px; }
 
     /* Property selection cards (Choose a Property section) — sliding carousel */
-    .property-carousel-wrap{
+   .property-carousel-wrap{
         position: relative;
         margin-bottom: .5rem;
+        padding: 0 44px;
     }
     .property-select-grid{
         display:flex;
@@ -139,39 +145,17 @@
         scroll-snap-type: x mandatory;
         padding-bottom: .5rem;
         -webkit-overflow-scrolling: touch;
-        scrollbar-width: thin;
+        scrollbar-width: none;      
+        -ms-overflow-style: none; 
     }
-    .property-select-grid::-webkit-scrollbar{ height: 6px; }
+    .property-select-grid::-webkit-scrollbar{ display: none;  height: 6px; }
     .property-select-grid::-webkit-scrollbar-thumb{ background: rgba(0,69,38,0.25); border-radius: 999px; }
 
-    .carousel-arrow{
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        background: #fff;
-        border: 1px solid #E2E8F0;
-        box-shadow: 0 4px 14px rgba(0,0,0,0.12);
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        cursor:pointer;
-        z-index: 2;
-        color: var(--primary);
-        transition: background .15s;
-    }
-    .carousel-arrow:hover{ background: #F0FDF4; }
-    .carousel-arrow.prev{ left: -8px; }
-    .carousel-arrow.next{ right: -8px; }
-    @media (max-width: 600px){
-        .carousel-arrow{ width: 30px; height:30px; }
-    }
-
     .property-select-card{
-        flex: 0 0 240px;
+        flex: 0 0 220px;
         scroll-snap-align: start;
+    }
+    .property-select-card{
         border: 1.5px solid #E2E8F0;
         border-radius: 16px;
         overflow: hidden;
@@ -180,11 +164,13 @@
         transition: all .15s ease;
         position: relative;
     }
+
     .property-select-card:hover{ border-color: rgba(0,69,38,0.4); transform: translateY(-2px); }
     .property-select-card.selected{
         border-color: var(--primary);
         box-shadow: 0 0 0 2px rgba(0,69,38,0.15);
     }
+
     .property-select-card .prop-img{
         width: 100%;
         height: 110px;
@@ -227,6 +213,32 @@
         font-size: 13px;
         padding: 1rem;
     }
+
+    .property-nav-btn{
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #fff;
+        border: 1px solid #E2E8F0;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        cursor:pointer;
+        color: var(--primary);
+        z-index: 2;
+        transition: background .15s;
+    }
+    .property-nav-btn:hover{ background: #F0FDF4; }
+    .property-nav-btn:disabled{
+        opacity: .35;
+        cursor: not-allowed;
+    }
+    .property-nav-btn.prev{ left: 0; }
+    .property-nav-btn.next{ right: 0; }
 </style>
 {% endblock %}
 
@@ -326,18 +338,14 @@
                         {{ form.related_property }}
                     </div>
 
-                    <div class="property-carousel-wrap">
-                        <div class="carousel-arrow prev" id="carouselPrev" style="display:none;">
-                            <i class="fas fa-chevron-left"></i>
-                        </div>
+                   <div class="property-carousel-wrap">
+                        <button type="button" class="property-nav-btn prev" id="propPagePrev" style="display:none;"><i class="fas fa-chevron-left"></i></button>
                         <div class="property-select-grid mb-2" id="propertyCardGrid">
                             <div class="property-select-empty" id="propertiesHint">
                                 Properties will be listed here after selecting an advisor
                             </div>
                         </div>
-                        <div class="carousel-arrow next" id="carouselNext" style="display:none;">
-                            <i class="fas fa-chevron-right"></i>
-                        </div>
+                        <button type="button" class="property-nav-btn next" id="propPageNext" style="display:none;"><i class="fas fa-chevron-right"></i></button>
                     </div>
                     {% if form.related_property.errors %}<div class="invalid-feedback mb-2">{{ form.related_property.errors.0 }}</div>{% endif %}
                 </div>
@@ -395,14 +403,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const messageBox = document.getElementById('id_message');
     const charCount = document.getElementById('charCount');
 
-    // Character counter for Requirements / Message
     if (messageBox && charCount) {
         const updateCount = () => { charCount.textContent = messageBox.value.length; };
         messageBox.addEventListener('input', updateCount);
         updateCount();
     }
 
-    // Toggle radio card active style + show/hide property picker
     function refreshChoiceUI() {
         if (choiceExisting.checked) {
             choiceExistingLabel.classList.add('active');
@@ -422,24 +428,21 @@ document.addEventListener('DOMContentLoaded', function () {
     const availablePropertiesLabel = document.getElementById('availablePropertiesLabel');
     const placeholderImg = "{% static 'img/agricultural_land_branding.jpg' %}";
 
-    // Carousel arrows for property cards
-    const carouselPrev = document.getElementById('carouselPrev');
-    const carouselNext = document.getElementById('carouselNext');
+    const propPagePrev = document.getElementById('propPagePrev');
+    const propPageNext = document.getElementById('propPageNext');
 
-    function updateCarouselArrows() {
+    function updateNavButtons() {
         const hasOverflow = propertyCardGrid.scrollWidth > propertyCardGrid.clientWidth + 5;
-        carouselPrev.style.display = hasOverflow ? 'flex' : 'none';
-        carouselNext.style.display = hasOverflow ? 'flex' : 'none';
+        propPagePrev.style.display = hasOverflow ? 'flex' : 'none';
+        propPageNext.style.display = hasOverflow ? 'flex' : 'none';
     }
 
-    if (carouselPrev && carouselNext) {
-        carouselPrev.addEventListener('click', () => {
-            propertyCardGrid.scrollBy({ left: -260, behavior: 'smooth' });
-        });
-        carouselNext.addEventListener('click', () => {
-            propertyCardGrid.scrollBy({ left: 260, behavior: 'smooth' });
-        });
-    }
+    propPagePrev.addEventListener('click', () => {
+        propertyCardGrid.scrollBy({ left: -236, behavior: 'smooth' });
+    });
+    propPageNext.addEventListener('click', () => {
+        propertyCardGrid.scrollBy({ left: 236, behavior: 'smooth' });
+    });
 
     function renderPropertyCards(properties) {
         propertyCardGrid.innerHTML = '';
@@ -447,7 +450,8 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!properties || properties.length === 0) {
             propertyCardGrid.innerHTML = '<div class="property-select-empty">No properties currently listed for this advisor.</div>';
             propertySelect.value = '';
-            updateCarouselArrows();
+            propPagePrev.style.display = 'none';
+            propPageNext.style.display = 'none';
             return;
         }
 
@@ -476,10 +480,9 @@ document.addEventListener('DOMContentLoaded', function () {
             propertyCardGrid.appendChild(card);
         });
 
-        updateCarouselArrows();
+        updateNavButtons();
     }
 
-    // Load advisor's service area + properties via AJAX when advisor changes
     if (advisorSelect) {
         advisorSelect.addEventListener('change', function () {
             const advisorId = this.value;
@@ -491,7 +494,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 serviceAreaText.textContent = 'Will be shown here after advisor selection';
                 availablePropertiesLabel.textContent = 'Available Properties';
                 propertyCardGrid.innerHTML = '<div class="property-select-empty">Properties will be listed here after selecting an advisor</div>';
-                updateCarouselArrows();
+                propPagePrev.style.display = 'none';
+                propPageNext.style.display = 'none';
                 return;
             }
 
@@ -504,7 +508,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (data.error) {
                         serviceAreaText.textContent = 'Not available';
                         propertyCardGrid.innerHTML = '<div class="property-select-empty">No properties found for this advisor.</div>';
-                        updateCarouselArrows();
                         return;
                     }
                     serviceAreaText.textContent = data.service_area || 'Not specified';
@@ -514,7 +517,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 .catch(() => {
                     serviceAreaText.textContent = 'Unable to load';
                     propertyCardGrid.innerHTML = '<div class="property-select-empty">Something went wrong loading properties.</div>';
-                    updateCarouselArrows();
                 });
         });
     }
