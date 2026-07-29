@@ -14,6 +14,9 @@ from Apps.Administration.auth_utils import get_user_role, role_required
 from .models import CustomerProfile, Inquiry, SavedProperty, PropertyViewing
 from Apps.PublicPage.models import Property, PropertyInquiry
 
+from django.views.generic import DetailView
+from Apps.PublicPage.models import PropertyInquiry
+
 
 class CustomerDashboardView(CustomerDashboardMixin, TemplateView):
     """Customer dashboard view with strict access control"""
@@ -483,3 +486,22 @@ def change_password(request):
 
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+class CustomerInquiryDetailView(DetailView):
+    model = PropertyInquiry
+    template_name = "customer/inquiry_detail.html"
+    context_object_name = "inquiry"
+
+    def get_queryset(self):
+        user = self.request.user
+        profile, _ = CustomerProfile.objects.get_or_create(user=user)
+
+        q_filter = Q(email=user.email)
+
+        if profile.phone:
+            q_filter |= Q(phone_number=profile.phone)
+
+        return PropertyInquiry.objects.filter(
+            q_filter
+        ).select_related('related_property')

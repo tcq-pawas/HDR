@@ -19,6 +19,9 @@ from Apps.Agent.models import AgentProfile
 from django.db import models
 
 
+
+
+
 class CustomerProfileView(generics.RetrieveUpdateAPIView):
     serializer_class = CustomerProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -182,6 +185,7 @@ def create_inquiry(request):
 
 #  get_advisor_properties function :
 def get_advisor_properties(request, agent_profile_id):
+    
     try:
         agent_profile = AgentProfile.objects.select_related('user').get(id=agent_profile_id)
     except AgentProfile.DoesNotExist:
@@ -211,3 +215,5 @@ def get_advisor_properties(request, agent_profile_id):
         'advisor_name': agent_profile.user.get_full_name() or agent_profile.user.username,
         'properties': properties_data,
     })
+    
+    

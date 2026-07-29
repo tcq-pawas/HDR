@@ -1,14 +1,14 @@
 {% extends "administration/admin_base.html" %}
 {% load static %}
 
-{% block page_title %}Manage Subscriptions{% endblock %}
-{% block page_subtitle %}Create and manage subscription plans, pricing and features.{% endblock %}
+{% block page_title %} {% if is_edit %} Edit Plan - {{ form.instance.name }} {% else %} Create Subscription Plan{% endif %}{% endblock %}
+{% block page_subtitle %}  Fill in the plan details, pricing options and features below. {% endblock %}
 
 {% block content %}
-<div class="mb-3 ps-3">
+<!-- <div class="mb-3 ps-3">
     <h4 class="fw-bold mb-1">{{ page_title }}</h4>
     <p class="text-muted mb-0">Fill in the plan details, pricing options and features below.</p>
-</div>
+</div> -->
 
 {% if messages %}
 {% for message in messages %}
