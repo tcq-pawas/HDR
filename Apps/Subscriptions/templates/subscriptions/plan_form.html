@@ -5,10 +5,116 @@
 {% block page_subtitle %}  Fill in the plan details, pricing options and features below. {% endblock %}
 
 {% block content %}
-<!-- <div class="mb-3 ps-3">
-    <h4 class="fw-bold mb-1">{{ page_title }}</h4>
-    <p class="text-muted mb-0">Fill in the plan details, pricing options and features below.</p>
-</div> -->
+
+<style>
+    input.avail-checkbox{
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        width: 24px !important;
+        height: 24px !important;
+        min-width: 24px !important;
+        min-height: 24px !important;
+        border-radius: 6px !important;
+        border: 2px solid #CBD5E1 !important;
+        background-color: #fff !important;
+        background-image: none !important;
+        cursor: pointer;
+        position: relative;
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        transition: all .15s ease;
+        flex-shrink: 0;
+        margin: 0 !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+    }
+
+    /* Default (unchecked) state — shows a red cross */
+    input.avail-checkbox::after{
+        content: "\f00d";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        color: #EF4444;
+        font-size: 12px;
+    }
+    
+    input.avail-checkbox:checked{
+        border-color: #0a8b60 !important;
+        background-color: #0a8b60 !important;
+    }
+    input.avail-checkbox:checked::after{
+        content: "\f00c";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        color: #fff;
+        font-size: 13px;
+    }
+
+    /* Two-column features grid */
+    .features-grid{
+        column-count: 2;
+        column-gap: 24px;
+    }
+    .feature-form-row{
+        display: grid;
+        grid-template-columns: 1fr 1fr 90px 70px;
+        gap: 12px;
+        align-items: center;
+        break-inside: avoid;
+        margin-bottom: 10px;
+        padding: 10px 12px;
+        background: #fff;
+        border: 1px solid #E2E8F0;
+        border-radius: 10px;
+    }
+    .feature-form-row input[type="text"],
+    .feature-form-row input[type="number"]{
+        width: 100%;
+    }
+    @media (max-width: 768px){
+        .features-grid{ column-count: 1; column-gap: 24px;
+        column-fill: auto; }
+        .feature-form-row{ grid-template-columns: 1fr; }
+        .features-grid-header-wrapper{ grid-template-columns: 1fr !important; }
+        .features-grid-header:nth-child(2){ display: none; }
+    }
+
+    .feature-form-row input[name$="-display_order"]{
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: textfield;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 8px center;
+        background-size: 14px;
+        padding-right: 28px;
+    }
+    .feature-form-row input[name$="-display_order"]::-webkit-inner-spin-button,
+    .feature-form-row input[name$="-display_order"]::-webkit-outer-spin-button{
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    .features-grid-header-wrapper {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+    }
+
+    .features-grid-header{
+        display: grid;
+        grid-template-columns: 1fr 1fr 90px 70px;
+        gap: 12px;
+        padding: 0 12px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #64748B;
+        text-transform: uppercase;
+    }
+    
+
+</style>
 
 {% if messages %}
 {% for message in messages %}
@@ -167,43 +273,47 @@
         <div class="card-header bg-white border-0 pt-3">
             <h6 class="fw-bold mb-0">Plan Features</h6>
         </div>
-        <div class="card-body">
+       <div class="card-body">
             {{ feature_formset.management_form }}
-            <div class="table-responsive">
-                <table class="table align-middle">
-                    <thead class="small text-muted">
-                        <tr>
-                            <th>Feature Name</th>
-                            <th>Value</th>
-                            <th>Available</th>
-                            <th>Order</th>
-                            <th>Remove</th>
-                        </tr>
-                    </thead>
-                    <tbody id="featuresTableBody">
-                        {% for fform in feature_formset %}
-                        <tr class="feature-form-row">
-                            {% for hidden in fform.hidden_fields %}{{ hidden }}{% endfor %}
-                            <td>{{ fform.feature_name }}</td>
-                            <td>{{ fform.feature_value }}</td>
-                            <td class="text-center">{{ fform.is_available }}</td>
-                            <td>{{ fform.display_order }}</td>
-                            <td class="text-center">
-                                {% if fform.instance.pk %}
-                                    <label class="btn btn-sm btn-outline-danger" style="border-radius:14px;">
-                                        <i class="fas fa-trash-alt"></i>
-                                        <span style="display:none;">{{ fform.DELETE }}</span>
-                                    </label>
-                                {% else %}
-                                <button type="button" class="btn btn-sm btn-outline-danger remove-row-btn" style="border-radius: 14px; font-weight:500;">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+            <div class="features-grid-header-wrapper mb-2">
+                <div class="features-grid-header">
+                    <div>Feature Name</div>
+                    <div>Value</div>
+                    <div class="text-center">Order</div>
+                    <div class="text-center">Remove</div>
+                </div>
+                <div class="features-grid-header">
+                    <div>Feature Name</div>
+                    <div>Value</div>
+                    <div class="text-center">Order</div>
+                    <div class="text-center">Remove</div>
+                </div>
+            </div>
+            
+            <div class="features-grid" id="featuresTableBody">
+                {% for fform in feature_formset %}
+                <div class="feature-form-row">
+                    {% for hidden in fform.hidden_fields %}{{ hidden }}{% endfor %}
+                    <div class="d-flex align-items-center gap-2">
+                        {{ fform.is_available }}
+                        {{ fform.feature_name }}
+                    </div>
+                    <div>{{ fform.feature_value }}</div>
+                    <div>{{ fform.display_order }}</div>
+                    <div class="text-center">
+                        {% if fform.instance.pk %}
+                            <label class="btn btn-sm btn-outline-danger mb-0" style="border-radius:14px;">
+                                <i class="fas fa-trash-alt"></i>
+                                <span style="display:none;">{{ fform.DELETE }}</span>
+                            </label>
+                        {% else %}
+                        <button type="button" class="btn btn-sm btn-outline-danger remove-row-btn" style="border-radius: 14px; font-weight:500;">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
             </div>
             <button type="button" id="addFeatureBtn" class="btn btn-sm btn-outline-success mt-2">
                 <i class="fas fa-plus"></i> Add Feature
@@ -221,16 +331,21 @@
 
 
 <!-- Hidden template rows used to clone new empty forms -->
+<div style="display:none;">
+    <div id="featureEmptyFormRow" class="feature-form-row">
+        {% for hidden in feature_formset.empty_form.hidden_fields %}{{ hidden }}{% endfor %}
+        <div class="d-flex align-items-center gap-2">
+            {{ feature_formset.empty_form.is_available }}
+            {{ feature_formset.empty_form.feature_name }}
+        </div>
+        <div>{{ feature_formset.empty_form.feature_value }}</div>
+        <div>{{ feature_formset.empty_form.display_order }}</div>
+        <div class="text-center"><button type="button" class="btn btn-sm btn-outline-danger remove-row-btn"><i class="fas fa-trash-alt"></i></button></div>
+    </div>
+</div>
+
 <table style="display:none;">
     <tbody>
-        <tr id="featureEmptyFormRow">
-            {% for hidden in feature_formset.empty_form.hidden_fields %}{{ hidden }}{% endfor %}
-            <td>{{ feature_formset.empty_form.feature_name }}</td>
-            <td>{{ feature_formset.empty_form.feature_value }}</td>
-            <td class="text-center">{{ feature_formset.empty_form.is_available }}</td>
-            <td>{{ feature_formset.empty_form.display_order }}</td>
-            <td class="text-center"><button type="button" class="btn btn-sm btn-outline-danger remove-row-btn"><i class="fas fa-trash-alt"></i></button></td>
-        </tr>
         <tr id="pricingEmptyFormRow">
             {% for hidden in pricing_formset.empty_form.hidden_fields %}{{ hidden }}{% endfor %}
             <td><select name="pricing_options-__prefix__-billing_cycle" class="form-control">
@@ -253,6 +368,10 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
+    document.querySelectorAll('input[name$="-is_available"]').forEach(cb => {
+        cb.classList.add('avail-checkbox');
+    });
+
     function setupDynamicFormset(config) {
         const { addBtnId, tableBodyId, emptyRowId, totalFormsInputName, rowSelector, orderFieldSuffix } = config;
 
@@ -263,19 +382,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (!tableBody || !totalFormsInput) return;
 
-        function renumberRows() {
+       function renumberRows() {
             if (!orderFieldSuffix) return;
             const rows = tableBody.querySelectorAll(rowSelector);
             let counter = 0;
             rows.forEach((row) => {
-                // Skip rows that are completely empty (feature name blank) —
-                // these are Django's "extra" blank forms and must be left
-                // untouched, otherwise Django will think they were edited
-                // and force-validate their required fields.
-                const nameInput = row.querySelector('input[name$="-feature_name"]');
-                const isBlank = nameInput && nameInput.value.trim() === '';
-                if (isBlank) return;
-
                 const orderInput = row.querySelector(`input[name$="${orderFieldSuffix}"]`);
                 if (orderInput) {
                     counter += 1;
@@ -297,27 +408,28 @@ document.addEventListener('DOMContentLoaded', function () {
                 tableBody.appendChild(newRow);
                 totalFormsInput.value = formIndex + 1;
 
+                newRow.querySelectorAll('input[name$="-is_available"]').forEach(cb => {
+                    cb.classList.add('avail-checkbox');
+                });
+
                 renumberRows();
             });
         }
 
-        // Delegated remove handler — catches every remove button, whether it
-        // came from the server (existing DB row) or was cloned by "Add".
         tableBody.addEventListener('click', function (e) {
             const removeBtn = e.target.closest('.remove-row-btn');
             if (!removeBtn) return;
 
-            const row = removeBtn.closest('tr');
+            const row = removeBtn.closest(rowSelector) || removeBtn.closest('tr');
             if (!row) return;
 
             row.remove();
             renumberRows();
         });
 
-        // Also handle clicking the styled DELETE checkbox label (for existing rows)
         tableBody.addEventListener('change', function (e) {
             if (e.target.matches('input[type="checkbox"][name$="-DELETE"]')) {
-                const row = e.target.closest('tr');
+                const row = e.target.closest(rowSelector) || e.target.closest('tr');
                 if (row && e.target.checked) {
                     row.style.display = 'none';
                 }
@@ -345,9 +457,6 @@ document.addEventListener('DOMContentLoaded', function () {
         orderFieldSuffix: null,
     });
 
-    // Since extra=0 now, a brand-new "Add Plan" page starts with zero rows.
-    // Auto-click "Add" once for a friendlier starting point — but only if
-    // the table is truly empty (never on Edit, where real rows already exist).
     const featuresBody = document.getElementById('featuresTableBody');
     const pricingBody = document.getElementById('pricingTableBody');
     const addFeatureBtn = document.getElementById('addFeatureBtn');
