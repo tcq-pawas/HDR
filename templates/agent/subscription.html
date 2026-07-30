@@ -1,0 +1,190 @@
+{% extends "agent/agent_base.html" %}
+
+{% load static %}
+
+{% block title %}Subscription Plans | HeyDay Realty{% endblock %}
+
+{% block breadcrumb_items %}
+<span>Subscription Plans</span>
+{% endblock %}
+
+{% block content %}
+<div class="premium-container">
+    <!-- Premium Header -->
+    <div class="premium-header">
+        <div class="header-content">
+            <div class="header-title">
+                <h1>Subscription Plans</h1>
+                <p class="header-subtitle">Choose the perfect plan to grow your property business</p>
+            </div>
+        </div>
+    </div>
+{% if messages %}
+<div class="mb-4" style="position: relative; z-index: 1000;">
+    {% for message in messages %}
+    <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} alert-dismissible fade show shadow-sm" role="alert">
+        {% if message.tags == 'success' %}<i class="bi bi-check-circle-fill me-2 text-success"></i>{% endif %}
+        {% if message.tags == 'warning' %}<i class="bi bi-exclamation-triangle-fill me-2 text-warning"></i>{% endif %}
+        {% if message.tags == 'error' %}<i class="bi bi-x-circle-fill me-2 text-danger"></i>{% endif %}
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- Billing Toggle -->
+<section class="billing-toggle-section">
+    <div class="container-fluid">
+        <div class="billing-toggle-wrapper">
+            <div class="billing-toggle" id="billingToggle">
+                <button class="billing-toggle-btn" data-period="1M">1 Month</button>
+                <button class="billing-toggle-btn" data-period="3M">3 Months</button>
+                <button class="billing-toggle-btn" data-period="6M">6 Months</button>
+                <button class="billing-toggle-btn active" data-period="12M">
+                    12 Months
+                    <span class="save-badge">Save 20%</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pricing Cards -->
+<section class="pricing-section">
+    <div class="container-fluid">
+        <div class="pricing-cards">
+            {% for plan in plans %}
+            <div class="pricing-card {% if forloop.counter == 2 %}pricing-card-harvest pricing-card-featured{% else %}pricing-card-{{ plan.slug }}{% endif %}">
+                {% if plan.badge_text %}
+                <div class="most-popular-badge">{{ plan.badge_text }}</div>
+                {% endif %}
+                <div class="pricing-card-header">
+                    {% if plan.badge_image %}
+                        <img src="{{ plan.badge_image.url }}" alt="{{ plan.name }} Logo" style="height: 48px; margin-bottom: 12px; object-fit: contain;">
+                    {% endif %}
+                    <h3 class="pricing-card-title">{{ plan.name }}</h3>
+                    <p class="pricing-card-subtitle">{{ plan.short_description|default:'' }}</p>
+                </div>
+                
+                <div class="pricing-card-price-wrapper">
+                    {% for default_pricing in plan.pricing_options.all %}
+                    <div class="pricing-card-price-group pricing-{{ default_pricing.billing_cycle }}" style="{% if default_pricing.billing_cycle != '12M' %}display: none;{% endif %}">
+                        <div class="pricing-card-price">
+                            <span class="price-currency">₹</span>
+                            <span class="price-amount">{{ default_pricing.price|default:0|floatformat:'0' }}</span>
+                            <span class="price-period">/{{ default_pricing.get_billing_cycle_display|default:'month' }}</span>
+                        </div>
+                        <p class="pricing-card-billing">₹{{ default_pricing.price|default:0|floatformat:'0' }}/{{ default_pricing.get_billing_cycle_display|default:'month' }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <ul class="pricing-card-features">
+                    {% for feature in plan.features.all %}
+                    {% if feature.is_available %}
+                    <li class="feature-included">
+                        <i class="fa fa-check"></i>
+                        <span>{{ feature.feature_name }}{% if feature.feature_value and feature.feature_value|lower != 'yes' and feature.feature_value|lower != 'true' %} ({{ feature.feature_value }}){% endif %}</span>
+                    </li>
+                    {% else %}
+                    <li class="feature-excluded">
+                        <i class="fa fa-times"></i>
+                        <span>{{ feature.feature_name }}</span>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+                <button class="pricing-card-btn checkout-btn {% if forloop.counter == 2 %}btn-primary{% else %}btn-outline{% endif %}" data-plan-id="{{ plan.id }}" style="width: 100%; display: block; text-align: center; border: none; cursor: pointer;">{{ plan.button_text }}</button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- View More Details -->
+<section class="view-more-section" style="padding: 40px 0; text-align: center;">
+    <div class="container-fluid">
+        <p style="margin-bottom: 20px; color: #64748b; font-size: 1.1rem;">Want to see detailed feature comparisons and billing options?</p>
+        <a href="{% url 'public:subscription_plans' %}" target="_blank" class="btn btn-primary" style="padding: 12px 32px; font-size: 1rem; border-radius: 8px; background: linear-gradient(135deg, #005427 0%, #003d1c 100%); border: none;">
+            <i class="bi bi-arrow-up-right-square me-2"></i>
+            View Detailed Comparison on Website
+        </a>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'public/css/subscription.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/agent/property_list.css' %}">
+<style>
+    /* Agent dashboard specific overrides */
+    .premium-container {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    }
+    
+    .annual-billing-banner .container-fluid,
+    .billing-toggle-section .container-fluid,
+    .pricing-section .container-fluid,
+    .compare-section .container-fluid,
+    .billing-comparison-section .container-fluid {
+        max-width: 1400px;
+        padding: 0 20px;
+    }
+    
+    .pricing-section {
+        padding: 40px 0;
+        background: #f8f9fa;
+    }
+    
+    .compare-section {
+        padding: 60px 0;
+        background: #ffffff;
+    }
+    
+    .billing-comparison-section {
+        padding: 60px 0;
+        background: #f8f9fa;
+    }
+    
+    .section-heading {
+        font-size: 32px;
+        margin-bottom: 30px;
+    }
+    
+    @media (max-width: 768px) {
+        .pricing-cards {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'public/js/subscription.js' %}"></script>
+<script>
+    // Override checkout URLs to use agent subscription endpoints
+    document.addEventListener('DOMContentLoaded', function() {
+        const checkoutBtns = document.querySelectorAll('.checkout-btn');
+        checkoutBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const planId = this.dataset.planId;
+                const activeBtn = document.querySelector('.billing-toggle-btn.active');
+                const billingCycle = activeBtn ? activeBtn.dataset.period : '12M';
+                
+                // Check if plan is free or paid
+                const priceElement = this.closest('.pricing-card').querySelector('.price-amount');
+                const price = parseInt(priceElement.textContent.replace(/,/g, ''));
+                
+                if (price === 0) {
+                    window.location.href = `/subscriptions/checkout-free/${planId}/`;
+                } else {
+                    window.location.href = `/subscriptions/checkout-paid/${planId}/?billing_cycle=${billingCycle}`;
+                }
+            });
+        });
+    });
+</script>
+</div>
+{% endblock %}

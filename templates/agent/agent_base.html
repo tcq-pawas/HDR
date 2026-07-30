@@ -794,6 +794,24 @@
 
                         <li class="nav-item">
 
+                            <a href="{% url 'agent:subscription_plans' %}"
+
+                                class="nav-link {% if request.resolver_match.url_name == 'subscription_plans' %}active{% endif %}"
+
+                                onclick="closeOffcanvasAndNavigate(event, this.href)">
+
+                                <i class="bi bi-star"></i>
+
+                                <span>Subscriptions</span>
+
+                            </a>
+
+                        </li>
+
+
+
+                        <li class="nav-item">
+
                             <a href="{% url 'agent:customer_list' %}"
 
                                 class="nav-link {% if request.resolver_match.url_name in 'customer_list customer_detail' %}active{% endif %}"
@@ -1025,6 +1043,22 @@
 
                         <li class="nav-item">
 
+                            <a href="{% url 'agent:subscription_plans' %}"
+
+                                class="nav-link {% if request.resolver_match.url_name == 'subscription_plans' %}active{% endif %}">
+
+                                <i class="bi bi-star"></i>
+
+                                <span>Subscriptions</span>
+
+                            </a>
+
+                        </li>
+
+
+
+                        <li class="nav-item">
+
                             <a href="{% url 'agent:customer_list' %}"
 
                                 class="nav-link {% if request.resolver_match.url_name in 'customer_list customer_detail' %}active{% endif %}">
@@ -1104,15 +1138,11 @@
             <div class="main-content">
 
                 {% block breadcrumb %}
-
                 <div class="breadcrumb">
-
-                    <a href="{% url 'agent:dashboard' %}"> >Dashboard </a>
-
+                    <a href="{% url 'agent:dashboard' %}">Dashboard</a>
+                    <i class="bi bi-chevron-right" style="font-size: 0.7rem; color: #94a3b8;"></i>
                     {% block breadcrumb_items %}{% endblock %}
-
                 </div>
-
                 {% endblock %}
 
 

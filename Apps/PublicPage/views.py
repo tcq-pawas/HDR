@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.http import HttpResponse
 from .models import Inquiry, Property, PropertyInquiry, PropertyImage, WebsiteEnquiry, ContactInquiry
 from Apps.Agent.models import AgentProfile, Lead
 import random
@@ -469,5 +470,36 @@ def agent_profile(request, agent_id=None):
         'response_rate': response_rate,
         'reviews': sample_reviews,
     }
-    
+
     return render(request, 'public/agent_profile.html', context)
+
+
+def robots_txt(request):
+    """
+    Dynamic robots.txt view that generates robots.txt with dynamic sitemap URL.
+    Follows SEO best practices by excluding private areas.
+    """
+    # Build the sitemap URL dynamically based on the current request
+    scheme = 'https' if request.is_secure() else 'http'
+    host = request.get_host()
+    sitemap_url = f"{scheme}://{host}/sitemap.xml"
+
+    robots_content = f"""User-agent: *
+Allow: /
+
+Disallow: /admin/
+Disallow: /accounts/
+Disallow: /dashboard/
+Disallow: /api/
+Disallow: /auth/
+Disallow: /customer/
+Disallow: /investor/
+Disallow: /agent/
+Disallow: /admin-dashboard/
+Disallow: /subscriptions/
+Disallow: /django-admin/
+
+Sitemap: {sitemap_url}
+"""
+
+    return HttpResponse(robots_content, content_type='text/plain')

@@ -3,6 +3,10 @@
 
 {% block title %}{{ title }} | HeyDay Realty{% endblock %}
 
+{% block breadcrumb_items %}
+<span>{{ title }}</span>
+{% endblock %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/agent/message_template_form.css' %}">
 {% endblock %}

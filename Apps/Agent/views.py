@@ -1498,3 +1498,19 @@ def delete_account(request):
     }
     
     return render(request, 'agent/delete_account.html', context)
+
+
+@login_required
+def subscription_plans(request):
+    """Subscription plans page for agents within the dashboard."""
+    user_role = get_user_role(request.user)
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
+    
+    from Apps.Subscriptions.models import SubscriptionPlan
+    
+    plans = SubscriptionPlan.objects.prefetch_related('features', 'pricing_options').filter(is_active=True).order_by('display_order')
+    
+    return render(request, 'agent/subscription.html', {
+        'plans': plans,
+    })

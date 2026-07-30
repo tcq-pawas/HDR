@@ -114,7 +114,7 @@
             <div class="login-section">
                 <div class="welcome-header">
                     <h2 class="welcome-title">Partner Application</h2>
-                    <p class="welcome-subtitle">Submit your details for administrative review</p>
+                    <p class="welcome-subtitle">Create your account to get started</p>
                 </div>
 
                 {% if messages %}
@@ -142,10 +142,17 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="{{ form.email.id_for_label }}" class="form-label">Email</label>
-                        <div class="input-wrapper">{{ form.email }}</div>
-                        {% if form.email.errors %}<div class="error-message">{{ form.email.errors.0 }}</div>{% endif %}
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label for="{{ form.email.id_for_label }}" class="form-label">Email</label>
+                            <div class="input-wrapper">{{ form.email }}</div>
+                            {% if form.email.errors %}<div class="error-message">{{ form.email.errors.0 }}</div>{% endif %}
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="{{ form.username.id_for_label }}" class="form-label">Username <small class="text-muted">(Optional)</small></label>
+                            <div class="input-wrapper">{{ form.username }}</div>
+                            {% if form.username.errors %}<div class="error-message">{{ form.username.errors.0 }}</div>{% endif %}
+                        </div>
                     </div>
 
                     <div class="row">
@@ -161,8 +168,21 @@
                         </div>
                     </div>
 
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label for="{{ form.password1.id_for_label }}" class="form-label">Password</label>
+                            <div class="input-wrapper">{{ form.password1 }}</div>
+                            {% if form.password1.errors %}<div class="error-message">{{ form.password1.errors.0 }}</div>{% endif %}
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="{{ form.password2.id_for_label }}" class="form-label">Confirm Password</label>
+                            <div class="input-wrapper">{{ form.password2 }}</div>
+                            {% if form.password2.errors %}<div class="error-message">{{ form.password2.errors.0 }}</div>{% endif %}
+                        </div>
+                    </div>
+
                     <button type="submit" class="login-btn">
-                        Submit Application
+                        Register & Continue
                     </button>
 
                     <div class="form-actions">

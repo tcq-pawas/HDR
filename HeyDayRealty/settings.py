@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django.contrib.sitemaps',
     
     # Third-party apps
     'rest_framework',
@@ -114,7 +115,7 @@ else:
             'NAME': os.getenv('DB_NAME',  default='heyday_db'),
             'USER': os.getenv('DB_USER',  default='postgres'),
             'PASSWORD': os.getenv('DB_PASSWORD',  default='postgres'),
-            'HOST': os.getenv('DB_HOST',  default='localhost'),
+            'HOST': os.getenv('DB_HOST',  default='postgres'),
             'PORT': os.getenv('DB_PORT', default='5432'),
         }
     }
