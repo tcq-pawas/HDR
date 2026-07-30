@@ -1,0 +1,237 @@
+{% extends "administration/admin_base.html" %}
+{% load static %}
+
+{% block page_title %}Plan Features (Master){% endblock %}
+{% block page_subtitle %}Create and manage the master list of features used across all subscription plans.{% endblock %}
+
+{% block content %}
+
+<style>
+    .feature-table-card{
+        background: #fff;
+        border: 1px solid #E2E8F0;
+        border-radius: 16px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        overflow: hidden;
+    }
+    .feature-table-header{
+        padding: 20px 24px;
+        border-bottom: 1px solid #E2E8F0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    .feature-table-header h6{
+        margin: 0;
+        font-weight: 700;
+    }
+
+    .feature-columns{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        padding: 20px 24px;
+    }
+    .feature-col-header{
+        display: grid;
+        grid-template-columns: 40px 1fr 90px;
+        padding: 10px 12px;
+        background: #F8FAFC;
+        font-size: 11px;
+        text-transform: uppercase;
+        color: #64748B;
+        font-weight: 600;
+        border-radius: 8px 8px 0 0;
+        border: 1px solid #E2E8F0;
+        border-bottom: none;
+    }
+    .feature-col-body{
+        border: 1px solid #E2E8F0;
+        border-radius: 0 0 8px 8px;
+        overflow: hidden;
+    }
+
+    .feature-row-group{
+        border-bottom: 1px solid #F1F5F9;
+    }
+    .feature-row-group:last-child{
+        border-bottom: none;
+    }
+
+    .feature-row-compact{
+        display: grid;
+        grid-template-columns: 35px 1fr 70px;
+        align-items: center;
+        padding: 10px 12px;
+        min-height: 52px;
+        gap: 8px;
+    }
+
+    .feature-row-compact .fw-semibold{
+        font-size: 15px;
+        font-weight: 200;
+        color: #2c3e50;
+    }
+    .feature-actions{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+    .feature-actions form{
+        margin: 0;
+        display: inline-flex;
+    }
+    .feature-actions .btn{
+        width: 32px;
+        height: 32px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .edit-row-form{
+        display: none;
+        background: #F8FAFC;
+        padding: 10px 12px;
+    }
+    .edit-row-form.show{
+        display: block;
+    }
+
+    @media (max-width: 768px){
+        .feature-columns{ grid-template-columns: 1fr; }
+    }
+</style>
+
+<!-- Add New Feature -->
+<div class="feature-table-card mb-4">
+    <div class="feature-table-header">
+        <h6>Add New Feature</h6>
+    </div>
+    <div class="p-4">
+        <form method="post" class="row g-3 align-items-end">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="add">
+            <div class="col-md-5">
+                <label class="form-label">Feature Name</label>
+                <input type="text" name="name" class="form-control" placeholder="e.g. Active Listings" required>
+            </div>
+            
+            <div class="col-md-3 text-end">
+                <button type="submit" class="btn btn-success px-4">
+                    <i class="fas fa-plus"></i> Add Feature
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Master Feature List -->
+<div class="feature-table-card">
+    <div class="feature-table-header">
+        <h6>All Features</h6>
+        <span class="badge bg-light text-dark border">{{ features.count }} total</span>
+    </div>
+
+    <div class="feature-columns" id="featureColumns">
+        <div>
+            <div class="feature-col-header">
+                <div>#</div>
+                <div>Feature Name</div>
+                <div style="text-align:center;">Actions</div>
+            </div>
+            <div class="feature-col-body" id="featureColLeft"></div>
+        </div>
+        <div>
+            <div class="feature-col-header">
+                <div>#</div>
+                <div>Feature Name</div>
+                <div style="text-align:center;">Actions</div>
+            </div>
+            <div class="feature-col-body" id="featureColRight"></div>
+        </div>
+    </div>
+
+    {% if not features %}
+    <div class="text-center text-muted py-4">
+        No features yet. Add your first feature above.
+    </div>
+    {% endif %}
+
+    <!-- Hidden source rows — JS splits these into the two columns above -->
+    <div id="featureSourceList" style="display:none;">
+        {% for feature in features %}
+        <div class="feature-row-group" data-feature-row>
+            <div class="feature-row-compact" id="view-row-{{ feature.id }}">
+                <div>{{ forloop.counter }}</div>
+                <div class="fw-semibold">{{ feature.name }}</div>
+                <div class="feature-actions">
+                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="toggleEdit({{ feature.id }})">
+                        <i class="fas fa-pencil-alt"></i>
+                    </button>
+                    <form method="post" onsubmit="return confirm('Delete this feature? It will be removed from all plans too.');">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="delete">
+                        <input type="hidden" name="feature_id" value="{{ feature.id }}">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="edit-row-form" id="edit-row-{{ feature.id }}">
+                <form method="post" class="d-flex gap-2 align-items-center flex-wrap">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="edit">
+                    <input type="hidden" name="feature_id" value="{{ feature.id }}">
+                    <input type="text" name="name" class="form-control form-control-sm" style="max-width:220px;" value="{{ feature.name }}" required>
+                    <div class="form-check mb-0">
+                        <!-- <input type="checkbox" name="is_active" class="form-check-input" id="editActive{{ feature.id }}" {% if feature.is_active %}checked{% endif %}>
+                        <label class="form-check-label small" for="editActive{{ feature.id }}">Active</label> -->
+                    </div>
+                    <button type="submit" class="btn btn-sm btn-success">Save</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="toggleEdit({{ feature.id }})">Cancel</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    function toggleEdit(featureId) {
+        var editRow = document.getElementById('edit-row-' + featureId);
+        if (editRow) {
+            editRow.classList.toggle('show');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var source = document.getElementById('featureSourceList');
+        var left = document.getElementById('featureColLeft');
+        var right = document.getElementById('featureColRight');
+
+        if (!source || !left || !right) {
+            return;
+        }
+
+        var groups = source.querySelectorAll('.feature-row-group');
+        var total = groups.length;
+        var half = Math.ceil(total / 2);
+
+        for (var i = 0; i < groups.length; i++) {
+            if (i < half) {
+                left.appendChild(groups[i]);
+            } else {
+                right.appendChild(groups[i]);
+            }
+        }
+    });
+</script>
+
+{% endblock %}

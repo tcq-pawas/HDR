@@ -78,30 +78,64 @@ class PlanPricing(models.Model):
 
 class PlanFeature(models.Model):
     """
-    PLAN FEATURES (Merged Master + Mapping)
-    List of features shown against each plan
+    Master Feature Table
     """
-    plan = models.ForeignKey(
-        SubscriptionPlan,
-        on_delete=models.CASCADE,
-        related_name="features",
-        help_text="Plan"
+    name = models.CharField(
+        max_length=150,
+        unique=True,
+        help_text="Feature Name (e.g. Active Listings)"
     )
-    feature_name = models.CharField(max_length=150, help_text="Feature Name e.g. Active Listings")
-    feature_value = models.CharField(max_length=100, blank=True, null=True,
-                                      help_text="Displayed Value e.g. 50 / Unlimited / Yes")
-    is_available = models.BooleanField(default=True, help_text="Show tick or cross")
-    display_order = models.PositiveIntegerField(default=1, help_text="Ordering of feature row")
+    is_active = models.BooleanField(default=True)
+    display_order = models.PositiveIntegerField(default=1)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = "Plan Feature"
         verbose_name_plural = "Plan Features"
+        ordering = ["display_order", "name"]
+
+    def __str__(self):
+        return self.name
+
+
+class SubscriptionPlanFeature(models.Model):
+    """
+    Plan ↔ Feature Mapping
+    """
+    plan = models.ForeignKey(
+        SubscriptionPlan,
+        on_delete=models.CASCADE,
+        related_name="features"
+    )
+    feature = models.ForeignKey(
+        PlanFeature,
+        on_delete=models.CASCADE,
+        related_name="plans"
+    )
+    feature_value = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        help_text="Example: 50, Unlimited, Yes"
+    )
+    is_available = models.BooleanField(
+        default=True,
+        help_text="Show tick or cross"
+    )
+    display_order = models.PositiveIntegerField(default=1)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Subscription Plan Feature"
+        verbose_name_plural = "Subscription Plan Features"
+        unique_together = ("plan", "feature")
         ordering = ["plan", "display_order"]
 
     def __str__(self):
-        return f"{self.plan.name} - {self.feature_name}"
+        return f"{self.plan.name} - {self.feature.name}"
+
 
 
 class UserSubscription(models.Model):

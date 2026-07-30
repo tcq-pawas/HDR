@@ -5,6 +5,7 @@ app_name = "subscriptions"
 
 urlpatterns = [
     path("", views.manage_subscriptions, name="manage-subscriptions"),
+    path("features/", views.manage_master_features, name="manage-master-features"),
     path("add/", views.add_subscription_plan, name="add-plan"),
     path("<int:pk>/edit/", views.edit_subscription_plan, name="edit-plan"),
     path("<int:pk>/delete/", views.delete_subscription_plan, name="delete-plan"),
