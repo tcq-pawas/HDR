@@ -102,7 +102,7 @@
                 
                 <div class="pricing-card-price-wrapper">
                     {% for default_pricing in plan.pricing_options.all %}
-                    <div class="pricing-card-price-group pricing-{{ default_pricing.billing_cycle }}" style="{% if default_pricing.billing_cycle != '12M' %}display: none;{% endif %}">
+                    <div class="pricing-card-price-group pricing-{{ default_pricing.billing_cycle }}" style="{% if default_pricing.billing_cycle != '12M' %}display: none; {% endif %}; ">
                         <div class="pricing-card-price">
                             <span class="price-currency">₹</span>
                             <span class="price-amount">{{ default_pricing.price|default:0|floatformat:'0' }}</span>
@@ -118,12 +118,12 @@
                     {% if feature.is_available %}
                     <li class="feature-included">
                         <i class="fa fa-check"></i>
-                        <span>{{ feature.feature_name }}{% if feature.feature_value and feature.feature_value|lower != 'yes' and feature.feature_value|lower != 'true' %} ({{ feature.feature_value }}){% endif %}</span>
+                        <span>{{ feature.feature.name }}{% if feature.feature_value and feature.feature_value|lower != 'yes' and feature.feature_value|lower != 'true' %} ({{ feature.feature_value }}){% endif %}</span>
                     </li>
                     {% else %}
                     <li class="feature-excluded">
                         <i class="fa fa-times"></i>
-                        <span>{{ feature.feature_name }}</span>
+                        <span>{{ feature.feature.name }}</span>
                     </li>
                     {% endif %}
                     {% endfor %}
