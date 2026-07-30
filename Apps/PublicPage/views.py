@@ -362,8 +362,8 @@ def subscription_plans(request):
     all_feature_names = []
     for plan in plans:
         for f in plan.features.all():
-            if f.feature_name not in all_feature_names:
-                all_feature_names.append(f.feature_name)
+            if f.feature.name not in all_feature_names:
+                all_feature_names.append(f.feature.name)
                 
     categorized_matrix = {cat: [] for cat in CATEGORIES.keys()}
     categorized_matrix['Other Features'] = []
@@ -371,7 +371,7 @@ def subscription_plans(request):
     for f_name in all_feature_names:
         row = {'name': f_name, 'values': []}
         for plan in plans:
-            pf = next((f for f in plan.features.all() if f.feature_name == f_name), None)
+            pf = next((f for f in plan.features.all() if f.feature.name == f_name), None)
             if pf:
                 row['values'].append({'is_available': pf.is_available, 'value': pf.feature_value})
             else:

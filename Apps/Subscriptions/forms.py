@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import inlineformset_factory
-from .models import SubscriptionPlan, PlanPricing, PlanFeature
+from .models import SubscriptionPlan, PlanPricing, PlanFeature, SubscriptionPlanFeature
 
 
 class SubscriptionPlanForm(forms.ModelForm):
@@ -49,19 +49,32 @@ class PlanPricingForm(forms.ModelForm):
         }
 
 
-class PlanFeatureForm(forms.ModelForm):
+class MasterPlanFeatureForm(forms.ModelForm):
+    """Form for adding/editing Master Features in the Master Table"""
     class Meta:
         model = PlanFeature
-        fields = ["feature_name", "feature_value", "is_available", "display_order"]
+        fields = ["name", "is_active"]
         widgets = {
-            "feature_name": forms.TextInput(attrs={"class": "form-control", "placeholder": "e.g. Active Listings"}),
-            "feature_value": forms.TextInput(attrs={"class": "form-control", "placeholder": "e.g. 50 / Unlimited"}),
-            "is_available": forms.CheckboxInput(attrs={"class": "form-check-input"}),
-            "display_order": forms.NumberInput(attrs={"class": "form-control"}),
+            "name": forms.TextInput(attrs={"class": "form-control", "placeholder": "e.g. Active Listings"}),
+            "is_active": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+            # "display_order": forms.NumberInput(attrs={"class": "form-control"}),
         }
 
 
-# Formsets - let one page manage a plan's pricing rows and feature rows together
+class SubscriptionPlanFeatureForm(forms.ModelForm):
+    """Form for mapping plan to feature with value and availability"""
+    class Meta:
+        model = SubscriptionPlanFeature
+        fields = ["feature", "feature_value", "is_available"]
+        widgets = {
+            "feature": forms.Select(attrs={"class": "form-control"}),
+            "feature_value": forms.TextInput(attrs={"class": "form-control", "placeholder": "e.g. 50 / Unlimited / Yes"}),
+            "is_available": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+            # "display_order": forms.NumberInput(attrs={"class": "form-control"}),
+        }
+
+
+# Formsets
 PlanPricingFormSet = inlineformset_factory(
     SubscriptionPlan, PlanPricing,
     form=PlanPricingForm,
@@ -69,9 +82,9 @@ PlanPricingFormSet = inlineformset_factory(
     can_delete=True,
 )
 
-PlanFeatureFormSet = inlineformset_factory(
-    SubscriptionPlan, PlanFeature,
-    form=PlanFeatureForm,
-    extra=0, 
-    can_delete=True,
+SubscriptionPlanFeatureFormSet = inlineformset_factory(
+    SubscriptionPlan, SubscriptionPlanFeature,
+    form=SubscriptionPlanFeatureForm,
+    extra=0,
+    can_delete=False,
 )
