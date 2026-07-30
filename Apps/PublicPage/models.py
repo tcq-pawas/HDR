@@ -427,6 +427,11 @@ class Property(models.Model):
     def __str__(self):
         return self.title
 
+    def get_absolute_url(self):
+        """Return the absolute URL for this property"""
+        from django.urls import reverse
+        return reverse('public:property_detail', kwargs={'slug': self.slug})
+
     def can_view_public(self):
         """Check if property can be viewed by unauthenticated users"""
         return self.is_active and self.show_to_public
