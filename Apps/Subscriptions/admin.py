@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import SubscriptionPlan, PlanPricing, PlanFeature, UserSubscription, PaymentTransaction, LedgerEntry
+from .models import SubscriptionPlan, PlanPricing, PlanFeature, SubscriptionPlanFeature, UserSubscription, PaymentTransaction, LedgerEntry
 
 # Register your models here.
 
@@ -10,11 +10,10 @@ class PlanPricingInline(admin.TabularInline):
               "is_default", "stripe_price_id")
 
 
-class PlanFeatureInline(admin.TabularInline):
-    model = PlanFeature
-    extra = 1
-    fields = ("feature_name", "feature_value", "is_available", "display_order")
-    readonly_fields = ()
+class SubscriptionPlanFeatureInline(admin.TabularInline):
+    model = SubscriptionPlanFeature
+    extra = 0
+    fields = ("feature", "feature_value", "is_available", "display_order")
     ordering = ("display_order",)
 
 
@@ -26,7 +25,7 @@ class SubscriptionPlanAdmin(admin.ModelAdmin):
     search_fields = ("name", "slug", "short_description")
     prepopulated_fields = {"slug": ("name",)}
     ordering = ("display_order",)
-    inlines = [PlanPricingInline, PlanFeatureInline]
+    inlines = [PlanPricingInline, SubscriptionPlanFeatureInline]
 
     fieldsets = (
         ("Basic Info", {
@@ -53,12 +52,22 @@ class PlanPricingAdmin(admin.ModelAdmin):
 
 @admin.register(PlanFeature)
 class PlanFeatureAdmin(admin.ModelAdmin):
-    list_display = ("plan", "feature_name", "feature_value", "is_available", "display_order")
-    list_filter = ("is_available", "plan")
-    search_fields = ("feature_name", "plan__name")
-    autocomplete_fields = ("plan",)
+    list_display = ("name", "is_active", "display_order", "created_at")
+    list_filter = ("is_active",)
+    search_fields = ("name",)
+    list_editable = ("is_active", "display_order")
+    ordering = ("display_order", "name")
+
+
+@admin.register(SubscriptionPlanFeature)
+class SubscriptionPlanFeatureAdmin(admin.ModelAdmin):
+    list_display = ("plan", "feature", "feature_value", "is_available", "display_order")
+    list_filter = ("is_available", "plan", "feature")
+    search_fields = ("feature__name", "plan__name")
+    autocomplete_fields = ("plan", "feature")
     list_editable = ("feature_value", "is_available", "display_order")
     ordering = ("plan", "display_order")
+
 
 @admin.register(UserSubscription)
 class UserSubscriptionAdmin(admin.ModelAdmin):

@@ -29,8 +29,6 @@
         box-shadow: none !important;
         padding: 0 !important;
     }
-
-    /* Default (unchecked) state — shows a red cross */
     input.avail-checkbox::after{
         content: "\f00d";
         font-family: "Font Awesome 6 Free";
@@ -38,10 +36,9 @@
         color: #EF4444;
         font-size: 12px;
     }
-    
     input.avail-checkbox:checked{
-        border-color: #0a8b60 !important;
-        background-color: #0a8b60 !important;
+        border-color: #136832 !important;
+        background-color: #136832 !important;
     }
     input.avail-checkbox:checked::after{
         content: "\f00c";
@@ -51,76 +48,58 @@
         font-size: 13px;
     }
 
-    /* Two-column features grid */
-    .features-grid{
-        column-count: 2;
-        column-gap: 24px;
-    }
-    .feature-form-row{
-        display: grid;
-        grid-template-columns: 1fr 1fr 90px 70px;
-        gap: 12px;
-        align-items: center;
-        break-inside: avoid;
-        margin-bottom: 10px;
-        padding: 10px 12px;
-        background: #fff;
-        border: 1px solid #E2E8F0;
-        border-radius: 10px;
-    }
-    .feature-form-row input[type="text"],
-    .feature-form-row input[type="number"]{
-        width: 100%;
-    }
-    @media (max-width: 768px){
-        .features-grid{ column-count: 1; column-gap: 24px;
-        column-fill: auto; }
-        .feature-form-row{ grid-template-columns: 1fr; }
-        .features-grid-header-wrapper{ grid-template-columns: 1fr !important; }
-        .features-grid-header:nth-child(2){ display: none; }
-    }
-
-    .feature-form-row input[name$="-display_order"]{
-        appearance: none;
-        -webkit-appearance: none;
-        -moz-appearance: textfield;
-        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-        background-repeat: no-repeat;
-        background-position: right 8px center;
-        background-size: 14px;
-        padding-right: 28px;
-    }
-    .feature-form-row input[name$="-display_order"]::-webkit-inner-spin-button,
-    .feature-form-row input[name$="-display_order"]::-webkit-outer-spin-button{
-        -webkit-appearance: none;
-        margin: 0;
-    }
-
-    .features-grid-header-wrapper {
+    .features-columns{
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 24px;
     }
-
     .features-grid-header{
         display: grid;
-        grid-template-columns: 1fr 1fr 90px 70px;
-        gap: 12px;
-        padding: 0 12px;
-        font-size: 12px;
+        grid-template-columns: 1fr 1fr 60px 50px;
+        gap: 10px;
+        padding: 0 10px 8px 10px;
+        font-size: 11px;
         font-weight: 600;
         color: #64748B;
         text-transform: uppercase;
     }
-    
-
+    .features-grid{
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    .feature-form-row{
+        display: grid;
+        grid-template-columns: 1fr 1fr 60px 50px;
+        gap: 10px;
+        align-items: center;
+        padding: 8px 10px;
+        background: #fff;
+        border: 1px solid #E2E8F0;
+        border-radius: 10px;
+    }
+    .feature-form-row input[type="text"]{
+        width: 100%;
+    }
+    @media (max-width: 992px){
+        .features-columns{ grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px){
+        .feature-form-row{ grid-template-columns: 1fr; }
+        .features-grid-header{ display: none; }
+    }
+    .feature-name{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 </style>
 
-{% if messages %}
+<!-- {% if messages %}
 {% for message in messages %}
 <div class="alert alert-{{ message.tags }}">{{ message }}</div>
 {% endfor %}
-{% endif %}
+{% endif %} -->
 
 {% if form.errors or pricing_formset.errors or feature_formset.errors or pricing_formset.non_form_errors or feature_formset.non_form_errors %}
 <div class="alert alert-danger">
@@ -268,56 +247,61 @@
         </div>
     </div>
 
-    <!-- FEATURES -->
+    <!-- FEATURES (fixed rows = master feature list, no add/remove) -->
     <div class="card shadow-sm border-0 rounded-4 mb-4">
         <div class="card-header bg-white border-0 pt-3">
             <h6 class="fw-bold mb-0">Plan Features</h6>
+            <p class="text-muted small mb-0 mt-1">Every master feature is listed automatically. Just set the value and mark availability.</p>
         </div>
-       <div class="card-body">
+        <div class="card-body">
             {{ feature_formset.management_form }}
-            <div class="features-grid-header-wrapper mb-2">
-                <div class="features-grid-header">
-                    <div>Feature Name</div>
-                    <div>Value</div>
-                    <div class="text-center">Order</div>
-                    <div class="text-center">Remove</div>
+
+            <div class="features-columns" id="featuresColumnsWrap">
+                <div>
+                    <div class="features-grid-header">
+                        <div>Feature</div>
+                        <div>Value</div>
+                        <!-- <div>Avail</div> -->
+                        <div>Remove</div>
+                    </div>
+                    <div class="features-grid" id="featuresColLeft"></div>
                 </div>
-                <div class="features-grid-header">
-                    <div>Feature Name</div>
-                    <div>Value</div>
-                    <div class="text-center">Order</div>
-                    <div class="text-center">Remove</div>
+                <div>
+                    <div class="features-grid-header">
+                        <div>Feature</div>
+                        <div>Value</div>
+                        <!-- <div>Avail</div> -->
+                        <div>Remove</div>
+                    </div>
+                    <div class="features-grid" id="featuresColRight"></div>
                 </div>
             </div>
-            
-            <div class="features-grid" id="featuresTableBody">
+
+            <!-- Hidden source — JS splits into the two columns above -->
+            <div id="featuresSource" style="display:none;">
                 {% for fform in feature_formset %}
-                <div class="feature-form-row">
+                <div class="feature-form-row" data-feature-row>
                     {% for hidden in fform.hidden_fields %}{{ hidden }}{% endfor %}
-                    <div class="d-flex align-items-center gap-2">
+                    {{ fform.feature.as_hidden }}
+                    <div class=" feature-name"> 
                         {{ fform.is_available }}
-                        {{ fform.feature_name }}
+                        <span > {{ fform.instance.feature.name }} </span>
                     </div>
-                    <div>{{ fform.feature_value }}</div>
-                    <div>{{ fform.display_order }}</div>
-                    <div class="text-center">
-                        {% if fform.instance.pk %}
-                            <label class="btn btn-sm btn-outline-danger mb-0" style="border-radius:14px;">
-                                <i class="fas fa-trash-alt"></i>
-                                <span style="display:none;">{{ fform.DELETE }}</span>
-                            </label>
-                        {% else %}
-                        <button type="button" class="btn btn-sm btn-outline-danger remove-row-btn" style="border-radius: 14px; font-weight:500;">
+                    <div>
+                        {{ fform.feature_value }}</div>
+                    <div class="d-flex align-items-center justify-content-center">
+                        <button type="button" class="btn btn-sm btn-outline-danger" title="Mark unavailable"
+                            onclick="markUnavailable(this)">
                             <i class="fas fa-trash-alt"></i>
                         </button>
-                        {% endif %}
                     </div>
+                </div>
+                {% empty %}
+                <div class="text-muted text-center py-4">
+                    No master features found. <a href="{% url 'subscriptions:manage-master-features' %}">Add features here</a> first.
                 </div>
                 {% endfor %}
             </div>
-            <button type="button" id="addFeatureBtn" class="btn btn-sm btn-outline-success mt-2">
-                <i class="fas fa-plus"></i> Add Feature
-            </button>
         </div>
     </div>
 
@@ -329,21 +313,7 @@
     </div>
 </form>
 
-
-<!-- Hidden template rows used to clone new empty forms -->
-<div style="display:none;">
-    <div id="featureEmptyFormRow" class="feature-form-row">
-        {% for hidden in feature_formset.empty_form.hidden_fields %}{{ hidden }}{% endfor %}
-        <div class="d-flex align-items-center gap-2">
-            {{ feature_formset.empty_form.is_available }}
-            {{ feature_formset.empty_form.feature_name }}
-        </div>
-        <div>{{ feature_formset.empty_form.feature_value }}</div>
-        <div>{{ feature_formset.empty_form.display_order }}</div>
-        <div class="text-center"><button type="button" class="btn btn-sm btn-outline-danger remove-row-btn"><i class="fas fa-trash-alt"></i></button></div>
-    </div>
-</div>
-
+<!-- Hidden template row used to clone new empty pricing forms -->
 <table style="display:none;">
     <tbody>
         <tr id="pricingEmptyFormRow">
@@ -372,101 +342,60 @@ document.addEventListener('DOMContentLoaded', function () {
         cb.classList.add('avail-checkbox');
     });
 
-    function setupDynamicFormset(config) {
-        const { addBtnId, tableBodyId, emptyRowId, totalFormsInputName, rowSelector, orderFieldSuffix } = config;
+    // Pricing formset only — features have no add/remove now
+    const addBtn = document.getElementById('addPricingBtn');
+    const tableBody = document.getElementById('pricingTableBody');
+    const emptyRow = document.getElementById('pricingEmptyFormRow');
+    const totalFormsInput = document.querySelector('input[name="pricing_options-TOTAL_FORMS"]');
 
-        const addBtn = document.getElementById(addBtnId);
-        const tableBody = document.getElementById(tableBodyId);
-        const emptyRow = document.getElementById(emptyRowId);
-        const totalFormsInput = document.querySelector(`input[name="${totalFormsInputName}"]`);
-
-        if (!tableBody || !totalFormsInput) return;
-
-       function renumberRows() {
-            if (!orderFieldSuffix) return;
-            const rows = tableBody.querySelectorAll(rowSelector);
-            let counter = 0;
-            rows.forEach((row) => {
-                const orderInput = row.querySelector(`input[name$="${orderFieldSuffix}"]`);
-                if (orderInput) {
-                    counter += 1;
-                    orderInput.value = counter;
-                }
-            });
-        }
-
-        if (addBtn && emptyRow) {
-            addBtn.addEventListener('click', function () {
-                const formIndex = parseInt(totalFormsInput.value, 10);
-
-                const newRow = emptyRow.cloneNode(true);
-                newRow.removeAttribute('id');
-                newRow.classList.add(rowSelector.replace('.', ''));
-
-                newRow.innerHTML = newRow.innerHTML.replace(/__prefix__/g, formIndex);
-
-                tableBody.appendChild(newRow);
-                totalFormsInput.value = formIndex + 1;
-
-                newRow.querySelectorAll('input[name$="-is_available"]').forEach(cb => {
-                    cb.classList.add('avail-checkbox');
-                });
-
-                renumberRows();
-            });
-        }
+    if (addBtn && tableBody && emptyRow && totalFormsInput) {
+        addBtn.addEventListener('click', function () {
+            const formIndex = parseInt(totalFormsInput.value, 10);
+            const newRow = emptyRow.cloneNode(true);
+            newRow.removeAttribute('id');
+            newRow.classList.add('pricing-form-row');
+            newRow.innerHTML = newRow.innerHTML.replace(/__prefix__/g, formIndex);
+            tableBody.appendChild(newRow);
+            totalFormsInput.value = formIndex + 1;
+        });
 
         tableBody.addEventListener('click', function (e) {
             const removeBtn = e.target.closest('.remove-row-btn');
             if (!removeBtn) return;
-
-            const row = removeBtn.closest(rowSelector) || removeBtn.closest('tr');
-            if (!row) return;
-
-            row.remove();
-            renumberRows();
+            const row = removeBtn.closest('tr');
+            if (row) row.remove();
         });
 
         tableBody.addEventListener('change', function (e) {
             if (e.target.matches('input[type="checkbox"][name$="-DELETE"]')) {
-                const row = e.target.closest(rowSelector) || e.target.closest('tr');
-                if (row && e.target.checked) {
-                    row.style.display = 'none';
-                }
+                const row = e.target.closest('tr');
+                if (row && e.target.checked) row.style.display = 'none';
             }
         });
-
-        renumberRows();
     }
 
-    setupDynamicFormset({
-        addBtnId: 'addFeatureBtn',
-        tableBodyId: 'featuresTableBody',
-        emptyRowId: 'featureEmptyFormRow',
-        totalFormsInputName: 'features-TOTAL_FORMS',
-        rowSelector: '.feature-form-row',
-        orderFieldSuffix: '-display_order',
-    });
-
-    setupDynamicFormset({
-        addBtnId: 'addPricingBtn',
-        tableBodyId: 'pricingTableBody',
-        emptyRowId: 'pricingEmptyFormRow',
-        totalFormsInputName: 'pricing_options-TOTAL_FORMS',
-        rowSelector: '.pricing-form-row',
-        orderFieldSuffix: null,
-    });
-
-    const featuresBody = document.getElementById('featuresTableBody');
-    const pricingBody = document.getElementById('pricingTableBody');
-    const addFeatureBtn = document.getElementById('addFeatureBtn');
-    const addPricingBtn = document.getElementById('addPricingBtn');
-
-    if (featuresBody && featuresBody.children.length === 0 && addFeatureBtn) {
-        addFeatureBtn.click();
+    if (tableBody && tableBody.children.length === 0 && addBtn) {
+        addBtn.click();
     }
-    if (pricingBody && pricingBody.children.length === 0 && addPricingBtn) {
-        addPricingBtn.click();
+});
+
+function markUnavailable(btn) {
+        const row = btn.closest('.feature-form-row');
+        if (!row) return;
+        const checkbox = row.querySelector('input[type="checkbox"][name$="-is_available"]');
+        if (checkbox) {
+            checkbox.checked = false;
+        }
+    }
+
+document.addEventListener('DOMContentLoaded', function () {
+    const source = document.getElementById('featuresSource');
+    const left = document.getElementById('featuresColLeft');
+    const right = document.getElementById('featuresColRight');
+    if (source && left && right) {
+        const rows = Array.from(source.querySelectorAll('[data-feature-row]'));
+        const half = Math.ceil(rows.length / 2);
+        rows.forEach((row, i) => (i < half ? left : right).appendChild(row));
     }
 });
 </script>

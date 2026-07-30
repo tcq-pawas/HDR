@@ -3,24 +3,84 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.shortcuts import render, redirect, get_object_or_404
 
-from .models import SubscriptionPlan, PlanPricing, UserSubscription
-from .forms import SubscriptionPlanForm, PlanPricingFormSet, PlanFeatureFormSet
+from .models import SubscriptionPlan, PlanPricing, PlanFeature, SubscriptionPlanFeature, UserSubscription
+from .forms import (
+    SubscriptionPlanForm,
+    PlanPricingFormSet,
+    MasterPlanFeatureForm,
+    SubscriptionPlanFeatureFormSet,
+)
 from django.utils import timezone
 from datetime import timedelta
 from Apps.Administration.auth_utils import get_user_role
-from django.utils import timezone
-from datetime import timedelta
 
 
 @login_required
 def manage_subscriptions(request):
     """List page - shows all subscription plans in the dashboard table."""
     plans = SubscriptionPlan.objects.all().order_by("display_order")
+    master_features_count = PlanFeature.objects.count()
     context = {
         "plans": plans,
+        "master_features_count": master_features_count,
         "page_title": "Manage Subscriptions",
     }
     return render(request, "subscriptions/plan_list.html", context)
+
+
+@login_required
+def manage_master_features(request):
+    """Manage Master Features Table page - list, add, edit, delete master features."""
+    features = PlanFeature.objects.all().order_by("display_order", "name")
+    
+    if request.method == "POST":
+        action = request.POST.get("action")
+        if action == "add":
+            form = MasterPlanFeatureForm(request.POST)
+            if form.is_valid():
+                new_feature = form.save(commit=False)
+                new_feature.display_order = PlanFeature.objects.count() + 1
+                new_feature.save()
+                messages.success(request, f"Feature '{form.cleaned_data['name']}' created successfully.")
+            else:
+                messages.error(request, f"Error creating feature: {form.errors.as_text()}")
+        elif action == "edit":
+            feature_id = request.POST.get("feature_id")
+            feature = get_object_or_404(PlanFeature, pk=feature_id)
+            form = MasterPlanFeatureForm(request.POST, instance=feature)
+            if form.is_valid():
+                form.save()
+                messages.success(request, f"Feature '{feature.name}' updated successfully.")
+            else:
+                messages.error(request, "Error updating feature.")
+        elif action == "delete":
+            feature_id = request.POST.get("feature_id")
+            feature = get_object_or_404(PlanFeature, pk=feature_id)
+            feat_name = feature.name
+            feature.delete()
+            messages.success(request, f"Feature '{feat_name}' deleted successfully.")
+        return redirect("subscriptions:manage-master-features")
+
+    context = {
+        "features": features,
+        "page_title": "Plan Features (Master)",
+    }
+    return render(request, "subscriptions/master_feature_list.html", context)
+
+
+def _ensure_plan_features_exist(plan):
+    """Helper function to ensure all active Master Features exist in SubscriptionPlanFeature for the given plan."""
+    master_features = PlanFeature.objects.filter(is_active=True).order_by("display_order")
+    for master in master_features:
+        SubscriptionPlanFeature.objects.get_or_create(
+            plan=plan,
+            feature=master,
+            defaults={
+                "is_available": True,
+                "feature_value": "",
+                "display_order": master.display_order,
+            }
+        )
 
 
 @login_required
@@ -31,8 +91,11 @@ def add_subscription_plan(request):
         if form.is_valid():
             with transaction.atomic():
                 plan = form.save()
+                # Ensure all master features are created for this new plan first
+                _ensure_plan_features_exist(plan)
+                
                 pricing_formset = PlanPricingFormSet(request.POST, request.FILES, instance=plan)
-                feature_formset = PlanFeatureFormSet(request.POST, request.FILES, instance=plan)
+                feature_formset = SubscriptionPlanFeatureFormSet(request.POST, request.FILES, instance=plan)
 
                 if pricing_formset.is_valid() and feature_formset.is_valid():
                     pricing_formset.save()
@@ -44,17 +107,20 @@ def add_subscription_plan(request):
                     messages.error(request, "Please fix the errors in pricing/features below.")
         else:
             pricing_formset = PlanPricingFormSet(request.POST)
-            feature_formset = PlanFeatureFormSet(request.POST)
+            feature_formset = SubscriptionPlanFeatureFormSet(request.POST)
             messages.error(request, "Please fix the errors below.")
     else:
         form = SubscriptionPlanForm()
         pricing_formset = PlanPricingFormSet()
-        feature_formset = PlanFeatureFormSet()
+        # For initial display on ADD page, create a temporary unsaved instance to prepopulate formset
+        plan = SubscriptionPlan()
+        feature_formset = SubscriptionPlanFeatureFormSet(instance=plan)
 
     context = {
         "form": form,
         "pricing_formset": pricing_formset,
         "feature_formset": feature_formset,
+        "master_features": PlanFeature.objects.filter(is_active=True).order_by("display_order"),
         "page_title": "Add Subscription Plan",
         "is_edit": False,
     }
@@ -65,11 +131,14 @@ def add_subscription_plan(request):
 def edit_subscription_plan(request, pk):
     """Edit page - update a plan, its pricing rows and its feature rows together."""
     plan = get_object_or_404(SubscriptionPlan, pk=pk)
+    
+    # Ensure every active master feature has a row for this plan
+    _ensure_plan_features_exist(plan)
 
     if request.method == "POST":
         form = SubscriptionPlanForm(request.POST, request.FILES, instance=plan)
         pricing_formset = PlanPricingFormSet(request.POST, request.FILES, instance=plan)
-        feature_formset = PlanFeatureFormSet(request.POST, request.FILES, instance=plan)
+        feature_formset = SubscriptionPlanFeatureFormSet(request.POST, request.FILES, instance=plan)
 
         if form.is_valid() and pricing_formset.is_valid() and feature_formset.is_valid():
             form.save()
@@ -78,16 +147,11 @@ def edit_subscription_plan(request, pk):
             messages.success(request, f"Plan '{plan.name}' updated successfully.")
             return redirect("subscriptions:manage-subscriptions")
         else:
-            print("FORM ERRORS:", form.errors)
-            print("PRICING ERRORS:", pricing_formset.errors)
-            print("PRICING NON FORM:", pricing_formset.non_form_errors())
-            print("FEATURE ERRORS:", feature_formset.errors)
-            print("FEATURE NON FORM:", feature_formset.non_form_errors())
             messages.error(request, "Please fix the errors below.")
     else:
         form = SubscriptionPlanForm(instance=plan)
         pricing_formset = PlanPricingFormSet(instance=plan)
-        feature_formset = PlanFeatureFormSet(instance=plan)
+        feature_formset = SubscriptionPlanFeatureFormSet(instance=plan)
 
     context = {
         "form": form,
@@ -98,6 +162,7 @@ def edit_subscription_plan(request, pk):
         "is_edit": True,
     }
     return render(request, "subscriptions/plan_form.html", context)
+
 
 
 @login_required
