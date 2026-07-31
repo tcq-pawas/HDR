@@ -40,6 +40,7 @@ def manage_master_features(request):
             form = MasterPlanFeatureForm(request.POST)
             if form.is_valid():
                 new_feature = form.save(commit=False)
+                new_feature.is_active = True  #Adding new features (active)
                 new_feature.display_order = PlanFeature.objects.count() + 1
                 new_feature.save()
                 messages.success(request, f"Feature '{form.cleaned_data['name']}' created successfully.")
