@@ -1,0 +1,357 @@
+{% extends "customer/customer_base.html" %}
+
+{% block header %}{% endblock %}
+
+
+{% block content %}
+<style>
+    /* Full Width Container */
+    .inquiry-container {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        padding: 24px;
+        background-color: #f8fafc;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        color: #1e293b;
+        box-sizing: border-box;
+    }
+
+    /* Header Section */
+    .inquiry-header-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+        width: 100%;
+    }
+
+    .inquiry-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0;
+    }
+
+    .inquiry-subtitle {
+        font-size: 13px;
+        color: #64748b;
+        margin-top: 4px;
+    }
+
+    /* Action Buttons */
+    .btn-secondary-custom {
+        display: inline-block;
+        padding: 8px 16px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #334155;
+        background-color: #ffffff;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .btn-secondary-custom:hover {
+        background-color: #f1f5f9;
+        color: #0f172a;
+    }
+
+    /* Full Page Grid Layout */
+    .inquiry-grid {
+        display: grid;
+        grid-template-columns: 1fr 320px;
+        gap: 24px;
+        width: 100%;
+    }
+
+    @media (max-width: 992px) {
+        .inquiry-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Cards Design */
+    .custom-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 24px;
+        margin-bottom: 24px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .card-head {
+        border-bottom: 1px solid #f1f5f9;
+        padding-bottom: 14px;
+        margin-bottom: 20px;
+    }
+
+    .card-head h3 {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1e293b;
+        margin: 0;
+    }
+
+    /* Fields & Labels */
+    .card-body-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .info-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .info-group.full-width {
+        grid-column: span 2;
+    }
+
+    .info-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: #64748b;
+        margin-bottom: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+    }
+
+    .info-value {
+        font-size: 14px;
+        font-weight: 600;
+        color: #0f172a;
+    }
+
+    .highlight-price {
+        font-size: 18px;
+        color: #0f172a;
+        font-weight: 700;
+    }
+
+    .info-paragraph {
+        font-size: 14px;
+        color: #334155;
+        margin: 0;
+        line-height: 1.5;
+    }
+
+   /* Featured Image */
+    .property-featured-image {
+        width: 320px;
+        height: 220px;
+        max-width: 100%;
+        overflow: hidden;
+        border-radius: 6px;
+        background-color: #f1f5f9;
+        /* margin: 0 auto; */
+    }
+
+    .property-featured-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .property-featured-image-placeholder {
+        width: 320px;
+        height: 220px;
+        max-width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #94a3b8;
+        background: #f1f5f9;
+        font-size: 2rem;
+        /* margin: 0 auto; */
+        border-radius: 6px;
+    }
+
+    /* Status Badge */
+    .badge-status {
+        display: inline-block;
+        padding: 4px 10px;
+        font-size: 12px;
+        font-weight: 600;
+        border-radius: 4px;
+        background-color: #fef3c7;
+        color: #d97706;
+        width: fit-content;
+    }
+
+    /* Agent Avatar Block */
+    .agent-profile-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .agent-avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background-color: #e2e8f0;
+        color: #475569;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 15px;
+    }
+
+    .agent-details {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .mt-4 {
+        margin-top: 20px;
+    }
+</style>
+
+<div class="inquiry-container">
+
+    <!-- Header Section -->
+    <div class="inquiry-header-bar">
+        <div>
+            <h1 class="inquiry-title">Inquiry Details</h1>
+            <p class="inquiry-subtitle">Inquiry ID: #{{ inquiry.enquiry_id }} &bull; Submitted on {{ inquiry.created_at|date:"M d, Y H:i" }}</p>
+        </div>
+        <div class="header-actions">
+            <a href="{% url 'customer:inquiries-page' %}" class="btn-secondary-custom">Back to Inquiries</a>
+        </div>
+    </div>
+
+    <!-- Main 2-Column Grid Layout (Full Width) -->
+    <div class="inquiry-grid">
+
+        <!-- Left Main Column -->
+        <div class="grid-main">
+            
+            <!-- Customer & Inquiry Details Card -->
+            <div class="custom-card">
+                <div class="card-head">
+                    <h3>Inquiry Information</h3>
+                </div>
+                <div class="card-body-grid">
+                    <div class="info-group">
+                        <span class="info-label">Customer Name</span>
+                        <span class="info-value">{{ inquiry.name }}</span>
+                    </div>
+                    <div class="info-group">
+                        <span class="info-label">Phone Number</span>
+                        <span class="info-value">{{ inquiry.phone_number }}</span>
+                    </div>
+                    <div class="info-group">
+                        <span class="info-label">Email Address</span>
+                        <span class="info-value">{{ inquiry.email }}</span>
+                    </div>
+                    <div class="info-group">
+                        <span class="info-label">Status</span>
+                        <span class="badge badge-status">{{ inquiry.status|title }}</span>
+                    </div>
+                </div>
+                <div class="info-group full-width mt-4">
+                    <span class="info-label">Message</span>
+                    <p class="info-paragraph">{{ inquiry.message|default:"No message provided." }}</p>
+                </div>
+            </div>
+
+            <!-- Property Details Card -->
+            <!-- Property Details Card -->
+        {% if inquiry.related_property %}
+        <div class="custom-card">
+            <div class="card-head">
+                <h3>Property Details</h3>
+            </div>
+
+            <div class="property-featured-image">
+                {% if inquiry.related_property.featured_image %}
+                    <img src="{{ inquiry.related_property.featured_image.url }}" alt="{{ inquiry.related_property.title }}">
+                {% elif inquiry.related_property.images.all %}
+                    <img src="{{ inquiry.related_property.images.first.image.url }}" alt="{{ inquiry.related_property.title }}">
+                {% else %}
+                    <div class="property-featured-image-placeholder">
+                        <i class="bi bi-image"></i>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="card-body-grid mt-4">
+                <div class="info-group">
+                    <span class="info-label">Property Title</span>
+                    <span class="info-value">{{ inquiry.related_property.title }}</span>
+                </div>
+                <div class="info-group">
+                    <span class="info-label">Property Type</span>
+                    <span class="info-value">{{ inquiry.related_property.get_category_display|default:inquiry.related_property.property_type|default:"N/A" }}</span>
+                </div>
+                <div class="info-group">
+                    <span class="info-label">Price</span>
+                    <span class="info-value highlight-price">₹{{ inquiry.related_property.price|floatformat:0 }}</span>
+                </div>
+                <div class="info-group">
+                    <span class="info-label">Area</span>
+                    <span class="info-value">
+                        {% if inquiry.related_property.total_area %}{{ inquiry.related_property.total_area|floatformat:0 }} {{ inquiry.related_property.get_area_unit_display|default:inquiry.related_property.area_unit }}
+                        {% elif inquiry.related_property.area_sqft %}{{ inquiry.related_property.area_sqft }} Sq.ft
+                        {% else %}N/A{% endif %}
+                    </span>
+                </div>
+                <div class="info-group full-width">
+                    <span class="info-label">Location</span>
+                    <span class="info-value">{{ inquiry.related_property.location|default:"N/A" }}</span>
+                </div>
+                <div class="info-group full-width">
+                    <span class="info-label">Description</span>
+                    <p class="info-paragraph">{{ inquiry.related_property.public_description|default:inquiry.related_property.description|default:"No description available." }}</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        </div>
+
+        <!-- Right Sidebar Column -->
+        <div class="grid-sidebar">
+            
+            <div class="custom-card">
+                <div class="card-head">
+                    <h3>Agent Information</h3>
+                </div>
+                {% if inquiry.agent_profile %}
+                    <div class="agent-profile-wrapper">
+                        <div class="agent-avatar">
+                            {{ inquiry.agent_profile.user.username|first|upper }}
+                        </div>
+                        <div class="agent-details">
+                            <span class="info-value">{{ inquiry.agent_profile.user.get_full_name|default:inquiry.agent_profile.user.username }}</span>
+                            <span class="info-label">{{ inquiry.agent_profile.user.email }}</span>
+                        </div>
+                    </div>
+                {% else %}
+                    <p class="info-paragraph">No Agent Assigned</p>
+                {% endif %}
+            </div>
+
+            <div class="custom-card">
+                <div class="card-head">
+                    <h3>Additional Info</h3>
+                </div>
+                <div class="info-group">
+                    <span class="info-label">Created At</span>
+                    <span class="info-value">{{ inquiry.created_at|date:"d M Y, h:i A" }}</span>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}

@@ -4,7 +4,7 @@ from .dashboard_views import (
     CustomerDashboardView, CustomerProfileView, CustomerEditProfileView,
     CustomerInquiriesView,
     CustomerSavedPropertiesView, CustomerViewingsView,
-    update_profile, change_password
+    update_profile, change_password, CustomerInquiryDetailView
 )
 
 app_name = 'customer'
@@ -19,7 +19,7 @@ urlpatterns = [
     path('viewings/', CustomerViewingsView.as_view(), name='viewings-page'),
     path("create-inquiry/", views.create_inquiry, name="create_inquiry"),
     path("api/advisor-properties/<int:agent_profile_id>/", views.get_advisor_properties,name="advisor-properties"),
-
+    path("inquiries/view/<int:pk>/",CustomerInquiryDetailView.as_view(),name="inquiry-detail-page"),
     # Form submission endpoints
     path('update-profile/', update_profile, name='update-profile'),
     path('change-password/', change_password, name='change-password'),

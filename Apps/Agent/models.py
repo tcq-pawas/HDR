@@ -76,6 +76,11 @@ class AgentProfile(models.Model):
         verbose_name = "Agent Profile"
         verbose_name_plural = "Agent Profiles"
 
+    def get_absolute_url(self):
+        """Return the absolute URL for this agent profile"""
+        from django.urls import reverse
+        return reverse('public:agent_profile', kwargs={'agent_id': self.id})
+
 
 class Lead(models.Model):
     """Lead management for agents"""
