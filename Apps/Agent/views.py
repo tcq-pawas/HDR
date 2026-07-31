@@ -1514,3 +1514,45 @@ def subscription_plans(request):
     return render(request, 'agent/subscription.html', {
         'plans': plans,
     })
+
+@login_required
+def document_verification(request):
+    """View to enforce KYC document upload for paid subscriptions"""
+    user_role = get_user_role(request.user)
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied.")
+        
+    from Apps.Subscriptions.models import UserSubscription
+    if not UserSubscription.objects.filter(user=request.user).exists():
+        messages.info(request, "Please choose a subscription plan first.")
+        return redirect('public:subscription_plans')
+        
+    try:
+        agent_profile = request.user.agent_profile
+    except AgentProfile.DoesNotExist:
+        agent_profile = AgentProfile.objects.create(user=request.user)
+        
+    if request.method == 'POST':
+        # Ensure at least one file is uploaded
+        if not any(k in request.FILES for k in ['id_proof_front', 'id_proof_back', 'address_proof']):
+            messages.error(request, 'At least 1 document is required.')
+            return redirect('agent:document_verification')
+            
+        # Handle uploads
+        if 'id_proof_front' in request.FILES:
+            agent_profile.id_proof_document = request.FILES['id_proof_front']
+        if 'id_proof_back' in request.FILES:
+            agent_profile.id_proof_back_document = request.FILES['id_proof_back']
+        if 'address_proof' in request.FILES:
+            agent_profile.address_proof_document = request.FILES['address_proof']
+            
+        agent_profile.verification_status = 'pending'
+        agent_profile.save()
+        messages.success(request, "Documents submitted successfully! They are now under review by our administration team.")
+        return redirect('agent:document_verification')
+        
+    context = {
+        'agent_profile': agent_profile,
+        'title': 'Document Verification',
+    }
+    return render(request, 'agent/document_verification.html', context)

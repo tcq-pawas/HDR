@@ -73,6 +73,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'Apps.Administration.middleware.SessionTimeoutMiddleware',
+    'Apps.Administration.middleware.AgentKYCMiddleware',
 ]
 
 ROOT_URLCONF = 'HeyDayRealty.urls'

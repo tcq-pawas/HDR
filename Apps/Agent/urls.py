@@ -10,6 +10,7 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('change-password/', views.change_password, name='change_password'),
     path('delete-account/', views.delete_account, name='delete_account'),
+    path('document-verification/', views.document_verification, name='document_verification'),
     
     # Property Management
     path('properties/', views.property_list, name='property_list'),

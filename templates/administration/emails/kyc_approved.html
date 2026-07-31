@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Approved</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f4f7f6; margin: 0; padding: 0; }
+        .email-container { max-width: 600px; margin: 40px auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .header { background-color: #004526; padding: 30px 20px; text-align: center; }
+        .header h1 { color: #ffffff; margin: 0; font-size: 24px; letter-spacing: 1px; }
+        .content { padding: 40px 30px; color: #333333; line-height: 1.6; font-size: 16px; }
+        .content h2 { color: #004526; font-size: 22px; margin-top: 0; }
+        .success-box { background-color: #e8f5e9; border-left: 4px solid #10b981; padding: 15px 20px; margin: 25px 0; border-radius: 4px; }
+        .btn { display: inline-block; background-color: #004526; color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 6px; font-weight: bold; margin-top: 20px; text-align: center; width: auto; }
+        .footer { background-color: #f8f9fa; padding: 20px; text-align: center; color: #777777; font-size: 13px; border-top: 1px solid #eeeeee; }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>HeyDay Realty</h1>
+        </div>
+        <div class="content">
+            <h2>Welcome to HeyDay Realty!</h2>
+            <p>Hi {{ user.get_full_name|default:user.username }},</p>
+            <p>Great news! Our administration team has reviewed your KYC documents and your account is now fully approved.</p>
+            
+            <div class="success-box">
+                <strong>Status: <span style="color: #10b981;">Approved</span></strong><br>
+                Your agent dashboard has been unlocked.
+            </div>
+            
+            <p>You can now log in to your dashboard to manage properties, view inquiries, and access all your premium agent features.</p>
+            
+            <center>
+                <!-- Assuming the default site URL here. Adjust if a dynamic site_url is available -->
+                <a href="https://heydayrealty.com/agent/dashboard/" class="btn" style="color: #ffffff;">Go to Dashboard</a>
+            </center>
+            
+            <p style="margin-top: 30px;">Best regards,<br>The HeyDay Realty Team</p>
+        </div>
+        <div class="footer">
+            &copy; {% now "Y" %} HeyDay Realty. All rights reserved.<br>
+            If you have any questions, please contact support.
+        </div>
+    </div>
+</body>
+</html>

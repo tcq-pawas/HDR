@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Action Required: Documents Rejected</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f4f7f6; margin: 0; padding: 0; }
+        .email-container { max-width: 600px; margin: 40px auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .header { background-color: #004526; padding: 30px 20px; text-align: center; }
+        .header h1 { color: #ffffff; margin: 0; font-size: 24px; letter-spacing: 1px; }
+        .content { padding: 40px 30px; color: #333333; line-height: 1.6; font-size: 16px; }
+        .content h2 { color: #e11d48; font-size: 22px; margin-top: 0; }
+        .reject-box { background-color: #fff1f2; border-left: 4px solid #e11d48; padding: 20px; margin: 25px 0; border-radius: 4px; }
+        .reject-box h4 { margin-top: 0; color: #9f1239; margin-bottom: 10px; font-size: 16px; }
+        .reason-text { font-style: italic; color: #4c0519; }
+        .btn { display: inline-block; background-color: #004526; color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 6px; font-weight: bold; margin-top: 20px; text-align: center; width: auto; }
+        .footer { background-color: #f8f9fa; padding: 20px; text-align: center; color: #777777; font-size: 13px; border-top: 1px solid #eeeeee; }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>HeyDay Realty</h1>
+        </div>
+        <div class="content">
+            <h2>Action Required: Documents Rejected</h2>
+            <p>Hi {{ user.get_full_name|default:user.username }},</p>
+            <p>Our administration team has reviewed the KYC documents you uploaded. Unfortunately, we cannot approve them at this time.</p>
+            
+            <div class="reject-box">
+                <h4>Reason for Rejection:</h4>
+                <div class="reason-text">"{{ reason }}"</div>
+            </div>
+            
+            <p>Please log in to your account to upload new or clearer copies of your documents based on the feedback above.</p>
+            
+            <center>
+                <!-- Assuming the default site URL here. -->
+                <a href="https://heydayrealty.com/agent/document-verification/" class="btn" style="color: #ffffff;">Re-Upload Documents</a>
+            </center>
+            
+            <p style="margin-top: 30px;">If you need help or have questions, please contact our support team.<br><br>Best regards,<br>The HeyDay Realty Team</p>
+        </div>
+        <div class="footer">
+            &copy; {% now "Y" %} HeyDay Realty. All rights reserved.
+        </div>
+    </div>
+</body>
+</html>
