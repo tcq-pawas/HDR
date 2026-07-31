@@ -9,11 +9,12 @@ from .forms import (
     PlanPricingFormSet,
     MasterPlanFeatureForm,
     SubscriptionPlanFeatureFormSet,
+    SubscriptionPlanFeatureForm,
 )
 from django.utils import timezone
 from datetime import timedelta
 from Apps.Administration.auth_utils import get_user_role
-
+from django.forms import inlineformset_factory
 
 @login_required
 def manage_subscriptions(request):
@@ -112,9 +113,24 @@ def add_subscription_plan(request):
     else:
         form = SubscriptionPlanForm()
         pricing_formset = PlanPricingFormSet()
-        # For initial display on ADD page, create a temporary unsaved instance to prepopulate formset
-        plan = SubscriptionPlan()
-        feature_formset = SubscriptionPlanFeatureFormSet(instance=plan)
+        master_features = PlanFeature.objects.filter(is_active=True).order_by("display_order")
+        
+        # Build an "empty" formset with correct number of extra forms, one per master feature
+        TempFeatureFormSet = inlineformset_factory(
+            SubscriptionPlan, SubscriptionPlanFeature,
+            form=SubscriptionPlanFeatureForm,
+            extra=master_features.count(),
+            can_delete=False,
+        )
+        feature_formset = TempFeatureFormSet()
+        # Pre-fill initial data so template shows feature name/checkbox properly
+        for i, mf in enumerate(master_features):
+            feature_formset.forms[i].initial = {
+                "feature": mf.id, 
+                "is_available": True,
+                "feature_value": "",
+            }
+            feature_formset.forms[i].master_feature_obj = mf
 
     context = {
         "form": form,
