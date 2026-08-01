@@ -1280,9 +1280,10 @@ def save_general_settings(request):
 @permission_classes([permissions.IsAuthenticated])
 def get_unread_inquiries(request):
     from .auth_utils import get_user_role
-    if get_user_role(request.user) != 'admin':
+    user_role = get_user_role(request.user)
+    if user_role not in ['admin', 'owner']:
         from rest_framework.exceptions import PermissionDenied
-        raise PermissionDenied("Admin access required.")
+        raise PermissionDenied("Admin or owner access required.")
     
     from Apps.PublicPage.models import Inquiry as WebsiteContactInquiry
     

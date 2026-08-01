@@ -33,7 +33,7 @@ def manage_subscriptions(request):
 @login_required
 def manage_master_features(request):
     """Manage Master Features Table page - list, add, edit, delete master features."""
-    features = PlanFeature.objects.all().order_by("display_order", "name")
+    features = PlanFeature.objects.filter(is_active=True).order_by("display_order", "name")
     
     if request.method == "POST":
         action = request.POST.get("action")
