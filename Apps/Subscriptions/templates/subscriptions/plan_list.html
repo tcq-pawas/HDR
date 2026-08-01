@@ -51,10 +51,14 @@
                     <td>{{ plan.pricing_options.count }}</td>
                     <td>{{ plan.features.count }}</td>
                     <td>
-                        <a href="{% url 'subscriptions:toggle-plan-status' plan.pk %}"
-                            class="badge {% if plan.is_active %}bg-success{% else %}bg-secondary{% endif %} text-decoration-none">
-                            {% if plan.is_active %}Active{% else %}Inactive{% endif %}
-                        </a>
+                        <form method="post" action="{% url 'subscriptions:toggle-plan-status' pk=plan.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" 
+                                    class="badge-btn {{ plan.is_active|yesno:'active,inactive' }}" 
+                                    style="border:none; cursor:pointer; padding:4px 12px; border-radius:6px; font-weight:600; color:#fff; background-color: {% if plan.is_active %}#136832{% else %}#94a3b8{% endif %};">
+                                {{ plan.is_active|yesno:"Active,Inactive" }}
+                            </button>
+                        </form>
                     </td>
                     <td>{{ plan.display_order }}</td>
                     <td class="text-end pe-4">

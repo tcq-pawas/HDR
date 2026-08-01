@@ -15,6 +15,7 @@ from django.utils import timezone
 from datetime import timedelta
 from Apps.Administration.auth_utils import get_user_role
 from django.forms import inlineformset_factory
+from django.views.decorators.http import require_POST
 
 @login_required
 def manage_subscriptions(request):
@@ -94,7 +95,7 @@ def add_subscription_plan(request):
             with transaction.atomic():
                 plan = form.save()
                 # Ensure all master features are created for this new plan first
-                _ensure_plan_features_exist(plan)
+                # _ensure_plan_features_exist(plan)
                 
                 pricing_formset = PlanPricingFormSet(request.POST, request.FILES, instance=plan)
                 feature_formset = SubscriptionPlanFeatureFormSet(request.POST, request.FILES, instance=plan)
@@ -196,6 +197,7 @@ def delete_subscription_plan(request, pk):
 
 
 @login_required
+@require_POST
 def toggle_plan_status(request, pk):
     """Quick action - flip is_active from the list table without opening the edit page."""
     plan = get_object_or_404(SubscriptionPlan, pk=pk)
@@ -219,9 +221,10 @@ def checkout_free_plan(request, plan_id):
     pricing = PlanPricing.objects.filter(plan=plan, price=0).first()
     
     if not pricing:
-        # If it's a paid plan, we simulate it for now as per instructions (wait for payment gateway)
+        # This is a paid plan — do NOT activate for free.
+        # messages.error(request, "This plan requires payment. Redirecting to checkout.")
+        # return redirect('subscriptions:checkout-paid', plan_id=plan.id)
         pricing = PlanPricing.objects.filter(plan=plan).first()
-
     # Create or update UserSubscription
     # We will grant 1 year of access
     end_date = timezone.now() + timedelta(days=365)
