@@ -103,27 +103,6 @@
             </div>
         </div>
 
-        <!-- Property Viewings -->
-        <div class="premium-metric-card metric-card-success">
-            <div class="metric-card-bg"></div>
-            <div class="metric-progress-bar" style="width: 82%;"></div>
-            <div class="metric-card-content">
-                <div class="metric-header-row">
-                    <div class="metric-icon-wrapper">
-                        <i class="bi bi-calendar-check"></i>
-                    </div>
-                    <div class="metric-value">{{ purchase_stats.scheduled_viewings }}</div>
-                </div>
-                <div class="metric-label">Property Viewings</div>
-                <div class="metric-trend">
-                    <span class="trend-indicator">
-                        <i class="bi bi-calendar"></i>
-                    </span>
-                    <span class="trend-text">Scheduled Visits</span>
-                </div>
-            </div>
-        </div>
-
         <!-- Featured Properties -->
         <div class="premium-metric-card metric-card-warning">
             <div class="metric-card-bg"></div>
@@ -259,62 +238,6 @@
 </div>
 
 
-
-<!-- Featured Properties Section -->
-<div class="leads-section">
-    <div class="leads-header leads-header-flex">
-        <h2>Featured Properties</h2>
-        <a href="#" class="view-all-link">View All</a>
-    </div>
-    <div class="leads-table-container table-responsive">
-        <table class="table table-hover leads-table">
-            <thead>
-                <tr>
-                    <th>Property Title</th>
-                    <th>Location</th>
-                    <th>Type</th>
-                    <th>Area</th>
-                    <th>Price</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% if featured_properties %}
-                    {% for p in featured_properties|slice:":5" %}
-                        <tr>
-                            <td><strong>{{ p.title }}</strong></td>
-                            <td>{{ p.location|default:"N/A" }}</td>
-                            <td>{{ p.property_type|default:"N/A" }}</td>
-                            <td>{{ p.area_sqft|intcomma|default:"N/A" }} sqft</td>
-                            <td>₹{{ p.price|floatformat:0|default:"N/A" }}</td>
-                            <td>
-                                <span class="status-badge status-approved">Featured</span>
-                            </td>
-                            <td>
-                                <div class="leads-actions">
-                                    <button class="btn btn-sm btn-outline-primary" style="border-radius: 6px; padding: 3px 12px; font-weight: 500;">View</button>
-                                </div>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                {% else %}
-                    <tr>
-                        <td colspan="7">
-                            <div class="empty-state">
-                                <div class="empty-state-icon">
-                                    <i class="bi bi-building"></i>
-                                </div>
-                                <h3>No Featured Properties</h3>
-                                <p>Featured properties will appear here</p>
-                            </div>
-                        </td>
-                    </tr>
-                {% endif %}
-            </tbody>
-        </table>
-    </div>
-</div>
 
 
 

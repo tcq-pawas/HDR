@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import CustomerProfile, Inquiry, SavedProperty, PropertyViewing, CustomerFeedback
+from .models import CustomerProfile, Inquiry, SavedProperty, CustomerFeedback
 from Apps.PublicPage.models import Property
 
 
@@ -51,17 +51,6 @@ class SavedPropertySerializer(serializers.ModelSerializer):
         return None
 
 
-class PropertyViewingSerializer(serializers.ModelSerializer):
-    customer_name = serializers.CharField(source='customer.username', read_only=True)
-    property_title = serializers.CharField(source='property.title', read_only=True)
-
-    class Meta:
-        model = PropertyViewing
-        fields = ['id', 'customer', 'customer_name', 'property', 'property_title', 
-                 'scheduled_date', 'status', 'notes', 'created_at', 'updated_at']
-        read_only_fields = ['created_at', 'updated_at', 'customer']
-
-
 class CustomerFeedbackSerializer(serializers.ModelSerializer):
     customer_name = serializers.CharField(source='customer.username', read_only=True)
     property_title = serializers.CharField(source='property.title', read_only=True)
@@ -83,12 +72,6 @@ class CreateSavedPropertySerializer(serializers.ModelSerializer):
     class Meta:
         model = SavedProperty
         fields = ['property', 'notes']
-
-
-class CreatePropertyViewingSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PropertyViewing
-        fields = ['property', 'scheduled_date', 'notes']
 
 
 class CreateCustomerFeedbackSerializer(serializers.ModelSerializer):

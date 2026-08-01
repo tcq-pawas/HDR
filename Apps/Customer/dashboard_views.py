@@ -11,7 +11,7 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User
 from Apps.Administration.smart_dashboard_views import CustomerDashboardMixin
 from Apps.Administration.auth_utils import get_user_role, role_required
-from .models import CustomerProfile, Inquiry, SavedProperty, PropertyViewing
+from .models import CustomerProfile, Inquiry, SavedProperty
 from Apps.PublicPage.models import Property, PropertyInquiry
 
 from django.views.generic import DetailView
@@ -42,12 +42,6 @@ class CustomerDashboardView(CustomerDashboardMixin, TemplateView):
             'total_inquiries': total_inquiries,
             'pending_inquiries': pending_inquiries,
             'saved_properties': SavedProperty.objects.filter(customer=user).count(),
-            'scheduled_viewings': PropertyViewing.objects.filter(
-                customer=user, status='scheduled'
-            ).count(),
-            'completed_viewings': PropertyViewing.objects.filter(
-                customer=user, status='completed'
-            ).count(),
         }
         
         # Owned properties (if customer has made purchases)
@@ -64,10 +58,6 @@ class CustomerDashboardView(CustomerDashboardMixin, TemplateView):
         context['recent_saved_properties'] = SavedProperty.objects.filter(
             customer=user
         ).select_related('property').order_by('-saved_at')[:5]
-        
-        context['upcoming_viewings'] = PropertyViewing.objects.filter(
-            customer=user, status='scheduled'
-        ).select_related('property').order_by('scheduled_date')[:5]
         
         # Personal documents and papers (placeholder for future document management)
         context['document_summary'] = {
@@ -165,7 +155,6 @@ class CustomerDashboardView(CustomerDashboardMixin, TemplateView):
                 location_data[location] = {
                     'inquiries': 0,
                     'saved': 0,
-                    'viewings': 0,
                     'properties': set()
                 }
             
@@ -262,16 +251,6 @@ class CustomerDashboardView(CustomerDashboardMixin, TemplateView):
                 'description': f"Property in {saved.property.location}",
                 'date': saved.saved_at,
                 'property': saved.property,
-            })
-        
-        # Add viewings
-        for viewing in PropertyViewing.objects.filter(customer=user).select_related('property').order_by('-scheduled_date')[:10]:
-            activities.append({
-                'type': 'viewing',
-                'title': f"Property Viewing: {viewing.property.title}",
-                'description': f"Status: {viewing.status}, Date: {viewing.scheduled_date}",
-                'date': viewing.scheduled_date,
-                'property': viewing.property,
             })
         
         # Sort by date and return recent activities
@@ -381,21 +360,6 @@ class CustomerSavedPropertiesView(CustomerDashboardMixin, TemplateView):
             customer=user
         ).select_related('property').order_by('-saved_at')
         
-        return context
-
-
-class CustomerViewingsView(CustomerDashboardMixin, TemplateView):
-    """Customer property viewings view with strict access control"""
-    template_name = 'customer/viewings.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        user = self.request.user
-
-        context['viewings'] = PropertyViewing.objects.filter(
-            customer=user
-        ).select_related('property').order_by('-scheduled_date')
-
         return context
 
 

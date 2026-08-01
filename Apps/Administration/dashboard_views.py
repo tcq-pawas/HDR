@@ -11,7 +11,7 @@ from django.shortcuts import redirect
 from Apps.Administration.smart_dashboard_views import AdminDashboardMixin
 from Apps.Administration.auth_utils import get_user_role, role_required
 from Apps.Administration.models import ActivityLog, SystemMetrics, UserPermission, PropertyReview
-from Apps.Customer.models import CustomerProfile, Inquiry, SavedProperty, PropertyViewing
+from Apps.Customer.models import CustomerProfile, Inquiry, SavedProperty
 from Apps.Investor.models import InvestorProfile, Investment, InvestmentListing, ROIData
 from Apps.PublicPage.models import Property
 from Apps.PublicPage.models import ContactInquiry
@@ -55,7 +55,6 @@ class AdminDashboardView(AdminDashboardMixin, TemplateView):
             'active_investments': confirmed_investments.count(),
             'total_investment_amount': confirmed_investments.aggregate(total=Sum('amount'))['total'] or 0,
             'saved_properties_count': SavedProperty.objects.count(),
-            'scheduled_viewings': PropertyViewing.objects.filter(status='scheduled').count(),
         }
         
         # Sales and revenue analytics

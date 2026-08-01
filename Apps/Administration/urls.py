@@ -105,7 +105,6 @@ urlpatterns = [
     
     path('api/settings/save-security/', views.save_security_settings, name='save-security-settings'),
     path('api/settings/save-general/', views.save_general_settings, name='save-general-settings'),
-    path('api/inquiries/unread-count/', views.get_unread_inquiries, name='unread-inquiries-count'),
     path('api/investments/create/', views.create_investment, name='create-investment'),
     
     #Get all details of Admin
