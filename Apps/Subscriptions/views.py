@@ -275,7 +275,7 @@ def checkout_paid_plan(request, plan_id):
         XClientSecret=settings.CASHFREE_SECRET_KEY
     )
     
-    order_id = f"ORDER_{request.user.id}_{int(time.time())}"
+    order_id = f"ORDER_{request.user.id}_{int(time.time())}_{uuid.uuid4().hex[:6]}"
     
     customer_details = CustomerDetails(
         customer_id=f"USER_{request.user.id}",
@@ -285,7 +285,7 @@ def checkout_paid_plan(request, plan_id):
     )
     
     order_meta = OrderMeta(
-        return_url=request.build_absolute_uri(reverse('subscriptions:payment-callback')) + f"?order_id={order_id}",
+        return_url=request.build_absolute_uri(reverse('subscriptions:payment-callback')) + "?order_id={order_id}",
         notify_url=request.build_absolute_uri(reverse('subscriptions:cashfree-webhook'))
     )
     
@@ -372,6 +372,8 @@ def cashfree_callback(request):
     from cashfree_pg.api_client import Cashfree
     
     order_id = request.GET.get('order_id')
+    if order_id:
+        order_id = order_id.strip()
     if not order_id:
         messages.error(request, "Invalid payment response.")
         return redirect('public:subscription_plans')
@@ -403,17 +405,21 @@ def cashfree_callback(request):
                 transaction.status = 'SUCCESS'
                 transaction.save()
                 
-            # Update subscription to active
-            user_sub = UserSubscription.objects.filter(user=request.user, stripe_subscription_id=order_id).first()
+            # Update subscription to active if verified, else pending
+            user_sub = UserSubscription.objects.filter(user=request.user).first()
             if user_sub:
-                user_sub.status = 'active'
-                user_sub.start_date = timezone.now()
-                
-                # Calculate end date based on billing cycle
-                cycle_mapping = {'1M': 30, '3M': 90, '6M': 180, '12M': 365}
-                days = cycle_mapping.get(user_sub.pricing.billing_cycle, 30) if user_sub.pricing else 30
-                user_sub.end_date = timezone.now() + timedelta(days=days)
-                
+                agent_profile = getattr(request.user, 'agent_profile', None)
+                if agent_profile and agent_profile.verification_status == 'approved':
+                    user_sub.status = 'active'
+                    user_sub.start_date = timezone.now()
+                    
+                    # Calculate end date based on billing cycle
+                    cycle_mapping = {'1M': 30, '3M': 90, '6M': 180, '12M': 365}
+                    days = cycle_mapping.get(user_sub.pricing.billing_cycle, 30) if user_sub.pricing else 30
+                    user_sub.end_date = timezone.now() + timedelta(days=days)
+                else:
+                    user_sub.status = 'pending'
+                    
                 user_sub.save()
                 
                 if transaction:
@@ -424,7 +430,7 @@ def cashfree_callback(request):
                 messages.success(request, f"Payment Successful! You are now subscribed to the {user_sub.plan.name} plan.")
                 return redirect('agent:property_type_select')
             else:
-                messages.error(request, "Subscription record not found.")
+                messages.error(request, f"Subscription record not found. DB order: {order_id} User: {request.user.id}")
                 return redirect('public:subscription_plans')
         else:
             if transaction:
@@ -491,14 +497,18 @@ def cashfree_webhook(request):
         if event_type == "PAYMENT_SUCCESS_WEBHOOK":
             if transaction.status != 'SUCCESS':
                 transaction.status = 'SUCCESS'
-                # Activate subscription
-                user_sub = UserSubscription.objects.filter(stripe_subscription_id=order_id).first()
+                # Activate subscription if verified, else pending
+                user_sub = UserSubscription.objects.filter(user=transaction.user).first()
                 if user_sub and user_sub.status != 'active':
-                    user_sub.status = 'active'
-                    user_sub.start_date = timezone.now()
-                    cycle_mapping = {'1M': 30, '3M': 90, '6M': 180, '12M': 365}
-                    days = cycle_mapping.get(user_sub.pricing.billing_cycle, 30) if user_sub.pricing else 30
-                    user_sub.end_date = timezone.now() + timedelta(days=days)
+                    agent_profile = getattr(transaction.user, 'agent_profile', None)
+                    if agent_profile and agent_profile.verification_status == 'approved':
+                        user_sub.status = 'active'
+                        user_sub.start_date = timezone.now()
+                        cycle_mapping = {'1M': 30, '3M': 90, '6M': 180, '12M': 365}
+                        days = cycle_mapping.get(user_sub.pricing.billing_cycle, 30) if user_sub.pricing else 30
+                        user_sub.end_date = timezone.now() + timedelta(days=days)
+                    else:
+                        user_sub.status = 'pending'
                     user_sub.save()
                     transaction.subscription = user_sub
                     

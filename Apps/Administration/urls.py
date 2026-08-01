@@ -98,7 +98,11 @@ urlpatterns = [
     path('api/properties/<int:property_id>/reject/', views.reject_property, name='property-reject'),
     path('api/properties/stats/', views.property_review_stats, name='property-review-stats'),
     path('api/settings/save-email/', views.save_email_settings, name='save-email-settings'),
-    path('api/settings/test-email/', views.test_email_settings, name='test-email-settings'),
+    path('api/settings/test-email/', views.test_email_settings, name='test-email-settings'),    # Document Verification / KYC
+    path('document-verifications/', views.document_verification_list, name='document_verification_list'),
+    path('document-verifications/<int:profile_id>/approve/', views.approve_kyc, name='approve_kyc'),
+    path('document-verifications/<int:profile_id>/reject/', views.reject_kyc, name='reject_kyc'),
+    
     path('api/settings/save-security/', views.save_security_settings, name='save-security-settings'),
     path('api/settings/save-general/', views.save_general_settings, name='save-general-settings'),
     path('api/inquiries/unread-count/', views.get_unread_inquiries, name='unread-inquiries-count'),

@@ -1,0 +1,318 @@
+{% extends "agent/agent_base.html" %}
+{% load static %}
+
+{% block title %}Document Verification | HeyDay Realty{% endblock %}
+
+{% block breadcrumb_items %}
+<span>Document Verification</span>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .verification-header {
+        background-color: #00563B;
+        color: white;
+        padding: 20px;
+        border-radius: 8px 8px 0 0;
+        margin-bottom: 20px;
+    }
+    
+    .status-tracker {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 20px 0 40px;
+        position: relative;
+    }
+    
+    .status-tracker::before {
+        content: '';
+        position: absolute;
+        top: 25px;
+        left: 50px;
+        right: 50px;
+        height: 2px;
+        background-color: #e0e0e0;
+        z-index: 1;
+    }
+    
+    .status-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .status-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: white;
+        border: 2px solid #e0e0e0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 10px;
+        font-size: 20px;
+        color: #9e9e9e;
+    }
+    
+    .status-step.active .status-icon {
+        border-color: #00563B;
+        background-color: #00563B;
+        color: white;
+    }
+    
+    .status-step.completed .status-icon {
+        border-color: #00563B;
+        color: #00563B;
+    }
+    
+    .status-label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #757575;
+    }
+    
+    .status-step.active .status-label,
+    .status-step.completed .status-label {
+        color: #212121;
+    }
+
+    .upload-box {
+        border: 1px dashed #bdbdbd;
+        border-radius: 8px;
+        padding: 30px;
+        text-align: center;
+        background-color: #fafafa;
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+    }
+    
+    .upload-box:hover {
+        background-color: #f1f8f5;
+        border-color: #00563B;
+    }
+
+    .upload-box i {
+        font-size: 40px;
+        color: #00563B;
+        margin-bottom: 15px;
+    }
+
+    .upload-btn {
+        background-color: #00563B;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: background-color 0.3s;
+    }
+
+    .upload-btn:hover {
+        background-color: #003d2a;
+        color: white;
+    }
+
+    .file-input {
+        display: none;
+    }
+
+    .card {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        border: none;
+        border-radius: 8px;
+    }
+    
+    .alert-warning {
+        background-color: #fff3cd;
+        border-color: #ffeeba;
+        color: #856404;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="card">
+        <div class="verification-header">
+            <h4 class="mb-1">Documents Verification</h4>
+            <p class="mb-0 text-white-50"><small>Complete your document verification to unlock full platform access</small></p>
+        </div>
+        
+        <div class="card-body p-4">
+
+            <div class="status-tracker">
+                <div class="status-step completed">
+                    <div class="status-icon"><i class="bi bi-person-fill"></i></div>
+                    <div class="status-label">Profile Created</div>
+                </div>
+                <div class="status-step completed">
+                    <div class="status-icon"><i class="bi bi-credit-card-fill"></i></div>
+                    <div class="status-label">Plan Purchased</div>
+                </div>
+                <div class="status-step {% if agent_profile.verification_status == 'pending' %}completed{% else %}active{% endif %}">
+                    <div class="status-icon"><i class="bi bi-file-earmark-text-fill"></i></div>
+                    <div class="status-label">Upload Documents</div>
+                </div>
+                <div class="status-step {% if agent_profile.verification_status == 'pending' %}active{% endif %}">
+                    <div class="status-icon"><i class="bi bi-search"></i></div>
+                    <div class="status-label">Under Review</div>
+                </div>
+            </div>
+
+            {% if agent_profile.verification_status == 'pending' %}
+            <div class="alert alert-info text-center p-5">
+                <i class="bi bi-hourglass-split display-4 mb-3 text-info"></i>
+                <h5>Documents Under Review</h5>
+                <p class="mb-0">Your documents have been submitted successfully and are currently being reviewed by our administration team. This process usually takes 24-48 hours. Once approved, you will have full access to your dashboard.</p>
+            </div>
+            {% elif agent_profile.verification_status == 'rejected' %}
+            <div class="alert alert-danger p-4 mb-4">
+                <h5><i class="bi bi-x-circle me-2"></i>Verification Rejected</h5>
+                <p class="mb-0">Unfortunately, your document verification failed.</p>
+                {% if agent_profile.verification_remarks %}
+                <hr>
+                <p class="mb-0"><strong>Reason:</strong> {{ agent_profile.verification_remarks }}</p>
+                {% endif %}
+                <p class="mt-2 mb-0">Please upload valid documents below to resubmit.</p>
+            </div>
+            {% endif %}
+
+            {% if agent_profile.verification_status != 'pending' and agent_profile.verification_status != 'approved' %}
+            <div class="alert alert-warning mb-4">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> 
+                <strong>Action Required:</strong> Please upload your Aadhaar Card (Front & Back) and Address Proof.
+            </div>
+
+            <form method="POST" enctype="multipart/form-data" id="verificationForm">
+                {% csrf_token %}
+                <div class="row">
+                    <!-- ID Proof Front -->
+                    <div class="col-md-4">
+                        <div class="card mb-3 h-100">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0"><i class="bi bi-person-badge me-2"></i>ID Proof (Front)</h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small">Upload front side of Aadhaar/PAN</p>
+                                <div class="upload-box">
+                                    <i class="bi bi-cloud-arrow-up"></i>
+                                    <p class="mb-3" id="idFrontName">No file selected</p>
+                                    <label class="upload-btn">
+                                        Browse File
+                                        <input type="file" name="id_proof_front" class="file-input" id="idProofFront" accept="image/*,.pdf">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ID Proof Back -->
+                    <div class="col-md-4">
+                        <div class="card mb-3 h-100">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0"><i class="bi bi-person-badge me-2"></i>ID Proof (Back)</h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small">Upload back side of Aadhaar</p>
+                                <div class="upload-box">
+                                    <i class="bi bi-cloud-arrow-up"></i>
+                                    <p class="mb-3" id="idBackName">No file selected</p>
+                                    <label class="upload-btn">
+                                        Browse File
+                                        <input type="file" name="id_proof_back" class="file-input" id="idProofBack" accept="image/*,.pdf">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Address Proof -->
+                    <div class="col-md-4">
+                        <div class="card mb-3 h-100">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0"><i class="bi bi-house-door me-2"></i>Address Proof</h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-muted small">Upload Utility Bill / Passport</p>
+                                <div class="upload-box">
+                                    <i class="bi bi-cloud-arrow-up"></i>
+                                    <p class="mb-3" id="addressName">No file selected</p>
+                                    <label class="upload-btn">
+                                        Browse File
+                                        <input type="file" name="address_proof" class="file-input" id="addressProof" accept="image/*,.pdf">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="formError" class="alert alert-danger d-none mt-3 mb-0">
+                    <i class="bi bi-x-circle-fill me-2"></i> <strong>Error:</strong> At least 1 document is required.
+                </div>
+                
+                <div class="text-end mt-4">
+                    <button type="submit" class="btn btn-success px-5 py-2" id="submitBtn">Submit Documents</button>
+                </div>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle file name display
+        function setupFileInput(inputId, displayId) {
+            const input = document.getElementById(inputId);
+            const display = document.getElementById(displayId);
+            
+            if(input && display) {
+                input.addEventListener('change', function(e) {
+                    if(e.target.files.length > 0) {
+                        display.textContent = e.target.files[0].name;
+                        display.classList.add('text-success');
+                        display.classList.add('fw-bold');
+                    } else {
+                        display.textContent = 'No file selected';
+                        display.classList.remove('text-success');
+                        display.classList.remove('fw-bold');
+                    }
+                });
+            }
+        }
+
+        setupFileInput('idProofFront', 'idFrontName');
+        setupFileInput('idProofBack', 'idBackName');
+        setupFileInput('addressProof', 'addressName');
+        
+        // Form Validation
+        const form = document.getElementById('verificationForm');
+        const formError = document.getElementById('formError');
+        
+        if(form) {
+            form.addEventListener('submit', function(e) {
+                const idFront = document.getElementById('idProofFront');
+                const idBack = document.getElementById('idProofBack');
+                const address = document.getElementById('addressProof');
+                
+                if (idFront.files.length === 0 && idBack.files.length === 0 && address.files.length === 0) {
+                    e.preventDefault();
+                    formError.classList.remove('d-none');
+                    // Scroll to error
+                    formError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                } else {
+                    formError.classList.add('d-none');
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}
