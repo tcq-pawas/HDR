@@ -9,6 +9,7 @@ from Apps.Customer.models import SavedProperty
 from .forms import InquiryForm
 from Apps.Agent.models import Lead, LeadFollowUp
 from django.utils import timezone
+from django.views.decorators.http import require_POST
 
 def property_search(request):
     """Browse and search active and approved property listings with map integration"""
@@ -150,6 +151,7 @@ def saved_properties(request):
     return render(request, 'buy/saved_properties.html', {'saved_items': saved_items})
 
 @login_required
+@require_POST
 def save_property(request, pk):
     """Save a property to the user's saved properties list"""
     from Apps.Administration.auth_utils import get_user_role
@@ -168,6 +170,7 @@ def save_property(request, pk):
     return redirect('buy:property_detail', pk=pk)
 
 @login_required
+@require_POST
 def remove_saved_property(request, pk):
     """Remove a property from the user's saved properties list"""
     property_obj = get_object_or_404(Property, pk=pk)
