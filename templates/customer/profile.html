@@ -1,332 +1,422 @@
 {% extends "customer/customer_base.html" %}
 {% load humanize %}
+{% load static %}
 
 {% block title %}My Profile - HeyDay Realty{% endblock %}
 
 {% block page_title %}My Profile{% endblock %}
 
 {% block extra_css %}
-{% load static %}
 <link rel="stylesheet" href="{% static 'css/agent/dashboard.css' %}">
 <style>
+    :root {
+        --primary: #004526;
+        --secondary: #006638;
+        --blue: #3B82F6;
+        --card: #FFFFFF;
+        --radius: 16px;
+        --shadow: 0 12px 30px rgba(0, 69, 38, 0.12);
+        --shadow-soft: 0 8px 20px rgba(2, 6, 23, 0.06);
+        --text: #0B1220;
+        --muted: rgba(11, 18, 32, 0.62);
+    }
+
+    .page-header-white {
+        display: none;
+    }
+
+    .main-content-wrapper {
+        padding: 24px 30px;
+    }
+
     .profile-content {
         padding: 0;
     }
-    
+
     .hero-banner {
-        background: linear-gradient(180deg, #004526 0%, #002815 50%, #002200 100%);
-        padding: 40px 30px;
+        background: #004526;
+        padding: 36px 28px;
         border-radius: 12px;
-        margin: 24px 30px 24px 30px;
-        box-shadow: 0 4px 15px rgba(0, 84, 39, 0.15);
+        margin: 0 0 24px;
+        box-shadow: 0 4px 15px rgba(0, 69, 38, 0.18);
+        position: relative;
+        overflow: hidden;
     }
-    
+
+    .hero-banner::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(900px circle at 10% 10%, rgba(16, 185, 129, 0.35), transparent 55%),
+            radial-gradient(900px circle at 90% 40%, rgba(59, 130, 246, 0.25), transparent 60%);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .hero-banner > * {
+        position: relative;
+        z-index: 1;
+    }
+
     .hero-banner h1 {
         color: white;
         font-weight: 700;
-        font-size: 28px;
+        font-size: clamp(1.35rem, 2.5vw, 1.75rem);
         margin-bottom: 8px;
     }
-    
+
     .hero-banner p {
         color: rgba(255, 255, 255, 0.9);
         margin: 0;
         font-size: 14px;
     }
-    
-    .page-header-white {
-        display: none;
-    }
-    
-    :root{
-        --primary:#004526;
-        --secondary:#006638;
-        --purple:#8B5CF6;
-        --blue:#3B82F6;
-        --pink:#EC4899;
-        --bg:#F8FAFC;
-        --card:#FFFFFF;
-        --radius:20px;
-        --shadow: 0 12px 30px rgba(0, 69, 38, 0.12);
-        --shadow-soft: 0 8px 20px rgba(2, 6, 23, 0.06);
+
+    .profile-wrap {
+        padding: 0;
+        max-width: 100%;
     }
 
-    /* Premium banner */
-    .profile-banner{
-        background: #FFFFFF;
+    .profile-banner {
+        background: var(--card);
         border-radius: var(--radius);
         box-shadow: var(--shadow-soft);
         border: 1px solid rgba(2, 6, 23, 0.06);
-        padding: 1.75rem;
-        position: relative;
-        overflow: hidden;
-        color: #0B1220;
+        padding: 1.5rem;
+        color: var(--text);
         margin-bottom: 24px;
     }
-    .profile-banner::before{
-        display: none;
-    }
 
-    .glass{
-        background: rgba(248, 250, 252, 0.8);
+    .glass {
+        background: rgba(248, 250, 252, 0.9);
         border: 1px solid rgba(2, 6, 23, 0.06);
-        backdrop-filter: none;
-        border-radius: calc(var(--radius) - 6px);
-        padding: 1rem;
+        border-radius: 12px;
+        padding: 0.85rem 1rem;
     }
 
-    .avatar-shell{
+    .profile-identity {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        min-width: 0;
+    }
+
+    .avatar-shell {
         width: 92px;
         height: 92px;
         border-radius: 50%;
         background: #FFFFFF;
-        padding: 6px;
-        border: 1px solid rgba(2, 6, 23, 0.06);
-        display:flex;
-        align-items:center;
-        justify-content:center;
+        padding: 5px;
+        border: 1px solid rgba(2, 6, 23, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
     }
-    .avatar-shell img{
-        width:100%;
-        height:100%;
-        border-radius:50%;
-        object-fit:cover;
+
+    .avatar-shell img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
         background: #fff;
     }
-    .avatar-fallback{
-        width:100%;
-        height:100%;
-        border-radius:50%;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        font-weight: 600;
-        font-size: 2rem;
-        color: rgba(255,255,255,0.95);
-        background: linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.08));
-    }
 
-    .kpi-card{
-        background: var(--card);
-        border-radius: var(--radius);
-        box-shadow: var(--shadow-soft);
-        border: 1px solid rgba(15,118,110,0.08);
-        padding: 1rem 1.15rem;
-        transition: transform .18s ease, box-shadow .18s ease;
-        position: relative;
-        overflow:hidden;
-        min-height: 96px;
-    }
-    .kpi-card:hover{
-        transform: translateY(-4px);
-        box-shadow: var(--shadow);
-    }
-    .kpi-icon{
-        width: 42px;
-        height: 42px;
-        border-radius: 14px;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        color:white;
-        margin-bottom:.6rem;
-        background: linear-gradient(135deg, rgba(0,0,0,0.08), rgba(0,0,0,0));
-    }
-    .kpi-value{
-        font-weight: 600;
-        font-size: 28px;
-        letter-spacing: -0.02em;
-        color: #0B1220;
-        margin-bottom: .15rem;
-    }
-    .kpi-label{
-        color: rgba(11,18,32,0.65);
-        font-weight: 400;
-        font-size: 12px;
-    }
-    .kpi-pill{
-        position:absolute;
-        right:-18px;
-        top:-18px;
-        width: 60px;
-        height: 60px;
+    .avatar-fallback {
+        width: 100%;
+        height: 100%;
         border-radius: 50%;
-        opacity: .12;
-        pointer-events:none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 2rem;
+        color: #fff;
+        background: linear-gradient(135deg, #004526, #006638);
     }
 
-    /* Personal info */
-    .section-card{
+    .profile-name {
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+        margin: 0;
+        word-break: break-word;
+    }
+
+    .contact-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.65rem;
+    }
+
+    .contact-chips .glass {
+        padding: 0.45rem 0.75rem;
+        font-size: 0.875rem;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+    }
+
+    .banner-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .edit-profile-btn {
+        background: #004526;
+        border: 1px solid #004526;
+        color: #fff;
+        border-radius: 12px;
+        padding: 0.7rem 1rem;
+        font-weight: 500;
+        display: inline-flex;
+        gap: 0.6rem;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.18s ease, background 0.18s ease;
+        text-decoration: none;
+        white-space: nowrap;
+        align-self: flex-end;
+    }
+
+    .edit-profile-btn:hover {
+        transform: translateY(-2px);
+        background: #006638;
+        border-color: #006638;
+        color: #fff;
+    }
+
+    .banner-stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.75rem;
+    }
+
+    .banner-stats .glass {
+        min-width: 0;
+    }
+
+    .stat-label {
+        font-weight: 600;
+        opacity: 0.75;
+        font-size: 0.75rem;
+    }
+
+    .stat-value {
+        font-weight: 600;
+        font-size: 0.95rem;
+        word-break: break-word;
+    }
+
+    .stat-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .stat-icon.green {
+        background: rgba(0, 69, 38, 0.1);
+        color: #004526;
+    }
+
+    .stat-icon.blue {
+        background: rgba(59, 130, 246, 0.1);
+        color: #3B82F6;
+    }
+
+    .stat-icon.teal {
+        background: rgba(16, 185, 129, 0.1);
+        color: #10B981;
+    }
+
+    .section-card,
+    .widget {
         background: var(--card);
         border-radius: var(--radius);
         box-shadow: var(--shadow-soft);
         border: 1px solid rgba(2, 6, 23, 0.06);
         padding: 1.25rem;
         margin-bottom: 1.25rem;
+        height: 100%;
     }
-    .section-title-premium{
+
+    .section-title-premium {
         font-weight: 700;
         letter-spacing: -0.02em;
-        color: #0B1220;
-        display:flex;
-        align-items:center;
-        gap:.75rem;
-        margin-bottom: .95rem;
-        font-size: 18px;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 0.95rem;
+        font-size: 1.05rem;
     }
-    .section-title-premium i{
+
+    .section-title-premium i {
         width: 40px;
         height: 40px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #004526;
+        background: rgba(0, 69, 38, 0.08);
+        flex-shrink: 0;
+    }
+
+    .info-item {
+        background: #FFFFFF;
+        border: 1px solid rgba(2, 6, 23, 0.06);
         border-radius: 14px;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        color:#004526;
+        padding: 0.95rem;
+        display: flex;
+        gap: 0.75rem;
+        align-items: flex-start;
+        min-height: 86px;
+        height: 100%;
+    }
+
+    .info-item .icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #004526;
+        flex-shrink: 0;
         background: rgba(0, 69, 38, 0.08);
     }
 
-    .info-grid .info-item{
-        background: #FFFFFF;
-        border: 1px solid rgba(2, 6, 23, 0.06);
-        border-radius: 16px;
-        padding: .95rem;
-        display:flex;
-        gap: .75rem;
-        align-items:flex-start;
-        min-height: 86px;
-        position: relative;
-    }
-    .info-grid .info-item .icon{
-        width: 40px;
-        height: 40px;
-        border-radius: 14px;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        color:#004526;
-        flex-shrink:0;
-        background: rgba(0, 69, 38, 0.08);
-    }
-    .info-grid .info-item .label{
+    .info-item .label {
         font-weight: 600;
-        color: rgba(11,18,32,0.65);
-        font-size:12px;
-        margin-bottom:.25rem;
+        color: var(--muted);
+        font-size: 12px;
+        margin-bottom: 0.25rem;
     }
-    .info-grid .info-item .value{
+
+    .info-item .value {
         font-weight: 500;
-        color:#0B1220;
+        color: var(--text);
         font-size: 14px;
         word-break: break-word;
     }
-    .info-grid .edit-btn{
-        position:absolute;
-        right: 10px;
-        top: 10px;
-        width: 34px;
-        height: 34px;
-        border-radius: 14px;
-        box-shadow: none;
+
+    .timeline {
+        padding: 0.25rem 0;
     }
 
-    /* Timeline + widgets */
-    .timeline{
-        padding: .35rem 0;
-    }
-    .timeline-item{
+    .timeline-item {
         position: relative;
         padding: 0 0 1rem 1.35rem;
-        margin-bottom:.65rem;
+        margin-bottom: 0.5rem;
     }
-    .timeline-item::before{
-        content:"";
-        position:absolute;
-        left:0;
-        top: 0.25rem;
+
+    .timeline-item::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.3rem;
         width: 12px;
         height: 12px;
         border-radius: 50%;
         background: linear-gradient(135deg, var(--secondary), var(--blue));
-        box-shadow: 0 6px 14px rgba(16,185,129,0.25);
+        box-shadow: 0 4px 10px rgba(0, 102, 56, 0.2);
     }
-    .timeline-item::after{
-        content:"";
-        position:absolute;
-        left:5px;
+
+    .timeline-item::after {
+        content: "";
+        position: absolute;
+        left: 5px;
         top: 1.05rem;
         width: 2px;
         height: calc(100% - 1.05rem);
-        background: linear-gradient(180deg, rgba(16,185,129,0.55), rgba(59,130,246,0));
+        background: linear-gradient(180deg, rgba(0, 102, 56, 0.45), rgba(59, 130, 246, 0));
     }
-    .timeline-item:last-child::after{ display:none; }
 
-    .timeline-date{
-        color: rgba(11,18,32,0.55);
-        font-weight: 400;
-        font-size: 12px;
-        margin-bottom: .15rem;
+    .timeline-item:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
     }
-    .timeline-title{
+
+    .timeline-item:last-child::after {
+        display: none;
+    }
+
+    .timeline-date {
+        color: rgba(11, 18, 32, 0.55);
+        font-size: 12px;
+        margin-bottom: 0.15rem;
+    }
+
+    .timeline-title {
         font-weight: 700;
-        color:#0B1220;
-        margin-bottom: .2rem;
+        color: var(--text);
+        margin-bottom: 0.2rem;
         font-size: 14px;
     }
-    .timeline-desc{
-        color: rgba(11,18,32,0.65);
-        font-weight: 400;
+
+    .timeline-desc {
+        color: var(--muted);
         font-size: 13px;
+        word-break: break-word;
     }
 
-    .widget{
-        background: var(--card);
-        border-radius: var(--radius);
-        box-shadow: var(--shadow-soft);
-        border: 1px solid rgba(2, 6, 23, 0.06);
-        padding: 1.25rem;
-    }
-
-    .widget-grid .w-item{
-        border-radius: 16px;
+    .w-item {
+        border-radius: 14px;
         border: 1px solid rgba(2, 6, 23, 0.06);
         background: #FFFFFF;
-        padding: .95rem;
+        padding: 0.95rem;
         min-height: 84px;
+        height: 100%;
     }
-    .widget-grid .w-item .w-label{
-        color: rgba(11,18,32,0.62);
+
+    .w-item .w-label {
+        color: var(--muted);
         font-weight: 500;
         font-size: 12px;
-        margin-bottom: .25rem;
-        display:flex;
-        align-items:center;
-        gap:.5rem;
+        margin-bottom: 0.35rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
     }
-    .widget-grid .w-item .w-value{
-        font-weight: 600;
-        color:#0B1220;
-        font-size: 16px;
-    }
-    .widget-grid .w-item i{ color: var(--blue); }
 
-    .edit-profile-btn{
-        background: #004526;
-        border: 1px solid #004526;
-        color: #fff;
-        border-radius: 16px;
-        padding: .7rem 1rem;
-        font-weight: 500;
-        display:flex;
-        gap:.6rem;
-        align-items:center;
-        transition: transform .18s ease, background .18s ease;
-        cursor:pointer;
-        white-space: nowrap;
+    .w-item .w-value {
+        font-weight: 600;
+        color: var(--text);
+        font-size: 1rem;
+        word-break: break-word;
     }
-    .edit-profile-btn:hover{
-        transform: translateY(-2px);
-        background: #006638;
-        border-color: #006638;
+
+    .w-item i {
+        color: var(--primary);
+    }
+
+    .empty-inline {
+        text-align: center;
+        padding: 1.5rem 1rem;
+        color: var(--muted);
+    }
+
+    .empty-inline i {
+        font-size: 1.5rem;
+        color: rgba(0, 69, 38, 0.35);
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .empty-inline a {
+        color: var(--primary);
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .empty-inline a:hover {
+        text-decoration: underline;
     }
 
     a:focus,
@@ -335,115 +425,148 @@
         box-shadow: none;
     }
 
+    @media (max-width: 991.98px) {
+        .banner-actions {
+            margin-top: 0.5rem;
+        }
 
-    /* ── Profile banner stats ────────────────────────────── */
-    .banner-stats{
-        display: flex;
-        gap: .75rem;
-        flex-wrap: nowrap;
-        margin-top: .75rem;
-    }
-    .banner-stats .glass{
-        flex: 1;
-        min-width: 0;
+        .edit-profile-btn {
+            align-self: stretch;
+            width: 100%;
+        }
+
+        .banner-stats {
+            grid-template-columns: 1fr;
+        }
     }
 
-    /* Responsive */
-    @media (max-width: 991px){
-        .kpi-card{ min-height: 92px; }
-        .banner-stats{ flex-wrap: wrap; }
+    @media (max-width: 767.98px) {
+        .main-content-wrapper {
+            padding: 16px 18px;
+        }
+
+        .hero-banner {
+            padding: 24px 18px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+        }
+
+        .profile-banner,
+        .section-card,
+        .widget {
+            padding: 1.1rem;
+            border-radius: 14px;
+        }
+
+        .profile-identity {
+            align-items: flex-start;
+        }
+
+        .avatar-shell {
+            width: 72px;
+            height: 72px;
+        }
+
+        .avatar-fallback {
+            font-size: 1.5rem;
+        }
     }
-    @media (max-width: 768px){
-        .profile-banner{ padding: 1.2rem; }
-        .avatar-shell{ width: 78px; height: 78px; }
+
+    @media (max-width: 575.98px) {
+        .banner-stats {
+            gap: 0.6rem;
+        }
+
+        .contact-chips .glass {
+            width: 100%;
+        }
     }
 </style>
-
 {% endblock %}
 
 {% block content %}
 <div class="profile-content">
 
-<!-- Hero Banner -->
 <div class="hero-banner">
     <h1>My Profile</h1>
-    <p>Welcome back, {{ user.first_name|default:user.username }}! Here's what's happening with your property search today.</p>
+    <p>Manage your details and review your recent property search activity.</p>
 </div>
 
-<div class="profile-wrap" style="padding: 0 30px;">
-    <!-- Profile Banner -->
-    <div class="profile-banner mb-3">
-        <div class="row align-items-center g-3" style="position:relative; z-index:1;">
-            <div class="col-lg-8">
-                <div class="d-flex align-items-center gap-3">
+<div class="profile-wrap">
+    <div class="profile-banner">
+        <div class="row align-items-start g-3">
+            <div class="col-lg-7">
+                <div class="profile-identity">
                     <div class="avatar-shell">
-                        {% if profile.profile_picture and profile.profile_picture.url %}
-                            <img src="{{ profile.profile_picture.url }}" alt="Profile">
+                        {% if profile.profile_picture %}
+                            <img src="{{ profile.profile_picture.url }}" alt="{{ user.get_full_name|default:user.username }}">
                         {% else %}
                             <div class="avatar-fallback">
-                                {{ profile.user.first_name.0|default:profile.user.username.0|upper }}
+                                {{ user.first_name.0|default:user.username.0|upper }}
                             </div>
                         {% endif %}
                     </div>
 
-                    <div>
-                        <h2 class="m-0" style="font-weight: 700; letter-spacing:-0.02em;">
-                            {{ profile.user.get_full_name|default:profile.user.username }}
+                    <div style="min-width:0;">
+                        <h2 class="profile-name">
+                            {{ user.get_full_name|default:user.username }}
                         </h2>
-                        <div class="d-flex gap-2 flex-wrap mt-1">
-                            <span class="d-inline-flex align-items-center glass" style="padding:.55rem .75rem;">
+                        <div class="contact-chips">
+                            <span class="d-inline-flex align-items-center glass">
                                 <i class="fas fa-envelope me-2"></i>
-                                <span style="font-weight:400;">{{ profile.user.email }}</span>
+                                <span>{{ user.email|default:"Not set" }}</span>
                             </span>
-                            <span class="d-inline-flex align-items-center glass" style="padding:.55rem .75rem;">
+                            <span class="d-inline-flex align-items-center glass">
                                 <i class="fas fa-phone me-2"></i>
-                                <span style="font-weight:400;">{{ profile.phone|default:'Not set' }}</span>
+                                <span>{{ profile.phone|default:"Not set" }}</span>
                             </span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-4">
-                <div class="d-flex justify-content-lg-end mb-2">
-                    <a href="{% url 'customer:edit-profile-page' %}" class="edit-profile-btn" style="text-decoration:none;">
+            <div class="col-lg-5">
+                <div class="banner-actions">
+                    <a href="{% url 'customer:edit-profile-page' %}" class="edit-profile-btn">
                         <i class="fas fa-pen"></i> Edit Profile
                     </a>
-                </div>
 
-                <div class="banner-stats">
-                    <div class="glass">
-                        <div class="d-flex align-items-center justify-content-between gap-2">
-                            <div>
-                                <div style="font-weight:600; opacity:.75; font-size:.75rem;">Member Since</div>
-                                <div style="font-weight:600; font-size:.95rem;">{{ profile.created_at|date:'M Y' }}</div>
-                            </div>
-                            <div style="width:36px;height:36px;border-radius:12px;background:rgba(0,69,38,0.1);display:flex;align-items:center;justify-content:center;color:#004526;flex-shrink:0;">
-                                <i class="fas fa-calendar-alt"></i>
+                    <div class="banner-stats">
+                        <div class="glass">
+                            <div class="d-flex align-items-center justify-content-between gap-2">
+                                <div>
+                                    <div class="stat-label">Member Since</div>
+                                    <div class="stat-value">{{ profile.created_at|date:"M Y" }}</div>
+                                </div>
+                                <div class="stat-icon green">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="glass">
-                        <div class="d-flex align-items-center justify-content-between gap-2">
-                            <div>
-                                <div style="font-weight:600; opacity:.75; font-size:.75rem;">Last Login</div>
-                                <div style="font-weight:600; font-size:.95rem;">{% if user.last_login %}{{ user.last_login|naturaltime }}{% else %}N/A{% endif %}</div>
-                            </div>
-                            <div style="width:36px;height:36px;border-radius:12px;background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center;color:#3B82F6;flex-shrink:0;">
-                                <i class="fas fa-clock"></i>
+                        <div class="glass">
+                            <div class="d-flex align-items-center justify-content-between gap-2">
+                                <div>
+                                    <div class="stat-label">Last Login</div>
+                                    <div class="stat-value">
+                                        {% if user.last_login %}{{ user.last_login|naturaltime }}{% else %}N/A{% endif %}
+                                    </div>
+                                </div>
+                                <div class="stat-icon blue">
+                                    <i class="fas fa-clock"></i>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="glass">
-                        <div class="d-flex align-items-center justify-content-between gap-2">
-                            <div>
-                                <div style="font-weight:600; opacity:.75; font-size:.75rem;">Status</div>
-                                <div style="font-weight:600; font-size:.95rem;">{% if user.is_active %}Active{% else %}Inactive{% endif %}</div>
-                            </div>
-                            <div style="width:36px;height:36px;border-radius:12px;background:rgba(16,185,129,0.1);display:flex;align-items:center;justify-content:center;color:#10B981;flex-shrink:0;">
-                                <i class="fas fa-check-circle"></i>
+                        <div class="glass">
+                            <div class="d-flex align-items-center justify-content-between gap-2">
+                                <div>
+                                    <div class="stat-label">Status</div>
+                                    <div class="stat-value">{% if user.is_active %}Active{% else %}Inactive{% endif %}</div>
+                                </div>
+                                <div class="stat-icon teal">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -453,7 +576,6 @@
     </div>
 
     <div class="row g-3">
-        <!-- Personal Information -->
         <div class="col-lg-7">
             <div class="section-card">
                 <div class="section-title-premium">
@@ -461,43 +583,63 @@
                     Personal Information
                 </div>
 
-                <div class="info-grid row g-3">
-                    <div class="col-md-6">
+                <div class="row g-3">
+                    <div class="col-sm-6">
                         <div class="info-item">
                             <div class="icon"><i class="fas fa-id-card"></i></div>
                             <div>
                                 <div class="label">Full Name</div>
-                                <div class="value" data-field="full_name">{{ profile.user.get_full_name|default:'Not set' }}</div>
+                                <div class="value">{{ user.get_full_name|default:"Not set" }}</div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-sm-6">
+                        <div class="info-item">
+                            <div class="icon"><i class="fas fa-at"></i></div>
+                            <div>
+                                <div class="label">Username</div>
+                                <div class="value">{{ user.username }}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
                         <div class="info-item">
                             <div class="icon"><i class="fas fa-envelope"></i></div>
                             <div>
                                 <div class="label">Email Address</div>
-                                <div class="value" data-field="email">{{ profile.user.email }}</div>
+                                <div class="value">{{ user.email|default:"Not set" }}</div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-sm-6">
                         <div class="info-item">
                             <div class="icon"><i class="fas fa-phone"></i></div>
                             <div>
                                 <div class="label">Phone Number</div>
-                                <div class="value" data-field="phone">{{ profile.phone|default:'Not set' }}</div>
+                                <div class="value">{{ profile.phone|default:"Not set" }}</div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-sm-6">
+                        <div class="info-item">
+                            <div class="icon"><i class="fas fa-map-marker-alt"></i></div>
+                            <div>
+                                <div class="label">Address</div>
+                                <div class="value">{{ profile.address|default:"Not set" }}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
                         <div class="info-item">
                             <div class="icon"><i class="fas fa-bullseye"></i></div>
                             <div>
                                 <div class="label">Preferred Contact</div>
-                                <div class="value" data-field="contact_method">{{ profile.get_preferred_contact_method_display|default:'Not set' }}</div>
+                                <div class="value">{{ profile.get_preferred_contact_method_display|default:"Not set" }}</div>
                             </div>
                         </div>
                     </div>
@@ -505,74 +647,83 @@
             </div>
         </div>
 
-        <!-- Recent Activity + Saved Properties -->
         <div class="col-lg-5">
             <div class="section-card">
                 <div class="section-title-premium">
-                    <i class="fas fa-history" style="background: linear-gradient(135deg, rgba(59,130,246,1), rgba(236,72,153,1));"></i>
+                    <i class="fas fa-history"></i>
                     Recent Activity
                 </div>
 
-                <div class="timeline">
-                    <div class="timeline-item">
-                        <div class="timeline-date">Today</div>
-                        <div class="timeline-title">Profile Updated</div>
-                        <div class="timeline-desc">Changed phone number</div>
+                {% if activity_timeline %}
+                    <div class="timeline">
+                        {% for activity in activity_timeline %}
+                            <div class="timeline-item">
+                                <div class="timeline-date">{{ activity.date|naturaltime }}</div>
+                                <div class="timeline-title">{{ activity.title }}</div>
+                                <div class="timeline-desc">{{ activity.description }}</div>
+                            </div>
+                        {% endfor %}
                     </div>
-                    <div class="timeline-item">
-                        <div class="timeline-date">Yesterday</div>
-                        <div class="timeline-title">Property Saved</div>
-                        <div class="timeline-desc">Added “Luxury Villa” to saved properties</div>
+                {% else %}
+                    <div class="empty-inline">
+                        <i class="fas fa-stream"></i>
+                        <div>No recent activity yet.</div>
+                        <div class="mt-2">
+                            <a href="{% url 'buy:property_search' %}">Browse properties</a> to get started.
+                        </div>
                     </div>
-                    <div class="timeline-item">
-                        <div class="timeline-date">2 days ago</div>
-                        <div class="timeline-title">Login Activity</div>
-                        <div class="timeline-desc">Signed in from a new device</div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-date">1 week ago</div>
-                        <div class="timeline-title">Password Changes</div>
-                        <div class="timeline-desc">Security update completed</div>
-                    </div>
-                </div>
+                {% endif %}
             </div>
 
-            <div class="widget mt-3">
-                <div class="section-title-premium" style="margin-bottom: .9rem;">
-                    <i class="fas fa-star" style="background: linear-gradient(135deg, rgba(139,92,246,1), rgba(59,130,246,1));"></i>
-                    Saved Properties Overview
+            <div class="widget">
+                <div class="section-title-premium" style="margin-bottom: 0.9rem;">
+                    <i class="fas fa-chart-pie"></i>
+                    Activity Overview
                 </div>
 
-                <div class="widget-grid row g-3">
-                    <div class="col-md-6 w-item">
-                        <div class="w-label"><i class="fas fa-layer-group"></i> Total Saved</div>
-                        <div class="w-value">12</div>
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="w-item">
+                            <div class="w-label"><i class="fas fa-heart"></i> Total Saved</div>
+                            <div class="w-value">{{ profile_stats.total_saved }}</div>
+                        </div>
                     </div>
-                    <div class="col-md-6 w-item">
-                        <div class="w-label"><i class="fas fa-eye"></i> Recently Viewed</div>
-                        <div class="w-value">3</div>
+                    <div class="col-6">
+                        <div class="w-item">
+                            <div class="w-label"><i class="fas fa-envelope"></i> Total Inquiries</div>
+                            <div class="w-value">{{ profile_stats.total_inquiries }}</div>
+                        </div>
                     </div>
-                    <div class="col-md-6 w-item">
-                        <div class="w-label"><i class="fas fa-compass"></i> Interests</div>
-                        <div class="w-value">Villa</div>
+                    <div class="col-6">
+                        <div class="w-item">
+                            <div class="w-label"><i class="fas fa-compass"></i> Top Interest</div>
+                            <div class="w-value">{{ profile_stats.top_interest|default:"—" }}</div>
+                        </div>
                     </div>
-                    <div class="col-md-6 w-item">
-                        <div class="w-label"><i class="fas fa-heart"></i> Favourite Locations</div>
-                        <div class="w-value">Chennai</div>
+                    <div class="col-6">
+                        <div class="w-item">
+                            <div class="w-label"><i class="fas fa-map-marker-alt"></i> Favourite Location</div>
+                            <div class="w-value">{{ profile_stats.top_location|default:"—" }}</div>
+                        </div>
                     </div>
                 </div>
+
+                {% if profile_stats.total_saved or profile_stats.total_inquiries %}
+                    <div class="d-flex flex-wrap gap-2 mt-3">
+                        <a href="{% url 'customer:saved-properties-page' %}" class="btn btn-sm btn-outline-success" style="border-radius:10px;">
+                            View Saved
+                        </a>
+                        <a href="{% url 'customer:inquiries-page' %}" class="btn btn-sm btn-outline-success" style="border-radius:10px;">
+                            View Inquiries
+                        </a>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>
 </div>
 </div>
-
-
 {% endblock %}
 
 {% block extra_js %}
-<script>
-    // Profile page — all editing is now handled on the dedicated Edit Profile page.
-    // No drawer or modal logic needed here.
-</script>
 {% endblock %}
