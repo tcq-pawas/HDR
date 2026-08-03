@@ -13,11 +13,12 @@ from .forms import (
 )
 from django.utils import timezone
 from datetime import timedelta
-from Apps.Administration.auth_utils import get_user_role
+from Apps.Administration.auth_utils import get_user_role, role_required
 from django.forms import inlineformset_factory
 from django.views.decorators.http import require_POST
 
-@login_required
+
+@role_required(['admin'])
 def manage_subscriptions(request):
     """List page - shows all subscription plans in the dashboard table."""
     plans = SubscriptionPlan.objects.all().order_by("display_order")
@@ -30,7 +31,7 @@ def manage_subscriptions(request):
     return render(request, "subscriptions/plan_list.html", context)
 
 
-@login_required
+@role_required(['admin'])
 def manage_master_features(request):
     """Manage Master Features Table page - list, add, edit, delete master features."""
     features = PlanFeature.objects.all().order_by("display_order", "name")
@@ -86,7 +87,7 @@ def _ensure_plan_features_exist(plan):
         )
 
 
-@login_required
+@role_required(['admin'])
 def add_subscription_plan(request):
     """Add page - create a plan along with its pricing rows and feature rows in one go."""
     if request.method == "POST":
@@ -145,7 +146,7 @@ def add_subscription_plan(request):
     return render(request, "subscriptions/plan_form.html", context)
 
 
-@login_required
+@role_required(['admin'])
 def edit_subscription_plan(request, pk):
     """Edit page - update a plan, its pricing rows and its feature rows together."""
     plan = get_object_or_404(SubscriptionPlan, pk=pk)
@@ -183,7 +184,7 @@ def edit_subscription_plan(request, pk):
 
 
 
-@login_required
+@role_required(['admin'])
 def delete_subscription_plan(request, pk):
     """Delete a plan (and its pricing/features via CASCADE)."""
     plan = get_object_or_404(SubscriptionPlan, pk=pk)
@@ -196,7 +197,7 @@ def delete_subscription_plan(request, pk):
     return render(request, "subscriptions/plan_confirm_delete.html", context)
 
 
-@login_required
+@role_required(['admin'])
 @require_POST
 def toggle_plan_status(request, pk):
     """Quick action - flip is_active from the list table without opening the edit page."""
