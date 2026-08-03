@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomerProfile, Inquiry, SavedProperty, PropertyViewing, CustomerFeedback
+from .models import CustomerProfile, Inquiry, SavedProperty, CustomerFeedback
 
 
 @admin.register(CustomerProfile)
@@ -26,15 +26,6 @@ class SavedPropertyAdmin(admin.ModelAdmin):
     search_fields = ['customer__username', 'property__title']
     readonly_fields = ['saved_at']
     date_hierarchy = 'saved_at'
-
-
-@admin.register(PropertyViewing)
-class PropertyViewingAdmin(admin.ModelAdmin):
-    list_display = ['customer', 'property', 'scheduled_date', 'status', 'created_at']
-    list_filter = ['status', 'scheduled_date', 'created_at']
-    search_fields = ['customer__username', 'property__title']
-    readonly_fields = ['created_at', 'updated_at']
-    date_hierarchy = 'scheduled_date'
 
 
 @admin.register(CustomerFeedback)

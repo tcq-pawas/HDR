@@ -475,18 +475,6 @@
             <i class="fas fa-chevron-right" style="color:#10B981;"></i>
         </div>
 
-<div class="sp-action-card" onclick="scheduleViewing('')" >
-
-            <div class="sp-action-left">
-                <div class="sp-action-icon" style="background: linear-gradient(135deg, #8B5CF6, rgba(139,92,246,0.6));"><i class="fas fa-calendar-check"></i></div>
-                <div>
-                    <p class="sp-action-title">Schedule Site Visit</p>
-                    <p class="sp-action-sub">Plan your viewing</p>
-                </div>
-            </div>
-            <i class="fas fa-chevron-right" style="color:#8B5CF6;"></i>
-        </div>
-
         <div class="sp-action-card" onclick="makeInquiry()">
             <div class="sp-action-left">
                 <div class="sp-action-icon" style="background: linear-gradient(135deg, #F59E0B, rgba(245,158,11,0.6));"><i class="fas fa-headset"></i></div>
@@ -603,11 +591,6 @@
                             <div class="sp-action-row">
                                 <button class="sp-btn sp-btn-primary" type="button" onclick="makeInquiry()">
                                     <i class="fas fa-envelope"></i> Inquire
-                                </button>
-                            </div>
-                            <div class="sp-action-row">
-                                <button class="sp-btn" type="button" onclick="scheduleViewing({{ saved_property.id }})">
-                                    <i class="fas fa-calendar-check"></i> Schedule Visit
                                 </button>
                                 <button class="sp-btn sp-btn-danger" type="button" onclick="toggleSave({{ saved_property.property.id }})">
                                     <i class="fas fa-heart-crack"></i> Remove
@@ -855,16 +838,6 @@
         // Compatibility: old buttons may call viewDetails
         function viewDetails(propertyId){
             viewProperty(propertyId);
-        }
-
-        // function scheduleViewing(propertyId) {
-            // If a viewing modal exists elsewhere, keep behaviour.
-            // Otherwise, keep non-breaking frontend alert.
-        //     alert('Schedule visit flow. Backend URLs unchanged.');
-        // }
-
-        function submitViewing() {
-            alert('Viewing scheduled successfully! We will contact you to confirm the details.');
         }
 
         function addNotes(savedPropertyId) {

@@ -724,16 +724,17 @@ def activate_user(request, user_id):
     user.is_active = True
     user.save()
     
-    # If the user was just approved, send them the approval email with a password reset link
+    # Always verify the profile when the admin clicks activate/approve
+    if hasattr(user, 'agent_profile'):
+        user.agent_profile.is_verified = True
+        user.agent_profile.verification_status = 'approved'
+        user.agent_profile.save()
+    elif hasattr(user, 'investor_profile'):
+        user.investor_profile.verified = True
+        user.investor_profile.save()
+        
+    # If the user was just approved/activated, send them the approval email with a password reset link
     if was_inactive:
-        # Check if they are an agent or investor to verify their profile
-        if hasattr(user, 'agent_profile'):
-            user.agent_profile.is_verified = True
-            user.agent_profile.save()
-        elif hasattr(user, 'investor_profile'):
-            user.investor_profile.verified = True
-            user.investor_profile.save()
-            
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         token = default_token_generator.make_token(user)
         domain = request.get_host()
@@ -1280,9 +1281,10 @@ def save_general_settings(request):
 @permission_classes([permissions.IsAuthenticated])
 def get_unread_inquiries(request):
     from .auth_utils import get_user_role
-    if get_user_role(request.user) != 'admin':
+    user_role = get_user_role(request.user)
+    if user_role not in ['admin', 'owner']:
         from rest_framework.exceptions import PermissionDenied
-        raise PermissionDenied("Admin access required.")
+        raise PermissionDenied("Admin or owner access required.")
     
     from Apps.PublicPage.models import Inquiry as WebsiteContactInquiry
     
@@ -1360,3 +1362,134 @@ class AdminPropertyListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         return Property.objects.filter(is_admin_list=True).order_by('-created_at')
+
+# --- Document Verification / KYC Management ---
+
+@login_required
+def document_verification_list(request):
+    """View to list all Agent KYC documents for Admin Review"""
+    from .auth_utils import get_user_role
+    if get_user_role(request.user) != 'admin':
+        from django.core.exceptions import PermissionDenied
+        raise PermissionDenied("Admin access required.")
+        
+    from Apps.Agent.models import AgentProfile
+    # Group profiles by status
+    pending = AgentProfile.objects.filter(verification_status='pending').select_related('user').order_by('-user__date_joined')
+    approved = AgentProfile.objects.filter(verification_status='approved').select_related('user').order_by('-user__date_joined')
+    rejected = AgentProfile.objects.filter(verification_status='rejected').select_related('user').order_by('-user__date_joined')
+    
+    context = {
+        'pending_profiles': pending,
+        'approved_profiles': approved,
+        'rejected_profiles': rejected,
+        'page_title': "KYC Verifications",
+    }
+    return render(request, 'administration/document_verification_list.html', context)
+
+
+@login_required
+def approve_kyc(request, profile_id):
+    """View to approve an agent's KYC documents"""
+    from .auth_utils import get_user_role
+    if get_user_role(request.user) != 'admin':
+        return JsonResponse({'success': False, 'message': 'Admin access required.'}, status=403)
+        
+    from Apps.Agent.models import AgentProfile
+    from django.core.mail import send_mail
+    from django.template.loader import render_to_string
+    from django.utils.html import strip_tags
+    from django.conf import settings
+    from django.contrib import messages
+    from django.shortcuts import redirect
+    from django.http import JsonResponse
+    
+    if request.method == 'POST':
+        try:
+            profile = AgentProfile.objects.get(id=profile_id)
+            profile.verification_status = 'approved'
+            profile.is_verified = True
+            profile.save()
+            
+            # Activate pending subscription if it exists
+            from Apps.Subscriptions.models import UserSubscription
+            from django.utils import timezone
+            from datetime import timedelta
+            
+            user_sub = UserSubscription.objects.filter(user=profile.user, status='pending').first()
+            if user_sub:
+                user_sub.status = 'active'
+                user_sub.start_date = timezone.now()
+                cycle_mapping = {'1M': 30, '3M': 90, '6M': 180, '12M': 365}
+                days = cycle_mapping.get(user_sub.pricing.billing_cycle, 30) if user_sub.pricing else 30
+                user_sub.end_date = timezone.now() + timedelta(days=days)
+                user_sub.save()
+            
+            # Send Email
+            subject = 'Your HeyDay Realty Account has been Approved!'
+            html_message = render_to_string('administration/emails/kyc_approved.html', {'user': profile.user})
+            plain_message = strip_tags(html_message)
+            from_email = settings.DEFAULT_FROM_EMAIL
+            to = profile.user.email
+            
+            if to:
+                send_mail(subject, plain_message, from_email, [to], html_message=html_message, fail_silently=True)
+                
+            messages.success(request, f"{profile.user.get_full_name() or profile.user.username}'s documents have been approved.")
+            return redirect('admin_dash:document_verification_list')
+        except AgentProfile.DoesNotExist:
+            messages.error(request, 'Agent profile not found.')
+            return redirect('admin_dash:document_verification_list')
+            
+    return redirect('admin_dash:document_verification_list')
+
+
+@login_required
+def reject_kyc(request, profile_id):
+    """View to reject an agent's KYC documents with a reason"""
+    from .auth_utils import get_user_role
+    if get_user_role(request.user) != 'admin':
+        return JsonResponse({'success': False, 'message': 'Admin access required.'}, status=403)
+        
+    from Apps.Agent.models import AgentProfile
+    from django.core.mail import send_mail
+    from django.template.loader import render_to_string
+    from django.utils.html import strip_tags
+    from django.conf import settings
+    from django.contrib import messages
+    from django.shortcuts import redirect
+    from django.http import JsonResponse
+    
+    if request.method == 'POST':
+        reason = request.POST.get('reason')
+        if not reason:
+            messages.error(request, 'Rejection reason is required.')
+            return redirect('administration:document_verification_list')
+            
+        try:
+            profile = AgentProfile.objects.get(id=profile_id)
+            profile.verification_status = 'rejected'
+            profile.is_verified = False
+            # Store the rejection reason if we want it in DB, but for now we just email it
+            profile.save()
+            
+            # Send Email
+            subject = 'Action Required: HeyDay Realty Document Verification'
+            html_message = render_to_string('administration/emails/kyc_rejected.html', {
+                'user': profile.user,
+                'reason': reason
+            })
+            plain_message = strip_tags(html_message)
+            from_email = settings.DEFAULT_FROM_EMAIL
+            to = profile.user.email
+            
+            if to:
+                send_mail(subject, plain_message, from_email, [to], html_message=html_message, fail_silently=True)
+                
+            messages.success(request, f"{profile.user.get_full_name() or profile.user.username}'s documents have been rejected.")
+            return redirect('admin_dash:document_verification_list')
+        except AgentProfile.DoesNotExist:
+            messages.error(request, 'Agent profile not found.')
+            return redirect('admin_dash:document_verification_list')
+            
+    return redirect('admin_dash:document_verification_list')

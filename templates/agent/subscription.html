@@ -178,9 +178,9 @@
                 const price = parseInt(priceElement.textContent.replace(/,/g, ''));
                 
                 if (price === 0) {
-                    window.location.href = `/subscriptions/checkout-free/${planId}/`;
+                    window.location.href = `/subscriptions/checkout/${planId}/`;
                 } else {
-                    window.location.href = `/subscriptions/checkout-paid/${planId}/?billing_cycle=${billingCycle}`;
+                    window.location.href = `/subscriptions/checkout/paid/${planId}/?billing_cycle=${billingCycle}`;
                 }
             });
         });

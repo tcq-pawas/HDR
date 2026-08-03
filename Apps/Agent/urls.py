@@ -10,6 +10,7 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('change-password/', views.change_password, name='change_password'),
     path('delete-account/', views.delete_account, name='delete_account'),
+    path('document-verification/', views.document_verification, name='document_verification'),
     
     # Property Management
     path('properties/', views.property_list, name='property_list'),
@@ -62,10 +63,6 @@ urlpatterns = [
     # Customer Management
     path('customers/', views.customer_list, name='customer_list'),
     path('customer/<str:phone>/', views.customer_detail, name='customer_detail'),
-    
-    # Reports
-    path('reports/', views.reports, name='reports'),
-    path('reports/export/<str:report_type>/', views.export_report, name='export_report'),
     
     # Subscription
     path('subscription/', views.subscription_plans, name='subscription_plans'),

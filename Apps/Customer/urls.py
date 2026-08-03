@@ -3,7 +3,7 @@ from . import views
 from .dashboard_views import (
     CustomerDashboardView, CustomerProfileView, CustomerEditProfileView,
     CustomerInquiriesView,
-    CustomerSavedPropertiesView, CustomerViewingsView,
+    CustomerSavedPropertiesView,
     update_profile, change_password, CustomerInquiryDetailView
 )
 
@@ -16,7 +16,6 @@ urlpatterns = [
     path('profile/edit/', CustomerEditProfileView.as_view(), name='edit-profile-page'),
     path('inquiries/', CustomerInquiriesView.as_view(), name='inquiries-page'),
     path('saved-properties/', CustomerSavedPropertiesView.as_view(), name='saved-properties-page'),
-    path('viewings/', CustomerViewingsView.as_view(), name='viewings-page'),
     path("create-inquiry/", views.create_inquiry, name="create_inquiry"),
     path("api/advisor-properties/<int:agent_profile_id>/", views.get_advisor_properties,name="advisor-properties"),
     path("inquiries/view/<int:pk>/",CustomerInquiryDetailView.as_view(),name="inquiry-detail-page"),
@@ -32,8 +31,6 @@ urlpatterns = [
     path('api/saved-properties/<int:pk>/', views.SavedPropertyDetailView.as_view(), name='saved-property-detail'),
     path('api/save-property/<int:property_id>/', views.save_property, name='save-property'),
     path('api/unsave-property/<int:property_id>/', views.unsave_property, name='unsave-property'),
-    path('api/viewings/', views.PropertyViewingListCreateView.as_view(), name='viewing-list'),
-    path('api/viewings/<int:pk>/', views.PropertyViewingDetailView.as_view(), name='viewing-detail'),
     path('api/feedback/', views.CustomerFeedbackListCreateView.as_view(), name='feedback-list'),
     path('api/feedback/<int:pk>/', views.CustomerFeedbackDetailView.as_view(), name='feedback-detail'),
 ]

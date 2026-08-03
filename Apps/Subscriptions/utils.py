@@ -11,8 +11,8 @@ def auto_assign_free_plan(user):
     if they don't already have an active subscription.
     """
     try:
-        # Check if user already has an active subscription
-        if hasattr(user, 'user_subscription') and user.user_subscription.status == 'active':
+        # Check if user already has any subscription that is active OR pending
+        if hasattr(user, 'user_subscription') and user.user_subscription.status in ['active', 'pending']:
             return False
             
         # Find the Free plan (assuming it's a plan with price=0)

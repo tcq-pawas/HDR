@@ -285,7 +285,14 @@
                     {{ fform.feature.as_hidden }}
                     <div class=" feature-name"> 
                         {{ fform.is_available }}
-                        <span > {{ fform.instance.feature.name }} </span>
+                        <span > 
+                            {% if fform.instance.pk %}
+                                {{ fform.instance.feature.name }}
+                            {% elif fform.master_feature_obj %}
+                                {{ fform.master_feature_obj.name }}
+                            {% endif %} 
+
+                        </span>
                     </div>
                     <div>
                         {{ fform.feature_value }}</div>

@@ -108,7 +108,7 @@ class Lead(models.Model):
     property = models.ForeignKey(Property, on_delete=models.SET_NULL, null=True, blank=True, related_name='leads')
     name = models.CharField(max_length=100)
     email = models.EmailField(blank=True)
-    phone = models.CharField(max_length=20)
+    phone = models.CharField(max_length=20, blank=True, null=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='new')
     source = models.CharField(max_length=20, choices=SOURCE_CHOICES, default='website')
     budget = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)

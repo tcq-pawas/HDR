@@ -3,12 +3,12 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render
-from .models import CustomerProfile, Inquiry, SavedProperty, PropertyViewing, CustomerFeedback
+from .models import CustomerProfile, Inquiry, SavedProperty, CustomerFeedback
 from .serializers import (
     CustomerProfileSerializer, InquirySerializer, SavedPropertySerializer,
-    PropertyViewingSerializer, CustomerFeedbackSerializer,
+    CustomerFeedbackSerializer,
     CreateInquirySerializer, CreateSavedPropertySerializer,
-    CreatePropertyViewingSerializer, CreateCustomerFeedbackSerializer
+    CreateCustomerFeedbackSerializer
 )
 from Apps.PublicPage.models import Property
 from django.http import JsonResponse
@@ -76,30 +76,6 @@ class SavedPropertyDetailView(generics.RetrieveDestroyAPIView):
 
     def get_queryset(self):
         return SavedProperty.objects.filter(customer=self.request.user)
-
-
-class PropertyViewingListCreateView(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        return PropertyViewing.objects.filter(customer=self.request.user).order_by('-scheduled_date')
-
-    def get_serializer_class(self):
-        if self.request.method == 'POST':
-            return CreatePropertyViewingSerializer
-        return PropertyViewingSerializer
-
-    def perform_create(self, serializer):
-        property_obj = get_object_or_404(Property, id=serializer.validated_data['property'].id)
-        serializer.save(customer=self.request.user, property=property_obj)
-
-
-class PropertyViewingDetailView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = PropertyViewingSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        return PropertyViewing.objects.filter(customer=self.request.user)
 
 
 class CustomerFeedbackListCreateView(generics.ListCreateAPIView):

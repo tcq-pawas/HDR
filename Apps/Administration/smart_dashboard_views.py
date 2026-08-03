@@ -100,5 +100,31 @@ class InvestorDashboardMixin(RoleBasedDashboardMixin):
 class AgentDashboardMixin(RoleBasedDashboardMixin):
     """Mixin for agent-only dashboard access"""
     
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            from .auth_utils import get_user_role
+            if get_user_role(request.user) == 'agent' and hasattr(request.user, 'agent_profile'):
+                from Apps.Subscriptions.models import UserSubscription
+                from django.urls import reverse
+                
+                # Check if the user has an active/pending paid plan
+                has_paid_plan = UserSubscription.objects.filter(
+                    user=request.user, 
+                    pricing__price__gt=0,
+                    status__in=['active', 'pending']
+                ).exists()
+                
+                if has_paid_plan and request.user.agent_profile.verification_status != 'approved':
+                    try:
+                        verification_url = reverse('agent:document_verification')
+                        if request.path != verification_url:
+                            from django.contrib import messages
+                            messages.warning(request, "Please verify your documents to access the dashboard.")
+                            return redirect(verification_url)
+                    except Exception:
+                        pass  # Url might not be registered yet
+                        
+        return super().dispatch(request, *args, **kwargs)
+    
     def has_role_access(self, user_role):
         return user_role in ['agent', 'owner']

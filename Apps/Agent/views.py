@@ -1358,99 +1358,8 @@ def customer_detail(request, phone):
     }
     
     return render(request, 'agent/customer_detail.html', context)
-
-
-@login_required
-def reports(request):
-    """Enhanced reports and analytics page"""
-    user_role = get_user_role(request.user)
-    if user_role not in ['agent', 'owner']:
-        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
-    
-    # Get date range from request
-    date_range = request.GET.get('range', '30')
-    days = int(date_range)
-    start_date = timezone.now().date() - timedelta(days=days)
-    
-    # Sales data
-    sales_data = Booking.objects.filter(
-        agent=request.user,
-        booking_date__gte=start_date
-    ).values('booking_date__date').annotate(
-        total=Sum('total_amount'),
-        count=Count('id')
-    ).order_by('booking_date__date')
-    
-    # Lead conversion data
-    leads_data = Lead.objects.filter(
-        agent=request.user,
-        created_at__gte=start_date
-    ).values('status').annotate(count=Count('id'))
-    
-    # Property performance
-    property_data = Property.objects.filter(
-        seller=request.user
-    ).annotate(
-        leads_count=Count('leads'),
-        views_count=Count('inquiries')
-    ).order_by('-leads_count')[:10]
-    
-    # Commission data
-    commission_data = Commission.objects.filter(
-        agent=request.user,
-        created_at__gte=start_date
-    ).values('status').annotate(total=Sum('commission_amount'))
-    
-    context = {
-        'date_range': date_range,
-        'sales_data': list(sales_data),
-        'leads_data': list(leads_data),
-        'property_data': property_data,
-        'commission_data': list(commission_data),
-    }
-    
-    return render(request, 'agent/reports.html', context)
-
-
-@login_required
-def export_report(request, report_type):
-    """Export reports to CSV"""
-    user_role = get_user_role(request.user)
-    if user_role not in ['agent', 'owner']:
-        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
-    
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = f'attachment; filename="{report_type}_report.csv"'
-    
-    writer = csv.writer(response)
-    
-    if report_type == 'leads':
-        writer.writerow(['Name', 'Email', 'Phone', 'Status', 'Source', 'Budget', 'Created Date'])
-        leads = Lead.objects.filter(agent=request.user)
-        for lead in leads:
-            writer.writerow([lead.name, lead.email, lead.phone, lead.status, lead.source, lead.budget, lead.created_at])
-    
-    elif report_type == 'bookings':
-        writer.writerow(['Customer Name', 'Property', 'Status', 'Total Amount', 'Booking Date'])
-        bookings = Booking.objects.filter(agent=request.user)
-        for booking in bookings:
-            writer.writerow([booking.customer_name, booking.property.title, booking.status, booking.total_amount, booking.booking_date])
-    
-    elif report_type == 'commissions':
-        writer.writerow(['Property', 'Commission Amount', 'Status', 'Due Date', 'Paid Date'])
-        commissions = Commission.objects.filter(agent=request.user)
-        for commission in commissions:
-            writer.writerow([commission.property.title, commission.commission_amount, commission.status, commission.due_date, commission.paid_date])
-    
-    elif report_type == 'site_visits':
-        writer.writerow(['Customer Name', 'Property', 'Scheduled Date', 'Status'])
-        visits = SiteVisit.objects.filter(agent=request.user)
-        for visit in visits:
-            writer.writerow([visit.customer_name, visit.property.title, visit.scheduled_date, visit.status])
-    
-    return response
-
-
+   
+     
 @login_required
 def change_password(request):
     """Change user password"""
@@ -1514,3 +1423,45 @@ def subscription_plans(request):
     return render(request, 'agent/subscription.html', {
         'plans': plans,
     })
+
+@login_required
+def document_verification(request):
+    """View to enforce KYC document upload for paid subscriptions"""
+    user_role = get_user_role(request.user)
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied.")
+        
+    from Apps.Subscriptions.models import UserSubscription
+    if not UserSubscription.objects.filter(user=request.user).exists():
+        messages.info(request, "Please choose a subscription plan first.")
+        return redirect('public:subscription_plans')
+        
+    try:
+        agent_profile = request.user.agent_profile
+    except AgentProfile.DoesNotExist:
+        agent_profile = AgentProfile.objects.create(user=request.user)
+        
+    if request.method == 'POST':
+        # Ensure at least one file is uploaded
+        if not any(k in request.FILES for k in ['id_proof_front', 'id_proof_back', 'address_proof']):
+            messages.error(request, 'At least 1 document is required.')
+            return redirect('agent:document_verification')
+            
+        # Handle uploads
+        if 'id_proof_front' in request.FILES:
+            agent_profile.id_proof_document = request.FILES['id_proof_front']
+        if 'id_proof_back' in request.FILES:
+            agent_profile.id_proof_back_document = request.FILES['id_proof_back']
+        if 'address_proof' in request.FILES:
+            agent_profile.address_proof_document = request.FILES['address_proof']
+            
+        agent_profile.verification_status = 'pending'
+        agent_profile.save()
+        messages.success(request, "Documents submitted successfully! They are now under review by our administration team.")
+        return redirect('agent:document_verification')
+        
+    context = {
+        'agent_profile': agent_profile,
+        'title': 'Document Verification',
+    }
+    return render(request, 'agent/document_verification.html', context)

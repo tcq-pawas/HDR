@@ -9,11 +9,13 @@ from .forms import (
     PlanPricingFormSet,
     MasterPlanFeatureForm,
     SubscriptionPlanFeatureFormSet,
+    SubscriptionPlanFeatureForm,
 )
 from django.utils import timezone
 from datetime import timedelta
 from Apps.Administration.auth_utils import get_user_role
-
+from django.forms import inlineformset_factory
+from django.views.decorators.http import require_POST
 
 @login_required
 def manage_subscriptions(request):
@@ -31,7 +33,7 @@ def manage_subscriptions(request):
 @login_required
 def manage_master_features(request):
     """Manage Master Features Table page - list, add, edit, delete master features."""
-    features = PlanFeature.objects.all().order_by("display_order", "name")
+    features = PlanFeature.objects.filter(is_active=True).order_by("display_order", "name")
     
     if request.method == "POST":
         action = request.POST.get("action")
@@ -39,6 +41,7 @@ def manage_master_features(request):
             form = MasterPlanFeatureForm(request.POST)
             if form.is_valid():
                 new_feature = form.save(commit=False)
+                new_feature.is_active = True  #Adding new features (active)
                 new_feature.display_order = PlanFeature.objects.count() + 1
                 new_feature.save()
                 messages.success(request, f"Feature '{form.cleaned_data['name']}' created successfully.")
@@ -92,7 +95,7 @@ def add_subscription_plan(request):
             with transaction.atomic():
                 plan = form.save()
                 # Ensure all master features are created for this new plan first
-                _ensure_plan_features_exist(plan)
+                # _ensure_plan_features_exist(plan)
                 
                 pricing_formset = PlanPricingFormSet(request.POST, request.FILES, instance=plan)
                 feature_formset = SubscriptionPlanFeatureFormSet(request.POST, request.FILES, instance=plan)
@@ -112,9 +115,24 @@ def add_subscription_plan(request):
     else:
         form = SubscriptionPlanForm()
         pricing_formset = PlanPricingFormSet()
-        # For initial display on ADD page, create a temporary unsaved instance to prepopulate formset
-        plan = SubscriptionPlan()
-        feature_formset = SubscriptionPlanFeatureFormSet(instance=plan)
+        master_features = PlanFeature.objects.filter(is_active=True).order_by("display_order")
+        
+        # Build an "empty" formset with correct number of extra forms, one per master feature
+        TempFeatureFormSet = inlineformset_factory(
+            SubscriptionPlan, SubscriptionPlanFeature,
+            form=SubscriptionPlanFeatureForm,
+            extra=master_features.count(),
+            can_delete=False,
+        )
+        feature_formset = TempFeatureFormSet()
+        # Pre-fill initial data so template shows feature name/checkbox properly
+        for i, mf in enumerate(master_features):
+            feature_formset.forms[i].initial = {
+                "feature": mf.id, 
+                "is_available": True,
+                "feature_value": "",
+            }
+            feature_formset.forms[i].master_feature_obj = mf
 
     context = {
         "form": form,
@@ -179,6 +197,7 @@ def delete_subscription_plan(request, pk):
 
 
 @login_required
+@require_POST
 def toggle_plan_status(request, pk):
     """Quick action - flip is_active from the list table without opening the edit page."""
     plan = get_object_or_404(SubscriptionPlan, pk=pk)
@@ -202,9 +221,10 @@ def checkout_free_plan(request, plan_id):
     pricing = PlanPricing.objects.filter(plan=plan, price=0).first()
     
     if not pricing:
-        # If it's a paid plan, we simulate it for now as per instructions (wait for payment gateway)
+        # This is a paid plan — do NOT activate for free.
+        # messages.error(request, "This plan requires payment. Redirecting to checkout.")
+        # return redirect('subscriptions:checkout-paid', plan_id=plan.id)
         pricing = PlanPricing.objects.filter(plan=plan).first()
-
     # Create or update UserSubscription
     # We will grant 1 year of access
     end_date = timezone.now() + timedelta(days=365)
@@ -255,7 +275,7 @@ def checkout_paid_plan(request, plan_id):
         XClientSecret=settings.CASHFREE_SECRET_KEY
     )
     
-    order_id = f"ORDER_{request.user.id}_{int(time.time())}"
+    order_id = f"ORDER_{request.user.id}_{int(time.time())}_{uuid.uuid4().hex[:6]}"
     
     customer_details = CustomerDetails(
         customer_id=f"USER_{request.user.id}",
@@ -265,7 +285,7 @@ def checkout_paid_plan(request, plan_id):
     )
     
     order_meta = OrderMeta(
-        return_url=request.build_absolute_uri(reverse('subscriptions:payment-callback')) + f"?order_id={order_id}",
+        return_url=request.build_absolute_uri(reverse('subscriptions:payment-callback')) + "?order_id={order_id}",
         notify_url=request.build_absolute_uri(reverse('subscriptions:cashfree-webhook'))
     )
     
@@ -352,6 +372,8 @@ def cashfree_callback(request):
     from cashfree_pg.api_client import Cashfree
     
     order_id = request.GET.get('order_id')
+    if order_id:
+        order_id = order_id.strip()
     if not order_id:
         messages.error(request, "Invalid payment response.")
         return redirect('public:subscription_plans')
@@ -383,17 +405,21 @@ def cashfree_callback(request):
                 transaction.status = 'SUCCESS'
                 transaction.save()
                 
-            # Update subscription to active
-            user_sub = UserSubscription.objects.filter(user=request.user, stripe_subscription_id=order_id).first()
+            # Update subscription to active if verified, else pending
+            user_sub = UserSubscription.objects.filter(user=request.user).first()
             if user_sub:
-                user_sub.status = 'active'
-                user_sub.start_date = timezone.now()
-                
-                # Calculate end date based on billing cycle
-                cycle_mapping = {'1M': 30, '3M': 90, '6M': 180, '12M': 365}
-                days = cycle_mapping.get(user_sub.pricing.billing_cycle, 30) if user_sub.pricing else 30
-                user_sub.end_date = timezone.now() + timedelta(days=days)
-                
+                agent_profile = getattr(request.user, 'agent_profile', None)
+                if agent_profile and agent_profile.verification_status == 'approved':
+                    user_sub.status = 'active'
+                    user_sub.start_date = timezone.now()
+                    
+                    # Calculate end date based on billing cycle
+                    cycle_mapping = {'1M': 30, '3M': 90, '6M': 180, '12M': 365}
+                    days = cycle_mapping.get(user_sub.pricing.billing_cycle, 30) if user_sub.pricing else 30
+                    user_sub.end_date = timezone.now() + timedelta(days=days)
+                else:
+                    user_sub.status = 'pending'
+                    
                 user_sub.save()
                 
                 if transaction:
@@ -404,7 +430,7 @@ def cashfree_callback(request):
                 messages.success(request, f"Payment Successful! You are now subscribed to the {user_sub.plan.name} plan.")
                 return redirect('agent:property_type_select')
             else:
-                messages.error(request, "Subscription record not found.")
+                messages.error(request, f"Subscription record not found. DB order: {order_id} User: {request.user.id}")
                 return redirect('public:subscription_plans')
         else:
             if transaction:
@@ -471,14 +497,18 @@ def cashfree_webhook(request):
         if event_type == "PAYMENT_SUCCESS_WEBHOOK":
             if transaction.status != 'SUCCESS':
                 transaction.status = 'SUCCESS'
-                # Activate subscription
-                user_sub = UserSubscription.objects.filter(stripe_subscription_id=order_id).first()
+                # Activate subscription if verified, else pending
+                user_sub = UserSubscription.objects.filter(user=transaction.user).first()
                 if user_sub and user_sub.status != 'active':
-                    user_sub.status = 'active'
-                    user_sub.start_date = timezone.now()
-                    cycle_mapping = {'1M': 30, '3M': 90, '6M': 180, '12M': 365}
-                    days = cycle_mapping.get(user_sub.pricing.billing_cycle, 30) if user_sub.pricing else 30
-                    user_sub.end_date = timezone.now() + timedelta(days=days)
+                    agent_profile = getattr(transaction.user, 'agent_profile', None)
+                    if agent_profile and agent_profile.verification_status == 'approved':
+                        user_sub.status = 'active'
+                        user_sub.start_date = timezone.now()
+                        cycle_mapping = {'1M': 30, '3M': 90, '6M': 180, '12M': 365}
+                        days = cycle_mapping.get(user_sub.pricing.billing_cycle, 30) if user_sub.pricing else 30
+                        user_sub.end_date = timezone.now() + timedelta(days=days)
+                    else:
+                        user_sub.status = 'pending'
                     user_sub.save()
                     transaction.subscription = user_sub
                     

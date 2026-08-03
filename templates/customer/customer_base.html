@@ -18,6 +18,8 @@
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" rel="stylesheet">
+
     <style>
         body {
             background-color: #f8f9fa;
@@ -123,12 +125,6 @@
                 <a class="nav-link {% if request.resolver_match.url_name == 'saved-properties-page' %}active{% endif %}" href="{% url 'customer:saved-properties-page' %}">
 
                     <i class="fas fa-heart me-2"></i> Saved Properties
-
-                </a>
-
-                <a class="nav-link {% if request.resolver_match.url_name == 'viewings-page' %}active{% endif %}" href="{% url 'customer:viewings-page' %}">
-
-                    <i class="fas fa-calendar me-2"></i> Property Viewings
 
                 </a>
 
