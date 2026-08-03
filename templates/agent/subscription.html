@@ -81,6 +81,7 @@
                         <span>{{ feature.feature.name }}</span>
                     </li>
                     {% endif %}
+                    
                     {% endfor %}
                 </ul>
                 <button class="pricing-card-btn checkout-btn {% if forloop.counter == 2 %}btn-primary{% else %}btn-outline{% endif %}" data-plan-id="{{ plan.id }}" style="width: 100%; display: block; text-align: center; border: none; cursor: pointer;">{{ plan.button_text }}</button>

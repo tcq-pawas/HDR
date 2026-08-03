@@ -1,7 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
 from Apps.PublicPage.models import Property
+from django.core.files.storage import FileSystemStorage
+from django.conf import settings
 
+
+private_storage = FileSystemStorage(location=settings.PRIVATE_MEDIA_ROOT)
 
 class AgentProfile(models.Model):
     """Extended profile for agents/sellers"""
@@ -30,7 +34,7 @@ class AgentProfile(models.Model):
     notification_whatsapp = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    id_proof_document = models.FileField(upload_to='agent_verification/id_proof/', blank=True, null=True)
+    id_proof_document = models.FileField(upload_to='agent_verification/id_proof/', storage=private_storage, blank=True, null=True)
     address_proof_document = models.FileField(upload_to='agent_verification/address_proof/', blank=True, null=True)
     verification_status = models.CharField(max_length=20, choices=VERIFICATION_STATUS_CHOICES, default='not_started')
     verification_remarks = models.TextField(blank=True, null=True)
@@ -411,3 +415,4 @@ class MessageTemplate(models.Model):
         verbose_name = "Message Template"
         verbose_name_plural = "Message Templates"
         ordering = ['name']
+

@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.core.paginator import Paginator
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, Http404
 from django.db.models import Q, Count, Sum
 from django.utils.text import slugify
 from django.core.exceptions import PermissionDenied
@@ -1423,3 +1423,25 @@ def subscription_plans(request):
     return render(request, 'agent/subscription.html', {
         'plans': plans,
     })
+
+
+@login_required
+def serve_id_proof(request, profile_id):
+    from Apps.Agent.models import AgentProfile
+    profile = get_object_or_404(AgentProfile, pk=profile_id)
+
+    is_owner = profile.user_id == request.user.id
+    is_admin = get_user_role(request.user) == 'admin'
+
+    if not (is_owner or is_admin):
+        raise Http404("Not found")
+
+    if not profile.id_proof_document:
+        raise Http404("No document uploaded")
+
+    # Development mein (bina nginx X-Accel ke) seedha file read karke bhej denge:
+    file_path = profile.id_proof_document.path
+    with open(file_path, 'rb') as f:
+        response = HttpResponse(f.read(), content_type='application/octet-stream')
+        response['Content-Disposition'] = f'inline; filename="{profile.id_proof_document.name.split("/")[-1]}"'
+        return response
