@@ -19,19 +19,7 @@
             </div>
         </div>
     </div>
-{% if messages %}
-<div class="mb-4" style="position: relative; z-index: 1000;">
-    {% for message in messages %}
-    <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} alert-dismissible fade show shadow-sm" role="alert">
-        {% if message.tags == 'success' %}<i class="bi bi-check-circle-fill me-2 text-success"></i>{% endif %}
-        {% if message.tags == 'warning' %}<i class="bi bi-exclamation-triangle-fill me-2 text-warning"></i>{% endif %}
-        {% if message.tags == 'error' %}<i class="bi bi-x-circle-fill me-2 text-danger"></i>{% endif %}
-        {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
+
 
 <!-- Billing Toggle -->
 <section class="billing-toggle-section">
@@ -85,12 +73,12 @@
                     {% if feature.is_available %}
                     <li class="feature-included">
                         <i class="fa fa-check"></i>
-                        <span>{{ feature.feature_name }}{% if feature.feature_value and feature.feature_value|lower != 'yes' and feature.feature_value|lower != 'true' %} ({{ feature.feature_value }}){% endif %}</span>
+                        <span>{{ feature.feature.name }}{% if feature.feature_value and feature.feature_value|lower != 'yes' and feature.feature_value|lower != 'true' %} ({{ feature.feature_value }}){% endif %}</span>
                     </li>
                     {% else %}
                     <li class="feature-excluded">
                         <i class="fa fa-times"></i>
-                        <span>{{ feature.feature_name }}</span>
+                        <span>{{ feature.feature.name }}</span>
                     </li>
                     {% endif %}
                     {% endfor %}
@@ -178,9 +166,9 @@
                 const price = parseInt(priceElement.textContent.replace(/,/g, ''));
                 
                 if (price === 0) {
-                    window.location.href = `/subscriptions/checkout-free/${planId}/`;
+                    window.location.href = `/subscriptions/checkout/${planId}/`;
                 } else {
-                    window.location.href = `/subscriptions/checkout-paid/${planId}/?billing_cycle=${billingCycle}`;
+                    window.location.href = `/subscriptions/checkout/paid/${planId}/?billing_cycle=${billingCycle}`;
                 }
             });
         });
