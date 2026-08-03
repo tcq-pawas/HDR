@@ -386,7 +386,7 @@
 
     .sp-empty-actions{ display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; margin-top: 1.15rem; }
 
-    /* Recently + Recommended */
+    /* Recently Viewed */
     .sp-horizontal{
         display:flex;
         gap: .9rem;
@@ -410,9 +410,8 @@
 
     .sp-section-head{ display:flex; align-items:baseline; justify-content:space-between; gap: 1rem; margin: 1.1rem 0 .9rem; flex-wrap:wrap; }
     .sp-section-title{ font-weight:700; margin:0; font-size: 18px; }
-    .sp-section-sub{ color:#64748b; font-weight: 400; margin: .25rem 0 0 0; font-size: 13px; }
 
-    .sp-recent-wrap, .sp-recommended-wrap{ margin-top: 1.2rem; }
+    .sp-recent-wrap{ margin-top: 1.2rem; }
 </style>
 {% endblock %}
 
@@ -617,90 +616,41 @@
         </div>
     {% endif %}
 
-    <!-- Recently Viewed Properties (if provided by context) -->
+    {% if recently_viewed %}
+    <!-- Recently Viewed Properties -->
     <div class="sp-recent-wrap">
         <div class="sp-section-head">
             <div>
                 <p class="sp-section-title">Recently Viewed</p>
-                <p class="sp-section-sub">Your latest land research</p>
             </div>
-            {% if recently_viewed %}
-                <span class="badge bg-light text-dark" style="font-weight:400; border-radius: 999px;">{{ recently_viewed|length }} viewed</span>
-            {% endif %}
+            <span class="badge bg-light text-dark" style="font-weight:400; border-radius: 999px;">{{ recently_viewed|length }} viewed</span>
         </div>
 
-        {% if recently_viewed %}
-            <div class="sp-horizontal mb-4">
-                {% for p in recently_viewed %}
-                    <div class="sp-mini-card">
-                        <div class="sp-media" style="aspect-ratio: 16/9;">
-                            {% if p.image %}
-                                <img src="{{ p.image.url }}" alt="{{ p.title }}">
-                            {% else %}
-                                <div class="sp-fallback"><i class="fas fa-seedling" style="font-size:2rem; color: rgba(15,118,110,0.75);"></i></div>
-                            {% endif %}
-                        </div>
-                        <div class="sp-body">
-                            <p class="sp-title">{{ p.title }}</p>
-                            <p class="sp-loc"><i class="fas fa-map-marker-alt" style="color: var(--primary);"></i>{{ p.location|default:"—" }}</p>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="fw-bold" style="color: var(--primary);">${{ p.price|default:0|intcomma }}</div>
-                                <button class="btn btn-sm btn-primary" style="border-radius: 14px; font-weight:500;" onclick="makeInquiry()">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </div>
+        <div class="sp-horizontal mb-4">
+            {% for p in recently_viewed %}
+                <div class="sp-mini-card">
+                    <div class="sp-media" style="aspect-ratio: 16/9;">
+                        {% if p.image %}
+                            <img src="{{ p.image.url }}" alt="{{ p.title }}">
+                        {% else %}
+                            <div class="sp-fallback"><i class="fas fa-seedling" style="font-size:2rem; color: rgba(15,118,110,0.75);"></i></div>
+                        {% endif %}
+                    </div>
+                    <div class="sp-body">
+                        <p class="sp-title">{{ p.title }}</p>
+                        <p class="sp-loc"><i class="fas fa-map-marker-alt" style="color: var(--primary);"></i>{{ p.location|default:"—" }}</p>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="fw-bold" style="color: var(--primary);">${{ p.price|default:0|intcomma }}</div>
+                            <button class="btn btn-sm btn-primary" style="border-radius: 14px; font-weight:500;" onclick="makeInquiry()">
+                                <i class="fas fa-eye"></i>
+                            </button>
                         </div>
                     </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-    </div>
-
-    <!-- Recommended Properties (if provided by context) -->
-    <div class="sp-recommended-wrap">
-        <div class="sp-section-head">
-            <div>
-                <p class="sp-section-title">Recommended Agricultural Land</p>
-                <p class="sp-section-sub">Based on saved + viewed activity</p>
-            </div>
+                </div>
+            {% endfor %}
         </div>
-
-        {% if recommended_properties %}
-            <div class="sp-property-grid">
-                {% for p in recommended_properties %}
-                    <div class="sp-property-card">
-                        <div class="sp-media">
-                            <img src="{% if p.image %}{{ p.image.url }}{% else %}{% static 'img/agricultural_land_branding.jpg' %}{% endif %}" alt="{{ p.title }}">
-                            <div class="sp-tag">For You</div>
-                        </div>
-                        <div class="sp-body">
-                            <p class="sp-title">{{ p.title }}</p>
-                            <p class="sp-loc"><i class="fas fa-map-marker-alt" style="color: var(--primary);"></i>{{ p.location|default:"—" }}</p>
-                            <div class="sp-metric-grid">
-                                <div class="sp-metric">
-                                    <div class="sp-metric-label">Total Area</div>
-                                    <div class="sp-metric-value">{{ p.area_sqft|default:0|intcomma }}</div>
-                                    <div class="sp-metric-label" style="text-transform:none; letter-spacing:0; margin-top:.25rem;">{{ p.area_unit|default:"sqft" }}</div>
-                                </div>
-                                <div class="sp-metric">
-                                    <div class="sp-metric-label">Price</div>
-                                    <div class="sp-metric-value">${{ p.price|default:0|intcomma }}</div>
-                                </div>
-                            </div>
-                            <div class="sp-actions">
-                                <button class="sp-btn sp-btn-primary" type="button" onclick="makeInquiry()">
-                                    <i class="fas fa-eye"></i> View Details
-                                </button>
-                                <button class="sp-btn" type="button" onclick="save_property()">
-                                    <i class="fas fa-heart"></i> Save
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
     </div>
+    {% endif %}
 
     <!-- Property Details Modal (keep existing ids/functionality) -->
     <div class="modal fade" id="propertyDetailsModal" tabindex="-1">

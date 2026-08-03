@@ -310,8 +310,93 @@ class CustomerProfileView(CustomerDashboardMixin, TemplateView):
         profile, created = CustomerProfile.objects.get_or_create(user=user)
         context['profile'] = profile
         context['created'] = created
+
+        q_filter = Q(email=user.email)
+        if profile.phone:
+            q_filter |= Q(phone_number=profile.phone)
+
+        saved_qs = SavedProperty.objects.filter(customer=user).select_related('property')
+        inquiry_qs = PropertyInquiry.objects.filter(q_filter).select_related('related_property')
+
+        total_saved = saved_qs.count()
+        total_inquiries = inquiry_qs.count()
+
+        top_category = (
+            saved_qs.exclude(property__category__isnull=True)
+            .exclude(property__category='')
+            .values('property__category')
+            .annotate(count=Count('id'))
+            .order_by('-count')
+            .first()
+        )
+        top_location = (
+            saved_qs.exclude(property__location__isnull=True)
+            .exclude(property__location='')
+            .values('property__location')
+            .annotate(count=Count('id'))
+            .order_by('-count')
+            .first()
+        )
+
+        context['profile_stats'] = {
+            'total_saved': total_saved,
+            'total_inquiries': total_inquiries,
+            'top_interest': top_category['property__category'] if top_category else None,
+            'top_location': top_location['property__location'] if top_location else None,
+        }
+        context['activity_timeline'] = self._build_profile_activity(
+            user, profile, inquiry_qs, saved_qs
+        )
         
         return context
+
+    def _build_profile_activity(self, user, profile, inquiry_qs, saved_qs):
+        """Build a real activity timeline from inquiries and saved properties."""
+        activities = []
+
+        for inquiry in inquiry_qs.order_by('-created_at')[:10]:
+            property_title = (
+                inquiry.related_property.title
+                if inquiry.related_property
+                else 'a property'
+            )
+            activities.append({
+                'type': 'inquiry',
+                'title': 'Inquiry Submitted',
+                'description': f'Inquired about {property_title}',
+                'date': inquiry.created_at,
+                'icon': 'fa-envelope',
+            })
+
+        for saved in saved_qs.order_by('-saved_at')[:10]:
+            location = saved.property.location or 'an unspecified location'
+            activities.append({
+                'type': 'saved',
+                'title': 'Property Saved',
+                'description': f'Added “{saved.property.title}” ({location}) to saved properties',
+                'date': saved.saved_at,
+                'icon': 'fa-heart',
+            })
+
+        if user.date_joined:
+            activities.append({
+                'type': 'joined',
+                'title': 'Account Created',
+                'description': 'Joined HeyDay Realty customer portal',
+                'date': user.date_joined,
+                'icon': 'fa-user-plus',
+            })
+
+        if profile.updated_at and profile.updated_at != profile.created_at:
+            activities.append({
+                'type': 'profile',
+                'title': 'Profile Updated',
+                'description': 'Updated personal information',
+                'date': profile.updated_at,
+                'icon': 'fa-user-edit',
+            })
+
+        return sorted(activities, key=lambda x: x['date'], reverse=True)[:8]
 
 
 class CustomerEditProfileView(CustomerDashboardMixin, TemplateView):

@@ -75,11 +75,21 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             const planId = this.getAttribute('data-plan-id');
             const activePeriodBtn = document.querySelector('.billing-toggle-btn.active');
-            let cycle = '1M';
+            let cycle = '12M';
             if (activePeriodBtn) {
                 cycle = activePeriodBtn.getAttribute('data-period');
             }
-            window.location.href = `/subscriptions/checkout/paid/${planId}/?billing_cycle=${cycle}`;
+            
+            const card = this.closest('.pricing-card');
+            const priceElement = card ? card.querySelector('.price-amount') : null;
+            const priceText = priceElement ? priceElement.textContent.replace(/[^0-9]/g, '') : '';
+            const price = priceText ? parseInt(priceText) : 0;
+            
+            if (price === 0) {
+                window.location.href = `/subscriptions/checkout/${planId}/`;
+            } else {
+                window.location.href = `/subscriptions/checkout/paid/${planId}/?billing_cycle=${cycle}`;
+            }
         });
     });
     

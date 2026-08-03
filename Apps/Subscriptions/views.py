@@ -13,11 +13,12 @@ from .forms import (
 )
 from django.utils import timezone
 from datetime import timedelta
-from Apps.Administration.auth_utils import get_user_role
+from Apps.Administration.auth_utils import get_user_role, role_required
 from django.forms import inlineformset_factory
 from django.views.decorators.http import require_POST
 
-@login_required
+
+@role_required(['admin'])
 def manage_subscriptions(request):
     """List page - shows all subscription plans in the dashboard table."""
     plans = SubscriptionPlan.objects.all().order_by("display_order")
@@ -30,7 +31,7 @@ def manage_subscriptions(request):
     return render(request, "subscriptions/plan_list.html", context)
 
 
-@login_required
+@role_required(['admin'])
 def manage_master_features(request):
     """Manage Master Features Table page - list, add, edit, delete master features."""
     features = PlanFeature.objects.filter(is_active=True).order_by("display_order", "name")
@@ -86,7 +87,7 @@ def _ensure_plan_features_exist(plan):
         )
 
 
-@login_required
+@role_required(['admin'])
 def add_subscription_plan(request):
     """Add page - create a plan along with its pricing rows and feature rows in one go."""
     if request.method == "POST":
@@ -145,7 +146,7 @@ def add_subscription_plan(request):
     return render(request, "subscriptions/plan_form.html", context)
 
 
-@login_required
+@role_required(['admin'])
 def edit_subscription_plan(request, pk):
     """Edit page - update a plan, its pricing rows and its feature rows together."""
     plan = get_object_or_404(SubscriptionPlan, pk=pk)
@@ -183,7 +184,7 @@ def edit_subscription_plan(request, pk):
 
 
 
-@login_required
+@role_required(['admin'])
 def delete_subscription_plan(request, pk):
     """Delete a plan (and its pricing/features via CASCADE)."""
     plan = get_object_or_404(SubscriptionPlan, pk=pk)
@@ -196,7 +197,7 @@ def delete_subscription_plan(request, pk):
     return render(request, "subscriptions/plan_confirm_delete.html", context)
 
 
-@login_required
+@role_required(['admin'])
 @require_POST
 def toggle_plan_status(request, pk):
     """Quick action - flip is_active from the list table without opening the edit page."""
@@ -212,21 +213,19 @@ def checkout_free_plan(request, plan_id):
     user_role = get_user_role(request.user) if hasattr(request.user, 'agent_profile') else 'customer'
     if user_role != 'agent':
         messages.error(request, "Only agents can subscribe to these plans.")
-        return redirect('public:subscription_plans')
+        return redirect('agent:subscription_plans')
 
     plan = get_object_or_404(SubscriptionPlan, pk=plan_id)
     
     # Check if there is a 0 price pricing for this plan (e.g. Seed is 0)
-    # We'll just grab the 12M pricing or the first available 0 price
     pricing = PlanPricing.objects.filter(plan=plan, price=0).first()
     
     if not pricing:
         # This is a paid plan — do NOT activate for free.
-        # messages.error(request, "This plan requires payment. Redirecting to checkout.")
-        # return redirect('subscriptions:checkout-paid', plan_id=plan.id)
-        pricing = PlanPricing.objects.filter(plan=plan).first()
+        messages.error(request, f"The '{plan.name}' plan requires payment. Redirecting to checkout.")
+        return redirect('subscriptions:checkout-paid', plan_id=plan.id)
+
     # Create or update UserSubscription
-    # We will grant 1 year of access
     end_date = timezone.now() + timedelta(days=365)
     
     UserSubscription.objects.update_or_create(
@@ -242,7 +241,7 @@ def checkout_free_plan(request, plan_id):
     )
     
     messages.success(request, f"Congratulations! You have successfully subscribed to the {plan.name} plan.")
-    return redirect('agent:property_type_select')
+    return redirect('agent:subscription_plans')
 
 
 @login_required
@@ -252,10 +251,6 @@ def checkout_paid_plan(request, plan_id):
     from django.urls import reverse
     import uuid
     import time
-    from cashfree_pg.models.create_order_request import CreateOrderRequest
-    from cashfree_pg.api_client import Cashfree
-    from cashfree_pg.models.customer_details import CustomerDetails
-    from cashfree_pg.models.order_meta import OrderMeta
     
     plan = get_object_or_404(SubscriptionPlan, id=plan_id)
     billing_cycle = request.GET.get('billing_cycle', '1M')
@@ -263,7 +258,7 @@ def checkout_paid_plan(request, plan_id):
     
     if not pricing:
         messages.error(request, "Invalid billing cycle selected.")
-        return redirect('public:subscription_plans')
+        return redirect('agent:subscription_plans')
         
     if pricing.price <= 0:
         return redirect('subscriptions:checkout-free', plan_id=plan.id)
@@ -307,6 +302,56 @@ def checkout_paid_plan(request, plan_id):
     )
     
     try:
+        from cashfree_pg.models.create_order_request import CreateOrderRequest
+        from cashfree_pg.api_client import Cashfree
+        from cashfree_pg.models.customer_details import CustomerDetails
+        from cashfree_pg.models.order_meta import OrderMeta
+        
+        app_id = getattr(settings, 'CASHFREE_APP_ID', None) or ''
+        secret_key = getattr(settings, 'CASHFREE_SECRET_KEY', None) or ''
+        
+        if not app_id or not secret_key:
+            messages.error(request, "Payment gateway configuration is missing. Please contact administrator.")
+            return redirect('agent:subscription_plans')
+
+        cashfree_env = Cashfree.SANDBOX if getattr(settings, 'CASHFREE_ENVIRONMENT', 'SANDBOX') == "SANDBOX" else Cashfree.PRODUCTION
+        cashfree = Cashfree(
+            XEnvironment=cashfree_env,
+            XClientId=app_id,
+            XClientSecret=secret_key
+        )
+        
+        order_id = f"ORDER_{request.user.id}_{int(time.time())}"
+        
+        customer_details = CustomerDetails(
+            customer_id=f"USER_{request.user.id}",
+            customer_phone=getattr(request.user, 'profile_phone', '9999999999'),
+            customer_name=request.user.get_full_name() or request.user.username,
+            customer_email=request.user.email or "test@example.com"
+        )
+        
+        order_meta = OrderMeta(
+            return_url=request.build_absolute_uri(reverse('subscriptions:payment-callback')) + f"?order_id={order_id}",
+            notify_url=request.build_absolute_uri(reverse('subscriptions:cashfree-webhook'))
+        )
+        
+        create_order_request = CreateOrderRequest(
+            order_id=order_id,
+            order_amount=float(pricing.price),
+            order_currency="INR",
+            customer_details=customer_details,
+            order_meta=order_meta
+        )
+        
+        from .models import PaymentTransaction
+        # Create the transaction record
+        PaymentTransaction.objects.create(
+            user=request.user,
+            order_id=order_id,
+            amount=pricing.price,
+            status='PENDING'
+        )
+        
         api_response = cashfree.PGCreateOrder(create_order_request=create_order_request)
         payment_session_id = api_response.data.payment_session_id
         
@@ -325,13 +370,16 @@ def checkout_paid_plan(request, plan_id):
             'payment_session_id': payment_session_id,
             'plan': plan,
             'pricing': pricing,
-            'environment': settings.CASHFREE_ENVIRONMENT
+            'environment': getattr(settings, 'CASHFREE_ENVIRONMENT', 'SANDBOX')
         }
         return render(request, 'public/subscription/checkout.html', context)
         
+    except ImportError:
+        messages.error(request, f"Payment gateway package ('cashfree_pg') is not installed on the server. Please contact administrator.")
+        return redirect('agent:subscription_plans')
     except Exception as e:
         messages.error(request, f"Payment gateway initialization failed: {str(e)}")
-        return redirect('public:subscription_plans')
+        return redirect('agent:subscription_plans')
 
 
 def _create_ledger_entries_for_subscription(user, transaction):

@@ -1152,17 +1152,17 @@
                         
                         {% for message in messages %}
                         
-                        <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} alert-dismissible fade show shadow-sm" role="alert">
+                        <div class="alert {% if 'error' in message.tags or message.level_tag == 'error' %}alert-danger{% elif 'warning' in message.tags or message.level_tag == 'warning' %}alert-warning{% elif 'success' in message.tags or message.level_tag == 'success' %}alert-success{% else %}alert-info{% endif %} alert-dismissible fade show shadow-sm" role="alert">
                             
-                            {% if message.tags == 'success' %}
+                            {% if 'success' in message.tags or message.level_tag == 'success' %}
                             
                                 <i class="bi bi-check-circle-fill me-2 text-success"></i>
                             
-                            {% elif message.tags == 'warning' %}
+                            {% elif 'warning' in message.tags or message.level_tag == 'warning' %}
 
                                 <i class="bi bi-exclamation-triangle-fill me-2 text-warning"></i>
                             
-                            {% elif message.tags == 'error' %}
+                            {% elif 'error' in message.tags or message.level_tag == 'error' %}
 
                                 <i class="bi bi-x-circle-fill me-2 text-danger"></i>
 

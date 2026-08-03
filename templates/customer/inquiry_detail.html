@@ -18,24 +18,33 @@
     }
 
     /* Header Section */
-    .inquiry-header-bar {
+    .page-header-white {
+        display: none;
+    }
+
+    .inquiry-detail-hero {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
         margin-bottom: 24px;
         width: 100%;
+        padding: 28px;
+        border-radius: 12px;
+        color: #fff;
     }
 
     .inquiry-title {
         font-size: 24px;
         font-weight: 700;
-        color: #0f172a;
+        color: #fff;
         margin: 0;
     }
 
     .inquiry-subtitle {
         font-size: 13px;
-        color: #64748b;
+        color: rgba(255, 255, 255, 0.9);
         margin-top: 4px;
     }
 
@@ -45,17 +54,17 @@
         padding: 8px 16px;
         font-size: 14px;
         font-weight: 500;
-        color: #334155;
+        color: #004526;
         background-color: #ffffff;
-        border: 1px solid #cbd5e1;
-        border-radius: 6px;
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        border-radius: 8px;
         text-decoration: none;
         transition: all 0.2s ease;
     }
 
     .btn-secondary-custom:hover {
         background-color: #f1f5f9;
-        color: #0f172a;
+        color: #002815;
     }
 
     /* Full Page Grid Layout */
@@ -218,7 +227,7 @@
 <div class="inquiry-container">
 
     <!-- Header Section -->
-    <div class="inquiry-header-bar">
+    <div class="inquiry-detail-hero">
         <div>
             <h1 class="inquiry-title">Inquiry Details</h1>
             <p class="inquiry-subtitle">Inquiry ID: #{{ inquiry.enquiry_id }} &bull; Submitted on {{ inquiry.created_at|date:"M d, Y H:i" }}</p>
