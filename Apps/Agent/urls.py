@@ -51,7 +51,6 @@ urlpatterns = [
     path('documents/', views.document_list, name='document_list'),
     path('document/add/', views.document_add, name='document_add'),
     path('document/<int:pk>/delete/', views.document_delete, name='document_delete'),
-    path('secure-id-proof/<int:profile_id>/', views.serve_id_proof, name='secure-id-proof'),
     
     # Communication Center
     path('communications/', views.communication_list, name='communication_list'),

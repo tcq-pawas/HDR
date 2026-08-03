@@ -1425,23 +1425,3 @@ def subscription_plans(request):
     })
 
 
-@login_required
-def serve_id_proof(request, profile_id):
-    from Apps.Agent.models import AgentProfile
-    profile = get_object_or_404(AgentProfile, pk=profile_id)
-
-    is_owner = profile.user_id == request.user.id
-    is_admin = get_user_role(request.user) == 'admin'
-
-    if not (is_owner or is_admin):
-        raise Http404("Not found")
-
-    if not profile.id_proof_document:
-        raise Http404("No document uploaded")
-
-    # Development mein (bina nginx X-Accel ke) seedha file read karke bhej denge:
-    file_path = profile.id_proof_document.path
-    with open(file_path, 'rb') as f:
-        response = HttpResponse(f.read(), content_type='application/octet-stream')
-        response['Content-Disposition'] = f'inline; filename="{profile.id_proof_document.name.split("/")[-1]}"'
-        return response
