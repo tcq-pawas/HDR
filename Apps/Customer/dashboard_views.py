@@ -31,12 +31,8 @@ class CustomerDashboardView(CustomerDashboardMixin, TemplateView):
         context['profile'] = profile
         
         # Personal purchase statistics
-        q_filter = Q(email=user.email)
-        if profile and profile.phone:
-            q_filter |= Q(phone_number=profile.phone)
-
-        total_inquiries = PropertyInquiry.objects.filter(q_filter).count()
-        pending_inquiries = PropertyInquiry.objects.filter(q_filter, status='new').count()
+        total_inquiries = PropertyInquiry.objects.filter(customer=user).count()
+        pending_inquiries = PropertyInquiry.objects.filter(customer=user, status='new').count()
 
         context['purchase_stats'] = {
             'total_inquiries': total_inquiries,
@@ -58,7 +54,7 @@ class CustomerDashboardView(CustomerDashboardMixin, TemplateView):
         
         # Recent activities
         context['recent_inquiries'] = PropertyInquiry.objects.filter(
-            q_filter
+            customer=user
         ).select_related('related_property').order_by('-created_at')[:5]
         
         context['recent_saved_properties'] = SavedProperty.objects.filter(
@@ -358,12 +354,9 @@ class CustomerInquiriesView(CustomerDashboardMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         user = self.request.user
         profile, _ = CustomerProfile.objects.get_or_create(user=user)
-        q_filter = Q(email=user.email)
-        if profile and profile.phone:
-            q_filter |= Q(phone_number=profile.phone)
 
         context['inquiries'] = PropertyInquiry.objects.filter(
-            q_filter
+            customer=user
         ).select_related('related_property').order_by('-created_at')
         
         return context
@@ -488,20 +481,12 @@ def change_password(request):
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 
-class CustomerInquiryDetailView(DetailView):
+class CustomerInquiryDetailView(CustomerDashboardMixin, DetailView):
     model = PropertyInquiry
     template_name = "customer/inquiry_detail.html"
     context_object_name = "inquiry"
 
     def get_queryset(self):
-        user = self.request.user
-        profile, _ = CustomerProfile.objects.get_or_create(user=user)
-
-        q_filter = Q(email=user.email)
-
-        if profile.phone:
-            q_filter |= Q(phone_number=profile.phone)
-
         return PropertyInquiry.objects.filter(
-            q_filter
+            customer=self.request.user
         ).select_related('related_property')
