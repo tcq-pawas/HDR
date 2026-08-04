@@ -53,10 +53,17 @@
             </div>
         </div>
     {% elif property.status == 'approved' %}
-        <div class="alert alert-success d-flex align-items-center mb-4" role="alert">
-            <i class="fas fa-check-circle me-3 fa-lg"></i>
+        <div class="alert {% if property.is_admin_list or not property.show_to_public %}alert-warning{% else %}alert-success{% endif %} d-flex align-items-center mb-4" role="alert">
+            <i class="fas {% if property.is_admin_list or not property.show_to_public %}fa-eye-slash{% else %}fa-check-circle{% endif %} me-3 fa-lg"></i>
             <div>
-                <strong>Approved</strong> - {% if property.is_admin_list %}This property is set as admin-only (not visible on the public website){% else %}This property is visible on the website{% endif %}
+                <strong>Approved</strong> - 
+                {% if property.is_admin_list %}
+                    This property is set as admin-only (not visible on the public website)
+                {% elif not property.show_to_public %}
+                    This property is approved but hidden from public listing (show_to_public is off)
+                {% else %}
+                    This property is visible on the public website
+                {% endif %}
             </div>
         </div>
     {% elif property.status == 'rejected' %}

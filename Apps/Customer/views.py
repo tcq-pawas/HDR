@@ -186,13 +186,19 @@ def create_inquiry(request):
 #  get_advisor_properties function :
 def get_advisor_properties(request, agent_profile_id):
     
+    # for authentication
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Authentication required'}, status=401)
+    
     try:
         agent_profile = AgentProfile.objects.select_related('user').get(id=agent_profile_id)
     except AgentProfile.DoesNotExist:
         return JsonResponse({'error': 'Advisor not found'}, status=404)
 
     properties = Property.objects.filter(
-        is_active=True
+        is_active=True,
+        status='approved',
+        show_to_public=True,
     ).filter(
         models.Q(assigned_agent=agent_profile.user) | models.Q(seller=agent_profile.user)
     )
