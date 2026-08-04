@@ -15,7 +15,7 @@
                     <h1 class="h3 mb-1">My Properties</h1>
                     <p class="text-muted mb-0">Properties you have added (admin-only, not visible on public website)</p>
                 </div>
-                <a href="{% url 'admin_dash:property_type_select' %}" class="btn btn-primary">
+                <a href="{% url 'agent:property_type_select' %}" class="btn btn-primary">
                     <i class="fas fa-plus me-2"></i>Add New Property
                 </a>
             </div>
@@ -81,11 +81,11 @@
                                         class="btn btn-sm btn-outline-success" title="View">
                                         <i class="fas fa-eye me-1"></i>View
                                     </a>
-                                    <a href="{% url 'admin_dash:property_edit' property.id %}"
+                                    <a href="{% url 'agent:property_edit' property.id %}"
                                         class="btn btn-sm btn-outline-secondary" title="Edit">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <a href="{% url 'admin_dash:property_delete' property.id %}"
+                                    <a href="{% url 'agent:property_delete' property.id %}"
                                         class="btn btn-sm btn-outline-danger" title="Delete">
                                         <i class="fas fa-trash"></i>
                                     </a>
