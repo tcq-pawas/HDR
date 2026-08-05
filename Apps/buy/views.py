@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.http import JsonResponse
-from Apps.PublicPage.models import Property, PropertyInquiry
+from Apps.PublicPage.models import Property, PropertyInquiry, LocationData
 from Apps.Customer.models import SavedProperty
 from .forms import InquiryForm
 from Apps.Agent.models import Lead, LeadFollowUp
@@ -106,6 +106,21 @@ def property_search(request):
     }
     
     return render(request, 'buy/property_search.html', context)
+
+def location_autocomplete(request):
+    """Return location suggestions from LocationData when query has at least 3 letters."""
+    query = request.GET.get('q', '').strip()
+    alpha_count = sum(1 for c in query if c.isalpha())
+    if alpha_count < 3:
+        return JsonResponse({'results': []})
+
+    locations = (
+        LocationData.objects
+        .filter(display_name__icontains=query)
+        .values_list('display_name', flat=True)
+        .distinct()[:15]
+    )
+    return JsonResponse({'results': list(locations)})
 
 def property_detail(request, pk):
     """View details of a property listing and allow submitting an inquiry"""

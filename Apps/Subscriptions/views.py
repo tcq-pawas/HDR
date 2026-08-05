@@ -262,54 +262,17 @@ def checkout_paid_plan(request, plan_id):
         
     if pricing.price <= 0:
         return redirect('subscriptions:checkout-free', plan_id=plan.id)
-        
-    cashfree_env = Cashfree.SANDBOX if settings.CASHFREE_ENVIRONMENT == "SANDBOX" else Cashfree.PRODUCTION
-    cashfree = Cashfree(
-        XEnvironment=cashfree_env,
-        XClientId=settings.CASHFREE_APP_ID,
-        XClientSecret=settings.CASHFREE_SECRET_KEY
-    )
-    
-    order_id = f"ORDER_{request.user.id}_{int(time.time())}_{uuid.uuid4().hex[:6]}"
-    
-    customer_details = CustomerDetails(
-        customer_id=f"USER_{request.user.id}",
-        customer_phone=getattr(request.user, 'profile_phone', '9999999999'),
-        customer_name=request.user.get_full_name() or request.user.username,
-        customer_email=request.user.email or "test@example.com"
-    )
-    
-    order_meta = OrderMeta(
-        return_url=request.build_absolute_uri(reverse('subscriptions:payment-callback')) + "?order_id={order_id}",
-        notify_url=request.build_absolute_uri(reverse('subscriptions:cashfree-webhook'))
-    )
-    
-    create_order_request = CreateOrderRequest(
-        order_id=order_id,
-        order_amount=float(pricing.price),
-        order_currency="INR",
-        customer_details=customer_details,
-        order_meta=order_meta
-    )
-    
-    from .models import PaymentTransaction
-    # Create the transaction record
-    PaymentTransaction.objects.create(
-        user=request.user,
-        order_id=order_id,
-        amount=pricing.price,
-        status='PENDING'
-    )
-    
+
     try:
         from cashfree_pg.models.create_order_request import CreateOrderRequest
         from cashfree_pg.api_client import Cashfree
         from cashfree_pg.models.customer_details import CustomerDetails
         from cashfree_pg.models.order_meta import OrderMeta
-        
+        from .models import PaymentTransaction
+
         app_id = getattr(settings, 'CASHFREE_APP_ID', None) or ''
         secret_key = getattr(settings, 'CASHFREE_SECRET_KEY', None) or ''
-        
+
         if not app_id or not secret_key:
             messages.error(request, "Payment gateway configuration is missing. Please contact administrator.")
             return redirect('agent:subscription_plans')
@@ -320,21 +283,21 @@ def checkout_paid_plan(request, plan_id):
             XClientId=app_id,
             XClientSecret=secret_key
         )
-        
-        order_id = f"ORDER_{request.user.id}_{int(time.time())}"
-        
+
+        order_id = f"ORDER_{request.user.id}_{int(time.time())}_{uuid.uuid4().hex[:6]}"
+
         customer_details = CustomerDetails(
             customer_id=f"USER_{request.user.id}",
             customer_phone=getattr(request.user, 'profile_phone', '9999999999'),
             customer_name=request.user.get_full_name() or request.user.username,
             customer_email=request.user.email or "test@example.com"
         )
-        
+
         order_meta = OrderMeta(
             return_url=request.build_absolute_uri(reverse('subscriptions:payment-callback')) + f"?order_id={order_id}",
             notify_url=request.build_absolute_uri(reverse('subscriptions:cashfree-webhook'))
         )
-        
+
         create_order_request = CreateOrderRequest(
             order_id=order_id,
             order_amount=float(pricing.price),
@@ -342,19 +305,17 @@ def checkout_paid_plan(request, plan_id):
             customer_details=customer_details,
             order_meta=order_meta
         )
-        
-        from .models import PaymentTransaction
-        # Create the transaction record
+
         PaymentTransaction.objects.create(
             user=request.user,
             order_id=order_id,
             amount=pricing.price,
             status='PENDING'
         )
-        
+
         api_response = cashfree.PGCreateOrder(create_order_request=create_order_request)
         payment_session_id = api_response.data.payment_session_id
-        
+
         # Save pending subscription
         UserSubscription.objects.update_or_create(
             user=request.user,
@@ -365,7 +326,7 @@ def checkout_paid_plan(request, plan_id):
                 'stripe_subscription_id': order_id  # Reusing this field for order_id for now
             }
         )
-        
+
         context = {
             'payment_session_id': payment_session_id,
             'plan': plan,
@@ -373,9 +334,9 @@ def checkout_paid_plan(request, plan_id):
             'environment': getattr(settings, 'CASHFREE_ENVIRONMENT', 'SANDBOX')
         }
         return render(request, 'public/subscription/checkout.html', context)
-        
+
     except ImportError:
-        messages.error(request, f"Payment gateway package ('cashfree_pg') is not installed on the server. Please contact administrator.")
+        messages.error(request, "Payment gateway package ('cashfree_pg') is not installed on the server. Please contact administrator.")
         return redirect('agent:subscription_plans')
     except Exception as e:
         messages.error(request, f"Payment gateway initialization failed: {str(e)}")

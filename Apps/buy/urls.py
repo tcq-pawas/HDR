@@ -5,6 +5,7 @@ app_name = 'buy'
 
 urlpatterns = [
     path('', views.property_search, name='property_search'),
+    path('ajax/location-autocomplete/', views.location_autocomplete, name='location_autocomplete'),
     path('<int:pk>/', views.property_detail, name='property_detail'),
     path('<int:pk>/inquiry/', views.send_inquiry, name='send_inquiry'),
     path('saved/', views.saved_properties, name='saved_properties'),

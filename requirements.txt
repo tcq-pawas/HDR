@@ -11,4 +11,6 @@ djangorestframework
 django-filter
 drf-spectacular
 django-cors-headers
+django-import-export
+openpyxl
 cashfree_pg

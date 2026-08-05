@@ -32,6 +32,116 @@
         border-color: #0F6A3C !important;
         box-shadow: 0 0 0 3px rgba(15, 106, 60, 0.1) !important;
     }
+
+    /* Location autocomplete */
+    .location-autocomplete-wrap {
+        position: relative;
+    }
+
+    .location-suggestions {
+        display: none;
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        max-height: 260px;
+        overflow-y: auto;
+    }
+
+    .location-suggestions.active {
+        display: block;
+    }
+
+    .location-suggestion-item {
+        padding: 12px 16px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: #1a2e2e;
+        cursor: pointer;
+        transition: background 0.15s;
+    }
+
+    .location-suggestion-item:hover,
+    .location-suggestion-item.highlighted {
+        background: #f0f9f4;
+        color: #0F6A3C;
+    }
+
+    .location-suggestion-item:not(:last-child) {
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .search-submit-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        height: 52px;
+        padding: 0 24px;
+        background: #0F6A3C;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: 0.2s;
+        box-shadow: 0 2px 8px rgba(15, 106, 60, 0.25);
+    }
+
+    .search-submit-btn:hover {
+        background: #0d5a32;
+        box-shadow: 0 4px 12px rgba(15, 106, 60, 0.35);
+    }
+
+    .search-form {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .search-form-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        align-items: flex-end;
+    }
+
+    .search-form-field {
+        flex: 1;
+        min-width: 140px;
+    }
+
+    .search-form-actions {
+        display: flex;
+        gap: 12px;
+        flex-shrink: 0;
+        margin-left: auto;
+    }
+
+    .clear-filters-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        height: 52px;
+        padding: 0 24px;
+        background: white;
+        color: #0F6A3C;
+        border: 1px solid #0F6A3C;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        text-decoration: none;
+        transition: 0.2s;
+    }
+
+    .clear-filters-btn:hover {
+        background: #f0f9f4;
+    }
     
     /* Button hover effects */
     .share-btn:hover {
@@ -90,25 +200,29 @@
         }
 
         /* Search form stacks vertically on mobile */
-        form[style*="flex-wrap: wrap"] {
-            flex-direction: column !important;
-            flex-wrap: wrap !important;
+        .search-form {
             gap: 12px !important;
         }
 
-        form[style*="flex-wrap: wrap"] > div {
+        .search-form-row {
+            flex-direction: column !important;
+            gap: 12px !important;
+        }
+
+        .search-form-field {
             width: 100% !important;
             min-width: 100% !important;
             flex: 1 1 100% !important;
         }
 
-        form[style*="flex-wrap: wrap"] > div[style*="flex-shrink: 0"] {
+        .search-form-actions {
             width: 100% !important;
-            display: flex !important;
-            justify-content: center !important;
+            margin-left: 0 !important;
+            flex-direction: column !important;
         }
 
-        form[style*="flex-wrap: wrap"] > div[style*="flex-shrink: 0"] a {
+        .search-form-actions .search-submit-btn,
+        .search-form-actions .clear-filters-btn {
             width: 100% !important;
             justify-content: center !important;
         }
@@ -178,84 +292,91 @@
     <!-- Floating Search Panel -->
     <div style="padding: 0 24px; position: relative; margin-top: -60px; z-index: 10;">
         <div style="background: white; border-radius: 18px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
-            <form method="get" style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end;">
-                <!-- Location -->
-                <div style="flex: 1; min-width: 140px;">
-                    <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #6b7a7a; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Location</label>
-                    <input type="text" name="location" placeholder="Search locations..." value="{{ filters.location }}" style="width: 100%; height: 52px; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0 16px; font-size: 0.95rem; font-weight: 500; background: #f8fafc; transition: 0.2s;">
+            <form method="get" class="search-form">
+                <div class="search-form-row">
+                    <!-- Location -->
+                    <div class="search-form-field location-autocomplete-wrap">
+                        <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #6b7a7a; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Location</label>
+                        <input type="text" id="location-search" name="location" placeholder="Search locations..." value="{{ filters.location }}" autocomplete="off" style="width: 100%; height: 52px; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0 16px; font-size: 0.95rem; font-weight: 500; background: #f8fafc; transition: 0.2s;">
+                        <div id="location-suggestions" class="location-suggestions" role="listbox"></div>
+                    </div>
+                    <!-- Price -->
+                    <div class="search-form-field">
+                        <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #6b7a7a; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Price</label>
+                        <select name="price_range" style="width: 100%; height: 52px; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0 16px; font-size: 0.95rem; font-weight: 500; background: #f8fafc; transition: 0.2s;">
+                            <option value="">All Prices</option>
+                            <option value="under_10_lac" {% if filters.price_range == 'under_10_lac' %}selected{% endif %}>Under ₹10 Lac</option>
+                            <option value="10_50_lac" {% if filters.price_range == '10_50_lac' %}selected{% endif %}>₹10 Lac - ₹50 Lac</option>
+                            <option value="50_lac_1cr" {% if filters.price_range == '50_lac_1cr' %}selected{% endif %}>₹50 Lac - ₹1 Cr</option>
+                            <option value="1cr_10cr" {% if filters.price_range == '1cr_10cr' %}selected{% endif %}>₹1 Cr - ₹10 Cr</option>
+                            <option value="above_10cr" {% if filters.price_range == 'above_10cr' %}selected{% endif %}>Above ₹10 Cr</option>
+                        </select>
+                    </div>
+                    <!-- Type -->
+                    <div class="search-form-field">
+                        <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #6b7a7a; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Type</label>
+                        <select name="property_type" style="width: 100%; height: 52px; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0 16px; font-size: 0.95rem; font-weight: 500; background: #f8fafc; transition: 0.2s;">
+                            <option value="">All Types</option>
+                            <option value="Agricultural" {% if filters.property_type == 'Agricultural' %}selected{% endif %}>Agricultural</option>
+                            <option value="Residential" {% if filters.property_type == 'Residential' %}selected{% endif %}>Residential</option>
+                            <option value="Commercial" {% if filters.property_type == 'Commercial' %}selected{% endif %}>Commercial</option>
+                            <option value="Farm Land" {% if filters.property_type == 'Farm Land' %}selected{% endif %}>Farm Land</option>
+                            <option value="Plot" {% if filters.property_type == 'Plot' %}selected{% endif %}>Plot</option>
+                        </select>
+                    </div>
+                    <!-- Area -->
+                    <div class="search-form-field">
+                        <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #6b7a7a; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Area</label>
+                        <select name="area_range" style="width: 100%; height: 52px; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0 16px; font-size: 0.95rem; font-weight: 500; background: #f8fafc; transition: 0.2s;">
+                            <option value="">All Areas</option>
+                            <option value="1-5" {% if filters.area_range == '1-5' %}selected{% endif %}>1-5</option>
+                            <option value="5-10" {% if filters.area_range == '5-10' %}selected{% endif %}>5-10</option>
+                            <option value="10-20" {% if filters.area_range == '10-20' %}selected{% endif %}>10-20</option>
+                            <option value="20-50" {% if filters.area_range == '20-50' %}selected{% endif %}>20-50</option>
+                            <option value="50+" {% if filters.area_range == '50+' %}selected{% endif %}>50+</option>
+                        </select>
+                    </div>
+                    <!-- Unit -->
+                    <div class="search-form-field">
+                        <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #6b7a7a; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Unit</label>
+                        <select name="area_unit" style="width: 100%; height: 52px; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0 16px; font-size: 0.95rem; font-weight: 500; background: #f8fafc; transition: 0.2s;">
+                            <option value="Acre" {% if filters.area_unit == 'Acre' %}selected{% endif %}>Acre</option>
+                            <option value="Bigha" {% if filters.area_unit == 'Bigha' %}selected{% endif %}>Bigha</option>
+                            <option value="Hectare" {% if filters.area_unit == 'Hectare' %}selected{% endif %}>Hectare</option>
+                            <option value="Sq Ft" {% if filters.area_unit == 'Sq Ft' %}selected{% endif %}>Sq Ft</option>
+                            <option value="Sq Yard" {% if filters.area_unit == 'Sq Yard' %}selected{% endif %}>Sq Yard</option>
+                        </select>
+                    </div>
                 </div>
-                <!-- Price -->
-                <div style="flex: 1; min-width: 140px;">
-                    <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #6b7a7a; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Price</label>
-                    <select name="price_range" style="width: 100%; height: 52px; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0 16px; font-size: 0.95rem; font-weight: 500; background: #f8fafc; transition: 0.2s;">
-                        <option value="">All Prices</option>
-                        <option value="under_10_lac" {% if filters.price_range == 'under_10_lac' %}selected{% endif %}>Under ₹10 Lac</option>
-                        <option value="10_50_lac" {% if filters.price_range == '10_50_lac' %}selected{% endif %}>₹10 Lac - ₹50 Lac</option>
-                        <option value="50_lac_1cr" {% if filters.price_range == '50_lac_1cr' %}selected{% endif %}>₹50 Lac - ₹1 Cr</option>
-                        <option value="1cr_10cr" {% if filters.price_range == '1cr_10cr' %}selected{% endif %}>₹1 Cr - ₹10 Cr</option>
-                        <option value="above_10cr" {% if filters.price_range == 'above_10cr' %}selected{% endif %}>Above ₹10 Cr</option>
-                    </select>
-                </div>
-                <!-- Type -->
-                <div style="flex: 1; min-width: 140px;">
-                    <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #6b7a7a; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Type</label>
-                    <select name="property_type" style="width: 100%; height: 52px; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0 16px; font-size: 0.95rem; font-weight: 500; background: #f8fafc; transition: 0.2s;">
-                        <option value="">All Types</option>
-                        <option value="Agricultural" {% if filters.property_type == 'Agricultural' %}selected{% endif %}>Agricultural</option>
-                        <option value="Residential" {% if filters.property_type == 'Residential' %}selected{% endif %}>Residential</option>
-                        <option value="Commercial" {% if filters.property_type == 'Commercial' %}selected{% endif %}>Commercial</option>
-                        <option value="Farm Land" {% if filters.property_type == 'Farm Land' %}selected{% endif %}>Farm Land</option>
-                        <option value="Plot" {% if filters.property_type == 'Plot' %}selected{% endif %}>Plot</option>
-                    </select>
-                </div>
-                <!-- Area -->
-                <div style="flex: 1; min-width: 140px;">
-                    <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #6b7a7a; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Area</label>
-                    <select name="area_range" style="width: 100%; height: 52px; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0 16px; font-size: 0.95rem; font-weight: 500; background: #f8fafc; transition: 0.2s;">
-                        <option value="">All Areas</option>
-                        <option value="1-5" {% if filters.area_range == '1-5' %}selected{% endif %}>1-5</option>
-                        <option value="5-10" {% if filters.area_range == '5-10' %}selected{% endif %}>5-10</option>
-                        <option value="10-20" {% if filters.area_range == '10-20' %}selected{% endif %}>10-20</option>
-                        <option value="20-50" {% if filters.area_range == '20-50' %}selected{% endif %}>20-50</option>
-                        <option value="50+" {% if filters.area_range == '50+' %}selected{% endif %}>50+</option>
-                    </select>
-                </div>
-                <!-- Unit -->
-                <div style="flex: 1; min-width: 140px;">
-                    <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #6b7a7a; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Unit</label>
-                    <select name="area_unit" style="width: 100%; height: 52px; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0 16px; font-size: 0.95rem; font-weight: 500; background: #f8fafc; transition: 0.2s;">
-                        <option value="Acre" {% if filters.area_unit == 'Acre' %}selected{% endif %}>Acre</option>
-                        <option value="Bigha" {% if filters.area_unit == 'Bigha' %}selected{% endif %}>Bigha</option>
-                        <option value="Hectare" {% if filters.area_unit == 'Hectare' %}selected{% endif %}>Hectare</option>
-                        <option value="Sq Ft" {% if filters.area_unit == 'Sq Ft' %}selected{% endif %}>Sq Ft</option>
-                        <option value="Sq Yard" {% if filters.area_unit == 'Sq Yard' %}selected{% endif %}>Sq Yard</option>
-                    </select>
-                </div>
-                <!-- Status -->
-                <div style="flex: 1; min-width: 140px;">
-                    <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #6b7a7a; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Status</label>
-                    <select name="status" style="width: 100%; height: 52px; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0 16px; font-size: 0.95rem; font-weight: 500; background: #f8fafc; transition: 0.2s;">
-                        <option value="">All Status</option>
-                        <option value="Active" {% if filters.status == 'Active' %}selected{% endif %}>Active</option>
-                        <option value="Available" {% if filters.status == 'Available' %}selected{% endif %}>Available</option>
-                        <option value="Sold" {% if filters.status == 'Sold' %}selected{% endif %}>Sold</option>
-                    </select>
-                </div>
-                <!-- Sale By -->
-                <div style="flex: 1; min-width: 140px;">
-                    <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #6b7a7a; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Sale By</label>
-                    <select name="sale_by" style="width: 100%; height: 52px; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0 16px; font-size: 0.95rem; font-weight: 500; background: #f8fafc; transition: 0.2s;">
-                        <option value="">All</option>
-                        <option value="Owner" {% if filters.sale_by == 'Owner' %}selected{% endif %}>Owner</option>
-                        <option value="Agent" {% if filters.sale_by == 'Agent' %}selected{% endif %}>Agent</option>
-                        <option value="Builder" {% if filters.sale_by == 'Builder' %}selected{% endif %}>Builder</option>
-                    </select>
-                </div>
-                <!-- Clear Filters Button -->
-                <div style="flex-shrink: 0;">
-                    <a href="{% url 'buy:property_search' %}" style="display: inline-flex; align-items: center; gap: 8px; height: 52px; padding: 0 24px; background: #0F6A3C; color: white; border: none; border-radius: 12px; font-weight: 600; font-size: 0.95rem; text-decoration: none; transition: 0.2s; box-shadow: 0 2px 8px rgba(15, 106, 60, 0.25);">
-                        <i class="bi bi-x-circle"></i> Clear Filters
-                    </a>
+                <div class="search-form-row">
+                    <!-- Status -->
+                    <div class="search-form-field">
+                        <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #6b7a7a; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Status</label>
+                        <select name="status" style="width: 100%; height: 52px; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0 16px; font-size: 0.95rem; font-weight: 500; background: #f8fafc; transition: 0.2s;">
+                            <option value="">All Status</option>
+                            <option value="Active" {% if filters.status == 'Active' %}selected{% endif %}>Active</option>
+                            <option value="Available" {% if filters.status == 'Available' %}selected{% endif %}>Available</option>
+                            <option value="Sold" {% if filters.status == 'Sold' %}selected{% endif %}>Sold</option>
+                        </select>
+                    </div>
+                    <!-- Sale By -->
+                    <div class="search-form-field">
+                        <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #6b7a7a; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Sale By</label>
+                        <select name="sale_by" style="width: 100%; height: 52px; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0 16px; font-size: 0.95rem; font-weight: 500; background: #f8fafc; transition: 0.2s;">
+                            <option value="">All</option>
+                            <option value="Owner" {% if filters.sale_by == 'Owner' %}selected{% endif %}>Owner</option>
+                            <option value="Agent" {% if filters.sale_by == 'Agent' %}selected{% endif %}>Agent</option>
+                            <option value="Builder" {% if filters.sale_by == 'Builder' %}selected{% endif %}>Builder</option>
+                        </select>
+                    </div>
+                    <div class="search-form-actions">
+                        <button type="submit" class="search-submit-btn">
+                            <i class="bi bi-search"></i> Search
+                        </button>
+                        <a href="{% url 'buy:property_search' %}" class="clear-filters-btn">
+                            <i class="bi bi-x-circle"></i> Clear Filters
+                        </a>
+                    </div>
                 </div>
             </form>
         </div>
@@ -489,6 +610,108 @@
                 });
             }
         });
+
+        // ---- Location autocomplete ----
+        const locationInput = document.getElementById('location-search');
+        const suggestionsBox = document.getElementById('location-suggestions');
+        let locationFetchTimer = null;
+        let highlightedIndex = -1;
+
+        function countAlphaChars(value) {
+            return (value.match(/[a-zA-Z]/g) || []).length;
+        }
+
+        function hideSuggestions() {
+            suggestionsBox.classList.remove('active');
+            suggestionsBox.innerHTML = '';
+            highlightedIndex = -1;
+        }
+
+        function selectSuggestion(value) {
+            locationInput.value = value;
+            hideSuggestions();
+        }
+
+        function renderSuggestions(results) {
+            suggestionsBox.innerHTML = '';
+            highlightedIndex = -1;
+
+            if (!results.length) {
+                hideSuggestions();
+                return;
+            }
+
+            results.forEach((name, index) => {
+                const item = document.createElement('div');
+                item.className = 'location-suggestion-item';
+                item.textContent = name;
+                item.setAttribute('role', 'option');
+                item.dataset.index = index;
+                item.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    selectSuggestion(name);
+                });
+                suggestionsBox.appendChild(item);
+            });
+
+            suggestionsBox.classList.add('active');
+        }
+
+        function fetchLocationSuggestions(query) {
+            fetch(`{% url 'buy:location_autocomplete' %}?q=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => renderSuggestions(data.results || []))
+                .catch(() => hideSuggestions());
+        }
+
+        if (locationInput && suggestionsBox) {
+            locationInput.addEventListener('input', function() {
+                const query = this.value.trim();
+                clearTimeout(locationFetchTimer);
+
+                if (countAlphaChars(query) < 3) {
+                    hideSuggestions();
+                    return;
+                }
+
+                locationFetchTimer = setTimeout(() => fetchLocationSuggestions(query), 250);
+            });
+
+            locationInput.addEventListener('keydown', function(e) {
+                const items = suggestionsBox.querySelectorAll('.location-suggestion-item');
+                if (!items.length) return;
+
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    highlightedIndex = (highlightedIndex + 1) % items.length;
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    highlightedIndex = (highlightedIndex - 1 + items.length) % items.length;
+                } else if (e.key === 'Enter' && highlightedIndex >= 0) {
+                    e.preventDefault();
+                    selectSuggestion(items[highlightedIndex].textContent);
+                    return;
+                } else if (e.key === 'Escape') {
+                    hideSuggestions();
+                    return;
+                } else {
+                    return;
+                }
+
+                items.forEach((item, idx) => {
+                    item.classList.toggle('highlighted', idx === highlightedIndex);
+                });
+                if (highlightedIndex >= 0) {
+                    items[highlightedIndex].scrollIntoView({ block: 'nearest' });
+                }
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!locationInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
+                    hideSuggestions();
+                }
+            });
+        }
 
         // ---- Share ----
         document.querySelectorAll('.share-btn').forEach(btn => {

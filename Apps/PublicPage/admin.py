@@ -1,8 +1,9 @@
 from django.contrib import admin
+from import_export.admin import ImportExportModelAdmin
 from .models import Property, PropertyImage, PropertyInquiry
 from .models import ContactInquiry
 from .models import WebsiteEnquiry, LocationData
-
+from .resources import LocationDataResource
 class PropertyImageInline(admin.TabularInline):
     model = PropertyImage
     extra = 1
@@ -51,7 +52,8 @@ class WebsiteEnquiryAdmin(admin.ModelAdmin):
 
 
 @admin.register(LocationData)
-class LocationDataAdmin(admin.ModelAdmin):
+class LocationDataAdmin(ImportExportModelAdmin):
+    resource_classes = [LocationDataResource]
     list_display = ('geo_name_id', 'city', 'state', 'country', 'sort_order', 'display_name')
     list_filter = ('state', 'country')
     search_fields = ('city', 'state', 'display_name')
