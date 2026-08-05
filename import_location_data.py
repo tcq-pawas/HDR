@@ -1,26 +1,18 @@
 #!/usr/bin/env python
 """
-Script to import or update location data from CSV file.
+Import or update location data from CSV into the LocationData table.
 Uses batched bulk upsert for fast imports on large files.
 
 Usage:
-    python import_location_data.py                    # Uses default CSV file
-    python import_location_data.py path/to/file.csv  # Uses custom CSV file
+    python import_location_data.py
+    python import_location_data.py path/to/file.csv
 """
 
 import csv
 import os
 import sys
 from decimal import Decimal
-
-import django
-
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'HeyDayRealty.settings')
-django.setup()
-
-from django.db import transaction
-
-from Apps.PublicPage.models import LocationData
+from pathlib import Path
 
 BATCH_SIZE = 500
 UPDATE_FIELDS = [
@@ -38,6 +30,15 @@ HEADER_ALIASES = {
     'cityname': 'city',
     'sortorder': 'sort_order',
 }
+DEFAULT_CSV_NAME = 'location_data_without_id.csv'
+
+
+def _default_csv_path():
+    try:
+        from django.conf import settings
+        return Path(settings.BASE_DIR) / DEFAULT_CSV_NAME
+    except Exception:
+        return Path(__file__).resolve().parent / DEFAULT_CSV_NAME
 
 
 def _normalize_row(row):
@@ -51,8 +52,8 @@ def _normalize_row(row):
     return normalized
 
 
-def _row_to_instance(row):
-    return LocationData(
+def _row_to_instance(row, location_model):
+    return location_model(
         geo_name_id=int(row['geo_name_id']),
         city=row['city'],
         state=row['state'],
@@ -65,22 +66,34 @@ def _row_to_instance(row):
     )
 
 
-def import_location_data(csv_file_path='location_data_without_id.csv'):
-    if not os.path.isabs(csv_file_path):
-        csv_file_path = os.path.join(os.path.dirname(__file__), csv_file_path)
+def import_location_data(csv_file_path=None):
+    from django.db import transaction
+    from Apps.PublicPage.models import LocationData
 
-    if not os.path.exists(csv_file_path):
-        print(f'CSV file not found at: {csv_file_path}')
-        return False
+    if csv_file_path is None:
+        csv_file_path = _default_csv_path()
+    else:
+        csv_file_path = Path(csv_file_path)
+        if not csv_file_path.is_absolute():
+            csv_file_path = Path(__file__).resolve().parent / csv_file_path
 
-    print(f'Importing location data from: {csv_file_path}')
+    if not csv_file_path.exists():
+        return {
+            'success': False,
+            'message': f'CSV file not found at: {csv_file_path}',
+            'total_rows': 0,
+            'upserted': 0,
+            'errors': 0,
+        }
+
     instances = []
     error_count = 0
     total_rows = 0
+    error_details = []
 
     with open(csv_file_path, 'r', encoding='utf-8-sig') as csvfile:
         reader = csv.DictReader(csvfile)
-        print(f'CSV headers: {reader.fieldnames}')
+        headers = reader.fieldnames
 
         for row_num, row in enumerate(reader, start=2):
             total_rows += 1
@@ -88,10 +101,11 @@ def import_location_data(csv_file_path='location_data_without_id.csv'):
                 normalized = _normalize_row(row)
                 if not normalized.get('geo_name_id'):
                     raise ValueError('missing geo_name_id')
-                instances.append(_row_to_instance(normalized))
+                instances.append(_row_to_instance(normalized, LocationData))
             except Exception as exc:
                 error_count += 1
-                print(f'Error on row {row_num}: {exc}')
+                if len(error_details) < 10:
+                    error_details.append({'row': row_num, 'error': str(exc)})
 
     if instances:
         with transaction.atomic():
@@ -103,16 +117,26 @@ def import_location_data(csv_file_path='location_data_without_id.csv'):
                     update_fields=UPDATE_FIELDS,
                     unique_fields=['geo_name_id'],
                 )
-                print(f'Imported rows {start + 1}-{start + len(batch)}')
 
-    print('\nIMPORT SUMMARY')
-    print(f'  Total rows processed: {total_rows}')
-    print(f'  Upserted: {len(instances)}')
-    print(f'  Errors: {error_count}')
-    return error_count == 0
+    return {
+        'success': error_count == 0,
+        'message': 'Location data imported successfully.' if error_count == 0 else 'Import completed with errors.',
+        'file': str(csv_file_path),
+        'headers': headers,
+        'total_rows': total_rows,
+        'upserted': len(instances),
+        'errors': error_count,
+        'error_details': error_details,
+    }
 
 
 if __name__ == '__main__':
-    csv_file = sys.argv[1] if len(sys.argv) > 1 else 'location_data_without_id.csv'
-    success = import_location_data(csv_file)
-    sys.exit(0 if success else 1)
+    import django
+
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'HeyDayRealty.settings')
+    django.setup()
+
+    csv_file = sys.argv[1] if len(sys.argv) > 1 else None
+    result = import_location_data(csv_file)
+    print(result)
+    sys.exit(0 if result['success'] else 1)

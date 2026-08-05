@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.db.models import Q
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from .models import Inquiry, Property, PropertyInquiry, PropertyImage, WebsiteEnquiry, ContactInquiry
 from Apps.Agent.models import AgentProfile, Lead
 import random
@@ -504,3 +504,13 @@ Sitemap: {sitemap_url}
 """
 
     return HttpResponse(robots_content, content_type='text/plain')
+
+
+@user_passes_test(staff_required)
+def import_location_data_view(request):
+    """Read location_data_without_id.csv and upsert rows into LocationData."""
+    from import_location_data import import_location_data
+
+    result = import_location_data()
+    status = 200 if result['success'] else 400
+    return JsonResponse(result, status=status)

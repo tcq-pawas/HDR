@@ -29,4 +29,5 @@ urlpatterns = [
     # API endpoints
     path('api/', include(router.urls)),
     path('admin/enquiries/', views.website_enquiry_list, name='website_enquiry_list'),
+    path('import-location-data/', views.import_location_data_view, name='import_location_data'),
 ]
