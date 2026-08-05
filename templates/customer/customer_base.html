@@ -32,6 +32,76 @@
     <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
     {% block extra_css %}{% endblock %}
 
+    <style>
+        /* Keep every customer page header aligned with the sidebar menu color */
+        .customer-dashboard {
+            --customer-menu: #004526;
+            --customer-menu-glow:
+                radial-gradient(900px circle at 10% 10%, rgba(16, 185, 129, 0.35), transparent 55%),
+                radial-gradient(900px circle at 90% 40%, rgba(59, 130, 246, 0.25), transparent 60%);
+        }
+
+        .customer-dashboard .dashboard-hero,
+        .customer-dashboard .hero-banner,
+        .customer-dashboard .premium-hero,
+        .customer-dashboard .sp-hero,
+        .customer-dashboard .inquiry-hero,
+        .customer-dashboard .edit-hero,
+        .customer-dashboard .inquiry-detail-hero {
+            background: var(--customer-menu) !important;
+            position: relative;
+            overflow: hidden;
+            border-color: rgba(0, 69, 38, 0.35) !important;
+            box-shadow: 0 4px 15px rgba(0, 69, 38, 0.18) !important;
+        }
+
+        /* Same glow treatment as .customer-dashboard .sidebar::after */
+        .customer-dashboard .dashboard-hero::before,
+        .customer-dashboard .hero-banner::before,
+        .customer-dashboard .premium-hero::before,
+        .customer-dashboard .sp-hero::before,
+        .customer-dashboard .inquiry-hero::before,
+        .customer-dashboard .edit-hero::before,
+        .customer-dashboard .inquiry-detail-hero::before {
+            content: "" !important;
+            position: absolute !important;
+            inset: 0 !important;
+            right: auto !important;
+            top: auto !important;
+            width: auto !important;
+            height: auto !important;
+            border-radius: 0 !important;
+            opacity: 1 !important;
+            transform: none !important;
+            filter: none !important;
+            background-image: none !important;
+            background: var(--customer-menu-glow) !important;
+            pointer-events: none !important;
+            z-index: 0 !important;
+        }
+
+        .customer-dashboard .dashboard-hero::after,
+        .customer-dashboard .hero-banner::after,
+        .customer-dashboard .premium-hero::after,
+        .customer-dashboard .sp-hero::after,
+        .customer-dashboard .inquiry-hero::after,
+        .customer-dashboard .edit-hero::after,
+        .customer-dashboard .inquiry-detail-hero::after {
+            display: none !important;
+        }
+
+        .customer-dashboard .dashboard-hero > *,
+        .customer-dashboard .hero-banner > *,
+        .customer-dashboard .inquiry-hero > *,
+        .customer-dashboard .edit-hero > *,
+        .customer-dashboard .inquiry-detail-hero > *,
+        .customer-dashboard .premium-hero > *,
+        .customer-dashboard .sp-hero > * {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+
     {% block extra_head %}{% endblock %}
 
 </head>
