@@ -34,7 +34,7 @@ services:
       - static_volume:/app/staticfiles
       - media_volume:/app/media
 
-    command: gunicorn HeyDayRealty.wsgi:application --workers 3 --bind 0.0.0.0:8000 --graceful-timeout 120 --timeout 120
+    command: gunicorn HeyDayRealty.wsgi:application --workers 3 --bind 0.0.0.0:8000 --graceful-timeout 300 --timeout 300
     expose:
       - "8000"
     env_file:

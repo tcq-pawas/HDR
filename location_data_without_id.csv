@@ -1,4 +1,4 @@
-﻿GeoNameID,City,State,Country,Latitude,Longitude,Timezone,SortOrder,DisplayName
+geo_name_id,city,state,country,latitude,longitude,timezone,sort_order,display_name
 1270996,Gonda City,Uttar Pradesh,IN,27.13181,81.95332,Asia/Kolkata,1,"Gonda City, Uttar Pradesh, IN"
 1271005,Gomoh,Jharkhand,IN,23.87355,86.1516,Asia/Kolkata,1,"Gomoh, Jharkhand, IN"
 1271047,Golakganj,Assam,IN,26.10216,89.82275,Asia/Kolkata,1,"Golakganj, Assam, IN"
@@ -1005,7 +1005,6 @@
 1274219,Chiknayakanhalli,Karnataka,IN,13.41609,76.62063,Asia/Kolkata,1,"Chiknayakanhalli, Karnataka, IN"
 1274220,Chikmagalur,Karnataka,IN,13.32231,75.774,Asia/Kolkata,1,"Chikmagalur, Karnataka, IN"
 1274229,Chikitigarh,Odisha,IN,19.20233,84.6145,Asia/Kolkata,1,"Chikitigarh, Odisha, IN"
-geonameid,cityname,state,country,latitude,longitude,timezone,sortorder,display_name
 1274237,Chikhli,Maharashtra,IN,20.35046,76.25774,Asia/Kolkata,1,"Chikhli, Maharashtra, IN"
 1274235,Chikhli,Gujarat,IN,20.75751,73.06268,Asia/Kolkata,1,"Chikhli, Gujarat, IN"
 1274243,Chik Ballapur,Karnataka,IN,13.43512,77.72787,Asia/Kolkata,1,"Chik Ballapur, Karnataka, IN"
