@@ -6,6 +6,7 @@ from .models import (
     Installment, Commission, Document, Communication, MessageTemplate
 )
 
+
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
 
@@ -697,6 +698,10 @@ class DocumentForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Description'}),
             'is_public': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
+        
+        
+        
+        
 
 
 class CommunicationForm(forms.ModelForm):

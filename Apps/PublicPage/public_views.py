@@ -35,12 +35,14 @@ class PublicPropertyViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         """Filter queryset based on user authentication and role"""
         request = self.request
-        queryset = Property.objects.filter(is_active=True, is_admin_list=False)
+        queryset = Property.objects.filter(
+            is_active=True, 
+            status='approved', 
+            show_to_public=True, 
+            is_admin_list=False
+        )
         
-        if not request.user.is_authenticated:
-            # Public users can only see properties marked for public viewing
-            queryset = queryset.filter(show_to_public=True)
-        else:
+        if request.user.is_authenticated:
             # Authenticated users can see properties they have access to
             user_role = get_user_role(request.user)
             if user_role:
@@ -143,6 +145,7 @@ def public_property_list(request):
     """Template view for public property listing page"""
     properties = Property.objects.filter(
         is_active=True, 
+        status='approved',
         show_to_public=True,
         is_admin_list=False
     ).order_by('-created_at')
@@ -157,8 +160,15 @@ def public_property_list(request):
 
 
 def public_property_detail(request, slug):
-    """Template view for public property detail page"""
-    property_obj = get_object_or_404(Property, slug=slug, is_active=True)
+    """Template view for public property detail page - only approved properties accessible"""
+    property_obj = get_object_or_404(
+        Property, 
+        slug=slug, 
+        is_active=True, 
+        status='approved', 
+        show_to_public=True, 
+        is_admin_list=False
+    )
     
     # Check access permissions
     if not request.user.is_authenticated and not property_obj.can_view_public():
@@ -175,6 +185,15 @@ def public_property_detail(request, slug):
         property_data = property_obj.get_public_data()
         images = property_obj.images.filter(category='General')  # Only show general images to public
     
+    
+     #  NEW: Agent details 
+    agent = getattr(property_obj, 'assigned_agent', None) or getattr(property_obj, 'seller', None)
+    agent_profile = None
+    if agent:
+        from Apps.Agent.models import AgentProfile
+        agent_profile = AgentProfile.objects.filter(user=agent).first()
+        
+        
     context = {
         'property': property_obj,
         'property_data': property_data,

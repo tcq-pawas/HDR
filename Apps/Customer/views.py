@@ -136,13 +136,29 @@ def create_inquiry(request):
     Renders the 'Connect with a Property Expert' form (GET)
     and saves a PropertyInquiry record on submit (POST).
     """
+    selected_property = None  # always define so template always has it
+
     if request.method == 'POST':
-        form = CreatePropertyInquiryForm(request.POST)
+        post_data = request.POST.copy()
+        # If user came from saved properties page, inject preselected property into form
+        preselected_id = post_data.get('preselected_property_id')
+        if preselected_id and not post_data.get('related_property'):
+            post_data['related_property'] = preselected_id
+            # Also restore the selected_property so card re-renders on validation error
+            try:
+                from Apps.PublicPage.models import Property
+                selected_property = Property.objects.get(id=preselected_id, is_active=True)
+            except Property.DoesNotExist:
+                pass
+
+        form = CreatePropertyInquiryForm(post_data)
         if form.is_valid():
             inquiry = form.save(commit=False)
             # Link the logged-in customer's email automatically if not provided
             if not inquiry.email and request.user.is_authenticated:
                 inquiry.email = request.user.email
+            if request.user.is_authenticated:
+                inquiry.customer = request.user
             inquiry.save()
             messages.success(request, "Your enquiry has been submitted successfully. Our property expert will get back to you shortly.")
             return redirect('customer:inquiries-page')
@@ -153,14 +169,31 @@ def create_inquiry(request):
         if request.user.is_authenticated:
             initial['name'] = request.user.get_full_name() or request.user.username
             initial['email'] = request.user.email
+
+        # Pre-fill property if property_id is passed from Saved Properties page
+        property_id = request.GET.get('property_id')
+        if property_id:
+            try:
+                from Apps.PublicPage.models import Property
+                prop = Property.objects.get(id=property_id, is_active=True)
+                initial['related_property'] = prop
+                initial['property_choice'] = 'existing'
+                selected_property = prop
+            except Property.DoesNotExist:
+                pass
+
         form = CreatePropertyInquiryForm(initial=initial)
- 
-    return render(request, "customer/create_inquiry.html", {"form": form})
+
+    return render(request, "customer/create_inquiry.html", {"form": form, "selected_property": selected_property})
 
 
 
 #  get_advisor_properties function :
 def get_advisor_properties(request, agent_profile_id):
+    
+    # for authentication
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Authentication required'}, status=401)
     
     try:
         agent_profile = AgentProfile.objects.select_related('user').get(id=agent_profile_id)
@@ -168,7 +201,9 @@ def get_advisor_properties(request, agent_profile_id):
         return JsonResponse({'error': 'Advisor not found'}, status=404)
 
     properties = Property.objects.filter(
-        is_active=True
+        is_active=True,
+        status='approved',
+        show_to_public=True,
     ).filter(
         models.Q(assigned_agent=agent_profile.user) | models.Q(seller=agent_profile.user)
     )

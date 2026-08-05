@@ -1,5 +1,6 @@
 {% extends "customer/customer_base.html" %}
 {% load static %}
+{% load humanize %}
 
 {% block title %}{% endblock %}
 {% block page_title %}{% endblock %}
@@ -338,7 +339,33 @@
                         {{ form.related_property }}
                     </div>
 
-                   <div class="property-carousel-wrap">
+                    {% if selected_property %}
+                    <!-- Pre-selected property card (came from saved properties page) -->
+                    <div class="property-carousel-wrap" id="preselectedWrap">
+                        <div class="property-select-grid mb-2">
+                            <div class="property-select-card selected" id="preselectedCard">
+                                {% if selected_property.featured_image %}
+                                    <img class="prop-img" src="{{ selected_property.featured_image.url }}" alt="{{ selected_property.title }}">
+                                {% elif selected_property.images.first %}
+                                    <img class="prop-img" src="{{ selected_property.images.first.image.url }}" alt="{{ selected_property.title }}">
+                                {% else %}
+                                    <div class="prop-img" style="background:#E2E8F0; display:flex; align-items:center; justify-content:center;">
+                                        <i class="fas fa-seedling" style="font-size:2rem; color:#94A3B8;"></i>
+                                    </div>
+                                {% endif %}
+                                <div class="prop-radio"></div>
+                                <div class="prop-body">
+                                    <p class="prop-title">{{ selected_property.title }}</p>
+                                    <p class="prop-type">{{ selected_property.get_category_display|default:selected_property.category }}</p>
+                                    <p class="prop-location"><i class="fas fa-location-dot"></i> {{ selected_property.location|default:"—" }}</p>
+                                    <p class="prop-price">₹{{ selected_property.price|intcomma }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="preselected_property_id" value="{{ selected_property.id }}">
+                    {% else %}
+                    <div class="property-carousel-wrap">
                         <button type="button" class="property-nav-btn prev" id="propPagePrev" style="display:none;"><i class="fas fa-chevron-left"></i></button>
                         <div class="property-select-grid mb-2" id="propertyCardGrid">
                             <div class="property-select-empty" id="propertiesHint">
@@ -347,8 +374,11 @@
                         </div>
                         <button type="button" class="property-nav-btn next" id="propPageNext" style="display:none;"><i class="fas fa-chevron-right"></i></button>
                     </div>
+                    {% endif %}
+
                     {% if form.related_property.errors %}<div class="invalid-feedback mb-2">{{ form.related_property.errors.0 }}</div>{% endif %}
                 </div>
+
 
                 <div class="info-note">
                     <i class="fas fa-circle-info mt-1"></i>

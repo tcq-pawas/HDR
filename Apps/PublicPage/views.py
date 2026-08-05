@@ -96,7 +96,8 @@ def property_detail(request, slug):
             name=name,
             email=email,
             phone_number=phone_number,
-            message=message
+            message=message,
+            customer=request.user if request.user.is_authenticated else None,
         )
         
         if property_obj.seller and phone_number:
