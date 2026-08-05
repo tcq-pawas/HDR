@@ -4,7 +4,8 @@ from .dashboard_views import (
     CustomerDashboardView, CustomerProfileView, CustomerEditProfileView,
     CustomerInquiriesView,
     CustomerSavedPropertiesView,
-    update_profile, change_password, CustomerInquiryDetailView
+    update_profile, change_password, CustomerInquiryDetailView,
+    CustomerPropertyDetailView
 )
 
 app_name = 'customer'
@@ -22,6 +23,7 @@ urlpatterns = [
     # Form submission endpoints
     path('update-profile/', update_profile, name='update-profile'),
     path('change-password/', change_password, name='change-password'),
+    path('property/<int:pk>/', CustomerPropertyDetailView.as_view(), name='property-detail-page'),
 
     # API endpoints
     path('api/profile/', views.CustomerProfileView.as_view(), name='profile'),

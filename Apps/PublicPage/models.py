@@ -2,6 +2,8 @@ from django.db import models
 from django.utils.text import slugify
 from django.contrib.auth.models import User
 import random
+from django.conf import settings
+
 
 # Deferred import to avoid circular imports at module load time
 def _get_user_role(user):
@@ -507,6 +509,14 @@ class PropertyImage(models.Model):
         return f"Image for {self.property.title}"
 
 class PropertyInquiry(models.Model):
+    
+    customer = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='property_inquiries'
+    )
     
     STATUS_CHOICES=[
         ('new', 'New'),

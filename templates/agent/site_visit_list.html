@@ -28,10 +28,11 @@
     </div>
 
     <!-- Premium Filter Section -->
+    <form method="GET" id="visitFilterForm">
     <div class="premium-filter">
         <div class="filter-grid">
             <div class="filter-item">
-                <select name="status" class="premium-select" onchange="location.href='?status='+this.value">
+                <select name="status" class="premium-select" onchange="document.getElementById('visitFilterForm').submit()">
                     <option value="">All Status</option>
                     <option value="scheduled" {% if status_filter == 'scheduled' %}selected{% endif %}>Scheduled</option>
                     <option value="confirmed" {% if status_filter == 'confirmed' %}selected{% endif %}>Confirmed</option>
@@ -44,17 +45,18 @@
             <div class="filter-item">
                 <div class="filter-input-wrapper">
                     <i class="bi bi-calendar3"></i>
-                    <input type="date" name="date_from" value="{{ date_from|default:'' }}" class="premium-input" placeholder="From Date" onchange="location.href='?date_from='+this.value">
+                    <input type="date" name="date_from" value="{{ date_from|date:'Y-m-d' }}" class="premium-input" placeholder="From Date" onchange="document.getElementById('visitFilterForm').submit()">
                 </div>
             </div>
             <div class="filter-item">
                 <div class="filter-input-wrapper">
                     <i class="bi bi-calendar3"></i>
-                    <input type="date" name="date_to" value="{{ date_to|default:'' }}" class="premium-input" placeholder="To Date" onchange="location.href='?date_to='+this.value">
+                    <input type="date" name="date_to" value="{{ date_to|date:'Y-m-d' }}" class="premium-input" placeholder="To Date" onchange="document.getElementById('visitFilterForm').submit()">
                 </div>
             </div>
         </div>
     </div>
+    </form>
 
     <!-- Premium Table -->
     <div class="premium-table-wrapper">

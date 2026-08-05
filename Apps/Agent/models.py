@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from Apps.PublicPage.models import Property
 
-
 class AgentProfile(models.Model):
     """Extended profile for agents/sellers"""
 
