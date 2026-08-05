@@ -232,7 +232,11 @@
                             <td>₹{{ saved.property.price|floatformat:0|default:"N/A" }}</td>
                             <td>
                                 <div class="leads-actions">
-                                    <button class="btn btn-sm btn-outline-primary" style="border-radius: 6px; padding: 3px 12px; font-weight: 500;">View</button>
+                                    <button class="btn btn-sm btn-outline-primary" 
+                                        style="border-radius: 6px; padding: 3px 12px; font-weight: 500;"
+                                        onclick="window.location.href='{% url 'customer:property-detail-page' saved.property.id %}'">
+                                        View
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -293,7 +297,11 @@
                             </td>
                             <td>
                                 <div class="leads-actions">
-                                    <button class="btn btn-sm btn-outline-primary" style="border-radius: 6px; padding: 3px 12px; font-weight: 500;">View</button>
+                                    <button class="btn btn-sm btn-outline-primary" 
+                                        style="border-radius: 6px; padding: 3px 12px; font-weight: 500;"
+                                        onclick="window.location.href='/p/{{ p.slug }}/'">
+                                        View
+                                    </button>
                                 </div>
                             </td>
                         </tr>

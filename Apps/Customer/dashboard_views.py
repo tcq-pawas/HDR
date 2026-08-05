@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum, Count, Avg, Q, F
@@ -479,6 +479,20 @@ def change_password(request):
 
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+class CustomerPropertyDetailView(LoginRequiredMixin, TemplateView):
+    template_name = 'customer/property_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        property_obj = get_object_or_404(Property, pk=self.kwargs['pk'])
+        context['property'] = property_obj
+        context['agent'] = property_obj.seller
+        return context
+
+
+
 
 
 class CustomerInquiryDetailView(CustomerDashboardMixin, DetailView):

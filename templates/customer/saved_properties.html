@@ -49,17 +49,17 @@
         position: relative;
         overflow: hidden;
         border-radius: 20px;
-        box-shadow: 0 16px 50px rgba(15,118,110,0.14);
-        border: 1px solid rgba(15,118,110,0.22);
-        background: linear-gradient(180deg, #004526 0%, #002815 50%, #002200 100%);
-        min-height: 235px;
+        box-shadow: 0 16px 50px rgba(0,69,38,0.18);
+        border: 1px solid rgba(255,255,255,0.12);
+        background: linear-gradient(135deg, #004526 0%, #002815 60%, #00180d 100%);
+        min-height: auto;
     }
     .sp-hero::before{
         content:"";
         position:absolute;
         inset:-40px;
         background: url("{% static 'img/agricultural_land_branding.jpg' %}") center/cover no-repeat;
-        opacity:.20;
+        opacity:.15;
         transform: rotate(-2deg) scale(1.05);
         filter: saturate(1.1) contrast(1.05);
     }
@@ -67,78 +67,73 @@
         content:"";
         position:absolute;
         inset:0;
-        /* background: linear-gradient(90deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.06) 35%, rgba(255,255,255,0) 70%); */
         pointer-events:none;
     }
     .sp-hero-inner{
         position:relative;
         z-index:2;
-        padding:1.5rem 1.6rem;
+        padding: 1.75rem 2rem;
         display:flex;
-        gap:1.25rem;
-        align-items:flex-start;
+        gap: 1.5rem;
+        align-items: center;
         justify-content:space-between;
         flex-wrap:wrap;
         color:#fff;
     }
-    .sp-hero-left{ flex: 1 1 520px; min-width: 280px; }
+    .sp-hero-left{ flex: 1 1 340px; min-width: 260px; }
     .sp-eyebrow{
         display:inline-flex;
-        gap:.6rem;
+        gap:.5rem;
         align-items:center;
-        padding:.45rem .75rem;
+        padding:.35rem .8rem;
         border-radius:999px;
-        background: rgba(255,255,255,0.14);
-        border:1px solid rgba(255,255,255,0.22);
+        background: rgba(255,255,255,0.15);
+        border:1px solid rgba(255,255,255,0.25);
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
         font-weight:600;
         letter-spacing:.2px;
-        margin-bottom:.85rem;
-        font-size:.95rem;
+        margin-bottom:.75rem;
+        font-size:.85rem;
     }
-    .sp-title{ font-size: 28px; font-weight:700; line-height:1.15; margin:0 0 .35rem 0; }
-    .sp-subtitle{ margin:0; color: rgba(255,255,255,0.92); font-weight:400; max-width: 760px; font-size: 14px; }
+    .sp-title{ font-size: 26px; font-weight:700; line-height:1.2; margin:0 0 .4rem 0; }
+    .sp-subtitle{ margin:0; color: rgba(255,255,255,0.85); font-weight:400; max-width: 600px; font-size: 13.5px; line-height: 1.4; }
 
     .sp-meta{
         display:grid;
-        grid-template-columns: repeat(2, minmax(210px, 1fr));
-        gap:.85rem;
-        flex: 0 1 460px;
-        align-content:start;
-        min-width: 320px;
+        grid-template-columns: repeat(2, minmax(180px, 1fr));
+        gap:.75rem;
+        flex: 0 1 480px;
+        align-content:center;
     }
     .sp-glass{
-        background: rgba(255,255,255,0.12);
-        border:1px solid rgba(255,255,255,0.22);
-        border-radius: 18px;
-        backdrop-filter: blur(14px);
-        -webkit-backdrop-filter: blur(14px);
-        box-shadow: 0 14px 45px rgba(0,0,0,0.12);
-        padding: .95rem 1rem;
+        background: rgba(0, 0, 0, 0.25);
+        border: 1px solid rgba(255,255,255,0.18);
+        border-radius: 14px;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        padding: .85rem 1.1rem;
         color:#fff;
     }
     .sp-meta-label{
-        font-size:12px;
-        opacity:.92;
+        font-size:11px;
+        color: rgba(255,255,255,0.75);
         text-transform:uppercase;
-        letter-spacing:.08em;
+        letter-spacing:.06em;
         font-weight:600;
-        margin-bottom:.35rem;
+        margin-bottom:.25rem;
     }
-    .sp-meta-value{ font-weight:500; font-size: 16px; margin:0; }
+    .sp-meta-value{ font-weight:700; font-size: 16px; margin:0; color: #ffffff; }
 
-    @media (max-width: 768px){
-        .sp-meta{ grid-template-columns: 1fr; min-width: unset; }
-        .sp-hero-inner{ padding: 1.1rem 1.05rem; }
-        .sp-hero{ height: 240px; }
-        .sp-title{ font-size: 1.5rem; }
-        .sp-subtitle{ font-size: 0.9rem; }
+    @media (max-width: 992px){
+        .sp-hero-inner{ padding: 1.25rem 1.25rem; }
+        .sp-meta{ flex: 1 1 100%; grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
-    @media (max-width: 480px){
-        .sp-hero{ height: 200px; }
-        .sp-hero-inner{ padding: 1rem 1.2rem; }
+    @media (max-width: 576px){
+        .sp-meta{ grid-template-columns: 1fr; }
+        .sp-hero-inner{ padding: 1rem 1rem; }
         .sp-title{ font-size: 1.25rem; }
         .sp-subtitle{ font-size: 0.85rem; }
     }
@@ -225,6 +220,7 @@
         border-radius: 16px;
         display:flex; align-items:center; justify-content:center;
         color:#fff;
+        font-size: 1.15rem;
         box-shadow: 0 14px 40px rgba(0,0,0,0.12);
     }
     .sp-action-title{ font-weight: 700; margin:0; font-size: 14px; }
@@ -297,42 +293,43 @@
     }
     .sp-heart:hover{ transform: translateY(-2px) scale(1.02); background: rgba(255,255,255,0.85); }
 
-    .sp-body{ padding: 1rem; display:flex; flex-direction:column; gap: .55rem; flex: 1; }
+    .sp-body{ padding: .75rem 1rem; display:flex; flex-direction:column; gap: .45rem; flex: 1; }
 
-    .sp-title{ font-weight: 700; line-height: 1.2; margin:0; font-size:15px; }
-    .sp-type-badge{ display:inline-flex; align-items:center; gap:.35rem; padding:.4rem .75rem; border-radius:999px; font-weight:500; border: 1px solid rgba(15,118,110,0.18); background: rgba(15,118,110,0.08); color: #0b5a4c; white-space:nowrap; font-size: 12px; }
+    .sp-title{ font-weight: 700; line-height: 1.2; margin:0; font-size:14.5px; }
+    .sp-type-badge{ display:inline-flex; align-items:center; gap:.3rem; padding:.25rem .6rem; border-radius:999px; font-weight:500; border: 1px solid rgba(15,118,110,0.18); background: rgba(15,118,110,0.08); color: #0b5a4c; white-space:nowrap; font-size: 11.5px; }
 
-    .sp-loc{ color:#64748b; font-weight: 400; font-size: 13px; display:flex; gap:.5rem; align-items:center; margin:0; flex-wrap:wrap; }
+    .sp-loc{ color:#64748b; font-weight: 400; font-size: 12.5px; display:flex; gap:.45rem; align-items:center; margin:0; flex-wrap:wrap; }
 
-    .sp-metric-grid{ display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:.65rem; }
-    .sp-metric{ background: rgba(255,255,255,0.80); border: 1px solid rgba(15,118,110,0.10); border-radius: 16px; padding: .6rem .7rem; }
-    .sp-metric-label{ color:#64748b; font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: .02em; }
-    .sp-metric-value{ font-weight: 600; margin-top:.25rem; font-size: 14px; }
+    .sp-metric-grid{ display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:.45rem; }
+    .sp-metric{ background: rgba(248,250,252,0.9); border: 1px solid rgba(15,118,110,0.10); border-radius: 12px; padding: .4rem .6rem; }
+    .sp-metric-label{ color:#64748b; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .02em; }
+    .sp-metric-value{ font-weight: 700; margin-top:.15rem; font-size: 13px; }
 
-    .sp-badges{ display:flex; flex-wrap:wrap; gap:.45rem; }
+    .sp-badges{ display:flex; flex-wrap:wrap; gap:.35rem; }
     .sp-badge{
-        padding:.45rem .75rem;
+        padding:.25rem .6rem;
         border-radius:999px;
         font-weight: 500;
-        font-size:12px;
+        font-size:11px;
         border: 1px solid rgba(0,0,0,0.06);
         white-space:nowrap;
-        background: rgba(2,6,23,0.02);
+        background: rgba(2,6,23,0.03);
         color: rgba(2,6,23,0.75);
     }
 
-    .sp-status-row{ display:flex; gap:.5rem; align-items:center; justify-content:space-between; }
-    .sp-status{ padding:.5rem .85rem; border-radius:999px; font-weight:500; font-size:12px; border: 1px solid rgba(0,0,0,0.06); white-space:nowrap; }
+    .sp-status-row{ display:flex; gap:.4rem; align-items:center; justify-content:space-between; }
+    .sp-status{ padding:.3rem .65rem; border-radius:999px; font-weight:500; font-size:11px; border: 1px solid rgba(0,0,0,0.06); white-space:nowrap; }
     .s-available{ background: rgba(16,185,129,0.15); color: #047857; border-color: rgba(16,185,129,0.25); }
     .s-reserved{ background: rgba(245,158,11,0.15); color: #b45309; border-color: rgba(245,158,11,0.25); }
     .s-sold{ background: rgba(239,68,68,0.15); color: #b91c1c; border-color: rgba(239,68,68,0.25); }
 
-    .sp-actions{ display:flex; flex-direction:column; gap:.55rem; margin-top:auto; }
-    .sp-action-row{ display:flex; gap:.6rem; }
+    .sp-actions{ display:flex; flex-direction:column; gap:.4rem; margin-top:auto; }
+    .sp-action-row{ display:flex; gap:.45rem; }
     .sp-btn{
-        border-radius: 16px;
+        border-radius: 12px;
         font-weight: 500;
-        padding: .65rem .85rem;
+        padding: .45rem .75rem;
+        font-size: 12.5px;
         border: 1px solid rgba(15,118,110,0.15);
         background: rgba(255,255,255,0.90);
         color: var(--primary);
@@ -340,10 +337,10 @@
         display:inline-flex;
         align-items:center;
         justify-content:center;
-        gap:.55rem;
+        gap:.45rem;
         flex:1;
     }
-    .sp-btn:hover{ transform: translateY(-1px); box-shadow: 0 16px 40px rgba(15,118,110,0.14); }
+    .sp-btn:hover{ transform: translateY(-1px); box-shadow: 0 10px 24px rgba(15,118,110,0.12); }
 
     .sp-btn-primary{
         background: linear-gradient(180deg, rgba(15,118,110,0.96), rgba(6,78,59,0.96));
@@ -524,8 +521,10 @@
             {% for saved_property in saved_properties %}
                 <div class="sp-property-card">
                     <div class="sp-media">
-                        {% if saved_property.property.image %}
-                            <img src="{{ saved_property.property.image.url }}" alt="{{ saved_property.property.title }}">
+                        {% if saved_property.property.featured_image %}
+                            <img src="{{ saved_property.property.featured_image.url }}" alt="{{ saved_property.property.title }}">
+                        {% elif saved_property.property.images.first %}
+                            <img src="{{ saved_property.property.images.first.image.url }}" alt="{{ saved_property.property.title }}">
                         {% else %}
                             <div class="sp-fallback">
                                 <i class="fas fa-seedling" style="font-size:2rem; color: rgba(15,118,110,0.75);"></i>
@@ -596,23 +595,21 @@
                         <!-- Property actions -->
                         <div class="sp-actions">
                             <div class="sp-action-row">
-                                <button class="sp-btn" type="button" onclick="viewDetails({{ saved_property.id }})">
+                                <button class="sp-btn" type="button"  onclick="window.location.href='{% url 'customer:property-detail-page' saved_property.property.id %}'">
                                     <i class="fas fa-eye"></i> View Details
                                 </button>
                             </div>
                             <div class="sp-action-row">
-                                <button class="sp-btn sp-btn-primary" type="button" onclick="makeInquiry()">
+                                <button class="sp-btn sp-btn-primary" type="button" onclick="makeInquiry({{ saved_property.property.id }})">
                                     <i class="fas fa-envelope"></i> Inquire
                                 </button>
-                            </div>
-                            <div class="sp-action-row">
-                                <button class="sp-btn" type="button" onclick="scheduleViewing({{ saved_property.id }})">
-                                    <i class="fas fa-calendar-check"></i> Schedule Visit
-                                </button>
-                                <button class="sp-btn sp-btn-danger" type="button" onclick="toggleSave({{ saved_property.property.id }})">
+
+                                <button class="sp-btn sp-btn-danger" type="button" onclick="removeSaved({{ saved_property.property.id }})">
                                     <i class="fas fa-heart-crack"></i> Remove
                                 </button>
-                            </div>
+                            </div>                    
+        
+                           
                         </div>
                     </div>
                 </div>
@@ -634,46 +631,47 @@
         </div>
     {% endif %}
 
-    <!-- Recently Viewed Properties (if provided by context) -->
+    {% if recently_viewed %}
+    <!-- Recently Viewed Properties -->
     <div class="sp-recent-wrap">
         <div class="sp-section-head">
             <div>
                 <p class="sp-section-title">Recently Viewed</p>
                 <p class="sp-section-sub">Your latest land research</p>
             </div>
-            {% if recently_viewed %}
-                <span class="badge bg-light text-dark" style="font-weight:400; border-radius: 999px;">{{ recently_viewed|length }} viewed</span>
-            {% endif %}
+            <span class="badge bg-light text-dark" style="font-weight:400; border-radius: 999px;">{{ recently_viewed|length }} viewed</span>
         </div>
 
-        {% if recently_viewed %}
-            <div class="sp-horizontal mb-4">
-                {% for p in recently_viewed %}
-                    <div class="sp-mini-card">
-                        <div class="sp-media" style="aspect-ratio: 16/9;">
-                            {% if p.image %}
-                                <img src="{{ p.image.url }}" alt="{{ p.title }}">
-                            {% else %}
-                                <div class="sp-fallback"><i class="fas fa-seedling" style="font-size:2rem; color: rgba(15,118,110,0.75);"></i></div>
-                            {% endif %}
-                        </div>
-                        <div class="sp-body">
-                            <p class="sp-title">{{ p.title }}</p>
-                            <p class="sp-loc"><i class="fas fa-map-marker-alt" style="color: var(--primary);"></i>{{ p.location|default:"—" }}</p>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="fw-bold" style="color: var(--primary);">${{ p.price|default:0|intcomma }}</div>
-                                <button class="btn btn-sm btn-primary" style="border-radius: 14px; font-weight:500;" onclick="makeInquiry()">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </div>
+        <div class="sp-horizontal mb-4">
+            {% for p in recently_viewed %}
+                <div class="sp-mini-card">
+                    <div class="sp-media" style="aspect-ratio: 16/9;">
+                        {% if p.featured_image %}
+                            <img src="{{ p.featured_image.url }}" alt="{{ p.title }}">
+                        {% elif p.images.first %}
+                            <img src="{{ p.images.first.image.url }}" alt="{{ p.title }}">
+                        {% else %}
+                            <div class="sp-fallback"><i class="fas fa-seedling" style="font-size:2rem; color: rgba(15,118,110,0.75);"></i></div>
+                        {% endif %}
+                    </div>
+                    <div class="sp-body">
+                        <p class="sp-title">{{ p.title }}</p>
+                        <p class="sp-loc"><i class="fas fa-map-marker-alt" style="color: var(--primary);"></i>{{ p.location|default:"—" }}</p>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="fw-bold" style="color: var(--primary);">₹{{ p.price|default:0|intcomma }}</div>
+                            <button class="btn btn-sm btn-primary" style="border-radius: 14px; font-weight:500;" onclick="window.location.href='{% url 'customer:property-detail-page' p.id %}'">
+                                <i class="fas fa-eye"></i>
+                            </button>
                         </div>
                     </div>
-                {% endfor %}
-            </div>
-        {% endif %}
+                </div>
+            {% endfor %}
+        </div>
     </div>
+    {% endif %}
 
-    <!-- Recommended Properties (if provided by context) -->
+    {% if recommended_properties %}
+    <!-- Recommended Properties -->
     <div class="sp-recommended-wrap">
         <div class="sp-section-head">
             <div>
@@ -682,42 +680,44 @@
             </div>
         </div>
 
-        {% if recommended_properties %}
-            <div class="sp-property-grid">
-                {% for p in recommended_properties %}
-                    <div class="sp-property-card">
-                        <div class="sp-media">
-                            <img src="{% if p.image %}{{ p.image.url }}{% else %}{% static 'img/agricultural_land_branding.jpg' %}{% endif %}" alt="{{ p.title }}">
-                            <div class="sp-tag">For You</div>
+        <div class="sp-property-grid">
+            {% for p in recommended_properties %}
+                <div class="sp-property-card">
+                    <div class="sp-media">
+                        {% if p.featured_image %}
+                            <img src="{{ p.featured_image.url }}" alt="{{ p.title }}">
+                        {% elif p.images.first %}
+                            <img src="{{ p.images.first.image.url }}" alt="{{ p.title }}">
+                        {% else %}
+                            <div class="sp-fallback"><i class="fas fa-seedling" style="font-size:2rem; color: rgba(15,118,110,0.75);"></i></div>
+                        {% endif %}
+                        <div class="sp-tag">For You</div>
+                    </div>
+                    <div class="sp-body">
+                        <p class="sp-title">{{ p.title }}</p>
+                        <p class="sp-loc"><i class="fas fa-map-marker-alt" style="color: var(--primary);"></i>{{ p.location|default:"—" }}</p>
+                        <div class="sp-metric-grid">
+                            <div class="sp-metric">
+                                <div class="sp-metric-label">Total Area</div>
+                                <div class="sp-metric-value">{{ p.area_sqft|default:0|intcomma }}</div>
+                                <div class="sp-metric-label" style="text-transform:none; letter-spacing:0; margin-top:.25rem;">{{ p.area_unit|default:"sqft" }}</div>
+                            </div>
+                            <div class="sp-metric">
+                                <div class="sp-metric-label">Price</div>
+                                <div class="sp-metric-value">₹{{ p.price|default:0|intcomma }}</div>
+                            </div>
                         </div>
-                        <div class="sp-body">
-                            <p class="sp-title">{{ p.title }}</p>
-                            <p class="sp-loc"><i class="fas fa-map-marker-alt" style="color: var(--primary);"></i>{{ p.location|default:"—" }}</p>
-                            <div class="sp-metric-grid">
-                                <div class="sp-metric">
-                                    <div class="sp-metric-label">Total Area</div>
-                                    <div class="sp-metric-value">{{ p.area_sqft|default:0|intcomma }}</div>
-                                    <div class="sp-metric-label" style="text-transform:none; letter-spacing:0; margin-top:.25rem;">{{ p.area_unit|default:"sqft" }}</div>
-                                </div>
-                                <div class="sp-metric">
-                                    <div class="sp-metric-label">Price</div>
-                                    <div class="sp-metric-value">${{ p.price|default:0|intcomma }}</div>
-                                </div>
-                            </div>
-                            <div class="sp-actions">
-                                <button class="sp-btn sp-btn-primary" type="button" onclick="makeInquiry()">
-                                    <i class="fas fa-eye"></i> View Details
-                                </button>
-                                <button class="sp-btn" type="button" onclick="save_property()">
-                                    <i class="fas fa-heart"></i> Save
-                                </button>
-                            </div>
+                        <div class="sp-actions">
+                            <button class="sp-btn sp-btn-primary" type="button" onclick="window.location.href='{% url 'customer:property-detail-page' p.id %}'">
+                                <i class="fas fa-eye"></i> View Details
+                            </button>
                         </div>
                     </div>
-                {% endfor %}
-            </div>
-        {% endif %}
+                </div>
+            {% endfor %}
+        </div>
     </div>
+    {% endif %}
 
     <!-- Property Details Modal (keep existing ids/functionality) -->
     <div class="modal fade" id="propertyDetailsModal" tabindex="-1">
@@ -853,15 +853,10 @@
 
 
         // Compatibility: old buttons may call viewDetails
-        function viewDetails(propertyId){
-            viewProperty(propertyId);
+        function viewDetails(propertyId) {
+            alert('Property details not available.');
+            return;
         }
-
-        // function scheduleViewing(propertyId) {
-            // If a viewing modal exists elsewhere, keep behaviour.
-            // Otherwise, keep non-breaking frontend alert.
-        //     alert('Schedule visit flow. Backend URLs unchanged.');
-        // }
 
         function submitViewing() {
             alert('Viewing scheduled successfully! We will contact you to confirm the details.');
@@ -880,9 +875,49 @@
             }
         }
 
-        // function makeInquiry() {
-        //     alert('Redirecting to inquiry form...');
-        // }
+        function makeInquiry(propertyId) {
+            var url = "{% url 'customer:create_inquiry' %}";
+            if (propertyId) {
+                url += '?property_id=' + propertyId;
+            }
+            window.location.href = url;
+        }
+
+        function removeSaved(propertyId) {
+            if (!confirm('Remove this property from your saved list?')) return;
+            fetch('/customer/api/unsave-property/' + propertyId + '/', {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(function(response) {
+                if (response.ok || response.status === 204 || response.status === 200) {
+                    location.reload();
+                } else {
+                    alert('Could not remove property. Please try again.');
+                }
+            })
+            .catch(function() {
+                alert('Network error. Please try again.');
+            });
+        }
+
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
 
         function browseProperties() {
             window.location.href = "{% url 'buy:property_search' %}";

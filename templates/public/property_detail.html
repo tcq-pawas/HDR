@@ -97,6 +97,34 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Agent / Seller Details -->
+            {% if property.seller %}
+            <div class="invest-card"
+                style="border: 1px solid var(--border); background: var(--cloud-white); padding: 32px 28px; margin-top: 28px;">
+                <h3 style="font-family: var(--font-heading); color: var(--forest); margin-bottom: 20px;">
+                    <i class="bi bi-person-badge"></i> Listed By
+                </h3>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <strong style="color: var(--forest);">Name:</strong>
+                        <span style="color: var(--text-mid);">{{ property.seller.get_full_name|default:property.seller.username }}</span>
+                    </div>
+                    {% if property.seller.email %}
+                    <div class="col-md-4">
+                        <strong style="color: var(--forest);">Email:</strong>
+                        <span style="color: var(--text-mid);">{{ property.seller.email }}</span>
+                    </div>
+                    {% endif %}
+                    {% if property.seller.customer_profile.phone %}
+                    <div class="col-md-4">
+                        <strong style="color: var(--forest);">Phone:</strong>
+                        <span style="color: var(--text-mid);">{{ property.seller.customer_profile.phone }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
         </div>
 
         <!-- Sidebar -->
@@ -107,9 +135,7 @@
                     <div class="section-label" style="margin: 0 auto 8px;">Price</div>
                     <h2 class="section-title" style="font-size: 2.4rem; color: var(--gold);">${{ property.price }}</h2>
                 </div>
-                <h5 style="font-family: var(--font-heading); color: var(--forest); margin-bottom: 16px;">Interested?
-                    Contact Us</h5>
-                
+
                 <div class="text-center mb-4">
                     {% if property.seller.user_subscription and property.seller.user_subscription.status == 'active' %}
                         {% if property.seller.user_subscription.plan.badge_image %}
@@ -119,7 +145,7 @@
                         {% endif %}
                     {% endif %}
                 </div>
-                
+
                 <h5 style="font-family: var(--font-heading); color: var(--forest); margin-bottom: 16px;">Interested? Contact Us</h5>
                 <form method="POST">
                     {% csrf_token %}

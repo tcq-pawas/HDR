@@ -185,6 +185,15 @@ def public_property_detail(request, slug):
         property_data = property_obj.get_public_data()
         images = property_obj.images.filter(category='General')  # Only show general images to public
     
+    
+     #  NEW: Agent details 
+    agent = getattr(property_obj, 'assigned_agent', None) or getattr(property_obj, 'seller', None)
+    agent_profile = None
+    if agent:
+        from Apps.Agent.models import AgentProfile
+        agent_profile = AgentProfile.objects.filter(user=agent).first()
+        
+        
     context = {
         'property': property_obj,
         'property_data': property_data,

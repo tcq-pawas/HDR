@@ -1,0 +1,250 @@
+{% extends "customer/customer_base.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block title %}{{ property.title }} - Property Details{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Clean Enterprise UI based on Inquiry Details structure */
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #e9ecef;
+    }
+    .page-title h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin: 0;
+    }
+    .page-title p {
+        font-size: 0.85rem;
+        color: #64748b;
+        margin: 0.25rem 0 0 0;
+    }
+
+    .info-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+    .info-card-header {
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    .info-card-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #334155;
+        margin: 0;
+    }
+    .info-card-body {
+        padding: 1.5rem;
+    }
+
+    /* Label & Value pairs */
+    .field-group {
+        margin-bottom: 1.5rem;
+    }
+    .field-label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+        color: #64748b;
+        margin-bottom: 0.25rem;
+    }
+    .field-value {
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: #0f172a;
+        margin: 0;
+    }
+    .status-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        background: #fef3c7;
+        color: #b45309;
+        text-transform: uppercase;
+    }
+    .status-badge.available { background: #dcfce7; color: #166534; }
+    .status-badge.sold { background: #fee2e2; color: #991b1b; }
+
+    .property-img {
+        width: 100%;
+        max-height: 400px;
+        object-fit: cover;
+        border-radius: 6px;
+        margin-bottom: 1.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="page-title">
+            <h1>Property Details</h1>
+            <p>Property ID: #{{ property.id }} • Added on {{ property.created_at|date:"M d, Y H:i"|default:"recently" }}</p>
+        </div>
+        <div>
+            <a href="javascript:history.back()" class="btn btn-outline-secondary btn-sm" style="font-weight: 500; padding: 0.4rem 1rem;">
+                Back to Properties
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content Layout -->
+    <div class="row">
+        <!-- Left Column: Main Information -->
+        <div class="col-lg-8">
+            
+            <!-- Property Images Card -->
+            <div class="info-card">
+                <div class="info-card-header">
+                    <h4 class="info-card-title">Property Overview</h4>
+                </div>
+                <div class="info-card-body">
+                    {% if property.featured_image %}
+                        <img src="{{ property.featured_image.url }}" class="property-img" alt="{{ property.title }}">
+                    {% elif property.images.first %}
+                        <img src="{{ property.images.first.image.url }}" class="property-img" alt="{{ property.title }}">
+                    {% else %}
+                        <div class="property-img" style="background: #f1f5f9; display: flex; align-items: center; justify-content: center; height: 250px;">
+                            <i class="fas fa-image" style="font-size: 4rem; color: #cbd5e1;"></i>
+                        </div>
+                    {% endif %}
+
+                    <div class="row">
+                        <div class="col-md-6 field-group">
+                            <div class="field-label">Property Title</div>
+                            <div class="field-value">{{ property.title }}</div>
+                        </div>
+                        <div class="col-md-6 field-group">
+                            <div class="field-label">Status</div>
+                            <div class="field-value">
+                                <span class="status-badge {% if property.status == 'available' %}available{% elif property.status == 'sold' %}sold{% endif %}">
+                                    {{ property.get_status_display|default:property.status|capfirst }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Property Details Card -->
+            <div class="info-card">
+                <div class="info-card-header">
+                    <h4 class="info-card-title">Property Details</h4>
+                </div>
+                <div class="info-card-body">
+                    <div class="row">
+                        <div class="col-md-6 field-group">
+                            <div class="field-label">Price</div>
+                            <div class="field-value">₹{{ property.price|intcomma }}</div>
+                        </div>
+                        <div class="col-md-6 field-group">
+                            <div class="field-label">Property Type</div>
+                            <div class="field-value">
+                                {% if property.get_property_type_display %}
+                                    {{ property.get_property_type_display|capfirst }}
+                                {% elif property.property_type %}
+                                    {{ property.property_type|capfirst }}
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6 field-group">
+                            <div class="field-label">Area</div>
+                            <div class="field-value">
+                                {% if property.area_sqft %}
+                                    {{ property.area_sqft|intcomma }}
+                                {% elif property.total_area %}
+                                    {{ property.total_area|intcomma }}
+                                {% else %}
+                                    N/A
+                                {% endif %} 
+                                sq.ft
+                            </div>
+                        </div>
+                        <div class="col-md-6 field-group">
+                            <div class="field-label">Category</div>
+                            <div class="field-value">
+                                {% if property.get_category_display %}
+                                    {{ property.get_category_display|capfirst }}
+                                {% elif property.category %}
+                                    {{ property.category|capfirst }}
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6 field-group">
+                            <div class="field-label">Location / City</div>
+                            <div class="field-value">{{ property.location|default:property.city|default:"N/A" }}</div>
+                        </div>
+                    </div>
+
+                    <div class="field-group mb-0 mt-2">
+                        <div class="field-label">Description</div>
+                        <div class="field-value" style="font-weight: 400; font-size: 0.9rem; line-height: 1.6; color: #475569;">
+                            {{ property.description|linebreaksbr|default:"No description provided." }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Column: Sidebar -->
+        <div class="col-lg-4">
+            
+            <!-- Agent Information Card -->
+            <div class="info-card">
+                <div class="info-card-header">
+                    <h4 class="info-card-title">Agent Information</h4>
+                </div>
+                <div class="info-card-body">
+                    {% if agent %}
+                        <div class="field-group">
+                            <div class="field-label">Agent Name</div>
+                            <div class="field-value">{{ agent.get_full_name|default:agent.username }}</div>
+                        </div>
+                        {% if agent.email %}
+                        <div class="field-group">
+                            <div class="field-label">Email Address</div>
+                            <div class="field-value">{{ agent.email }}</div>
+                        </div>
+                        {% endif %}
+                        {% if agent.profile.phone or agent.phone %}
+                        <div class="field-group mb-0">
+                            <div class="field-label">Phone Number</div>
+                            <div class="field-value">{{ agent.profile.phone|default:agent.phone }}</div>
+                        </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="text-muted" style="font-size: 0.9rem;">No Agent Assigned</div>
+                    {% endif %}
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+{% endblock %}
