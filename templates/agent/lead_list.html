@@ -223,13 +223,13 @@
             <div class="filter-item">
                 <div class="filter-input-wrapper">
                     <i class="bi bi-calendar3"></i>
-                    <input type="date" name="date_from" class="premium-input" value="{{ request.GET.date_from }}" placeholder="From Date">
+                    <input type="date" name="date_from" class="premium-input" value="{{ date_from|date:'Y-m-d' }}" placeholder="From Date">
                 </div>
             </div>
             <div class="filter-item">
                 <div class="filter-input-wrapper">
                     <i class="bi bi-calendar3"></i>
-                    <input type="date" name="date_to" class="premium-input" value="{{ request.GET.date_to }}" placeholder="To Date">
+                    <input type="date" name="date_to" class="premium-input" value="{{ date_to|date:'Y-m-d' }}" placeholder="To Date">
                 </div>
             </div>
             <div class="filter-item">

@@ -25,6 +25,77 @@ from .forms import (
     CommissionForm, DocumentForm, CommunicationForm, MessageTemplateForm
 )
 
+from datetime import datetime, timedelta
+
+MIN_ALLOWED_DATE = datetime(2020, 1, 1).date()
+MAX_RANGE_DAYS = 365
+
+def parse_safe_date(value):
+    """Safely parses the date string received from the URL. If the date is invalid, it returns None instead of crashing."""
+    if not value:
+        return None
+    try:
+        return datetime.strptime(value, '%Y-%m-%d').date()
+    except (ValueError, TypeError):
+        return None
+
+
+def get_safe_date_range(request):
+    """
+    Leads jaise filters ke liye — future date allow NAHI karta.
+    """
+    today = timezone.now().date()
+
+    date_from = parse_safe_date(request.GET.get('date_from'))
+    date_to = parse_safe_date(request.GET.get('date_to'))
+
+    if date_from and date_from < MIN_ALLOWED_DATE:
+        date_from = MIN_ALLOWED_DATE
+    if date_from and date_from > today:
+        date_from = today
+
+    if date_to and date_to > today:
+        date_to = today
+    if date_to and date_to < MIN_ALLOWED_DATE:
+        date_to = MIN_ALLOWED_DATE
+
+    if date_from and date_to and date_from > date_to:
+        date_from, date_to = date_to, date_from
+
+    if date_from and date_to and (date_to - date_from).days > MAX_RANGE_DAYS:
+        date_from = date_to - timedelta(days=MAX_RANGE_DAYS)
+
+    return date_from, date_to
+
+
+def get_safe_date_range_with_future(request):
+    """
+    Site Visits jaise filters ke liye — future date allow karta hai (max 2 saal aage tak).
+    """
+    today = timezone.now().date()
+    MAX_FUTURE_DATE = today + timedelta(days=730)
+
+    date_from = parse_safe_date(request.GET.get('date_from'))
+    date_to = parse_safe_date(request.GET.get('date_to'))
+
+    if date_from and date_from < MIN_ALLOWED_DATE:
+        date_from = MIN_ALLOWED_DATE
+    if date_from and date_from > MAX_FUTURE_DATE:
+        date_from = MAX_FUTURE_DATE
+
+    if date_to and date_to < MIN_ALLOWED_DATE:
+        date_to = MIN_ALLOWED_DATE
+    if date_to and date_to > MAX_FUTURE_DATE:
+        date_to = MAX_FUTURE_DATE
+
+    if date_from and date_to and date_from > date_to:
+        date_from, date_to = date_to, date_from
+
+    if date_from and date_to and (date_to - date_from).days > MAX_RANGE_DAYS:
+        date_from = date_to - timedelta(days=MAX_RANGE_DAYS)
+
+    return date_from, date_to
+
 
 @login_required
 def dashboard(request):
@@ -515,8 +586,7 @@ def lead_list(request):
         leads = leads.filter(source=source_filter)
     
     # Filter by date range
-    date_from = request.GET.get('date_from')
-    date_to = request.GET.get('date_to')
+    date_from, date_to = get_safe_date_range(request)
     if date_from:
         leads = leads.filter(created_at__date__gte=date_from)
     if date_to:
@@ -558,6 +628,8 @@ def lead_list(request):
         'stats': stats,
         'status_filter': status_filter,
         'source_filter': source_filter,
+        'date_from': date_from,
+        'date_to': date_to,
     }
     
     return render(request, 'agent/lead_list.html', context)
@@ -683,8 +755,7 @@ def site_visit_list(request):
         visits = visits.filter(status=status_filter)
     
     # Filter by date range
-    date_from = request.GET.get('date_from')
-    date_to = request.GET.get('date_to')
+    date_from, date_to = get_safe_date_range_with_future(request)
     if date_from:
         visits = visits.filter(scheduled_date__date__gte=date_from)
     if date_to:
