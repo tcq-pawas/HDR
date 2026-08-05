@@ -508,7 +508,7 @@ Sitemap: {sitemap_url}
 
 @user_passes_test(staff_required)
 def import_location_data_view(request):
-    """Read location_data_without_id.csv and upsert rows into LocationData."""
+    """Read Apps/Administration/location_data_without_id.csv and upsert rows into LocationData."""
     from import_location_data import import_location_data
 
     result = import_location_data()

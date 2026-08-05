@@ -30,15 +30,15 @@ HEADER_ALIASES = {
     'cityname': 'city',
     'sortorder': 'sort_order',
 }
-DEFAULT_CSV_NAME = 'location_data_without_id.csv'
+DEFAULT_CSV_PATH = Path('Apps') / 'Administration' / 'location_data_without_id.csv'
 
 
 def _default_csv_path():
     try:
         from django.conf import settings
-        return Path(settings.BASE_DIR) / DEFAULT_CSV_NAME
+        return Path(settings.BASE_DIR) / DEFAULT_CSV_PATH
     except Exception:
-        return Path(__file__).resolve().parent / DEFAULT_CSV_NAME
+        return Path(__file__).resolve().parent / DEFAULT_CSV_PATH
 
 
 def _normalize_row(row):
