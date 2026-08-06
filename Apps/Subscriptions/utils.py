@@ -9,9 +9,6 @@ from Apps.Subscriptions.models import PlanPricing, UserSubscription
 
 logger = logging.getLogger(__name__)
 
-# Seed plan: one listing every N days (existing business rule)
-SEED_PLAN_COOLDOWN_DAYS = 4
-
 # Sentinel so callers can pass subscription=None from .first() without re-fetching
 SUBSCRIPTION_UNSET = object()
 
@@ -61,7 +58,6 @@ def check_property_listing_eligibility(user, subscription=SUBSCRIPTION_UNSET):
     - Plan is present and eligible for listings
     - Current listing count is under the plan's property_limit
       (property_limit=0 means unlimited)
-    - Seed-plan cooldown between listings (when applicable)
     """
     subscription = get_user_subscription(user, subscription=subscription)
 
@@ -108,43 +104,21 @@ def check_property_listing_eligibility(user, subscription=SUBSCRIPTION_UNSET):
 
     limit = plan.property_limit
     # 0 = unlimited listings for this plan
-    if limit > 0:
-        current_count = count_agent_listed_properties(user)
-        if current_count >= limit:
-            unit = "property" if limit == 1 else "properties"
-            return PropertyListingCheck(
-                allowed=False,
-                title="Plan Limit Reached",
-                message=(
-                    f"You have reached your plan's listing limit of {limit} {unit}. "
-                    "Please upgrade your subscription or remove an existing property "
-                    "before adding another one."
-                ),
-            )
+    if limit == 0:
+        return PropertyListingCheck(allowed=True)
 
-    if plan.slug and 'seed' in plan.slug.lower():
-        from Apps.PublicPage.models import Property
-
-        last_property = (
-            Property.objects.filter(seller=user)
-            .only('created_at')
-            .order_by('-created_at')
-            .first()
+    current_count = count_agent_listed_properties(user)
+    if current_count >= limit:
+        unit = "property" if limit == 1 else "properties"
+        return PropertyListingCheck(
+            allowed=False,
+            title="Plan Limit Reached",
+            message=(
+                f"You have reached your plan's listing limit of {limit} {unit}. "
+                "Please upgrade your subscription or remove an existing property "
+                "before adding another one."
+            ),
         )
-        if last_property:
-            days_passed = (timezone.now() - last_property.created_at).days
-            if days_passed < SEED_PLAN_COOLDOWN_DAYS:
-                days_left = SEED_PLAN_COOLDOWN_DAYS - days_passed
-                day_unit = "day" if days_left == 1 else "days"
-                return PropertyListingCheck(
-                    allowed=False,
-                    title="Seed Plan Cooldown",
-                    message=(
-                        f"You have reached your Seed plan listing frequency limit. "
-                        f"You can add another property after {days_left} {day_unit}. "
-                        "Please upgrade your subscription or wait for the cooldown to end."
-                    ),
-                )
 
     return PropertyListingCheck(allowed=True)
 
