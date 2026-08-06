@@ -1,7 +1,10 @@
 {% extends 'public/base.html' %}
 {% load static %}
 
-{% block title %}{{ agent.user.get_full_name|default:agent.user.username }} - Agent Profile | HeyDay Realty{% endblock %}
+{% block title %}{{ agent.user.get_full_name|default:agent.user.username }} - Agent Profile | HHectare{% endblock %}
+{% block meta_description %}Connect with {{ agent.user.get_full_name|default:agent.user.username }}, a verified real estate agent on HHectare. Browse listings and request property consultations.{% endblock %}
+{% block og_title %}{{ agent.user.get_full_name|default:agent.user.username }} - Agent Profile | HHectare{% endblock %}
+{% block twitter_title %}{{ agent.user.get_full_name|default:agent.user.username }} - Agent Profile | HHectare{% endblock %}
 
 {% block content %}
 <!-- Breadcrumb -->
@@ -189,7 +192,7 @@
                     <i class="fas fa-envelope"></i>
                     <div class="contact-info">
                         <span class="contact-label">Email</span>
-                        <span class="contact-value">{{ agent.user.email|default:"agent@heydayrealty.in" }}</span>
+                        <span class="contact-value">{{ agent.user.email|default:"agent@hhectare.com" }}</span>
                     </div>
                 </div>
                 <div class="contact-item">
@@ -1360,7 +1363,7 @@
         if (navigator.share) {
             navigator.share({
                 title: '{{ agent.user.get_full_name|default:agent.user.username }} - Agent Profile',
-                text: 'Check out this agent profile on HeyDay Realty',
+                text: 'Check out this agent profile on HHectare',
                 url: window.location.href
             });
         } else {

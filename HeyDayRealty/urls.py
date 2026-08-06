@@ -89,6 +89,11 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, Sp
 from django.http import JsonResponse
 from Apps.PublicPage.sitemaps import PropertySitemap, StaticViewSitemap, AgentProfileSitemap
 
+# Django Admin branding
+admin.site.site_header = "HHectare Administration"
+admin.site.site_title = "HHectare Admin Portal"
+admin.site.index_title = "Welcome to HHectare Dashboard"
+
 def health_check(request):
     """Health check endpoint for Docker healthcheck"""
     return JsonResponse({'status': 'healthy'}, status=200)

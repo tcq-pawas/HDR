@@ -22,7 +22,7 @@ POST /admin-dashboard/api/contact/
 
 ## Request Format
 
-### HeyDay Realty
+### HHectare
 
 ```json
 {
@@ -93,12 +93,12 @@ POST /admin-dashboard/api/contact/
 | full_name | string | Yes | Full name of the contact person |
 | phone_number | string | Yes | Phone number with country code |
 | email | string | Yes | Valid email address |
-| subject | string | HeyDay only | Subject of the inquiry |
-| preferred_contact_method | string | HeyDay only | 'email', 'phone', 'whatsapp', or 'both' |
-| property_type | string | HeyDay only | 'apartment', 'villa', 'penthouse', etc. |
-| preferred_location | string | HeyDay only | Preferred property location |
-| budget_range | string | HeyDay only | Budget range category |
-| area_size | string | HeyDay only | Area size category |
+| subject | string | HHectare only | Subject of the inquiry |
+| preferred_contact_method | string | HHectare only | 'email', 'phone', 'whatsapp', or 'both' |
+| property_type | string | HHectare only | 'apartment', 'villa', 'penthouse', etc. |
+| preferred_location | string | HHectare only | Preferred property location |
+| budget_range | string | HHectare only | Budget range category |
+| area_size | string | HHectare only | Area size category |
 | message | string | Yes | Inquiry message |
 
 ## Adding a New Website
@@ -145,7 +145,7 @@ No changes needed to views, serializers, or validators. The API will automatical
     },
     "item": [
         {
-            "name": "HeyDay Realty Contact",
+            "name": "HHectare Contact",
             "request": {
                 "method": "POST",
                 "header": [
@@ -211,7 +211,7 @@ Apps/Administration/
 ├── urls.py                         # URL configuration
 └── templates/
     └── emails/
-        ├── heyday_contact.html     # HeyDay email template
+        ├── heyday_contact.html     # HHectare email template
         └── thecodiq_contact.html   # TheCodiQ email template
 ```
 

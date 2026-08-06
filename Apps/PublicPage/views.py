@@ -162,7 +162,7 @@ def send_admin_email_notification(enquiry):
             ).exclude(email='').values_list('email', flat=True).distinct())
             
         if not recipients:
-            recipients = [settings.DEFAULT_FROM_EMAIL or 'admin@heydayrealty.com']
+            recipients = [settings.DEFAULT_FROM_EMAIL or 'admin@hhectare.com']
             
         subject = f"New Website Enquiry #{enquiry.enquiry_id} - {enquiry.full_name}"
         message = f"""
@@ -186,7 +186,7 @@ To view and manage this enquiry, please log in to the Admin Dashboard:
 http://localhost:8000/admin-dashboard/inquiries/{enquiry.id}/
 
 Best regards,
-HeyDay Realty System
+HHectare System
 """
         html_message = f"""
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
@@ -230,7 +230,7 @@ HeyDay Realty System
                 </div>
             </div>
             <div style="background-color: #f8fafc; padding: 15px; text-align: center; font-size: 12px; color: #9ca3af; border-top: 1px solid #e2e8f0;">
-                This is an automated notification from HeyDay Realty.
+                This is an automated notification from HHectare.
             </div>
         </div>
         """
@@ -477,15 +477,15 @@ def agent_profile(request, agent_id=None):
 
 def robots_txt(request):
     """
-    Dynamic robots.txt view that generates robots.txt with dynamic sitemap URL.
-    Follows SEO best practices by excluding private areas.
+    Dynamic robots.txt for HHectare with sitemap URL and private-area exclusions.
     """
     # Build the sitemap URL dynamically based on the current request
     scheme = 'https' if request.is_secure() else 'http'
     host = request.get_host()
     sitemap_url = f"{scheme}://{host}/sitemap.xml"
 
-    robots_content = f"""User-agent: *
+    robots_content = f"""# HHectare robots.txt
+User-agent: *
 Allow: /
 
 Disallow: /admin/

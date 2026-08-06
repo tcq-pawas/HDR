@@ -743,7 +743,7 @@ def activate_user(request, user_id):
         html_message = f"""
         <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
             <div style="background: linear-gradient(135deg, #0F766E 0%, #115E59 100%); padding: 30px 20px; text-align: center;">
-                <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700; letter-spacing: 1px;">🌱 HeyDay Realty</h1>
+                <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700; letter-spacing: 1px;">🌱 HHectare</h1>
             </div>
             <div style="padding: 40px 30px; background-color: #ffffff;">
                 <h2 style="color: #1F2937; margin-top: 0; font-size: 22px;">Account Approved! 🎉</h2>
@@ -757,16 +757,16 @@ def activate_user(request, user_id):
                 
                 <p style="color: #6B7280; font-size: 14px; line-height: 1.5;">If the button doesn't work, copy and paste this link into your browser:<br><a href="{reset_url}" style="color: #0F766E; word-break: break-all;">{reset_url}</a></p>
                 
-                <p style="color: #4B5563; font-size: 16px; line-height: 1.6; margin-top: 30px;">Best regards,<br><strong style="color: #0F766E;">HeyDay Realty Team</strong></p>
+                <p style="color: #4B5563; font-size: 16px; line-height: 1.6; margin-top: 30px;">Best regards,<br><strong style="color: #0F766E;">HHectare Team</strong></p>
             </div>
             <div style="background-color: #F9FAFB; padding: 20px; text-align: center; border-top: 1px solid #e5e7eb;">
-                <p style="color: #9CA3AF; font-size: 13px; margin: 0;">&copy; 2026 HeyDay Realty. All rights reserved.</p>
+                <p style="color: #9CA3AF; font-size: 13px; margin: 0;">&copy; 2026 HHectare. All rights reserved.</p>
             </div>
         </div>
         """
         send_mail(
-            subject='Account Approved - HeyDay Realty',
-            message=f'Hello {user.first_name},\n\nGreat news! Your account has been approved by the administration team.\n\nPlease click the link below to set your password and log in to your dashboard:\n{reset_url}\n\nBest regards,\nHeyDay Realty Team',
+            subject='Account Approved - HHectare',
+            message=f'Hello {user.first_name},\n\nGreat news! Your account has been approved by the administration team.\n\nPlease click the link below to set your password and log in to your dashboard:\n{reset_url}\n\nBest regards,\nHHectare Team',
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[user.email],
             html_message=html_message,
@@ -1189,7 +1189,7 @@ def save_email_settings(request):
         SystemSettings.objects.update_or_create(setting_key='EMAIL_HOST_USER', defaults={'setting_value': username})
         SystemSettings.objects.update_or_create(setting_key='EMAIL_HOST_PASSWORD', defaults={'setting_value': password})
         SystemSettings.objects.update_or_create(setting_key='EMAIL_USE_TLS', defaults={'setting_value': use_tls})
-        SystemSettings.objects.update_or_create(setting_key='DEFAULT_FROM_EMAIL', defaults={'setting_value': request.data.get('emailFrom', 'noreply@heydayrealty.com')})
+        SystemSettings.objects.update_or_create(setting_key='DEFAULT_FROM_EMAIL', defaults={'setting_value': request.data.get('emailFrom', 'noreply@hhectare.com')})
 
         return Response({'success': True, 'message': 'Email settings saved successfully'})
     except Exception as e:
@@ -1205,10 +1205,10 @@ def test_email_settings(request):
         # Ensure latest settings are used by clearing any cached connection
         # We can just use send_mail, which will instantiate the backend with current DB settings
         send_mail(
-            subject='Test Email from HeyDay Realty Admin',
+            subject='Test Email from HHectare Admin',
             message='This is a test email to verify your SMTP settings are configured correctly.',
             from_email=None,  # Uses DEFAULT_FROM_EMAIL
-            recipient_list=[request.user.email or request.data.get('testEmail', 'noreply@heydayrealty.com')],
+            recipient_list=[request.user.email or request.data.get('testEmail', 'noreply@hhectare.com')],
             fail_silently=False,
         )
         return Response({'success': True, 'message': 'Test email sent successfully!'})
@@ -1258,9 +1258,9 @@ def save_general_settings(request):
             request.user.username = username
             request.user.save()
         
-        site_name = request.data.get('siteName', 'HeyDay Realty')
+        site_name = request.data.get('siteName', 'HHectare')
         site_description = request.data.get('siteDescription', 'Professional real estate investment platform')
-        contact_email = request.data.get('contactEmail', 'info@heydayrealty.com')
+        contact_email = request.data.get('contactEmail', 'info@hhectare.com')
         phone_number = request.data.get('phoneNumber', '+1 (555) 123-4567')
         address = request.data.get('address', '123 Business Ave, Suite 100\nNew York, NY 10001')
         timezone = request.data.get('timezone', 'America/New_York')
@@ -1426,7 +1426,7 @@ def approve_kyc(request, profile_id):
                 user_sub.save()
             
             # Send Email
-            subject = 'Your HeyDay Realty Account has been Approved!'
+            subject = 'Your HHectare Account has been Approved!'
             html_message = render_to_string('administration/emails/kyc_approved.html', {'user': profile.user})
             plain_message = strip_tags(html_message)
             from_email = settings.DEFAULT_FROM_EMAIL
@@ -1474,7 +1474,7 @@ def reject_kyc(request, profile_id):
             profile.save()
             
             # Send Email
-            subject = 'Action Required: HeyDay Realty Document Verification'
+            subject = 'Action Required: HHectare Document Verification'
             html_message = render_to_string('administration/emails/kyc_rejected.html', {
                 'user': profile.user,
                 'reason': reason

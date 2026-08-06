@@ -5,6 +5,11 @@ from .models import (
     Notification, SystemMetrics, WebsiteInquiry
 )
 
+# Django Admin branding
+admin.site.site_header = "HHectare Administration"
+admin.site.site_title = "HHectare Admin Portal"
+admin.site.index_title = "Welcome to HHectare Dashboard"
+
 
 @admin.register(AdminProfile)
 class AdminProfileAdmin(admin.ModelAdmin):

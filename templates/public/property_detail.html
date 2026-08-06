@@ -1,5 +1,12 @@
 {% extends 'public/base.html' %}
 {% load static %}
+
+{% block title %}{{ property.title }} | HHectare{% endblock %}
+{% block meta_description %}{{ property.title }}{% if property.location %} in {{ property.location }}{% endif %} — view details on HHectare, your premium real estate platform.{% endblock %}
+{% block og_title %}{{ property.title }} | HHectare{% endblock %}
+{% block twitter_title %}{{ property.title }} | HHectare{% endblock %}
+{% block og_type %}article{% endblock %}
+
 {% block hero_image %}https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1600&q=80{% endblock %}
 {% block hero_title %}{{ property.title }}{% endblock %}
 {% block hero_subtitle %}{{ property.location }}{% endblock %}

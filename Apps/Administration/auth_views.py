@@ -81,7 +81,7 @@ class CustomLoginView(TemplateView):
                         import urllib.request
                         import json
                         url = f"https://nominatim.openstreetmap.org/reverse?format=json&lat={lat}&lon={lng}"
-                        req = urllib.request.Request(url, headers={'User-Agent': 'HeyDayRealty/1.0'})
+                        req = urllib.request.Request(url, headers={'User-Agent': 'HHectare/1.0'})
                         with urllib.request.urlopen(req, timeout=3) as response:
                             data = json.loads(response.read().decode())
                             if 'display_name' in data:

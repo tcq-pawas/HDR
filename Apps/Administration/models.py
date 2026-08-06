@@ -288,7 +288,7 @@ class PropertyReview(models.Model):
 
 
 class WebsiteInquiry(models.Model):
-    website = models.CharField(max_length=50)  # HeyDay Realty / TheCodiQ Global
+    website = models.CharField(max_length=50)  # HHectare / TheCodiQ Global
 
     full_name = models.CharField(max_length=150)
     phone_number = models.CharField(max_length=20)

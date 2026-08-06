@@ -48,7 +48,18 @@ class StaticViewSitemap(Sitemap):
 
     def items(self):
         """Return static page names"""
-        return ['public:home', 'public:about', 'public:contact', 'buy:property_search']
+        return [
+            'public:home',
+            'public:about',
+            'public:contact',
+            'public:career',
+            'public:nri',
+            'public:property_list',
+            'public:agents',
+            'public:subscription_plans',
+            'buy:property_search',
+            'sell:sell_page',
+        ]
 
     def location(self, item):
         """Return URL for each static page"""

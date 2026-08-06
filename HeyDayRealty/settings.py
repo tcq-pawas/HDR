@@ -205,8 +205,8 @@ REST_FRAMEWORK = {
 
 # drf-spectacular settings
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'HeyDay Realty API',
-    'DESCRIPTION': 'Comprehensive API for HeyDay Realty platform including Administration, Customer, Investor, Agent, and Property management',
+    'TITLE': 'HHectare API',
+    'DESCRIPTION': 'Comprehensive API for HHectare platform including Administration, Customer, Investor, Agent, and Property management',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
     'COMPONENT_SPLIT_REQUEST': True,
@@ -252,6 +252,10 @@ LOGOUT_REDIRECT_URL = '/auth/login/'
 # Email settings
 EMAIL_BACKEND = 'Apps.Administration.email_backend.SystemSettingsEmailBackend'
 DEFAULT_FROM_EMAIL = 'noreply@heydayrealty.com'
+
+# Site branding / display metadata
+SITE_NAME = 'HHectare'
+SITE_DESCRIPTION = 'HHectare is a premium real estate platform offering residential, commercial, luxury, and agricultural properties with verified listings across India.'
 
 # Contact API Keys for external website submissions
 CONTACT_API_KEY_HEYDAY = os.getenv('CONTACT_API_KEY_HEYDAY')

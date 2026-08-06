@@ -19,10 +19,10 @@
 <body>
     <div class="email-container">
         <div class="header">
-            <h1>HeyDay Realty</h1>
+            <h1>HHectare</h1>
         </div>
         <div class="content">
-            <h2>Welcome to HeyDay Realty!</h2>
+            <h2>Welcome to HHectare!</h2>
             <p>Hi {{ user.get_full_name|default:user.username }},</p>
             <p>Great news! Our administration team has reviewed your KYC documents and your account is now fully approved.</p>
             
@@ -35,13 +35,13 @@
             
             <center>
                 <!-- Assuming the default site URL here. Adjust if a dynamic site_url is available -->
-                <a href="https://heydayrealty.com/agent/dashboard/" class="btn" style="color: #ffffff;">Go to Dashboard</a>
+                <a href="/agent/dashboard/" class="btn" style="color: #ffffff;">Go to Dashboard</a>
             </center>
             
-            <p style="margin-top: 30px;">Best regards,<br>The HeyDay Realty Team</p>
+            <p style="margin-top: 30px;">Best regards,<br>The HHectare Team</p>
         </div>
         <div class="footer">
-            &copy; {% now "Y" %} HeyDay Realty. All rights reserved.<br>
+            &copy; {% now "Y" %} HHectare. All rights reserved.<br>
             If you have any questions, please contact support.
         </div>
     </div>

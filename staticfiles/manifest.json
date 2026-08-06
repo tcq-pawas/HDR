@@ -1,0 +1,29 @@
+{
+  "name": "HHectare",
+  "short_name": "HHectare",
+  "description": "HHectare is a premium real estate platform offering residential, commercial, luxury, and agricultural properties with verified listings across India.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#1B4332",
+  "lang": "en-IN",
+  "icons": [
+    {
+      "src": "/static/img/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/static/img/logo-2.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/img/logo-2.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
