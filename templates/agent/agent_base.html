@@ -711,7 +711,7 @@
 
                             <a href="{% url 'agent:property_list' %}"
 
-                                class="nav-link {% if request.resolver_match.url_name in 'property_list property_add property_edit property_type_select' %}active{% endif %}"
+                                class="nav-link {% if request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'property_list' or request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'property_add' or request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'property_edit' or request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'property_type_select' %}active{% endif %}"
                                 
                                 onclick="closeOffcanvasAndNavigate(event, this.href)">
 
@@ -970,7 +970,7 @@
 
                             <a href="{% url 'agent:property_list' %}"
 
-                                class="nav-link {% if request.resolver_match.url_name in 'property_list property_add property_edit property_type_select' %}active{% endif %}">
+                                class="nav-link {% if request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'property_list' or request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'property_add' or request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'property_edit' or request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'property_type_select' %}active{% endif %}">
 
                                 <i class="bi bi-houses"></i>
 
