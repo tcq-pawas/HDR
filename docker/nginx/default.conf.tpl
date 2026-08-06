@@ -18,16 +18,22 @@ server {
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_prefer_server_ciphers on;
 
+    # Allow large property image / document uploads (default nginx limit is 1m)
+    client_max_body_size 50M;
+    client_body_timeout 300s;
+
     location /static/ {
         alias /app/staticfiles/;
     }
 
     location /media/ {
         alias /app/media/;
+        client_max_body_size 50M;
     }
 
     location / {
         proxy_pass http://web:8000;
         include /etc/nginx/proxy_params;
+        client_max_body_size 50M;
     }
 }

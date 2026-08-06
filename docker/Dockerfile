@@ -24,15 +24,14 @@ COPY . .
 
 # Copy entrypoint script
 COPY docker/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+RUN sed -i 's/\r$//' /entrypoint.sh && chmod +x /entrypoint.sh
 
-# Create non-root user
+# Create non-root user for runtime (entrypoint starts as root to fix volume perms)
 RUN useradd -m -u 1000 appuser && \
+    mkdir -p /app/media /app/staticfiles /app/static && \
     chown -R appuser:appuser /app
 
-USER appuser
-
-# Expose port
+# Do NOT switch USER here — entrypoint must run as root to chown mounted volumes,
+# then drops privileges to appuser before starting Gunicorn.
 EXPOSE 8000
-
 ENTRYPOINT ["/entrypoint.sh"]

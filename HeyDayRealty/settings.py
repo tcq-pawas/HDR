@@ -255,7 +255,13 @@ DEFAULT_FROM_EMAIL = 'noreply@heydayrealty.com'
 
 # Site branding / display metadata
 SITE_NAME = 'HHectare'
-SITE_DESCRIPTION = 'HHectare is a premium real estate platform offering residential, commercial, luxury, and agricultural properties with verified listings across India.'
+SITE_SLOGAN = 'Invest Green. Grow Strong.'
+SITE_DESCRIPTION = 'HHectare — Invest Green. Grow Strong. Premium real estate platform offering residential, commercial, luxury, and agricultural properties with verified listings across India.'
+
+# Upload limits (aligned with nginx client_max_body_size 50M)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 50 * 1024 * 1024  # 50 MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10 MB before spilling to disk
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
 
 # Contact API Keys for external website submissions
 CONTACT_API_KEY_HEYDAY = os.getenv('CONTACT_API_KEY_HEYDAY')

@@ -18,7 +18,7 @@
     <meta name="robots" content="noindex, nofollow">
     <meta name="description" content="HHectare agent dashboard for managing properties, leads, and bookings.">
     <link rel="canonical" href="{{ request.build_absolute_uri }}">
-    <link rel="icon" href="{% static 'img/favicon.ico' %}">
+    <link rel="icon" href="{% static 'img/logo.png' %}">
     <meta name="application-name" content="HHectare">
 
     <!-- Bootstrap 5 -->
@@ -631,13 +631,14 @@
             <div class="offcanvas-header">
 
                 <a class="brand-logo" href="{% url 'agent:dashboard' %}"
-
+                    style="display:flex; align-items:center; gap:10px; text-decoration:none;"
                     onclick="closeOffcanvasAndNavigate(event, this.href)">
 
-                    <img src="{% static 'img/logo.png' %}" alt="HHectare">
-
-                    <span>HHectare</span>
-
+                    <img src="{% static 'img/logo.png' %}" alt="HHectare" title="HHectare" style="height:40px; width:auto;">
+                    <div>
+                        <div style="font-weight:700; line-height:1.1; color:#fff;">HHectare</div>
+                        <div style="font-size:0.65rem; opacity:0.85; color:#fff;">Invest Green. Grow Strong.</div>
+                    </div>
                 </a>
 
                 <button type="button" class="btn-close text-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -898,11 +899,13 @@
 
                 <!-- Logo -->
 
-                <a class="brand-logo" href="{% url 'agent:dashboard' %}">
+                <a class="brand-logo" href="{% url 'agent:dashboard' %}" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
 
-                    <img src="{% static 'img/logo.png' %}" alt="HHectare">
-
-                    <span>HHectare</span>
+                    <img src="{% static 'img/logo.png' %}" alt="HHectare" title="HHectare" style="height:40px; width:auto;">
+                    <div>
+                        <div style="font-weight:700; line-height:1.1; color:#fff;">HHectare</div>
+                        <div style="font-size:0.65rem; opacity:0.85; color:#fff;">Invest Green. Grow Strong.</div>
+                    </div>
 
                 </a>
 

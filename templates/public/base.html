@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}HHectare | Premium Real Estate & Property Platform{% endblock %}</title>
 
-    <meta name="description" content="{% block meta_description %}HHectare is a premium real estate platform offering residential, commercial, luxury, and agricultural properties with verified listings across India.{% endblock %}">
+    <meta name="description" content="{% block meta_description %}HHectare — Invest Green. Grow Strong. Premium real estate platform offering residential, commercial, luxury, and agricultural properties with verified listings across India.{% endblock %}">
     <meta name="keywords" content="{% block meta_keywords %}HHectare, HHectare India, HHectare Realty, Real Estate, Property, Buy Property, Sell Property, Luxury Property, Plots, Apartments, Commercial Property, Agricultural Land, Investment Property, Property Consultant, Verified Properties, India Real Estate{% endblock %}">
     <meta name="author" content="HHectare">
     <meta name="robots" content="{% block meta_robots %}index, follow{% endblock %}">
@@ -17,22 +17,22 @@
 
     <!-- Open Graph -->
     <meta property="og:title" content="{% block og_title %}HHectare | Premium Real Estate Platform{% endblock %}">
-    <meta property="og:description" content="{% block og_description %}Discover premium residential, commercial, and agricultural properties with HHectare.{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}HHectare — Invest Green. Grow Strong. Discover premium residential, commercial, and agricultural properties.{% endblock %}">
     <meta property="og:site_name" content="HHectare">
     <meta property="og:type" content="{% block og_type %}website{% endblock %}">
     <meta property="og:url" content="{% block og_url %}{{ request.build_absolute_uri }}{% endblock %}">
-    <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo-2.png' %}{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo.png' %}{% endblock %}">
     <meta property="og:locale" content="en_IN">
 
     <!-- Twitter Cards -->
     <meta name="twitter:card" content="{% block twitter_card %}summary_large_image{% endblock %}">
     <meta name="twitter:title" content="{% block twitter_title %}HHectare | Premium Real Estate Platform{% endblock %}">
-    <meta name="twitter:description" content="{% block twitter_description %}Discover premium residential, commercial, and agricultural properties with HHectare.{% endblock %}">
-    <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo-2.png' %}{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}HHectare — Invest Green. Grow Strong. Discover premium residential, commercial, and agricultural properties.{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo.png' %}{% endblock %}">
 
     <!-- Favicon & PWA -->
-    <link rel="icon" href="{% static 'img/favicon.ico' %}">
-    <link rel="apple-touch-icon" href="{% static 'img/logo-2.png' %}">
+    <link rel="icon" href="{% static 'img/logo.png' %}">
+    <link rel="apple-touch-icon" href="{% static 'img/logo.png' %}">
     <link rel="manifest" href="{% static 'manifest.json' %}">
     <meta name="theme-color" content="#1B4332">
     <meta name="application-name" content="HHectare">
@@ -48,8 +48,8 @@
                 "@id": "{{ request.scheme }}://{{ request.get_host }}/#organization",
                 "name": "HHectare",
                 "url": "{{ request.scheme }}://{{ request.get_host }}/",
-                "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo-2.png' %}",
-                "description": "HHectare is a premium real estate platform offering residential, commercial, luxury, and agricultural properties with verified listings across India.",
+                "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo.png' %}",
+                "description": "HHectare — Invest Green. Grow Strong. Premium real estate platform offering residential, commercial, luxury, and agricultural properties with verified listings across India.",
                 "sameAs": []
             },
             {
@@ -69,7 +69,7 @@
                 "@id": "{{ request.scheme }}://{{ request.get_host }}/#localbusiness",
                 "name": "HHectare",
                 "url": "{{ request.scheme }}://{{ request.get_host }}/",
-                "image": "{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo-2.png' %}",
+                "image": "{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo.png' %}",
                 "priceRange": "$$",
                 "areaServed": "India"
             }
@@ -98,16 +98,16 @@
     <!-- LEFT: Logo -->
     <a class="navbar-brand p-0" href="{% url 'public:home' %}">
       <div class="d-flex align-items-center gap-2">
-        <div class="bg-success bg-gradient rounded-3 d-flex align-items-center justify-content-center"
-             style="width:42px; height:42px; font-size:1.3rem;">
-          🌿
-        </div>
+        <img src="{% static 'img/logo.png' %}"
+             alt="HHectare"
+             title="HHectare"
+             style="height:48px; width:auto; display:block;">
         <div>
           <div class="fw-bold lh-1" style="font-family:'Playfair Display',serif; font-size:1.25rem; color:#1B4332;">
             HHectare
           </div>
-          <div class="small text-uppercase fw-semibold lh-1" style="font-size:0.6rem; letter-spacing:2px; color:#40916C;">
-            Real Estate
+          <div class="small fw-semibold lh-1 mt-1" style="font-size:0.65rem; letter-spacing:0.5px; color:#40916C;">
+            Invest Green. Grow Strong.
           </div>
         </div>
       </div>
@@ -192,7 +192,7 @@
                 <div class="col-lg-3 col-md-6 mb-4">
                     <!-- <h5>Company</h5> 
 
-                    <img src="{% static '/img/logo-2.png' %}" alt="HHectare"
+                    <img src="{% static '/img/logo.png' %}" alt="HHectare"
                         style="max-width:220px; margin-bottom:20px;">
 
                     <!-- <p class="footer-desc">
@@ -383,8 +383,12 @@
     <footer class="footer">
         <div class="footer-container">
             <div class="footer-brand">
+                <img src="{% static 'img/logo.png' %}"
+                     alt="HHectare"
+                     title="HHectare"
+                     style="height:56px; width:auto; margin-bottom:12px; display:block;">
                 <div class="footer-brand-logo">HHectare</div>
-                <p class="footer-brand-description">Premium Real Estate Platform</p>
+                <p class="footer-brand-description">Invest Green. Grow Strong.</p>
                 <p class="footer-brand-description">Buy • Sell • Invest • Discover</p>
                 <div class="footer-social">
                     <a href="#" class="footer-social-link">𝗙</a>
