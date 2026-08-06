@@ -17,7 +17,10 @@ from django.views.decorators.http import require_GET
 from Apps.PublicPage.models import Property, PropertyInquiry, LocationData, PropertyImage
 from Apps.Administration.auth_utils import get_user_role
 from Apps.Subscriptions.models import UserSubscription
-from Apps.Subscriptions.utils import check_property_listing_eligibility
+from Apps.Subscriptions.utils import (
+    SUBSCRIPTION_UNSET,
+    check_property_listing_eligibility,
+)
 from .models import (
     AgentProfile, Lead, LeadFollowUp, SiteVisit,
     Booking, Installment, Commission, Document, Communication, MessageTemplate
@@ -266,14 +269,16 @@ def _agent_listing_limit_response(request, check):
     )
 
 
-def _enforce_agent_property_listing(request, user_role, subscription=None):
+def _enforce_agent_property_listing(request, user_role, subscription=SUBSCRIPTION_UNSET):
     """
     Run subscription listing validation for agents.
     Returns an HttpResponse when blocked; otherwise None.
     """
     if user_role != 'agent':
         return None
-    check = check_property_listing_eligibility(request.user, subscription=subscription)
+    check = check_property_listing_eligibility(
+        request.user, subscription=subscription
+    )
     if check.allowed:
         return None
     return _agent_listing_limit_response(request, check)

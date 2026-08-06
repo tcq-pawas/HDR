@@ -2,6 +2,7 @@ import logging
 from dataclasses import dataclass
 from datetime import timedelta
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 
 from Apps.Subscriptions.models import PlanPricing, UserSubscription
@@ -10,6 +11,9 @@ logger = logging.getLogger(__name__)
 
 # Seed plan: one listing every N days (existing business rule)
 SEED_PLAN_COOLDOWN_DAYS = 4
+
+# Sentinel so callers can pass subscription=None from .first() without re-fetching
+SUBSCRIPTION_UNSET = object()
 
 
 @dataclass(frozen=True)
@@ -21,16 +25,19 @@ class PropertyListingCheck:
     redirect_to_plans: bool = False
 
 
-def get_user_subscription(user, subscription=None):
+def get_user_subscription(user, subscription=SUBSCRIPTION_UNSET):
     """
     Return the user's UserSubscription, or None if missing.
+
     Pass ``subscription`` to reuse a prefetched / locked instance.
+    Explicit ``None`` (e.g. from ``QuerySet.first()``) is respected and
+    will not fall back to another lookup.
     """
-    if subscription is not None:
+    if subscription is not SUBSCRIPTION_UNSET:
         return subscription
     try:
         return user.user_subscription
-    except UserSubscription.DoesNotExist:
+    except (UserSubscription.DoesNotExist, ObjectDoesNotExist, AttributeError):
         return None
 
 
@@ -45,7 +52,7 @@ def count_agent_listed_properties(user):
     return Property.objects.filter(seller=user).count()
 
 
-def check_property_listing_eligibility(user, subscription=None):
+def check_property_listing_eligibility(user, subscription=SUBSCRIPTION_UNSET):
     """
     Determine whether ``user`` may add another property listing.
 
@@ -66,7 +73,7 @@ def check_property_listing_eligibility(user, subscription=None):
             message="You must select a subscription plan before adding properties.",
         )
 
-    if subscription.is_expired or subscription.status != 'active':
+    if not subscription.is_currently_active:
         if subscription.is_expired:
             return PropertyListingCheck(
                 allowed=False,
@@ -128,12 +135,14 @@ def check_property_listing_eligibility(user, subscription=None):
             days_passed = (timezone.now() - last_property.created_at).days
             if days_passed < SEED_PLAN_COOLDOWN_DAYS:
                 days_left = SEED_PLAN_COOLDOWN_DAYS - days_passed
+                day_unit = "day" if days_left == 1 else "days"
                 return PropertyListingCheck(
                     allowed=False,
                     title="Seed Plan Cooldown",
                     message=(
-                        f"Now your today limit is reached, you can add another property "
-                        f"after {days_left} days (Seed Plan Limit)."
+                        f"You have reached your Seed plan listing frequency limit. "
+                        f"You can add another property after {days_left} {day_unit}. "
+                        "Please upgrade your subscription or wait for the cooldown to end."
                     ),
                 )
 
@@ -146,8 +155,10 @@ def auto_assign_free_plan(user):
     if they don't already have an active subscription.
     """
     try:
-        # Check if user already has any subscription that is active OR pending
-        if hasattr(user, 'user_subscription') and user.user_subscription.status in ['active', 'pending']:
+        existing = get_user_subscription(user)
+        if existing is not None and (
+            existing.is_currently_active or existing.status == 'pending'
+        ):
             return False
 
         # Find the Free plan (assuming it's a plan with price=0)
@@ -164,14 +175,17 @@ def auto_assign_free_plan(user):
                     'start_date': timezone.now(),
                     'end_date': end_date,
                     'status': 'active',
-                    'auto_renew': False
-                }
+                    'auto_renew': False,
+                },
             )
             return True
 
-        logger.warning(f"Failed to auto-assign free plan to {user.username}: No 0-price PlanPricing found.")
+        logger.warning(
+            "Failed to auto-assign free plan to %s: No 0-price PlanPricing found.",
+            user.username,
+        )
         return False
 
     except Exception as e:
-        logger.error(f"Error assigning free plan to {user.username}: {str(e)}")
+        logger.error("Error assigning free plan to %s: %s", user.username, str(e))
         return False
