@@ -34,7 +34,6 @@ class PropertyForm(forms.ModelForm):
         self.fields['price'].required = True
         self.fields['location'].required = True
         self.fields['state'].required = True
-        self.fields['district'].required = True
         self.fields['city'].required = True
         self.fields['pincode'].required = True
         self.fields['full_address'].required = True
@@ -144,7 +143,7 @@ class PropertyForm(forms.ModelForm):
             'registry_copy', 'sale_deed', 'mutation', 'building_approval',
             'completion_certificate', 'noc', 'layout_plan', 'property_brochure',
             # Location Management
-            'state', 'district', 'city', 'locality', 'landmark', 'full_address', 'pincode',
+            'state', 'city', 'locality', 'landmark', 'full_address', 'pincode',
             # Investment Details
             'investment_opportunity', 'expected_roi', 'minimum_investment',
             # Analytics & CRM
@@ -230,7 +229,6 @@ class PropertyForm(forms.ModelForm):
             'property_brochure': forms.FileInput(attrs={'class': 'form-control', 'accept': 'application/pdf'}),
             # Location Management
             'state': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'State'}),
-            'district': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'District'}),
             'city': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'City'}),
             'locality': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Locality'}),
             'landmark': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Landmark'}),
