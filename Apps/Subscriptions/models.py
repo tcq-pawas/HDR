@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from django.utils.text import slugify
 from django.contrib.auth.models import User
 
@@ -23,7 +24,10 @@ class SubscriptionPlan(models.Model):
                                    help_text="Button Link e.g. /checkout")
     is_active = models.BooleanField(default=True, help_text="Status")
     display_order = models.PositiveIntegerField(default=1, help_text="Ordering on the pricing page")
-    property_limit = models.PositiveIntegerField(default=10, help_text="Max properties an agent can list on this plan")
+    property_limit = models.PositiveIntegerField(
+        default=10,
+        help_text="Max properties an agent can list on this plan. Use 0 for unlimited.",
+    )
 
     class Meta:
         verbose_name = "Subscription Plan"
@@ -184,6 +188,20 @@ class UserSubscription(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.plan.name if self.plan else 'No Plan'}"
+
+    @property
+    def is_expired(self):
+        """True when status is expired or end_date has passed."""
+        if self.status == 'expired':
+            return True
+        if self.end_date and self.end_date <= timezone.now():
+            return True
+        return False
+
+    @property
+    def is_currently_active(self):
+        """True when subscription is active and not past its end date."""
+        return self.status == 'active' and not self.is_expired
 
 class PaymentTransaction(models.Model):
     """

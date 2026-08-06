@@ -5,6 +5,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.core.paginator import Paginator
 from django.http import HttpResponse, JsonResponse, Http404
+from django.db import transaction
 from django.db.models import Q, Count, Sum
 from django.utils.text import slugify
 from django.core.exceptions import PermissionDenied
@@ -15,6 +16,8 @@ import csv
 from django.views.decorators.http import require_GET
 from Apps.PublicPage.models import Property, PropertyInquiry, LocationData, PropertyImage
 from Apps.Administration.auth_utils import get_user_role
+from Apps.Subscriptions.models import UserSubscription
+from Apps.Subscriptions.utils import check_property_listing_eligibility
 from .models import (
     AgentProfile, Lead, LeadFollowUp, SiteVisit,
     Booking, Installment, Commission, Document, Communication, MessageTemplate
@@ -244,73 +247,65 @@ def property_list(request):
     return render(request, 'agent/property_list.html', context)
 
 
+def _agent_listing_limit_response(request, check):
+    """
+    Build the HTTP response for a failed listing-eligibility check.
+    Preserves the existing UX (plans redirect or limit modal).
+    """
+    if check.redirect_to_plans:
+        messages.warning(request, check.message)
+        return redirect('public:subscription_plans')
+    return render(
+        request,
+        'agent/property_type_select.html',
+        {
+            'base_template': 'agent/agent_base.html',
+            'limit_message': check.message,
+            'limit_title': check.title,
+        },
+    )
+
+
+def _enforce_agent_property_listing(request, user_role, subscription=None):
+    """
+    Run subscription listing validation for agents.
+    Returns an HttpResponse when blocked; otherwise None.
+    """
+    if user_role != 'agent':
+        return None
+    check = check_property_listing_eligibility(request.user, subscription=subscription)
+    if check.allowed:
+        return None
+    return _agent_listing_limit_response(request, check)
+
+
 @login_required
 def property_type_select(request):
     """Select property type before adding"""
     user_role = get_user_role(request.user)
     if user_role not in ['agent', 'owner', 'admin'] and not request.user.is_superuser and not request.user.is_staff:
         raise PermissionDenied("Access denied. This page is only accessible to agents, owners, or admins.")
-    
-    # Check subscription for agents
-    if user_role == 'agent':
-        if not hasattr(request.user, 'user_subscription') or request.user.user_subscription.status != 'active':
-            messages.warning(request, "You must select a subscription plan before adding properties.")
-            return redirect('public:subscription_plans')
-            
-        user_sub = request.user.user_subscription
-        plan = user_sub.plan
-        if plan:
-            limit = plan.property_limit
-            current_count = Property.objects.filter(seller=request.user).count()
-            if current_count >= limit:
-                limit_msg = f"You have reached your plan's maximum limit of {limit} properties. Please upgrade your plan to add more."
-                return render(request, 'agent/property_type_select.html', {'base_template': 'agent/agent_base.html', 'limit_message': limit_msg, 'limit_title': "Plan Limit Reached"})
-                
-            if plan.slug and 'seed' in plan.slug.lower():
-                last_property = Property.objects.filter(seller=request.user).order_by('-created_at').first()
-                if last_property:
-                    days_passed = (timezone.now() - last_property.created_at).days
-                    if days_passed < 4:
-                        days_left = 4 - days_passed
-                        limit_msg = f"Now your today limit is reached, you can add another property after {days_left} days (Seed Plan Limit)."
-                        return render(request, 'agent/property_type_select.html', {'base_template': 'agent/agent_base.html', 'limit_message': limit_msg, 'limit_title': "Seed Plan Cooldown"})
-    
+
+    blocked = _enforce_agent_property_listing(request, user_role)
+    if blocked is not None:
+        return blocked
+
     base_template = 'administration/admin_base.html' if (user_role == 'admin' or request.user.is_superuser or request.user.is_staff) else 'agent/agent_base.html'
     return render(request, 'agent/property_type_select.html', {'base_template': base_template})
 
 
 @login_required
 def property_add(request, property_type):
-    # Check if user is an agent
+    """Add a new property with subscription-based listing limit validation."""
     user_role = get_user_role(request.user)
     if user_role not in ['agent', 'owner', 'admin'] and not request.user.is_superuser and not request.user.is_staff:
         raise PermissionDenied("Access denied. This page is only accessible to agents, owners, or admins.")
-        
-    # Check subscription for agents
-    if user_role == 'agent':
-        if not hasattr(request.user, 'user_subscription') or request.user.user_subscription.status != 'active':
-            messages.warning(request, "You must select a subscription plan before adding properties.")
-            return redirect('public:subscription_plans')
-            
-        user_sub = request.user.user_subscription
-        plan = user_sub.plan
-        if plan:
-            limit = plan.property_limit
-            current_count = Property.objects.filter(seller=request.user).count()
-            if current_count >= limit:
-                limit_msg = f"You have reached your plan's maximum limit of {limit} properties. Please upgrade your plan to add more."
-                return render(request, 'agent/property_type_select.html', {'base_template': 'agent/agent_base.html', 'limit_message': limit_msg, 'limit_title': "Plan Limit Reached"})
-                
-            if plan.slug and 'seed' in plan.slug.lower():
-                last_property = Property.objects.filter(seller=request.user).order_by('-created_at').first()
-                if last_property:
-                    days_passed = (timezone.now() - last_property.created_at).days
-                    if days_passed < 4:
-                        days_left = 4 - days_passed
-                        limit_msg = f"Now your today limit is reached, you can add another property after {days_left} days (Seed Plan Limit)."
-                        return render(request, 'agent/property_type_select.html', {'base_template': 'agent/agent_base.html', 'limit_message': limit_msg, 'limit_title': "Seed Plan Cooldown"})
-            
-    """Add a new property"""
+
+    # Gate form access for agents (inactive/expired/at-limit) before they fill the form
+    blocked = _enforce_agent_property_listing(request, user_role)
+    if blocked is not None:
+        return blocked
+
     is_admin = user_role == 'admin' or request.user.is_superuser or request.user.is_staff
     if request.method == 'POST':
         # Use AgriculturalLandForm for land properties
@@ -318,41 +313,39 @@ def property_add(request, property_type):
             form = AgriculturalLandForm(request.POST, request.FILES)
         else:
             form = PropertyForm(request.POST, request.FILES)
-        
+
         if form.is_valid():
-            property_obj = form.save(commit=False)
-            property_obj.seller = request.user
-            if is_admin:
-                property_obj.status = 'approved'
-                property_obj.is_admin_list = True
+            # Re-validate on Submit Property under a lock so concurrent posts cannot bypass limits
+            if user_role == 'agent':
+                with transaction.atomic():
+                    locked_sub = (
+                        UserSubscription.objects
+                        .select_for_update()
+                        .select_related('plan')
+                        .filter(user_id=request.user.pk)
+                        .first()
+                    )
+                    blocked = _enforce_agent_property_listing(
+                        request, user_role, subscription=locked_sub
+                    )
+                    if blocked is not None:
+                        return blocked
+                    property_obj = _save_new_property(
+                        form, request, property_type, is_admin=False
+                    )
             else:
-                property_obj.status = 'pending'
-                property_obj.created_by = request.user
-                property_obj.last_updated_by = request.user
-            
-            # Set property type and category based on selection
-            if property_type == 'land':
-                property_obj.property_type = 'sale'
-                property_obj.category = 'Plots'
-            elif property_type == 'house':
-                property_obj.property_type = 'sale'
-                property_obj.category = 'Apartments'
-            
-            # Slug will be automatically generated and deduplicated in the Property.save() method
-            
-            property_obj.save()
-            
-            # Save multiple images to the PropertyImage gallery table
-            gallery_images = request.FILES.getlist('gallery_images')
-            for image in gallery_images:
-                PropertyImage.objects.create(property=property_obj, image=image, category='General')
-                
+                property_obj = _save_new_property(
+                    form, request, property_type, is_admin=is_admin
+                )
+
             if is_admin:
                 messages.success(request, "Property created successfully!")
                 return redirect('admin_dash:admin-property-list')
-            else:
-                messages.success(request, "Property created successfully! It's pending admin approval.")
-                return redirect('agent:property_list')
+            messages.success(
+                request,
+                "Property created successfully! It's pending admin approval.",
+            )
+            return redirect('agent:property_list')
         else:
             print("Form errors:", form.errors)
             # Build a clean, human-readable error message
@@ -369,7 +362,7 @@ def property_add(request, property_type):
         else:
             initial_category = 'Apartments' if property_type == 'house' else 'Plots'
             form = PropertyForm(initial={'property_type': 'sale', 'category': initial_category})
-    
+
     base_template = 'administration/admin_base.html' if is_admin else 'agent/agent_base.html'
     context = {
         'form': form,
@@ -377,12 +370,40 @@ def property_add(request, property_type):
         'title': f'Add {property_type.title()}',
         'base_template': base_template
     }
-    
+
     # Use different template for agricultural land
     if property_type == 'land':
         return render(request, 'agent/agricultural_land_form.html', context)
     else:
         return render(request, 'agent/property_form.html', context)
+
+
+def _save_new_property(form, request, property_type, is_admin=False):
+    """Persist a new property and its gallery images using the existing add workflow."""
+    property_obj = form.save(commit=False)
+    property_obj.seller = request.user
+    if is_admin:
+        property_obj.status = 'approved'
+        property_obj.is_admin_list = True
+    else:
+        property_obj.status = 'pending'
+        property_obj.created_by = request.user
+        property_obj.last_updated_by = request.user
+
+    if property_type == 'land':
+        property_obj.property_type = 'sale'
+        property_obj.category = 'Plots'
+    elif property_type == 'house':
+        property_obj.property_type = 'sale'
+        property_obj.category = 'Apartments'
+
+    # Slug is generated/deduplicated in Property.save()
+    property_obj.save()
+
+    for image in request.FILES.getlist('gallery_images'):
+        PropertyImage.objects.create(property=property_obj, image=image, category='General')
+
+    return property_obj
 
 
 @login_required
