@@ -1,0 +1,96 @@
+{% extends "agent/agent_base.html" %}
+{% block title %}Create Organization{% endblock %}
+
+{% block breadcrumb_items %}
+<a href="{% url 'organization:my-organizations' %}">Organizations</a>
+<i class="bi bi-chevron-right" style="font-size: 0.7rem; color: #94a3b8;"></i>
+<span>Create Organization</span>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3>Create Organization</h3>
+    <a href="{% url 'organization:my-organizations' %}" class="btn btn-outline-secondary btn-sm">Back</a>
+</div>
+
+<div class="card card-stat shadow-sm">
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+
+            <!-- Row 1: Organization Name (full width) -->
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <label class="form-label fw-semibold">Organization Name</label>
+                    <input type="text" name="organization_name" class="form-control"
+                           value="{{ data.organization_name|default:'' }}" placeholder="e.g. ABC Reality">
+                    {% if errors.organization_name %}
+                        <div class="text-danger small mt-1">{{ errors.organization_name }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Row 2: Email | Phone -->
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold">Email</label>
+                    <input type="email" name="email" class="form-control" value="{{ data.email|default:'' }}" placeholder="e.g. info@company.com">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold">Phone</label>
+                    <input type="text" name="phone" class="form-control" value="{{ data.phone|default:'' }}" placeholder="e.g. +91 98765 43210">
+                    {% if errors.phone %}
+                        <div class="text-danger small mt-1">{{ errors.phone }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Row 3: Address | Website -->
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold">Address</label>
+                    <input type="text" name="address" class="form-control" value="{{ data.address|default:'' }}" placeholder="Street address">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold">Website</label>
+                    <input type="url" name="website" class="form-control" value="{{ data.website|default:'' }}" placeholder="https://example.com">
+                </div>
+            </div>
+
+            <!-- Row 4: City | State -->
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold">City</label>
+                    <input type="text" name="city" class="form-control" value="{{ data.city|default:'' }}" placeholder="City">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold">State</label>
+                    <input type="text" name="state" class="form-control" value="{{ data.state|default:'' }}" placeholder="State / Province">
+                </div>
+            </div>
+
+            <!-- Row 5: Country | Zip Code -->
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold">Country</label>
+                    <input type="text" name="country" class="form-control" value="{{ data.country|default:'' }}" placeholder="Country">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold">Zip Code</label>
+                    <input type="text" name="zip_code" class="form-control" value="{{ data.zip_code|default:'' }}" placeholder="Zip / Postal code">
+                </div>
+            </div>
+
+            <!-- Row 6: Logo (full width) -->
+            <div class="row">
+                <div class="col-12 mb-4">
+                    <label class="form-label fw-semibold">Logo</label>
+                    <input type="file" name="logo" class="form-control">
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success px-4">Create Organization</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

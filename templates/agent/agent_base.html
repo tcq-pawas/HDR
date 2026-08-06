@@ -40,6 +40,21 @@
 
     <style>
 
+        /* Hide scrollbars in sidebar while maintaining scroll functionality */
+        .agent-sidebar,
+        .agent-sidebar .sidebar-nav {
+            scrollbar-width: none !important; /* Firefox */
+            -ms-overflow-style: none !important; /* IE and Edge */
+        }
+
+        .agent-sidebar::-webkit-scrollbar,
+        .agent-sidebar .sidebar-nav::-webkit-scrollbar,
+        .agent-sidebar *::-webkit-scrollbar {
+            display: none !important; /* Chrome, Safari, Opera */
+            width: 0 !important;
+            height: 0 !important;
+        }
+
         .agent-header {
 
             background: #FFFFFF !important;
@@ -716,7 +731,7 @@
 
                             <a href="{% url 'agent:lead_list' %}"
 
-                                class="nav-link {% if request.resolver_match.url_name in 'lead_list lead_detail lead_edit' %}active{% endif %}"
+                                class="nav-link {% if request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'lead_list' or request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'lead_detail' or request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'lead_edit' %}active{% endif %}"
 
                                 onclick="closeOffcanvasAndNavigate(event, this.href)">
 
@@ -736,7 +751,7 @@
 
                             <a href="{% url 'agent:site_visit_list' %}"
 
-                                class="nav-link {% if request.resolver_match.url_name in 'site_visit_list site_visit_add site_visit_detail' %}active{% endif %}"
+                                class="nav-link {% if request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'site_visit_list' or request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'site_visit_add' or request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'site_visit_detail' %}active{% endif %}"
 
                                 onclick="closeOffcanvasAndNavigate(event, this.href)">
 
@@ -756,7 +771,7 @@
 
                             <a href="{% url 'agent:booking_list' %}"
                             
-                                class="nav-link {% if request.resolver_match.url_name in 'booking_list booking_add booking_detail' %}active{% endif %}"
+                                class="nav-link {% if request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'booking_list' or request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'booking_add' or request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'booking_detail' %}active{% endif %}"
                             
                                 onclick="closeOffcanvasAndNavigate(event, this.href)">
 
@@ -776,7 +791,7 @@
 
                             <a href="{% url 'agent:commission_list' %}"
 
-                                class="nav-link {% if request.resolver_match.url_name in 'commission_list commission_detail' %}active{% endif %}"
+                                class="nav-link {% if request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'commission_list' or request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'commission_detail' %}active{% endif %}"
 
                                 onclick="closeOffcanvasAndNavigate(event, this.href)">
 
@@ -967,13 +982,25 @@
 
                         </li>
 
+                        <li class="nav-item">
+
+                            <a href="{% url 'organization:my-organizations' %}" class="nav-link {% if request.resolver_match.namespace == 'organization' %}active{% endif %}">
+                                
+                                <i class="bi bi-buildings"></i>
+                                
+                                <span>Organizations</span>
+                           
+                            </a>
+
+                        </li>
+
 
 
                         <li class="nav-item">
 
                             <a href="{% url 'agent:lead_list' %}"
 
-                                class="nav-link {% if request.resolver_match.url_name in 'lead_list lead_detail lead_edit' %}active{% endif %}">
+                                class="nav-link {% if request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'lead_list' or request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'lead_detail' or request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'lead_edit' %}active{% endif %}">
 
                                 <i class="bi bi-people"></i>
 
@@ -991,7 +1018,7 @@
 
                             <a href="{% url 'agent:site_visit_list' %}"
 
-                                class="nav-link {% if request.resolver_match.url_name in 'site_visit_list site_visit_add site_visit_detail' %}active{% endif %}">
+                                class="nav-link {% if request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'site_visit_list' or request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'site_visit_add' or request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'site_visit_detail' %}active{% endif %}">
 
                                 <i class="bi bi-calendar-event"></i>
 
@@ -1009,7 +1036,7 @@
 
                             <a href="{% url 'agent:booking_list' %}"
 
-                                class="nav-link {% if request.resolver_match.url_name in 'booking_list booking_add booking_detail' %}active{% endif %}">
+                                class="nav-link {% if request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'booking_list' or request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'booking_add' or request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'booking_detail' %}active{% endif %}">
 
                                 <i class="bi bi-cash-stack"></i>
 
@@ -1027,7 +1054,7 @@
 
                             <a href="{% url 'agent:commission_list' %}"
 
-                                class="nav-link {% if request.resolver_match.url_name in 'commission_list commission_detail' %}active{% endif %}">
+                                class="nav-link {% if request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'commission_list' or request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'commission_detail' %}active{% endif %}">
 
                                 <i class="bi bi-currency-dollar"></i>
 
