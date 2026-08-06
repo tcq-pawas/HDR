@@ -23,7 +23,8 @@ server {
     client_body_timeout 300s;
 
     location /static/ {
-        alias /app/staticfiles/;
+        # Serve Django STATIC_ROOT (collectstatic output)
+        alias /app/static/;
     }
 
     location /media/ {
