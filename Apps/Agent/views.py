@@ -323,9 +323,11 @@ def property_add(request, property_type):
             # Re-validate on Submit Property under a lock so concurrent posts cannot bypass limits
             if user_role == 'agent':
                 with transaction.atomic():
+                    # Lock only UserSubscription — plan FK is nullable, so
+                    # FOR UPDATE + OUTER JOIN fails on PostgreSQL.
                     locked_sub = (
                         UserSubscription.objects
-                        .select_for_update()
+                        .select_for_update(of=('self',))
                         .select_related('plan')
                         .filter(user_id=request.user.pk)
                         .first()
