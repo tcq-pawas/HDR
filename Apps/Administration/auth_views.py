@@ -61,7 +61,7 @@ class CustomLoginView(TemplateView):
 
         # Resolve user from username / email / profile mobile, then verify password
         user = get_user_by_login_identifier(identifier)
-        import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         if user and not user.is_active and user.check_password(password):
             return render_login("Your account is suspended.")
 
