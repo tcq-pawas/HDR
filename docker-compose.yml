@@ -31,6 +31,8 @@ services:
     container_name: hdr-web
     hostname: hdr-web
     volumes:
+      # Serve collected files only. Mounting over staticfiles/ hides image assets
+      # and CSS never updates because collectstatic writes to STATIC_ROOT (/app/static).
       - static_volume:/app/staticfiles
       - media_volume:/app/media
 
@@ -54,7 +56,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - static_volume:/app/staticfiles
+      - static_volume:/app/static
       - media_volume:/app/media
       - /etc/letsencrypt:/etc/letsencrypt:ro
       
