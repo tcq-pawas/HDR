@@ -31,9 +31,8 @@ services:
     container_name: hdr-web
     hostname: hdr-web
     volumes:
-      # Serve collected files only. Mounting over staticfiles/ hides image assets
-      # and CSS never updates because collectstatic writes to STATIC_ROOT (/app/static).
-      - static_volume:/app/staticfiles
+      # Mount STATIC_ROOT only. Do not overlay staticfiles/ (source CSS/JS/images in the image).
+      - static_volume:/app/static
       - media_volume:/app/media
 
     command: gunicorn HeyDayRealty.wsgi:application --workers 3 --bind 0.0.0.0:8000 --graceful-timeout 300 --timeout 300
