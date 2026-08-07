@@ -31,9 +31,7 @@ services:
     container_name: hdr-web
     hostname: hdr-web
     volumes:
-      # Mount collected STATIC_ROOT only — do not overlay source staticfiles/
-      # or image logo/asset updates get hidden by the old volume contents.
-      - static_volume:/app/static
+      - static_volume:/app/staticfiles
       - media_volume:/app/media
 
     command: gunicorn HeyDayRealty.wsgi:application --workers 3 --bind 0.0.0.0:8000 --graceful-timeout 300 --timeout 300
@@ -56,7 +54,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - static_volume:/app/static
+      - static_volume:/app/staticfiles
       - media_volume:/app/media
       - /etc/letsencrypt:/etc/letsencrypt:ro
       

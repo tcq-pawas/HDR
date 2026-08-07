@@ -65,7 +65,7 @@ else
 fi
 
 echo "Collecting static files..."
-if run_as_app python manage.py collectstatic --noinput --clear; then
+if run_as_app python manage.py collectstatic --noinput; then
   echo "✓ Static files collected successfully"
 else
   echo "✗ Static file collection failed"
