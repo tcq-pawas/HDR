@@ -22,8 +22,8 @@ server {
     client_max_body_size 50M;
     client_body_timeout 300s;
 
+    # Django STATIC_ROOT (collectstatic output)
     location /static/ {
-        # Serve Django STATIC_ROOT (collectstatic output)
         alias /app/static/;
     }
 

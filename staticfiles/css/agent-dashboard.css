@@ -225,6 +225,16 @@ body {
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.agent-sidebar::-webkit-scrollbar,
+.agent-sidebar .sidebar-nav::-webkit-scrollbar,
+.agent-sidebar *::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
 }
 
 .agent-sidebar .sidebar-content {
@@ -237,6 +247,8 @@ body {
 .agent-sidebar .sidebar-nav {
     flex: 1;
     overflow-y: auto;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
 }
 
 .agent-sidebar .sidebar-footer {

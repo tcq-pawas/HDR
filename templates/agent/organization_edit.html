@@ -1,0 +1,147 @@
+{% extends "agent/agent_base.html" %}
+{% block title %}Edit {{ organization.organization_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<a href="{% url 'organization:my-organizations' %}">Organizations</a>
+<i class="bi bi-chevron-right" style="font-size: 0.7rem; color: #94a3b8;"></i>
+<a href="{% url 'organization:detail' organization.id %}">{{ organization.organization_name }}</a>
+<i class="bi bi-chevron-right" style="font-size: 0.7rem; color: #94a3b8;"></i>
+<span>Edit</span>
+{% endblock %}
+
+{% block content %}
+<style>
+    .edit-org-card {
+        background: #fff;
+        border-radius: 16px;
+        border: 1px solid #e8f0ea;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        padding: 2rem;
+        max-width: 800px;
+    }
+    .edit-org-header {
+        background: linear-gradient(135deg, #1a4a2e 0%, #2d7a4f 60%, #3da668 100%);
+        border-radius: 14px;
+        padding: 1.5rem 2rem;
+        color: #fff;
+        margin-bottom: 1.8rem;
+    }
+    .form-label {
+        font-weight: 600;
+        font-size: 13px;
+        color: #374151;
+    }
+    .btn-save-org {
+        background: linear-gradient(135deg, #2d7a4f, #3da668);
+        color: #fff;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 9px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+    .btn-save-org:hover {
+        color: #fff;
+        box-shadow: 0 4px 14px rgba(45,122,79,0.35);
+    }
+</style>
+
+<div class="edit-org-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <div>
+        <h4 class="mb-1 text-white fw-bold"><i class="bi bi-pencil-square me-2"></i>Edit Organization Details</h4>
+        <p class="mb-0 text-white-50 small">Update profile and contact information for {{ organization.organization_name }}</p>
+    </div>
+    <a href="{% url 'organization:detail' organization.id %}" class="btn btn-sm btn-outline-light" style="border-radius:8px;">
+        <i class="bi bi-arrow-left"></i> Cancel
+    </a>
+</div>
+
+<div class="edit-org-card">
+    <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+
+        <!-- Org Name -->
+        <div class="mb-3">
+            <label class="form-label">Organization Name <span class="text-danger">*</span></label>
+            <input type="text" name="organization_name" class="form-control"
+                   value="{{ organization.organization_name }}" required>
+            {% if errors.organization_name %}
+                <div class="text-danger small mt-1">{{ errors.organization_name }}</div>
+            {% endif %}
+        </div>
+
+        <!-- Row: Email & Phone -->
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Email Address</label>
+                <input type="email" name="email" class="form-control"
+                       value="{{ organization.email|default:'' }}">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Phone Number</label>
+                <input type="text" name="phone" class="form-control"
+                       value="{{ organization.phone|default:'' }}">
+                {% if errors.phone %}
+                    <div class="text-danger small mt-1">{{ errors.phone }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Website -->
+        <div class="mb-3">
+            <label class="form-label">Website URL</label>
+            <input type="url" name="website" class="form-control"
+                   value="{{ organization.website|default:'' }}" placeholder="https://">
+        </div>
+
+        <!-- Address -->
+        <div class="mb-3">
+            <label class="form-label">Street Address</label>
+            <input type="text" name="address" class="form-control"
+                   value="{{ organization.address|default:'' }}">
+        </div>
+
+        <!-- Row: City, State, Zip, Country -->
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <label class="form-label">City</label>
+                <input type="text" name="city" class="form-control"
+                       value="{{ organization.city|default:'' }}">
+            </div>
+            <div class="col-md-3 mb-3">
+                <label class="form-label">State</label>
+                <input type="text" name="state" class="form-control"
+                       value="{{ organization.state|default:'' }}">
+            </div>
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Zip Code</label>
+                <input type="text" name="zip_code" class="form-control"
+                       value="{{ organization.zip_code|default:'' }}">
+            </div>
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Country</label>
+                <input type="text" name="country" class="form-control"
+                       value="{{ organization.country|default:'' }}">
+            </div>
+        </div>
+
+        <!-- Logo Upload -->
+        <div class="mb-4">
+            <label class="form-label">Organization Logo</label>
+            <input type="file" name="logo" class="form-control" accept="image/*">
+            {% if organization.logo and organization.logo.name %}
+                <div class="mt-2 small text-muted">Current Logo: <a href="{{ organization.logo.url }}" target="_blank">View File</a></div>
+            {% endif %}
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn-save-org">
+                <i class="bi bi-check-circle me-1"></i> Save Changes
+            </button>
+            <a href="{% url 'organization:detail' organization.id %}" class="btn btn-outline-secondary px-4" style="border-radius:9px;">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -4,7 +4,55 @@ from Apps.Agent.models import AgentProfile
 from Apps.Investor.models import InvestorProfile, Investment, InvestmentListing
 from Apps.PublicPage.models import Property
 from django.core.validators import RegexValidator
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+
+
+class CustomAuthenticationForm(AuthenticationForm):
+    """Login form that accepts username, email, or mobile number."""
+
+    error_messages = {
+        **AuthenticationForm.error_messages,
+        'invalid_login': (
+            "Please enter a correct email, phone number, or username and password. "
+            "Note that both fields may be case-sensitive."
+        ),
+    }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].label = 'Email, Phone Number, or Username'
+        self.fields['username'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Email, phone number, or username',
+            'autocomplete': 'username',
+            'autofocus': True,
+        })
+        self.fields['password'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Password',
+            'autocomplete': 'current-password',
+        })
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        return username.strip() if isinstance(username, str) else username
+
+    def clean(self):
+        """Authenticate via custom backend using stripped email/phone/username."""
+        from django.contrib.auth import authenticate
+
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+
+        if username is not None and password:
+            self.user_cache = authenticate(
+                self.request, username=username, password=password
+            )
+            if self.user_cache is None:
+                raise self.get_invalid_login_error()
+            self.confirm_login_allowed(self.user_cache)
+
+        return self.cleaned_data
 
 class PartnerRegistrationForm(UserCreationForm):
     ROLE_CHOICES = [

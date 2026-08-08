@@ -136,12 +136,13 @@
 </section>
 
 <!-- Premium Listings Section -->
+{% if farmland_listings %}
 <section class="premium-listings-section">
     <div class="premium-listings-container">
         <div class="section-header">
             <div>
-                <div class="section-badge">Featured Projects</div>
-                <h2 class="section-heading">Premium Farmland Listings</h2>
+                <div class="section-badge">Subscriber Listings</div>
+                <h2 class="section-heading">Premium Agent Properties</h2>
             </div>
             <a href="{% url 'buy:property_search' %}" class="view-all-link">View All Listings →</a>
         </div>
@@ -170,8 +171,6 @@
                 
                 <!-- <a href="{% url 'public:property_detail' property.slug %}" -->
             </div>
-            {% empty %}
-            <p style="color: var(--text-muted, #6f7f90);">No featured farmland listings yet.</p>
             {% endfor %}
         </div>
         <div class="carousel-arrows">
@@ -180,14 +179,16 @@
         </div>
     </div>
 </section>
+{% endif %}
 
-<!-- Verified Properties Section -->
+<!-- Latest Properties Section -->
+{% if verified_properties %}
 <section class="premium-listings-section" style="background: #FAFAF7;">
     <div class="premium-listings-container">
         <div class="section-header">
             <div>
-                <div class="section-badge">Premium Listings</div>
-                <h2 class="section-heading">Verified Properties</h2>
+                <div class="section-badge">Just Added</div>
+                <h2 class="section-heading">Latest Properties</h2>
             </div>
             <a href="{% url 'buy:property_search' %}" class="view-all-link">View All Listings →</a>
         </div>
@@ -214,8 +215,6 @@
                     <a href="{% url 'public:property_detail' property.slug %}" class="btn-view-details">View Details</a>
                 </div>
             </div>
-            {% empty %}
-            <p style="color: var(--text-muted, #6f7f90);">No verified properties yet.</p>
             {% endfor %}
         </div>
         <div class="carousel-arrows">
@@ -224,6 +223,7 @@
         </div>
     </div>
 </section>
+{% endif %}
 
 <!-- Why Choose HHectare Section -->
 <section class="why-invest-section">

@@ -31,8 +31,7 @@ services:
     container_name: hdr-web
     hostname: hdr-web
     volumes:
-      # Mount collected STATIC_ROOT only — do not overlay source staticfiles/
-      # or image logo/asset updates get hidden by the old volume contents.
+      # Mount STATIC_ROOT only. Do not overlay staticfiles/ (source CSS/JS/images in the image).
       - static_volume:/app/static
       - media_volume:/app/media
 
