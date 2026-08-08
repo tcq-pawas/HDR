@@ -68,7 +68,7 @@ class PlanPricing(models.Model):
                                           help_text="Old Price (for showing strike-through discount)")
     save_percentage = models.PositiveIntegerField(blank=True, null=True, help_text="Discount %")
     is_default = models.BooleanField(default=False, help_text="Default Billing cycle to pre-select")
-    stripe_price_id = models.CharField(max_length=100, blank=True, null=True, help_text="Stripe Price ID")
+    cashfree_plan_id = models.CharField(max_length=100, blank=True, null=True, help_text="Cashfree Subscriptions Plan ID (e.g. HARVEST_1M)")
 
     class Meta:
         verbose_name = "Plan Pricing"
