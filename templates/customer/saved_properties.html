@@ -409,6 +409,101 @@
     .sp-section-title{ font-weight:700; margin:0; font-size: 18px; }
 
     .sp-recent-wrap{ margin-top: 1.2rem; }
+
+    /* Custom Confirm/Alert Modal */
+    .hd-modal-overlay{
+    position: fixed;
+    inset: 0;
+    background: rgba(0,10,5,0.55);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+.hd-modal-overlay.show{ display: flex; }
+
+.hd-modal-box{
+    width: 480px;
+    max-width: 92vw;
+    border-radius: 28px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 24px 70px rgba(0,0,0,0.35);
+    animation: hdPop .18s ease;
+}
+@keyframes hdPop{
+    from{ transform: scale(.92); opacity:0; }
+    to{ transform: scale(1); opacity:1; }
+}
+
+.hd-modal-header{
+    background: linear-gradient(135deg, #1a4a2e 0%, #0d2e1c 100%);
+    color:#fff;
+    padding: 2.5rem 2.2rem 2.75rem;
+    position: relative;
+}
+.hd-modal-header h4{
+    font-size: 26px;
+    font-weight: 800;
+    margin: 0;
+    line-height: 1.3;
+    padding-right: 40px;
+    color: #fff !important;
+}
+.hd-modal-close{
+    position:absolute;
+    top: 20px; right: 20px;
+    width: 38px; height:38px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    border:none;
+    color:#fff;
+    font-size: 20px;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    transition: background .15s ease;
+}
+.hd-modal-close:hover{ background: rgba(255,255,255,0.28); }
+
+.hd-modal-body{
+    padding: 2.2rem 2.2rem 2.2rem;
+}
+.hd-modal-body p{
+    color:#475569;
+    font-size: 15px;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.hd-modal-actions{
+    display:flex;
+    gap:.75rem;
+    margin-top: 1.75rem;
+}
+.hd-modal-btn{
+    flex:1;
+    padding: 1rem 1.1rem;
+    border-radius: 16px;
+    font-weight: 700;
+    font-size: 15.5px;
+    border: none;
+    cursor: pointer;
+    transition: transform .12s ease;
+}
+.hd-modal-btn:active{ transform: scale(.97); }
+
+.hd-modal-btn-cancel{
+    background: #F1F5F9;
+    color: #334155;
+}
+.hd-modal-btn-cancel:hover{ background:#E2E8F0; }
+
+.hd-modal-btn-danger{
+     background: linear-gradient(180deg, #22c55e, #16a34a);
+    color:#fff;
+}
+.hd-modal-btn-danger:hover{ filter: brightness(1.05); }
 </style>
 {% endblock %}
 
@@ -592,7 +687,7 @@
                                 </button>
 
                                 <button class="sp-btn sp-btn-danger" type="button" onclick="removeSaved({{ saved_property.property.id }})">
-                                    <i class="fas fa-heart-crack"></i> Remove
+                                    <i class="fas fa-trash"></i> Remove
                                 </button>
                             </div>                    
         
@@ -761,22 +856,75 @@
         </div>
     </div>
 
+    <!-- Custom Confirm/Alert Popup -->
+    <div class="hd-modal-overlay" id="hdConfirmOverlay">
+        <div class="hd-modal-box">
+            <div class="hd-modal-header">
+                <button class="hd-modal-close" onclick="hdConfirmClose(false)">&times;</button>
+                <h4 id="hdConfirmTitle">Are you sure?</h4>
+            </div>
+            <div class="hd-modal-body">
+                <p id="hdConfirmMessage"></p>
+                <div class="hd-modal-actions" id="hdConfirmActions">
+                    <button class="hd-modal-btn hd-modal-btn-cancel" onclick="hdConfirmClose(false)">Cancel</button>
+                    <button class="hd-modal-btn hd-modal-btn-danger" onclick="hdConfirmClose(true)">Confirm</button>
+                </div>
+                <div class="hd-modal-actions" id="hdConfirmOkOnly" style="display:none;">
+                    <button class="hd-modal-btn hd-modal-btn-danger" onclick="hdConfirmClose(false)" style="background: linear-gradient(180deg, #004526, #002815);">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Preserving existing frontend function names.
+        // ===== Custom Popup System (replaces confirm() and alert()) =====
+        let hdConfirmCallback = null;
+
+        function hdShowConfirm(message, onConfirm, title = "Are you sure?") {
+            document.getElementById('hdConfirmTitle').textContent = title;
+            document.getElementById('hdConfirmMessage').textContent = message;
+            document.getElementById('hdConfirmActions').style.display = 'flex';
+            document.getElementById('hdConfirmOkOnly').style.display = 'none';
+            hdConfirmCallback = onConfirm;
+            document.getElementById('hdConfirmOverlay').classList.add('show');
+        }
+
+        function hdShowAlert(message, title = "Notice") {
+            document.getElementById('hdConfirmTitle').textContent = title;
+            document.getElementById('hdConfirmMessage').textContent = message;
+            document.getElementById('hdConfirmActions').style.display = 'none';
+            document.getElementById('hdConfirmOkOnly').style.display = 'flex';
+            hdConfirmCallback = null;
+            document.getElementById('hdConfirmOverlay').classList.add('show');
+        }
+
+        function hdConfirmClose(result) {
+            document.getElementById('hdConfirmOverlay').classList.remove('show');
+            if (result && typeof hdConfirmCallback === 'function') {
+                hdConfirmCallback();
+            }
+            hdConfirmCallback = null;
+        }
+
+        // ===== Preserving existing frontend function names =====
+
         function toggleFavorite(button, propertyId) {
-            button.classList.toggle('active');
             const isActive = button.classList.contains('active');
-            
-            if (isActive) {
-                alert('Property added to favorites!');
+
+            if (!isActive) {
+                button.classList.add('active');
+                hdShowAlert('Property added to favorites!', 'Saved');
             } else {
-                if (confirm('Are you sure you want to remove this property from your saved list?')) {
-                    alert('Property removed from favorites!');
-                    // In a real implementation, this would remove the property and refresh the page
-                } else {
-                    button.classList.add('active');
-                }
+                hdShowConfirm(
+                    'Are you sure you want to remove this property from your saved list?',
+                    function () {
+                        button.classList.remove('active');
+                        hdShowAlert('Property removed from favorites!', 'Removed');
+                        // In a real implementation, this would remove the property and refresh the page
+                    },
+                    'Remove Property?'
+                );
             }
         }
 
@@ -837,15 +985,14 @@
             new bootstrap.Modal(document.getElementById('propertyDetailsModal')).show();
         }
 
-
         // Compatibility: old buttons may call viewDetails
         function viewDetails(propertyId) {
-            alert('Property details not available.');
+            hdShowAlert('Property details not available.', 'Notice');
             return;
         }
 
         function submitViewing() {
-            alert('Viewing scheduled successfully! We will contact you to confirm the details.');
+            hdShowAlert('Viewing scheduled successfully! We will contact you to confirm the details.', 'Viewing Scheduled');
         }
 
         function addNotes(savedPropertyId) {
@@ -853,11 +1000,11 @@
         }
 
         function saveNotes() {
-            alert('Notes saved successfully!');
+            hdShowAlert('Notes saved successfully!', 'Saved');
             const modalEl = document.getElementById('notesModal');
-            if(modalEl){
+            if (modalEl) {
                 const inst = bootstrap.Modal.getInstance(modalEl);
-                if(inst) inst.hide();
+                if (inst) inst.hide();
             }
         }
 
@@ -870,24 +1017,29 @@
         }
 
         function removeSaved(propertyId) {
-            if (!confirm('Remove this property from your saved list?')) return;
-            fetch('/customer/api/unsave-property/' + propertyId + '/', {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRFToken': getCookie('csrftoken'),
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(function(response) {
-                if (response.ok || response.status === 204 || response.status === 200) {
-                    location.reload();
-                } else {
-                    alert('Could not remove property. Please try again.');
-                }
-            })
-            .catch(function() {
-                alert('Network error. Please try again.');
-            });
+            hdShowConfirm(
+                'This will remove the property from your saved list.',
+                function () {
+                    fetch('/customer/api/unsave-property/' + propertyId + '/', {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRFToken': getCookie('csrftoken'),
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(function (response) {
+                        if (response.ok || response.status === 204 || response.status === 200) {
+                            location.reload();
+                        } else {
+                            hdShowAlert('Could not remove property. Please try again.', 'Error');
+                        }
+                    })
+                    .catch(function () {
+                        hdShowAlert('Network error. Please try again.', 'Error');
+                    });
+                },
+                'Remove this property?'
+            );
         }
 
         function getCookie(name) {
@@ -909,25 +1061,28 @@
             window.location.href = "{% url 'buy:property_search' %}";
         }
 
-        // function compareProperties() {
-        //     alert('Compare feature would be implemented here...');
-        // }
+        function compareProperties() {
+            hdShowAlert('Compare feature would be implemented here...', 'Coming Soon');
+        }
 
-        // function exportWishlist(){
-        //     alert('Export wishlist (UI only). Backend URLs unchanged.');
-        // }
+        function exportWishlist() {
+            hdShowAlert('Export wishlist (UI only). Backend URLs unchanged.', 'Notice');
+        }
 
         // Preserve remove-from-saved action hook.
         function toggleSave(propertyId) {
-            if (confirm('Remove this property from your saved list?')) {
-                window.location.href = '/buy/saved/' + propertyId + '/remove/';
-            }
+            hdShowConfirm(
+                'Remove this property from your saved list?',
+                function () {
+                    window.location.href = '/buy/saved/' + propertyId + '/remove/';
+                },
+                'Remove this property?'
+            );
         }
 
-        function save_property(){
-            alert('Save property flow (UI placeholder).');
+        function save_property() {
+            hdShowAlert('Save property flow (UI placeholder).', 'Notice');
         }
     </script>
 </div>
 {% endblock %}
-

@@ -278,12 +278,17 @@ def add_agent(request, organization_id):
                     username = f"{base_username}{counter}"
                     counter += 1
 
+                from django.contrib.auth.models import Group
+
                 new_agent = User.objects.create_user(
                     username=username,
                     email=email,
                     password="Password123!" # Default temporary password
                 )
-                messages.info(request, f"New agent account '{username}' created automatically.")
+                agent_group, _ = Group.objects.get_or_create(name='agent')
+                new_agent.groups.add(agent_group)
+
+                messages.info(request, f"New agent account '{username}' created automatically with default password 'Password123!'.")
 
             # Step 3: Create mapping record with is_owner = False
             mapping, created = AgentOrganizationMapping.objects.get_or_create(
