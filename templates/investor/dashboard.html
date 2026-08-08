@@ -4,129 +4,24 @@
 {% block title %}Investor Dashboard - HeyDay Realty{% endblock %}
 
 {% block extra_css %}
-<script src="https://cdn.tailwindcss.com"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
 <style>
   body {
     background: #f4f6f9;
-    font-family: Inter, sans-serif;
-  }
-
-  .hero-banner {
-    background: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef');
-    background-size: cover;
-    background-position: center;
+    font-family: 'Inter', sans-serif;
   }
 
   .card-shadow {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, .08);
-  }
-
-  @media (max-width: 768px) {
-    .hero-banner {
-      height: 150px !important;
-    }
-    .hero-banner h2 {
-      font-size: 1.5rem !important;
-    }
-    .hero-banner p {
-      font-size: 0.9rem !important;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .hero-banner {
-      height: 120px !important;
-      padding: 0 1rem !important;
-    }
-    .hero-banner h2 {
-      font-size: 1.25rem !important;
-    }
-    .hero-banner p {
-      font-size: 0.85rem !important;
-    }
-    .hero-banner > div:last-child {
-      display: none;
-    }
+    box-shadow: 0 4px 20px rgba(0, 0, 0, .05);
   }
 </style>
 {% endblock %}
 
-{% block page_title %}Investor Dashboard{% endblock %}
-
-{% block header %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-  <div>
-    <h2>Investor Dashboard</h2>
-    <p class="text-muted">Welcome back, {{ user.first_name|default:user.username }}! 👋</p>
-  </div>
-  <div class="text-end">
-    <div class="d-flex align-items-center gap-3">
-      <div class="position-relative">
-        <i class="fas fa-bell text-xl"></i>
-        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-          style="font-size: 10px; padding: 4px 6px;">3</span>
-      </div>
-      <span class="badge bg-success">Investor</span>
-    </div>
-  </div>
-</div>
-{% endblock %}
+{% block page_title %}Welcome Back, {{ user.first_name|default:user.username }} 👋{% endblock %}
+{% block page_subtitle %}<p class="page-subtitle">Monitor your agricultural land portfolio, investments, and business operations from a single dashboard.</p>{% endblock %}
 
 {% block content %}
 
-<!-- Hero Banner -->
-<section
-  class="hero-banner rounded-3 overflow-hidden mb-4 d-flex align-items-center justify-content-between px-5 text-white"
-  style="height: 200px;">
-
-  <div>
-    <h2 class="fw-bold" style="font-size: 2.5rem;">
-      Welcome Back, {{ user.first_name|default:user.username }}!
-    </h2>
-
-    <p class="mt-2" style="font-size: 1.1rem;">
-      Monitor your agricultural land portfolio and investment performance.
-    </p>
-  </div>
-
-  <div class="bg-dark bg-opacity-30 rounded-3 p-4" style="width: 600px; backdrop-filter: blur(10px);">
-
-    <div class="row g-3">
-
-      <div class="col-3 text-center">
-        <p class="small mb-1 text-white-50">Portfolio Value</p>
-        <h3 class="fw-bold fs-4 mb-0 text-white">
-          ₹2.5Cr
-        </h3>
-      </div>
-
-      <div class="col-3 text-center">
-        <p class="small mb-1 text-white-50">Total Profit</p>
-        <h3 class="fw-bold fs-4 mb-0 text-white">
-          ₹48.75L
-        </h3>
-      </div>
-
-      <div class="col-3 text-center">
-        <p class="small mb-1 text-white-50">ROI</p>
-        <h3 class="fw-bold fs-4 text-success mb-0">
-          38.5%
-        </h3>
-      </div>
-
-      <div class="col-3 text-center">
-        <p class="small mb-1 text-white-50">Investments</p>
-        <h3 class="fw-bold fs-4 mb-0 text-white">
-          12
-        </h3>
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
 
 <!-- KPI Cards -->
 <div class="row g-4 mb-4">

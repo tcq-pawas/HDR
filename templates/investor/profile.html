@@ -4,12 +4,7 @@
 {% block title %}Investor Dashboard - HeyDay Realty{% endblock %}
 
 {% block extra_css %}
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
-* {
-    font-family: 'Inter', sans-serif;
-}
-
+<style>
 .premium-hero {
     background: linear-gradient(135deg, rgba(2, 44, 34, 0.95) 0%, rgba(6, 78, 59, 0.9) 50%, rgba(6, 95, 70, 0.85) 100%),
                 url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
@@ -294,12 +289,12 @@
         font-size: 2rem;
     }
 }
+</style>
 {% endblock %}
 
-{% block page_title %}Investor Dashboard{% endblock %}
+{% block page_title %}Investor Profile{% endblock %}
+{% block page_subtitle %}<p class="page-subtitle">View and manage your personal details, investment preferences, and account overview.</p>{% endblock %}
 
-{% block header %}
-{% endblock %}
 
 {% block content %}
 <!-- Premium Investor Hero Section -->
@@ -371,7 +366,7 @@
                 </div>
                 <span class="badge bg-light text-primary rounded-pill">+12%</span>
             </div>
-            <div class="kpi-number">₹{{ investment_stats.total_invested_amount|intcomma }}</div>
+            <div class="kpi-number">{{ investment_stats.total_investments|default:0 }}</div>
             <div class="text-muted mt-1" style="font-size: 0.875rem;">Total Investments</div>
         </div>
     </div>
@@ -379,11 +374,11 @@
         <div class="kpi-card gradient-2">
             <div class="d-flex justify-content-between align-items-start mb-3">
                 <div class="action-icon" style="background: linear-gradient(135deg, #d1fae5, #a7f3d0); color: #059669;">
-                    <i class="fas fa-dollar-sign"></i>
+                    <i class="fas fa-indian-rupee-sign"></i>
                 </div>
                 <span class="badge bg-light text-success rounded-pill">+8%</span>
             </div>
-            <div class="kpi-number">₹{{ investment_stats.total_invested_amount|intcomma }}</div>
+            <div class="kpi-number">₹{{ investment_stats.total_invested_amount|default:0|intcomma }}</div>
             <div class="text-muted mt-1" style="font-size: 0.875rem;">Total Invested</div>
         </div>
     </div>
@@ -395,7 +390,7 @@
                 </div>
                 <span class="badge bg-light text-warning rounded-pill">+15%</span>
             </div>
-            <div class="kpi-number">₹{{ roi_analysis.total_returns|intcomma }}</div>
+            <div class="kpi-number">₹{{ roi_analysis.total_returns|default:0|intcomma }}</div>
             <div class="text-muted mt-1" style="font-size: 0.875rem;">Total Returns</div>
         </div>
     </div>
@@ -407,7 +402,7 @@
                 </div>
                 <span class="badge bg-light text-purple rounded-pill">+5%</span>
             </div>
-            <div class="kpi-number">{{ roi_analysis.total_roi_percentage|floatformat:1 }}%</div>
+            <div class="kpi-number">{{ roi_analysis.total_roi_percentage|floatformat:1|default:"0.0" }}%</div>
             <div class="text-muted mt-1" style="font-size: 0.875rem;">Average ROI</div>
         </div>
     </div>
@@ -426,7 +421,9 @@
                     <button class="btn btn-outline-success btn-sm">3M</button>
                 </div>
             </div>
-            <canvas id="portfolioChart" height="300"></canvas>
+            <div style="position: relative; height: 320px; width: 100%;">
+                <canvas id="portfolioChart"></canvas>
+            </div>
         </div>
 
         <!-- Recent Investments Table -->
