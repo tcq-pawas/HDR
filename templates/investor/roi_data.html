@@ -5,6 +5,7 @@
 
 {% block extra_css %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
 .roi-card {
     border: none;
     border-radius: 12px;
@@ -30,37 +31,14 @@
     position: relative;
     height: 300px;
 }
+</style>
 {% endblock %}
 
-{% block page_title %}ROI Data{% endblock %}
-
-{% block header %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h2><i class="fas fa-chart-pie text-success me-2"></i>ROI Data</h2>
-        <p class="text-muted">Analyze your investment returns and performance</p>
-    </div>
-    <div class="text-end">
-        <div class="btn-group me-2">
-            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                <i class="fas fa-calendar"></i> Time Period
-            </button>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Last 30 Days</a></li>
-                <li><a class="dropdown-item" href="#">Last 3 Months</a></li>
-                <li><a class="dropdown-item" href="#">Last 6 Months</a></li>
-                <li><a class="dropdown-item" href="#">Last Year</a></li>
-                <li><a class="dropdown-item" href="#">All Time</a></li>
-            </ul>
-        </div>
-        <button class="btn btn-success" onclick="exportData()">
-            <i class="fas fa-download"></i> Export Data
-        </button>
-    </div>
-</div>
-{% endblock %}
+{% block page_title %}ROI Data & Analytics{% endblock %}
+{% block page_subtitle %}<p class="page-subtitle">Analyze your portfolio investment returns, ROI metrics, and growth performance.</p>{% endblock %}
 
 {% block content %}
+
     <!-- ROI Summary Cards -->
     <div class="row mb-4">
         <div class="col-md-3">

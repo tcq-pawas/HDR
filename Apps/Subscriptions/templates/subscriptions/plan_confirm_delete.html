@@ -3,19 +3,133 @@
 {% block page_title %}Manage Subscriptions{% endblock %}
 {% block page_subtitle %}Create and manage subscription plans, pricing and features.{% endblock %}
 
+{% block breadcrumb_items %}
+<a href="{% url 'subscriptions:manage-subscriptions' %}">Manage Subscriptions</a>
+<i class="bi bi-chevron-right" style="font-size: 0.7rem; color: #94a3b8;"></i>
+<span>Delete Plan</span>
+{% endblock %}
+
 {% block content %}
-<div class="card shadow-sm border-0 rounded-4 mx-auto" style="max-width: 480px;">
-    <div class="card-body text-center p-4">
-        <h5 class="fw-bold mb-3">Delete Subscription Plan?</h5>
-        <p class="text-muted">
-            Are you sure you want to delete "<strong>{{ plan.name }}</strong>"?
-            This will also remove all its pricing options and features. This action cannot be undone.
-        </p>
-        <form method="post">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger px-4 me-2">Yes, Delete</button>
-            <a href="{% url 'subscriptions:manage-subscriptions' %}" class="btn btn-outline-secondary px-4">Cancel</a>
-        </form>
+<style>
+    .delete-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem;
+    }
+    .delete-modal-card {
+        background: #fff;
+        border-radius: 20px;
+        width: 100%;
+        max-width: 540px;
+        overflow: hidden;
+        box-shadow: 0 25px 60px rgba(0,0,0,0.12);
+        border: 1px solid #e8f0ea;
+    }
+    .delete-modal-header {
+        background: linear-gradient(135deg, #1a4a2e 0%, #2d7a4f 60%, #3da668 100%);
+        padding: 1.8rem 2rem;
+        color: #fff;
+        position: relative;
+    }
+    .delete-modal-body {
+        padding: 1.8rem 2rem;
+    }
+    .plan-summary-box {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1.2rem;
+        margin-bottom: 1.5rem;
+    }
+    .btn-delete-confirm {
+        background: linear-gradient(135deg, #16a34a, #22c55e);
+        color: #fff;
+        border: none;
+        padding: 11px 20px;
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        box-shadow: 0 4px 14px rgba(34,197,94,0.35);
+        transition: all 0.2s ease;
+        text-decoration: none;
+        flex: 1;
+    }
+    .btn-delete-confirm:hover {
+        color: #fff;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(34,197,94,0.45);
+    }
+    .btn-delete-cancel {
+        background: #f1f5f9;
+        color: #475569;
+        border: none;
+        padding: 11px 20px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        text-decoration: none;
+        transition: background 0.2s ease;
+        flex: 1;
+    }
+    .btn-delete-cancel:hover {
+        background: #e2e8f0;
+        color: #334155;
+    }
+</style>
+
+<div class="delete-wrapper">
+    <div class="delete-modal-card">
+
+        <!-- Green Header -->
+        <div class="delete-modal-header d-flex align-items-center gap-3">
+            <div style="width:48px; height:48px; border-radius:12px; background:rgba(255,255,255,0.15); border:1.5px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <i class="bi bi-trash3-fill" style="color:#fff; font-size:22px;"></i>
+            </div>
+            <div>
+                <h5 class="mb-0 fw-bold text-white" style="font-size:20px;">Delete Subscription Plan?</h5>
+                <p class="mb-0 text-white-50 small">Confirm deletion for this plan</p>
+            </div>
+        </div>
+
+        <!-- Body -->
+        <div class="delete-modal-body">
+            <p class="text-secondary small mb-3" style="font-size:14px; line-height:1.5;">
+                Are you sure you want to delete this subscription plan? This will also remove all its pricing options and features. This action cannot be undone.
+            </p>
+
+            <!-- Plan Summary Box -->
+            <div class="plan-summary-box">
+                <h6 class="fw-bold text-dark mb-1" style="font-size:16px;">
+                    <i class="bi bi-award-fill me-1 text-success"></i> {{ plan.name }}
+                </h6>
+                {% if plan.code %}
+                    <div class="text-muted small"><strong>Code:</strong> {{ plan.code }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Actions -->
+            <form method="post" class="mb-0">
+                {% csrf_token %}
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn-delete-confirm">
+                        <i class="bi bi-trash-fill"></i> Yes, Delete Plan
+                    </button>
+                    <a href="{% url 'subscriptions:manage-subscriptions' %}" class="btn-delete-cancel">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+
     </div>
 </div>
 {% endblock %}

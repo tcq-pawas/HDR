@@ -173,14 +173,9 @@
                     <button type="button" class="btn btn-sm btn-outline-primary" onclick="toggleEdit({{ feature.id }})">
                         <i class="fas fa-pencil-alt"></i>
                     </button>
-                    <form method="post" onsubmit="return confirm('Delete this feature? It will be removed from all plans too.');">
-                        {% csrf_token %}
-                        <input type="hidden" name="action" value="delete">
-                        <input type="hidden" name="feature_id" value="{{ feature.id }}">
-                        <button type="submit" class="btn btn-sm btn-outline-danger">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </form>
+                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="openDeleteFeatureModal({{ feature.id }}, '{{ feature.name|escapejs }}')">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
                 </div>
             </div>
 
@@ -203,6 +198,66 @@
     </div>
 </div>
 
+<!-- Hidden delete form -->
+<form id="deleteFeatureForm" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="delete">
+    <input type="hidden" name="feature_id" id="deleteFeatureIdInput" value="">
+</form>
+
+<!-- Delete Feature Modal -->
+<div id="deleteFeatureModal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.55); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(4px);">
+    <div style="background:#fff; border-radius:20px; width:92% !important; max-width:560px !important; overflow:hidden; box-shadow:0 25px 60px rgba(0,0,0,0.3); margin:auto; animation: modalSlideIn 0.2s ease;">
+
+        <!-- Green Header -->
+        <div style="background:linear-gradient(135deg,#1a4a2e 0%,#2d7a4f 60%,#3da668 100%); padding:1.8rem 2.2rem; position:relative;">
+            <button onclick="closeDeleteFeatureModal()"
+                    style="position:absolute; top:14px; right:14px; background:rgba(255,255,255,0.2); border:none; color:#fff; width:34px; height:34px; border-radius:50%; font-size:18px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background 0.2s;"
+                    onmouseover="this.style.background='rgba(255,255,255,0.35)'"
+                    onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+                <i class="bi bi-x"></i>
+            </button>
+            <div style="display:flex; align-items:center; gap:14px;">
+                <div style="width:48px; height:48px; border-radius:14px; background:rgba(255,255,255,0.15); border:1.5px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <i class="bi bi-trash3-fill" style="color:#fff; font-size:22px;"></i>
+                </div>
+                <div>
+                    <h5 style="color:#fff; margin:0; font-weight:700; font-size:20px;">Delete Feature?</h5>
+                    <p style="color:rgba(255,255,255,0.75); margin:4px 0 0; font-size:13px;">It will be removed from all plans too.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- White Body -->
+        <div style="padding:2rem 2.2rem;">
+            <p style="color:#475569; font-size:15px; line-height:1.6; margin:0 0 1.6rem;">
+                Are you sure you want to delete <strong id="deleteFeatureNameText" style="color:#1e293b;"></strong>? This action cannot be undone.
+            </p>
+            <div style="display:flex; gap:12px;">
+                <button onclick="submitDeleteFeature()"
+                        style="flex:1; background:linear-gradient(135deg,#16a34a,#22c55e); color:#fff; border:none; padding:12px 18px; border-radius:10px; font-weight:700; font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:7px; box-shadow:0 4px 14px rgba(34,197,94,0.35); transition:all 0.2s;"
+                        onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 18px rgba(34,197,94,0.45)'"
+                        onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 14px rgba(34,197,94,0.35)'">
+                    <i class="bi bi-trash-fill"></i> Yes, Delete
+                </button>
+                <button onclick="closeDeleteFeatureModal()"
+                        style="flex:1; background:#f1f5f9; color:#475569; border:none; padding:12px 18px; border-radius:10px; font-weight:600; font-size:15px; cursor:pointer; transition:background 0.2s;"
+                        onmouseover="this.style.background='#e2e8f0'"
+                        onmouseout="this.style.background='#f1f5f9'">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+@keyframes modalSlideIn {
+    from { opacity: 0; transform: translateY(-20px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+</style>
+
 <script>
     function toggleEdit(featureId) {
         var editRow = document.getElementById('edit-row-' + featureId);
@@ -210,6 +265,25 @@
             editRow.classList.toggle('show');
         }
     }
+
+    function openDeleteFeatureModal(featureId, featureName) {
+        document.getElementById('deleteFeatureIdInput').value = featureId;
+        document.getElementById('deleteFeatureNameText').textContent = '"' + featureName + '"';
+        document.getElementById('deleteFeatureModal').style.display = 'flex';
+    }
+
+    function closeDeleteFeatureModal() {
+        document.getElementById('deleteFeatureModal').style.display = 'none';
+    }
+
+    function submitDeleteFeature() {
+        document.getElementById('deleteFeatureForm').submit();
+    }
+
+    // Close modal on backdrop click
+    document.getElementById('deleteFeatureModal').addEventListener('click', function(e) {
+        if (e.target === this) closeDeleteFeatureModal();
+    });
 
     document.addEventListener('DOMContentLoaded', function () {
         var source = document.getElementById('featureSourceList');

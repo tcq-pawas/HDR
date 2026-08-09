@@ -587,18 +587,12 @@
                                             
                                             </button>
                                             
-                                            <form method="POST" action="{% url 'admin_dash:inquiry-delete' inquiry.id %}" class="m-0"
-                                            
-                                                onsubmit="return confirm('Delete enquiry {{ inquiry.enquiry_id }} permanently?');">
-                                                
+                                            <form method="POST" action="{% url 'admin_dash:inquiry-delete' inquiry.id %}" class="m-0">
                                                 {% csrf_token %}
-                                                
-                                                <button type="submit" class="action-icon-btn danger" title="Delete">
-                                                
+                                                <button type="button" class="action-icon-btn danger" title="Delete"
+                                                    onclick="confirmDeleteInquiry(this, '{{ inquiry.enquiry_id }}')">
                                                     <i class="fas fa-trash"></i>
-                                                
                                                 </button>
-                                            
                                             </form>
 
                                         </div>
@@ -911,14 +905,18 @@
 
     }
 
-    function deleteInquiry(inquiryId) {
+    let deleteConfirmForm = null;
 
-        if (confirm('Are you sure you want to delete this inquiry?')) {
+    function confirmDeleteInquiry(button, enquiryId) {
+        deleteConfirmForm = button.closest('form');
+        document.getElementById('deleteConfirmModalText').textContent = `Delete enquiry #${enquiryId} permanently?`;
+        new bootstrap.Modal(document.getElementById('deleteConfirmModal')).show();
+    }
 
-            alert('Inquiry deleted successfully!');
-
+    function deleteInquiry() {
+        if (deleteConfirmForm) {
+            deleteConfirmForm.submit();
         }
-
     }
 
     function respondToInquiries() {
@@ -1007,5 +1005,40 @@
     });
 
 </script>
+
+<!-- Delete confirmation modal -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 520px;">
+        <div class="modal-content rounded-4 shadow-lg border-0 overflow-hidden">
+            <div class="modal-body p-0 bg-light">
+                <div class="px-4 py-4" style="background: linear-gradient(135deg, #1a4a2e 0%, #2d7a4f 60%, #3da668 100%); position: relative;">
+                    <div class="d-flex align-items-center justify-content-between gap-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <div style="width:42px; height:42px; border-radius:12px; background:rgba(255,255,255,0.15); border:1.5px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                <i class="bi bi-trash3-fill text-white" style="font-size:1.2rem;"></i>
+                            </div>
+                            <div>
+                                <h5 class="text-white mb-1" id="deleteConfirmModalLabel" style="font-weight:700;">Delete Inquiry</h5>
+                                <p class="text-white-50 mb-0" style="font-size:.85rem; line-height:1.4;">Are you sure you want to delete this inquiry? This action cannot be undone.</p>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-light btn-sm rounded-circle p-0" data-bs-dismiss="modal" aria-label="Close" style="width:32px; height:32px; opacity:.9;">
+                            <span class="fw-bold" style="line-height:1;">×</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="px-4 pb-4 pt-3" style="background:#f8fafc;">
+                    <div class="rounded-3 bg-white p-3 shadow-sm border" style="border-color:#e2e8f0;">
+                        <p id="deleteConfirmModalText" class="mb-0" style="font-size:0.95rem; color:#1e293b; font-weight: 500;"></p>
+                    </div>
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <button type="button" class="btn btn-light btn-lg rounded-pill px-4" data-bs-dismiss="modal" style="background:#f1f5f9; color:#475569; border:none; font-size:14px; font-weight:600;">Cancel</button>
+                        <button type="button" class="btn btn-success btn-lg rounded-pill px-4" onclick="deleteInquiry()" style="background: linear-gradient(135deg, #16a34a, #22c55e); border: none; font-size:14px; font-weight:700; box-shadow: 0 4px 14px rgba(34,197,94,0.35);">Yes, Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}

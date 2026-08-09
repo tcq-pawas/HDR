@@ -3,6 +3,7 @@
 {% block title %}Investor Documents - HHectare{% endblock %}
 
 {% block extra_css %}
+<style>
 .document-card {
     border: none;
     border-radius: 12px;
@@ -26,18 +27,12 @@
 .file-word { background-color: #007bff; color: white; }
 .file-image { background-color: #17a2b8; color: white; }
 .file-default { background-color: #6c757d; color: white; }
+</style>
 {% endblock %}
 
 {% block page_title %}Investment Documents{% endblock %}
+{% block page_subtitle %}<p class="page-subtitle">Access your legal agreements, financial statements, and property reports.</p>{% endblock %}
 
-{% block header %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h2><i class="fas fa-file-alt text-success me-2"></i>Investment Documents</h2>
-        <p class="text-muted">View your investment documents</p>
-    </div>
-</div>
-{% endblock %}
 
 {% block content %}
     <!-- Documents List -->
