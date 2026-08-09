@@ -209,7 +209,7 @@
                             <th>Original Price</th>
                             <th>Save %</th>
                             <th>Default</th>
-                            <th>Stripe Price ID</th>
+                            <th>Cashfree Plan ID</th>
                             <th>Remove</th>
                         </tr>
                     </thead>
@@ -222,7 +222,7 @@
                             <td>{{ pform.original_price }}</td>
                             <td>{{ pform.save_percentage }}</td>
                             <td class="text-center">{{ pform.is_default }}</td>
-                            <td>{{ pform.stripe_price_id }}</td>
+                            <td>{{ pform.cashfree_plan_id }}</td>
                             <td class="text-center">
                                 {% if pform.instance.pk %}
                                     <label class="btn btn-sm btn-outline-danger" style="border-radius:14px;">
@@ -337,7 +337,7 @@
             <td>{{ pricing_formset.empty_form.original_price }}</td>
             <td>{{ pricing_formset.empty_form.save_percentage }}</td>
             <td class="text-center">{{ pricing_formset.empty_form.is_default }}</td>
-            <td>{{ pricing_formset.empty_form.stripe_price_id }}</td>
+            <td>{{ pricing_formset.empty_form.cashfree_plan_id }}</td>
             <td class="text-center"><button type="button" class="btn btn-sm btn-outline-danger remove-row-btn"><i class="fas fa-trash-alt"></i></button></td>
         </tr>
     </tbody>

@@ -5,6 +5,7 @@ from .models import (
     AgentProfile, Lead, LeadFollowUp, SiteVisit, Booking, 
     Installment, Commission, Document, Communication, MessageTemplate
 )
+from .validators import validate_image_file, validate_document_file, validate_video_file
 
 
 class MultipleFileInput(forms.ClearableFileInput):
@@ -248,6 +249,78 @@ class PropertyForm(forms.ModelForm):
             'allowed_roles': forms.Select(attrs={'class': 'form-select'}),
         }
 
+    def clean_featured_image(self):
+        f = self.cleaned_data.get('featured_image')
+        if f:
+            validate_image_file(f)
+        return f
+
+    def clean_floor_plan(self):
+        f = self.cleaned_data.get('floor_plan')
+        if f:
+            validate_image_file(f)
+        return f
+
+    def clean_property_video(self):
+        f = self.cleaned_data.get('property_video')
+        if f:
+            validate_video_file(f)
+        return f
+
+    def clean_drone_video(self):
+        f = self.cleaned_data.get('drone_video')
+        if f:
+            validate_video_file(f)
+        return f
+
+    def clean_registry_copy(self):
+        f = self.cleaned_data.get('registry_copy')
+        if f:
+            validate_document_file(f)
+        return f
+
+    def clean_sale_deed(self):
+        f = self.cleaned_data.get('sale_deed')
+        if f:
+            validate_document_file(f)
+        return f
+
+    def clean_mutation(self):
+        f = self.cleaned_data.get('mutation')
+        if f:
+            validate_document_file(f)
+        return f
+
+    def clean_building_approval(self):
+        f = self.cleaned_data.get('building_approval')
+        if f:
+            validate_document_file(f)
+        return f
+
+    def clean_completion_certificate(self):
+        f = self.cleaned_data.get('completion_certificate')
+        if f:
+            validate_document_file(f)
+        return f
+
+    def clean_noc(self):
+        f = self.cleaned_data.get('noc')
+        if f:
+            validate_document_file(f)
+        return f
+
+    def clean_layout_plan(self):
+        f = self.cleaned_data.get('layout_plan')
+        if f:
+            validate_document_file(f)
+        return f
+
+    def clean_property_brochure(self):
+        f = self.cleaned_data.get('property_brochure')
+        if f:
+            validate_document_file(f)
+        return f
+
 
 class AgriculturalLandForm(forms.ModelForm):
     """Form specifically for Agricultural Land properties"""
@@ -472,6 +545,48 @@ class AgriculturalLandForm(forms.ModelForm):
             instance.save()
         return instance
 
+    def clean_featured_image(self):
+        f = self.cleaned_data.get('featured_image')
+        if f:
+            validate_image_file(f)
+        return f
+
+    def clean_property_video(self):
+        f = self.cleaned_data.get('property_video')
+        if f:
+            validate_video_file(f)
+        return f
+
+    def clean_drone_video(self):
+        f = self.cleaned_data.get('drone_video')
+        if f:
+            validate_video_file(f)
+        return f
+
+    def clean_registry_copy(self):
+        f = self.cleaned_data.get('registry_copy')
+        if f:
+            validate_document_file(f)
+        return f
+
+    def clean_sale_deed(self):
+        f = self.cleaned_data.get('sale_deed')
+        if f:
+            validate_document_file(f)
+        return f
+
+    def clean_layout_plan(self):
+        f = self.cleaned_data.get('layout_plan')
+        if f:
+            validate_document_file(f)
+        return f
+
+    def clean_property_brochure(self):
+        f = self.cleaned_data.get('property_brochure')
+        if f:
+            validate_document_file(f)
+        return f
+
 
 class AgentProfileForm(forms.ModelForm):
     """Form for updating agent profile"""
@@ -571,6 +686,12 @@ class AgentProfileForm(forms.ModelForm):
             self.fields['first_name'].initial = user.first_name
             self.fields['last_name'].initial = user.last_name
             self.fields['email'].initial = user.email
+
+    def clean_profile_image(self):
+        f = self.cleaned_data.get('profile_image')
+        if f:
+            validate_image_file(f)
+        return f
 
 
 class LeadForm(forms.ModelForm):
@@ -696,6 +817,12 @@ class DocumentForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Description'}),
             'is_public': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
+
+    def clean_file(self):
+        f = self.cleaned_data.get('file')
+        if f:
+            validate_document_file(f)
+        return f
         
         
         

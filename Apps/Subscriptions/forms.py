@@ -38,14 +38,14 @@ class PlanPricingForm(forms.ModelForm):
     class Meta:
         model = PlanPricing
         fields = ["billing_cycle", "price", "original_price", "save_percentage",
-                   "is_default", "stripe_price_id"]
+                   "is_default", "cashfree_plan_id"]
         widgets = {
             "billing_cycle": forms.Select(attrs={"class": "form-control"}),
             "price": forms.NumberInput(attrs={"class": "form-control", "step": "0.01"}),
             "original_price": forms.NumberInput(attrs={"class": "form-control", "step": "0.01"}),
             "save_percentage": forms.NumberInput(attrs={"class": "form-control"}),
             "is_default": forms.CheckboxInput(attrs={"class": "form-check-input"}),
-            "stripe_price_id": forms.TextInput(attrs={"class": "form-control", "placeholder": "price_xxx"}),
+            "cashfree_plan_id": forms.TextInput(attrs={"class": "form-control", "placeholder": "e.g. HARVEST_1M"}),
         }
 
 

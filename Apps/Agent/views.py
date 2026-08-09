@@ -25,6 +25,7 @@ from .models import (
     AgentProfile, Lead, LeadFollowUp, SiteVisit,
     Booking, Installment, Commission, Document, Communication, MessageTemplate
 )
+from .validators import validate_image_file, validate_document_file, validate_video_file, ValidationError
 from .forms import (
     PropertyForm, AgriculturalLandForm, AgentProfileForm, LeadForm,
     LeadFollowUpForm, SiteVisitForm, BookingForm, InstallmentForm,
@@ -408,7 +409,11 @@ def _save_new_property(form, request, property_type, is_admin=False):
     property_obj.save()
 
     for image in request.FILES.getlist('gallery_images'):
-        PropertyImage.objects.create(property=property_obj, image=image, category='General')
+        try:
+            validate_image_file(image)
+            PropertyImage.objects.create(property=property_obj, image=image, category='General')
+        except ValidationError:
+            pass
 
     return property_obj
 
@@ -469,7 +474,11 @@ def property_edit(request, pk):
             # Save multiple images to the PropertyImage gallery table
             gallery_images = request.FILES.getlist('gallery_images')
             for image in gallery_images:
-                PropertyImage.objects.create(property=property_obj, image=image, category='General')
+                try:
+                    validate_image_file(image)
+                    PropertyImage.objects.create(property=property_obj, image=image, category='General')
+                except ValidationError:
+                    pass
                 
             messages.success(request, "Property updated successfully!")
             if is_admin:
@@ -1118,18 +1127,25 @@ def document_list(request):
         proof_type = request.POST.get('proof_type')
         uploaded_file = request.FILES.get('file')
 
-        if uploaded_file and proof_type == 'id_proof':
-            agent_profile.id_proof_document = uploaded_file
-            if agent_profile.verification_status == 'not_started':
-                agent_profile.verification_status = 'pending'
-            agent_profile.save()
-            messages.success(request, "ID Proof uploaded successfully!")
-        elif uploaded_file and proof_type == 'address_proof':
-            agent_profile.address_proof_document = uploaded_file
-            if agent_profile.verification_status == 'not_started':
-                agent_profile.verification_status = 'pending'
-            agent_profile.save()
-            messages.success(request, "Address Proof uploaded successfully!")
+        if uploaded_file:
+            try:
+                validate_document_file(uploaded_file)
+                if proof_type == 'id_proof':
+                    agent_profile.id_proof_document = uploaded_file
+                    if agent_profile.verification_status == 'not_started':
+                        agent_profile.verification_status = 'pending'
+                    agent_profile.save()
+                    messages.success(request, "ID Proof uploaded successfully!")
+                elif proof_type == 'address_proof':
+                    agent_profile.address_proof_document = uploaded_file
+                    if agent_profile.verification_status == 'not_started':
+                        agent_profile.verification_status = 'pending'
+                    agent_profile.save()
+                    messages.success(request, "Address Proof uploaded successfully!")
+                else:
+                    messages.error(request, "Invalid proof type specified.")
+            except ValidationError as ve:
+                messages.error(request, str(ve.message if hasattr(ve, 'message') else ve))
         else:
             messages.error(request, "Please select a valid file to upload.")
 
@@ -1546,17 +1562,24 @@ def document_verification(request):
             messages.error(request, 'At least 1 document is required.')
             return redirect('agent:document_verification')
             
-        # Handle uploads
-        if 'id_proof_front' in request.FILES:
-            agent_profile.id_proof_document = request.FILES['id_proof_front']
-        if 'id_proof_back' in request.FILES:
-            agent_profile.id_proof_back_document = request.FILES['id_proof_back']
-        if 'address_proof' in request.FILES:
-            agent_profile.address_proof_document = request.FILES['address_proof']
-            
-        agent_profile.verification_status = 'pending'
-        agent_profile.save()
-        messages.success(request, "Documents submitted successfully! They are now under review by our administration team.")
+        try:
+            # Handle uploads with validation
+            if 'id_proof_front' in request.FILES:
+                validate_document_file(request.FILES['id_proof_front'])
+                agent_profile.id_proof_document = request.FILES['id_proof_front']
+            if 'id_proof_back' in request.FILES:
+                validate_document_file(request.FILES['id_proof_back'])
+                agent_profile.id_proof_back_document = request.FILES['id_proof_back']
+            if 'address_proof' in request.FILES:
+                validate_document_file(request.FILES['address_proof'])
+                agent_profile.address_proof_document = request.FILES['address_proof']
+                
+            agent_profile.verification_status = 'pending'
+            agent_profile.save()
+            messages.success(request, "Documents submitted successfully! They are now under review by our administration team.")
+        except ValidationError as ve:
+            messages.error(request, str(ve.message if hasattr(ve, 'message') else ve))
+
         return redirect('agent:document_verification')
         
     context = {
