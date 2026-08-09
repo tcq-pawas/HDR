@@ -350,14 +350,14 @@
     </div>
     <div class="d-flex align-items-center gap-2 flex-wrap">
         <a href="{% url 'organization:members' organization.id %}" class="btn-act-secondary">
-            <i class="bi bi-people-fill"></i> View Members
+            <i class="bi bi-people-fill"></i> Agent Management
         </a>
         {% if is_owner %}
             <a href="{% url 'organization:edit' organization.id %}" class="btn-act-secondary">
                 <i class="bi bi-pencil-square"></i> Edit Info
             </a>
             <a href="{% url 'organization:add-agent' organization.id %}" class="btn-act-primary">
-                <i class="bi bi-person-plus-fill"></i> Add Agent
+                <i class="bi bi-person-plus-fill"></i> Invite Agent
             </a>
         {% endif %}
     </div>

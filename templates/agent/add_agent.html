@@ -1,12 +1,12 @@
 {% extends "agent/agent_base.html" %}
-{% block title %}Add Agent - {{ organization.organization_name }}{% endblock %}
+{% block title %}Invite Agent - {{ organization.organization_name }}{% endblock %}
 
 {% block breadcrumb_items %}
 <a href="{% url 'organization:my-organizations' %}">Organizations</a>
 <i class="bi bi-chevron-right" style="font-size: 0.7rem; color: #94a3b8;"></i>
 <a href="{% url 'organization:detail' organization.id %}">{{ organization.organization_name }}</a>
 <i class="bi bi-chevron-right" style="font-size: 0.7rem; color: #94a3b8;"></i>
-<span>Add Agent</span>
+<span>Invite Agent</span>
 {% endblock %}
 
 {% block content %}
@@ -110,6 +110,7 @@
     .btn-add-agent:hover {
         transform: translateY(-1px);
         box-shadow: 0 6px 18px rgba(45,122,79,0.4);
+        color: #fff;
     }
     .alert-error {
         background: #fef2f2;
@@ -118,9 +119,6 @@
         padding: 0.85rem 1.1rem;
         color: #b91c1c;
         font-size: 13px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
         margin-bottom: 1.2rem;
     }
     .info-box {
@@ -134,59 +132,71 @@
         display: flex;
         gap: 8px;
     }
+    .field-error {
+        color: #b91c1c;
+        font-size: 12px;
+        margin-top: 4px;
+    }
 </style>
 
-
-
-<!-- Hero -->
 <div class="add-agent-hero d-flex align-items-center justify-content-between flex-wrap gap-3">
     <div>
-        <h4><i class="bi bi-person-plus-fill me-2" style="opacity:0.9;"></i>Add Agent</h4>
-        <p>Add a new agent to <strong style="color:#fff;">{{ organization.organization_name }}</strong></p>
+        <h4><i class="bi bi-envelope-plus-fill me-2" style="opacity:0.9;"></i>Invite Agent</h4>
+        <p>Send an invitation to join <strong style="color:#fff;">{{ organization.organization_name }}</strong></p>
     </div>
     <a href="{% url 'organization:members' organization.id %}" class="btn-back-glass">
         <i class="bi bi-arrow-left"></i> Back to Members
     </a>
 </div>
 
-<!-- Form Card -->
 <div class="form-card">
-
-    {% if error %}
+    {% if form.non_field_errors %}
         <div class="alert-error">
-            <i class="bi bi-exclamation-circle-fill" style="color:#ef4444;"></i>
-            {{ error }}
+            {% for err in form.non_field_errors %}{{ err }}{% endfor %}
         </div>
     {% endif %}
 
     <form method="post" novalidate>
         {% csrf_token %}
-        <div class="mb-4">
-            <label class="form-label">Username or Email</label>
-            <input
-                type="text"
-                name="agent_identifier"
-                class="form-control"
-                placeholder="e.g. john_doe or john@example.com"
-                autofocus
-                required
-            >
+        <div class="mb-3">
+            <label class="form-label" for="id_email">Email address <span class="text-danger">*</span></label>
+            {{ form.email }}
+            {% if form.email.errors %}<div class="field-error">{{ form.email.errors.0 }}</div>{% endif %}
             <div class="form-hint">
                 <i class="bi bi-info-circle"></i>
-                Enter the agent's exact username or registered email address.
+                Must not already belong to an active user account.
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label" for="id_first_name">First name <span class="text-danger">*</span></label>
+                {{ form.first_name }}
+                {% if form.first_name.errors %}<div class="field-error">{{ form.first_name.errors.0 }}</div>{% endif %}
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label" for="id_last_name">Last name <span class="text-danger">*</span></label>
+                {{ form.last_name }}
+                {% if form.last_name.errors %}<div class="field-error">{{ form.last_name.errors.0 }}</div>{% endif %}
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <label class="form-label" for="id_phone">Phone <span class="text-danger">*</span></label>
+            {{ form.phone }}
+            {% if form.phone.errors %}<div class="field-error">{{ form.phone.errors.0 }}</div>{% endif %}
+        </div>
+
         <button type="submit" class="btn-add-agent">
-            <i class="bi bi-person-plus-fill"></i> Add to Organization
+            <i class="bi bi-send-fill"></i> Send Invitation
         </button>
     </form>
 
     <div class="info-box">
         <i class="bi bi-shield-check" style="color:#16a34a; font-size:16px; margin-top:1px;"></i>
         <div>
-            Added agents will join as <strong>Members</strong>.
-            Only you (the Owner) can add or remove agents.
+            A secure invitation link will be generated. The agent sets their own password on the Create Account page.
+            No password is required from you. The link stays valid until the agent completes onboarding.
         </div>
     </div>
 </div>

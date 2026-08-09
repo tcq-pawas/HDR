@@ -1,11 +1,23 @@
 from django.contrib import messages
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, login
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.http import require_POST
 
-from .models import Organization, AgentOrganizationMapping
+from Apps.Administration.backends import AUTH_BACKEND_PATH
+from Apps.Administration.models import ActivityLog
+
+from .forms import InviteAgentForm, CreateAccountFromInvitationForm
+from .invitation_utils import (
+    build_invitation_absolute_url,
+    complete_agent_invitation,
+    create_agent_invitation,
+    resend_agent_invitation,
+    send_invitation_email,
+)
+from .models import Organization, AgentOrganizationMapping, AgentInvitation
 
 User = get_user_model()
 
@@ -36,6 +48,24 @@ def _is_member(agent, organization_id):
     return _get_membership(agent, organization_id) is not None
 
 
+def _log_org_event(user, action_type, description, request=None):
+    ActivityLog.objects.create(
+        user=user,
+        action_type=action_type,
+        module="organization",
+        description=description,
+        ip_address=request.META.get("REMOTE_ADDR") if request else None,
+        user_agent=request.META.get("HTTP_USER_AGENT", "") if request else "",
+    )
+
+
+def _safe_invitation(mapping):
+    try:
+        return mapping.invitation
+    except AgentInvitation.DoesNotExist:
+        return None
+
+
 # ---------------------------------------------------------------------
 # Views
 # ---------------------------------------------------------------------
@@ -50,7 +80,13 @@ def my_organizations(request):
         agent=request.user, status=AgentOrganizationMapping.Status.ACTIVE
     ).select_related("organization")
 
-    user_associated_with_org = memberships.exists()
+    user_associated_with_org = AgentOrganizationMapping.objects.filter(
+        agent=request.user,
+        status__in=[
+            AgentOrganizationMapping.Status.ACTIVE,
+            AgentOrganizationMapping.Status.PENDING_INVITATION,
+        ],
+    ).exists()
 
     organizations = [
         {
@@ -78,10 +114,12 @@ def create_organization(request):
     Organization Creation Flow:
     - Strictly limits each agent associated with an org from creating another.
     """
-    # Check if agent is already associated with any active organization (as owner or member)
     already_associated = AgentOrganizationMapping.objects.filter(
         agent=request.user,
-        status=AgentOrganizationMapping.Status.ACTIVE,
+        status__in=[
+            AgentOrganizationMapping.Status.ACTIVE,
+            AgentOrganizationMapping.Status.PENDING_INVITATION,
+        ],
     ).exists()
 
     if already_associated:
@@ -108,7 +146,6 @@ def create_organization(request):
         }
         logo = request.FILES.get("logo")
 
-        # ---- Step 1: Validate ----
         if not data["organization_name"]:
             errors["organization_name"] = "Organization name is required."
 
@@ -117,7 +154,6 @@ def create_organization(request):
 
         if not errors:
             with transaction.atomic():
-                # ---- Step 2: Insert into Organization Master table ----
                 organization = Organization.objects.create(
                     organization_name=data["organization_name"],
                     email=data["email"] or None,
@@ -132,7 +168,6 @@ def create_organization(request):
                     created_by=request.user,
                 )
 
-                # ---- Step 3: Mapping row, creator becomes Owner ----
                 AgentOrganizationMapping.objects.create(
                     agent=request.user,
                     organization=organization,
@@ -221,7 +256,7 @@ def organization_detail(request, organization_id):
 
 @login_required
 def organization_members(request, organization_id):
-    """Manage organization members list - Owner + Member can view."""
+    """Manage organization members / agent invitations - Owner + Member can view."""
     if not _is_member(request.user, organization_id):
         messages.error(request, "You are not a member of this organization.")
         raise PermissionDenied("You are not linked to this organization.")
@@ -229,89 +264,159 @@ def organization_members(request, organization_id):
     organization = get_object_or_404(Organization, id=organization_id)
     owner_flag = _is_owner(request.user, organization_id)
 
-    members = AgentOrganizationMapping.objects.filter(
-        organization=organization, status=AgentOrganizationMapping.Status.ACTIVE
-    ).select_related("agent")
+    members = (
+        AgentOrganizationMapping.objects.filter(organization=organization)
+        .exclude(status=AgentOrganizationMapping.Status.REMOVED)
+        .select_related("agent", "invitation")
+        .order_by("-is_owner", "-created_at")
+    )
+
+    member_rows = []
+    for m in members:
+        invitation = _safe_invitation(m)
+        invite_url = None
+        if (
+            invitation
+            and invitation.status == AgentInvitation.Status.PENDING
+            and owner_flag
+        ):
+            invite_url = build_invitation_absolute_url(request, invitation)
+
+        member_rows.append(
+            {
+                "mapping": m,
+                "invitation": invitation,
+                "invite_url": invite_url,
+                "status_label": m.invitation_status_label,
+            }
+        )
 
     return render(
         request,
         "agent/manage_members.html",
-        {"organization": organization, "members": members, "is_owner": owner_flag},
+        {
+            "organization": organization,
+            "member_rows": member_rows,
+            "is_owner": owner_flag,
+        },
     )
 
 
 @login_required
 def add_agent(request, organization_id):
     """
-    OWNER ONLY - 'Add new agents' action.
-    Step 1: Enter agent details & validate.
-    Step 2: Create the agent record (if the agent does not already exist).
-    Step 3: Create record in AgentOrganizationMapping table (is_owner=False).
+    OWNER ONLY - Invite a new agent by email.
+    Creates a pending user with a hashed temporary password and an invitation token.
     """
     if not _is_owner(request.user, organization_id):
         messages.error(request, "Only the organization owner can do that.")
         raise PermissionDenied("You must be the organization owner.")
 
     organization = get_object_or_404(Organization, id=organization_id)
-    error = None
+    form = InviteAgentForm(request.POST or None)
 
-    if request.method == "POST":
-        identifier = request.POST.get("agent_identifier", "").strip()
-
-        if not identifier:
-            error = "Please enter username or email."
-        else:
-            # Step 2: Find or create the agent record if it doesn't exist
-            new_agent = User.objects.filter(username=identifier).first() or \
-                User.objects.filter(email=identifier).first()
-
-            if not new_agent:
-                # Create the agent record if it does not already exist
-                is_email = "@" in identifier
-                username = identifier if not is_email else identifier.split("@")[0]
-                email = identifier if is_email else f"{identifier}@example.com"
-                
-                # Make username unique if already taken
-                base_username = username
-                counter = 1
-                while User.objects.filter(username=username).exists():
-                    username = f"{base_username}{counter}"
-                    counter += 1
-
-                new_agent = User.objects.create_user(
-                    username=username,
-                    email=email,
-                    password="Password123!" # Default temporary password
-                )
-                messages.info(request, f"New agent account '{username}' created automatically.")
-
-            # Step 3: Create mapping record with is_owner = False
-            mapping, created = AgentOrganizationMapping.objects.get_or_create(
-                agent=new_agent,
+    if request.method == "POST" and form.is_valid():
+        try:
+            invitation = create_agent_invitation(
                 organization=organization,
-                defaults={
-                    "is_owner": False,  # newly added agents are always regular Members
-                    "status": AgentOrganizationMapping.Status.ACTIVE,
-                },
+                invited_by=request.user,
+                email=form.cleaned_data["email"],
+                first_name=form.cleaned_data["first_name"],
+                last_name=form.cleaned_data["last_name"],
+                phone=form.cleaned_data["phone"],
+                request=request,
             )
+            email_ok, email_msg = send_invitation_email(request, invitation)
+            invite_url = build_invitation_absolute_url(request, invitation)
 
-            # If mapping previously existed but status was REMOVED, reactivate it
-            if not created and mapping.status != AgentOrganizationMapping.Status.ACTIVE:
-                mapping.status = AgentOrganizationMapping.Status.ACTIVE
-                mapping.save(update_fields=["status", "updated_at"])
-                created = True
-
-            if created:
+            if email_ok:
                 messages.success(
-                    request, f"{new_agent.username} added to {organization.organization_name} as a Member."
+                    request,
+                    f"Invitation sent to {invitation.email}. "
+                    f"You can also copy the link from the members list.",
                 )
-                return redirect("organization:members", organization_id=organization.id)
             else:
-                error = f"Agent '{new_agent.username}' is already a member of this organization."
+                messages.warning(
+                    request,
+                    f"{email_msg} Copy the invitation link from the members list: {invite_url}",
+                )
+            return redirect("organization:members", organization_id=organization.id)
+        except ValueError as exc:
+            form.add_error(None, str(exc))
 
     return render(
-        request, "agent/add_agent.html", {"organization": organization, "error": error}
+        request,
+        "agent/add_agent.html",
+        {"organization": organization, "form": form},
     )
+
+
+@login_required
+@require_POST
+def resend_invitation(request, organization_id, mapping_id):
+    """OWNER ONLY - Resend a pending invitation email."""
+    if not _is_owner(request.user, organization_id):
+        messages.error(request, "Only the organization owner can do that.")
+        raise PermissionDenied("You must be the organization owner.")
+
+    organization = get_object_or_404(Organization, id=organization_id)
+    mapping = get_object_or_404(
+        AgentOrganizationMapping, id=mapping_id, organization=organization
+    )
+    invitation = _safe_invitation(mapping)
+    if not invitation or invitation.status != AgentInvitation.Status.PENDING:
+        messages.error(request, "No pending invitation found for this agent.")
+        return redirect("organization:members", organization_id=organization.id)
+
+    try:
+        success, message = resend_agent_invitation(
+            request, invitation, resent_by=request.user
+        )
+        if success:
+            messages.success(request, f"Invitation resent to {invitation.email}.")
+        else:
+            messages.warning(request, message)
+    except ValueError as exc:
+        messages.error(request, str(exc))
+
+    return redirect("organization:members", organization_id=organization.id)
+
+
+@login_required
+@require_POST
+def deactivate_agent(request, organization_id, mapping_id):
+    """OWNER ONLY - Deactivate an agent (keeps record, blocks org access)."""
+    if not _is_owner(request.user, organization_id):
+        messages.error(request, "Only the organization owner can do that.")
+        raise PermissionDenied("You must be the organization owner.")
+
+    organization = get_object_or_404(Organization, id=organization_id)
+    mapping = get_object_or_404(
+        AgentOrganizationMapping, id=mapping_id, organization=organization
+    )
+
+    if mapping.is_owner:
+        messages.error(request, "You cannot deactivate the organization owner.")
+        return redirect("organization:members", organization_id=organization.id)
+
+    mapping.status = AgentOrganizationMapping.Status.INACTIVE
+    mapping.save(update_fields=["status", "updated_at"])
+
+    invitation = _safe_invitation(mapping)
+    if invitation and invitation.status == AgentInvitation.Status.PENDING:
+        invitation.status = AgentInvitation.Status.REVOKED
+        invitation.save(update_fields=["status", "updated_at"])
+
+    _log_org_event(
+        request.user,
+        "update",
+        f"Deactivated agent {mapping.agent.email} in {organization.organization_name}.",
+        request=request,
+    )
+    messages.success(
+        request, f"{mapping.agent.get_full_name() or mapping.agent.email} has been deactivated."
+    )
+    return redirect("organization:members", organization_id=organization.id)
 
 
 @login_required
@@ -331,6 +436,97 @@ def remove_agent(request, organization_id, mapping_id):
     elif request.method == "POST":
         mapping.status = AgentOrganizationMapping.Status.REMOVED
         mapping.save(update_fields=["status", "updated_at"])
+
+        invitation = _safe_invitation(mapping)
+        if invitation and invitation.status == AgentInvitation.Status.PENDING:
+            invitation.status = AgentInvitation.Status.REVOKED
+            invitation.save(update_fields=["status", "updated_at"])
+
         messages.success(request, f"{mapping.agent.username} removed from organization.")
 
     return redirect("organization:members", organization_id=organization.id)
+
+
+def create_account(request, token):
+    """
+    Public create-account page for invitation token.
+    Valid pending tokens allow the agent to set a password and activate.
+    Used/revoked tokens show an appropriate message.
+    """
+    invitation = AgentInvitation.objects.filter(token=token).select_related(
+        "agent", "organization", "mapping"
+    ).first()
+
+    if not invitation:
+        return render(
+            request,
+            "auth/create_account.html",
+            {
+                "invalid": True,
+                "message": "This invitation link is invalid.",
+            },
+        )
+
+    if invitation.status == AgentInvitation.Status.USED:
+        return render(
+            request,
+            "auth/create_account.html",
+            {
+                "already_used": True,
+                "message": "This invitation has already been used. Please log in with your account.",
+            },
+        )
+
+    if invitation.status == AgentInvitation.Status.REVOKED:
+        return render(
+            request,
+            "auth/create_account.html",
+            {
+                "invalid": True,
+                "message": "This invitation has been revoked. Please contact your organization owner.",
+            },
+        )
+
+    agent = invitation.agent
+    initial = {
+        "first_name": agent.first_name,
+        "last_name": agent.last_name,
+        "phone": getattr(getattr(agent, "agent_profile", None), "phone", "") or "",
+    }
+    form = CreateAccountFromInvitationForm(
+        request.POST or None, user=agent, initial=initial
+    )
+
+    if request.method == "POST" and form.is_valid():
+        try:
+            user = complete_agent_invitation(
+                invitation,
+                first_name=form.cleaned_data["first_name"],
+                last_name=form.cleaned_data["last_name"],
+                phone=form.cleaned_data["phone"],
+                password=form.cleaned_data["password1"],
+                request=request,
+            )
+            login(request, user, backend=AUTH_BACKEND_PATH)
+            from Apps.Subscriptions.utils import auto_assign_free_plan
+
+            auto_assign_free_plan(user)
+            messages.success(
+                request,
+                "Your account has been created successfully. Welcome!",
+            )
+            return redirect("agent:dashboard")
+        except ValueError as exc:
+            messages.error(request, str(exc))
+            return redirect("create-account", token=token)
+
+    return render(
+        request,
+        "auth/create_account.html",
+        {
+            "form": form,
+            "invitation": invitation,
+            "organization": invitation.organization,
+            "email": invitation.email,
+        },
+    )

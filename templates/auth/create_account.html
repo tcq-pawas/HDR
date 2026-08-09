@@ -1,0 +1,183 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if already_used or invalid %}Invitation{% else %}Create Account{% endif %} | HHectare</title>
+    <link rel="icon" href="{% static 'img/logo.png' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #004526;
+            --text-dark: #1F2937;
+            --text-muted: #6B7280;
+        }
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'DM Sans', sans-serif;
+            background:
+                linear-gradient(135deg, rgba(15, 118, 110, 0.35) 20%, rgba(6, 78, 59, 0.4) 100%),
+                url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+            padding: 1.5rem;
+        }
+        .card-wrap {
+            width: 100%;
+            max-width: 520px;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+            padding: 2.5rem;
+        }
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.75rem;
+            color: var(--text-dark);
+            margin-bottom: 0.35rem;
+        }
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 1.75rem;
+        }
+        .form-label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #374151;
+        }
+        .form-control {
+            border-radius: 10px;
+            padding: 0.7rem 1rem;
+            border: 1.5px solid #E5E7EB;
+            margin-bottom: 0.25rem;
+        }
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 69, 38, 0.12);
+        }
+        .btn-create {
+            background: linear-gradient(135deg, #004526, #006638);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem 1.25rem;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+        .btn-create:hover { color: #fff; opacity: 0.95; }
+        .btn-login {
+            display: inline-block;
+            margin-top: 1rem;
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .alert-box {
+            background: #fff7ed;
+            border: 1px solid #fdba74;
+            border-radius: 12px;
+            padding: 1rem 1.15rem;
+            color: #9a3412;
+            font-size: 0.95rem;
+        }
+        .alert-box.error {
+            background: #fef2f2;
+            border-color: #fecaca;
+            color: #991b1b;
+        }
+        .email-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+        }
+        .field-error { color: #b91c1c; font-size: 0.8rem; margin-bottom: 0.75rem; }
+        .mb-field { margin-bottom: 1rem; }
+    </style>
+</head>
+<body>
+    <div class="card-wrap">
+        {% if already_used %}
+            <h1>Invitation already used</h1>
+            <p class="subtitle">This invitation link is no longer active.</p>
+            <div class="alert-box">
+                <i class="fa fa-info-circle me-1"></i>
+                {{ message }}
+            </div>
+            <a href="{% url 'auth:login' %}" class="btn-login">
+                <i class="fa fa-sign-in-alt me-1"></i> Go to Login
+            </a>
+        {% elif invalid %}
+            <h1>Invalid invitation</h1>
+            <p class="subtitle">{{ message }}</p>
+            <div class="alert-box error">
+                <i class="fa fa-exclamation-circle me-1"></i>
+                {{ message }}
+            </div>
+            <a href="{% url 'auth:login' %}" class="btn-login">Go to Login</a>
+        {% else %}
+            <h1>Create your account</h1>
+            <p class="subtitle">
+                Complete your profile to join
+                <strong>{{ organization.organization_name }}</strong>.
+            </p>
+            <div class="email-chip">
+                <i class="fa fa-envelope"></i> {{ email }}
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert-box {% if message.tags == 'error' %}error{% endif %} mb-3">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post" novalidate>
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6 mb-field">
+                        <label class="form-label" for="id_first_name">First name</label>
+                        {{ form.first_name }}
+                        {% if form.first_name.errors %}<div class="field-error">{{ form.first_name.errors.0 }}</div>{% endif %}
+                    </div>
+                    <div class="col-md-6 mb-field">
+                        <label class="form-label" for="id_last_name">Last name</label>
+                        {{ form.last_name }}
+                        {% if form.last_name.errors %}<div class="field-error">{{ form.last_name.errors.0 }}</div>{% endif %}
+                    </div>
+                </div>
+                <div class="mb-field">
+                    <label class="form-label" for="id_phone">Phone</label>
+                    {{ form.phone }}
+                    {% if form.phone.errors %}<div class="field-error">{{ form.phone.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="mb-field">
+                    <label class="form-label" for="id_password1">Password</label>
+                    {{ form.password1 }}
+                    {% if form.password1.errors %}<div class="field-error">{{ form.password1.errors.0 }}</div>{% endif %}
+                </div>
+                <div class="mb-field">
+                    <label class="form-label" for="id_password2">Confirm password</label>
+                    {{ form.password2 }}
+                    {% if form.password2.errors %}<div class="field-error">{{ form.password2.errors.0 }}</div>{% endif %}
+                </div>
+                <button type="submit" class="btn-create">
+                    <i class="fa fa-user-check me-1"></i> Create Account
+                </button>
+            </form>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -63,6 +63,14 @@ class CustomLoginView(TemplateView):
         user = get_user_by_login_identifier(identifier)
         # import pdb; pdb.set_trace()
         if user and not user.is_active and user.check_password(password):
+            from Apps.Organization.models import AgentInvitation
+            has_pending_invite = AgentInvitation.objects.filter(
+                agent=user, status=AgentInvitation.Status.PENDING
+            ).exists()
+            if has_pending_invite:
+                return render_login(
+                    "Your invitation is still pending. Please complete account setup using your invitation link."
+                )
             return render_login("Your account is suspended.")
 
         if user and user.is_active and user.check_password(password):

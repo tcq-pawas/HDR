@@ -88,6 +88,7 @@ from django.conf.urls.static import static
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 from django.http import JsonResponse
 from Apps.PublicPage.sitemaps import PropertySitemap, StaticViewSitemap, AgentProfileSitemap
+from Apps.Organization.views import create_account as create_account_from_invitation
 
 # Django Admin branding
 admin.site.site_header = "HHectare Administration"
@@ -117,6 +118,13 @@ urlpatterns = [
     
     # Authentication (must be first)
     path('auth/', include(('Apps.Administration.auth_urls', 'auth'), namespace='auth')),
+
+    # Agent invitation onboarding (public)
+    path(
+        'create-account/<str:token>/',
+        create_account_from_invitation,
+        name='create-account',
+    ),
     
     # Admin interface (Django admin)
     path('django-admin/', admin.site.urls),
