@@ -380,45 +380,49 @@
         </div>
     </footer> -->
 
-    <footer class="footer">
+    <footer class="footer site-footer">
         <div class="footer-container">
             <div class="footer-brand">
-                <img src="{% static 'img/logo.png' %}"
-                     alt="HHectare"
-                     title="HHectare"
-                     style="height:56px; width:auto; margin-bottom:12px; display:block;">
-                <div class="footer-brand-logo">HHectare</div>
-                <p class="footer-brand-description">Invest Green. Grow Strong.</p>
+                <a href="{% url 'public:home' %}" class="footer-logo-container">
+                    <img src="{% static 'img/logo.png' %}"
+                         alt="HHectare"
+                         title="HHectare"
+                         class="footer-logo-img">
+                    <div class="footer-logo-text">
+                        <div class="footer-brand-logo">HHectare</div>
+                        <div class="footer-brand-tagline">Invest Green. Grow Strong.</div>
+                    </div>
+                </a>
                 <p class="footer-brand-description">Buy • Sell • Invest • Discover</p>
                 <div class="footer-social">
-                    <a href="#" class="footer-social-link">𝗙</a>
-                    <a href="#" class="footer-social-link">◎</a>
-                    <a href="#" class="footer-social-link">in</a>
-                    <a href="#" class="footer-social-link">𝗫</a>
+                    <a href="#" class="footer-social-link" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="footer-social-link" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                    <a href="#" class="footer-social-link" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+                    <a href="#" class="footer-social-link" aria-label="X"><i class="bi bi-twitter"></i></a>
                 </div>
             </div>
 
             <div class="footer-column">
                 <h4>Quick Links</h4>
-                <div class="footer-links">
-                    <a href="{% url 'public:home' %}" class="footer-link">Home</a>
-                    <a href="{% url 'buy:property_search' %}" class="footer-link">Buy Property</a>
-                    <a href="{% url 'sell:sell_page' %}" class="footer-link">Sell Property</a>
-                    <a href="{% url 'public:agents' %}" class="footer-link">Find Agents</a>
-                    <a href="{% url 'public:about' %}" class="footer-link">About Us</a>
-                    <a href="{% url 'public:contact' %}" class="footer-link">Contact</a>
-                </div>
+                <ul class="footer-links list-unstyled">
+                    <li><a href="{% url 'public:home' %}" class="footer-link">Home</a></li>
+                    <li><a href="{% url 'buy:property_search' %}" class="footer-link">Buy Property</a></li>
+                    <li><a href="{% url 'sell:sell_page' %}" class="footer-link">Sell Property</a></li>
+                    <li><a href="{% url 'public:agents' %}" class="footer-link">Find Agents</a></li>
+                    <li><a href="{% url 'public:about' %}" class="footer-link">About Us</a></li>
+                    <li><a href="{% url 'public:contact' %}" class="footer-link">Contact</a></li>
+                </ul>
             </div>
 
             <div class="footer-column">
                 <h4>Services</h4>
-                <div class="footer-links">
-                    <a href="#" class="footer-link">Managed Farmland</a>
-                    <a href="#" class="footer-link">Agricultural Land</a>
-                    <a href="#" class="footer-link">Farm Plots</a>
-                    <a href="#" class="footer-link">Plantation Projects</a>
-                    <a href="#" class="footer-link">Investment Consulting</a>
-                </div>
+                <ul class="footer-links list-unstyled">
+                    <li><a href="#" class="footer-link">Managed Farmland</a></li>
+                    <li><a href="#" class="footer-link">Agricultural Land</a></li>
+                    <li><a href="#" class="footer-link">Farm Plots</a></li>
+                    <li><a href="#" class="footer-link">Plantation Projects</a></li>
+                    <li><a href="#" class="footer-link">Investment Consulting</a></li>
+                </ul>
             </div>
         </div>
 
