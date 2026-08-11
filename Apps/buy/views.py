@@ -11,6 +11,7 @@ from Apps.Agent.models import Lead, LeadFollowUp
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 
+
 def property_search(request):
     """Browse and search active and approved property listings with map integration"""
     # Show only active, approved properties
