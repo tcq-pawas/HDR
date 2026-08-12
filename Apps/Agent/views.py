@@ -23,13 +23,15 @@ from Apps.Subscriptions.utils import (
 )
 from .models import (
     AgentProfile, Lead, LeadFollowUp, SiteVisit,
-    Booking, Installment, Commission, Document, Communication, MessageTemplate
+    Booking, Installment, Commission, Document, VerificationDocument,
+    Communication, MessageTemplate
 )
 from .validators import validate_image_file, validate_document_file, validate_video_file, ValidationError
 from .forms import (
     PropertyForm, AgriculturalLandForm, AgentProfileForm, LeadForm,
     LeadFollowUpForm, SiteVisitForm, BookingForm, InstallmentForm,
-    CommissionForm, DocumentForm, CommunicationForm, MessageTemplateForm
+    CommissionForm, DocumentForm, VerificationDocumentForm,
+    CommunicationForm, MessageTemplateForm
 )
 
 from datetime import datetime, timedelta
@@ -1111,56 +1113,230 @@ def commission_detail(request, pk):
 
 @login_required
 def document_list(request):
-    """Agent verification page - upload ID proof & address proof"""
+    """Agent document verification management page."""
     user_role = get_user_role(request.user)
     if user_role not in ['agent', 'owner']:
         raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
 
     try:
         agent_profile = request.user.agent_profile
-    # pyrefly: ignore [missing-attribute]
     except AgentProfile.DoesNotExist:
-        # pyrefly: ignore [missing-attribute]
         agent_profile = AgentProfile.objects.create(user=request.user)
 
+    form = VerificationDocumentForm()
+    reupload_doc = None
+
     if request.method == 'POST':
-        proof_type = request.POST.get('proof_type')
-        uploaded_file = request.FILES.get('file')
+        action = request.POST.get('action', 'submit')
+        reupload_id = request.POST.get('reupload_id')
 
-        if uploaded_file:
-            try:
-                validate_document_file(uploaded_file)
-                if proof_type == 'id_proof':
-                    agent_profile.id_proof_document = uploaded_file
-                    if agent_profile.verification_status == 'not_started':
-                        agent_profile.verification_status = 'pending'
-                    agent_profile.save()
-                    messages.success(request, "ID Proof uploaded successfully!")
-                elif proof_type == 'address_proof':
-                    agent_profile.address_proof_document = uploaded_file
-                    if agent_profile.verification_status == 'not_started':
-                        agent_profile.verification_status = 'pending'
-                    agent_profile.save()
-                    messages.success(request, "Address Proof uploaded successfully!")
-                else:
-                    messages.error(request, "Invalid proof type specified.")
-            except ValidationError as ve:
-                messages.error(request, str(ve.message if hasattr(ve, 'message') else ve))
+        if action == 'reupload' and reupload_id:
+            reupload_doc = get_object_or_404(
+                VerificationDocument,
+                pk=reupload_id,
+                agent=request.user,
+                is_current=True,
+            )
+            if not reupload_doc.can_reupload:
+                messages.error(request, "This document cannot be re-uploaded in its current status.")
+                return redirect(request.path)
+
+        form = VerificationDocumentForm(request.POST, request.FILES)
+        if form.is_valid():
+            doc_type = form.cleaned_data['document_type']
+            if not reupload_doc:
+                already = VerificationDocument.objects.filter(
+                    agent=request.user,
+                    document_type=doc_type,
+                    is_current=True,
+                ).exclude(status__in=['rejected', 'reupload_required']).first()
+                if already:
+                    messages.error(
+                        request,
+                        f"You already have a {already.display_name} submission "
+                        f"({already.get_status_display()}). "
+                        "Use Re-upload only if admin requests it."
+                    )
+                    return redirect(request.path)
+
+            with transaction.atomic():
+                if reupload_doc:
+                    reupload_doc.is_current = False
+                    reupload_doc.save(update_fields=['is_current', 'updated_at'])
+
+                doc = form.save(commit=False)
+                doc.agent = request.user
+                doc.has_back_side = form.cleaned_data.get('has_back_side', True)
+                if not doc.has_back_side:
+                    doc.back_file = None
+                doc.status = 'pending_review'
+                doc.rejection_reason = ''
+                if reupload_doc:
+                    doc.replaces = reupload_doc
+                    # Keep document type aligned with the rejected submission when re-uploading
+                    doc.document_type = reupload_doc.document_type
+                    if reupload_doc.document_type != 'other':
+                        doc.document_name = ''
+                    else:
+                        doc.document_name = form.cleaned_data.get('document_name') or reupload_doc.document_name
+                doc.save()
+
+                VerificationDocument.objects.filter(
+                    agent=request.user,
+                    document_type=doc.document_type,
+                    is_current=True,
+                ).exclude(pk=doc.pk).update(is_current=False)
+
+                VerificationDocument.sync_agent_profile_status(request.user)
+
+            messages.success(
+                request,
+                f"{doc.display_name} submitted for verification successfully!"
+            )
+            return redirect(request.path)
         else:
-            messages.error(request, "Please select a valid file to upload.")
+            messages.error(request, "Please correct the errors below and try again.")
 
-        return redirect('agent:document_list')
+    submitted_docs = VerificationDocument.objects.filter(
+        agent=request.user, is_current=True
+    ).order_by('-submitted_at')
+
+    submitted_type_codes = set(submitted_docs.values_list('document_type', flat=True))
+    required_types = VerificationDocument.required_types()
+    additional_types = VerificationDocument.additional_types()
+
+    required_submitted_count = sum(
+        1 for t in required_types if t['code'] in submitted_type_codes
+    )
+    required_verified_count = sum(
+        1 for t in required_types
+        if submitted_docs.filter(document_type=t['code'], status='verified').exists()
+    )
+    all_required_submitted = required_submitted_count == len(required_types)
+    all_required_verified = required_verified_count == len(required_types)
+    has_any_docs = submitted_docs.exists()
+    has_pending_or_review = submitted_docs.filter(
+        status__in=['pending_review', 'under_review']
+    ).exists()
+    admin_review_done = (
+        agent_profile.verification_status in ['approved', 'rejected']
+        or submitted_docs.filter(
+            status__in=['verified', 'rejected', 'reupload_required']
+        ).exists()
+    ) and not has_pending_or_review and has_any_docs
+
+    # Progress steps
+    step_docs_submitted = has_any_docs
+    step_under_review = has_any_docs and (
+        has_pending_or_review or admin_review_done or all_required_verified
+    )
+    step_admin_review = admin_review_done or all_required_verified
+    step_complete = agent_profile.is_verified or all_required_verified
+
+    checklist_items = []
+    for t in required_types:
+        doc = submitted_docs.filter(document_type=t['code']).first()
+        if doc and doc.status == 'verified':
+            state = 'done'
+            label = f"{t['label']} Verified"
+        elif doc and doc.status in ('rejected', 'reupload_required'):
+            state = 'rejected'
+            label = f"{t['label']} — Re-upload Required"
+        elif doc:
+            state = 'done'
+            label = f"{t['label']} Submitted"
+        else:
+            state = 'pending'
+            label = f"{t['label']} Required"
+        checklist_items.append({'label': label, 'state': state})
+
+    for doc in submitted_docs.exclude(
+        document_type__in=VerificationDocument.REQUIRED_DOCUMENT_TYPES
+    ):
+        if doc.status == 'verified':
+            checklist_items.append({'label': f"{doc.display_name} Verified", 'state': 'done'})
+        elif doc.status in ('rejected', 'reupload_required'):
+            checklist_items.append({
+                'label': f"{doc.display_name} — Re-upload Required",
+                'state': 'rejected',
+            })
+        else:
+            checklist_items.append({'label': f"{doc.display_name} Submitted", 'state': 'done'})
+
+    if step_admin_review:
+        checklist_items.append({'label': 'Admin Review Completed', 'state': 'done'})
+    elif has_any_docs:
+        checklist_items.append({'label': 'Admin Review', 'state': 'active'})
+    else:
+        checklist_items.append({'label': 'Admin Review', 'state': 'pending'})
+
+    if step_complete:
+        checklist_items.append({'label': 'Verification Complete', 'state': 'done'})
+    else:
+        checklist_items.append({'label': 'Verification Complete', 'state': 'locked'})
 
     context = {
         'agent_profile': agent_profile,
-        'id_proof_uploaded': bool(agent_profile.id_proof_document),
-        'address_proof_uploaded': bool(agent_profile.address_proof_document),
+        'form': form,
+        'submitted_docs': submitted_docs,
+        'required_types': required_types,
+        'additional_types': additional_types,
+        'submitted_type_codes': submitted_type_codes,
         'verification_status': agent_profile.verification_status,
-        'admin_review_done': agent_profile.verification_status in ['approved', 'rejected'],
-        'is_verified': agent_profile.is_verified,  # existing boolean field use kiya
+        'is_verified': agent_profile.is_verified or all_required_verified,
+        'step_docs_submitted': step_docs_submitted,
+        'step_under_review': step_under_review,
+        'step_admin_review': step_admin_review,
+        'step_complete': step_complete,
+        'checklist_items': checklist_items,
+        'all_required_submitted': all_required_submitted,
+        'all_required_verified': all_required_verified,
+        'title': 'Documents Verification',
     }
 
     return render(request, 'agent/document_list.html', context)
+
+
+@login_required
+def verification_document_detail(request, pk):
+    """Return JSON details for a submitted verification document (View modal)."""
+    user_role = get_user_role(request.user)
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied.")
+
+    doc = get_object_or_404(VerificationDocument, pk=pk, agent=request.user)
+
+    def file_payload(field):
+        if not field:
+            return None
+        name = field.name.rsplit('/', 1)[-1]
+        url = field.url
+        ext = name.rsplit('.', 1)[-1].lower() if '.' in name else ''
+        return {
+            'name': name,
+            'url': url,
+            'is_image': ext in ('jpg', 'jpeg', 'png', 'webp', 'gif'),
+            'is_pdf': ext == 'pdf',
+        }
+
+    return JsonResponse({
+        'id': doc.id,
+        'document_type': doc.document_type,
+        'document_type_display': doc.get_document_type_display(),
+        'display_name': doc.display_name,
+        'status': doc.status,
+        'status_display': doc.get_status_display(),
+        'rejection_reason': doc.rejection_reason or '',
+        'submitted_at': doc.submitted_at.strftime('%d %b %Y'),
+        'admin_reviewed_at': (
+            doc.admin_reviewed_at.strftime('%d %b %Y') if doc.admin_reviewed_at else ''
+        ),
+        'has_back_side': doc.has_back_side,
+        'can_reupload': doc.can_reupload,
+        'front': file_payload(doc.front_file),
+        'back': file_payload(doc.back_file) if doc.has_back_side else None,
+    })
+
 
 @login_required
 def document_add(request):
@@ -1541,49 +1717,15 @@ def subscription_plans(request):
 
 @login_required
 def document_verification(request):
-    """View to enforce KYC document upload for paid subscriptions"""
+    """KYC gate page for paid subscriptions — same workflow as Documents page."""
     user_role = get_user_role(request.user)
     if user_role not in ['agent', 'owner']:
         raise PermissionDenied("Access denied.")
-        
+
     from Apps.Subscriptions.models import UserSubscription
     if not UserSubscription.objects.filter(user=request.user).exists():
         messages.info(request, "Please choose a subscription plan first.")
         return redirect('public:subscription_plans')
-        
-    try:
-        agent_profile = request.user.agent_profile
-    except AgentProfile.DoesNotExist:
-        agent_profile = AgentProfile.objects.create(user=request.user)
-        
-    if request.method == 'POST':
-        # Ensure at least one file is uploaded
-        if not any(k in request.FILES for k in ['id_proof_front', 'id_proof_back', 'address_proof']):
-            messages.error(request, 'At least 1 document is required.')
-            return redirect('agent:document_verification')
-            
-        try:
-            # Handle uploads with validation
-            if 'id_proof_front' in request.FILES:
-                validate_document_file(request.FILES['id_proof_front'])
-                agent_profile.id_proof_document = request.FILES['id_proof_front']
-            if 'id_proof_back' in request.FILES:
-                validate_document_file(request.FILES['id_proof_back'])
-                agent_profile.id_proof_back_document = request.FILES['id_proof_back']
-            if 'address_proof' in request.FILES:
-                validate_document_file(request.FILES['address_proof'])
-                agent_profile.address_proof_document = request.FILES['address_proof']
-                
-            agent_profile.verification_status = 'pending'
-            agent_profile.save()
-            messages.success(request, "Documents submitted successfully! They are now under review by our administration team.")
-        except ValidationError as ve:
-            messages.error(request, str(ve.message if hasattr(ve, 'message') else ve))
 
-        return redirect('agent:document_verification')
-        
-    context = {
-        'agent_profile': agent_profile,
-        'title': 'Document Verification',
-    }
-    return render(request, 'agent/document_verification.html', context)
+    # Reuse the full document management page
+    return document_list(request)

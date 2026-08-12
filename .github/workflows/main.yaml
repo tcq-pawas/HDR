@@ -22,11 +22,76 @@ jobs:
       # Step 2: Configure SSH
       # ============================================
       - name: Configure SSH
+        env:
+          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+          EC2_HOST: ${{ secrets.EC2_HOST }}
         run: |
+          set -euo pipefail
+
+          echo "============================================"
+          echo "SSH configuration diagnostics"
+          echo "============================================"
+
+          if [ -z "${EC2_HOST:-}" ]; then
+            echo "::error::EC2_HOST secret is empty or not set"
+            exit 1
+          fi
+          echo "EC2_HOST is set: yes (length=${#EC2_HOST})"
+
+          if [ -z "${EC2_SSH_KEY:-}" ]; then
+            echo "::error::EC2_SSH_KEY secret is empty or not set"
+            exit 1
+          fi
+          echo "EC2_SSH_KEY is set: yes (length=${#EC2_SSH_KEY})"
+
           mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/ec2_key.pem
+          chmod 700 ~/.ssh
+
+          # Support both real newlines and literal \n in the secret
+          printf '%s\n' "$EC2_SSH_KEY" | sed 's/\r$//' | sed 's/\\n/\n/g' > ~/.ssh/ec2_key.pem
           chmod 600 ~/.ssh/ec2_key.pem
-          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+          echo "Private key file written: ~/.ssh/ec2_key.pem"
+          echo "Private key file size: $(wc -c < ~/.ssh/ec2_key.pem) bytes"
+          echo "Private key header line:"
+          head -n 1 ~/.ssh/ec2_key.pem || true
+
+          if ! grep -q "BEGIN .*PRIVATE KEY" ~/.ssh/ec2_key.pem; then
+            echo "::error::EC2_SSH_KEY is not a valid PEM private key (missing BEGIN PRIVATE KEY line)"
+            exit 1
+          fi
+
+          echo "--------------------------------------------"
+          echo "Running ssh-keyscan against host: ${EC2_HOST}"
+          echo "Command: ssh-keyscan -H -T 10 -v ${EC2_HOST}"
+          echo "--------------------------------------------"
+
+          set +e
+          ssh-keyscan -H -T 10 -v "$EC2_HOST" > /tmp/ssh-keyscan.out 2> /tmp/ssh-keyscan.err
+          SCAN_EXIT=$?
+          set -e
+
+          echo "ssh-keyscan exit code: ${SCAN_EXIT}"
+          echo "----- ssh-keyscan STDOUT -----"
+          cat /tmp/ssh-keyscan.out || true
+          echo "----- ssh-keyscan STDERR -----"
+          cat /tmp/ssh-keyscan.err || true
+          echo "------------------------------"
+
+          if [ "$SCAN_EXIT" -ne 0 ] || [ ! -s /tmp/ssh-keyscan.out ]; then
+            echo "::error::ssh-keyscan failed for host '${EC2_HOST}' (exit=${SCAN_EXIT})."
+            echo "::error::Common causes: wrong EC2_HOST, instance stopped, port 22 blocked in security group, or network timeout."
+            echo "Quick checks from this runner:"
+            echo "- DNS lookup:"
+            getent hosts "$EC2_HOST" || host "$EC2_HOST" || true
+            echo "- Port 22 reachability:"
+            nc -vz -w 5 "$EC2_HOST" 22 || true
+            exit 1
+          fi
+
+          cat /tmp/ssh-keyscan.out >> ~/.ssh/known_hosts
+          echo "Host key saved to ~/.ssh/known_hosts"
+          echo "SSH configuration completed successfully"
 
       # ============================================
       # Step 3: Deploy to EC2

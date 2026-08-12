@@ -14,19 +14,22 @@
 {% block content %}
 <div class="premium-container">
 
-    <!-- Premium Header -->
+    <!-- Header -->
     <div class="premium-header">
         <div class="header-content">
             <div class="header-title">
                 <h1>Documents Verification</h1>
-                <p class="header-subtitle">Complete your identity and address verification to unlock all agent features</p>
+                <p class="header-subtitle">Submit identity and address documents for admin review to unlock all agent features</p>
             </div>
+            <button type="button" class="btn-add-document header-add-btn" data-bs-toggle="modal" data-bs-target="#addDocumentModal">
+                <i class="bi bi-plus-lg"></i> Add Document
+            </button>
         </div>
     </div>
 
     <!-- Status Banner -->
     <div class="verification-status-wrapper">
-        {% if verification_status == 'approved' %}
+        {% if verification_status == 'approved' or is_verified %}
         <div class="premium-status-banner status-approved">
             <i class="bi bi-check-circle-fill"></i>
             <div>
@@ -38,15 +41,15 @@
         <div class="premium-status-banner status-rejected">
             <i class="bi bi-x-circle-fill"></i>
             <div>
-                <strong>Verification Status: <span>Rejected</span></strong>
-                <p>{{ agent_profile.verification_remarks|default:"Please re-upload correct documents." }}</p>
+                <strong>Verification Status: <span>Action Required</span></strong>
+                <p>{{ agent_profile.verification_remarks|default:"Some documents need re-upload. Please review the list below." }}</p>
             </div>
         </div>
         {% elif verification_status == 'pending' %}
         <div class="premium-status-banner status-pending">
             <i class="bi bi-exclamation-circle-fill"></i>
             <div>
-                <strong>Verification Status: <span>Pending</span></strong>
+                <strong>Verification Status: <span>Pending Review</span></strong>
                 <p>Your documents are under review by admin.</p>
             </div>
         </div>
@@ -61,115 +64,205 @@
         {% endif %}
     </div>
 
-    <!-- Premium Stepper -->
+    <!-- Progress Stepper -->
     <div class="stepper-card">
         <div class="stepper">
-            <div class="step {% if id_proof_uploaded %}completed{% else %}active{% endif %}">
+            <div class="step {% if step_docs_submitted %}completed{% else %}active{% endif %}">
                 <div class="step-icon-wrap">
-                    <div class="step-icon"><i class="bi bi-person-vcard"></i></div>
+                    <div class="step-icon"><i class="bi bi-file-earmark-arrow-up"></i></div>
                     <span class="step-number">1</span>
                 </div>
-                <div class="step-label">ID Proof</div>
-                <div class="step-status">{% if id_proof_uploaded %}Uploaded{% else %}Pending{% endif %}</div>
+                <div class="step-label">Documents Submitted</div>
+                <div class="step-status">{% if step_docs_submitted %}Done{% else %}Pending{% endif %}</div>
             </div>
 
-            <div class="step-line {% if id_proof_uploaded %}completed{% endif %}"></div>
+            <div class="step-line {% if step_docs_submitted %}completed{% endif %}"></div>
 
-            <div class="step {% if address_proof_uploaded %}completed{% endif %}">
+            <div class="step {% if step_under_review %}completed{% elif step_docs_submitted %}active{% endif %}">
                 <div class="step-icon-wrap">
-                    <div class="step-icon"><i class="bi bi-geo-alt"></i></div>
+                    <div class="step-icon"><i class="bi bi-hourglass-split"></i></div>
                     <span class="step-number">2</span>
                 </div>
-                <div class="step-label">Address Proof</div>
-                <div class="step-status">{% if address_proof_uploaded %}Uploaded{% else %}Pending{% endif %}</div>
+                <div class="step-label">Under Review</div>
+                <div class="step-status">{% if step_under_review %}In Progress{% else %}Pending{% endif %}</div>
             </div>
 
-            <div class="step-line {% if address_proof_uploaded %}completed{% endif %}"></div>
+            <div class="step-line {% if step_admin_review %}completed{% endif %}"></div>
 
-            <div class="step {% if admin_review_done %}completed{% endif %}">
+            <div class="step {% if step_admin_review %}completed{% elif step_under_review %}active{% endif %}">
                 <div class="step-icon-wrap">
-                    <div class="step-icon"><i class="bi bi-person"></i></div>
+                    <div class="step-icon"><i class="bi bi-person-check"></i></div>
                     <span class="step-number">3</span>
                 </div>
                 <div class="step-label">Admin Review</div>
-                <div class="step-status">{% if admin_review_done %}Done{% else %}Pending{% endif %}</div>
+                <div class="step-status">{% if step_admin_review %}Done{% else %}Pending{% endif %}</div>
             </div>
 
-            <div class="step-line {% if is_verified %}completed{% endif %}"></div>
+            <div class="step-line {% if step_complete %}completed{% endif %}"></div>
 
-            <div class="step {% if is_verified %}completed{% else %}locked{% endif %}">
+            <div class="step {% if step_complete %}completed{% else %}locked{% endif %}">
                 <div class="step-icon-wrap">
                     <div class="step-icon"><i class="bi bi-shield-check"></i></div>
                     <span class="step-number">4</span>
                 </div>
                 <div class="step-label">Verification Complete</div>
-                <div class="step-status">{% if is_verified %}Verified{% else %}Locked{% endif %}</div>
+                <div class="step-status">{% if step_complete %}Verified{% else %}Locked{% endif %}</div>
             </div>
         </div>
     </div>
 
-    <!-- Upload Cards + Sidebar -->
     <div class="verification-grid">
 
-        <!-- ID Proof Card -->
-        <div class="upload-card">
-            <div class="upload-card-header">
-                <i class="bi bi-person-vcard"></i>
-                <h3>ID Proof</h3>
+        <!-- Submitted Documents -->
+        <div class="docs-main">
+            <div class="section-card">
+                <div class="section-header">
+                    <div>
+                        <h2>Submitted Documents</h2>
+                        <p class="section-subtitle">All documents you have submitted for verification</p>
+                    </div>
+                    <button type="button" class="btn-add-document" data-bs-toggle="modal" data-bs-target="#addDocumentModal">
+                        <i class="bi bi-plus-lg"></i> Add Document
+                    </button>
+                </div>
+
+                {% if submitted_docs %}
+                <div class="doc-cards">
+                    {% for doc in submitted_docs %}
+                    <div class="doc-card status-{{ doc.status }}">
+                        <div class="doc-card-main">
+                            <div class="doc-card-title-row">
+                                <div class="doc-type-icon">
+                                    <i class="bi bi-file-earmark-text"></i>
+                                </div>
+                                <div>
+                                    <h3>{{ doc.display_name }}</h3>
+                                    <p class="doc-meta">
+                                        Submitted: {{ doc.submitted_at|date:"d M Y" }}
+                                        {% if doc.is_required_type %}<span class="req-pill">Required</span>{% endif %}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="doc-sides">
+                                <div class="doc-side-preview">
+                                    <span class="side-label">Front</span>
+                                    {% if doc.front_file %}
+                                        {% with name=doc.front_file.name|lower %}
+                                        {% if ".pdf" in name %}
+                                        <a href="{{ doc.front_file.url }}" target="_blank" class="file-chip pdf">
+                                            <i class="bi bi-file-earmark-pdf"></i> PDF
+                                        </a>
+                                        {% else %}
+                                        <a href="{{ doc.front_file.url }}" target="_blank" class="thumb-wrap">
+                                            <img src="{{ doc.front_file.url }}" alt="Front side" class="doc-thumb">
+                                            <span class="thumb-check"><i class="bi bi-check-circle-fill"></i></span>
+                                        </a>
+                                        {% endif %}
+                                        {% endwith %}
+                                    {% else %}
+                                    <span class="file-chip missing">Missing</span>
+                                    {% endif %}
+                                </div>
+                                <div class="doc-side-preview">
+                                    <span class="side-label">Back</span>
+                                    {% if not doc.has_back_side %}
+                                    <span class="file-chip muted">N/A</span>
+                                    {% elif doc.back_file %}
+                                        {% with name=doc.back_file.name|lower %}
+                                        {% if ".pdf" in name %}
+                                        <a href="{{ doc.back_file.url }}" target="_blank" class="file-chip pdf">
+                                            <i class="bi bi-file-earmark-pdf"></i> PDF
+                                        </a>
+                                        {% else %}
+                                        <a href="{{ doc.back_file.url }}" target="_blank" class="thumb-wrap">
+                                            <img src="{{ doc.back_file.url }}" alt="Back side" class="doc-thumb">
+                                            <span class="thumb-check"><i class="bi bi-check-circle-fill"></i></span>
+                                        </a>
+                                        {% endif %}
+                                        {% endwith %}
+                                    {% else %}
+                                    <span class="file-chip missing">Missing</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            {% if doc.rejection_reason and doc.can_reupload %}
+                            <div class="rejection-box">
+                                <i class="bi bi-exclamation-triangle-fill"></i>
+                                <div>
+                                    <strong>Reason:</strong>
+                                    <p>{{ doc.rejection_reason }}</p>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="doc-card-aside">
+                            <span class="status-badge badge-{{ doc.status }}">{{ doc.get_status_display }}</span>
+                            <div class="doc-actions">
+                                <button type="button" class="btn-doc-action btn-view"
+                                    data-doc-id="{{ doc.id }}"
+                                    onclick="openDocumentView({{ doc.id }})">
+                                    <i class="bi bi-eye"></i> View
+                                </button>
+                                {% if doc.can_reupload %}
+                                <button type="button" class="btn-doc-action btn-reupload"
+                                    onclick="openReupload({{ doc.id }}, '{{ doc.document_type }}', '{{ doc.document_name|escapejs }}', {{ doc.has_back_side|yesno:'false,true' }})">
+                                    <i class="bi bi-arrow-repeat"></i> Re-upload
+                                </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon"><i class="bi bi-folder2-open"></i></div>
+                    <h3>No documents submitted yet</h3>
+                    <p>Upload your identity and address documents to begin the verification process.</p>
+                    <button type="button" class="btn-add-document" data-bs-toggle="modal" data-bs-target="#addDocumentModal">
+                        <i class="bi bi-plus-lg"></i> Add Document
+                    </button>
+                </div>
+                {% endif %}
             </div>
-            <p class="upload-card-desc">Upload any one valid government ID proof.</p>
 
-            <form method="post" enctype="multipart/form-data" class="upload-form">
-                {% csrf_token %}
-                <input type="hidden" name="proof_type" value="id_proof">
-                <label for="id_proof_input" class="dropzone">
-                    <i class="bi bi-cloud-arrow-up"></i>
-                    {% if id_proof_uploaded %}
-                    <strong>Document uploaded</strong>
-                    <span>{{ agent_profile.id_proof_document.name|slice:"24:" }}</span>
-                    {% else %}
-                    <strong>No document uploaded yet</strong>
-                    <span>Accepted: Aadhaar Card, PAN Card, Passport, Driving Licence</span>
-                    {% endif %}
-                </label>
-                <input type="file" id="id_proof_input" name="file" accept=".pdf,.jpg,.jpeg,.png" hidden
-                    onchange="this.form.submit()">
-                <button type="button" class="btn-upload"
-                    onclick="document.getElementById('id_proof_input').click()">
-                    <i class="bi bi-upload"></i> Upload ID Proof
-                </button>
-            </form>
-        </div>
-
-        <!-- Address Proof Card -->
-        <div class="upload-card">
-            <div class="upload-card-header">
-                <i class="bi bi-geo-alt"></i>
-                <h3>Address Proof</h3>
+            <!-- Required / Additional -->
+            <div class="requirements-row">
+                <div class="req-card">
+                    <h4>Required Documents</h4>
+                    <ul class="req-list">
+                        {% for t in required_types %}
+                        <li>
+                            {% if t.code in submitted_type_codes %}
+                            <i class="bi bi-check-circle-fill checked"></i>
+                            {% else %}
+                            <i class="bi bi-circle"></i>
+                            {% endif %}
+                            <span>{{ t.label }}</span>
+                            <em class="req-tag">Required</em>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="req-card">
+                    <h4>Additional Documents</h4>
+                    <ul class="req-list">
+                        {% for t in additional_types %}
+                        <li>
+                            {% if t.code in submitted_type_codes %}
+                            <i class="bi bi-check-circle-fill checked"></i>
+                            {% else %}
+                            <i class="bi bi-circle"></i>
+                            {% endif %}
+                            <span>{{ t.label }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
-            <p class="upload-card-desc">Upload any one valid address proof.</p>
-
-            <form method="post" enctype="multipart/form-data" class="upload-form">
-                {% csrf_token %}
-                <input type="hidden" name="proof_type" value="address_proof">
-                <label for="address_proof_input" class="dropzone">
-                    <i class="bi bi-cloud-arrow-up"></i>
-                    {% if address_proof_uploaded %}
-                    <strong>Document uploaded</strong>
-                    <span>{{ agent_profile.address_proof_document.name|slice:"29:" }}</span>
-                    {% else %}
-                    <strong>No document uploaded yet</strong>
-                    <span>Accepted: Aadhaar Card, Passport, Driving Licence, Utility Bill, Bank Statement (Last 3
-                        months)</span>
-                    {% endif %}
-                </label>
-                <input type="file" id="address_proof_input" name="file" accept=".pdf,.jpg,.jpeg,.png" hidden
-                    onchange="this.form.submit()">
-                <button type="button" class="btn-upload"
-                    onclick="document.getElementById('address_proof_input').click()">
-                    <i class="bi bi-upload"></i> Upload Address Proof
-                </button>
-            </form>
         </div>
 
         <!-- Sidebar -->
@@ -177,34 +270,29 @@
             <div class="checklist-card">
                 <h4>Verification Checklist</h4>
                 <ul class="checklist">
-                    <li>
-                        <i class="bi {% if id_proof_uploaded %}bi-check-circle-fill checked{% else %}bi-circle{% endif %}"></i>
-                        <span>ID Proof Uploaded</span>
-                        <em class="{% if id_proof_uploaded %}done{% else %}pending{% endif %}">
-                            {% if id_proof_uploaded %}Done{% else %}Pending{% endif %}
+                    {% for item in checklist_items %}
+                    <li class="{% if item.state == 'locked' %}locked-item{% endif %}">
+                        {% if item.state == 'done' %}
+                        <i class="bi bi-check-circle-fill checked"></i>
+                        {% elif item.state == 'active' %}
+                        <i class="bi bi-circle-fill active-dot"></i>
+                        {% elif item.state == 'rejected' %}
+                        <i class="bi bi-x-circle-fill rejected-dot"></i>
+                        {% elif item.state == 'locked' %}
+                        <i class="bi bi-lock-fill"></i>
+                        {% else %}
+                        <i class="bi bi-circle"></i>
+                        {% endif %}
+                        <span>{{ item.label }}</span>
+                        <em class="{% if item.state == 'done' %}done{% elif item.state == 'active' %}pending{% elif item.state == 'rejected' %}rejected{% else %}locked{% endif %}">
+                            {% if item.state == 'done' %}Done
+                            {% elif item.state == 'active' %}In Progress
+                            {% elif item.state == 'rejected' %}Action Needed
+                            {% elif item.state == 'locked' %}Locked
+                            {% else %}Pending{% endif %}
                         </em>
                     </li>
-                    <li>
-                        <i class="bi {% if address_proof_uploaded %}bi-check-circle-fill checked{% else %}bi-circle{% endif %}"></i>
-                        <span>Address Proof Uploaded</span>
-                        <em class="{% if address_proof_uploaded %}done{% else %}pending{% endif %}">
-                            {% if address_proof_uploaded %}Done{% else %}Pending{% endif %}
-                        </em>
-                    </li>
-                    <li>
-                        <i class="bi {% if admin_review_done %}bi-check-circle-fill checked{% else %}bi-circle{% endif %}"></i>
-                        <span>Admin Review</span>
-                        <em class="{% if admin_review_done %}done{% else %}pending{% endif %}">
-                            {% if admin_review_done %}Done{% else %}Pending{% endif %}
-                        </em>
-                    </li>
-                    <li class="{% if not is_verified %}locked-item{% endif %}">
-                        <i class="bi {% if is_verified %}bi-check-circle-fill checked{% else %}bi-lock-fill{% endif %}"></i>
-                        <span>Verification Complete</span>
-                        <em class="{% if is_verified %}done{% else %}locked{% endif %}">
-                            {% if is_verified %}Done{% else %}Locked{% endif %}
-                        </em>
-                    </li>
+                    {% endfor %}
                 </ul>
             </div>
 
@@ -221,17 +309,15 @@
                 </ul>
             </div>
         </div>
-
     </div>
 
-    <!-- Bottom Banner -->
     {% if not is_verified %}
     <div class="pending-banner">
         <div class="pending-banner-left">
             <i class="bi bi-lock-fill"></i>
             <div>
                 <strong>Your account is under verification</strong>
-                <p>You will be able to add properties, manage leads, site visits and use other features once your documents are verified by our admin team.</p>
+                <p>You will be able to add properties, manage leads, site visits and use other features once your required documents are verified by our admin team.</p>
             </div>
         </div>
         <a href="#" class="btn-outline">
@@ -241,4 +327,494 @@
     {% endif %}
 
 </div>
+
+<!-- Add / Re-upload Document Modal -->
+<div class="modal fade" id="addDocumentModal" tabindex="-1" aria-labelledby="addDocumentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content doc-modal">
+            <form method="post" enctype="multipart/form-data" id="addDocumentForm" novalidate>
+                {% csrf_token %}
+                <input type="hidden" name="action" id="formAction" value="submit">
+                <input type="hidden" name="reupload_id" id="reuploadId" value="">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addDocumentModalLabel">Add Document</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    {% if form.errors %}
+                    <div class="alert alert-danger">
+                        <ul class="mb-0 ps-3">
+                            {% for field, errors in form.errors.items %}
+                                {% for error in errors %}
+                                <li>{{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+
+                    <div class="form-group mb-3">
+                        <label for="id_document_type" class="form-label">Select Document Type <span class="text-danger">*</span></label>
+                        {{ form.document_type }}
+                        <div class="invalid-feedback" id="err_document_type">Please select a document type.</div>
+                    </div>
+
+                    <div class="form-group mb-3 d-none" id="otherNameGroup">
+                        <label for="id_document_name" class="form-label">Document Name <span class="text-danger">*</span></label>
+                        {{ form.document_name }}
+                        <div class="invalid-feedback" id="err_document_name">Please enter a document name.</div>
+                    </div>
+
+                    <div class="upload-sides-grid">
+                        <div class="upload-side-box" id="frontUploadBox">
+                            <h6>Front Side <span class="text-danger">*</span></h6>
+                            <div class="dropzone-area" id="frontDropzone" data-side="front">
+                                <i class="bi bi-cloud-arrow-up"></i>
+                                <strong>Upload Front Side</strong>
+                                <span>Drag & drop or browse · JPG, PNG, PDF · Max 10MB</span>
+                                <button type="button" class="btn-browse" onclick="document.getElementById('id_front_file').click()">Choose File</button>
+                                {{ form.front_file }}
+                            </div>
+                            <div class="preview-panel d-none" id="frontPreview">
+                                <img src="" alt="Front preview" id="frontPreviewImg" class="preview-img d-none">
+                                <div class="preview-pdf d-none" id="frontPreviewPdf"><i class="bi bi-file-earmark-pdf"></i></div>
+                                <div class="preview-meta">
+                                    <span id="frontFileName"></span>
+                                    <button type="button" class="btn-remove-file" data-side="front"><i class="bi bi-x-lg"></i> Remove</button>
+                                </div>
+                            </div>
+                            <div class="invalid-feedback d-block" id="err_front_file"></div>
+                        </div>
+
+                        <div class="upload-side-box" id="backUploadBox">
+                            <h6>Back Side <span class="text-danger" id="backRequiredMark">*</span></h6>
+                            <div class="dropzone-area" id="backDropzone" data-side="back">
+                                <i class="bi bi-cloud-arrow-up"></i>
+                                <strong>Upload Back Side</strong>
+                                <span>Drag & drop or browse · JPG, PNG, PDF · Max 10MB</span>
+                                <button type="button" class="btn-browse" onclick="document.getElementById('id_back_file').click()">Choose File</button>
+                                {{ form.back_file }}
+                            </div>
+                            <div class="preview-panel d-none" id="backPreview">
+                                <img src="" alt="Back preview" id="backPreviewImg" class="preview-img d-none">
+                                <div class="preview-pdf d-none" id="backPreviewPdf"><i class="bi bi-file-earmark-pdf"></i></div>
+                                <div class="preview-meta">
+                                    <span id="backFileName"></span>
+                                    <button type="button" class="btn-remove-file" data-side="back"><i class="bi bi-x-lg"></i> Remove</button>
+                                </div>
+                            </div>
+                            <div class="invalid-feedback d-block" id="err_back_file"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-check mt-3 mb-2">
+                        {{ form.no_back_side }}
+                        <label class="form-check-label" for="id_no_back_side">This document has no back side</label>
+                    </div>
+
+                    <!-- Preview before submit -->
+                    <div class="doc-preview-section d-none" id="docPreviewSection">
+                        <h6>Document Preview</h6>
+                        <p class="mb-2"><strong>Document Type:</strong> <span id="previewTypeLabel">—</span></p>
+                        <div class="preview-sides-row">
+                            <div>
+                                <span class="side-label">Front Side</span>
+                                <div id="previewFrontSlot" class="preview-slot"></div>
+                            </div>
+                            <div id="previewBackColumn">
+                                <span class="side-label">Back Side</span>
+                                <div id="previewBackSlot" class="preview-slot"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-submit-verify" id="submitVerifyBtn">
+                        Submit for Verification
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- View Document Modal -->
+<div class="modal fade" id="viewDocumentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content doc-modal">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewDocTitle">Document Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="viewDocBody">
+                <div class="text-center py-4 text-muted">Loading…</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-submit-verify d-none" id="viewReuploadBtn">
+                    <i class="bi bi-arrow-repeat"></i> Re-upload Document
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+    const ALLOWED = ['jpg', 'jpeg', 'png', 'pdf'];
+    const MAX_MB = 10;
+    const detailUrlTemplate = "{% url 'agent:verification_document_detail' pk=0 %}".replace('/0/', '/__ID__/');
+
+    const typeSelect = document.getElementById('id_document_type');
+    const otherNameGroup = document.getElementById('otherNameGroup');
+    const noBackSide = document.getElementById('id_no_back_side');
+    const backUploadBox = document.getElementById('backUploadBox');
+    const backRequiredMark = document.getElementById('backRequiredMark');
+    const form = document.getElementById('addDocumentForm');
+    const previewSection = document.getElementById('docPreviewSection');
+    const frontInput = document.getElementById('id_front_file');
+    const backInput = document.getElementById('id_back_file');
+
+    function toggleOtherName() {
+        if (!typeSelect) return;
+        const isOther = typeSelect.value === 'other';
+        otherNameGroup.classList.toggle('d-none', !isOther);
+        updatePreviewLabel();
+    }
+
+    function toggleBackSide() {
+        const disabled = noBackSide && noBackSide.checked;
+        backUploadBox.classList.toggle('is-disabled', disabled);
+        backRequiredMark.classList.toggle('d-none', disabled);
+        if (disabled) {
+            clearSide('back');
+            document.getElementById('err_back_file').textContent = '';
+        }
+        updatePreviewSection();
+    }
+
+    function updatePreviewLabel() {
+        const label = typeSelect && typeSelect.selectedOptions[0]
+            ? typeSelect.selectedOptions[0].text
+            : '—';
+        const nameInput = document.getElementById('id_document_name');
+        const display = (typeSelect && typeSelect.value === 'other' && nameInput.value)
+            ? nameInput.value
+            : label;
+        document.getElementById('previewTypeLabel').textContent = display || '—';
+    }
+
+    function fileExt(name) {
+        const parts = name.toLowerCase().split('.');
+        return parts.length > 1 ? parts.pop() : '';
+    }
+
+    function validateFile(file) {
+        if (!file) return 'Please select a file.';
+        const ext = fileExt(file.name);
+        if (!ALLOWED.includes(ext)) return 'Supported formats: JPG, JPEG, PNG, PDF.';
+        if (file.size > MAX_MB * 1024 * 1024) return `Maximum file size is ${MAX_MB}MB.`;
+        return '';
+    }
+
+    function setPreview(side, file) {
+        const preview = document.getElementById(side + 'Preview');
+        const dropzone = document.getElementById(side + 'Dropzone');
+        const img = document.getElementById(side + 'PreviewImg');
+        const pdf = document.getElementById(side + 'PreviewPdf');
+        const nameEl = document.getElementById(side + 'FileName');
+
+        if (!file) {
+            preview.classList.add('d-none');
+            dropzone.classList.remove('d-none');
+            img.classList.add('d-none');
+            pdf.classList.add('d-none');
+            img.src = '';
+            nameEl.textContent = '';
+            updatePreviewSection();
+            return;
+        }
+
+        dropzone.classList.add('d-none');
+        preview.classList.remove('d-none');
+        nameEl.textContent = file.name;
+        const ext = fileExt(file.name);
+
+        if (['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(ext)) {
+            const url = URL.createObjectURL(file);
+            img.src = url;
+            img.classList.remove('d-none');
+            pdf.classList.add('d-none');
+        } else {
+            img.classList.add('d-none');
+            pdf.classList.remove('d-none');
+        }
+        updatePreviewSection();
+    }
+
+    function clearSide(side) {
+        const input = document.getElementById('id_' + side + '_file');
+        if (input) input.value = '';
+        setPreview(side, null);
+    }
+
+    function clonePreviewNode(side) {
+        const img = document.getElementById(side + 'PreviewImg');
+        const pdf = document.getElementById(side + 'PreviewPdf');
+        if (img && !img.classList.contains('d-none') && img.src) {
+            const clone = img.cloneNode(true);
+            clone.classList.remove('d-none');
+            clone.style.maxHeight = '140px';
+            return clone;
+        }
+        if (pdf && !pdf.classList.contains('d-none')) {
+            const wrap = document.createElement('div');
+            wrap.className = 'preview-pdf';
+            wrap.innerHTML = '<i class="bi bi-file-earmark-pdf"></i> PDF selected';
+            return wrap;
+        }
+        const empty = document.createElement('span');
+        empty.className = 'text-muted small';
+        empty.textContent = 'Not uploaded';
+        return empty;
+    }
+
+    function updatePreviewSection() {
+        const hasFront = frontInput && frontInput.files && frontInput.files[0];
+        const hasBack = backInput && backInput.files && backInput.files[0];
+        const noBack = noBackSide && noBackSide.checked;
+        const show = hasFront && (hasBack || noBack) && typeSelect && typeSelect.value;
+        previewSection.classList.toggle('d-none', !show);
+        if (!show) return;
+
+        updatePreviewLabel();
+        const frontSlot = document.getElementById('previewFrontSlot');
+        const backSlot = document.getElementById('previewBackSlot');
+        const backCol = document.getElementById('previewBackColumn');
+        frontSlot.innerHTML = '';
+        frontSlot.appendChild(clonePreviewNode('front'));
+        backCol.classList.toggle('d-none', noBack);
+        if (!noBack) {
+            backSlot.innerHTML = '';
+            backSlot.appendChild(clonePreviewNode('back'));
+        }
+    }
+
+    function bindFileInput(side) {
+        const input = document.getElementById('id_' + side + '_file');
+        const dropzone = document.getElementById(side + 'Dropzone');
+        const err = document.getElementById('err_' + side + '_file');
+
+        input.addEventListener('change', function () {
+            const file = this.files[0];
+            const msg = file ? validateFile(file) : '';
+            err.textContent = msg;
+            if (msg) {
+                this.value = '';
+                setPreview(side, null);
+                return;
+            }
+            setPreview(side, file || null);
+        });
+
+        ['dragenter', 'dragover'].forEach(evt => {
+            dropzone.addEventListener(evt, e => {
+                e.preventDefault();
+                dropzone.classList.add('dragover');
+            });
+        });
+        ['dragleave', 'drop'].forEach(evt => {
+            dropzone.addEventListener(evt, e => {
+                e.preventDefault();
+                dropzone.classList.remove('dragover');
+            });
+        });
+        dropzone.addEventListener('drop', e => {
+            const file = e.dataTransfer.files[0];
+            if (!file) return;
+            const msg = validateFile(file);
+            err.textContent = msg;
+            if (msg) return;
+            const dt = new DataTransfer();
+            dt.items.add(file);
+            input.files = dt.files;
+            setPreview(side, file);
+        });
+    }
+
+    document.querySelectorAll('.btn-remove-file').forEach(btn => {
+        btn.addEventListener('click', () => clearSide(btn.dataset.side));
+    });
+
+    if (typeSelect) {
+        typeSelect.addEventListener('change', toggleOtherName);
+        toggleOtherName();
+    }
+    if (noBackSide) {
+        noBackSide.addEventListener('change', toggleBackSide);
+        toggleBackSide();
+    }
+    const nameInput = document.getElementById('id_document_name');
+    if (nameInput) nameInput.addEventListener('input', updatePreviewLabel);
+
+    bindFileInput('front');
+    bindFileInput('back');
+
+    // Hide native file inputs (keep for form submit)
+    if (frontInput) frontInput.classList.add('native-file-input');
+    if (backInput) backInput.classList.add('native-file-input');
+
+    form.addEventListener('submit', function (e) {
+        let valid = true;
+        document.getElementById('err_document_type').style.display = 'none';
+        document.getElementById('err_document_name').style.display = 'none';
+        document.getElementById('err_front_file').textContent = '';
+        document.getElementById('err_back_file').textContent = '';
+
+        if (!typeSelect.value) {
+            document.getElementById('err_document_type').style.display = 'block';
+            valid = false;
+        }
+        if (typeSelect.value === 'other' && !(nameInput && nameInput.value.trim())) {
+            document.getElementById('err_document_name').style.display = 'block';
+            valid = false;
+        }
+        if (!frontInput.files[0]) {
+            document.getElementById('err_front_file').textContent = 'Please upload the front side of your document.';
+            valid = false;
+        } else {
+            const msg = validateFile(frontInput.files[0]);
+            if (msg) { document.getElementById('err_front_file').textContent = msg; valid = false; }
+        }
+        if (!(noBackSide && noBackSide.checked)) {
+            if (!backInput.files[0]) {
+                document.getElementById('err_back_file').textContent = 'Please upload the back side of your document.';
+                valid = false;
+            } else {
+                const msg = validateFile(backInput.files[0]);
+                if (msg) { document.getElementById('err_back_file').textContent = msg; valid = false; }
+            }
+        }
+        if (!valid) e.preventDefault();
+    });
+
+    // Reset modal on close
+    const addModal = document.getElementById('addDocumentModal');
+    addModal.addEventListener('hidden.bs.modal', function () {
+        form.reset();
+        document.getElementById('formAction').value = 'submit';
+        document.getElementById('reuploadId').value = '';
+        document.getElementById('addDocumentModalLabel').textContent = 'Add Document';
+        clearSide('front');
+        clearSide('back');
+        toggleOtherName();
+        toggleBackSide();
+        previewSection.classList.add('d-none');
+        ['err_front_file', 'err_back_file'].forEach(id => document.getElementById(id).textContent = '');
+    });
+
+    {% if form.errors %}
+    document.addEventListener('DOMContentLoaded', function () {
+        const modal = new bootstrap.Modal(document.getElementById('addDocumentModal'));
+        modal.show();
+        toggleOtherName();
+        toggleBackSide();
+    });
+    {% endif %}
+
+    window.openReupload = function (id, docType, docName, noBack) {
+        document.getElementById('formAction').value = 'reupload';
+        document.getElementById('reuploadId').value = id;
+        document.getElementById('addDocumentModalLabel').textContent = 'Re-upload Document';
+        if (typeSelect) {
+            typeSelect.value = docType;
+            typeSelect.dispatchEvent(new Event('change'));
+        }
+        if (docName && nameInput) nameInput.value = docName;
+        if (noBackSide) {
+            noBackSide.checked = !!noBack;
+            toggleBackSide();
+        }
+        const modal = new bootstrap.Modal(document.getElementById('addDocumentModal'));
+        modal.show();
+    };
+
+    window.openDocumentView = function (id) {
+        const body = document.getElementById('viewDocBody');
+        const title = document.getElementById('viewDocTitle');
+        const reuploadBtn = document.getElementById('viewReuploadBtn');
+        body.innerHTML = '<div class="text-center py-4 text-muted">Loading…</div>';
+        reuploadBtn.classList.add('d-none');
+
+        const modal = new bootstrap.Modal(document.getElementById('viewDocumentModal'));
+        modal.show();
+
+        fetch(detailUrlTemplate.replace('__ID__', id))
+            .then(r => r.json())
+            .then(data => {
+                title.textContent = data.display_name;
+                const frontHtml = renderFileBlock('Front Side', data.front);
+                const backHtml = data.has_back_side
+                    ? renderFileBlock('Back Side', data.back)
+                    : '<div class="view-side"><span class="side-label">Back Side</span><p class="text-muted mb-0">This document has no back side</p></div>';
+
+                let reasonHtml = '';
+                if (data.rejection_reason) {
+                    reasonHtml = `<div class="rejection-box mt-3"><i class="bi bi-exclamation-triangle-fill"></i><div><strong>Rejection Reason:</strong><p>${escapeHtml(data.rejection_reason)}</p></div></div>`;
+                }
+
+                body.innerHTML = `
+                    <div class="view-meta-grid">
+                        <div><span class="meta-label">Document Type</span><strong>${escapeHtml(data.document_type_display)}</strong></div>
+                        <div><span class="meta-label">Status</span><span class="status-badge badge-${data.status}">${escapeHtml(data.status_display)}</span></div>
+                        <div><span class="meta-label">Submitted</span><strong>${escapeHtml(data.submitted_at)}</strong></div>
+                        <div><span class="meta-label">Admin Review</span><strong>${data.admin_reviewed_at ? escapeHtml(data.admin_reviewed_at) : 'Pending'}</strong></div>
+                    </div>
+                    <div class="view-sides">${frontHtml}${backHtml}</div>
+                    ${reasonHtml}
+                `;
+
+                if (data.can_reupload) {
+                    reuploadBtn.classList.remove('d-none');
+                    reuploadBtn.onclick = function () {
+                        bootstrap.Modal.getInstance(document.getElementById('viewDocumentModal')).hide();
+                        openReupload(data.id, data.document_type, data.display_name || '', !data.has_back_side);
+                    };
+                }
+            })
+            .catch(() => {
+                body.innerHTML = '<div class="alert alert-danger">Unable to load document details.</div>';
+            });
+    };
+
+    function renderFileBlock(label, file) {
+        if (!file) {
+            return `<div class="view-side"><span class="side-label">${label}</span><p class="text-muted">Not available</p></div>`;
+        }
+        let media;
+        if (file.is_image) {
+            media = `<a href="${file.url}" target="_blank"><img src="${file.url}" alt="${label}" class="view-img"></a>`;
+        } else if (file.is_pdf) {
+            media = `<a href="${file.url}" target="_blank" class="file-chip pdf"><i class="bi bi-file-earmark-pdf"></i> ${escapeHtml(file.name)}</a>`;
+        } else {
+            media = `<a href="${file.url}" target="_blank" class="file-chip">${escapeHtml(file.name)}</a>`;
+        }
+        return `<div class="view-side"><span class="side-label">${label}</span>${media}</div>`;
+    }
+
+    function escapeHtml(str) {
+        return String(str || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+})();
+</script>
 {% endblock %}

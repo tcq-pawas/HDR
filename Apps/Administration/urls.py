@@ -102,6 +102,8 @@ urlpatterns = [
     path('document-verifications/', views.document_verification_list, name='document_verification_list'),
     path('document-verifications/<int:profile_id>/approve/', views.approve_kyc, name='approve_kyc'),
     path('document-verifications/<int:profile_id>/reject/', views.reject_kyc, name='reject_kyc'),
+    path('document-verifications/doc/<int:doc_id>/approve/', views.approve_verification_document, name='approve_verification_document'),
+    path('document-verifications/doc/<int:doc_id>/reject/', views.reject_verification_document, name='reject_verification_document'),
     
     path('api/settings/save-security/', views.save_security_settings, name='save-security-settings'),
     path('api/settings/save-general/', views.save_general_settings, name='save-general-settings'),

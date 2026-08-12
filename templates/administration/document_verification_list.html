@@ -5,189 +5,644 @@
 {% block page_subtitle %}Review and manage agent document verification submissions{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header bg-white pb-0 border-bottom-0">
-                <ul class="nav nav-tabs" id="kycTabs" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active fw-bold text-warning" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending" type="button" role="tab">
-                            <i class="fas fa-clock me-2"></i>Pending ({{ pending_profiles.count }})
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link fw-bold text-success" id="approved-tab" data-bs-toggle="tab" data-bs-target="#approved" type="button" role="tab">
-                            <i class="fas fa-check-circle me-2"></i>Approved ({{ approved_profiles.count }})
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link fw-bold text-danger" id="rejected-tab" data-bs-toggle="tab" data-bs-target="#rejected" type="button" role="tab">
-                            <i class="fas fa-times-circle me-2"></i>Rejected ({{ rejected_profiles.count }})
-                        </button>
-                    </li>
-                </ul>
+<style>
+    .kyc-dash {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        box-shadow: var(--shadow-sm);
+        padding: 1.25rem 1.35rem 1.35rem;
+    }
+
+    /* Status summary cards */
+    .kyc-status-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.75rem;
+        margin-bottom: 1.15rem;
+    }
+
+    .kyc-status-card {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        padding: 0.85rem 1rem;
+        border-radius: 12px;
+        border: 1.5px solid transparent;
+        background: #f8fafc;
+        cursor: pointer;
+        text-align: left;
+        transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+        width: 100%;
+    }
+
+    .kyc-status-card:hover {
+        box-shadow: var(--shadow-sm);
+    }
+
+    .kyc-status-card .status-top {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        line-height: 1.2;
+    }
+
+    .kyc-status-card .status-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+
+    .kyc-status-card .status-count {
+        font-size: 1.65rem;
+        font-weight: 700;
+        font-family: 'Poppins', sans-serif;
+        color: var(--text-primary);
+        line-height: 1.1;
+        padding-left: 1.1rem;
+    }
+
+    .kyc-status-card[data-filter="pending"] {
+        background: #fffbeb;
+        border-color: #fde68a;
+    }
+    .kyc-status-card[data-filter="pending"] .status-dot { background: #f59e0b; }
+    .kyc-status-card[data-filter="pending"].active {
+        border-color: #f59e0b;
+        background: #fef3c7;
+        box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+    }
+
+    .kyc-status-card[data-filter="verified"] {
+        background: #f0fdf4;
+        border-color: #bbf7d0;
+    }
+    .kyc-status-card[data-filter="verified"] .status-dot { background: #10b981; }
+    .kyc-status-card[data-filter="verified"].active {
+        border-color: #10b981;
+        background: #dcfce7;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+    }
+
+    .kyc-status-card[data-filter="reupload"] {
+        background: #fef2f2;
+        border-color: #fecaca;
+    }
+    .kyc-status-card[data-filter="reupload"] .status-dot { background: #ef4444; }
+    .kyc-status-card[data-filter="reupload"].active {
+        border-color: #ef4444;
+        background: #fee2e2;
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
+    }
+
+    .kyc-status-card[data-filter="submitted"] {
+        background: #eff6ff;
+        border-color: #bfdbfe;
+    }
+    .kyc-status-card[data-filter="submitted"] .status-dot { background: #3b82f6; }
+    .kyc-status-card[data-filter="submitted"].active {
+        border-color: #3b82f6;
+        background: #dbeafe;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+    }
+
+    /* Section header */
+    .kyc-section-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 0.35rem 0 1rem;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 1rem;
+    }
+
+    .kyc-section-header h2 {
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin: 0 0 0.2rem;
+        color: var(--text-primary);
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .kyc-section-header p {
+        margin: 0;
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+    }
+
+    .kyc-section-header .header-link {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--primary);
+        text-decoration: none;
+        white-space: nowrap;
+        padding-top: 0.2rem;
+    }
+
+    .kyc-section-header .header-link:hover {
+        text-decoration: underline;
+    }
+
+    /* Document list */
+    .kyc-doc-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.65rem;
+        min-height: 0;
+    }
+
+    .kyc-doc-card {
+        display: flex;
+        align-items: center;
+        gap: 0.9rem;
+        padding: 0.85rem 1rem;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .kyc-doc-card:hover {
+        border-color: #cbd5e1;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .kyc-thumb {
+        width: 56px;
+        height: 56px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: #f1f5f9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        flex-shrink: 0;
+        cursor: pointer;
+        padding: 0;
+        color: #94a3b8;
+        font-size: 1.35rem;
+        transition: border-color 0.15s ease;
+    }
+
+    .kyc-thumb:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+
+    .kyc-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .kyc-doc-body {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .kyc-doc-title-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        margin-bottom: 0.25rem;
+        flex-wrap: wrap;
+    }
+
+    .kyc-doc-title {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .kyc-agent-line {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        margin: 0 0 0.35rem;
+    }
+
+    .kyc-agent-line strong {
+        color: #334155;
+        font-weight: 600;
+    }
+
+    .kyc-meta-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.45rem 0.65rem;
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+    }
+
+    .kyc-side-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.12rem 0.45rem;
+        border-radius: 6px;
+        background: #f1f5f9;
+        font-weight: 600;
+        font-size: 0.72rem;
+        color: #475569;
+    }
+
+    .kyc-side-chip.ok { background: #ecfdf5; color: #047857; }
+    .kyc-side-chip.missing { background: #fef2f2; color: #b91c1c; }
+    .kyc-side-chip.na { background: #f8fafc; color: #94a3b8; }
+
+    .kyc-reason {
+        margin-top: 0.45rem;
+        font-size: 0.78rem;
+        color: #b91c1c;
+        background: #fef2f2;
+        border-radius: 6px;
+        padding: 0.35rem 0.55rem;
+        display: inline-block;
+        max-width: 100%;
+    }
+
+    .kyc-status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 0.25rem 0.6rem;
+        border-radius: 999px;
+        white-space: nowrap;
+    }
+
+    .kyc-status-pill.pending {
+        background: #fef3c7;
+        color: #b45309;
+    }
+    .kyc-status-pill.verified {
+        background: #dcfce7;
+        color: #047857;
+    }
+    .kyc-status-pill.reupload {
+        background: #fee2e2;
+        color: #b91c1c;
+    }
+
+    .kyc-doc-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        justify-content: flex-end;
+        flex-shrink: 0;
+    }
+
+    .kyc-doc-actions .btn {
+        font-size: 0.78rem;
+        font-weight: 600;
+        padding: 0.35rem 0.7rem;
+        border-radius: 8px;
+    }
+
+    .btn-kyc-approve {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: #fff;
+    }
+    .btn-kyc-approve:hover {
+        background: var(--primary-dark);
+        border-color: var(--primary-dark);
+        color: #fff;
+    }
+
+    /* Empty state */
+    .kyc-empty {
+        text-align: center;
+        padding: 2rem 1rem;
+        border: 1px dashed #cbd5e1;
+        border-radius: 12px;
+        background: #f8fafc;
+    }
+
+    .kyc-empty .empty-icon {
+        width: 44px;
+        height: 44px;
+        margin: 0 auto 0.75rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        background: #e2e8f0;
+        color: #64748b;
+    }
+
+    .kyc-empty.pending .empty-icon { background: #fef3c7; color: #d97706; }
+    .kyc-empty.verified .empty-icon { background: #dcfce7; color: #059669; }
+    .kyc-empty.reupload .empty-icon { background: #fee2e2; color: #dc2626; }
+    .kyc-empty.submitted .empty-icon { background: #dbeafe; color: #2563eb; }
+
+    .kyc-empty h3 {
+        font-size: 0.98rem;
+        font-weight: 600;
+        margin: 0 0 0.35rem;
+        color: var(--text-primary);
+    }
+
+    .kyc-empty p {
+        margin: 0;
+        font-size: 0.82rem;
+        color: var(--text-secondary);
+        max-width: 280px;
+        margin-inline: auto;
+    }
+
+    /* Bulk agent strip inside submitted filter */
+    .kyc-bulk-strip {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border);
+    }
+
+    .kyc-bulk-strip h4 {
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin: 0 0 0.65rem;
+        color: var(--text-primary);
+    }
+
+    .kyc-bulk-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        padding: 0.65rem 0.85rem;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: #f8fafc;
+        margin-bottom: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .kyc-bulk-row .name {
+        font-weight: 600;
+        font-size: 0.88rem;
+    }
+
+    .kyc-bulk-row .email {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+    }
+
+    /* Preview modal helpers */
+    .kyc-preview-side {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1rem;
+        height: 100%;
+    }
+    .kyc-preview-side h6 {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #64748b;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+    }
+    .kyc-preview-img {
+        width: 100%;
+        max-height: 420px;
+        object-fit: contain;
+        border-radius: 8px;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+    }
+    .kyc-preview-pdf {
+        width: 100%;
+        height: 420px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        background: #fff;
+    }
+    .kyc-preview-empty {
+        min-height: 160px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #94a3b8;
+        background: #fff;
+        border: 1px dashed #cbd5e1;
+        border-radius: 8px;
+    }
+    .kyc-meta-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem 1rem;
+        margin-bottom: 1.25rem;
+    }
+    .kyc-meta-label {
+        display: block;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        color: #94a3b8;
+        font-weight: 700;
+        margin-bottom: 0.15rem;
+    }
+
+    .kyc-pane { display: none; }
+    .kyc-pane.active { display: block; }
+
+    @media (max-width: 992px) {
+        .kyc-status-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .kyc-doc-card {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .kyc-doc-actions {
+            justify-content: stretch;
+        }
+        .kyc-doc-actions .btn,
+        .kyc-doc-actions form {
+            flex: 1;
+        }
+        .kyc-doc-actions form .btn {
+            width: 100%;
+        }
+        .kyc-section-header {
+            flex-direction: column;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .kyc-meta-grid { grid-template-columns: 1fr; }
+        .kyc-dash { padding: 1rem; }
+    }
+</style>
+
+<div class="kyc-dash">
+    <!-- Status summary -->
+    <div class="kyc-status-grid" role="tablist" aria-label="Document status filters">
+        <button type="button" class="kyc-status-card active" data-filter="pending" role="tab" aria-selected="true">
+            <span class="status-top"><span class="status-dot"></span> Pending Review</span>
+            <span class="status-count">{{ pending_count }}</span>
+        </button>
+        <button type="button" class="kyc-status-card" data-filter="verified" role="tab" aria-selected="false">
+            <span class="status-top"><span class="status-dot"></span> Verified</span>
+            <span class="status-count">{{ verified_count }}</span>
+        </button>
+        <button type="button" class="kyc-status-card" data-filter="reupload" role="tab" aria-selected="false">
+            <span class="status-top"><span class="status-dot"></span> Re-upload Required</span>
+            <span class="status-count">{{ rejected_count }}</span>
+        </button>
+        <button type="button" class="kyc-status-card" data-filter="submitted" role="tab" aria-selected="false">
+            <span class="status-top"><span class="status-dot"></span> Submitted by Agent</span>
+            <span class="status-count">{{ submitted_count }}</span>
+        </button>
+    </div>
+
+    <!-- Section header -->
+    <div class="kyc-section-header">
+        <div>
+            <h2>Document Verification</h2>
+            <p>Review and manage documents submitted by agents.</p>
+        </div>
+        <a href="#kycDocList" class="header-link" id="kycManageLink">Manage Documents</a>
+    </div>
+
+    <div id="kycDocList">
+        <!-- PENDING -->
+        <div class="kyc-pane active" id="pane-pending" data-pane="pending">
+            {% if pending_docs %}
+            <div class="kyc-doc-list">
+                {% for doc in pending_docs %}
+                {% include "administration/_kyc_doc_card.html" with doc=doc show_review_actions="1" status_class="pending" %}
+                {% endfor %}
             </div>
-            
-            <div class="card-body">
-                <div class="tab-content" id="kycTabsContent">
-                    
-                    <!-- PENDING TAB -->
-                    <div class="tab-pane fade show active" id="pending" role="tabpanel">
-                        {% if pending_profiles %}
-                            <div class="table-responsive">
-                                <table class="table table-hover align-middle">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Agent Name</th>
-                                            <th>Documents</th>
-                                            <th>Submitted On</th>
-                                            <th class="text-end">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for profile in pending_profiles %}
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                                                        <i class="fas fa-user-tie"></i>
-                                                    </div>
-                                                    <div>
-                                                        <div class="fw-bold">{{ profile.user.get_full_name|default:profile.user.username }}</div>
-                                                        <div class="small text-muted">{{ profile.user.email }}</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="d-flex gap-2">
-                                                    {% if profile.id_proof_document %}
-                                                        <a href="{{ profile.id_proof_document.url }}" target="_blank" class="badge bg-info text-decoration-none p-2"><i class="fas fa-id-card me-1"></i> ID Front</a>
-                                                    {% endif %}
-                                                    {% if profile.id_proof_back_document %}
-                                                        <a href="{{ profile.id_proof_back_document.url }}" target="_blank" class="badge bg-info text-decoration-none p-2"><i class="fas fa-id-card me-1"></i> ID Back</a>
-                                                    {% endif %}
-                                                    {% if profile.address_proof_document %}
-                                                        <a href="{{ profile.address_proof_document.url }}" target="_blank" class="badge bg-info text-decoration-none p-2"><i class="fas fa-file-invoice me-1"></i> Address</a>
-                                                    {% endif %}
-                                                </div>
-                                            </td>
-                                            <td>{{ profile.user.date_joined|date:"M d, Y" }}</td>
-                                            <td class="text-end">
-                                                <div class="d-flex gap-2 justify-content-end">
-                                                    <form method="post" action="{% url 'admin_dash:approve_kyc' profile.id %}">
-                                                        {% csrf_token %}
-                                                        <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-check me-1"></i> Approve</button>
-                                                    </form>
-                                                    <button type="button" class="btn btn-danger btn-sm" onclick="showRejectModal({{ profile.id }}, '{{ profile.user.get_full_name|default:profile.user.username|escapejs }}')">
-                                                        <i class="fas fa-times me-1"></i> Reject
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        {% else %}
-                            <div class="text-center py-5">
-                                <i class="fas fa-clipboard-check text-muted mb-3" style="font-size: 3rem;"></i>
-                                <h5 class="text-muted">No pending verifications</h5>
-                                <p class="text-muted small">All caught up!</p>
-                            </div>
-                        {% endif %}
-                    </div>
+            {% else %}
+            <div class="kyc-empty pending">
+                <div class="empty-icon"><i class="fas fa-check"></i></div>
+                <h3>No Pending Documents</h3>
+                <p>You're all caught up. There are no documents waiting for review.</p>
+            </div>
+            {% endif %}
+        </div>
 
-                    <!-- APPROVED TAB -->
-                    <div class="tab-pane fade" id="approved" role="tabpanel">
-                        {% if approved_profiles %}
-                            <div class="table-responsive">
-                                <table class="table table-hover align-middle">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Agent Name</th>
-                                            <th>Status</th>
-                                            <th class="text-end">View Profile</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for profile in approved_profiles %}
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                                                        <i class="fas fa-check"></i>
-                                                    </div>
-                                                    <div>
-                                                        <div class="fw-bold">{{ profile.user.get_full_name|default:profile.user.username }}</div>
-                                                        <div class="small text-muted">{{ profile.user.email }}</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td><span class="badge bg-success">Approved</span></td>
-                                            <td class="text-end">
-                                                <a href="{% url 'admin_dash:user-profile' user_id=profile.user.id %}" class="btn btn-outline-primary btn-sm">View Details</a>
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        {% else %}
-                            <div class="text-center py-5">
-                                <h5 class="text-muted">No approved profiles found.</h5>
-                            </div>
-                        {% endif %}
-                    </div>
-                    
-                    <!-- REJECTED TAB -->
-                    <div class="tab-pane fade" id="rejected" role="tabpanel">
-                        {% if rejected_profiles %}
-                            <div class="table-responsive">
-                                <table class="table table-hover align-middle">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Agent Name</th>
-                                            <th>Status</th>
-                                            <th class="text-end">View Profile</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for profile in rejected_profiles %}
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="bg-danger bg-opacity-10 text-danger rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                                                        <i class="fas fa-times"></i>
-                                                    </div>
-                                                    <div>
-                                                        <div class="fw-bold">{{ profile.user.get_full_name|default:profile.user.username }}</div>
-                                                        <div class="small text-muted">{{ profile.user.email }}</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td><span class="badge bg-danger">Rejected</span></td>
-                                            <td class="text-end">
-                                                <a href="{% url 'admin_dash:user-profile' user_id=profile.user.id %}" class="btn btn-outline-primary btn-sm">View Details</a>
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        {% else %}
-                            <div class="text-center py-5">
-                                <h5 class="text-muted">No rejected profiles found.</h5>
-                            </div>
-                        {% endif %}
-                    </div>
+        <!-- VERIFIED -->
+        <div class="kyc-pane" id="pane-verified" data-pane="verified">
+            {% if verified_docs %}
+            <div class="kyc-doc-list">
+                {% for doc in verified_docs %}
+                {% include "administration/_kyc_doc_card.html" with doc=doc status_class="verified" %}
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="kyc-empty verified">
+                <div class="empty-icon"><i class="fas fa-check-circle"></i></div>
+                <h3>No Verified Documents</h3>
+                <p>Verified documents will appear here once approved.</p>
+            </div>
+            {% endif %}
+        </div>
 
+        <!-- RE-UPLOAD -->
+        <div class="kyc-pane" id="pane-reupload" data-pane="reupload">
+            {% if rejected_docs %}
+            <div class="kyc-doc-list">
+                {% for doc in rejected_docs %}
+                {% include "administration/_kyc_doc_card.html" with doc=doc status_class="reupload" show_reason="1" %}
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="kyc-empty reupload">
+                <div class="empty-icon"><i class="fas fa-redo"></i></div>
+                <h3>No Re-upload Required</h3>
+                <p>Documents needing a new upload will show up here.</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- SUBMITTED BY AGENT -->
+        <div class="kyc-pane" id="pane-submitted" data-pane="submitted">
+            {% if submitted_docs %}
+            <div class="kyc-doc-list">
+                {% for doc in submitted_docs %}
+                    {% if doc.status == 'verified' %}
+                        {% include "administration/_kyc_doc_card.html" with doc=doc status_class="verified" %}
+                    {% elif doc.status == 'rejected' or doc.status == 'reupload_required' %}
+                        {% include "administration/_kyc_doc_card.html" with doc=doc status_class="reupload" show_reason="1" %}
+                    {% else %}
+                        {% include "administration/_kyc_doc_card.html" with doc=doc show_review_actions="1" status_class="pending" %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="kyc-empty submitted">
+                <div class="empty-icon"><i class="fas fa-file-alt"></i></div>
+                <h3>No Documents Submitted</h3>
+                <p>Documents uploaded by agents will appear here.</p>
+            </div>
+            {% endif %}
+
+            {% if pending_profiles %}
+            <div class="kyc-bulk-strip">
+                <h4>Agents awaiting overall KYC decision</h4>
+                {% for profile in pending_profiles %}
+                <div class="kyc-bulk-row">
+                    <div>
+                        <div class="name">{{ profile.user.get_full_name|default:profile.user.username }}</div>
+                        <div class="email">{{ profile.user.email }}</div>
+                    </div>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <form method="post" action="{% url 'admin_dash:approve_kyc' profile.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-kyc-approve">
+                                <i class="fas fa-check me-1"></i> Approve All
+                            </button>
+                        </form>
+                        <button type="button" class="btn btn-sm btn-outline-danger"
+                            onclick="showRejectModal({{ profile.id }}, '{{ profile.user.get_full_name|default:profile.user.username|escapejs }}')">
+                            <i class="fas fa-times me-1"></i> Reject All
+                        </button>
+                    </div>
                 </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Document Preview Modal -->
+<div class="modal fade" id="docPreviewModal" tabindex="-1" aria-labelledby="docPreviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="docPreviewModalLabel">Document Preview</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="docPreviewBody">
+                <div class="text-center py-4 text-muted">Loading…</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Rejection Modal -->
+<!-- Rejection Modal (profile) -->
 <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -199,7 +654,6 @@
                 </div>
                 <div class="modal-body">
                     <p>You are about to reject the KYC documents for <strong id="rejectAgentName"></strong>.</p>
-                    <p>They will receive an email notifying them of this rejection along with the reason you provide below.</p>
                     <div class="mb-3">
                         <label for="rejectionReason" class="form-label fw-bold">Reason for Rejection <span class="text-danger">*</span></label>
                         <textarea class="form-control" id="rejectionReason" name="reason" rows="3" required placeholder="e.g., ID Proof is blurry and unreadable..."></textarea>
@@ -214,14 +668,193 @@
     </div>
 </div>
 
+<!-- Rejection Modal (single document) -->
+<div class="modal fade" id="rejectDocModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="rejectDocForm" method="post" action="">
+                {% csrf_token %}
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Request Re-upload</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Request re-upload of <strong id="rejectDocName"></strong> for <strong id="rejectDocAgent"></strong>.</p>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Reason <span class="text-danger">*</span></label>
+                        <textarea class="form-control" name="reason" rows="3" required placeholder="e.g., Back side image is unclear."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Confirm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
+    const KYC_DOCS = {
+        {% for doc in submitted_docs %}
+        {{ doc.id }}: {
+            id: {{ doc.id }},
+            displayName: "{{ doc.display_name|escapejs }}",
+            documentType: "{{ doc.get_document_type_display|escapejs }}",
+            agentName: "{{ doc.agent.get_full_name|default:doc.agent.username|escapejs }}",
+            agentEmail: "{{ doc.agent.email|escapejs }}",
+            status: "{{ doc.get_status_display|escapejs }}",
+            submittedAt: "{{ doc.submitted_at|date:'d M Y' }}",
+            reviewedAt: "{% if doc.admin_reviewed_at %}{{ doc.admin_reviewed_at|date:'d M Y' }}{% endif %}",
+            rejectionReason: "{{ doc.rejection_reason|escapejs }}",
+            hasBackSide: {{ doc.has_back_side|yesno:"true,false" }},
+            frontUrl: "{% if doc.front_file %}{{ doc.front_file.url|escapejs }}{% endif %}",
+            backUrl: "{% if doc.back_file %}{{ doc.back_file.url|escapejs }}{% endif %}",
+            frontName: "{% if doc.front_file %}{{ doc.front_file.name|escapejs }}{% endif %}",
+            backName: "{% if doc.back_file %}{{ doc.back_file.name|escapejs }}{% endif %}"
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    };
+
+    (function initKycFilters() {
+        const cards = document.querySelectorAll('.kyc-status-card');
+        const panes = document.querySelectorAll('.kyc-pane');
+
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                const filter = card.dataset.filter;
+                cards.forEach(c => {
+                    c.classList.toggle('active', c === card);
+                    c.setAttribute('aria-selected', c === card ? 'true' : 'false');
+                });
+                panes.forEach(pane => {
+                    pane.classList.toggle('active', pane.dataset.pane === filter);
+                });
+            });
+        });
+    })();
+
+    function isPdf(nameOrUrl) {
+        return /\.pdf($|\?)/i.test(nameOrUrl || '');
+    }
+
+    function isImage(nameOrUrl) {
+        return /\.(jpe?g|png|gif|webp)($|\?)/i.test(nameOrUrl || '');
+    }
+
+    function renderSide(label, url, name, hasBackSideFlag) {
+        if (!url) {
+            const emptyText = (label === 'Back Side' && hasBackSideFlag === false)
+                ? 'This document has no back side'
+                : 'Not available';
+            return `
+                <div class="kyc-preview-side">
+                    <h6>${label}</h6>
+                    <div class="kyc-preview-empty">${emptyText}</div>
+                </div>
+            `;
+        }
+
+        const source = name || url;
+        let media;
+        if (isImage(source)) {
+            media = `<img src="${url}" alt="${label}" class="kyc-preview-img">`;
+        } else if (isPdf(source)) {
+            media = `<iframe src="${url}" class="kyc-preview-pdf" title="${label}"></iframe>`;
+        } else {
+            media = `
+                <div class="kyc-preview-empty">
+                    <a href="${url}" class="btn btn-outline-secondary btn-sm" download>
+                        <i class="fas fa-download me-1"></i> Download file
+                    </a>
+                </div>
+            `;
+        }
+
+        return `
+            <div class="kyc-preview-side">
+                <h6>${label}</h6>
+                ${media}
+            </div>
+        `;
+    }
+
+    function escapeHtml(str) {
+        return String(str || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    function showDocPreviewModal(docId) {
+        const doc = KYC_DOCS[docId];
+        const title = document.getElementById('docPreviewModalLabel');
+        const body = document.getElementById('docPreviewBody');
+
+        if (!doc) {
+            title.textContent = 'Document Preview';
+            body.innerHTML = '<div class="alert alert-danger mb-0">Document details not found.</div>';
+        } else {
+            title.textContent = doc.displayName;
+            const reasonHtml = doc.rejectionReason
+                ? `<div class="alert alert-danger mt-3 mb-0"><strong>Rejection Reason:</strong> ${escapeHtml(doc.rejectionReason)}</div>`
+                : '';
+
+            body.innerHTML = `
+                <div class="kyc-meta-grid">
+                    <div>
+                        <span class="kyc-meta-label">Agent</span>
+                        <strong>${escapeHtml(doc.agentName)}</strong>
+                        <div class="small text-muted">${escapeHtml(doc.agentEmail)}</div>
+                    </div>
+                    <div>
+                        <span class="kyc-meta-label">Document Type</span>
+                        <strong>${escapeHtml(doc.documentType)}</strong>
+                    </div>
+                    <div>
+                        <span class="kyc-meta-label">Status</span>
+                        <strong>${escapeHtml(doc.status)}</strong>
+                    </div>
+                    <div>
+                        <span class="kyc-meta-label">Submitted</span>
+                        <strong>${escapeHtml(doc.submittedAt || '—')}</strong>
+                    </div>
+                    <div>
+                        <span class="kyc-meta-label">Admin Review</span>
+                        <strong>${escapeHtml(doc.reviewedAt || 'Pending')}</strong>
+                    </div>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        ${renderSide('Front Side', doc.frontUrl, doc.frontName, doc.hasBackSide)}
+                    </div>
+                    <div class="col-md-6">
+                        ${renderSide('Back Side', doc.hasBackSide ? doc.backUrl : '', doc.backName, doc.hasBackSide)}
+                    </div>
+                </div>
+                ${reasonHtml}
+            `;
+        }
+
+        const modal = new bootstrap.Modal(document.getElementById('docPreviewModal'));
+        modal.show();
+    }
+
     function showRejectModal(profileId, agentName) {
         document.getElementById('rejectAgentName').textContent = agentName;
-        // The URL needs to be constructed safely using Django's URL tag to guarantee correct prefixes:
         var rejectUrl = "{% url 'admin_dash:reject_kyc' profile_id=999999 %}".replace('999999', profileId);
         document.getElementById('rejectForm').action = rejectUrl;
-        
         var rejectModal = new bootstrap.Modal(document.getElementById('rejectModal'));
+        rejectModal.show();
+    }
+
+    function showRejectDocModal(docId, docName, agentName) {
+        document.getElementById('rejectDocName').textContent = docName;
+        document.getElementById('rejectDocAgent').textContent = agentName;
+        var rejectUrl = "{% url 'admin_dash:reject_verification_document' doc_id=999999 %}".replace('999999', docId);
+        document.getElementById('rejectDocForm').action = rejectUrl;
+        var rejectModal = new bootstrap.Modal(document.getElementById('rejectDocModal'));
         rejectModal.show();
     }
 </script>

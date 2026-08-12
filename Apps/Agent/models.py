@@ -335,6 +335,150 @@ class Document(models.Model):
         ordering = ['-uploaded_at']
 
 
+class VerificationDocument(models.Model):
+    """KYC / identity documents submitted by agents for admin verification."""
+
+    DOCUMENT_TYPE_CHOICES = [
+        ('aadhaar', 'Aadhaar Card'),
+        ('pan', 'PAN Card'),
+        ('voter_id', 'Voter ID'),
+        ('driving_license', 'Driving License'),
+        ('passport', 'Passport'),
+        ('address_proof', 'Address Proof'),
+        ('bank_statement', 'Bank Statement'),
+        ('gst_certificate', 'GST Certificate'),
+        ('other', 'Other'),
+    ]
+
+    # Types the platform requires before overall verification can complete
+    REQUIRED_DOCUMENT_TYPES = ('aadhaar', 'pan', 'address_proof')
+
+    STATUS_CHOICES = [
+        ('pending_review', 'Pending Review'),
+        ('under_review', 'Under Review'),
+        ('verified', 'Verified'),
+        ('rejected', 'Rejected'),
+        ('reupload_required', 'Re-upload Required'),
+    ]
+
+    agent = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='verification_documents'
+    )
+    document_type = models.CharField(max_length=30, choices=DOCUMENT_TYPE_CHOICES)
+    document_name = models.CharField(
+        max_length=200, blank=True,
+        help_text="Custom name when document type is Other"
+    )
+    front_file = models.FileField(upload_to='agent_verification/front/')
+    back_file = models.FileField(upload_to='agent_verification/back/', blank=True, null=True)
+    has_back_side = models.BooleanField(default=True)
+    status = models.CharField(
+        max_length=20, choices=STATUS_CHOICES, default='pending_review'
+    )
+    rejection_reason = models.TextField(blank=True)
+    admin_reviewed_by = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True,
+        related_name='reviewed_verification_documents'
+    )
+    admin_reviewed_at = models.DateTimeField(null=True, blank=True)
+    replaces = models.ForeignKey(
+        'self', on_delete=models.SET_NULL, null=True, blank=True,
+        related_name='replacements',
+        help_text="Previous submission this re-upload replaces"
+    )
+    is_current = models.BooleanField(
+        default=True,
+        help_text="False for historical submissions kept after re-upload"
+    )
+    submitted_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Verification Document"
+        verbose_name_plural = "Verification Documents"
+        ordering = ['-submitted_at']
+
+    def __str__(self):
+        return f"{self.display_name} ({self.get_status_display()}) - {self.agent}"
+
+    @property
+    def display_name(self):
+        if self.document_type == 'other' and self.document_name:
+            return self.document_name
+        return self.get_document_type_display()
+
+    @property
+    def is_required_type(self):
+        return self.document_type in self.REQUIRED_DOCUMENT_TYPES
+
+    @property
+    def can_reupload(self):
+        return self.status in ('rejected', 'reupload_required')
+
+    @classmethod
+    def required_types(cls):
+        return [
+            {'code': code, 'label': label, 'required': True}
+            for code, label in cls.DOCUMENT_TYPE_CHOICES
+            if code in cls.REQUIRED_DOCUMENT_TYPES
+        ]
+
+    @classmethod
+    def additional_types(cls):
+        return [
+            {'code': code, 'label': label, 'required': False}
+            for code, label in cls.DOCUMENT_TYPE_CHOICES
+            if code not in cls.REQUIRED_DOCUMENT_TYPES
+        ]
+
+    @classmethod
+    def sync_agent_profile_status(cls, agent):
+        """Derive AgentProfile.verification_status from current verification docs."""
+        try:
+            profile = agent.agent_profile
+        except AgentProfile.DoesNotExist:
+            return None
+
+        current_docs = cls.objects.filter(agent=agent, is_current=True)
+        if not current_docs.exists():
+            profile.verification_status = 'not_started'
+            profile.is_verified = False
+            profile.save(update_fields=['verification_status', 'is_verified', 'updated_at'])
+            return profile
+
+        required_verified = all(
+            current_docs.filter(document_type=code, status='verified').exists()
+            for code in cls.REQUIRED_DOCUMENT_TYPES
+        )
+        has_actionable = current_docs.filter(
+            status__in=['rejected', 'reupload_required']
+        ).exists()
+        has_pending = current_docs.filter(
+            status__in=['pending_review', 'under_review']
+        ).exists()
+
+        if required_verified:
+            profile.verification_status = 'approved'
+            profile.is_verified = True
+        elif has_actionable and not has_pending:
+            profile.verification_status = 'rejected'
+            profile.is_verified = False
+            # Prefer latest rejection reason
+            latest_reject = current_docs.filter(
+                status__in=['rejected', 'reupload_required']
+            ).exclude(rejection_reason='').order_by('-updated_at').first()
+            if latest_reject:
+                profile.verification_remarks = latest_reject.rejection_reason
+        else:
+            profile.verification_status = 'pending'
+            profile.is_verified = False
+
+        profile.save(update_fields=[
+            'verification_status', 'is_verified', 'verification_remarks', 'updated_at'
+        ])
+        return profile
+
+
 class Communication(models.Model):
     """Communication tracking (WhatsApp, Email, SMS)"""
     

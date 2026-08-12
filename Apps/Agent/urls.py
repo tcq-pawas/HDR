@@ -50,6 +50,7 @@ urlpatterns = [
     
     # Document Management
     path('documents/', views.document_list, name='document_list'),
+    path('documents/<int:pk>/detail/', views.verification_document_detail, name='verification_document_detail'),
     path('document/add/', views.document_add, name='document_add'),
     path('document/<int:pk>/delete/', views.document_delete, name='document_delete'),
     
