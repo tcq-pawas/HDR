@@ -1,7 +1,8 @@
 from django.contrib import admin
 from .models import (
     AgentProfile, Lead, LeadFollowUp, SiteVisit,
-    Booking, Installment, Commission, Document, Communication, MessageTemplate
+    Booking, Installment, Commission, Document, VerificationDocument,
+    Communication, MessageTemplate
 )
 
 
@@ -67,6 +68,17 @@ class DocumentAdmin(admin.ModelAdmin):
     list_filter = ['document_type', 'category', 'uploaded_at']
     search_fields = ['title', 'agent__username', 'property__title']
     readonly_fields = ['uploaded_at', 'file_size']
+
+
+@admin.register(VerificationDocument)
+class VerificationDocumentAdmin(admin.ModelAdmin):
+    list_display = [
+        'display_name', 'document_type', 'agent', 'status',
+        'is_current', 'submitted_at', 'admin_reviewed_at'
+    ]
+    list_filter = ['status', 'document_type', 'is_current', 'submitted_at']
+    search_fields = ['document_name', 'agent__username', 'agent__email']
+    readonly_fields = ['submitted_at', 'updated_at', 'admin_reviewed_at']
 
 
 @admin.register(Communication)

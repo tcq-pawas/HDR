@@ -48,6 +48,8 @@ class AgentKYCMiddleware:
             # Exempt paths that the agent should always be able to access
             exempt_paths = [
                 '/agent/document-verification/',
+                '/agent/documents/',
+                '/agent/document/',
                 '/agent/settings/',
                 '/agent/profile/',
                 '/agent/change-password/',

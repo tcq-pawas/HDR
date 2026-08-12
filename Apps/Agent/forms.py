@@ -2,8 +2,9 @@ from django import forms
 from django.contrib.auth.models import User
 from Apps.PublicPage.models import Property, LocationData
 from .models import (
-    AgentProfile, Lead, LeadFollowUp, SiteVisit, Booking, 
-    Installment, Commission, Document, Communication, MessageTemplate
+    AgentProfile, Lead, LeadFollowUp, SiteVisit, Booking,
+    Installment, Commission, Document, VerificationDocument,
+    Communication, MessageTemplate
 )
 from .validators import validate_image_file, validate_document_file, validate_video_file
 
@@ -823,10 +824,89 @@ class DocumentForm(forms.ModelForm):
         if f:
             validate_document_file(f)
         return f
-        
-        
-        
-        
+
+
+class VerificationDocumentForm(forms.ModelForm):
+    """Form for agent KYC document submission (front + back)."""
+
+    no_back_side = forms.BooleanField(
+        required=False,
+        label='This document has no back side',
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input', 'id': 'id_no_back_side'}),
+    )
+
+    class Meta:
+        model = VerificationDocument
+        fields = ['document_type', 'document_name', 'front_file', 'back_file']
+        widgets = {
+            'document_type': forms.Select(attrs={
+                'class': 'form-select',
+                'id': 'id_document_type',
+            }),
+            'document_name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter document name',
+                'id': 'id_document_name',
+            }),
+            'front_file': forms.FileInput(attrs={
+                'class': 'form-control',
+                'accept': '.jpg,.jpeg,.png,.pdf',
+                'id': 'id_front_file',
+            }),
+            'back_file': forms.FileInput(attrs={
+                'class': 'form-control',
+                'accept': '.jpg,.jpeg,.png,.pdf',
+                'id': 'id_back_file',
+            }),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['document_type'].choices = [
+            ('', 'Select Document Type')
+        ] + list(VerificationDocument.DOCUMENT_TYPE_CHOICES)
+        self.fields['document_type'].required = True
+        self.fields['front_file'].required = True
+        self.fields['back_file'].required = False
+        self.fields['document_name'].required = False
+
+    def clean_front_file(self):
+        f = self.cleaned_data.get('front_file')
+        if f:
+            validate_document_file(f)
+        return f
+
+    def clean_back_file(self):
+        f = self.cleaned_data.get('back_file')
+        if f:
+            validate_document_file(f)
+        return f
+
+    def clean(self):
+        cleaned = super().clean()
+        document_type = cleaned.get('document_type')
+        document_name = (cleaned.get('document_name') or '').strip()
+        no_back_side = cleaned.get('no_back_side')
+        back_file = cleaned.get('back_file')
+        front_file = cleaned.get('front_file')
+
+        if not document_type:
+            self.add_error('document_type', 'Please select a document type.')
+
+        if document_type == 'other' and not document_name:
+            self.add_error('document_name', 'Please enter a document name for Other.')
+
+        if not front_file:
+            self.add_error('front_file', 'Please upload the front side of your document.')
+
+        if not no_back_side and not back_file:
+            self.add_error('back_file', 'Please upload the back side of your document.')
+
+        cleaned['has_back_side'] = not bool(no_back_side)
+        if no_back_side:
+            cleaned['back_file'] = None
+
+        return cleaned
 
 
 class CommunicationForm(forms.ModelForm):

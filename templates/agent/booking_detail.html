@@ -85,13 +85,13 @@
         <div class="card">
             <h3>Quick Actions</h3>
             <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                <a href="{% url 'agent:site_visit_add %}?customer_name={{ booking.customer_name }}&customer_phone={{ booking.customer_phone }}" class="btn btn-primary" style="text-align: center;">
+                <a href="{% url 'agent:site_visit_add' %}?customer_name={{ booking.customer_name }}&customer_phone={{ booking.customer_phone }}" class="btn btn-primary" style="text-align: center;">
                     <i class="bi bi-calendar-event"></i> Schedule Site Visit
                 </a>
-                <a href="{% url 'agent:communication_send %}?recipient={{ booking.customer_phone }}" class="btn btn-secondary" style="text-align: center;">
+                <a href="{% url 'agent:communication_send' %}?recipient={{ booking.customer_phone }}" class="btn btn-secondary" style="text-align: center;">
                     <i class="bi bi-chat-dots"></i> Send Message
                 </a>
-                <a href="{% url 'agent:document_add %}?booking_id={{ booking.id }}" class="btn btn-success" style="text-align: center;">
+                <a href="{% url 'agent:document_add' %}?booking_id={{ booking.id }}" class="btn btn-success" style="text-align: center;">
                     <i class="bi bi-file-earmark"></i> Upload Document
                 </a>
             </div>

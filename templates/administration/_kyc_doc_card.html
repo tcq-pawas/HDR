@@ -1,0 +1,83 @@
+{% comment %}
+Reusable KYC document card for admin verification list.
+Expected: doc, status_class (pending|verified|reupload),
+optional: show_review_actions, show_reason
+{% endcomment %}
+<div class="kyc-doc-card">
+    <button type="button" class="kyc-thumb" onclick="showDocPreviewModal({{ doc.id }})" title="Preview document" aria-label="Preview {{ doc.display_name }}">
+        {% if doc.front_file %}
+            {% with name=doc.front_file.name|lower %}
+            {% if ".pdf" in name %}
+                <i class="fas fa-file-pdf"></i>
+            {% elif ".jpg" in name or ".jpeg" in name or ".png" in name or ".gif" in name or ".webp" in name %}
+                <img src="{{ doc.front_file.url }}" alt="{{ doc.display_name }} thumbnail">
+            {% else %}
+                <i class="fas fa-file-alt"></i>
+            {% endif %}
+            {% endwith %}
+        {% else %}
+            <i class="fas fa-file-alt"></i>
+        {% endif %}
+    </button>
+
+    <div class="kyc-doc-body">
+        <div class="kyc-doc-title-row">
+            <h3 class="kyc-doc-title">{{ doc.display_name }}</h3>
+            {% if status_class == "verified" %}
+            <span class="kyc-status-pill verified"><i class="fas fa-check-circle"></i> Verified</span>
+            {% elif status_class == "reupload" %}
+            <span class="kyc-status-pill reupload"><i class="fas fa-exclamation-circle"></i> {{ doc.get_status_display }}</span>
+            {% else %}
+            <span class="kyc-status-pill pending"><i class="fas fa-clock"></i> {{ doc.get_status_display }}</span>
+            {% endif %}
+        </div>
+
+        <p class="kyc-agent-line">
+            <strong>{{ doc.agent.get_full_name|default:doc.agent.username }}</strong>
+            · {{ doc.agent.email }}
+        </p>
+
+        <div class="kyc-meta-row">
+            {% if doc.front_file %}
+            <span class="kyc-side-chip ok"><i class="fas fa-check"></i> Front</span>
+            {% else %}
+            <span class="kyc-side-chip missing">Front missing</span>
+            {% endif %}
+
+            {% if not doc.has_back_side %}
+            <span class="kyc-side-chip na">Back N/A</span>
+            {% elif doc.back_file %}
+            <span class="kyc-side-chip ok"><i class="fas fa-check"></i> Back</span>
+            {% else %}
+            <span class="kyc-side-chip missing">Back missing</span>
+            {% endif %}
+
+            <span>· Submitted {{ doc.submitted_at|date:"d M Y" }}</span>
+            {% if doc.admin_reviewed_at and status_class == "verified" %}
+            <span>· Reviewed {{ doc.admin_reviewed_at|date:"d M Y" }}</span>
+            {% endif %}
+        </div>
+
+        {% if show_reason and doc.rejection_reason %}
+        <div class="kyc-reason"><strong>Reason:</strong> {{ doc.rejection_reason }}</div>
+        {% endif %}
+    </div>
+
+    <div class="kyc-doc-actions">
+        <button type="button" class="btn btn-outline-primary btn-sm" onclick="showDocPreviewModal({{ doc.id }})">
+            <i class="fas fa-eye me-1"></i> View Document
+        </button>
+        {% if show_review_actions %}
+        <form method="post" action="{% url 'admin_dash:approve_verification_document' doc.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-kyc-approve">
+                <i class="fas fa-check me-1"></i> Approve
+            </button>
+        </form>
+        <button type="button" class="btn btn-outline-danger btn-sm"
+            onclick="showRejectDocModal({{ doc.id }}, '{{ doc.display_name|escapejs }}', '{{ doc.agent.get_full_name|default:doc.agent.username|escapejs }}')">
+            <i class="fas fa-times me-1"></i> Reject
+        </button>
+        {% endif %}
+    </div>
+</div>
