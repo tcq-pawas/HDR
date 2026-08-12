@@ -8,6 +8,247 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'public/css/subscription.css' %}">
+<style>
+    /* ===== Mobile responsive fixes ===== */
+    html, body {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+
+    .container {
+        width: 100%;
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    /* Hero */
+    @media (max-width: 991px) {
+        .subscription-hero-content {
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .subscription-hero-left,
+        .subscription-hero-right {
+            width: 100%;
+            max-width: 100%;
+            flex: none;
+        }
+
+        .subscription-hero-image {
+            width: 100%;
+            height: auto;
+            max-width: 320px;
+            margin: 0 auto;
+            display: block;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .subscription-hero {
+            padding: 32px 0;
+        }
+
+        .subscription-hero-title {
+            font-size: 28px;
+            line-height: 1.25;
+        }
+
+        .subscription-hero-description {
+            font-size: 15px;
+        }
+
+        .subscription-hero-features {
+            flex-wrap: wrap;
+            gap: 12px 20px;
+        }
+
+        .subscription-hero-feature {
+            flex: 1 1 45%;
+            font-size: 13px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .subscription-hero-title {
+            font-size: 24px;
+        }
+
+        .subscription-hero-feature {
+            flex: 1 1 100%;
+        }
+    }
+
+    /* Annual billing banner */
+    @media (max-width: 480px) {
+        .annual-billing-content {
+            flex-wrap: wrap;
+            text-align: center;
+            gap: 8px;
+        }
+
+        .annual-billing-text {
+            font-size: 13px;
+        }
+    }
+
+    /* Billing toggle (1M / 3M / 6M / 12M) */
+    @media (max-width: 768px) {
+        .billing-toggle {
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .billing-toggle-btn {
+            flex: 1 1 auto;
+            min-width: 45%;
+            font-size: 13px;
+            padding: 8px 10px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .billing-toggle-btn {
+            min-width: 100%;
+        }
+
+        .save-badge {
+            display: block;
+            margin-top: 2px;
+        }
+    }
+
+    /* Pricing cards */
+    .pricing-cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 24px;
+    }
+
+    @media (max-width: 991px) {
+        .pricing-cards {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .pricing-card {
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .pricing-card-featured {
+            order: -1;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .pricing-card {
+            padding: 20px 16px;
+            max-width: 100%;
+        }
+
+        .pricing-card-title {
+            font-size: 20px;
+        }
+
+        .price-amount {
+            font-size: 28px;
+        }
+
+        .pricing-card-features {
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .pricing-card-features li {
+            font-size: 13px;
+        }
+    }
+
+    /* Compare Features table + Billing Comparison table */
+    .compare-table-wrapper,
+    .billing-table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .compare-table,
+    .billing-table {
+        width: 100%;
+        min-width: 600px;
+        border-collapse: collapse;
+    }
+
+    @media (max-width: 768px) {
+        .compare-table th,
+        .compare-table td,
+        .billing-table th,
+        .billing-table td {
+            font-size: 13px;
+            padding: 10px 12px;
+            white-space: nowrap;
+        }
+
+        .feature-column,
+        .plan-name-column {
+            position: sticky;
+            left: 0;
+            background: #fff;
+            z-index: 1;
+        }
+
+        .section-heading {
+            font-size: 22px;
+            text-align: center;
+        }
+    }
+
+    /* Why Choose cards */
+    .why-choose-cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 24px;
+    }
+
+    @media (max-width: 991px) {
+        .why-choose-cards {
+            justify-content: center;
+        }
+
+        .why-choose-card {
+            flex: 1 1 45%;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .why-choose-card {
+            flex: 1 1 100%;
+        }
+
+        .why-choose-card-title {
+            font-size: 16px;
+        }
+
+        .why-choose-card-description {
+            font-size: 13px;
+        }
+    }
+
+    /* Alerts/messages block */
+    @media (max-width: 480px) {
+        .alert {
+            font-size: 13px;
+            padding: 10px 12px;
+        }
+    }
+</style>
 {% endblock %}
 
 {% block content %}

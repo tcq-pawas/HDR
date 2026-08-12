@@ -187,7 +187,7 @@
     <div class="premium-listings-container">
         <div class="section-header">
             <div>
-                <div class="section-badge">Just Added</div>
+                <div class="section-badge" style="padding: 6px 20px;">Just Added</div>
                 <h2 class="section-heading">Latest Properties</h2>
             </div>
             <a href="{% url 'buy:property_search' %}" class="view-all-link">View All Listings →</a>
@@ -264,7 +264,9 @@
             <h2 class="section-heading">Trusted by 1000+ investors across India</h2>
             <p class="section-subtitle">See what our satisfied investors say about their experience with HHectare.</p>
         </div>
-        <div class="testimonials-premium-grid">
+        
+        <!-- Desktop Grid Layout -->
+        <div class="testimonials-premium-grid desktop-testimonials">
             <div class="testimonials-premium-card">
                 <div class="testimonial-quote-icon">"</div>
                 <div class="testimonial-stars">★★★★★</div>
@@ -305,6 +307,64 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Mobile Slider Layout -->
+        <div class="mobile-testimonial-slider">
+            <div class="testimonial-slider-wrapper">
+                <div class="testimonial-slider-track">
+                    <div class="testimonial-slide">
+                        <div class="testimonials-premium-card">
+                            <div class="testimonial-quote-icon">"</div>
+                            <div class="testimonial-stars">★★★★★</div>
+                            <p class="testimonial-text">Professional, transparent and highly knowledgeable team. The legal verification process gave us complete peace of mind.</p>
+                            <div class="testimonial-divider"></div>
+                            <div class="testimonial-footer">
+                                <div class="testimonial-avatar">MR</div>
+                                <div class="testimonial-info">
+                                    <div class="testimonial-name">Michael Ross</div>
+                                    <div class="testimonial-designation">Property Investor</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-slide">
+                        <div class="testimonials-premium-card">
+                            <div class="testimonial-quote-icon">"</div>
+                            <div class="testimonial-stars">★★★★★</div>
+                            <p class="testimonial-text">HHectare made buying farmland incredibly simple. From shortlisting to registry, every step was handled smoothly.</p>
+                            <div class="testimonial-divider"></div>
+                            <div class="testimonial-footer">
+                                <div class="testimonial-avatar">PS</div>
+                                <div class="testimonial-info">
+                                    <div class="testimonial-name">Priya Sharma</div>
+                                    <div class="testimonial-designation">Farmland Owner, Pune</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-slide">
+                        <div class="testimonials-premium-card">
+                            <div class="testimonial-quote-icon">"</div>
+                            <div class="testimonial-stars">★★★★★</div>
+                            <p class="testimonial-text">Excellent service and genuine properties. The team guided us through every step with patience and expertise.</p>
+                            <div class="testimonial-divider"></div>
+                            <div class="testimonial-footer">
+                                <div class="testimonial-avatar">RK</div>
+                                <div class="testimonial-info">
+                                    <div class="testimonial-name">Rajesh Kumar</div>
+                                    <div class="testimonial-designation">Business Owner, Delhi</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-slider-dots">
+                <button class="testimonial-dot active" data-slide="0"></button>
+                <button class="testimonial-dot" data-slide="1"></button>
+                <button class="testimonial-dot" data-slide="2"></button>
+            </div>
+        </div>
     </div>
 </section>
 
@@ -326,5 +386,99 @@
         </div>
     </div>
 </section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Mobile testimonial slider functionality
+    const sliderWrapper = document.querySelector('.testimonial-slider-wrapper');
+    const sliderTrack = document.querySelector('.testimonial-slider-track');
+    const slides = document.querySelectorAll('.testimonial-slide');
+    const dots = document.querySelectorAll('.testimonial-dot');
+    
+    if (sliderWrapper && sliderTrack && slides.length > 0) {
+        let currentSlide = 0;
+        const totalSlides = slides.length;
+        let startX = 0;
+        let isDragging = false;
+        
+        // Initialize slider
+        function updateSlider() {
+            sliderTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            // Update dots
+            dots.forEach((dot, index) => {
+                dot.classList.remove('active');
+                if (index === currentSlide) {
+                    dot.classList.add('active');
+                }
+            });
+        }
+        
+        // Dot click navigation
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                currentSlide = index;
+                updateSlider();
+            });
+        });
+        
+        // Touch events for mobile swipe
+        sliderWrapper.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            isDragging = true;
+        });
+        
+        sliderWrapper.addEventListener('touchend', (e) => {
+            if (!isDragging) return;
+            
+            const endX = e.changedTouches[0].clientX;
+            const diffX = startX - endX;
+            
+            // Swipe threshold - if swipe is significant enough, change slide
+            if (Math.abs(diffX) > 50) {
+                if (diffX > 0 && currentSlide < totalSlides - 1) {
+                    currentSlide++;
+                } else if (diffX < 0 && currentSlide > 0) {
+                    currentSlide--;
+                }
+                updateSlider();
+            }
+            
+            isDragging = false;
+        });
+        
+        // Mouse events for desktop testing
+        sliderWrapper.addEventListener('mousedown', (e) => {
+            startX = e.clientX;
+            isDragging = true;
+        });
+        
+        sliderWrapper.addEventListener('mouseup', (e) => {
+            if (!isDragging) return;
+            
+            const endX = e.clientX;
+            const diffX = startX - endX;
+            
+            if (Math.abs(diffX) > 50) {
+                if (diffX > 0 && currentSlide < totalSlides - 1) {
+                    currentSlide++;
+                } else if (diffX < 0 && currentSlide > 0) {
+                    currentSlide--;
+                }
+                updateSlider();
+            }
+            
+            isDragging = false;
+        });
+        
+        sliderWrapper.addEventListener('mouseleave', () => {
+            isDragging = false;
+        });
+        
+        // Initialize on load
+        updateSlider();
+    }
+});
+</script>
 
 {% endblock %}

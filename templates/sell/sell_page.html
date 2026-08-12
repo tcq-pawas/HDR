@@ -27,7 +27,7 @@
 /* Hero Section */
 .sell-hero {
     position: relative;
-    height: 400px;
+    min-height: 400px;
     background-image: url('{% static "images/hero-img-all.png" %}');
     background-size: cover;
     background-position: center;
@@ -35,6 +35,7 @@
     align-items: center;
     justify-content: center;
     text-align: center;
+    padding: 40px 20px;
 }
 
 .sell-hero::before {
@@ -44,6 +45,7 @@
     left: 0;
     right: 0;
     bottom: 0;
+    z-index: 0;
     /* background: rgba(0,0,0,0.55); */
 }
 
@@ -248,8 +250,9 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
     gap: 40px;
-    height: 500px;
+    min-height: 420px;
     border: 1px solid #ECECEC;
     box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 }
@@ -273,6 +276,7 @@
 
 .support-content {
     flex: 1;
+    min-width: 260px;
 }
 
 .support-content h3 {
@@ -292,8 +296,8 @@
 
 .phone-mockup {
     position: relative;
-    width: 500px;
-    height: 500px;
+    width: 260px;
+    height: 460px;
     border-radius: 30px;
     padding: 12px;
     flex-shrink: 0;
@@ -420,10 +424,12 @@
     box-shadow: 0 10px 30px rgba(0,0,0,0.08);
     max-width: 2000px;
     margin: 0 auto;
-    height: 300px;
+    min-height: 220px;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
+    gap: 24px;
 }
 
 .cta-banner::before,
@@ -500,7 +506,7 @@
 /* Responsive */
 @media (max-width: 991px) {
     .sell-hero {
-        height: 350px;
+        min-height: 350px;
     }
     .sell-hero-title {
         font-size: 2.25rem;
@@ -509,22 +515,21 @@
     .support-card {
         flex-direction: column;
         text-align: center;
-        height: auto;
         min-height: auto;
         padding: 32px;
     }
     
     .phone-mockup {
         margin-top: 20px;
-        width: 160px;
-        height: 250px;
+        width: 200px;
+        height: 360px;
     }
     
     .support-section-title {
         font-size: 32px;
     }
     
-    .cta-content {
+    .cta-banner {
         flex-direction: column;
         text-align: center;
     }
@@ -545,7 +550,7 @@
 
 @media (max-width: 767px) {
     .sell-hero {
-        height: 300px;
+        min-height: 300px;
     }
     
     .sell-hero-title {
@@ -571,14 +576,7 @@
     
     .cta-banner {
         padding: 24px 28px;
-        height: auto;
-        min-height: 120px;
-    }
-    
-    .cta-content {
-        flex-direction: row;
-        text-align: left;
-        gap: 20px;
+        min-height: auto;
     }
     
     .cta-left {
@@ -612,7 +610,7 @@
 
 @media (max-width: 480px) {
     .sell-hero {
-        height: 220px;
+        min-height: 220px;
     }
 
     .sell-hero-title {

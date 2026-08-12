@@ -6,12 +6,127 @@
 {% block og_title %}About HHectare | Trusted Real Estate Company{% endblock %}
 {% block twitter_title %}About HHectare | Trusted Real Estate Company{% endblock %}
 
+{% block extra_css %}
+<style>
+    /* ===== Mobile responsive fixes ===== */
+    html, body {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+
+    /* ---- Statistics section ---- */
+    .stats-row .stat-col {
+        margin-bottom: 24px;
+    }
+
+    @media (min-width: 768px) {
+        .stats-row .stat-col {
+            margin-bottom: 0;
+        }
+        .stats-row .stat-col:not(:first-child) {
+            border-left: 1px solid #E5E7EB;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .stats-row .stat-col:nth-child(even) {
+            border-left: 1px solid #E5E7EB;
+        }
+        .stats-row .stat-col:nth-child(n+3) {
+            border-top: 1px solid #E5E7EB;
+            padding-top: 24px;
+        }
+    }
+
+    /* Flex column with gap — this is what actually stops the number/label
+       from overlapping. Gap can't be collapsed or overridden the way
+       margin-bottom can be by an inherited style elsewhere on the page. */
+    .stat-inner {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .stat-icon-circle {
+        width: 56px;
+        height: 56px;
+        border: 2px solid #0F6A3C;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .stat-icon-circle i {
+        font-size: 24px;
+        color: #0F6A3C;
+        line-height: 1 !important;
+    }
+
+    .stat-number {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(1.6rem, 5vw, 2.5rem);
+        font-weight: 700;
+        color: #F4B400;
+        line-height: 1.15 !important;
+        margin: 0 !important;
+        display: block;
+    }
+
+    .stat-label {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.9rem;
+        color: #6B7280;
+        font-weight: 500;
+        line-height: 1.4 !important;
+        margin: 0 !important;
+        display: block;
+    }
+
+    /* ---- CTA banner: stack on mobile instead of squeezing into a row ---- */
+    @media (max-width: 768px) {
+        .cta-inner {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 28px !important;
+            text-align: left;
+        }
+
+        .cta-btns {
+            width: 100%;
+        }
+
+        .btn-cta-primary {
+            display: block !important;
+            width: 100%;
+            text-align: center;
+        }
+
+        .cta-decor {
+            display: none !important;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .inner-hero-content {
+            padding-left: 20px !important;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block inner_hero %}
 <section class="inner-hero"
-    style="background-image: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80'); height: 260px;">
-    <div class="inner-hero-content" style="text-align: left; padding-left: 48px;">
-        <h1 class="inner-hero-title" style="font-size: 2.5rem;">About HHectare</h1>
-        <p class="inner-hero-quote" style="font-style: normal; font-size: 1.1rem;">
+    style="background-image: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80'); height: clamp(200px, 34vw, 260px);">
+    <div class="inner-hero-content" style="text-align: left; ">
+        <h1 class="inner-hero-title" style="font-size: clamp(1.6rem, 6vw, 2.5rem);">About HHectare</h1>
+        <p class="inner-hero-quote" style="font-style: normal; ">
             Invest in Income Generating Farmland
         </p>
         <div style="display: flex; align-items: center; gap: 12px; margin-top: 16px;">
@@ -25,7 +140,7 @@
 {% block content %}
 
 <!-- About Section -->
-<section class="why" style="padding: 72px 48px; background: var(--cloud-white);">
+<section class="why" style="padding: clamp(40px, 8vw, 72px) clamp(20px, 5vw, 48px); background: var(--cloud-white);">
     <div class="section-inner">
         <div class="row align-items-center g-5">
             <div class="col-lg-6">
@@ -37,7 +152,7 @@
             </div>
             <div class="col-lg-6">
                 <div class="section-label">About Us</div>
-                <h2 class="section-title" style="font-size: 2.4rem;">Building Wealth Through Farmland Investments</h2>
+                <h2 class="section-title" style="font-size: clamp(1.6rem, 5vw, 2.4rem);">Building Wealth Through Farmland Investments</h2>
                 <p style="color: var(--text-muted); line-height: 1.8; margin-bottom: 1.5rem;">
                     HHectare helps investors access professionally managed farmland opportunities designed for long-term appreciation and passive agricultural income.
                 </p>
@@ -53,83 +168,91 @@
 </section>
 
 <!-- Statistics Section -->
-<section style="background: #ffffff; padding: 48px 0; border-bottom: 1px solid #E5E7EB;">
+<section style="background: #ffffff; padding: clamp(28px, 6vw, 48px) 0; border-bottom: 1px solid #E5E7EB;">
     <div class="container" style="max-width: 1440px;">
-        <div class="row align-items-center">
-            <div class="col-3 text-center">
-                <div style="width: 56px; height: 56px; margin: 0 auto 16px; border: 2px solid #0F6A3C; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                    <i class="bi bi-check-circle" style="font-size: 24px; color: #0F6A3C;"></i>
+        <div class="row align-items-center stats-row">
+            <div class="col-6 col-md-3 text-center stat-col">
+                <div class="stat-inner">
+                    <div class="stat-icon-circle">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+                    <div class="stat-number">100+</div>
+                    <div class="stat-label">Acres Managed</div>
                 </div>
-                <div style="font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 700; color: #F4B400; margin-bottom: 8px;">100+</div>
-                <div style="font-family: 'Inter', sans-serif; font-size: 0.95rem; color: #6B7280; font-weight: 500;">Acres Managed</div>
             </div>
-            <div class="col-3 text-center" style="border-left: 1px solid #E5E7EB;">
-                <div style="width: 56px; height: 56px; margin: 0 auto 16px; border: 2px solid #0F6A3C; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                    <i class="bi bi-people" style="font-size: 24px; color: #0F6A3C;"></i>
+            <div class="col-6 col-md-3 text-center stat-col">
+                <div class="stat-inner">
+                    <div class="stat-icon-circle">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Investor Families</div>
                 </div>
-                <div style="font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 700; color: #F4B400; margin-bottom: 8px;">50+</div>
-                <div style="font-family: 'Inter', sans-serif; font-size: 0.95rem; color: #6B7280; font-weight: 500;">Investor Families</div>
             </div>
-            <div class="col-3 text-center" style="border-left: 1px solid #E5E7EB;">
-                <div style="width: 56px; height: 56px; margin: 0 auto 16px; border: 2px solid #0F6A3C; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                    <i class="bi bi-shield-check" style="font-size: 24px; color: #0F6A3C;"></i>
+            <div class="col-6 col-md-3 text-center stat-col">
+                <div class="stat-inner">
+                    <div class="stat-icon-circle">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Verified Documentation</div>
                 </div>
-                <div style="font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 700; color: #F4B400; margin-bottom: 8px;">100%</div>
-                <div style="font-family: 'Inter', sans-serif; font-size: 0.95rem; color: #6B7280; font-weight: 500;">Verified Documentation</div>
             </div>
-            <div class="col-3 text-center" style="border-left: 1px solid #E5E7EB;">
-                <div style="width: 56px; height: 56px; margin: 0 auto 16px; border: 2px solid #0F6A3C; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                    <i class="bi bi-headset" style="font-size: 24px; color: #0F6A3C;"></i>
+            <div class="col-6 col-md-3 text-center stat-col">
+                <div class="stat-inner">
+                    <div class="stat-icon-circle">
+                        <i class="bi bi-headset"></i>
+                    </div>
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Investor Support</div>
                 </div>
-                <div style="font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 700; color: #F4B400; margin-bottom: 8px;">24/7</div>
-                <div style="font-family: 'Inter', sans-serif; font-size: 0.95rem; color: #6B7280; font-weight: 500;">Investor Support</div>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Why Invest Section -->
-<section class="why" style="background: linear-gradient(135deg, #0F6A3C 0%, #0A4D2C 100%); padding: 72px 48px; position: relative;">
+<section class="why" style="background: linear-gradient(135deg, #0F6A3C 0%, #0A4D2C 100%); padding: clamp(40px, 8vw, 72px) clamp(20px, 5vw, 48px); position: relative;">
     <div class="section-inner">
         <div class="why-header text-center">
             <div class="section-label" style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px);">Why Invest With Us</div>
-            <h2 style="color: #ffffff !important; font-size: 2.4rem !important; font-family: 'Playfair Display', serif; font-weight: 700; line-height: 1.2; margin-bottom: 14px;">A trusted approach to farmland ownership</h2>
-            <p style="max-width: 700px; color: rgba(255, 255, 255, 0.95) !important; font-size: 1.1rem !important; line-height: 1.7; text-align: center; margin: 0 auto;">From verification to long-term value creation, we ensure every step is secure and transparent.</p>
+            <h2 style="color: #ffffff !important; font-size: clamp(1.5rem, 5vw, 2.4rem) !important; font-family: 'Playfair Display', serif; font-weight: 700; line-height: 1.2; margin-bottom: 14px;">A trusted approach to farmland ownership</h2>
+            <p style="max-width: 700px; color: rgba(255, 255, 255, 0.95) !important; font-size: clamp(0.95rem, 3vw, 1.1rem) !important; line-height: 1.7; text-align: center; margin: 0 auto;">From verification to long-term value creation, we ensure every step is secure and transparent.</p>
         </div>
         <div class="row g-4 mt-4">
             <div class="col-lg-3 col-md-6">
                 <div class="invest-card" style="text-align: center; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2);">
-                    <div style="width: 64px; height: 64px; margin: 0 auto 20px; background: linear-gradient(135deg, #0F6A3C 0%, #0A4D2C 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <div style="width: clamp(48px, 14vw, 64px); height: clamp(48px, 14vw, 64px); margin: 0 auto 20px; background: linear-gradient(135deg, #0F6A3C 0%, #0A4D2C 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                         <i class="bi bi-check-circle" style="font-size: 28px; color: #ffffff;"></i>
                     </div>
-                    <h3 style="font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700; color: #ffffff; margin-bottom: 12px;">Verified Farmland</h3>
+                    <h3 style="font-family: var(--font-heading); font-size: clamp(1.1rem, 3vw, 1.25rem); font-weight: 700; color: #ffffff; margin-bottom: 12px;">Verified Farmland</h3>
                     <p style="font-size: 0.95rem; line-height: 1.6; color: #ffffff;">Clear title verification and legal documentation for every project.</p>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6">
                 <div class="invest-card" style="text-align: center; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2);">
-                    <div style="width: 64px; height: 64px; margin: 0 auto 20px; background: linear-gradient(135deg, #0F6A3C 0%, #0A4D2C 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <div style="width: clamp(48px, 14vw, 64px); height: clamp(48px, 14vw, 64px); margin: 0 auto 20px; background: linear-gradient(135deg, #0F6A3C 0%, #0A4D2C 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                         <i class="bi bi-tree" style="font-size: 28px; color: #ffffff;"></i>
                     </div>
-                    <h3 style="font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700; color: #ffffff; margin-bottom: 12px;">Managed Projects</h3>
+                    <h3 style="font-family: var(--font-heading); font-size: clamp(1.1rem, 3vw, 1.25rem); font-weight: 700; color: #ffffff; margin-bottom: 12px;">Managed Projects</h3>
                     <p style="font-size: 0.95rem; line-height: 1.6; color: #ffffff;">Plantation and maintenance support designed for long-term growth.</p>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6">
                 <div class="invest-card" style="text-align: center; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2);">
-                    <div style="width: 64px; height: 64px; margin: 0 auto 20px; background: linear-gradient(135deg, #0F6A3C 0%, #0A4D2C 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <div style="width: clamp(48px, 14vw, 64px); height: clamp(48px, 14vw, 64px); margin: 0 auto 20px; background: linear-gradient(135deg, #0F6A3C 0%, #0A4D2C 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                         <i class="bi bi-geo-alt" style="font-size: 28px; color: #ffffff;"></i>
                     </div>
-                    <h3 style="font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700; color: #ffffff; margin-bottom: 12px;">Site Visit Assistance</h3>
+                    <h3 style="font-family: var(--font-heading); font-size: clamp(1.1rem, 3vw, 1.25rem); font-weight: 700; color: #ffffff; margin-bottom: 12px;">Site Visit Assistance</h3>
                     <p style="font-size: 0.95rem; line-height: 1.6; color: #ffffff;">Visit projects before investing and make informed decisions.</p>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6">
                 <div class="invest-card" style="text-align: center; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2);">
-                    <div style="width: 64px; height: 64px; margin: 0 auto 20px; background: linear-gradient(135deg, #0F6A3C 0%, #0A4D2C 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <div style="width: clamp(48px, 14vw, 64px); height: clamp(48px, 14vw, 64px); margin: 0 auto 20px; background: linear-gradient(135deg, #0F6A3C 0%, #0A4D2C 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                         <i class="bi bi-graph-up-arrow" style="font-size: 28px; color: #ffffff;"></i>
                     </div>
-                    <h3 style="font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700; color: #ffffff; margin-bottom: 12px;">Long-Term Value</h3>
+                    <h3 style="font-family: var(--font-heading); font-size: clamp(1.1rem, 3vw, 1.25rem); font-weight: 700; color: #ffffff; margin-bottom: 12px;">Long-Term Value</h3>
                     <p style="font-size: 0.95rem; line-height: 1.6; color: #ffffff;">Benefit from land appreciation and agricultural potential.</p>
                 </div>
             </div>
@@ -138,24 +261,24 @@
 </section>
 
 <!-- Mission & Vision Section -->
-<section class="why" style="background: var(--cloud-white); padding: 72px 48px;">
+<section class="why" style="background: var(--cloud-white); padding: clamp(40px, 8vw, 72px) clamp(20px, 5vw, 48px);">
     <div class="section-inner">
         <div class="row g-4">
             <div class="col-lg-6">
-                <div class="invest-card" style="text-align: center; padding: 40px 32px;">
-                    <div style="width: 72px; height: 72px; margin: 0 auto 24px; background: linear-gradient(135deg, #F4B400 0%, #E6A328 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                <div class="invest-card" style="text-align: center; padding: clamp(28px, 6vw, 40px) clamp(20px, 5vw, 32px);">
+                    <div style="width: clamp(56px, 16vw, 72px); height: clamp(56px, 16vw, 72px); margin: 0 auto 24px; background: linear-gradient(135deg, #F4B400 0%, #E6A328 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                         <i class="bi bi-bullseye" style="font-size: 32px; color: #ffffff;"></i>
                     </div>
-                    <h3 style="font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700; color: #0F6A3C; margin-bottom: 16px;">Our Mission</h3>
+                    <h3 style="font-family: var(--font-heading); font-size: clamp(1.2rem, 4vw, 1.5rem); font-weight: 700; color: #0F6A3C; margin-bottom: 16px;">Our Mission</h3>
                     <p style="font-size: 1rem; line-height: 1.7; color: #6B7280;">To make farmland ownership accessible, transparent, and rewarding for modern investors seeking long-term wealth creation through real assets.</p>
                 </div>
             </div>
             <div class="col-lg-6">
-                <div class="invest-card" style="text-align: center; padding: 40px 32px;">
-                    <div style="width: 72px; height: 72px; margin: 0 auto 24px; background: linear-gradient(135deg, #F4B400 0%, #E6A328 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                <div class="invest-card" style="text-align: center; padding: clamp(28px, 6vw, 40px) clamp(20px, 5vw, 32px);">
+                    <div style="width: clamp(56px, 16vw, 72px); height: clamp(56px, 16vw, 72px); margin: 0 auto 24px; background: linear-gradient(135deg, #F4B400 0%, #E6A328 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                         <i class="bi bi-eye" style="font-size: 32px; color: #ffffff;"></i>
                     </div>
-                    <h3 style="font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700; color: #0F6A3C; margin-bottom: 16px;">Our Vision</h3>
+                    <h3 style="font-family: var(--font-heading); font-size: clamp(1.2rem, 4vw, 1.5rem); font-weight: 700; color: #0F6A3C; margin-bottom: 16px;">Our Vision</h3>
                     <p style="font-size: 1rem; line-height: 1.7; color: #6B7280;">To become a trusted platform for farmland investments by connecting investors with professionally managed agricultural opportunities across India.</p>
                 </div>
             </div>
@@ -164,13 +287,13 @@
 </section>
 
 <!-- CTA Section -->
-<div class="cta-banner" style="padding: 48px 48px 88px; background: var(--cloud-white);">
-    <div class="cta-inner" style="max-width: 1440px; margin: 0 auto; background: linear-gradient(135deg, #0F6A3C 0%, #0A4D2C 100%); border-radius: 24px; padding: 56px 48px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: space-between; gap: 48px; box-shadow: 0 16px 48px rgba(15, 106, 60, 0.2);">
+<div class="cta-banner" style="padding: clamp(28px, 6vw, 48px) clamp(20px, 5vw, 48px) clamp(48px, 10vw, 88px); background: var(--cloud-white);">
+    <div class="cta-inner" style="max-width: 1440px; margin: 0 auto; background: linear-gradient(135deg, #0F6A3C 0%, #0A4D2C 100%); border-radius: 24px; padding: clamp(32px, 8vw, 56px) clamp(24px, 5vw, 48px); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: space-between; gap: 48px; box-shadow: 0 16px 48px rgba(15, 106, 60, 0.2);">
         <div style="flex: 1; position: relative; z-index: 2;">
             <div class="cta-label" style="display: inline-block; background: rgba(244, 180, 0, 0.2); color: #F4B400; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; padding: 8px 20px; border-radius: 50px; margin-bottom: 20px;">Premium Farmland Investment</div>
-            <h2 class="cta-title" style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 700; color: #ffffff; margin-bottom: 16px;">Ready to Own Premium Farmland?</h2>
-            <p class="cta-sub" style="font-size: 1.1rem; color: rgba(255, 255, 255, 0.85); margin-bottom: 24px; line-height: 1.6;">Explore verified farmland opportunities and build long-term wealth through land ownership.</p>
-            <div style="display: flex; gap: 32px; flex-wrap: wrap;">
+            <h2 class="cta-title" style="font-family: var(--font-heading); font-size: clamp(1.5rem, 5vw, 2.2rem); font-weight: 700; color: #ffffff; margin-bottom: 16px;">Ready to Own Premium Farmland?</h2>
+            <p class="cta-sub" style="font-size: clamp(0.95rem, 3vw, 1.1rem); color: rgba(255, 255, 255, 0.85); margin-bottom: 24px; line-height: 1.6;">Explore verified farmland opportunities and build long-term wealth through land ownership.</p>
+            <div style="display: flex; gap: clamp(16px, 4vw, 32px); flex-wrap: wrap;">
                 <div style="display: flex; align-items: center; gap: 8px; color: #ffffff; font-size: 0.95rem; font-weight: 500;">
                     <i class="bi bi-check2" style="color: #F4B400; font-size: 1.1rem;"></i>
                     <span>High Appreciation</span>
@@ -188,7 +311,7 @@
         <div class="cta-btns" style="position: relative; z-index: 2;">
             <a href="{% url 'buy:property_search' %}" class="btn-cta-primary" style="display: inline-block; background: linear-gradient(135deg, #F4B400 0%, #E6A328 100%); color: #0F6A3C; font-size: 1rem; font-weight: 600; padding: 16px 32px; border-radius: 12px; text-decoration: none; transition: transform 0.3s ease, box-shadow 0.3s ease; box-shadow: 0 4px 16px rgba(244, 180, 0, 0.3);">Explore Investment Opportunities</a>
         </div>
-        <div style="position: absolute; right: 40px; top: 50%; transform: translateY(-50%); display: flex; gap: 16px; opacity: 0.15; z-index: 1;">
+        <div class="cta-decor" style="position: absolute; right: 40px; top: 50%; transform: translateY(-50%); display: flex; gap: 16px; opacity: 0.15; z-index: 1;">
             <span style="font-size: 3rem;">🌿</span>
             <span style="font-size: 3rem;">🍃</span>
             <span style="font-size: 3rem;">🌿</span>
