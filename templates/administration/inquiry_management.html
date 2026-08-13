@@ -909,7 +909,7 @@
 
     function confirmDeleteInquiry(button, enquiryId) {
         deleteConfirmForm = button.closest('form');
-        document.getElementById('deleteConfirmModalText').textContent = `Delete enquiry #${enquiryId} permanently?`;
+        document.getElementById('deleteConfirmModalText').textContent = `Delete enquiry ${enquiryId} permanently?`;
         new bootstrap.Modal(document.getElementById('deleteConfirmModal')).show();
     }
 

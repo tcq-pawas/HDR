@@ -21,10 +21,11 @@
     .delete-modal-card {
         background: #fff;
         border-radius: 20px;
-        /* width: 100%; */
-        max-width: 280px;
+        width: 100%;
+        max-width: 440px !important;
+        margin: 0 auto;
         overflow: hidden;
-        box-shadow: 0 25px 60px rgba(0,0,0,0.12);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.1);
         border: 1px solid #e8f0ea;
     }
     .delete-modal-header {
@@ -128,13 +129,13 @@
             <!-- Actions -->
             <form method="post" class="mb-0">
                 {% csrf_token %}
-                <div class="d-flex gap-2">
-                    <button type="submit" class="btn-delete-confirm">
-                        <i class="bi bi-trash-fill"></i> Yes, Delete Property
-                    </button>
+                <div class="d-flex gap-3 justify-content-end mt-4">
                     <a href="{% url cancel_url %}" class="btn-delete-cancel">
                         Cancel
                     </a>
+                    <button type="submit" class="btn-delete-confirm">
+                        <i class="bi bi-trash-fill me-1"></i> Yes, Delete Property
+                    </button>
                 </div>
             </form>
         </div>
