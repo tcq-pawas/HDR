@@ -8,9 +8,9 @@
 
     --sidebar-bg: #005427;
 
-    --sidebar-active-bg: #005427;
+    --sidebar-active-bg: #6AAE48;
 
-    --sidebar-active-text: #FFFFFF;
+    --sidebar-active-text: #005427;
 
     --sidebar-text: #FFFFFF;
 
@@ -84,7 +84,7 @@ body {
 
     top: 0;
 
-    left: 260px;
+    left: 275px;
 
     right: 0;
 
@@ -424,7 +424,7 @@ body {
 
 .agent-sidebar {
 
-    width: 260px;
+    width: 275px;
 
     background: var(--sidebar-bg);
 
@@ -440,6 +440,8 @@ body {
 
     overflow-y: auto;
 
+    overflow-x: visible;
+
 }
 
 
@@ -450,7 +452,13 @@ body {
 
     flex-direction: column;
 
-    padding: 24px 20px;
+    padding: 24px 16px;
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    overflow-x: visible;
 
 }
 
@@ -617,7 +625,7 @@ body {
 .sidebar-nav .nav-item {
 
     margin-bottom: 5px;
-
+    max-width: 235px !important;
 }
 
 
@@ -628,9 +636,9 @@ body {
 
     align-items: center;
 
-    gap: 15px;
+    gap: 16px;
 
-    padding: 12px 20px;
+    padding: 14px 16px;
 
     color: var(--sidebar-text);
 
@@ -642,6 +650,10 @@ body {
 
     transition: var(--transition);
 
+    width: 100%;
+
+    box-sizing: border-box;
+
 }
 
 
@@ -650,9 +662,9 @@ body {
 
 .sidebar-nav .nav-link.active {
 
-    background: var(--sidebar-active-bg);
+    background: #6AAE48 !important;
 
-    color: var(--sidebar-active-text);
+    color: #005427 !important;
 
 }
 
@@ -704,7 +716,7 @@ body {
 
     flex: 1;
 
-    margin-left: 260px;
+    margin-left: 275px;
 
     padding: 24px 30px;
 

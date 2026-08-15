@@ -269,6 +269,36 @@
 
             max-width: 100%;
 
+            margin-left: 275px;
+
+            width: calc(100% - 275px);
+
+            min-width: 0;
+
+        }
+
+        /* Sidebar width fixes */
+        nav.sidebar {
+            width: 275px !important;
+            min-width: 275px !important;
+            max-width: 275px !important;
+            flex-shrink: 0 !important;
+            overflow-x: visible !important;
+        }
+
+        nav.sidebar .p-3 {
+            width: 100% !important;
+            box-sizing: border-box !important;
+            overflow-x: visible !important;
+        }
+
+        nav.sidebar .nav {
+            overflow-x: visible !important;
+        }
+
+        nav.sidebar .nav-item {
+            width: 100% !important;
+            box-sizing: border-box !important;
         }
 
 
@@ -1347,7 +1377,7 @@
 
 
 
-            <div class="p-3 flex-grow-1">
+            <div class="p-3 flex-grow-1" style="overflow-x: visible;">
 
 
 

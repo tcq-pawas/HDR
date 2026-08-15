@@ -35,9 +35,9 @@
 
     <!-- Custom CSS -->
 
-    <link rel="stylesheet" href="{% static 'css/agent-dashboard.css' %}?v=9">
+    <link rel="stylesheet" href="{% static 'css/agent-dashboard.css' %}?v=10">
 
-    <link rel="stylesheet" href="{% static 'css/responsive.css' %}?v=5">
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}?v=6">
 
     {% block extra_css %}{% endblock %}
 
@@ -51,11 +51,38 @@
         }
 
         .agent-sidebar::-webkit-scrollbar,
-        .agent-sidebar .sidebar-nav::-webkit-scrollbar,
-        .agent-sidebar *::-webkit-scrollbar {
+        .agent-sidebar .sidebar-nav::-webkit-scrollbar {
             display: none !important; /* Chrome, Safari, Opera */
             width: 0 !important;
             height: 0 !important;
+        }
+
+        /* Ensure menu items don't get clipped */
+        .agent-sidebar {
+            overflow-x: visible !important;
+            width: 275px !important;
+            min-width: 275px !important;
+            max-width: 275px !important;
+        }
+
+        .agent-sidebar .sidebar-nav {
+            overflow-x: visible !important;
+        }
+
+        .agent-sidebar .sidebar-content {
+            overflow-x: visible !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        .agent-sidebar .sidebar-nav .nav-link {
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        .agent-sidebar .sidebar-nav .nav-list {
+            width: 100% !important;
+            box-sizing: border-box !important;
         }
 
         .agent-header {
@@ -120,16 +147,20 @@
 
         .sidebar-nav .nav-link {
 
-            padding: 12px 20px !important;
+            padding: 14px 18px !important;
 
             font-size: 14px !important;
-            
-            gap: 15px !important;
-            
+
+            gap: 16px !important;
+
             border-radius: 8px !important;
-            
+
             transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease !important;
-        
+
+            width: 100% !important;
+
+            box-sizing: border-box !important;
+
         }
 
         .sidebar-nav .nav-link i {
@@ -235,32 +266,90 @@
         }
 
         @media (min-width: 993px) {
-        
+
             .agent-sidebar {
-        
-                width: 260px !important;
-        
-                min-width: 260px !important;
-        
-                max-width: 260px !important;
-        
+
+                width: 275px !important;
+
+                min-width: 275px !important;
+
+                max-width: 275px !important;
+
+                flex-shrink: 0 !important;
             }
-        
+
             .agent-main {
-        
-                margin-left: 260px !important;
-        
+
+                margin-left: 275px !important;
+
+                width: calc(100% - 275px) !important;
+
+                min-width: 0 !important;
             }
-        
+
             .agent-header {
-        
-                left: 260px !important;
-        
+
+                left: 275px !important;
+
+                width: calc(100% - 275px) !important;
+
+                max-width: none !important;
             }
-        
+
+            .agent-sidebar .sidebar-content {
+
+                width: 100% !important;
+
+                box-sizing: border-box !important;
+
+                overflow-x: visible !important;
+            }
+
+            .agent-sidebar .sidebar-nav {
+
+                overflow-x: visible !important;
+            }
+
         }
 
         /* Critical Mobile Fixes - Inline to ensure they load */
+
+        /* Tablet responsive adjustments */
+        @media (min-width: 768px) and (max-width: 992px) {
+            .agent-sidebar {
+                width: 240px !important;
+                min-width: 240px !important;
+                max-width: 240px !important;
+            }
+
+            .agent-header {
+                left: 240px !important;
+                width: calc(100% - 240px) !important;
+            }
+
+            .agent-main {
+                margin-left: 240px !important;
+                width: calc(100% - 240px) !important;
+            }
+
+            .sidebar-content {
+                padding: 20px 16px !important;
+            }
+
+            .sidebar-nav .nav-link {
+                padding: 12px 16px !important;
+                gap: 14px !important;
+                font-size: 12px !important;
+            }
+
+            .sidebar-nav .nav-link i {
+                font-size: 16px !important;
+            }
+
+            .sidebar-profile-card {
+                padding: 20px 12px !important;
+            }
+        }
 
         @media (max-width: 992px) {
 
@@ -685,9 +774,9 @@
                     </a>
                 </div>
 
-                <nav class="sidebar-nav">
+                <nav class="sidebar-nav" style="overflow-x: visible;">
 
-                    <ul class="nav-list">
+                    <ul class="nav-list" style="overflow-x: visible;">
 
                         <li class="nav-item">
 
@@ -946,9 +1035,9 @@
                 </div>
 
 
-                <nav class="sidebar-nav">
+                <nav class="sidebar-nav" style="overflow-x: visible;">
 
-                    <ul class="nav-list">
+                    <ul class="nav-list" style="overflow-x: visible;">
 
                         <li class="nav-item">
 
