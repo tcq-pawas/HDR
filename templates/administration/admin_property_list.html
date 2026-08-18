@@ -4,110 +4,1266 @@
 
 {% block title %}My Properties - Admin Dashboard{% endblock %}
 
-{% block content %}
-<div class="container-fluid py-4">
 
-    <!-- Page Header -->
-    <div class="row mb-4">
+{% block extra_css %}
+<style>
+/* =========================================================
+   MY PROPERTIES — FULLY RESPONSIVE ADMIN UI
+   Native sort dropdown preserved.
+   Desktop / Laptop / Tablet / Mobile / 480px / 360px /
+   Landscape mobile.
+   ========================================================= */
+
+.my-properties-page {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
+}
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.properties-page-header {
+    width: 100%;
+    margin-bottom: 22px !important;
+}
+
+.properties-page-header > .col-12 > .d-flex {
+    width: 100%;
+    min-width: 0;
+    gap: 18px;
+}
+
+.properties-page-title {
+    margin: 0 0 5px !important;
+    color: #0f172a;
+    font-size: 1.08rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.properties-page-subtitle {
+    margin: 0;
+    color: #64748b !important;
+    font-size: .78rem;
+    line-height: 1.5;
+    max-width: 720px;
+}
+
+.properties-add-btn {
+    min-height: 40px;
+    padding: 9px 16px;
+    border-radius: 9px;
+    font-size: .76rem;
+    font-weight: 600;
+    white-space: nowrap;
+    flex: 0 0 auto;
+}
+
+/* =========================================================
+   CARD
+   ========================================================= */
+
+.properties-table-card {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 15px;
+    overflow: hidden;
+    border: 1px solid #e8edf2 !important;
+    box-shadow: 0 5px 18px rgba(15, 23, 42, .06) !important;
+    min-width: 0;
+}
+
+.properties-table-header {
+    width: 100%;
+    padding: 16px 18px !important;
+    min-width: 0;
+}
+
+.properties-table-header > div {
+    width: 100%;
+    min-width: 0;
+    gap: 14px;
+}
+
+.properties-table-title {
+    margin: 0 !important;
+    color: #0f172a;
+    font-size: .95rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+/* =========================================================
+   NATIVE SORT DROPDOWN
+   Keep actual <select>; do not replace with custom popup.
+   The control itself is responsive and contained.
+   ========================================================= */
+
+.properties-sort-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    flex: 0 0 auto;
+}
+
+.properties-sort-label {
+    color: #64748b !important;
+    font-size: .68rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.properties-sort {
+    width: 155px !important;
+    min-width: 155px !important;
+    max-width: 155px !important;
+    height: 35px;
+    min-height: 35px;
+    padding: 6px 28px 6px 9px;
+    font-size: .68rem;
+    border-radius: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.properties-table-wrapper {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: auto !important;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+}
+
+.properties-table {
+    width: 100%;
+    min-width: 900px;
+    margin: 0;
+}
+
+.properties-table thead th {
+    background: #f8fafc;
+    color: #64748b;
+    font-size: .7rem;
+    font-weight: 700;
+    padding: 11px 12px;
+    white-space: nowrap;
+    vertical-align: middle;
+    border-bottom: 1px solid #e5eaf0;
+}
+
+.properties-table tbody td {
+    color: #334155;
+    font-size: .76rem;
+    padding: 12px;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.properties-table tbody tr {
+    transition: background-color .16s ease;
+}
+
+.properties-table tbody tr:hover {
+    background: #fbfdff;
+}
+
+/* =========================================================
+   PROPERTY CELL
+   ========================================================= */
+
+.property-image,
+.property-placeholder {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    object-fit: cover;
+    border-radius: 8px !important;
+}
+
+.property-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.property-title {
+    max-width: 220px;
+    margin: 0 !important;
+    color: #1e293b;
+    font-size: .8rem;
+    font-weight: 700;
+    line-height: 1.3;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+.property-slug {
+    display: block;
+    max-width: 220px;
+    margin-top: 3px;
+    color: #94a3b8 !important;
+    font-size: .65rem;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+}
+
+.property-id {
+    font-size: .65rem;
+    white-space: nowrap;
+}
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.property-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 5px;
+    white-space: nowrap;
+}
+
+.property-actions .btn {
+    margin: 0 !important;
+    flex: 0 0 auto;
+    border-radius: 7px;
+}
+
+.property-view-btn {
+    white-space: nowrap;
+}
+
+.properties-table .property-actions .btn:not(.property-view-btn) {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.properties-table .property-actions i {
+    margin: 0 !important;
+    font-size: .68rem;
+}
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.properties-empty-icon {
+    font-size: 2.4rem;
+}
+
+.properties-empty-text {
+    font-size: .78rem;
+}
+
+/* =========================================================
+   LARGE DESKTOP
+   ========================================================= */
+
+@media (min-width: 1400px) {
+    .properties-page-header > .col-12 > .d-flex {
+        gap: 24px;
+    }
+
+    .properties-page-title {
+        font-size: 1.16rem;
+    }
+
+    .properties-page-subtitle {
+        font-size: .82rem;
+    }
+
+    .properties-table-header {
+        padding: 18px 20px !important;
+    }
+
+    .properties-sort {
+        width: 165px !important;
+        min-width: 165px !important;
+        max-width: 165px !important;
+    }
+
+    .properties-table {
+        min-width: 960px;
+    }
+}
+
+/* =========================================================
+   LAPTOP / TABLET LANDSCAPE
+   ========================================================= */
+
+@media (max-width: 1199.98px) and (min-width: 769px) {
+
+    .properties-page-header > .col-12 > .d-flex {
+        gap: 12px;
+    }
+
+    .properties-page-title {
+        font-size: 1rem;
+    }
+
+    .properties-page-subtitle {
+        font-size: .74rem;
+    }
+
+    .properties-add-btn {
+        padding: 8px 13px;
+        font-size: .72rem;
+    }
+
+    .properties-sort {
+        width: 145px !important;
+        min-width: 145px !important;
+        max-width: 145px !important;
+    }
+
+    .properties-table {
+        min-width: 860px;
+    }
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 768px) and (min-width: 481px) {
+
+    .my-properties-page {
+        padding-top: 18px !important;
+        padding-bottom: 18px !important;
+    }
+
+    .properties-page-header {
+        margin-bottom: 15px !important;
+    }
+
+    .properties-page-header > .col-12 > .d-flex {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 11px;
+    }
+
+    .properties-page-title {
+        font-size: .98rem;
+    }
+
+    .properties-page-subtitle {
+        font-size: .72rem;
+    }
+
+    .properties-add-btn {
+        width: 100%;
+        min-height: 40px;
+        font-size: .72rem;
+    }
+
+    .properties-table-card {
+        border-radius: 13px;
+    }
+
+    .properties-table-header {
+        padding: 13px !important;
+    }
+
+    .properties-table-header > div {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 9px;
+    }
+
+    .properties-table-title {
+        font-size: .86rem;
+    }
+
+    .properties-sort-wrapper {
+        width: 100%;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 7px;
+    }
+
+    .properties-sort {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        height: 38px;
+        min-height: 38px;
+        font-size: .7rem;
+    }
+
+    .properties-table-wrapper {
+        border-radius: 8px;
+    }
+
+    .properties-table {
+        min-width: 820px;
+    }
+
+    .properties-table thead th {
+        font-size: .64rem;
+        padding: 9px 10px;
+    }
+
+    .properties-table tbody td {
+        font-size: .68rem;
+        padding: 10px;
+    }
+
+    .property-image,
+    .property-placeholder {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+    }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .my-properties-page {
+        padding-top: 12px !important;
+        padding-bottom: 12px !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .properties-page-header {
+        margin-bottom: 12px !important;
+    }
+
+    .properties-page-header > .col-12 > .d-flex {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 9px;
+    }
+
+    .properties-page-title {
+        font-size: .88rem;
+        margin-bottom: 3px !important;
+    }
+
+    .properties-page-subtitle {
+        font-size: .66rem;
+        line-height: 1.45;
+    }
+
+    .properties-add-btn {
+        width: 100%;
+        min-height: 38px;
+        padding: 8px 10px;
+        font-size: .67rem;
+        border-radius: 8px;
+    }
+
+    .properties-table-card {
+        border-radius: 11px;
+    }
+
+    .properties-table-header {
+        padding: 11px 10px !important;
+    }
+
+    .properties-table-header > div {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 8px;
+    }
+
+    .properties-table-title {
+        font-size: .77rem;
+    }
+
+    .properties-sort-wrapper {
+        width: 100%;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 6px;
+    }
+
+    .properties-sort-label {
+        align-self: center;
+        font-size: .61rem;
+    }
+
+    .properties-sort {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        height: 36px;
+        min-height: 36px;
+        padding: 7px 24px 7px 8px;
+        font-size: .61rem;
+        border-radius: 8px;
+    }
+
+    .properties-table-wrapper {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .properties-table {
+        min-width: 760px;
+    }
+
+    .properties-table thead th {
+        font-size: .57rem;
+        padding: 8px 8px;
+    }
+
+    .properties-table tbody td {
+        font-size: .6rem;
+        padding: 9px 8px;
+    }
+
+    .property-image,
+    .property-placeholder {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+    }
+
+    .property-placeholder i {
+        font-size: .68rem;
+    }
+
+    .property-title {
+        max-width: 165px;
+        font-size: .62rem;
+    }
+
+    .property-slug {
+        max-width: 165px;
+        font-size: .52rem;
+    }
+
+    .property-id {
+        font-size: .55rem;
+    }
+
+    .property-actions {
+        gap: 4px;
+    }
+
+    .property-view-btn {
+        width: 30px;
+        height: 30px;
+        padding: 0 !important;
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        font-size: 0 !important;
+    }
+
+    .property-view-btn i {
+        margin: 0 !important;
+        font-size: .62rem;
+    }
+
+    .properties-table .property-actions .btn:not(.property-view-btn) {
+        width: 30px;
+        height: 30px;
+    }
+
+    .properties-empty-icon {
+        font-size: 1.9rem;
+    }
+
+    .properties-empty-text {
+        font-size: .68rem;
+    }
+}
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+    .properties-page-title {
+        font-size: .82rem;
+    }
+
+    .properties-page-subtitle {
+        font-size: .61rem;
+    }
+
+    .properties-add-btn {
+        min-height: 36px;
+        font-size: .62rem;
+    }
+
+    .properties-table-header {
+        padding: 9px 8px !important;
+    }
+
+    .properties-table-title {
+        font-size: .72rem;
+    }
+
+    .properties-sort-label {
+        font-size: .58rem;
+    }
+
+    .properties-sort {
+        height: 34px;
+        min-height: 34px;
+        font-size: .58rem;
+    }
+
+    .properties-table {
+        min-width: 720px;
+    }
+
+    .properties-table thead th {
+        font-size: .53rem;
+        padding: 7px;
+    }
+
+    .properties-table tbody td {
+        font-size: .56rem;
+        padding: 8px 7px;
+    }
+
+    .property-image,
+    .property-placeholder {
+        width: 33px;
+        height: 33px;
+        min-width: 33px;
+    }
+
+    .property-title {
+        max-width: 145px;
+        font-size: .58rem;
+    }
+
+    .property-slug {
+        max-width: 145px;
+        font-size: .49rem;
+    }
+
+    .property-actions .btn,
+    .property-actions .property-view-btn {
+        width: 27px !important;
+        height: 27px !important;
+    }
+
+    .property-actions .btn i {
+        font-size: .56rem !important;
+    }
+}
+
+/* =========================================================
+   LANDSCAPE MOBILE
+   ========================================================= */
+
+@media (max-width: 767.98px) and (orientation: landscape) {
+
+    .properties-page-header > .col-12 > .d-flex {
+        flex-direction: row;
+        align-items: center !important;
+        justify-content: space-between;
+    }
+
+    .properties-add-btn {
+        width: auto;
+        flex: 0 0 auto;
+    }
+
+    .properties-table-header > div {
+        flex-direction: row;
+        align-items: center !important;
+        justify-content: space-between;
+    }
+
+    .properties-sort-wrapper {
+        width: auto;
+        display: flex;
+        grid-template-columns: none;
+    }
+
+    .properties-sort {
+        width: 145px !important;
+        min-width: 145px !important;
+        max-width: 145px !important;
+    }
+}
+
+/* =========================================================
+   NO PAGE-LEVEL OVERFLOW
+   ========================================================= */
+
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.my-properties-page,
+.properties-page-header,
+.properties-table-card,
+.properties-table-header,
+.properties-table-wrapper {
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   SORT DROPDOWN — CONTAINED ON ALL SCREEN SIZES
+   Uses a controlled menu so options never overflow the card.
+   ========================================================= */
+
+.properties-sort-dropdown {
+    position: relative;
+    width: 155px;
+    min-width: 0;
+    max-width: 100%;
+    flex: 0 0 155px;
+}
+
+.properties-sort-native {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+.properties-sort-toggle {
+    width: 100%;
+    height: 35px;
+    min-height: 35px;
+    padding: 6px 9px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    background: #fff;
+    color: #495057;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: .68rem;
+    text-align: left;
+    cursor: pointer;
+    overflow: hidden;
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.properties-sort-toggle:hover,
+.properties-sort-toggle.open {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 .14rem rgba(13,110,253,.10);
+}
+
+.properties-sort-value {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.properties-sort-toggle i {
+    flex: 0 0 auto;
+    font-size: .6rem;
+    transition: transform .15s ease;
+}
+
+.properties-sort-toggle.open i {
+    transform: rotate(180deg);
+}
+
+.properties-sort-menu {
+    position: absolute;
+    display: none;
+    top: calc(100% + 5px);
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-height: 180px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 4px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 10px 24px rgba(15,23,42,.14);
+    z-index: 3000;
+}
+
+.properties-sort-dropdown.open .properties-sort-menu {
+    display: block;
+}
+
+.properties-sort-option {
+    display: block;
+    width: 100%;
+    padding: 8px 9px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: #212529;
+    font-size: .72rem;
+    line-height: 1.25;
+    text-align: left;
+    cursor: pointer;
+    white-space: normal;
+}
+
+.properties-sort-option:hover,
+.properties-sort-option.active {
+    background: #f1f7f4;
+    color: #006b45;
+}
+
+@media (max-width: 768px) {
+    .properties-sort-dropdown {
+        width: 100%;
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    .properties-sort-toggle {
+        width: 100%;
+        height: 36px;
+        min-height: 36px;
+        font-size: .61rem;
+        padding: 7px 9px;
+    }
+
+    .properties-sort-menu {
+        max-height: 170px;
+    }
+
+    .properties-sort-option {
+        font-size: .65rem;
+        padding: 8px 9px;
+    }
+}
+
+@media (max-width: 360px) {
+    .properties-sort-toggle {
+        height: 34px;
+        min-height: 34px;
+        font-size: .58rem;
+    }
+
+    .properties-sort-option {
+        font-size: .61rem;
+    }
+}
+
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container-fluid py-4 my-properties-page">
+
+
+    <!-- =================================================
+         PAGE HEADER
+         ================================================= -->
+
+    <div class="row mb-4 properties-page-header">
+
         <div class="col-12">
+
             <div class="d-flex justify-content-between align-items-center">
+
                 <div>
-                    <h1 class="h3 mb-1">My Properties</h1>
-                    <p class="text-muted mb-0">Properties you have added (admin-only, not visible on public website)</p>
+
+                    <h6 class="h5 properties-page-title">
+                        My Properties
+                    </h6>
+
+                    <p class="text-muted mb-0 properties-page-subtitle">
+                        Properties you have added
+                        (admin-only, not visible on public website)
+                    </p>
+
                 </div>
-                <a href="{% url 'admin_dash:property_type_select' %}" class="btn btn-primary">
-                    <i class="fas fa-plus me-2"></i>Add New Property
+
+
+                <a
+                    href="{% url 'admin_dash:property_type_select' %}"
+                    class="btn btn-primary properties-add-btn"
+                >
+                    <i class="fas fa-plus me-2"></i>
+                    Add New Property
                 </a>
+
             </div>
+
         </div>
+
     </div>
 
-    <!-- Table -->
-    <div class="card border-0 shadow-sm">
-        <div class="card-header bg-white border-0 py-3">
+
+    <!-- =================================================
+         PROPERTY TABLE
+         ================================================= -->
+
+    <div class="card border-0 shadow-sm properties-table-card">
+
+
+        <!-- TABLE HEADER -->
+
+        <div class="card-header bg-white border-0 py-3 properties-table-header">
+
             <div class="d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Property List</h5>
-                <div class="d-flex align-items-center gap-2">
-                    <span class="text-muted small fw-semibold">Sort by</span>
-                    <select class="form-select form-select-sm" style="width: auto;">
-                        <option>Date Added (Newest)</option>
-                    </select>
+
+                <h5 class="mb-0 properties-table-title">
+                    Property List
+                </h5>
+
+
+                <div class="properties-sort-wrapper">
+
+                    <span class="text-muted small fw-semibold properties-sort-label">
+                        Sort by
+                    </span>
+
+                    <div class="properties-sort-dropdown">
+                        <!-- Hidden native select keeps the form semantics/value intact. -->
+                        <select class="properties-sort-native" tabindex="-1" aria-hidden="true">
+                            <option value="newest" selected>Date Added (Newest)</option>
+                        </select>
+
+                        <button
+                            type="button"
+                            class="properties-sort-toggle"
+                            aria-haspopup="listbox"
+                            aria-expanded="false"
+                        >
+                            <span class="properties-sort-value">Date Added (Newest)</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+
+                        <div class="properties-sort-menu" role="listbox">
+                            <button
+                                type="button"
+                                class="properties-sort-option active"
+                                data-value="newest"
+                            >
+                                Date Added (Newest)
+                            </button>
+                        </div>
+                    </div>
+
                 </div>
+
             </div>
+
         </div>
+
+
+        <!-- TABLE BODY -->
+
         <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover mb-0">
+
+            <div class="table-responsive properties-table-wrapper">
+
+                <table class="table table-hover mb-0 properties-table">
+
                     <thead class="bg-light">
+
                         <tr>
+
                             <th>Property</th>
+
                             <th>ID</th>
+
                             <th>Category</th>
+
                             <th>Location</th>
+
                             <th>Price</th>
+
                             <th>Date Added</th>
+
                             <th>Actions</th>
+
                         </tr>
+
                     </thead>
+
+
                     <tbody>
+
                         {% for property in properties %}
+
                         <tr>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    {% if property.featured_image %}
-                                    <img src="{{ property.featured_image.url }}" alt="{{ property.title }}"
-                                        class="rounded me-3" style="width:50px;height:50px;object-fit:cover;">
-                                    {% else %}
-                                    <div class="bg-light rounded me-3 d-flex align-items-center justify-content-center"
-                                        style="width:50px;height:50px;">
-                                        <i class="fas fa-building text-muted"></i>
-                                    </div>
-                                    {% endif %}
-                                    <div>
-                                        <h6 class="mb-0">{{ property.title }}</h6>
-                                        <small class="text-muted">{{ property.slug }}</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><span class="badge bg-light text-dark">#{{ property.id }}</span></td>
-                            <td>{{ property.get_category_display }}</td>
-                            <td>{{ property.location }}</td>
-                            <td>₹{{ property.price|intcomma }}</td>
-                            <td>{{ property.created_at|date:"M d, Y" }}</td>
+
+
+                            <!-- PROPERTY -->
 
                             <td>
-                                <div class="btn-group">
-                                    <a href="{% url 'admin_dash:property-review-detail' property.id %}"
-                                        class="btn btn-sm btn-outline-success" title="View">
-                                        <i class="fas fa-eye me-1"></i>View
+
+                                <div class="d-flex align-items-center">
+
+                                    {% if property.featured_image %}
+
+                                    <img
+                                        src="{{ property.featured_image.url }}"
+                                        alt="{{ property.title }}"
+                                        class="rounded me-3 property-image"
+                                    >
+
+                                    {% else %}
+
+                                    <div class="bg-light rounded me-3 d-flex align-items-center justify-content-center property-placeholder">
+
+                                        <i class="fas fa-building text-muted"></i>
+
+                                    </div>
+
+                                    {% endif %}
+
+
+                                    <div>
+
+                                        <h6 class="mb-0 property-title">
+                                            {{ property.title }}
+                                        </h6>
+
+                                        <small class="text-muted property-slug">
+                                            {{ property.slug }}
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- ID -->
+
+                            <td>
+
+                                <span class="badge bg-light text-dark property-id">
+                                    #{{ property.id }}
+                                </span>
+
+                            </td>
+
+
+                            <!-- CATEGORY -->
+
+                            <td>
+                                {{ property.get_category_display }}
+                            </td>
+
+
+                            <!-- LOCATION -->
+
+                            <td>
+                                {{ property.location }}
+                            </td>
+
+
+                            <!-- PRICE -->
+
+                            <td>
+                                ₹{{ property.price|intcomma }}
+                            </td>
+
+
+                            <!-- DATE -->
+
+                            <td>
+                                {{ property.created_at|date:"M d, Y" }}
+                            </td>
+
+
+                            <!-- ACTIONS -->
+
+                            <td>
+
+                                <div class="property-actions">
+
+
+                                    <!-- VIEW -->
+
+                                    <a
+                                        href="{% url 'admin_dash:property-review-detail' property.id %}"
+                                        class="btn btn-sm btn-outline-success property-view-btn"
+                                        title="View"
+                                    >
+                                        <i class="fas fa-eye me-1"></i>
+                                        <span class="property-action-text">
+                                            View
+                                        </span>
                                     </a>
-                                    <a href="{% url 'admin_dash:property_edit' property.id %}"
-                                        class="btn btn-sm btn-outline-secondary" title="Edit">
+
+
+                                    <!-- EDIT -->
+
+                                    <a
+                                        href="{% url 'admin_dash:property_edit' property.id %}"
+                                        class="btn btn-sm btn-outline-secondary"
+                                        title="Edit"
+                                    >
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <a href="{% url 'admin_dash:property_delete' property.id %}"
-                                        class="btn btn-sm btn-outline-danger" title="Delete">
+
+
+                                    <!-- DELETE -->
+
+                                    <a
+                                        href="{% url 'admin_dash:property_delete' property.id %}"
+                                        class="btn btn-sm btn-outline-danger"
+                                        title="Delete"
+                                    >
                                         <i class="fas fa-trash"></i>
                                     </a>
+
                                 </div>
+
                             </td>
+
                         </tr>
+
+
                         {% empty %}
+
                         <tr>
-                            <td colspan="8" class="text-center py-5">
-                                <i class="fas fa-inbox fa-3x text-muted mb-3 d-block"></i>
-                                <p class="text-muted mb-3">No properties added yet.</p>
-                                <a href="{% url 'agent:property_type_select' %}" class="btn btn-primary">
-                                    <i class="fas fa-plus me-2"></i>Add Your First Property
+
+                            <td
+                                colspan="7"
+                                class="text-center py-5"
+                            >
+
+                                <i class="fas fa-inbox fa-3x text-muted mb-3 d-block properties-empty-icon"></i>
+
+                                <p class="text-muted mb-3 properties-empty-text">
+                                    No properties added yet.
+                                </p>
+
+                                <a
+                                    href="{% url 'agent:property_type_select' %}"
+                                    class="btn btn-primary"
+                                >
+                                    <i class="fas fa-plus me-2"></i>
+                                    Add Your First Property
                                 </a>
+
                             </td>
+
                         </tr>
+
                         {% endfor %}
+
                     </tbody>
+
                 </table>
+
             </div>
+
         </div>
+
     </div>
 
 </div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const dropdown = document.querySelector(".properties-sort-dropdown");
+    if (!dropdown) return;
+
+    const toggle = dropdown.querySelector(".properties-sort-toggle");
+    const label = dropdown.querySelector(".properties-sort-value");
+    const nativeSelect = dropdown.querySelector(".properties-sort-native");
+    const options = dropdown.querySelectorAll(".properties-sort-option");
+
+    function closeDropdown() {
+        dropdown.classList.remove("open");
+        toggle.classList.remove("open");
+        toggle.setAttribute("aria-expanded", "false");
+    }
+
+    toggle.addEventListener("click", function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const willOpen = !dropdown.classList.contains("open");
+
+        document.querySelectorAll(".properties-sort-dropdown.open").forEach(function (item) {
+            if (item !== dropdown) {
+                item.classList.remove("open");
+                const otherToggle = item.querySelector(".properties-sort-toggle");
+                if (otherToggle) {
+                    otherToggle.classList.remove("open");
+                    otherToggle.setAttribute("aria-expanded", "false");
+                }
+            }
+        });
+
+        dropdown.classList.toggle("open", willOpen);
+        toggle.classList.toggle("open", willOpen);
+        toggle.setAttribute("aria-expanded", willOpen ? "true" : "false");
+    });
+
+    options.forEach(function (option) {
+        option.addEventListener("click", function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            const value = option.dataset.value || "";
+
+            nativeSelect.value = value;
+            label.textContent = option.textContent.trim();
+
+            options.forEach(function (item) {
+                item.classList.remove("active");
+            });
+
+            option.classList.add("active");
+            closeDropdown();
+        });
+    });
+
+    document.addEventListener("click", function (event) {
+        if (!dropdown.contains(event.target)) {
+            closeDropdown();
+        }
+    });
+
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+            closeDropdown();
+        }
+    });
+});
+</script>
+
 {% endblock %}

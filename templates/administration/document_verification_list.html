@@ -489,6 +489,374 @@
         .kyc-meta-grid { grid-template-columns: 1fr; }
         .kyc-dash { padding: 1rem; }
     }
+
+    /* =====================================================
+       RESPONSIVE ENHANCEMENTS
+       Page-specific overrides; existing functionality kept
+       ===================================================== */
+
+    @media (max-width: 992px) {
+        .kyc-dash {
+            padding: 1rem;
+        }
+
+        .kyc-status-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.65rem;
+        }
+
+        .kyc-status-card {
+            padding: 0.75rem 0.85rem;
+        }
+
+        .kyc-status-card .status-count {
+            font-size: 1.45rem;
+        }
+
+        .kyc-doc-card {
+            gap: 0.75rem;
+        }
+
+        .kyc-doc-actions .btn {
+            font-size: 0.72rem;
+            padding: 0.32rem 0.58rem;
+        }
+
+        .kyc-preview-img {
+            max-height: 340px;
+        }
+
+        .kyc-preview-pdf {
+            height: 340px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .kyc-dash {
+            padding: 0.85rem;
+            border-radius: 12px;
+        }
+
+        /* Status filters */
+        .kyc-status-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.55rem;
+            margin-bottom: 0.9rem;
+        }
+
+        .kyc-status-card {
+            min-width: 0;
+            padding: 0.7rem 0.75rem;
+            border-radius: 10px;
+        }
+
+        .kyc-status-card .status-top {
+            font-size: 0.7rem;
+            gap: 0.4rem;
+            min-width: 0;
+        }
+
+        .kyc-status-card .status-dot {
+            width: 8px;
+            height: 8px;
+        }
+
+        .kyc-status-card .status-count {
+            font-size: 1.25rem;
+            padding-left: 0.95rem;
+        }
+
+        /* Section header */
+        .kyc-section-header {
+            gap: 0.6rem;
+            padding-bottom: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .kyc-section-header h2 {
+            font-size: 1rem;
+        }
+
+        .kyc-section-header p {
+            font-size: 0.75rem;
+            line-height: 1.45;
+        }
+
+        .kyc-section-header .header-link {
+            font-size: 0.75rem;
+            padding-top: 0;
+        }
+
+        /* Document cards */
+        .kyc-doc-card {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0.7rem;
+            padding: 0.75rem;
+            border-radius: 10px;
+        }
+
+        .kyc-thumb {
+            width: 52px;
+            height: 52px;
+            font-size: 1.15rem;
+        }
+
+        .kyc-doc-title-row {
+            align-items: flex-start;
+            gap: 0.45rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .kyc-doc-title {
+            font-size: 0.85rem;
+            line-height: 1.3;
+        }
+
+        .kyc-agent-line {
+            font-size: 0.72rem;
+            line-height: 1.4;
+        }
+
+        .kyc-meta-row {
+            gap: 0.35rem 0.45rem;
+            font-size: 0.68rem;
+        }
+
+        .kyc-side-chip {
+            font-size: 0.64rem;
+            padding: 0.12rem 0.38rem;
+        }
+
+        .kyc-status-pill {
+            font-size: 0.65rem;
+            padding: 0.22rem 0.5rem;
+        }
+
+        .kyc-reason {
+            font-size: 0.68rem;
+            line-height: 1.4;
+        }
+
+        /* Actions become easy-to-tap full-width controls */
+        .kyc-doc-actions {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.45rem;
+        }
+
+        .kyc-doc-actions .btn,
+        .kyc-doc-actions form,
+        .kyc-doc-actions form .btn {
+            width: 100%;
+            min-width: 0;
+        }
+
+        .kyc-doc-actions .btn {
+            min-height: 38px;
+            font-size: 0.7rem;
+            padding: 0.45rem 0.55rem;
+        }
+
+        /* Bulk agent rows */
+        .kyc-bulk-strip {
+            margin-top: 0.8rem;
+            padding-top: 0.8rem;
+        }
+
+        .kyc-bulk-strip h4 {
+            font-size: 0.82rem;
+        }
+
+        .kyc-bulk-row {
+            align-items: stretch;
+            gap: 0.65rem;
+            padding: 0.7rem;
+        }
+
+        .kyc-bulk-row .name {
+            font-size: 0.78rem;
+        }
+
+        .kyc-bulk-row .email {
+            font-size: 0.68rem;
+            overflow-wrap: anywhere;
+        }
+
+        .kyc-bulk-row > div:last-child {
+            width: 100%;
+        }
+
+        .kyc-bulk-row > div:last-child form,
+        .kyc-bulk-row > div:last-child .btn {
+            flex: 1 1 0;
+        }
+
+        /* Preview */
+        .kyc-preview-side {
+            padding: 0.75rem;
+        }
+
+        .kyc-preview-img {
+            max-height: 300px;
+        }
+
+        .kyc-preview-pdf {
+            height: 300px;
+        }
+
+        .kyc-meta-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 0.65rem;
+            margin-bottom: 1rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .kyc-dash {
+            padding: 0.7rem;
+            border-radius: 10px;
+        }
+
+        /* Four status cards become a clean 2x2 grid */
+        .kyc-status-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.45rem;
+        }
+
+        .kyc-status-card {
+            padding: 0.6rem;
+        }
+
+        .kyc-status-card .status-top {
+            font-size: 0.64rem;
+        }
+
+        .kyc-status-card .status-count {
+            font-size: 1.1rem;
+            padding-left: 0.85rem;
+        }
+
+        .kyc-section-header {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .kyc-section-header .header-link {
+            align-self: flex-start;
+        }
+
+        .kyc-doc-title-row {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .kyc-doc-title {
+            font-size: 0.8rem;
+        }
+
+        .kyc-agent-line {
+            font-size: 0.68rem;
+        }
+
+        .kyc-meta-row {
+            font-size: 0.64rem;
+        }
+
+        .kyc-doc-actions {
+            grid-template-columns: 1fr;
+        }
+
+        .kyc-doc-actions .btn {
+            min-height: 40px;
+        }
+
+        .kyc-bulk-row > div:last-child {
+            flex-direction: column;
+        }
+
+        .kyc-bulk-row > div:last-child form,
+        .kyc-bulk-row > div:last-child .btn {
+            width: 100%;
+        }
+
+        .kyc-meta-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .kyc-preview-img {
+            max-height: 240px;
+        }
+
+        .kyc-preview-pdf {
+            height: 260px;
+        }
+
+        /* Mobile modal */
+        #docPreviewModal .modal-dialog,
+        #rejectModal .modal-dialog,
+        #rejectDocModal .modal-dialog {
+            width: auto;
+            max-width: calc(100% - 16px);
+            margin: 8px auto;
+        }
+
+        #docPreviewModal .modal-header,
+        #rejectModal .modal-header,
+        #rejectDocModal .modal-header {
+            padding: 0.8rem 0.9rem;
+        }
+
+        #docPreviewModal .modal-body,
+        #rejectModal .modal-body,
+        #rejectDocModal .modal-body {
+            padding: 0.85rem;
+        }
+
+        #docPreviewModal .modal-footer,
+        #rejectModal .modal-footer,
+        #rejectDocModal .modal-footer {
+            padding: 0.65rem 0.85rem;
+            gap: 0.45rem;
+            flex-wrap: wrap;
+        }
+
+        #docPreviewModal .modal-footer .btn,
+        #rejectModal .modal-footer .btn,
+        #rejectDocModal .modal-footer .btn {
+            min-height: 38px;
+        }
+    }
+
+    @media (max-width: 400px) {
+        .kyc-dash {
+            padding: 0.55rem;
+        }
+
+        .kyc-status-card .status-top {
+            font-size: 0.59rem;
+        }
+
+        .kyc-status-card .status-count {
+            font-size: 1rem;
+        }
+
+        .kyc-doc-card {
+            padding: 0.65rem;
+        }
+
+        .kyc-thumb {
+            width: 48px;
+            height: 48px;
+        }
+
+        .kyc-meta-row {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+    }
+
 </style>
 
 <div class="kyc-dash">

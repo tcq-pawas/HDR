@@ -1285,7 +1285,998 @@
 
         }
 
-    </style>
+
+
+        /* ============================================================
+           GLOBAL RESPONSIVE DESIGN SYSTEM
+           Works across desktop, laptop, tablet and mobile screens.
+           ============================================================ */
+
+        html {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body,
+        .app-container,
+        .main-content,
+        .main-content-wrapper,
+        .content-container {
+            min-width: 0;
+            max-width: 100%;
+        }
+
+        .main-content {
+            flex: 1 1 auto;
+            min-width: 0;
+            width: 100%;
+        }
+
+        .main-content-wrapper {
+            width: 100%;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .content-container {
+            width: 100%;
+            min-width: 0;
+        }
+
+        /* Keep every flex/grid child from forcing horizontal overflow */
+        .row > *,
+        [class*="col-"],
+        .d-flex > *,
+        .card,
+        .card-body,
+        .card-header,
+        .page-header,
+        .alert,
+        .table-responsive {
+            min-width: 0;
+        }
+
+        /* Typography: clean alignment and readable wrapping */
+        p,
+        h1, h2, h3, h4, h5, h6,
+        .page-title,
+        .page-subtitle,
+        .card-title,
+        .card-text,
+        .form-label,
+        .table,
+        .nav-link,
+        .btn,
+        .badge {
+            overflow-wrap: anywhere;
+            word-break: normal;
+        }
+
+        .page-title,
+        .page-subtitle,
+        .card-title,
+        .card-header,
+        .table th,
+        .table td {
+            text-align: left;
+        }
+
+        /* Consistent card appearance */
+        .card,
+        .stat-card {
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .card-body {
+            overflow: hidden;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: .45rem;
+            line-height: 1.25;
+            white-space: normal;
+            text-align: center;
+        }
+
+        .btn i,
+        .btn svg {
+            flex: 0 0 auto;
+        }
+
+        /* Form controls */
+        .form-control,
+        .form-select,
+        .input-group,
+        .input-group-text {
+            max-width: 100%;
+        }
+
+        .form-control,
+        .form-select {
+            min-height: 42px;
+        }
+
+        /* Tables: never break the page; scroll only inside table wrapper */
+        .table-responsive {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+        }
+
+        .table-responsive .table {
+            margin-bottom: 0;
+            vertical-align: middle;
+        }
+
+        .table th,
+        .table td {
+            vertical-align: middle;
+        }
+
+        /* Page header */
+        .page-header .container-fluid {
+            width: 100%;
+            min-width: 0;
+        }
+
+        /* Toast: responsive width */
+        #inquiry-toast-container {
+            width: min(420px, calc(100vw - 24px));
+            max-width: calc(100vw - 24px);
+            padding: 12px !important;
+        }
+
+        #inquiry-toast-container .toast {
+            width: 100%;
+            min-width: 0 !important;
+            max-width: 100%;
+        }
+
+        /* ============================================================
+           LARGE DESKTOP — 1400px+
+           ============================================================ */
+        @media (min-width: 1400px) {
+            .main-content-wrapper {
+                padding-left: 40px;
+                padding-right: 40px;
+            }
+
+            .page-header {
+                padding: 28px 36px;
+                margin-bottom: 28px;
+            }
+
+            .page-title {
+                font-size: clamp(1.75rem, 1.4rem + .5vw, 2.15rem);
+            }
+
+            .page-subtitle {
+                font-size: 1rem;
+            }
+
+            .card-body {
+                padding: 28px;
+            }
+        }
+
+        /* ============================================================
+           STANDARD DESKTOP / LAPTOP — 1200px to 1399px
+           ============================================================ */
+        @media (min-width: 992px) and (max-width: 1399.98px) {
+            .main-content-wrapper {
+                padding: 28px;
+            }
+
+            .page-header {
+                padding: 24px 28px;
+                margin-bottom: 24px;
+            }
+
+            .page-title {
+                font-size: 1.65rem;
+            }
+
+            .card-body {
+                padding: 22px;
+            }
+
+            .table th,
+            .table td {
+                padding: 13px 14px;
+            }
+        }
+
+        /* ============================================================
+           TABLET / SMALL LAPTOP — 768px to 991px
+           ============================================================ */
+        @media (min-width: 768px) and (max-width: 991.98px) {
+            .main-content-wrapper {
+                padding: 22px;
+            }
+
+            .page-header {
+                padding: 20px 22px;
+                margin-bottom: 20px;
+                border-radius: 14px;
+            }
+
+            .page-title {
+                font-size: 1.45rem;
+            }
+
+            .page-subtitle {
+                font-size: .9rem;
+                line-height: 1.5;
+            }
+
+            .card {
+                border-radius: 14px;
+                margin-bottom: 18px;
+            }
+
+            .card-header {
+                padding: 16px 18px;
+            }
+
+            .card-body {
+                padding: 18px;
+            }
+
+            .stat-card {
+                border-radius: 14px;
+            }
+
+            .stat-icon {
+                width: 48px;
+                height: 48px;
+                font-size: 1.25rem;
+            }
+
+            .table {
+                min-width: 620px;
+                font-size: .82rem;
+            }
+
+            .table th,
+            .table td {
+                padding: 11px 12px;
+            }
+        }
+
+        /* ============================================================
+           MOBILE — up to 767px
+           ============================================================ */
+        @media (max-width: 767.98px) {
+            body {
+                font-size: 14px;
+                line-height: 1.5;
+            }
+
+            .app-container {
+                display: block;
+                width: 100%;
+                min-height: 100vh;
+            }
+
+            /* Sidebar overlay behavior */
+            .sidebar {
+                width: min(290px, 86vw) !important;
+                max-width: 290px;
+                height: 100vh;
+                position: fixed !important;
+                top: 0;
+                left: 0;
+                z-index: 1100;
+                transform: translateX(-105%);
+                transition: transform .28s ease, box-shadow .28s ease;
+                overflow-y: auto;
+                overflow-x: hidden;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+                box-shadow: 12px 0 32px rgba(0, 0, 0, .18);
+            }
+
+            .main-content {
+                width: 100%;
+                margin-left: 0 !important;
+                min-width: 0;
+            }
+
+            .main-content-wrapper {
+                width: 100%;
+                max-width: 100%;
+                padding: 68px 14px 20px;
+                margin: 0;
+            }
+
+            /* Mobile menu */
+            .mobile-menu-toggle {
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
+                width: 44px;
+                height: 44px;
+                padding: 0;
+                top: 14px;
+                left: 14px;
+                border-radius: 12px;
+                font-size: 1rem;
+                z-index: 1200;
+            }
+
+            /* Hide hamburger completely while sidebar is open */
+            .mobile-menu-toggle.sidebar-open {
+                display: none !important;
+                visibility: hidden !important;
+                pointer-events: none !important;
+            }
+
+            /* Page header */
+            .page-header {
+                width: 100%;
+                padding: 17px 16px;
+                margin-bottom: 16px;
+                border-radius: 14px;
+            }
+
+            .page-header .container-fluid {
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            .page-title {
+                font-size: clamp(1.18rem, 4vw, 1.45rem);
+                line-height: 1.25;
+                text-align: left;
+            }
+
+            .page-subtitle {
+                font-size: .78rem;
+                line-height: 1.45;
+                margin-top: 5px;
+                text-align: left;
+            }
+
+            /* Content */
+            .content-container {
+                width: 100%;
+                padding: 0;
+            }
+
+            .content-container > .container-fluid,
+            .content-container > .row {
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            .row {
+                --bs-gutter-x: .75rem;
+                --bs-gutter-y: .75rem;
+            }
+
+            /* Cards */
+            .card,
+            .stat-card {
+                border-radius: 13px;
+                margin-bottom: 14px;
+            }
+
+            .card:hover,
+            .stat-card:hover {
+                transform: none;
+            }
+
+            .card-header {
+                padding: 14px 15px;
+                font-size: .86rem;
+            }
+
+            .card-body {
+                padding: 15px;
+            }
+
+            /* Stat cards */
+            .stat-card .card-body {
+                padding: 14px;
+            }
+
+            .stat-icon {
+                width: 42px;
+                height: 42px;
+                min-width: 42px;
+                border-radius: 10px;
+                font-size: 1rem;
+            }
+
+            .stat-card .card-title {
+                font-size: 1.15rem;
+                line-height: 1.2;
+            }
+
+            .stat-card .card-text,
+            .stat-card small {
+                font-size: .7rem;
+                line-height: 1.35;
+            }
+
+            /* Buttons */
+            .btn {
+                min-height: 40px;
+                padding: 8px 12px;
+                font-size: .74rem;
+            }
+
+            .btn-sm {
+                min-height: 34px;
+                padding: 6px 9px;
+                font-size: .68rem;
+            }
+
+            .btn-group,
+            .d-flex.gap-2 {
+                flex-wrap: wrap;
+            }
+
+            /* Tables */
+            .table-responsive {
+                margin-left: 0;
+                margin-right: 0;
+                border-radius: 9px;
+            }
+
+            .table {
+                min-width: 620px;
+                font-size: .72rem;
+            }
+
+            .table thead th {
+                font-size: .68rem;
+                padding: 9px 10px;
+                white-space: nowrap;
+            }
+
+            .table tbody td {
+                font-size: .7rem;
+                padding: 9px 10px;
+            }
+
+            /* Badges */
+            .badge {
+                font-size: .65rem;
+                padding: 5px 8px;
+                line-height: 1.2;
+            }
+
+            /* Activity */
+            .activity-item {
+                padding-left: 13px;
+                margin-bottom: 13px;
+                font-size: .75rem;
+            }
+
+            .activity-item::before {
+                width: 9px;
+                height: 9px;
+                left: -6px;
+            }
+
+            /* Forms */
+            .form-label {
+                font-size: .73rem;
+                margin-bottom: 5px;
+            }
+
+            .form-control,
+            .form-select {
+                min-height: 40px;
+                padding: 8px 10px;
+                font-size: .75rem;
+            }
+
+            textarea.form-control {
+                min-height: 90px;
+            }
+
+            /* Alerts */
+            .alert {
+                padding: 10px 12px;
+                font-size: .74rem;
+                line-height: 1.45;
+            }
+
+            /* Toast */
+            #inquiry-toast-container {
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                width: 100%;
+                max-width: 100%;
+                padding: 10px !important;
+            }
+
+            #inquiry-toast-container .toast {
+                width: 100%;
+                margin-top: 8px !important;
+                border-radius: 12px !important;
+            }
+
+            #inquiry-toast-container .toast-body {
+                padding: 12px !important;
+            }
+
+            #inquiry-toast-container .toast strong {
+                font-size: .78rem;
+            }
+
+            #inquiry-toast-container .toast p {
+                font-size: .72rem !important;
+                line-height: 1.4;
+            }
+
+            #inquiry-toast-container .toast .btn {
+                min-height: 32px;
+                font-size: .65rem !important;
+                padding: 5px 8px !important;
+            }
+        }
+
+        /* ============================================================
+           SMALL PHONES — 480px and below
+           ============================================================ */
+        @media (max-width: 480px) {
+            .main-content-wrapper {
+                padding: 64px 10px 16px;
+            }
+
+            .page-header {
+                padding: 15px 13px;
+                border-radius: 12px;
+            }
+
+            .page-title {
+                font-size: 1.08rem;
+            }
+
+            .page-subtitle {
+                font-size: .7rem;
+            }
+
+            .card-body {
+                padding: 12px;
+            }
+
+            .card-header {
+                padding: 12px 13px;
+            }
+
+            .stat-card .card-body {
+                padding: 11px;
+            }
+
+            .stat-icon {
+                width: 36px;
+                height: 36px;
+                min-width: 36px;
+                font-size: .85rem;
+            }
+
+            .stat-card .card-title {
+                font-size: 1rem;
+            }
+
+            .stat-card .card-text,
+            .stat-card small {
+                font-size: .63rem;
+            }
+
+            .btn {
+                min-height: 38px;
+                padding: 7px 9px;
+                font-size: .68rem;
+            }
+
+            .table {
+                min-width: 580px;
+            }
+
+            .table thead th,
+            .table tbody td {
+                padding: 8px 8px;
+                font-size: .64rem;
+            }
+        }
+
+        /* ============================================================
+           VERY SMALL PHONES — 360px and below
+           ============================================================ */
+        @media (max-width: 360px) {
+            .main-content-wrapper {
+                padding-left: 8px;
+                padding-right: 8px;
+            }
+
+            .mobile-menu-toggle {
+                width: 40px;
+                height: 40px;
+                top: 12px;
+                left: 10px;
+            }
+
+            .page-header {
+                padding: 13px 11px;
+            }
+
+            .page-title {
+                font-size: 1rem;
+            }
+
+            .page-subtitle {
+                font-size: .66rem;
+            }
+
+            .card-body {
+                padding: 10px;
+            }
+
+            .btn {
+                font-size: .64rem;
+                padding: 6px 8px;
+            }
+
+            .table {
+                min-width: 540px;
+            }
+        }
+
+        /* ============================================================
+           LANDSCAPE MOBILE
+           ============================================================ */
+        @media (max-width: 767.98px) and (orientation: landscape) {
+            .main-content-wrapper {
+                padding-top: 62px;
+            }
+
+            .sidebar {
+                width: 270px !important;
+            }
+
+            .page-header {
+                padding: 14px 18px;
+            }
+        }
+
+        /* ============================================================
+           ACCESSIBILITY / TOUCH TARGETS
+           ============================================================ */
+        @media (pointer: coarse) {
+            .nav-link,
+            .btn,
+            .mobile-menu-toggle,
+            .form-control,
+            .form-select,
+            .form-check-input {
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            .nav-link {
+                min-height: 42px;
+            }
+        }
+
+
+        /* ============================================================
+           SIDEBAR NAVIGATION — CLEAN, ALIGNED & RESPONSIVE
+           ============================================================ */
+
+        .sidebar {
+            width: 270px;
+            min-width: 270px;
+            max-width: 270px;
+            background: linear-gradient(180deg, #004526 0%, #00391f 55%, #002815 100%);
+            overflow-x: hidden;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,.20) transparent;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,.18);
+            border-radius: 10px;
+        }
+
+        .sidebar-brand {
+            padding: 22px 18px 18px !important;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,.10);
+        }
+
+        .sidebar-brand a {
+            display: block !important;
+            width: 100%;
+        }
+
+        .sidebar-brand img {
+            height: 38px !important;
+            max-width: 150px;
+            object-fit: contain;
+        }
+
+        .sidebar > .p-3 {
+            padding: 14px !important;
+        }
+
+        /* Admin profile */
+        .sidebar .mb-4.p-3 {
+            margin: 0 0 14px !important;
+            padding: 12px !important;
+            border-radius: 14px !important;
+            background: rgba(255,255,255,.075) !important;
+            border: 1px solid rgba(255,255,255,.08);
+        }
+
+        .sidebar .mb-4.p-3 > .d-flex {
+            gap: 10px;
+            align-items: center !important;
+        }
+
+        .sidebar .mb-4.p-3 .me-3 {
+            margin-right: 0 !important;
+            flex: 0 0 auto;
+        }
+
+        .sidebar .mb-4.p-3 .fw-bold {
+            font-size: .82rem;
+            line-height: 1.25;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 145px;
+        }
+
+        /* Main navigation list */
+        .sidebar > .p-3 > .nav {
+            gap: 5px;
+        }
+
+        .sidebar .nav-item {
+            width: 100%;
+            margin: 0;
+        }
+
+        .sidebar .nav-link {
+            width: 100%;
+            min-height: 44px;
+            padding: 10px 12px !important;
+            margin: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: flex-start !important;
+            gap: 11px;
+            border-radius: 10px;
+            color: rgba(255,255,255,.88) !important;
+            font-size: .82rem;
+            font-weight: 600;
+            line-height: 1.2;
+            text-decoration: none;
+            white-space: nowrap !important;
+            overflow: hidden;
+            transition: background-color .2s ease,
+                        color .2s ease,
+                        transform .2s ease;
+        }
+
+        .sidebar .nav-link:hover {
+            color: #fff !important;
+            background: rgba(255,255,255,.095) !important;
+            transform: translateX(2px);
+        }
+
+        .sidebar .nav-link.active {
+            color: #fff !important;
+            background: rgba(255,255,255,.14) !important;
+            box-shadow: inset 3px 0 0 #F59E0B,
+                        0 4px 12px rgba(0,0,0,.08);
+        }
+
+        .sidebar .nav-link > i:first-child,
+        .sidebar .nav-link > .bi:first-child {
+            width: 20px;
+            min-width: 20px;
+            height: 20px;
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            margin: 0 !important;
+            font-size: .92rem;
+            opacity: .95;
+            flex: 0 0 20px;
+        }
+
+        /* Prevent text from becoming a narrow wrapped column */
+        .sidebar .nav-link {
+            text-align: left !important;
+        }
+
+        .sidebar .nav-link .ms-auto {
+            margin-left: auto !important;
+            flex: 0 0 auto;
+            width: 16px;
+            min-width: 16px;
+            display: inline-flex !important;
+            justify-content: center;
+            font-size: .7rem;
+            opacity: .8;
+        }
+
+        /* Inquiry notification badge */
+        .sidebar .nav-link #inquiry-notification-badge,
+        #inquiry-notification-badge {
+            margin-left: auto !important;
+            flex: 0 0 auto;
+            min-width: 20px;
+            height: 20px;
+            padding: 0 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .65rem;
+            line-height: 1;
+        }
+
+        /* Submenus */
+        .sidebar .collapse {
+            width: 100%;
+        }
+
+        .sidebar .collapse .nav {
+            margin: 4px 0 5px !important;
+            padding: 4px 0 4px 12px !important;
+            gap: 2px;
+            border-left: 1px solid rgba(255,255,255,.12);
+        }
+
+        .sidebar .collapse .nav-link {
+            min-height: 38px;
+            padding: 8px 10px !important;
+            font-size: .76rem;
+            font-weight: 500;
+            border-radius: 8px;
+        }
+
+        .sidebar .collapse .nav-link > i:first-child,
+        .sidebar .collapse .nav-link > .bi:first-child {
+            width: 18px;
+            min-width: 18px;
+            font-size: .78rem;
+        }
+
+        /* Logout */
+        .sidebar > .p-3.border-top {
+            padding: 12px 14px !important;
+            background: rgba(0,0,0,.06);
+        }
+
+        .sidebar > .p-3.border-top .nav-link {
+            min-height: 42px;
+            color: rgba(255,255,255,.9) !important;
+        }
+
+        /* Mobile sidebar */
+        @media (max-width: 767.98px) {
+            .sidebar {
+                width: min(290px, 86vw) !important;
+                min-width: min(290px, 86vw) !important;
+                max-width: min(290px, 86vw) !important;
+                transform: translateX(-105%);
+                box-shadow: 12px 0 32px rgba(0,0,0,.22);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .sidebar-brand {
+                padding: 20px 16px 16px !important;
+            }
+
+            .sidebar > .p-3 {
+                padding: 12px !important;
+            }
+
+            .sidebar .nav-link {
+                min-height: 46px;
+                padding: 10px 12px !important;
+                font-size: .82rem;
+                gap: 11px;
+            }
+
+            .sidebar .nav-link > i:first-child,
+            .sidebar .nav-link > .bi:first-child {
+                width: 21px;
+                min-width: 21px;
+                height: 21px;
+                font-size: .9rem;
+            }
+
+            .sidebar .collapse .nav-link {
+                min-height: 41px;
+                font-size: .76rem;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .sidebar {
+                width: 280px !important;
+                min-width: 280px !important;
+                max-width: 280px !important;
+            }
+
+            .sidebar .nav-link {
+                min-height: 44px;
+                padding-left: 11px !important;
+                padding-right: 10px !important;
+                font-size: .79rem;
+            }
+
+            .sidebar .nav-link > i:first-child,
+            .sidebar .nav-link > .bi:first-child {
+                width: 20px;
+                min-width: 20px;
+            }
+        }
+
+    
+
+        /* ============================================================
+           MOBILE SIDEBAR WIDTH — 80–90% OF SCREEN
+           Keeps the existing sidebar design/alignment unchanged.
+           ============================================================ */
+
+        @media (max-width: 767.98px) {
+            .sidebar {
+                width: 88vw !important;
+                min-width: 88vw !important;
+                max-width: 88vw !important;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .sidebar {
+                width: 88vw !important;
+                min-width: 88vw !important;
+                max-width: 88vw !important;
+            }
+        }
+
+        @media (max-width: 767.98px) and (orientation: landscape) {
+            .sidebar {
+                width: 88vw !important;
+                min-width: 88vw !important;
+                max-width: 88vw !important;
+            }
+        }
+
+</style>
 
 
 
@@ -1406,7 +2397,7 @@
 
 
                             <div class="small text-white-50">Administrator</div>
-                            <a href="{% url 'admin_dash:view_profile' %}" class="btn btn-xs mt-2 w-100" style="font-size: 0.75rem; padding: 0.15rem 0.4rem; background: rgba(255, 255, 255, 0.15); border: none; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);">
+                            <a href="{% url 'admin_dash:view_profile' %}" class="btn btn-xs mt-2 w-100" style="font-size: 0.75rem; padding: 0.15rem 0.4rem; background: rgba(255, 255, 255, 0.15); border: none; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2); display: flex; align-items: center; justify-content: center; text-align: center; color: white;">
                                 View Profile
                             </a>
                         </div>
@@ -1676,21 +2667,21 @@
 
         function toggleSidebar() {
 
-
-
             const sidebar = document.getElementById('sidebar');
-
-
+            const toggle = document.querySelector('.mobile-menu-toggle');
 
             sidebar.classList.toggle('show');
 
-
+            // Hide hamburger while sidebar is open.
+            // Show it again when the sidebar is closed.
+            if (toggle) {
+                toggle.classList.toggle(
+                    'sidebar-open',
+                    sidebar.classList.contains('show')
+                );
+            }
 
         }
-
-
-
-
 
 
 
@@ -1731,6 +2722,13 @@
 
 
                 sidebar.classList.remove('show');
+
+
+
+                // Show hamburger again after sidebar is closed.
+                if (toggle) {
+                    toggle.classList.remove('sidebar-open');
+                }
 
 
 

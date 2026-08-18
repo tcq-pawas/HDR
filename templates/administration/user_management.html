@@ -18,6 +18,221 @@
 
 {% block content %}
 
+    <style>
+        /* ============================================================
+           Responsive styles — small screens only.
+           One piece needed more than CSS: the role-filter <select>
+           is swapped for a small custom dropdown further down,
+           because native <select> popups can't be styled or resized
+           by CSS in any browser. Everything else here is pure CSS.
+           ============================================================ */
+
+        /* ---------- KPI stat cards ---------- */
+        @media (max-width: 575.98px) {
+            .row.mb-4 > div[class*="col-"] {
+                flex: 0 0 100%;
+                max-width: 100%;
+                width: 100%;
+            }
+            .stat-card-modern .card-body.p-4 {
+                padding: 20px !important;
+            }
+            .stat-card-modern h3.card-title {
+                font-size: 1.5rem !important;
+            }
+        }
+        @media (min-width: 576px) and (max-width: 767.98px) {
+            .row.mb-4 > div[class*="col-"] {
+                flex: 0 0 50%;
+                max-width: 50%;
+                width: 50%;
+            }
+        }
+
+        /* ---------- Table card header: title + role filter + search ---------- */
+        @media (max-width: 767.98px) {
+            .card-header .d-flex.justify-content-between.align-items-center {
+                flex-direction: column;
+                align-items: stretch !important;
+                gap: 14px;
+            }
+            .card-header h5.mb-0 {
+                font-size: 1.05rem;
+            }
+            .card-header .d-flex.gap-2 {
+                flex-direction: column;
+                width: 100%;
+            }
+            .card-header .input-group {
+                width: 100% !important;
+            }
+        }
+
+        /* ---------- Custom role-filter dropdown (replaces native <select> popup) ---------- */
+        .custom-dropdown {
+            position: relative;
+            width: 150px;
+        }
+        .custom-dropdown-toggle {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            color: #64748B;
+            font-size: 0.95rem;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+        .custom-dropdown-toggle:hover,
+        .custom-dropdown-toggle:focus {
+            border-color: #2563EB;
+            outline: none;
+        }
+        .custom-dropdown-toggle i {
+            font-size: 0.7rem;
+            color: #94A3B8;
+            transition: transform 0.15s ease;
+        }
+        .custom-dropdown-toggle[aria-expanded="true"] i {
+            transform: rotate(180deg);
+        }
+        .custom-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            right: 0;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+            overflow: hidden;
+            z-index: 1000;
+        }
+        .custom-dropdown-option {
+            padding: 10px 14px;
+            font-size: 0.9rem;
+            color: #334155;
+            cursor: pointer;
+        }
+        .custom-dropdown-option:hover {
+            background: #F1F5F9;
+        }
+        .custom-dropdown-option.active {
+            background: #2563EB;
+            color: #FFFFFF;
+        }
+        @media (max-width: 767.98px) {
+            .card-header .custom-dropdown {
+                width: 100% !important;
+            }
+        }
+
+        /* ---------- Bulk actions bar ---------- */
+        @media (max-width: 575.98px) {
+            #bulkActions .alert {
+                flex-direction: column;
+                align-items: flex-start !important;
+                gap: 12px;
+            }
+            #bulkActions .d-flex.gap-2 {
+                width: 100%;
+            }
+            #bulkActions .d-flex.gap-2 .btn {
+                flex: 1;
+            }
+        }
+
+        /* ---------- Users table -> stacked cards on small screens ---------- */
+        @media (max-width: 767.98px) {
+            .table-responsive { padding: 10px; }
+            .table-responsive table thead { display: none; }
+            .table-responsive table,
+            .table-responsive table tbody,
+            .table-responsive table tr,
+            .table-responsive table td {
+                display: block;
+                width: 100%;
+            }
+            .table-responsive table tr {
+                position: relative;
+                height: auto !important;
+                margin-bottom: 14px;
+                padding: 16px;
+                border: 1px solid #E2E8F0;
+                border-radius: 12px;
+                background: #FFFFFF;
+            }
+            .table-responsive table tr:last-child { margin-bottom: 0; }
+            .table-responsive table td {
+                padding: 5px 0 !important;
+                border: none !important;
+            }
+
+            /* checkbox floats top-right of the card */
+            .table-responsive table td:first-child:not(:only-child) {
+                position: absolute;
+                top: 14px;
+                right: 14px;
+                width: auto !important;
+                padding: 0 !important;
+            }
+            .table-responsive table td:first-child .form-check-input {
+                width: 1.1em;
+                height: 1.1em;
+            }
+
+            /* slightly smaller avatar in card view */
+            .table-responsive table td:nth-child(2) .avatar {
+                width: 44px !important;
+                height: 44px !important;
+                font-size: 1.05rem !important;
+            }
+
+            /* mobile row labels, generated via CSS (no markup added) */
+            .table-responsive table td:nth-child(3)::before,
+            .table-responsive table td:nth-child(4)::before,
+            .table-responsive table td:nth-child(5)::before {
+                display: block;
+                font-size: 0.7rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.04em;
+                color: #94A3B8;
+                margin-bottom: 4px;
+            }
+            .table-responsive table td:nth-child(3)::before { content: "Role"; }
+            .table-responsive table td:nth-child(4)::before { content: "Status"; }
+            .table-responsive table td:nth-child(5)::before { content: "Joined"; }
+
+            /* full-width action button */
+            .table-responsive table td:last-child:not(:only-child) {
+                margin-top: 10px;
+            }
+            .table-responsive table td:last-child:not(:only-child) a.btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+            }
+        }
+
+        /* ---------- User detail drawer ---------- */
+        @media (max-width: 767.98px) {
+            #userDetailDrawer {
+                width: 100% !important;
+                right: -100% !important;
+            }
+            #userDetailDrawer .offcanvas-header,
+            #userDetailDrawer .offcanvas-body {
+                padding: 20px !important;
+            }
+        }
+    </style>
+
     <!-- Statistics Header - KPI Cards -->
 
     <div class="row mb-4">
@@ -291,14 +506,28 @@
 
                         <h5 class="mb-0" style="font-weight: 600; color: #0F172A;">All Users ({{ total_users }})</h5>
                         <div class="d-flex gap-2">
-                            <select class="form-select" id="roleFilter" onchange="filterUsers()" style="width: 150px; border-radius: 8px; border-color: #E2E8F0; color: #64748B;">
-                                <option value="">All Roles</option>
-                                <option value="admin">Admin</option>
-                                <option value="owner">Owner</option>
-                                <option value="agent">Agent</option>
-                                <option value="investor">Investor</option>
-                                <option value="customer">Customer</option>
-                            </select>
+                            <div class="custom-dropdown" id="roleFilterDropdown">
+                                <button type="button" class="custom-dropdown-toggle" id="roleFilterToggle" onclick="toggleRoleDropdown()" aria-haspopup="listbox" aria-expanded="false">
+                                    <span id="roleFilterLabel">All Roles</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                                <div class="custom-dropdown-menu" id="roleFilterMenu" role="listbox" style="display: none;">
+                                    <div class="custom-dropdown-option active" role="option" data-value="" data-label="All Roles">All Roles</div>
+                                    <div class="custom-dropdown-option" role="option" data-value="admin" data-label="Admin">Admin</div>
+                                    <div class="custom-dropdown-option" role="option" data-value="owner" data-label="Owner">Owner</div>
+                                    <div class="custom-dropdown-option" role="option" data-value="agent" data-label="Agent">Agent</div>
+                                    <div class="custom-dropdown-option" role="option" data-value="investor" data-label="Investor">Investor</div>
+                                    <div class="custom-dropdown-option" role="option" data-value="customer" data-label="Customer">Customer</div>
+                                </div>
+                                <select id="roleFilter" onchange="filterUsers()" style="display: none;">
+                                    <option value="">All Roles</option>
+                                    <option value="admin">Admin</option>
+                                    <option value="owner">Owner</option>
+                                    <option value="agent">Agent</option>
+                                    <option value="investor">Investor</option>
+                                    <option value="customer">Customer</option>
+                                </select>
+                            </div>
                             <div class="input-group" style="width: 300px;">
                                 <span class="input-group-text bg-light border-end-0" style="border-radius: 8px 0 0 8px; border-color: #E2E8F0;">
                                     <i class="fas fa-search text-muted"></i>
@@ -310,6 +539,43 @@
                     </div>
 
                 </div>
+
+                <script>
+                    (function() {
+                        const toggleBtn = document.getElementById('roleFilterToggle');
+                        const menu = document.getElementById('roleFilterMenu');
+                        const label = document.getElementById('roleFilterLabel');
+                        const hiddenSelect = document.getElementById('roleFilter');
+                        const wrapper = document.getElementById('roleFilterDropdown');
+
+                        window.toggleRoleDropdown = function() {
+                            const isOpen = menu.style.display === 'block';
+                            menu.style.display = isOpen ? 'none' : 'block';
+                            toggleBtn.setAttribute('aria-expanded', String(!isOpen));
+                        };
+
+                        menu.querySelectorAll('.custom-dropdown-option').forEach(function(opt) {
+                            opt.addEventListener('click', function() {
+                                menu.querySelectorAll('.custom-dropdown-option').forEach(function(o) {
+                                    o.classList.remove('active');
+                                });
+                                this.classList.add('active');
+                                label.textContent = this.getAttribute('data-label');
+                                hiddenSelect.value = this.getAttribute('data-value');
+                                hiddenSelect.dispatchEvent(new Event('change'));
+                                menu.style.display = 'none';
+                                toggleBtn.setAttribute('aria-expanded', 'false');
+                            });
+                        });
+
+                        document.addEventListener('click', function(e) {
+                            if (wrapper && !wrapper.contains(e.target)) {
+                                menu.style.display = 'none';
+                                toggleBtn.setAttribute('aria-expanded', 'false');
+                            }
+                        });
+                    })();
+                </script>
 
                 <div class="card-body p-0">
 
@@ -908,4 +1174,3 @@
 </script>
 
 {% endblock %}
-

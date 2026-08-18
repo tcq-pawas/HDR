@@ -321,27 +321,216 @@
         color: #0F172A;
     }
     
+    /* ============================================
+       SMALL SCREEN RESPONSIVE (≤768px)
+       ============================================ */
     @media (max-width: 768px) {
+
+        .profile-card {
+            padding: 20px;
+            border-radius: 16px;
+        }
+
         .profile-header-section {
             flex-direction: column;
             text-align: center;
+            gap: 16px;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
         }
-        
+
         .profile-avatar {
+            width: 84px;
+            height: 84px;
+            font-size: 2rem;
             margin: 0 auto;
         }
-        
+
+        .profile-name {
+            font-size: 1.25rem;
+        }
+
+        .profile-username,
+        .profile-email {
+            font-size: 0.85rem;
+        }
+
         .profile-badges {
             justify-content: center;
         }
-        
+
+        /* Action buttons - clean 2x2 grid instead of a tall stack */
         .action-bar {
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
         }
-        
+
         .action-btn {
             width: 100%;
             justify-content: center;
+            padding: 12px 8px;
+            font-size: 0.78rem;
+            text-align: center;
+        }
+
+        /* KPI cards */
+        .kpi-card {
+            padding: 14px;
+            border-radius: 12px;
+        }
+
+        .kpi-icon {
+            width: 38px;
+            height: 38px;
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+
+        .kpi-value,
+        .kpi-value.fs-5 {
+            font-size: 1.2rem !important;
+        }
+
+        .kpi-label {
+            font-size: 0.7rem;
+        }
+
+        /* Info cards */
+        .info-card {
+            padding: 16px;
+            border-radius: 12px;
+        }
+
+        .info-card h5 {
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+        }
+
+        .info-row {
+            gap: 12px;
+            padding: 10px 0;
+            align-items: flex-start;
+        }
+
+        .info-label {
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .info-value {
+            font-size: 0.85rem;
+            text-align: right;
+            word-break: break-word;
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* Financial Ledger header - stack title and balance cleanly */
+        .ledger-header {
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .ledger-balance {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ledger-balance-badge {
+            font-size: 0.85rem !important;
+        }
+
+        /* Verification status row */
+        .verification-status-row {
+            flex-direction: column;
+            align-items: stretch !important;
+            gap: 14px;
+        }
+
+        .verification-status-row .btn {
+            width: 100%;
+        }
+
+        /* Tables inside info cards - tighter on mobile, still horizontally scrollable */
+        .ledger-table,
+        .login-table {
+            min-width: 560px;
+        }
+
+        .ledger-table th,
+        .ledger-table td,
+        .login-table th,
+        .login-table td {
+            font-size: 0.75rem;
+            padding: 8px 10px;
+            white-space: nowrap;
+        }
+
+        /* Back link */
+        .back-link {
+            padding: 8px 12px;
+            margin-bottom: 16px;
+            font-size: 0.85rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .info-row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+        }
+
+        .info-value {
+            text-align: left;
+        }
+
+        .kpi-card {
+            padding: 12px;
+        }
+
+        /* Reset Password / Change Role modals use inline padding - override for small screens */
+        #resetPasswordModal .modal-header,
+        #resetPasswordModal .modal-body,
+        #resetPasswordModal .modal-footer,
+        #changeRoleModal .modal-header,
+        #changeRoleModal .modal-body,
+        #changeRoleModal .modal-footer {
+            padding: 16px !important;
+        }
+
+        #resetPasswordModal .modal-footer,
+        #changeRoleModal .modal-footer {
+            flex-direction: column-reverse;
+            gap: 8px;
+        }
+
+        #resetPasswordModal .modal-footer .btn,
+        #changeRoleModal .modal-footer .btn {
+            width: 100% !important;
+            margin: 0 !important;
+        }
+    }
+
+    @media (max-width: 380px) {
+        .profile-avatar {
+            width: 72px;
+            height: 72px;
+            font-size: 1.7rem;
+        }
+
+        .action-btn {
+            font-size: 0.72rem;
+            padding: 10px 6px;
+        }
+
+        .kpi-value,
+        .kpi-value.fs-5 {
+            font-size: 1.05rem !important;
         }
     }
 </style>
@@ -446,7 +635,7 @@
             <div class="kpi-icon" style="background: #E0E7FF; color: #4338CA;">
                 <i class="fas fa-sign-in-alt"></i>
             </div>
-            <div class="kpi-value">{{ viewed_user.login_count|default:"0" }}</div>
+            <div class="kpi-value fs-5">{{ viewed_user.login_count|default:"0" }}</div>
             <div class="kpi-label">Total Logins</div>
         </div>
     </div>
@@ -455,7 +644,7 @@
             <div class="kpi-icon" style="background: #D1FAE5; color: #059669;">
                 <i class="fas fa-clock"></i>
             </div>
-            <div class="kpi-value">{{ viewed_user.date_joined|timesince }}</div>
+            <div class="kpi-value fs-5">{{ viewed_user.date_joined|timesince }}</div>
             <div class="kpi-label">Account Age</div>
         </div>
     </div>
@@ -465,7 +654,7 @@
                 <div class="kpi-icon" style="background: #FEF3C7; color: #D97706;">
                     <i class="fas fa-home"></i>
                 </div>
-                <div class="kpi-value">{{ customer_data.purchased_properties|default:"0" }}</div>
+                <div class="kpi-value fs-5">{{ customer_data.purchased_properties|default:"0" }}</div>
                 <div class="kpi-label">Properties</div>
             </div>
         </div>
@@ -474,7 +663,7 @@
                 <div class="kpi-icon" style="background: #FEE2E2; color: #DC2626;">
                     <i class="fas fa-heart"></i>
                 </div>
-                <div class="kpi-value">{{ customer_data.saved_properties|default:"0" }}</div>
+                <div class="kpi-value fs-5">{{ customer_data.saved_properties|default:"0" }}</div>
                 <div class="kpi-label">Saved</div>
             </div>
         </div>
@@ -483,7 +672,7 @@
                 <div class="kpi-icon" style="background: #E0F2FE; color: #0284C7;">
                     <i class="fas fa-envelope"></i>
                 </div>
-                <div class="kpi-value">{{ customer_data.inquiries|default:"0" }}</div>
+                <div class="kpi-value fs-5">{{ customer_data.inquiries|default:"0" }}</div>
                 <div class="kpi-label">Inquiries</div>
             </div>
         </div>
@@ -492,7 +681,7 @@
                 <div class="kpi-icon" style="background: #F3E8FF; color: #7C3AED;">
                     <i class="fas fa-file"></i>
                 </div>
-                <div class="kpi-value">{{ customer_data.documents|default:"0" }}</div>
+                <div class="kpi-value fs-5">{{ customer_data.documents|default:"0" }}</div>
                 <div class="kpi-label">Documents</div>
             </div>
         </div>
@@ -502,7 +691,7 @@
                 <div class="kpi-icon" style="background: #D1FAE5; color: #059669;">
                     <i class="fas fa-dollar-sign"></i>
                 </div>
-                <div class="kpi-value">${{ investor_data.total_investments|default:0|intcomma }}</div>
+                <div class="kpi-value fs-5">${{ investor_data.total_investments|default:0|intcomma }}</div>
                 <div class="kpi-label">Investments</div>
             </div>
         </div>
@@ -511,7 +700,7 @@
                 <div class="kpi-icon" style="background: #FEF3C7; color: #D97706;">
                     <i class="fas fa-chart-line"></i>
                 </div>
-                <div class="kpi-value">{{ investor_data.roi|default:"0" }}%</div>
+                <div class="kpi-value fs-5">{{ investor_data.roi|default:"0" }}%</div>
                 <div class="kpi-label">ROI</div>
             </div>
         </div>
@@ -520,7 +709,7 @@
                 <div class="kpi-icon" style="background: #E0E7FF; color: #4338CA;">
                     <i class="fas fa-coins"></i>
                 </div>
-                <div class="kpi-value">{{ investor_data.investment_count|default:"0" }}</div>
+                <div class="kpi-value fs-5">{{ investor_data.investment_count|default:"0" }}</div>
                 <div class="kpi-label">Count</div>
             </div>
         </div>
@@ -529,7 +718,7 @@
                 <div class="kpi-icon" style="background: #F3E8FF; color: #7C3AED;">
                     <i class="fas fa-file"></i>
                 </div>
-                <div class="kpi-value">{{ investor_data.documents|default:"0" }}</div>
+                <div class="kpi-value fs-5">{{ investor_data.documents|default:"0" }}</div>
                 <div class="kpi-label">Documents</div>
             </div>
         </div>
@@ -539,7 +728,7 @@
                 <div class="kpi-icon" style="background: #E0E7FF; color: #4338CA;">
                     <i class="fas fa-building"></i>
                 </div>
-                <div class="kpi-value">{{ agent_data.assigned_properties|default:"0" }}</div>
+                <div class="kpi-value fs-5">{{ agent_data.assigned_properties|default:"0" }}</div>
                 <div class="kpi-label">Properties</div>
             </div>
         </div>
@@ -548,7 +737,7 @@
                 <div class="kpi-icon" style="background: #D1FAE5; color: #059669;">
                     <i class="fas fa-users"></i>
                 </div>
-                <div class="kpi-value">{{ agent_data.leads|default:"0" }}</div>
+                <div class="kpi-value fs-5">{{ agent_data.leads|default:"0" }}</div>
                 <div class="kpi-label">Leads</div>
             </div>
         </div>
@@ -557,7 +746,7 @@
                 <div class="kpi-icon" style="background: #FEF3C7; color: #D97706;">
                     <i class="fas fa-user-friends"></i>
                 </div>
-                <div class="kpi-value">{{ agent_data.customers|default:"0" }}</div>
+                <div class="kpi-value fs-5">{{ agent_data.customers|default:"0" }}</div>
                 <div class="kpi-label">Customers</div>
             </div>
         </div>
@@ -566,7 +755,7 @@
                 <div class="kpi-icon" style="background: #FEE2E2; color: #DC2626;">
                     <i class="fas fa-dollar-sign"></i>
                 </div>
-                <div class="kpi-value">${{ agent_data.commission|default:0|intcomma }}</div>
+                <div class="kpi-value fs-5">${{ agent_data.commission|default:0|intcomma }}</div>
                 <div class="kpi-label">Commission</div>
             </div>
         </div>
@@ -576,7 +765,7 @@
                 <div class="kpi-icon" style="background: #E0E7FF; color: #4338CA;">
                     <i class="fas fa-users"></i>
                 </div>
-                <div class="kpi-value">-</div>
+                <div class="kpi-value fs-5">-</div>
                 <div class="kpi-label">Managed</div>
             </div>
         </div>
@@ -585,7 +774,7 @@
                 <div class="kpi-icon" style="background: #D1FAE5; color: #059669;">
                     <i class="fas fa-history"></i>
                 </div>
-                <div class="kpi-value">{{ admin_data.activity_logs|length|default:"0" }}</div>
+                <div class="kpi-value fs-5">{{ admin_data.activity_logs|length|default:"0" }}</div>
                 <div class="kpi-label">Activities</div>
             </div>
         </div>
@@ -594,7 +783,7 @@
                 <div class="kpi-icon" style="background: #FEF3C7; color: #D97706;">
                     <i class="fas fa-key"></i>
                 </div>
-                <div class="kpi-value">{{ admin_data.permissions|length|default:"0" }}</div>
+                <div class="kpi-value fs-5">{{ admin_data.permissions|length|default:"0" }}</div>
                 <div class="kpi-label">Permissions</div>
             </div>
         </div>
@@ -603,7 +792,7 @@
                 <div class="kpi-icon" style="background: #F3E8FF; color: #7C3AED;">
                     <i class="fas fa-shield-alt"></i>
                 </div>
-                <div class="kpi-value">Full</div>
+                <div class="kpi-value fs-5">Full</div>
                 <div class="kpi-label">Access</div>
             </div>
         </div>
@@ -718,7 +907,7 @@
         <div class="info-card">
             <h5><i class="fas fa-shopping-cart"></i> Customer Details</h5>
             <div class="row">
-                <div class="col-md-3 mb-3">
+                <div class="col-6 col-md-3 mb-3">
                     <div class="kpi-card">
                         <div class="kpi-icon" style="background: #FEF3C7; color: #D97706;">
                             <i class="fas fa-home"></i>
@@ -727,7 +916,7 @@
                         <div class="kpi-label">Purchased Properties</div>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-6 col-md-3 mb-3">
                     <div class="kpi-card">
                         <div class="kpi-icon" style="background: #FEE2E2; color: #DC2626;">
                             <i class="fas fa-heart"></i>
@@ -736,7 +925,7 @@
                         <div class="kpi-label">Saved Properties</div>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-6 col-md-3 mb-3">
                     <div class="kpi-card">
                         <div class="kpi-icon" style="background: #E0F2FE; color: #0284C7;">
                             <i class="fas fa-envelope"></i>
@@ -745,7 +934,7 @@
                         <div class="kpi-label">Inquiries</div>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-6 col-md-3 mb-3">
                     <div class="kpi-card">
                         <div class="kpi-icon" style="background: #F3E8FF; color: #7C3AED;">
                             <i class="fas fa-file"></i>
@@ -764,7 +953,7 @@
         <div class="info-card">
             <h5><i class="fas fa-chart-line"></i> Investor Details</h5>
             <div class="row">
-                <div class="col-md-3 mb-3">
+                <div class="col-6 col-md-3 mb-3">
                     <div class="kpi-card">
                         <div class="kpi-icon" style="background: #D1FAE5; color: #059669;">
                             <i class="fas fa-dollar-sign"></i>
@@ -773,7 +962,7 @@
                         <div class="kpi-label">Total Investments</div>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-6 col-md-3 mb-3">
                     <div class="kpi-card">
                         <div class="kpi-icon" style="background: #FEF3C7; color: #D97706;">
                             <i class="fas fa-chart-line"></i>
@@ -782,7 +971,7 @@
                         <div class="kpi-label">ROI</div>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-6 col-md-3 mb-3">
                     <div class="kpi-card">
                         <div class="kpi-icon" style="background: #E0E7FF; color: #4338CA;">
                             <i class="fas fa-coins"></i>
@@ -791,7 +980,7 @@
                         <div class="kpi-label">Investment Count</div>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-6 col-md-3 mb-3">
                     <div class="kpi-card">
                         <div class="kpi-icon" style="background: #F3E8FF; color: #7C3AED;">
                             <i class="fas fa-file"></i>
@@ -810,7 +999,7 @@
         <div class="info-card">
             <h5><i class="fas fa-user-tie"></i> {% if viewed_user.role == 'owner' %}Owner{% else %}Agent{% endif %} Details</h5>
             <div class="row">
-                <div class="col-md-3 mb-3">
+                <div class="col-6 col-md-3 mb-3">
                     <div class="kpi-card">
                         <div class="kpi-icon" style="background: #E0E7FF; color: #4338CA;">
                             <i class="fas fa-building"></i>
@@ -819,7 +1008,7 @@
                         <div class="kpi-label">Assigned Properties</div>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-6 col-md-3 mb-3">
                     <div class="kpi-card">
                         <div class="kpi-icon" style="background: #D1FAE5; color: #059669;">
                             <i class="fas fa-users"></i>
@@ -828,7 +1017,7 @@
                         <div class="kpi-label">Leads</div>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-6 col-md-3 mb-3">
                     <div class="kpi-card">
                         <div class="kpi-icon" style="background: #FEF3C7; color: #D97706;">
                             <i class="fas fa-user-friends"></i>
@@ -837,7 +1026,7 @@
                         <div class="kpi-label">Customers</div>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-6 col-md-3 mb-3">
                     <div class="kpi-card">
                         <div class="kpi-icon" style="background: #FEE2E2; color: #DC2626;">
                             <i class="fas fa-dollar-sign"></i>
@@ -883,7 +1072,7 @@
                 </div>
             </div>
             
-            <div class="mt-3 pt-3 border-top d-flex justify-content-between align-items-center">
+            <div class="mt-3 pt-3 border-top d-flex justify-content-between align-items-center verification-status-row">
                 <div>
                     <p class="text-muted small fw-bold mb-1">Verification Status</p>
                     {% if viewed_user.agent_profile.verification_status == 'pending' %}
@@ -917,7 +1106,7 @@
         <div class="info-card" style="border-left: 4px solid #059669;">
             <h5><i class="fas fa-gem text-success"></i> Subscription Details</h5>
             <div class="row">
-                <div class="col-md-3 mb-3">
+                <div class="col-6 col-md-3 mb-3">
                     <div class="kpi-card">
                         <div class="kpi-icon" style="background: #E0E7FF; color: #4338CA;">
                             <i class="fas fa-box"></i>
@@ -926,7 +1115,7 @@
                         <div class="kpi-label">Active Plan</div>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-6 col-md-3 mb-3">
                     <div class="kpi-card">
                         <div class="kpi-icon" style="background: #D1FAE5; color: #059669;">
                             <i class="fas fa-check-circle"></i>
@@ -935,7 +1124,7 @@
                         <div class="kpi-label">Status</div>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-6 col-md-3 mb-3">
                     <div class="kpi-card">
                         <div class="kpi-icon" style="background: #FEF3C7; color: #D97706;">
                             <i class="fas fa-calendar-alt"></i>
@@ -944,7 +1133,7 @@
                         <div class="kpi-label">Started On</div>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
+                <div class="col-6 col-md-3 mb-3">
                     <div class="kpi-card">
                         <div class="kpi-icon" style="background: #FEE2E2; color: #DC2626;">
                             <i class="fas fa-hourglass-end"></i>
@@ -985,16 +1174,16 @@
 <div class="row mb-4">
     <div class="col-12">
         <div class="info-card">
-            <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+            <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom ledger-header">
                 <h5 class="mb-0 border-0 pb-0"><i class="fas fa-wallet text-primary"></i> Financial Ledger</h5>
-                <div>
+                <div class="ledger-balance">
                     <span class="text-muted small me-2">Running Balance:</span>
-                    <span class="badge {% if current_balance >= 0 %}bg-success{% else %}bg-danger{% endif %} px-3 py-2" style="font-size: 1rem;">₹{{ current_balance }}</span>
+                    <span class="badge {% if current_balance >= 0 %}bg-success{% else %}bg-danger{% endif %} px-3 py-2 ledger-balance-badge" style="font-size: 1rem;">₹{{ current_balance }}</span>
                 </div>
             </div>
             
             <div class="table-responsive">
-                <table class="table table-hover align-middle">
+                <table class="table table-hover align-middle ledger-table">
                     <thead class="table-light">
                         <tr>
                             <th style="font-weight: 600; color: #64748B; font-size: 0.875rem;">Date</th>
@@ -1044,7 +1233,7 @@
         <div class="info-card">
             <h5><i class="fas fa-sign-in-alt"></i> Login History</h5>
             <div class="table-responsive">
-                <table class="table table-hover">
+                <table class="table table-hover login-table">
                     <thead>
                         <tr>
                             <th style="font-weight: 600; color: #64748B; font-size: 0.875rem;">Date & Time</th>

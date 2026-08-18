@@ -4,87 +4,608 @@
 {% block title %}Admin Communication History | HHectare{% endblock %}
 
 {% block content %}
-<div class="container-fluid py-4">
+
+<style>
+    /* =========================================================
+       COMMUNICATION HISTORY - RESPONSIVE UI
+       ========================================================= */
+
+    .communication-page {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    /* ---------- Header ---------- */
+
+    .communication-page .communication-page-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    .communication-page .communication-page-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #212529;
+    }
+
+    .communication-page .communication-page-subtitle {
+        font-size: .9rem;
+    }
+
+    /* ---------- Main Card ---------- */
+
+    .communication-page .communication-card {
+        width: 100%;
+        overflow: hidden;
+        border-radius: 16px;
+    }
+
+    .communication-page .communication-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+    }
+
+    .communication-page .communication-card-title {
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .communication-page .send-message-btn {
+        white-space: nowrap;
+    }
+
+    /* ---------- Filters ---------- */
+
+    .communication-page .communication-filters {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .communication-page .communication-type-filter {
+        width: 160px;
+        min-height: 40px;
+        cursor: pointer;
+    }
+
+    /* ---------- Table ---------- */
+
+    .communication-page .communication-table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .communication-page .communication-table {
+        min-width: 900px;
+        margin-bottom: 0;
+    }
+
+    .communication-page .communication-table th {
+        white-space: nowrap;
+        font-size: .78rem;
+        font-weight: 600;
+        color: #495057;
+        padding-top: 13px;
+        padding-bottom: 13px;
+    }
+
+    .communication-page .communication-table td {
+        font-size: .82rem;
+        vertical-align: middle;
+        padding-top: 13px;
+        padding-bottom: 13px;
+    }
+
+    .communication-page .communication-table .recipient-cell {
+        min-width: 170px;
+        max-width: 220px;
+    }
+
+    .communication-page .communication-table .subject-cell {
+        min-width: 150px;
+        max-width: 200px;
+    }
+
+    .communication-page .communication-table .message-cell {
+        min-width: 230px;
+        max-width: 300px;
+    }
+
+    .communication-page .recipient-text,
+    .communication-page .subject-text,
+    .communication-page .message-text {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* ---------- Badges ---------- */
+
+    .communication-page .communication-type-badge {
+        white-space: nowrap;
+        font-size: .72rem;
+    }
+
+    .communication-page .status-badge {
+        white-space: nowrap;
+        font-size: .72rem;
+    }
+
+    /* ---------- Empty State ---------- */
+
+    .communication-page .communication-empty {
+        padding: 60px 20px !important;
+    }
+
+    .communication-page .communication-empty-icon {
+        font-size: 3rem;
+    }
+
+
+    /* =========================================================
+       TABLET
+       ========================================================= */
+
+    @media (max-width: 991.98px) {
+
+        .communication-page .communication-page-title {
+            font-size: 1.35rem;
+        }
+
+        .communication-page .communication-page-subtitle {
+            font-size: .82rem;
+        }
+
+        .communication-page .communication-table {
+            min-width: 850px;
+        }
+
+        .communication-page .communication-table th,
+        .communication-page .communication-table td {
+            font-size: .78rem;
+        }
+
+    }
+
+
+    /* =========================================================
+       MOBILE
+       ========================================================= */
+
+    @media (max-width: 767.98px) {
+
+        .communication-page {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+
+        /* Page Header */
+
+        .communication-page .communication-page-header {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 8px;
+            margin-bottom: 16px !important;
+        }
+
+        .communication-page .communication-page-title {
+            font-size: 1.15rem;
+            margin-bottom: 3px;
+        }
+
+        .communication-page .communication-page-subtitle {
+            font-size: .74rem;
+            line-height: 1.4;
+        }
+
+        /* Main Card */
+
+        .communication-page .communication-card {
+            border-radius: 12px !important;
+        }
+
+        /* Card Header */
+
+        .communication-page .communication-card-header {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 10px;
+            padding: 14px !important;
+        }
+
+        .communication-page .communication-card-title {
+            font-size: .9rem;
+        }
+
+        .communication-page .send-message-btn {
+            width: 100%;
+            min-height: 40px;
+            font-size: .78rem;
+        }
+
+        /* Filters */
+
+        .communication-page .communication-filters {
+            display: block;
+            padding: 12px 14px !important;
+        }
+
+        .communication-page .communication-type-filter {
+            width: 100% !important;
+            min-height: 40px;
+            font-size: .78rem;
+        }
+
+        /* Table */
+
+        .communication-page .communication-table-wrapper {
+            width: 100%;
+            overflow-x: auto !important;
+            border-top: 0;
+        }
+
+        .communication-page .communication-table {
+            min-width: 850px;
+        }
+
+        .communication-page .communication-table th {
+            font-size: .68rem;
+            padding: 10px 9px;
+        }
+
+        .communication-page .communication-table td {
+            font-size: .72rem;
+            padding: 10px 9px;
+        }
+
+        .communication-page .communication-table .ps-4 {
+            padding-left: 10px !important;
+        }
+
+        .communication-page .communication-table .pe-4 {
+            padding-right: 10px !important;
+        }
+
+        .communication-page .recipient-cell {
+            min-width: 150px;
+        }
+
+        .communication-page .subject-cell {
+            min-width: 140px;
+        }
+
+        .communication-page .message-cell {
+            min-width: 210px;
+        }
+
+        .communication-page .communication-type-badge {
+            font-size: .65rem;
+            padding: 6px 9px !important;
+        }
+
+        .communication-page .status-badge {
+            font-size: .65rem;
+        }
+
+        /* Empty State */
+
+        .communication-page .communication-empty {
+            padding: 45px 15px !important;
+        }
+
+        .communication-page .communication-empty-icon {
+            font-size: 2.4rem !important;
+        }
+
+        .communication-page .communication-empty h5 {
+            font-size: .9rem;
+        }
+
+        .communication-page .communication-empty p {
+            font-size: .75rem;
+        }
+    }
+
+
+    /* =========================================================
+       SMALL PHONES
+       ========================================================= */
+
+    @media (max-width: 420px) {
+
+        .communication-page .communication-page-title {
+            font-size: 1.05rem;
+        }
+
+        .communication-page .communication-page-subtitle {
+            font-size: .7rem;
+        }
+
+        .communication-page .communication-card-header {
+            padding: 12px !important;
+        }
+
+        .communication-page .communication-card-title {
+            font-size: .85rem;
+        }
+
+        .communication-page .send-message-btn {
+            min-height: 38px;
+            font-size: .72rem;
+        }
+
+        .communication-page .communication-filters {
+            padding: 10px 12px !important;
+        }
+
+        .communication-page .communication-type-filter {
+            min-height: 38px;
+            font-size: .72rem;
+        }
+
+        .communication-page .communication-table {
+            min-width: 820px;
+        }
+
+        .communication-page .communication-table th {
+            font-size: .63rem;
+        }
+
+        .communication-page .communication-table td {
+            font-size: .68rem;
+        }
+    }
+</style>
+
+
+<div class="container-fluid py-4 communication-page">
+
     <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="communication-page-header mb-4">
+
         <div>
-            <h1 class="h3 mb-0 text-gray-800">Communication History</h1>
-            <p class="text-muted mb-0">View and manage all communications sent to users and partners</p>
+            <h1 class="communication-page-title mb-1">
+                Communication History
+            </h1>
+
+            <p class="communication-page-subtitle text-muted mb-0">
+                View and manage all communications sent to users and partners
+            </p>
         </div>
+
     </div>
 
-    <!-- Main Content -->
-    <div class="card shadow-sm border-0 rounded-4">
-        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-bottom-0">
-            <h6 class="m-0 font-weight-bold text-primary fs-5">Sent Messages</h6>
-            <a href="{% url 'admin_dash:communication-send' %}" class="btn btn-primary">
-                <i class="bi bi-plus-lg me-1"></i> Send Message
+
+    <!-- Main Card -->
+    <div class="card shadow-sm border-0 communication-card">
+
+        <!-- Card Header -->
+        <div class="card-header bg-white border-bottom-0 communication-card-header py-3">
+
+            <h6 class="communication-card-title text-primary">
+                Sent Messages
+            </h6>
+
+            <a href="{% url 'admin_dash:communication-send' %}"
+               class="btn btn-primary send-message-btn">
+
+                <i class="bi bi-plus-lg me-1"></i>
+                Send Message
+
             </a>
+
         </div>
+
+
         <div class="card-body p-0">
+
             <!-- Filters -->
-            <div class="px-4 py-3 bg-light border-bottom">
-                <select name="type" class="form-select w-auto" onchange="location.href='?type='+this.value">
-                    <option value="">All Types</option>
-                    <option value="whatsapp" {% if type_filter == 'whatsapp' %}selected{% endif %}>WhatsApp</option>
-                    <option value="email" {% if type_filter == 'email' %}selected{% endif %}>Email</option>
+            <div class="communication-filters px-4 py-3 bg-light border-bottom">
+
+                <select
+                    name="type"
+                    class="form-select form-select-sm communication-type-filter"
+                    onchange="location.href='?type='+this.value">
+
+                    <option value="">
+                        All Types
+                    </option>
+
+                    <option value="whatsapp"
+                        {% if type_filter == 'whatsapp' %}selected{% endif %}>
+                        WhatsApp
+                    </option>
+
+                    <option value="email"
+                        {% if type_filter == 'email' %}selected{% endif %}>
+                        Email
+                    </option>
+
                 </select>
+
             </div>
+
 
             <!-- Table -->
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
+            <div class="communication-table-wrapper">
+
+                <table class="table table-hover align-middle communication-table">
+
                     <thead class="table-light">
+
                         <tr>
-                            <th class="ps-4">Type</th>
-                            <th>Recipient</th>
-                            <th>Subject</th>
-                            <th>Message Preview</th>
-                            <th>Status</th>
-                            <th class="pe-4">Sent At</th>
+
+                            <th class="ps-4">
+                                Type
+                            </th>
+
+                            <th>
+                                Recipient
+                            </th>
+
+                            <th>
+                                Subject
+                            </th>
+
+                            <th>
+                                Message Preview
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th class="pe-4">
+                                Sent At
+                            </th>
+
                         </tr>
+
                     </thead>
+
+
                     <tbody>
+
                         {% if communications %}
+
                             {% for communication in communications %}
+
                                 <tr>
+
+                                    <!-- Type -->
                                     <td class="ps-4">
+
                                         {% if communication.communication_type == 'email' %}
-                                            <span class="badge bg-primary rounded-pill px-3 py-2"><i class="bi bi-envelope-fill me-1"></i> Email</span>
+
+                                            <span class="badge bg-primary rounded-pill px-3 py-2 communication-type-badge">
+                                                <i class="bi bi-envelope-fill me-1"></i>
+                                                Email
+                                            </span>
+
                                         {% elif communication.communication_type == 'whatsapp' %}
-                                            <span class="badge bg-success rounded-pill px-3 py-2"><i class="bi bi-whatsapp me-1"></i> WhatsApp</span>
+
+                                            <span class="badge bg-success rounded-pill px-3 py-2 communication-type-badge">
+                                                <i class="bi bi-whatsapp me-1"></i>
+                                                WhatsApp
+                                            </span>
+
                                         {% else %}
-                                            <span class="badge bg-secondary rounded-pill px-3 py-2">{{ communication.get_communication_type_display }}</span>
+
+                                            <span class="badge bg-secondary rounded-pill px-3 py-2 communication-type-badge">
+                                                {{ communication.get_communication_type_display }}
+                                            </span>
+
                                         {% endif %}
+
                                     </td>
-                                    <td><span class="fw-medium text-dark">{{ communication.recipient }}</span></td>
-                                    <td><span class="text-muted">{{ communication.subject|truncatewords:5|default:"N/A" }}</span></td>
-                                    <td><span class="text-muted">{{ communication.message|truncatewords:10 }}</span></td>
+
+
+                                    <!-- Recipient -->
+                                    <td class="recipient-cell">
+
+                                        <span class="fw-medium text-dark recipient-text">
+                                            {{ communication.recipient }}
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- Subject -->
+                                    <td class="subject-cell">
+
+                                        <span class="text-muted subject-text">
+                                            {{ communication.subject|truncatewords:5|default:"N/A" }}
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- Message -->
+                                    <td class="message-cell">
+
+                                        <span class="text-muted message-text">
+                                            {{ communication.message|truncatewords:10 }}
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- Status -->
                                     <td>
+
                                         {% if communication.status == 'sent' %}
-                                            <span class="badge bg-success bg-opacity-10 text-success px-2 py-1 border border-success border-opacity-25 rounded-3">Sent</span>
+
+                                            <span class="badge bg-success bg-opacity-10 text-success px-2 py-1 border border-success border-opacity-25 rounded-3 status-badge">
+                                                Sent
+                                            </span>
+
                                         {% else %}
-                                            <span class="badge bg-secondary bg-opacity-10 text-secondary px-2 py-1 border border-secondary border-opacity-25 rounded-3">{{ communication.get_status_display }}</span>
+
+                                            <span class="badge bg-secondary bg-opacity-10 text-secondary px-2 py-1 border border-secondary border-opacity-25 rounded-3 status-badge">
+                                                {{ communication.get_status_display }}
+                                            </span>
+
                                         {% endif %}
+
                                     </td>
-                                    <td class="pe-4 text-muted small">{{ communication.sent_at|date:"M d, Y H:i" }}</td>
+
+
+                                    <!-- Date -->
+                                    <td class="pe-4 text-muted small">
+
+                                        {{ communication.sent_at|date:"M d, Y H:i" }}
+
+                                    </td>
+
                                 </tr>
+
                             {% endfor %}
+
                         {% else %}
+
                             <tr>
-                                <td colspan="6" class="text-center py-5">
+
+                                <td colspan="6" class="text-center communication-empty">
+
                                     <div class="text-muted">
-                                        <i class="bi bi-chat-dots" style="font-size: 3rem;"></i>
-                                        <h5 class="mt-3">No Communications Yet</h5>
-                                        <p>You haven't sent any messages yet.</p>
+
+                                        <i class="bi bi-chat-dots communication-empty-icon"></i>
+
+                                        <h5 class="mt-3">
+                                            No Communications Yet
+                                        </h5>
+
+                                        <p class="mb-0">
+                                            You haven't sent any messages yet.
+                                        </p>
+
                                     </div>
+
                                 </td>
+
                             </tr>
+
                         {% endif %}
+
                     </tbody>
+
                 </table>
+
             </div>
+
         </div>
+
     </div>
+
 </div>
+
 {% endblock %}

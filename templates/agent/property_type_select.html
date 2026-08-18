@@ -6,79 +6,916 @@
 <span>Add Property</span>
 {% endblock %}
 
-{% block content %}
-<div class="page-header">
-    <div class="header-title">
-        <h1>Select Property Type</h1>
-        <p class="text-muted">Choose the type of property you want to add</p>
-    </div>
-</div>
-
-{% if limit_message %}
-<!-- Limit Reached Modal -->
-<div class="modal fade show" style="display: block; background: rgba(0,0,0,0.5);" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="border-radius: 16px; border: none; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-      <div class="modal-header" style="background: #fff8e1; border-bottom: none; padding: 20px 24px;">
-        <h5 class="modal-title" style="color: #F4B400; font-weight: 700; display: flex; align-items: center; gap: 8px;">
-            <i class="bi bi-exclamation-triangle-fill"></i> {{ limit_title }}
-        </h5>
-        <a href="{% url 'agent:dashboard' %}" class="btn-close" style="opacity: 0.5;"></a>
-      </div>
-      <div class="modal-body text-center" style="padding: 30px 24px;">
-        <div style="background: #fff3cd; width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
-            <i class="bi bi-shield-lock-fill" style="font-size: 2rem; color: #F4B400;"></i>
-        </div>
-        <p style="font-size: 1.1rem; color: #495057; font-weight: 500; margin-bottom: 0;">{{ limit_message }}</p>
-      </div>
-      <div class="modal-footer" style="border-top: 1px solid #f1f3f5; padding: 16px 24px; justify-content: center;">
-        <a href="{% url 'agent:dashboard' %}" class="btn btn-secondary px-4 py-2" style="border-radius: 8px; font-weight: 500;">Back to Dashboard</a>
-      </div>
-    </div>
-  </div>
-</div>
-{% endif %}
-
-<div class="row">
-    <div class="col-md-6">
-        {% if request.resolver_match.namespace == 'admin_dash' %}
-        <a href="{% url 'admin_dash:property_add' 'land' %}" class="card property-type-card text-decoration-none">
-            {% else %}
-            <a href="{% url 'agent:property_add' 'land' %}" class="card property-type-card text-decoration-none">
-                {% endif %}
-                <!-- <a href="{% url 'agent:property_add' 'land' %}" class="card property-type-card text-decoration-none"> -->
-                <div class="card-body text-center">
-                    <div class="property-type-icon">
-                        <i class="bi bi-map"></i>
-                    </div>
-                    <h3>Agricultural Land</h3>
-                    <p class="text-muted">Add agricultural land, farmland, plantations, and agro-investment properties
-                    </p>
-                    <button class="btn btn-primary mt-2">Select Agri Land</button>
-                </div>
-            </a>
-    </div>
-    <div class="col-md-6">
-        {% if request.resolver_match.namespace == 'admin_dash' %}
-        <a href="{% url 'admin_dash:property_add' 'house' %}" class="card property-type-card text-decoration-none">
-            {% else %}
-            <a href="{% url 'agent:property_add' 'house' %}" class="card property-type-card text-decoration-none">
-                {% endif %}
-                <!-- <a href="{% url 'agent:property_add' 'house' %}" class="card property-type-card text-decoration-none"> -->
-                <div class="card-body text-center">
-                    <div class="property-type-icon">
-                        <i class="bi bi-house"></i>
-                    </div>
-                    <h3>House / Building</h3>
-                    <p class="text-muted">Add houses, apartments, villas, or commercial buildings</p>
-                    <button class="btn btn-primary mt-2">Select House</button>
-                </div>
-            </a>
-    </div>
-</div>
-
-{% load static %}
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/agent/property_type_select.css' %}">
+<style>
+    /* =========================================================
+       PROPERTY TYPE SELECT
+       Attractive + Fully Responsive
+       Desktop / Laptop / Tablet / Mobile / 360px / Landscape
+       ========================================================= */
+
+    .property-type-page {
+        width: 100%;
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 0;
+        min-width: 0;
+        overflow-x: hidden;
+    }
+
+    /* ---------------------------------------------------------
+       Page Header
+       --------------------------------------------------------- */
+
+    .property-type-header {
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 24px;
+        padding: 24px 28px;
+        border: 1px solid #e5e7eb;
+        border-radius: 18px;
+        background:
+            radial-gradient(circle at top right, rgba(16, 185, 129, 0.11), transparent 35%),
+            linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+    }
+
+    .property-type-header::after {
+        content: "";
+        position: absolute;
+        width: 150px;
+        height: 150px;
+        right: -60px;
+        top: -70px;
+        border-radius: 50%;
+        background: rgba(0, 107, 69, 0.06);
+        pointer-events: none;
+    }
+
+    .property-type-header-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .property-type-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        margin-bottom: 8px;
+        padding: 5px 10px;
+        border-radius: 999px;
+        background: rgba(0, 107, 69, 0.08);
+        color: #006b45;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+    }
+
+    .property-type-eyebrow i {
+        font-size: 0.7rem;
+    }
+
+    .property-type-header h1 {
+        margin: 0;
+        color: #0f172a;
+        font-size: clamp(1.3rem, 2vw, 1.8rem);
+        font-weight: 700;
+        line-height: 1.2;
+    }
+
+    .property-type-header p {
+        max-width: 650px;
+        margin: 8px 0 0;
+        color: #64748b;
+        font-size: 0.85rem;
+        line-height: 1.55;
+    }
+
+    /* ---------------------------------------------------------
+       Choice Grid
+       --------------------------------------------------------- */
+
+    .property-type-grid {
+        width: 100%;
+    }
+
+    .property-type-col {
+        display: flex;
+    }
+
+    .property-type-card {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        min-height: 320px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 28px 26px;
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+        border-radius: 18px;
+        background: #ffffff;
+        box-shadow: 0 8px 25px rgba(15, 23, 42, 0.06);
+        color: inherit;
+        text-decoration: none;
+        transition:
+            transform .22s ease,
+            box-shadow .22s ease,
+            border-color .22s ease;
+    }
+
+    .property-type-card::before {
+        content: "";
+        position: absolute;
+        width: 180px;
+        height: 180px;
+        right: -70px;
+        top: -65px;
+        border-radius: 50%;
+        background: rgba(0, 107, 69, 0.05);
+        pointer-events: none;
+        transition: transform .25s ease;
+    }
+
+    .property-type-card::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #006b45, #16a34a);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform .22s ease;
+    }
+
+    .property-type-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(0, 107, 69, 0.25);
+        box-shadow: 0 18px 38px rgba(15, 23, 42, 0.10);
+        color: inherit;
+    }
+
+    .property-type-card:hover::before {
+        transform: scale(1.12);
+    }
+
+    .property-type-card:hover::after {
+        transform: scaleX(1);
+    }
+
+    .property-type-card:focus-visible {
+        outline: 3px solid rgba(37, 99, 235, 0.22);
+        outline-offset: 3px;
+    }
+
+    .property-type-card .card-body {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        padding: 0 !important;
+        text-align: center;
+    }
+
+    /* ---------------------------------------------------------
+       Icons
+       --------------------------------------------------------- */
+
+    .property-type-icon {
+        width: 76px;
+        height: 76px;
+        margin: 0 auto 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 20px;
+        background: linear-gradient(135deg, rgba(0, 107, 69, 0.10), rgba(16, 185, 129, 0.15));
+        border: 1px solid rgba(0, 107, 69, 0.08);
+        color: #006b45;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.85);
+    }
+
+    .property-type-icon i {
+        font-size: 2rem;
+    }
+
+    /* Different subtle accent for house/building */
+    .property-type-col:nth-child(2) .property-type-icon {
+        background: linear-gradient(135deg, rgba(37, 99, 235, 0.09), rgba(96, 165, 250, 0.16));
+        color: #2563eb;
+        border-color: rgba(37, 99, 235, 0.10);
+    }
+
+    /* ---------------------------------------------------------
+       Card Content
+       --------------------------------------------------------- */
+
+    .property-type-card h3 {
+        margin: 0 0 9px;
+        color: #0f172a;
+        font-size: 1.25rem;
+        font-weight: 700;
+        line-height: 1.3;
+    }
+
+    .property-type-card p {
+        max-width: 430px;
+        margin: 0 auto;
+        color: #64748b;
+        font-size: 0.82rem;
+        line-height: 1.6;
+    }
+
+    .property-type-card .btn {
+        min-height: 42px;
+        margin-top: 18px !important;
+        padding: 9px 18px;
+        border: 0;
+        border-radius: 10px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        box-shadow: 0 5px 14px rgba(0, 107, 69, 0.16);
+        transition: transform .18s ease, box-shadow .18s ease;
+    }
+
+    .property-type-card .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 18px rgba(0, 107, 69, 0.21);
+    }
+
+    .property-type-col:nth-child(2) .btn {
+        background: #2563eb;
+        box-shadow: 0 5px 14px rgba(37, 99, 235, 0.15);
+    }
+
+    .property-type-col:nth-child(2) .btn:hover {
+        background: #1d4ed8;
+        box-shadow: 0 8px 18px rgba(37, 99, 235, 0.20);
+    }
+
+    /* ---------------------------------------------------------
+       Limit Modal
+       --------------------------------------------------------- */
+
+    .property-limit-modal {
+        background: rgba(15, 23, 42, 0.58);
+        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
+        padding: 16px;
+        overflow-y: auto;
+    }
+
+    .property-limit-dialog {
+        width: min(520px, 100%);
+        max-width: 520px;
+        margin: auto;
+    }
+
+    .property-limit-content {
+        border: 0;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 22px 55px rgba(0, 0, 0, 0.22);
+    }
+
+    .property-limit-header {
+        background: #fff8e1;
+        border-bottom: 0;
+        padding: 18px 22px;
+        gap: 10px;
+    }
+
+    .property-limit-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #d99700;
+        font-size: 1rem;
+        font-weight: 700;
+        line-height: 1.3;
+    }
+
+    .property-limit-body {
+        padding: 26px 22px;
+        text-align: center;
+    }
+
+    .property-limit-icon {
+        width: 62px;
+        height: 62px;
+        margin: 0 auto 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: #fff3cd;
+        color: #d99700;
+    }
+
+    .property-limit-icon i {
+        font-size: 1.8rem;
+    }
+
+    .property-limit-message {
+        margin: 0;
+        color: #495057;
+        font-size: 0.92rem;
+        font-weight: 500;
+        line-height: 1.6;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    .property-limit-footer {
+        display: flex;
+        justify-content: center;
+        padding: 14px 22px;
+        border-top: 1px solid #f1f3f5;
+    }
+
+    .property-limit-footer .btn {
+        min-height: 40px;
+        padding: 8px 17px;
+        border-radius: 9px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    /* =========================================================
+       LARGE DESKTOP
+       ========================================================= */
+
+    @media (min-width: 1400px) {
+        .property-type-page {
+            max-width: 1180px;
+        }
+
+        .property-type-header {
+            padding: 28px 32px;
+        }
+
+        .property-type-card {
+            min-height: 350px;
+            padding: 32px 30px;
+        }
+
+        .property-type-icon {
+            width: 84px;
+            height: 84px;
+        }
+    }
+
+    /* =========================================================
+       LAPTOP / STANDARD DESKTOP
+       ========================================================= */
+
+    @media (min-width: 992px) and (max-width: 1399.98px) {
+        .property-type-card {
+            min-height: 300px;
+        }
+
+        .property-type-icon {
+            width: 70px;
+            height: 70px;
+        }
+
+        .property-type-icon i {
+            font-size: 1.8rem;
+        }
+    }
+
+    /* =========================================================
+       TABLET
+       ========================================================= */
+
+    @media (min-width: 768px) and (max-width: 991.98px) {
+        .property-type-header {
+            padding: 20px 22px;
+            margin-bottom: 18px;
+        }
+
+        .property-type-card {
+            min-height: 275px;
+            padding: 22px 18px;
+            border-radius: 15px;
+        }
+
+        .property-type-icon {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 14px;
+            border-radius: 16px;
+        }
+
+        .property-type-icon i {
+            font-size: 1.6rem;
+        }
+
+        .property-type-card h3 {
+            font-size: 1.08rem;
+        }
+
+        .property-type-card p {
+            font-size: 0.75rem;
+        }
+
+        .property-type-card .btn {
+            min-height: 40px;
+            font-size: 0.72rem;
+        }
+    }
+
+    /* =========================================================
+       MOBILE
+       ========================================================= */
+
+    @media (max-width: 767.98px) {
+        .property-type-page {
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .property-type-header {
+            margin-bottom: 14px;
+            padding: 17px 15px;
+            border-radius: 14px;
+        }
+
+        .property-type-eyebrow {
+            margin-bottom: 7px;
+            padding: 4px 8px;
+            font-size: 0.62rem;
+        }
+
+        .property-type-header h1 {
+            font-size: 1.15rem;
+        }
+
+        .property-type-header p {
+            margin-top: 6px;
+            font-size: 0.72rem;
+            line-height: 1.5;
+        }
+
+        .property-type-grid {
+            row-gap: 12px;
+        }
+
+        .property-type-col {
+            width: 100%;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .property-type-card {
+            min-height: 0;
+            padding: 23px 18px;
+            border-radius: 14px;
+        }
+
+        .property-type-icon {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 13px;
+            border-radius: 16px;
+        }
+
+        .property-type-icon i {
+            font-size: 1.45rem;
+        }
+
+        .property-type-card h3 {
+            font-size: 1rem;
+            margin-bottom: 7px;
+        }
+
+        .property-type-card p {
+            max-width: 420px;
+            font-size: 0.71rem;
+            line-height: 1.55;
+        }
+
+        .property-type-card .btn {
+            width: 100%;
+            min-height: 40px;
+            margin-top: 15px !important;
+            font-size: 0.7rem;
+        }
+
+        /* Modal */
+        .property-limit-modal {
+            padding: 10px;
+        }
+
+        .property-limit-dialog {
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .property-limit-content {
+            border-radius: 14px;
+        }
+
+        .property-limit-header {
+            padding: 14px 15px;
+        }
+
+        .property-limit-title {
+            font-size: 0.82rem;
+            padding-right: 22px;
+        }
+
+        .property-limit-body {
+            padding: 21px 15px;
+        }
+
+        .property-limit-icon {
+            width: 54px;
+            height: 54px;
+            margin-bottom: 13px;
+        }
+
+        .property-limit-icon i {
+            font-size: 1.55rem;
+        }
+
+        .property-limit-message {
+            font-size: 0.78rem;
+            line-height: 1.5;
+        }
+
+        .property-limit-footer {
+            padding: 11px 15px;
+        }
+
+        .property-limit-footer .btn {
+            width: 100%;
+            min-height: 39px;
+        }
+    }
+
+    /* =========================================================
+       SMALL PHONES
+       ========================================================= */
+
+    @media (max-width: 480px) {
+        .property-type-header {
+            padding: 15px 13px;
+        }
+
+        .property-type-header h1 {
+            font-size: 1.05rem;
+        }
+
+        .property-type-header p {
+            font-size: 0.68rem;
+        }
+
+        .property-type-card {
+            padding: 20px 14px;
+        }
+
+        .property-type-icon {
+            width: 54px;
+            height: 54px;
+            border-radius: 14px;
+        }
+
+        .property-type-icon i {
+            font-size: 1.3rem;
+        }
+
+        .property-type-card h3 {
+            font-size: 0.92rem;
+        }
+
+        .property-type-card p {
+            font-size: 0.67rem;
+        }
+
+        .property-type-card .btn {
+            min-height: 38px;
+            font-size: 0.67rem;
+        }
+    }
+
+    /* =========================================================
+       VERY SMALL PHONES
+       ========================================================= */
+
+    @media (max-width: 360px) {
+        .property-type-header {
+            padding: 13px 11px;
+            border-radius: 12px;
+        }
+
+        .property-type-eyebrow {
+            font-size: 0.58rem;
+        }
+
+        .property-type-header h1 {
+            font-size: 0.98rem;
+        }
+
+        .property-type-header p {
+            font-size: 0.64rem;
+        }
+
+        .property-type-card {
+            padding: 18px 11px;
+            border-radius: 12px;
+        }
+
+        .property-type-icon {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 11px;
+        }
+
+        .property-type-icon i {
+            font-size: 1.2rem;
+        }
+
+        .property-type-card h3 {
+            font-size: 0.88rem;
+        }
+
+        .property-type-card p {
+            font-size: 0.63rem;
+            line-height: 1.5;
+        }
+
+        .property-type-card .btn {
+            min-height: 37px;
+            font-size: 0.63rem;
+            padding: 8px 10px;
+        }
+    }
+
+    /* =========================================================
+       LANDSCAPE MOBILE
+       ========================================================= */
+
+    @media (max-width: 767.98px) and (orientation: landscape) {
+        .property-type-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .property-type-col {
+            display: flex;
+        }
+
+        .property-type-card {
+            min-height: 255px;
+            padding: 18px 12px;
+        }
+
+        .property-type-icon {
+            width: 52px;
+            height: 52px;
+            margin-bottom: 11px;
+        }
+
+        .property-type-card h3 {
+            font-size: 0.9rem;
+        }
+
+        .property-type-card p {
+            font-size: 0.63rem;
+        }
+
+        .property-type-card .btn {
+            min-height: 37px;
+            margin-top: 12px !important;
+        }
+    }
+
+    /* Prevent accidental overflow from long text */
+    .property-type-page,
+    .property-type-header,
+    .property-type-card,
+    .property-type-card .card-body,
+    .property-limit-content {
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+</style>
 {% endblock %}
+
+
+{% block content %}
+
+<div class="property-type-page">
+
+    <!-- ================= HEADER ================= -->
+
+    <div class="property-type-header">
+
+        <div class="property-type-header-content">
+
+            <div class="property-type-eyebrow">
+                <i class="bi bi-plus-circle-fill"></i>
+                Add New Property
+            </div>
+
+            <h1>Select Property Type</h1>
+
+            <p>
+                Choose the type of property you want to add.
+                Select the option that best matches your listing.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= PROPERTY TYPES ================= -->
+
+    <div class="row g-3 property-type-grid">
+
+        <!-- Agricultural Land -->
+
+        <div class="col-md-6 property-type-col">
+
+            {% if request.resolver_match.namespace == 'admin_dash' %}
+
+                <a
+                    href="{% url 'admin_dash:property_add' 'land' %}"
+                    class="card property-type-card"
+                    aria-label="Add Agricultural Land"
+                >
+
+            {% else %}
+
+                <a
+                    href="{% url 'agent:property_add' 'land' %}"
+                    class="card property-type-card"
+                    aria-label="Add Agricultural Land"
+                >
+
+            {% endif %}
+
+                    <div class="card-body">
+
+                        <div class="property-type-icon">
+                            <i class="bi bi-map"></i>
+                        </div>
+
+                        <h3>
+                            Agricultural Land
+                        </h3>
+
+                        <p>
+                            Add agricultural land, farmland, plantations,
+                            and agro-investment properties.
+                        </p>
+
+                        <span class="btn btn-primary mt-2">
+                            <i class="bi bi-arrow-right me-1"></i>
+                            Select Agri Land
+                        </span>
+
+                    </div>
+
+                </a>
+
+        </div>
+
+
+        <!-- House / Building -->
+
+        <div class="col-md-6 property-type-col">
+
+            {% if request.resolver_match.namespace == 'admin_dash' %}
+
+                <a
+                    href="{% url 'admin_dash:property_add' 'house' %}"
+                    class="card property-type-card"
+                    aria-label="Add House or Building"
+                >
+
+            {% else %}
+
+                <a
+                    href="{% url 'agent:property_add' 'house' %}"
+                    class="card property-type-card"
+                    aria-label="Add House or Building"
+                >
+
+            {% endif %}
+
+                    <div class="card-body">
+
+                        <div class="property-type-icon">
+                            <i class="bi bi-house"></i>
+                        </div>
+
+                        <h3>
+                            House / Building
+                        </h3>
+
+                        <p>
+                            Add houses, apartments, villas,
+                            or commercial buildings.
+                        </p>
+
+                        <span class="btn btn-primary mt-2">
+                            <i class="bi bi-arrow-right me-1"></i>
+                            Select House
+                        </span>
+
+                    </div>
+
+                </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= LIMIT MODAL ================= -->
+
+    {% if limit_message %}
+
+    <div
+        class="modal fade show property-limit-modal"
+        style="display: flex;"
+        tabindex="-1"
+        role="dialog"
+        aria-modal="true"
+    >
+
+        <div class="modal-dialog modal-dialog-centered property-limit-dialog">
+
+            <div class="modal-content property-limit-content">
+
+                <!-- Header -->
+
+                <div class="modal-header property-limit-header">
+
+                    <h5 class="modal-title property-limit-title">
+
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+
+                        {{ limit_title }}
+
+                    </h5>
+
+                    <a
+                        href="{% url 'agent:dashboard' %}"
+                        class="btn-close"
+                        style="opacity:.5;"
+                        aria-label="Close"
+                    ></a>
+
+                </div>
+
+
+                <!-- Body -->
+
+                <div class="modal-body property-limit-body">
+
+                    <div class="property-limit-icon">
+
+                        <i class="bi bi-shield-lock-fill"></i>
+
+                    </div>
+
+                    <p class="property-limit-message">
+                        {{ limit_message }}
+                    </p>
+
+                </div>
+
+
+                <!-- Footer -->
+
+                <div class="modal-footer property-limit-footer">
+
+                    <a
+                        href="{% url 'agent:dashboard' %}"
+                        class="btn btn-secondary"
+                    >
+                        <i class="bi bi-arrow-left me-1"></i>
+                        Back to Dashboard
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
 {% endblock %}

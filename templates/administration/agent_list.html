@@ -1,29 +1,422 @@
 {% extends "administration/admin_base.html" %}
 {% load static %}
+
 {% block title %}Agents - Admin Dashboard{% endblock %}
 {% block page_title %}Agents{% endblock %}
 {% block page_subtitle %}Manage and view all agent accounts{% endblock %}
+
+
+{% block extra_css %}
+<style>
+
+    /* =========================================
+       AGENTS PAGE
+       ========================================= */
+
+    .agents-page {
+        width: 100%;
+    }
+
+    .agents-card {
+        border: 1px solid #e8edf2;
+        border-radius: 14px;
+        overflow: hidden;
+        background: #fff;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+    }
+
+
+    /* =========================================
+       HEADER
+       ========================================= */
+
+    .agents-card .card-header {
+        background: #fff;
+        padding: 18px 20px;
+        border-bottom: 1px solid #edf1f5;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    .agents-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0;
+        white-space: nowrap;
+    }
+
+
+    /* =========================================
+       FILTER
+       ========================================= */
+
+    .agents-filter-form {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .agents-search {
+        width: 190px;
+        min-width: 190px;
+    }
+
+    .agents-status {
+        width: 125px;
+        min-width: 125px;
+    }
+
+    .agents-filter-btn {
+        white-space: nowrap;
+        background: #006b45;
+        border-color: #006b45;
+    }
+
+    .agents-filter-btn:hover {
+        background: #005538;
+        border-color: #005538;
+    }
+
+
+    /* =========================================
+       BODY
+       ========================================= */
+
+    .agents-card .card-body {
+        padding: 18px 20px;
+    }
+
+
+    /* =========================================
+       TABLE
+       ========================================= */
+
+    .agents-table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+    }
+
+    .agents-table {
+        min-width: 760px;
+        margin-bottom: 0;
+    }
+
+    .agents-table thead th {
+        background: #f7f9fb;
+        color: #64748b;
+        font-size: 0.72rem;
+        font-weight: 600;
+        padding: 11px 12px;
+        border-bottom: 1px solid #e5eaf0;
+        white-space: nowrap;
+    }
+
+    .agents-table tbody td {
+        color: #334155;
+        font-size: 0.78rem;
+        padding: 14px 12px;
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+
+    .agent-name {
+        font-weight: 600;
+        color: #1e293b;
+    }
+
+    .agent-status {
+        font-size: 0.68rem;
+        padding: 4px 8px;
+        border-radius: 5px;
+    }
+
+    .agent-details-btn {
+        font-size: 0.72rem;
+        padding: 5px 10px;
+        white-space: nowrap;
+    }
+
+
+    /* =========================================
+       TOTAL
+       ========================================= */
+
+    .agents-total {
+        margin-top: 14px !important;
+        padding-top: 12px;
+        border-top: 1px solid #edf1f5;
+        font-size: 0.8rem;
+        color: #334155;
+    }
+
+
+    /* =========================================
+       TABLET
+       ========================================= */
+
+    @media (max-width: 992px) {
+
+        .agents-card .card-header {
+            gap: 14px;
+        }
+
+        .agents-search {
+            width: 170px;
+            min-width: 170px;
+        }
+
+        .agents-status {
+            width: 115px;
+            min-width: 115px;
+        }
+
+    }
+
+
+    /* =========================================
+       MOBILE
+       ========================================= */
+
+    @media (max-width: 768px) {
+
+        .agents-page {
+            width: 100%;
+            padding: 0;
+        }
+
+        .agents-card {
+            border-radius: 12px;
+            margin: 0;
+        }
+
+
+        /* Header */
+
+        .agents-card .card-header {
+            display: block !important;
+            padding: 14px 12px;
+        }
+
+        .agents-title {
+            font-size: 0.82rem;
+            line-height: 1.2;
+            margin-bottom: 10px !important;
+        }
+
+
+        /* Filter row */
+
+        .agents-filter-form {
+            width: 100%;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 96px auto;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .agents-search {
+            width: 100%;
+            min-width: 0;
+            height: 36px;
+            font-size: 0.68rem;
+            padding: 6px 8px;
+        }
+
+        .agents-status {
+            width: 96px;
+            min-width: 96px;
+            height: 36px;
+            font-size: 0.62rem;
+            padding: 6px 24px 6px 7px;
+            margin-left: 0 !important;
+        }
+
+        .agents-filter-btn {
+            height: 36px;
+            font-size: 0.65rem;
+            padding: 6px 10px;
+            margin-left: 0 !important;
+        }
+
+
+        /* Body */
+
+        .agents-card .card-body {
+            padding: 10px 8px;
+        }
+
+
+        /* Table */
+
+        .agents-table-wrapper {
+            border-radius: 9px;
+            overflow-x: auto;
+        }
+
+        .agents-table {
+            min-width: 700px;
+        }
+
+        .agents-table thead th {
+            font-size: 0.62rem;
+            padding: 9px 10px;
+        }
+
+        .agents-table tbody td {
+            font-size: 0.65rem;
+            padding: 11px 10px;
+        }
+
+        .agent-status {
+            font-size: 0.58rem;
+            padding: 3px 6px;
+        }
+
+        .agent-details-btn {
+            font-size: 0.62rem;
+            padding: 4px 8px;
+        }
+
+
+        /* Total */
+
+        .agents-total {
+            font-size: 0.68rem;
+            margin-top: 10px !important;
+            padding-top: 9px;
+        }
+
+    }
+
+
+    /* =========================================
+       VERY SMALL MOBILE
+       ========================================= */
+
+    @media (max-width: 400px) {
+
+        .agents-card .card-header {
+            padding: 12px 9px;
+        }
+
+        .agents-title {
+            font-size: 0.78rem;
+        }
+
+        .agents-filter-form {
+            grid-template-columns: minmax(0, 1fr) 92px auto;
+            gap: 4px;
+        }
+
+        .agents-search {
+            font-size: 0.62rem;
+            height: 34px;
+        }
+
+        .agents-status {
+            width: 92px;
+            min-width: 92px;
+            height: 34px;
+            font-size: 0.6rem;
+            padding: 5px 22px 5px 6px;
+        }
+
+        .agents-filter-btn {
+            height: 34px;
+            font-size: 0.6rem;
+            padding: 5px 8px;
+        }
+
+        .agents-card .card-body {
+            padding: 8px 6px;
+        }
+
+        .agents-table {
+            min-width: 680px;
+        }
+
+    }
+
+</style>
+{% endblock %}
+
+
 {% block content %}
-<div class="container-fluid">
-    <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="card-title mb-0">All Agents</h5>
-            <div class="d-flex gap-2">
-                <form class="d-flex" method="GET">
-                    <input type="text" name="search" class="form-control form-control-sm" placeholder="Search agents..." value="{{ search }}">
-                    <select name="status" class="form-select form-select-sm ms-2">
-                        <option value="">All Status</option>
-                        <option value="active" {% if selected_status == 'active' %}selected{% endif %}>Active</option>
-                        <option value="inactive" {% if selected_status == 'inactive' %}selected{% endif %}>Inactive</option>
-                    </select>
-                    <button type="submit" class="btn btn-primary btn-sm ms-2">Filter</button>
-                </form>
-            </div>
+
+<div class="container-fluid agents-page">
+
+    <div class="card agents-card">
+
+
+        <!-- HEADER -->
+
+        <div class="card-header">
+
+            <h5 class="card-title agents-title">
+                All Agents
+            </h5>
+
+
+            <form class="agents-filter-form" method="GET">
+
+                <input
+                    type="text"
+                    name="search"
+                    class="form-control form-control-sm agents-search"
+                    placeholder="Search agents..."
+                    value="{{ search }}"
+                >
+
+
+                <select
+                    name="status"
+                    class="form-select form-select-sm agents-status"
+                >
+                    <option value="">All Status</option>
+
+                    <option
+                        value="active"
+                        {% if selected_status == 'active' %}selected{% endif %}
+                    >
+                        Active
+                    </option>
+
+                    <option
+                        value="inactive"
+                        {% if selected_status == 'inactive' %}selected{% endif %}
+                    >
+                        Inactive
+                    </option>
+                </select>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary btn-sm agents-filter-btn"
+                >
+                    Filter
+                </button>
+
+            </form>
+
         </div>
+
+
+        <!-- BODY -->
+
         <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead class="table-light">
+
+            <div class="agents-table-wrapper">
+
+                <table class="table table-hover align-middle agents-table">
+
+                    <thead>
                         <tr>
                             <th>Name</th>
                             <th>Email</th>
@@ -33,38 +426,99 @@
                             <th>Actions</th>
                         </tr>
                     </thead>
+
+
                     <tbody>
+
                         {% for agent in agents %}
+
                         <tr>
+
                             <td>
-                                <div class="fw-semibold">{{ agent.get_full_name|default:agent.username }}</div>
+                                <div class="agent-name">
+                                    {{ agent.get_full_name|default:agent.username }}
+                                </div>
                             </td>
-                            <td>{{ agent.email }}</td>
-                            <td>{{ agent.agent_profile.phone|default:"-" }}</td>
-                            <td>{{ agent.date_joined|date:"M d, Y" }}</td>
+
                             <td>
+                                {{ agent.email }}
+                            </td>
+
+                            <td>
+                                {{ agent.agent_profile.phone|default:"-" }}
+                            </td>
+
+                            <td>
+                                {{ agent.date_joined|date:"M d, Y" }}
+                            </td>
+
+
+                            <td>
+
                                 {% if agent.is_active %}
-                                    <span class="badge bg-success bg-opacity-10 text-success border border-success">Active</span>
+
+                                <span class="badge bg-success bg-opacity-10 text-success border border-success agent-status">
+                                    Active
+                                </span>
+
                                 {% else %}
-                                    <span class="badge bg-warning bg-opacity-10 text-warning border border-warning">Inactive</span>
+
+                                <span class="badge bg-warning bg-opacity-10 text-warning border border-warning agent-status">
+                                    Inactive
+                                </span>
+
                                 {% endif %}
+
                             </td>
+
+
                             <td>
-                                <a href="{% url 'admin_dash:user-profile' agent.id %}" class="btn btn-sm btn-outline-primary">View Details</a>
+
+                                <a
+                                    href="{% url 'admin_dash:user-profile' agent.id %}"
+                                    class="btn btn-sm btn-outline-primary agent-details-btn"
+                                >
+                                    View Details
+                                </a>
+
                             </td>
+
                         </tr>
+
+
                         {% empty %}
+
                         <tr>
-                            <td colspan="6" class="text-center py-4 text-muted">No agents found</td>
+
+                            <td
+                                colspan="6"
+                                class="text-center py-4 text-muted"
+                            >
+                                No agents found
+                            </td>
+
                         </tr>
+
                         {% endfor %}
+
                     </tbody>
+
                 </table>
+
             </div>
-            <div class="mt-3">
-                <strong>Total Agents:</strong> {{ total_agents }}
+
+
+            <!-- TOTAL -->
+
+            <div class="agents-total">
+                <strong>Total Agents:</strong>
+                {{ total_agents }}
             </div>
+
         </div>
+
     </div>
+
 </div>
+
 {% endblock %}

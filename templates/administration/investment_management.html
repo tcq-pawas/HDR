@@ -2,21 +2,240 @@
 
 {% load humanize %}
 
-
-
 {% block title %}Investment Management - Admin Dashboard{% endblock %}
-
-
 
 {% block page_title %}Investment Management{% endblock %}
 
-
-
 {% block page_subtitle %}Monitor and manage all investment activities{% endblock %}
 
+<style>
+/* =========================================================
+   INVESTMENT MANAGEMENT - RESPONSIVE UI
+   ========================================================= */
 
+.investment-page {
+    width: 100%;
+    min-width: 0;
+}
+
+/* ---------- Statistics ---------- */
+.investment-page .stat-card {
+    height: 100%;
+    min-height: 105px;
+    border: 0;
+    border-radius: 12px;
+}
+
+/* ---------- Action buttons ---------- */
+.investment-page .investment-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* ---------- Recent Investments header ---------- */
+.investment-page .investment-card-header {
+    gap: 16px;
+}
+
+.investment-page .investment-filters {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.investment-page .investment-search {
+    width: 200px;
+    min-width: 0;
+}
+
+.investment-page .investment-status-select {
+    width: 150px;
+    min-width: 0;
+}
+
+/* ---------- Table ---------- */
+.investment-page .investment-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.investment-page .investment-table {
+    min-width: 900px;
+    margin-bottom: 0;
+}
+
+.investment-page .investment-table th,
+.investment-page .investment-table td {
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+/* ---------- Mobile ---------- */
+@media (max-width: 767.98px) {
+
+    .investment-page .row {
+        --bs-gutter-x: .6rem;
+    }
+
+    /* Stats: compact 2-column cards */
+    .investment-page .stat-card {
+        min-height: 86px;
+        border-radius: 10px;
+    }
+
+    .investment-page .stat-card .card-body {
+        padding: 11px;
+    }
+
+    .investment-page .stat-card .card-title {
+        font-size: 1.05rem;
+        margin-bottom: 2px;
+    }
+
+    .investment-page .stat-card .card-text {
+        font-size: .68rem;
+        margin-bottom: 0;
+    }
+
+    .investment-page .stat-card i {
+        font-size: 1.25rem !important;
+    }
+
+    /* Actions */
+    .investment-page .investment-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    .investment-page .investment-actions .btn {
+        width: 100%;
+        min-height: 40px;
+        padding: 8px 6px;
+        font-size: .72rem;
+        white-space: nowrap;
+    }
+
+    .investment-page .investment-actions .btn:last-child {
+        grid-column: 1 / -1;
+    }
+
+    /* Recent Investments card */
+    .investment-page .investment-card-header {
+        display: block !important;
+        padding: 14px !important;
+        border-bottom: none;
+    }
+
+    .investment-page .investment-card-header h5 {
+        font-size: .92rem;
+        margin: 0 0 12px !important;
+    }
+
+    .investment-page .investment-filters {
+        width: 100%;
+        display: grid !important;
+        grid-template-columns: 1fr;
+        gap: 8px !important;
+        padding-top: 12px;
+        border-top: 1px solid #eef1f4;
+    }
+
+    .investment-page .investment-search,
+    .investment-page .investment-status-select {
+        width: 100% !important;
+        height: 40px;
+        padding: 8px 11px;
+        font-size: .75rem;
+        border-radius: 8px;
+    }
+
+    /* Table remains scrollable rather than squeezing columns */
+    .investment-page .investment-table-wrap {
+        overflow-x: auto !important;
+        border-radius: 0 0 10px 10px;
+    }
+
+    .investment-page .investment-table {
+        min-width: 900px;
+    }
+
+    .investment-page .investment-table th {
+        font-size: .66rem;
+        padding: 9px 10px;
+    }
+
+    .investment-page .investment-table td {
+        font-size: .72rem;
+        padding: 10px;
+    }
+
+    /* Empty state */
+    .investment-page .investment-table td[colspan] {
+        height: 145px;
+        white-space: normal;
+    }
+
+    .investment-page .investment-table td[colspan] .fa-coins {
+        font-size: 2rem !important;
+        margin-bottom: 8px !important;
+    }
+
+    /* Modals */
+    .investment-page .modal-dialog {
+        width: calc(100% - 20px);
+        max-width: none;
+        margin: 10px auto;
+    }
+
+    .investment-page .modal-content {
+        border-radius: 12px;
+    }
+
+    .investment-page .modal-header,
+    .investment-page .modal-body,
+    .investment-page .modal-footer {
+        padding: 12px;
+    }
+
+    .investment-page .modal-title {
+        font-size: .92rem;
+    }
+}
+
+/* ---------- Very small phones ---------- */
+@media (max-width: 380px) {
+
+    .investment-page .stat-card .card-body {
+        padding: 9px;
+    }
+
+    .investment-page .stat-card .card-title {
+        font-size: .95rem;
+    }
+
+    .investment-page .stat-card .card-text {
+        font-size: .6rem;
+    }
+
+    .investment-page .stat-card i {
+        font-size: 1rem !important;
+    }
+
+    .investment-page .investment-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .investment-page .investment-actions .btn:last-child {
+        grid-column: auto;
+    }
+}
+</style>
 
 {% block content %}
+<div class="investment-page">
 
 {% if messages %}
 {% for message in messages %}
@@ -149,7 +368,7 @@
 
             <div class="card-body">
 
-                <div class="d-flex gap-2 flex-wrap">
+                <div class="d-flex gap-2 flex-wrap investment-actions">
 
                     <button class="btn btn-primary" onclick="approveInvestments()">
 
@@ -189,16 +408,15 @@
 
         <div class="card">
 
-            <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="card-header d-flex justify-content-between align-items-center investment-card-header">
 
                 <h5 class="mb-0">Recent Investments</h5>
 
-                <div class="d-flex gap-2">
+                <div class="d-flex gap-2 investment-filters">
 
-                    <input type="text" class="form-control form-control-sm" placeholder="Search investments..."
-                        style="width: 200px;">
+                    <input type="text" class="form-control form-control-sm investment-search" placeholder="Search investments...">
 
-                    <select class="form-select form-select-sm" style="width: 150px;">
+                    <select class="form-select form-select-sm investment-status-select">
 
                         <option value="">All Status</option>
 
@@ -216,9 +434,9 @@
 
             <div class="card-body">
 
-                <div class="table-responsive">
+                <div class="table-responsive investment-table-wrap">
 
-                    <table class="table table-hover">
+                    <table class="table table-hover investment-table">
 
                         <thead>
 
@@ -542,6 +760,7 @@
 
 </div>
 
+</div>
 {% endblock %}
 
 

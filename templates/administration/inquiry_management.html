@@ -9,6 +9,7 @@
 {% block page_subtitle %}Manage and respond to customer inquiries{% endblock %}
 
 {% block content %}
+<div class="inquiry-page-wrapper">
 
 <style>
     
@@ -208,6 +209,576 @@
     
     .pagination-modern .page-item.active .page-link{ background:var(--brand); border-color:var(--brand); color:#fff; }
 
+
+
+    /* =========================================================
+       INQUIRY MANAGEMENT - RESPONSIVE / MOBILE UI
+       ========================================================= */
+
+    .inquiry-page-wrapper {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    /* Filter controls */
+    .filter-bar-modern {
+        width: 100%;
+    }
+
+    .filter-bar-modern form {
+        width: 100%;
+    }
+
+    .filter-bar-modern .form-control,
+    .filter-bar-modern .form-select {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .filter-bar-modern .input-group {
+        width: 100%;
+    }
+
+    .filter-bar-modern .dropdown {
+        width: 100%;
+    }
+
+    .filter-bar-modern .dropdown > .btn {
+        width: 100%;
+    }
+
+    .filter-bar-modern .dropdown-menu {
+        max-width: min(280px, calc(100vw - 30px));
+        min-width: 0;
+    }
+
+    /* Keep table inside its card */
+    .inquiry-table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .inquiry-table {
+        min-width: 900px;
+    }
+
+    .inquiry-table td,
+    .inquiry-table th {
+        white-space: nowrap;
+    }
+
+    .customer-cell {
+        min-width: 190px;
+    }
+
+    .action-icon-btn {
+        flex-shrink: 0;
+    }
+
+    /* =========================================================
+       TABLET
+       ========================================================= */
+
+    @media (max-width: 991.98px) {
+
+        .stat-card-modern {
+            padding: 16px;
+            border-radius: 14px;
+        }
+
+        .stat-card-modern .stat-value {
+            font-size: 1.55rem;
+        }
+
+        .stat-icon-circle {
+            width: 40px;
+            height: 40px;
+            font-size: .9rem;
+        }
+
+        .filter-bar-modern .row {
+            row-gap: 10px !important;
+        }
+
+        .filter-bar-modern .col-md-3,
+        .filter-bar-modern .col-md-2,
+        .filter-bar-modern .col-md-1 {
+            width: 50%;
+            flex: 0 0 50%;
+        }
+
+        .filter-bar-modern .col-md-1 .btn,
+        .filter-bar-modern .dropdown > .btn {
+            width: 100%;
+        }
+    }
+
+    /* =========================================================
+       MOBILE
+       ========================================================= */
+
+    @media (max-width: 767.98px) {
+
+        /* Prevent horizontal page overflow */
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        .container-fluid {
+            width: 100%;
+            max-width: 100%;
+            padding-left: 10px !important;
+            padding-right: 10px !important;
+        }
+
+        /* Statistics */
+        .row.mb-4.g-3 {
+            margin-left: -4px;
+            margin-right: -4px;
+        }
+
+        .row.mb-4.g-3 > [class*="col-"] {
+            padding-left: 4px;
+            padding-right: 4px;
+        }
+
+        .stat-card-modern {
+            min-height: 88px;
+            padding: 13px 12px;
+            border-radius: 12px;
+        }
+
+        .stat-card-modern .stat-value {
+            font-size: 1.25rem;
+            margin-bottom: 4px;
+        }
+
+        .stat-card-modern .stat-label {
+            font-size: .68rem;
+            line-height: 1.25;
+        }
+
+        .stat-icon-circle {
+            width: 34px;
+            height: 34px;
+            font-size: .78rem;
+        }
+
+        /* Main inquiry card */
+        .row > .col-12 {
+            min-width: 0;
+        }
+
+        .card {
+            max-width: 100%;
+        }
+
+        .card-header {
+            padding: 12px 14px !important;
+        }
+
+        .card-header h5 {
+            font-size: .95rem;
+        }
+
+        /* Filter card area */
+        .filter-bar-modern {
+            margin-bottom: 14px !important;
+        }
+
+        .filter-bar-modern form {
+            display: flex;
+            flex-direction: column;
+            gap: 8px !important;
+            margin: 0 !important;
+        }
+
+        .filter-bar-modern form > [class*="col-md-"] {
+            width: 100%;
+            flex: 0 0 100%;
+            max-width: 100%;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+
+        .filter-bar-modern .form-control,
+        .filter-bar-modern .form-select {
+            height: 40px;
+            min-height: 40px;
+            font-size: .78rem;
+            border-radius: 8px;
+        }
+
+        .filter-bar-modern .btn {
+            min-height: 40px !important;
+            height: 40px !important;
+            font-size: .78rem;
+            border-radius: 8px !important;
+        }
+
+        .filter-bar-modern .btn + .btn {
+            margin-left: 0;
+        }
+
+        .filter-bar-modern .dropdown {
+            width: 100%;
+        }
+
+        .filter-bar-modern .dropdown > .btn {
+            min-width: 0 !important;
+            width: 100%;
+            padding-left: 12px;
+            padding-right: 12px;
+        }
+
+        .filter-bar-modern .dropdown-menu {
+            position: absolute !important;
+            left: auto !important;
+            right: 0 !important;
+            width: min(260px, calc(100vw - 30px));
+            max-width: calc(100vw - 30px);
+            max-height: 220px;
+            overflow-y: auto;
+            z-index: 1080;
+        }
+
+        /* Search + controls */
+        .filter-bar-modern .input-group {
+            width: 100%;
+        }
+
+        /* Table */
+        .inquiry-table-wrapper,
+        .table-responsive {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto !important;
+            overflow-y: visible;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .inquiry-table {
+            min-width: 900px;
+            margin-bottom: 0;
+        }
+
+        .inquiry-table thead th {
+            font-size: .68rem;
+            padding: 9px 10px;
+        }
+
+        .inquiry-table tbody td {
+            font-size: .76rem;
+            padding: 11px 10px;
+        }
+
+        .customer-name {
+            font-size: .78rem;
+        }
+
+        .customer-sub {
+            font-size: .68rem;
+        }
+
+        .iq-avatar-circle {
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            min-height: 32px;
+            max-width: 32px;
+            max-height: 32px;
+            font-size: .7rem;
+        }
+
+        .status-pill {
+            font-size: .68rem;
+            padding: 4px 9px;
+        }
+
+        .action-icon-btn {
+            width: 31px;
+            height: 31px;
+            border-radius: 7px;
+        }
+
+        .action-icon-btn i {
+            font-size: .72rem;
+        }
+
+        /* Pagination */
+        .pagination-modern {
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2px;
+        }
+
+        .pagination-modern .page-link {
+            font-size: .72rem;
+            padding: 6px 9px;
+            margin: 0 1px;
+        }
+
+        /* Modals */
+        .modal-dialog {
+            width: calc(100% - 20px);
+            max-width: calc(100% - 20px);
+            margin: 10px auto;
+        }
+
+        .modal-content {
+            border-radius: 12px !important;
+        }
+
+        .modal-header,
+        .modal-body,
+        .modal-footer {
+            padding: 12px !important;
+        }
+
+        .modal-title {
+            font-size: .95rem;
+        }
+
+        .modal-footer {
+            flex-wrap: wrap;
+        }
+
+        .modal-footer .btn {
+            font-size: .75rem;
+        }
+
+        /* Delete modal */
+        #deleteConfirmModal .modal-dialog {
+            width: calc(100% - 20px);
+            max-width: calc(100% - 20px) !important;
+            margin: 10px auto;
+        }
+
+        #deleteConfirmModal .px-4 {
+            padding-left: 14px !important;
+            padding-right: 14px !important;
+        }
+
+        #deleteConfirmModal .d-flex.justify-content-end {
+            flex-direction: column-reverse;
+            width: 100%;
+        }
+
+        #deleteConfirmModal .d-flex.justify-content-end .btn {
+            width: 100%;
+            margin: 0 !important;
+        }
+
+        /* Response modal */
+        #responseModal textarea {
+            min-height: 120px;
+        }
+    }
+
+    /* =========================================================
+       SMALL PHONES
+       ========================================================= */
+
+    @media (max-width: 420px) {
+
+        .container-fluid {
+            padding-left: 7px !important;
+            padding-right: 7px !important;
+        }
+
+        .stat-card-modern {
+            padding: 11px 9px;
+        }
+
+        .stat-card-modern .stat-value {
+            font-size: 1.12rem;
+        }
+
+        .stat-card-modern .stat-label {
+            font-size: .62rem;
+        }
+
+        .stat-icon-circle {
+            width: 30px;
+            height: 30px;
+            font-size: .7rem;
+        }
+
+        .filter-bar-modern .form-control,
+        .filter-bar-modern .form-select,
+        .filter-bar-modern .btn {
+            font-size: .72rem;
+        }
+
+        .filter-bar-modern .dropdown-menu {
+            width: calc(100vw - 24px);
+            max-width: calc(100vw - 24px);
+        }
+
+        .card-body {
+            padding-left: 10px !important;
+            padding-right: 10px !important;
+        }
+
+        .pagination-modern .page-link {
+            font-size: .68rem;
+            padding: 5px 7px;
+        }
+    }
+
+    /* =========================================================
+       VERY SMALL PHONES
+       ========================================================= */
+
+    @media (max-width: 360px) {
+
+        .stat-card-modern .stat-label {
+            font-size: .58rem;
+        }
+
+        .stat-card-modern .stat-value {
+            font-size: 1rem;
+        }
+
+        .stat-icon-circle {
+            width: 27px;
+            height: 27px;
+        }
+
+        .filter-bar-modern .form-control,
+        .filter-bar-modern .form-select,
+        .filter-bar-modern .btn {
+            height: 38px !important;
+            min-height: 38px !important;
+            font-size: .68rem;
+        }
+    }
+
+
+    /* Bounded custom filter dropdowns - avoids native browser option overflow */
+    .custom-filter-dropdown {
+        position: relative;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .custom-filter-toggle {
+        width: 100%;
+        height: 42px;
+        min-height: 42px;
+        padding: 0 12px;
+        border: 1px solid #e2e6e8;
+        border-radius: 10px;
+        background: #fff;
+        color: #495057;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        font-size: .875rem;
+        text-align: left;
+        cursor: pointer;
+        overflow: hidden;
+    }
+
+    .custom-filter-toggle:focus,
+    .custom-filter-toggle.open {
+        outline: none;
+        border-color: #86b7fe;
+        box-shadow: 0 0 0 .18rem rgba(13,110,253,.12);
+    }
+
+    .custom-filter-value {
+        min-width: 0;
+        flex: 1 1 auto;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .custom-filter-toggle > i {
+        flex: 0 0 auto;
+        font-size: .68rem;
+        transition: transform .15s ease;
+    }
+
+    .custom-filter-toggle.open > i {
+        transform: rotate(180deg);
+    }
+
+    .custom-filter-menu {
+        display: none;
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0;
+        right: 0;
+        width: 100%;
+        max-height: 190px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        background: #fff;
+        border: 1px solid #dfe4e7;
+        border-radius: 9px;
+        box-shadow: 0 8px 24px rgba(16,24,40,.14);
+        z-index: 3000;
+        padding: 4px;
+    }
+
+    .custom-filter-dropdown.open .custom-filter-menu {
+        display: block;
+    }
+
+    .custom-filter-option {
+        display: block;
+        width: 100%;
+        border: 0;
+        border-radius: 7px;
+        background: transparent;
+        color: #343a40;
+        padding: 9px 10px;
+        font-size: .82rem;
+        line-height: 1.25;
+        text-align: left;
+        cursor: pointer;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .custom-filter-option:hover,
+    .custom-filter-option.active {
+        background: #f0f7f3;
+        color: #168044;
+    }
+
+    @media (max-width: 767.98px) {
+        .custom-filter-toggle {
+            height: 40px;
+            min-height: 40px;
+            font-size: .78rem;
+            border-radius: 8px;
+        }
+
+        .custom-filter-menu {
+            max-height: 180px;
+            border-radius: 8px;
+        }
+
+        .custom-filter-option {
+            padding: 10px;
+            font-size: .76rem;
+        }
+    }
+
+    @media (max-width: 420px) {
+        .custom-filter-toggle,
+        .custom-filter-option {
+            font-size: .72rem;
+        }
+    }
+
 </style>
 
     <!-- Statistics Cards -->
@@ -316,49 +887,55 @@
                     
                             <div class="col-md-2">
                     
-                                <select name="budget" class="form-select">
-                    
-                                    <option value="">All Budgets</option>
-                    
-                                    {% for b in budget_choices %}
-                                      
-                                        <option value="{{ b }}" {% if selected_budget == b %}selected{% endif %}>{{ b }}</option>
-                                    
-                                    {% endfor %}
-                                
-                                </select>
+                                <div class="custom-filter-dropdown">
+                                    <input type="hidden" name="budget" value="{{ selected_budget|default:'' }}">
+                                    <button type="button" class="custom-filter-toggle" aria-expanded="false">
+                                        <span class="custom-filter-value">{% if selected_budget %}{{ selected_budget }}{% else %}All Budgets{% endif %}</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                    <div class="custom-filter-menu">
+                                        <button type="button" class="custom-filter-option {% if not selected_budget %}active{% endif %}" data-value="">All Budgets</button>
+                                        {% for b in budget_choices %}
+                                        <button type="button" class="custom-filter-option {% if selected_budget == b %}active{% endif %}" data-value="{{ b|escapejs }}">{{ b }}</button>
+                                        {% endfor %}
+                                    </div>
+                                </div>
                             
                             </div>
 
                             <div class="col-md-2">
 
-                                <select name="date_filter" class="form-select">
-
-                                    <option value="">Any Date</option>
-
-                                    <option value="today" {% if selected_date_filter == 'today' %}selected{% endif %}>Today</option>
-                                    
-                                    <option value="week" {% if selected_date_filter == 'week' %}selected{% endif %}>This Week</option>
-                                    
-                                    <option value="month" {% if selected_date_filter == 'month' %}selected{% endif %}>This Month</option>
-                                
-                                </select>
+                                <div class="custom-filter-dropdown">
+                                    <input type="hidden" name="date_filter" value="{{ selected_date_filter|default:'' }}">
+                                    <button type="button" class="custom-filter-toggle" aria-expanded="false">
+                                        <span class="custom-filter-value">{% if selected_date_filter == 'today' %}Today{% elif selected_date_filter == 'week' %}This Week{% elif selected_date_filter == 'month' %}This Month{% else %}Any Date{% endif %}</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                    <div class="custom-filter-menu">
+                                        <button type="button" class="custom-filter-option {% if not selected_date_filter %}active{% endif %}" data-value="">Any Date</button>
+                                        <button type="button" class="custom-filter-option {% if selected_date_filter == 'today' %}active{% endif %}" data-value="today">Today</button>
+                                        <button type="button" class="custom-filter-option {% if selected_date_filter == 'week' %}active{% endif %}" data-value="week">This Week</button>
+                                        <button type="button" class="custom-filter-option {% if selected_date_filter == 'month' %}active{% endif %}" data-value="month">This Month</button>
+                                    </div>
+                                </div>
                             
                             </div>
                            
                             <div class="col-md-2">
                                 
-                                <select name="status" class="form-select">
-                                    
-                                    <option value="">All Status</option>
-                                    
-                                    {% for value, label in status_choices %}
-                                        
-                                        <option value="{{ value }}" {% if selected_status == value %}selected{% endif %}>{{ label }}</option>
-                                    
+                                <div class="custom-filter-dropdown">
+                                    <input type="hidden" name="status" value="{{ selected_status|default:'' }}">
+                                    <button type="button" class="custom-filter-toggle" aria-expanded="false">
+                                        <span class="custom-filter-value">{% if selected_status %}{% for value, label in status_choices %}{% if selected_status == value %}{{ label }}{% endif %}{% endfor %}{% else %}All Status{% endif %}</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                    <div class="custom-filter-menu">
+                                        <button type="button" class="custom-filter-option {% if not selected_status %}active{% endif %}" data-value="">All Status</button>
+                                        {% for value, label in status_choices %}
+                                        <button type="button" class="custom-filter-option {% if selected_status == value %}active{% endif %}" data-value="{{ value|escapejs }}">{{ label }}</button>
                                         {% endfor %}
-                                
-                                    </select>
+                                    </div>
+                                </div>
 
                             </div>
 
@@ -422,7 +999,7 @@
 
                 <div class="card-body" style="overflow: visible; padding: 12px 20px;">
 
-                    <div class="table-responsive">
+                    <div class="table-responsive inquiry-table-wrapper">
 
                         <table class="table table-hover inquiry-table">
 
@@ -792,6 +1369,7 @@
 
 {% endif %}
 
+</div>
 {% endblock %}
 
 {% block extra_js %}
@@ -1002,6 +1580,72 @@
 
         el.textContent = initials;
 
+    });
+
+
+    /* Custom filter dropdown behavior */
+    document.addEventListener('DOMContentLoaded', function () {
+        const dropdowns = document.querySelectorAll('.custom-filter-dropdown');
+
+        function closeAllDropdowns(except) {
+            dropdowns.forEach(function (dropdown) {
+                if (dropdown !== except) {
+                    dropdown.classList.remove('open');
+                    const toggle = dropdown.querySelector('.custom-filter-toggle');
+                    if (toggle) {
+                        toggle.classList.remove('open');
+                        toggle.setAttribute('aria-expanded', 'false');
+                    }
+                }
+            });
+        }
+
+        dropdowns.forEach(function (dropdown) {
+            const toggle = dropdown.querySelector('.custom-filter-toggle');
+            const hiddenInput = dropdown.querySelector('input[type="hidden"]');
+            const valueText = dropdown.querySelector('.custom-filter-value');
+            const options = dropdown.querySelectorAll('.custom-filter-option');
+
+            toggle.addEventListener('click', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+
+                const open = !dropdown.classList.contains('open');
+                closeAllDropdowns(dropdown);
+                dropdown.classList.toggle('open', open);
+                toggle.classList.toggle('open', open);
+                toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+            });
+
+            options.forEach(function (option) {
+                option.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    hiddenInput.value = option.getAttribute('data-value') || '';
+                    valueText.textContent = option.textContent.trim();
+
+                    options.forEach(function (item) {
+                        item.classList.remove('active');
+                    });
+                    option.classList.add('active');
+
+                    dropdown.classList.remove('open');
+                    toggle.classList.remove('open');
+                    toggle.setAttribute('aria-expanded', 'false');
+                });
+            });
+        });
+
+        document.addEventListener('click', function () {
+            closeAllDropdowns(null);
+        });
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                closeAllDropdowns(null);
+            }
+        });
     });
 
 </script>

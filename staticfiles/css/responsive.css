@@ -260,7 +260,7 @@ iframe, embed, object, video {
 
         padding-left: 15px;
 
-
+        padding-top: 75px;
 
         padding-right: 15px;
 
@@ -9829,191 +9829,264 @@ iframe, embed, object, video {
 
 
 
-@media (max-width: 768px) {
-
-
-
-    .admin-dashboard .sidebar {
-
-
-
-        transform: translateX(-100%);
-
-
-
-        width: 100%;
-
-
-
-        max-width: 280px;
-
-
-
-        height: 100vh;
-
-
-
-        overflow-y: auto;
-
-
-
-        overflow-x: hidden;
-
-
-
-        -webkit-overflow-scrolling: touch;
-
-
-
-    }
-
-
-
-
-
-
-
-    .admin-dashboard .sidebar.show {
-
-
-
-        transform: translateX(0);
-
-
-
-    }
-
-
-
-
-
-
-
-    .admin-dashboard .main-content {
-
-
-
-        margin-left: 0;
-
-
-
-    }
-
-
-
-
-
-
-
+/* ---- Large Desktop (1201px–1400px) ---- */
+@media (min-width: 1201px) and (max-width: 1400px) {
     .admin-dashboard .main-content-wrapper {
-
-
-
-        padding: 16px;
-
-
-
+        padding: 20px;
     }
-
-
-
-
-
-
-
-    .admin-dashboard .page-header {
-
-
-
-        padding: 16px;
-
-
-
-        margin-bottom: 16px;
-
-
-
-    }
-
-
-
-
-
-
 
     .admin-dashboard .page-title {
+        font-size: 1.6rem;
+    }
+}
 
-
-
-        font-size: 1.5rem;
-
-
-
+/* ---- Laptops (993px–1200px) ---- */
+@media (min-width: 993px) and (max-width: 1200px) {
+    .admin-dashboard .sidebar {
+        width: 240px;
     }
 
+    .admin-dashboard .main-content {
+        margin-left: 240px;
+    }
 
+    .admin-dashboard .main-content-wrapper {
+        padding: 18px;
+    }
 
+    .admin-dashboard .page-header {
+        padding: 18px;
+        margin-bottom: 18px;
+    }
 
-
-
+    .admin-dashboard .page-title {
+        font-size: 1.5rem;
+    }
 
     .admin-dashboard .table {
-
-
-
-        font-size: 0.8rem;
-
-
-
-        min-width: 500px;
-
-
-
+        font-size: 0.85rem;
     }
-
-
-
-
-
-
 
     .admin-dashboard .card-body {
-
-
-
-        padding: 16px;
-
-
-
+        padding: 18px;
     }
-
-
-
-
-
-
 
     .admin-dashboard .stat-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.3rem;
+    }
+}
 
-
-
-        width: 48px;
-
-
-
-        height: 48px;
-
-
-
-        font-size: 1.25rem;
-
-
-
+/* ---- Tablets (769px–992px) — sidebar collapses to overlay ---- */
+@media (min-width: 769px) and (max-width: 992px) {
+    .admin-dashboard .sidebar {
+        transform: translateX(-100%);
+        width: 260px;
     }
 
+    .admin-dashboard .sidebar.show {
+        transform: translateX(0);
+    }
 
+    .admin-dashboard .main-content {
+        margin-left: 0;
+    }
 
+    .admin-dashboard .main-content-wrapper {
+        padding: 20px;
+    }
+
+    .admin-dashboard .page-header {
+        padding: 18px;
+        margin-bottom: 18px;
+    }
+
+    .admin-dashboard .page-title {
+        font-size: 1.5rem;
+    }
+
+    .admin-dashboard .table {
+        font-size: 0.85rem;
+        min-width: 600px;
+    }
+
+    .admin-dashboard .card-body {
+        padding: 18px;
+    }
+
+    .admin-dashboard .stat-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.3rem;
+    }
 }
+
+/* ---- Small tablets / large phones (577px–768px) ---- */
+@media (max-width: 768px) {
+    .admin-dashboard .sidebar {
+        transform: translateX(-100%);
+        width: 100%;
+        max-width: 280px;
+        height: 100vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .admin-dashboard .sidebar.show {
+        transform: translateX(0);
+    }
+
+    .admin-dashboard .main-content {
+        margin-left: 0;
+    }
+
+    .admin-dashboard .main-content-wrapper {
+        padding: 16px;
+    }
+
+    .admin-dashboard .page-header {
+        padding: 16px;
+        margin-bottom: 16px;
+    }
+
+    .admin-dashboard .page-title {
+        font-size: 1.5rem;
+    }
+
+    .admin-dashboard .table {
+        font-size: 0.8rem;
+        min-width: 500px;
+    }
+
+    .admin-dashboard .card-body {
+        padding: 16px;
+    }
+
+    .admin-dashboard .stat-icon {
+        width: 48px;
+        height: 48px;
+        font-size: 1.25rem;
+    }
+}
+
+/* ---- Mobile (≤576px) ---- */
+@media (max-width: 576px) {
+    .admin-dashboard .sidebar {
+        max-width: 260px;
+    }
+
+    .admin-dashboard .main-content-wrapper {
+        padding: 12px;
+    }
+
+    .admin-dashboard .page-header {
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+
+    .admin-dashboard .page-title {
+        font-size: 1.25rem;
+    }
+
+    .admin-dashboard .table {
+        font-size: 0.75rem;
+        min-width: 400px;
+    }
+
+    .admin-dashboard .card-body {
+        padding: 12px;
+    }
+
+    .admin-dashboard .stat-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+    }
+}
+
+/* ---- Extra-small phones (≤400px) ---- */
+@media (max-width: 400px) {
+    .admin-dashboard .sidebar {
+        max-width: 240px;
+    }
+
+    .admin-dashboard .main-content-wrapper {
+        padding: 10px;
+    }
+
+    .admin-dashboard .page-header {
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    .admin-dashboard .page-title {
+        font-size: 1.1rem;
+    }
+
+    .admin-dashboard .table {
+        font-size: 0.7rem;
+        min-width: 340px;
+    }
+
+    .admin-dashboard .card-body {
+        padding: 10px;
+    }
+
+    .admin-dashboard .stat-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+    }
+}
+
+/* ---- Ultra-narrow / foldables (≤340px) ---- */
+@media (max-width: 340px) {
+    .admin-dashboard .sidebar {
+        max-width: 220px;
+    }
+
+    .admin-dashboard .page-title {
+        font-size: 1rem;
+    }
+
+    .admin-dashboard .table {
+        min-width: 300px;
+    }
+}
+
+/* ---- Large desktop / ultra-wide (≥1920px) ---- */
+@media (min-width: 1920px) {
+    .admin-dashboard .sidebar {
+        width: 320px;
+    }
+
+    .admin-dashboard .main-content {
+        margin-left: 320px;
+    }
+
+    .admin-dashboard .main-content-wrapper {
+        padding: 32px;
+    }
+
+    .admin-dashboard .page-title {
+        font-size: 2rem;
+    }
+}
+
+/* ---- Short-height landscape (phones rotated) ---- */
+@media (max-height: 500px) and (orientation: landscape) {
+    .admin-dashboard .sidebar {
+        overflow-y: auto;
+    }
+
+    .admin-dashboard .page-header {
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+}
+
 
 
 
