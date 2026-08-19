@@ -75,7 +75,7 @@ def property_search(request):
         properties = properties.order_by(sort_options[sort_by])
     
     # Pagination
-    paginator = Paginator(properties, 12)
+    paginator = Paginator(properties, 6)
     page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
     

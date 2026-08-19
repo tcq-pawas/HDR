@@ -2823,7 +2823,7 @@ nav {
     border: 1px solid rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(8px);
     color: rgba(255, 255, 255, 0.9);
-    padding: 6px 14px;
+    padding: 6px 14px;  
     border-radius: 50px;
     font-size: 13px;
 }

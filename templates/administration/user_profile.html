@@ -1334,10 +1334,141 @@
         </div>
     </div>
 </div>
+
+<!-- Delete User Confirmation Modal -->
+<div class="modal fade" id="deleteUserModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 480px;">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="modal-header border-0 bg-success text-white p-4">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-circle bg-white shadow-sm d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; min-width: 44px;">
+                        <i class="fas fa-check text-success fs-4"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title fw-bold mb-0">Delete User</h5>
+                        <small class="text-white-50">Confirm user account deletion</small>
+                    </div>
+                </div>
+                <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 text-center">
+                <div class="mb-3">
+                    <i class="fas fa-user-shield text-success mb-2" style="font-size: 3rem; opacity: 0.85;"></i>
+                    <h6 class="fw-bold text-dark mb-1">{{ viewed_user.get_full_name|default:viewed_user.username }}</h6>
+                    <p class="text-muted small mb-0">{{ viewed_user.email }}</p>
+                </div>
+                <p class="text-secondary mb-0" style="font-size: 0.95rem;">
+                    Are you sure you want to delete this user? This action cannot be undone and all user data will be permanently removed.
+                </p>
+                <div class="alert bg-success bg-opacity-10 border-0 text-success mt-3 mb-0 text-start small">
+                    <i class="fas fa-exclamation-triangle me-2"></i>This is a destructive action. The user will lose all access permanently.
+                </div>
+            </div>
+            <div class="modal-footer border-0 bg-light p-3 d-flex justify-content-end gap-2">
+                <button type="button" class="btn btn-light fw-semibold rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success fw-semibold rounded-pill px-4" id="confirmDeleteUserBtn" onclick="confirmDeleteUser()">
+                    <i class="fas fa-check me-2"></i>Yes, Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Suspend User Confirmation Modal -->
+<div class="modal fade" id="suspendUserModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 480px;">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="modal-header border-0 bg-success text-white p-4">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-circle bg-white shadow-sm d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; min-width: 44px;">
+                        <i class="fas fa-check text-success fs-4"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title fw-bold mb-0">Suspend User</h5>
+                        <small class="text-white-50">Confirm user suspension</small>
+                    </div>
+                </div>
+                <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 text-center">
+                <div class="mb-3">
+                    <i class="fas fa-user-clock text-success mb-2" style="font-size: 3rem; opacity: 0.85;"></i>
+                    <h6 class="fw-bold text-dark mb-1">{{ viewed_user.get_full_name|default:viewed_user.username }}</h6>
+                    <p class="text-muted small mb-0">{{ viewed_user.email }}</p>
+                </div>
+                <p class="text-secondary mb-0" style="font-size: 0.95rem;">
+                    Are you sure you want to suspend this user? They will not be able to access the platform until reactivated.
+                </p>
+            </div>
+            <div class="modal-footer border-0 bg-light p-3 d-flex justify-content-end gap-2">
+                <button type="button" class="btn btn-light fw-semibold rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success fw-semibold rounded-pill px-4" id="confirmSuspendBtn" onclick="confirmSuspendUser()">
+                    <i class="fas fa-check me-2"></i>Yes, Suspend
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Activate User Confirmation Modal -->
+<div class="modal fade" id="activateUserModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 480px;">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="modal-header border-0 bg-success text-white p-4">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-circle bg-white shadow-sm d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; min-width: 44px;">
+                        <i class="fas fa-check text-success fs-4"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title fw-bold mb-0">Activate User</h5>
+                        <small class="text-white-50">Confirm user activation</small>
+                    </div>
+                </div>
+                <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 text-center">
+                <div class="mb-3">
+                    <i class="fas fa-user-check text-success mb-2" style="font-size: 3rem; opacity: 0.85;"></i>
+                    <h6 class="fw-bold text-dark mb-1">{{ viewed_user.get_full_name|default:viewed_user.username }}</h6>
+                    <p class="text-muted small mb-0">{{ viewed_user.email }}</p>
+                </div>
+                <p class="text-secondary mb-0" style="font-size: 0.95rem;">
+                    Are you sure you want to activate this user? They will regain full access to the platform.
+                </p>
+            </div>
+            <div class="modal-footer border-0 bg-light p-3 d-flex justify-content-end gap-2">
+                <button type="button" class="btn btn-light fw-semibold rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success fw-semibold rounded-pill px-4" id="confirmActivateBtn" onclick="confirmActivateUser()">
+                    <i class="fas fa-check me-2"></i>Yes, Activate
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Status Notification Modal -->
+<div class="modal fade" id="userNotificationModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 440px;">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden text-center p-4">
+            <div class="mb-3 mt-2">
+                <div id="userNotifIcon" class="d-inline-flex align-items-center justify-content-center rounded-circle bg-success bg-opacity-10 text-success p-3 mb-2" style="width: 64px; height: 64px;">
+                    <i class="fas fa-check-circle fa-2x"></i>
+                </div>
+                <h5 class="fw-bold text-dark mt-2 mb-1" id="userNotifTitle">Notification</h5>
+                <p class="text-secondary small mb-0" id="userNotifMessage"></p>
+            </div>
+            <div class="d-flex justify-content-center">
+                <button type="button" class="btn btn-success fw-semibold rounded-pill px-4" id="userNotifBtn" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
+    let onUserNotifClose = null;
+
     function openEditModal() {
         const modal = new bootstrap.Modal(document.getElementById('editUserModal'));
         modal.show();
@@ -1347,54 +1478,73 @@
         // Function disabled/removed since 'Edit User' button was removed
     }
 
+    // --- Suspend User ---
     function suspendUser() {
-        if (confirm('Are you sure you want to suspend this user? They will not be able to access the platform.')) {
-            fetch(`/admin-dashboard/api/users/{{ viewed_user.id }}/suspend/`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': getCookie('csrftoken')
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('User suspended successfully!');
-                    location.reload();
-                } else {
-                    alert('Error suspending user: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error suspending user');
-            });
-        }
+        new bootstrap.Modal(document.getElementById('suspendUserModal')).show();
+    }
+
+    function confirmSuspendUser() {
+        const btn = document.getElementById('confirmSuspendBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Suspending...';
+
+        fetch(`/admin-dashboard/api/users/{{ viewed_user.id }}/suspend/`, {
+            method: 'POST',
+            headers: { 'X-CSRFToken': getCookie('csrftoken') }
+        })
+        .then(r => r.json())
+        .then(data => {
+            bootstrap.Modal.getInstance(document.getElementById('suspendUserModal'))?.hide();
+            if (data.success) {
+                showUserNotification('success', 'User Suspended', 'The user has been suspended and can no longer access the platform.', () => location.reload());
+            } else {
+                showUserNotification('danger', 'Error', 'Error suspending user: ' + data.message);
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-check me-2"></i>Yes, Suspend';
+            }
+        })
+        .catch(error => {
+            bootstrap.Modal.getInstance(document.getElementById('suspendUserModal'))?.hide();
+            showUserNotification('danger', 'Error', 'Error suspending user: ' + error);
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-check me-2"></i>Yes, Suspend';
+        });
     }
     
+    // --- Activate User ---
     function activateUser() {
-        if (confirm('Are you sure you want to activate this user? They will regain access to the platform.')) {
-            fetch(`/admin-dashboard/api/users/{{ viewed_user.id }}/activate/`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': getCookie('csrftoken')
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('User activated successfully!');
-                    location.reload();
-                } else {
-                    alert('Error activating user: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error activating user');
-            });
-        }
+        new bootstrap.Modal(document.getElementById('activateUserModal')).show();
+    }
+
+    function confirmActivateUser() {
+        const btn = document.getElementById('confirmActivateBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Activating...';
+
+        fetch(`/admin-dashboard/api/users/{{ viewed_user.id }}/activate/`, {
+            method: 'POST',
+            headers: { 'X-CSRFToken': getCookie('csrftoken') }
+        })
+        .then(r => r.json())
+        .then(data => {
+            bootstrap.Modal.getInstance(document.getElementById('activateUserModal'))?.hide();
+            if (data.success) {
+                showUserNotification('success', 'User Activated', 'The user has been activated and can now access the platform.', () => location.reload());
+            } else {
+                showUserNotification('danger', 'Error', 'Error activating user: ' + data.message);
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-check me-2"></i>Yes, Activate';
+            }
+        })
+        .catch(error => {
+            bootstrap.Modal.getInstance(document.getElementById('activateUserModal'))?.hide();
+            showUserNotification('danger', 'Error', 'Error activating user: ' + error);
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-check me-2"></i>Yes, Activate';
+        });
     }
     
+    // --- Reset Password ---
     function resetPassword() {
         const modal = new bootstrap.Modal(document.getElementById('resetPasswordModal'));
         modal.show();
@@ -1405,12 +1555,12 @@
         const confirmPassword = document.getElementById('confirm_password').value;
         
         if (!newPassword || !confirmPassword) {
-            alert('Please fill in both fields.');
+            showUserNotification('warning', 'Input Required', 'Please fill in both password fields.');
             return;
         }
         
         if (newPassword !== confirmPassword) {
-            alert('Passwords do not match.');
+            showUserNotification('warning', 'Mismatch', 'Passwords do not match.');
             return;
         }
         
@@ -1420,29 +1570,26 @@
         fetch(`/admin-dashboard/api/users/{{ viewed_user.id }}/reset-password/`, {
             method: 'POST',
             body: formData,
-            headers: {
-                'X-CSRFToken': getCookie('csrftoken')
-            }
+            headers: { 'X-CSRFToken': getCookie('csrftoken') }
         })
-        .then(response => response.json())
+        .then(r => r.json())
         .then(data => {
             if (data.success) {
-                alert(data.message);
                 const modal = bootstrap.Modal.getInstance(document.getElementById('resetPasswordModal'));
-                if (modal) {
-                    modal.hide();
-                }
+                if (modal) modal.hide();
                 document.getElementById('resetPasswordForm').reset();
+                showUserNotification('success', 'Password Reset', data.message || 'Password has been reset successfully.');
             } else {
-                alert('Error resetting password: ' + data.message);
+                showUserNotification('danger', 'Error', 'Error resetting password: ' + data.message);
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Error sending password reset');
+            showUserNotification('danger', 'Error', 'Error sending password reset');
         });
     }
     
+    // --- Change Role ---
     function changeRole() {
         const modal = new bootstrap.Modal(document.getElementById('changeRoleModal'));
         modal.show();
@@ -1455,49 +1602,89 @@
         fetch(`/admin-dashboard/api/users/{{ viewed_user.id }}/change-role/`, {
             method: 'POST',
             body: formData,
-            headers: {
-                'X-CSRFToken': getCookie('csrftoken')
-            }
+            headers: { 'X-CSRFToken': getCookie('csrftoken') }
         })
-        .then(response => response.json())
+        .then(r => r.json())
         .then(data => {
+            bootstrap.Modal.getInstance(document.getElementById('changeRoleModal'))?.hide();
             if (data.success) {
-                alert('User role changed successfully!');
-                location.reload();
+                showUserNotification('success', 'Role Changed', 'User role has been changed successfully!', () => location.reload());
             } else {
-                alert('Error changing role: ' + data.message);
+                showUserNotification('danger', 'Error', 'Error changing role: ' + data.message);
             }
         })
         .catch(error => {
+            bootstrap.Modal.getInstance(document.getElementById('changeRoleModal'))?.hide();
             console.error('Error:', error);
-            alert('Error changing role');
+            showUserNotification('danger', 'Error', 'Error changing role');
         });
     }
     
+    // --- Delete User ---
     function deleteUser() {
-        if (confirm('Are you sure you want to delete this user? This action cannot be undone and all user data will be permanently removed.')) {
-            if (confirm('WARNING: This is a destructive action. Please confirm again that you want to delete this user permanently.')) {
-                fetch(`/admin-dashboard/api/users/{{ viewed_user.id }}/delete/`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': getCookie('csrftoken')
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('User deleted successfully!');
-                        window.location.href = '/admin-dashboard/users/';
-                    } else {
-                        alert('Error deleting user: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Error deleting user');
-                });
+        new bootstrap.Modal(document.getElementById('deleteUserModal')).show();
+    }
+
+    function confirmDeleteUser() {
+        const btn = document.getElementById('confirmDeleteUserBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Deleting...';
+
+        fetch(`/admin-dashboard/api/users/{{ viewed_user.id }}/delete/`, {
+            method: 'POST',
+            headers: { 'X-CSRFToken': getCookie('csrftoken') }
+        })
+        .then(r => r.json())
+        .then(data => {
+            bootstrap.Modal.getInstance(document.getElementById('deleteUserModal'))?.hide();
+            if (data.success) {
+                showUserNotification('success', 'User Deleted', 'The user has been deleted successfully.', () => { window.location.href = '/admin-dashboard/users/'; });
+            } else {
+                showUserNotification('danger', 'Error', 'Error deleting user: ' + data.message);
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-check me-2"></i>Yes, Delete';
             }
+        })
+        .catch(error => {
+            bootstrap.Modal.getInstance(document.getElementById('deleteUserModal'))?.hide();
+            showUserNotification('danger', 'Error', 'Error deleting user: ' + error);
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-check me-2"></i>Yes, Delete';
+        });
+    }
+
+    // --- Notification Helper ---
+    function showUserNotification(type, title, message, onCloseCallback) {
+        const icon = document.getElementById('userNotifIcon');
+        const titleEl = document.getElementById('userNotifTitle');
+        const msgEl = document.getElementById('userNotifMessage');
+        const btn = document.getElementById('userNotifBtn');
+        onUserNotifClose = onCloseCallback || null;
+
+        if (type === 'success') {
+            icon.className = 'd-inline-flex align-items-center justify-content-center rounded-circle bg-success bg-opacity-10 text-success p-3 mb-2';
+            icon.innerHTML = '<i class="fas fa-check-circle fa-2x"></i>';
+            btn.className = 'btn btn-success fw-semibold rounded-pill px-4';
+        } else if (type === 'danger') {
+            icon.className = 'd-inline-flex align-items-center justify-content-center rounded-circle bg-danger bg-opacity-10 text-danger p-3 mb-2';
+            icon.innerHTML = '<i class="fas fa-times-circle fa-2x"></i>';
+            btn.className = 'btn btn-danger fw-semibold rounded-pill px-4';
+        } else {
+            icon.className = 'd-inline-flex align-items-center justify-content-center rounded-circle bg-warning bg-opacity-10 text-warning p-3 mb-2';
+            icon.innerHTML = '<i class="fas fa-exclamation-triangle fa-2x"></i>';
+            btn.className = 'btn btn-warning text-dark fw-semibold rounded-pill px-4';
         }
+
+        titleEl.textContent = title;
+        msgEl.textContent = message;
+
+        const modalEl = document.getElementById('userNotificationModal');
+        const notifModal = new bootstrap.Modal(modalEl);
+        modalEl.addEventListener('hidden.bs.modal', function handler() {
+            modalEl.removeEventListener('hidden.bs.modal', handler);
+            if (onUserNotifClose) { onUserNotifClose(); onUserNotifClose = null; }
+        });
+        notifModal.show();
     }
     
     function getCookie(name) {

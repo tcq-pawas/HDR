@@ -28,10 +28,10 @@
 
     <title>{% block title %}Admin Dashboard - HHectare{% endblock %}</title>
     <meta name="robots" content="noindex, nofollow">
-    <meta name="description" content="HHectare administration portal.">
+    <meta name="description" content="Administration portal.">
     <link rel="canonical" href="{{ request.build_absolute_uri }}">
-    <meta name="application-name" content="HHectare">
-    <link rel="icon" href="{% static 'img/logo.png' %}">
+    <meta name="application-name" content="Real Estate Platform">
+    <link rel="icon" href="{% static 'img/favicon.ico' %}">
 
 
 
@@ -269,6 +269,36 @@
 
             max-width: 100%;
 
+            margin-left: 275px;
+
+            width: calc(100% - 275px);
+
+            min-width: 0;
+
+        }
+
+        /* Sidebar width fixes */
+        nav.sidebar {
+            width: 275px !important;
+            min-width: 275px !important;
+            max-width: 275px !important;
+            flex-shrink: 0 !important;
+            overflow-x: visible !important;
+        }
+
+        nav.sidebar .p-3 {
+            width: 100% !important;
+            box-sizing: border-box !important;
+            overflow-x: visible !important;
+        }
+
+        nav.sidebar .nav {
+            overflow-x: visible !important;
+        }
+
+        nav.sidebar .nav-item {
+            width: 100% !important;
+            box-sizing: border-box !important;
         }
 
 
@@ -2325,9 +2355,7 @@
 
 
                 <a href="{% url 'admin_dash:dashboard' %}" style="text-decoration:none; display:inline-block; color:inherit;">
-                    <img src="{% static 'img/logo.png' %}" alt="HHectare" title="HHectare" style="height:40px; width:auto; display:block; margin-bottom:6px;">
-                    <div style="font-weight:700; font-size:1rem; line-height:1.2;">HHectare</div>
-                    <div style="font-size:0.7rem; opacity:0.85; margin-top:2px;">Invest Green. Grow Strong.</div>
+                    <img src="{% static 'img/logo.png' %}" alt="Logo" title="Logo" style="height:40px; width:auto; display:block; margin-bottom:6px;">
                 </a>
 
 
@@ -2340,7 +2368,7 @@
 
 
 
-            <div class="p-3 flex-grow-1">
+            <div class="p-3 flex-grow-1" style="overflow-x: visible;">
 
 
 
