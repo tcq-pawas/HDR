@@ -9,6 +9,33 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/agent/agricultural_land_form.css' %}">
+<style>
+/* Spinner animation */
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Location button styling */
+.location-btn {
+    padding: 12px 15px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-width: 45px;
+    min-height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.location-btn i {
+    font-size: 1.2rem;
+}
+</style>
 {% endblock %}
 
 {% block content %}
@@ -31,15 +58,15 @@
             </div>
             <div class="step-indicator" data-step="2">
                 <div class="step-number">2</div>
-                <span>Area</span>
+                <span>Ownership</span>
             </div>
             <div class="step-indicator" data-step="3">
                 <div class="step-number">3</div>
-                <span>Ownership</span>
+                <span>Area</span>
             </div>
             <div class="step-indicator" data-step="4">
                 <div class="step-number">4</div>
-                <span>Revenue & Legal</span>
+                <span>Price</span>
             </div>
             <div class="step-indicator" data-step="5">
                 <div class="step-number">5</div>
@@ -55,7 +82,7 @@
             </div>
             <div class="step-indicator" data-step="8">
                 <div class="step-number">8</div>
-                <span>Investment</span>
+                <span>Legal</span>
             </div>
         </div>
     </div>
@@ -107,8 +134,39 @@
             </div>
         </div>
 
-        <!-- Step 2: Area Information -->
+        <!-- Step 2: Land Ownership Information -->
         <div class="wizard-step" data-step="2">
+            <div class="form-section">
+                <h3>Land Ownership Information</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.owner_name.id_for_label }}">Owner Name</label>
+                        {{ form.owner_name }}
+                        {% if form.owner_name.errors %}<div class="error-message">{{ form.owner_name.errors }}</div>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.owner_mobile.id_for_label }}">Owner Mobile</label>
+                        {{ form.owner_mobile }}
+                        {% if form.owner_mobile.errors %}<div class="error-message">{{ form.owner_mobile.errors }}</div>{% endif %}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.owner_email.id_for_label }}">Owner Email</label>
+                        {{ form.owner_email }}
+                        {% if form.owner_email.errors %}<div class="error-message">{{ form.owner_email.errors }}</div>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.ownership_type.id_for_label }}">Ownership Type</label>
+                        {{ form.ownership_type }}
+                        {% if form.ownership_type.errors %}<div class="error-message">{{ form.ownership_type.errors }}</div>{% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Area Information -->
+        <div class="wizard-step" data-step="3">
             <div class="form-section">
                 <h3>Area Information</h3>
                 <div class="form-row">
@@ -142,6 +200,22 @@
                         <span class="conversion-value" id="gunthaValue">-</span>
                     </div>
                     <div class="conversion-item">
+                        <span class="conversion-label">In Kattha:</span>
+                        <span class="conversion-value" id="katthaValue">-</span>
+                    </div>
+                    <div class="conversion-item">
+                        <span class="conversion-label">In Biswa:</span>
+                        <span class="conversion-value" id="biswaValue">-</span>
+                    </div>
+                    <div class="conversion-item">
+                        <span class="conversion-label">In Kanal:</span>
+                        <span class="conversion-value" id="kanalValue">-</span>
+                    </div>
+                    <div class="conversion-item">
+                        <span class="conversion-label">In Marla:</span>
+                        <span class="conversion-value" id="marlaValue">-</span>
+                    </div>
+                    <div class="conversion-item">
                         <span class="conversion-label">In Sq Yard:</span>
                         <span class="conversion-value" id="sqYardValue">-</span>
                     </div>
@@ -153,95 +227,45 @@
             </div>
         </div>
 
-        <!-- Step 3: Land Ownership Information -->
-        <div class="wizard-step" data-step="3">
-            <div class="form-section">
-                <h3>Land Ownership Information</h3>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="{{ form.owner_name.id_for_label }}">Owner Name</label>
-                        {{ form.owner_name }}
-                        {% if form.owner_name.errors %}<div class="error-message">{{ form.owner_name.errors }}</div>{% endif %}
-                    </div>
-                    <div class="form-group">
-                        <label for="{{ form.owner_mobile.id_for_label }}">Owner Mobile</label>
-                        {{ form.owner_mobile }}
-                        {% if form.owner_mobile.errors %}<div class="error-message">{{ form.owner_mobile.errors }}</div>{% endif %}
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="{{ form.owner_email.id_for_label }}">Owner Email</label>
-                        {{ form.owner_email }}
-                        {% if form.owner_email.errors %}<div class="error-message">{{ form.owner_email.errors }}</div>{% endif %}
-                    </div>
-                    <div class="form-group">
-                        <label for="{{ form.ownership_type.id_for_label }}">Ownership Type</label>
-                        {{ form.ownership_type }}
-                        {% if form.ownership_type.errors %}<div class="error-message">{{ form.ownership_type.errors }}</div>{% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Step 4: Revenue & Legal Information -->
+        <!-- Step 4: Price Information -->
         <div class="wizard-step" data-step="4">
             <div class="form-section">
-                <h3>Revenue & Legal Information</h3>
+                <h3>Price Information</h3>
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="{{ form.khasra_number.id_for_label }}">Khasra Number</label>
-                        {{ form.khasra_number }}
-                        {% if form.khasra_number.errors %}<div class="error-message">{{ form.khasra_number.errors }}</div>{% endif %}
+                        <label for="{{ form.price.id_for_label }}" class="field-required">Total Land Price (₹)</label>
+                        {{ form.price }}
+                        {% if form.price.errors %}<div class="error-message">{{ form.price.errors }}</div>{% endif %}
                     </div>
                     <div class="form-group">
-                        <label for="{{ form.khata_number.id_for_label }}">Khata Number</label>
-                        {{ form.khata_number }}
-                        {% if form.khata_number.errors %}<div class="error-message">{{ form.khata_number.errors }}</div>{% endif %}
+                        <label for="{{ form.price_per_acre.id_for_label }}">Price Per Acre (₹)</label>
+                        {{ form.price_per_acre }}
+                        <small style="color: #999; margin-top: 0.5rem; display: block;">Auto-calculated based on total price and area</small>
+                        {% if form.price_per_acre.errors %}<div class="error-message">{{ form.price_per_acre.errors }}</div>{% endif %}
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="{{ form.plot_number.id_for_label }}">Plot Number</label>
-                        {{ form.plot_number }}
-                        {% if form.plot_number.errors %}<div class="error-message">{{ form.plot_number.errors }}</div>{% endif %}
+                        <label for="{{ form.expected_roi.id_for_label }}">Expected ROI (%)</label>
+                        {{ form.expected_roi }}
+                        {% if form.expected_roi.errors %}<div class="error-message">{{ form.expected_roi.errors }}</div>{% endif %}
                     </div>
                     <div class="form-group">
-                        <label for="{{ form.registry_number.id_for_label }}">Registry Number</label>
-                        {{ form.registry_number }}
-                        {% if form.registry_number.errors %}<div class="error-message">{{ form.registry_number.errors }}</div>{% endif %}
+                        <label for="{{ form.investment_type.id_for_label }}">Investment Type</label>
+                        {{ form.investment_type }}
+                        {% if form.investment_type.errors %}<div class="error-message">{{ form.investment_type.errors }}</div>{% endif %}
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="{{ form.revenue_village.id_for_label }}">Revenue Village</label>
-                        {{ form.revenue_village }}
-                        {% if form.revenue_village.errors %}<div class="error-message">{{ form.revenue_village.errors }}</div>{% endif %}
-                    </div>
-                    <div class="form-group">
-                        <label for="{{ form.tehsil.id_for_label }}" class="field-required">Tehsil</label>
-                        {{ form.tehsil }}
-                        {% if form.tehsil.errors %}<div class="error-message">{{ form.tehsil.errors }}</div>{% endif %}
+                        <label for="{{ form.appreciation_potential.id_for_label }}">Appreciation Potential</label>
+                        {{ form.appreciation_potential }}
+                        {% if form.appreciation_potential.errors %}<div class="error-message">{{ form.appreciation_potential.errors }}</div>{% endif %}
                     </div>
                 </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="{{ form.district.id_for_label }}" class="field-required">District</label>
-                        {{ form.district }}
-                        {% if form.district.errors %}<div class="error-message">{{ form.district.errors }}</div>{% endif %}
-                    </div>
-                    <div class="form-group">
-                        <label for="{{ form.state.id_for_label }}" class="field-required">State</label>
-                        {{ form.state }}
-                        {% if form.state.errors %}<div class="error-message">{{ form.state.errors }}</div>{% endif %}
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="{{ form.legal_status.id_for_label }}">Legal Status</label>
-                        {{ form.legal_status }}
-                        {% if form.legal_status.errors %}<div class="error-message">{{ form.legal_status.errors }}</div>{% endif %}
-                    </div>
+                <div class="checkbox-group">
+                    {{ form.negotiable }}
+                    <label for="{{ form.negotiable.id_for_label }}">Negotiable</label>
                 </div>
             </div>
         </div>
@@ -398,11 +422,18 @@
                     <div class="form-group">
                         <label for="{{ form.latitude.id_for_label }}">Latitude</label>
                         {{ form.latitude }}
+                        <small style="color: #999; margin-top: 0.5rem; display: block;">Auto-filled with current location</small>
                         {% if form.latitude.errors %}<div class="error-message">{{ form.latitude.errors }}</div>{% endif %}
                     </div>
                     <div class="form-group">
                         <label for="{{ form.longitude.id_for_label }}">Longitude</label>
-                        {{ form.longitude }}
+                        <div style="display: flex; gap: 8px; align-items: flex-end;">
+                            {{ form.longitude }}
+                            <button type="button" class="btn btn-primary location-btn" id="getCurrentLocationBtn" style="padding: 12px 15px; white-space: nowrap; min-width: 45px; min-height: 45px; display: flex; align-items: center; justify-content: center;">
+                                <i class="bi bi-geo-alt"></i>
+                            </button>
+                        </div>
+                        <small style="color: #999; margin-top: 0.5rem; display: block;">Auto-filled with current location</small>
                         {% if form.longitude.errors %}<div class="error-message">{{ form.longitude.errors }}</div>{% endif %}
                     </div>
                 </div>
@@ -412,44 +443,64 @@
             </div>
         </div>
 
-        <!-- Step 8: Investment & Media -->
+        <!-- Step 8: Revenue & Legal Information -->
         <div class="wizard-step" data-step="8">
             <div class="form-section">
-                <h3>Investment Information</h3>
+                <h3>Revenue & Legal Information</h3>
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="{{ form.price.id_for_label }}" class="field-required">Total Land Price (₹)</label>
-                        {{ form.price }}
-                        {% if form.price.errors %}<div class="error-message">{{ form.price.errors }}</div>{% endif %}
+                        <label for="{{ form.khasra_number.id_for_label }}">Khasra Number</label>
+                        {{ form.khasra_number }}
+                        {% if form.khasra_number.errors %}<div class="error-message">{{ form.khasra_number.errors }}</div>{% endif %}
                     </div>
                     <div class="form-group">
-                        <label for="{{ form.price_per_acre.id_for_label }}">Price Per Acre (₹)</label>
-                        {{ form.price_per_acre }}
-                        {% if form.price_per_acre.errors %}<div class="error-message">{{ form.price_per_acre.errors }}</div>{% endif %}
+                        <label for="{{ form.khata_number.id_for_label }}">Khata Number</label>
+                        {{ form.khata_number }}
+                        {% if form.khata_number.errors %}<div class="error-message">{{ form.khata_number.errors }}</div>{% endif %}
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="{{ form.expected_roi.id_for_label }}">Expected ROI (%)</label>
-                        {{ form.expected_roi }}
-                        {% if form.expected_roi.errors %}<div class="error-message">{{ form.expected_roi.errors }}</div>{% endif %}
+                        <label for="{{ form.plot_number.id_for_label }}">Plot Number</label>
+                        {{ form.plot_number }}
+                        {% if form.plot_number.errors %}<div class="error-message">{{ form.plot_number.errors }}</div>{% endif %}
                     </div>
                     <div class="form-group">
-                        <label for="{{ form.investment_type.id_for_label }}">Investment Type</label>
-                        {{ form.investment_type }}
-                        {% if form.investment_type.errors %}<div class="error-message">{{ form.investment_type.errors }}</div>{% endif %}
+                        <label for="{{ form.registry_number.id_for_label }}">Registry Number</label>
+                        {{ form.registry_number }}
+                        {% if form.registry_number.errors %}<div class="error-message">{{ form.registry_number.errors }}</div>{% endif %}
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="{{ form.appreciation_potential.id_for_label }}">Appreciation Potential</label>
-                        {{ form.appreciation_potential }}
-                        {% if form.appreciation_potential.errors %}<div class="error-message">{{ form.appreciation_potential.errors }}</div>{% endif %}
+                        <label for="{{ form.revenue_village.id_for_label }}">Revenue Village</label>
+                        {{ form.revenue_village }}
+                        {% if form.revenue_village.errors %}<div class="error-message">{{ form.revenue_village.errors }}</div>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.tehsil.id_for_label }}" class="field-required">Tehsil</label>
+                        {{ form.tehsil }}
+                        {% if form.tehsil.errors %}<div class="error-message">{{ form.tehsil.errors }}</div>{% endif %}
                     </div>
                 </div>
-                <div class="checkbox-group">
-                    {{ form.negotiable }}
-                    <label for="{{ form.negotiable.id_for_label }}">Negotiable</label>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.district.id_for_label }}" class="field-required">District</label>
+                        {{ form.district }}
+                        {% if form.district.errors %}<div class="error-message">{{ form.district.errors }}</div>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.state.id_for_label }}" class="field-required">State</label>
+                        {{ form.state }}
+                        {% if form.state.errors %}<div class="error-message">{{ form.state.errors }}</div>{% endif %}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.legal_status.id_for_label }}">Legal Status</label>
+                        {{ form.legal_status }}
+                        {% if form.legal_status.errors %}<div class="error-message">{{ form.legal_status.errors }}</div>{% endif %}
+                    </div>
                 </div>
             </div>
 
@@ -685,7 +736,15 @@ document.addEventListener('DOMContentLoaded', function() {
             'acre': 43560,
             'hectare': 107639.104,
             'bigha': 27000,
-            'guntha': 1089
+            'guntha': 1089,
+            'kattha': 1361.25,  // Approximate conversion (varies by region)
+            'biswa': 1350,       // Approximate conversion (varies by region)
+            'kanal': 5445,      // 1 Kanal = 5445 sq ft
+            'marla': 272.25,     // 1 Marla = 272.25 sq ft
+            'cent': 435.6,       // 1 Cent = 435.6 sq ft
+            'ground': 2400,      // 1 Ground = 2400 sq ft
+            'ankana': 72,        // Approximate conversion
+            'dam': 39.37         // Approximate conversion
         };
 
         const conversionFactor = toSqFt[unit];
@@ -701,12 +760,163 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('bighaValue').textContent = (areaInSqFt / toSqFt['bigha']).toFixed(2) + ' Bigha';
         document.getElementById('hectareValue').textContent = (areaInSqFt / toSqFt['hectare']).toFixed(2) + ' Hectare';
         document.getElementById('gunthaValue').textContent = (areaInSqFt / toSqFt['guntha']).toFixed(2) + ' Guntha';
+        document.getElementById('katthaValue').textContent = (areaInSqFt / toSqFt['kattha']).toFixed(2) + ' Kattha';
+        document.getElementById('biswaValue').textContent = (areaInSqFt / toSqFt['biswa']).toFixed(2) + ' Biswa';
+        document.getElementById('kanalValue').textContent = (areaInSqFt / toSqFt['kanal']).toFixed(2) + ' Kanal';
+        document.getElementById('marlaValue').textContent = (areaInSqFt / toSqFt['marla']).toFixed(2) + ' Marla';
         document.getElementById('sqYardValue').textContent = (areaInSqFt / toSqFt['sq_yard']).toFixed(2) + ' Sq Yard';
         document.getElementById('sqMeterValue').textContent = (areaInSqFt / toSqFt['sq_meter']).toFixed(2) + ' Sq Meter';
     }
 
-    totalAreaInput.addEventListener('input', convertArea);
-    areaUnitSelect.addEventListener('change', convertArea);
+    // Price per acre auto-calculation
+    const totalPriceInput = document.getElementById('total_price_input');
+    const pricePerAcreInput = document.querySelector('input[name="price_per_acre"]');
+    
+    function calculatePricePerAcre() {
+        const totalPrice = parseFloat(totalPriceInput?.value) || 0;
+        const totalArea = parseFloat(totalAreaInput?.value) || 0;
+        const areaUnit = areaUnitSelect?.value || '';
+        
+        if (totalPrice > 0 && totalArea > 0 && areaUnit) {
+            // Convert area to acres first
+            const toSqFt = {
+                'sqft': 1,
+                'sqyard': 9,
+                'sq_yard': 9,
+                'sq_meter': 10.7639104,
+                'acre': 43560,
+                'hectare': 107639.104,
+                'bigha': 27000,
+                'guntha': 1089,
+                'kattha': 1361.25,
+                'biswa': 1350,
+                'kanal': 5445,
+                'marla': 272.25,
+                'cent': 435.6,
+                'ground': 2400,
+                'ankana': 72,
+                'dam': 39.37
+            };
+            
+            const conversionFactor = toSqFt[areaUnit];
+            if (conversionFactor) {
+                const areaInSqFt = totalArea * conversionFactor;
+                const areaInAcres = areaInSqFt / 43560; // Convert sq ft to acres
+                const pricePerAcre = totalPrice / areaInAcres;
+                
+                if (pricePerAcreInput && isFinite(pricePerAcre) && pricePerAcre > 0) {
+                    pricePerAcreInput.value = pricePerAcre.toFixed(2);
+                }
+            }
+        }
+    }
+    
+    // Set up event listeners
+    totalAreaInput.addEventListener('input', function() {
+        convertArea();
+        calculatePricePerAcre();
+    });
+    
+    areaUnitSelect.addEventListener('change', function() {
+        convertArea();
+        calculatePricePerAcre();
+    });
+    
+    if (totalPriceInput) {
+        totalPriceInput.addEventListener('input', calculatePricePerAcre);
+    }
+    
+    // Initial calculation if values exist (delay to ensure elements are loaded)
+    setTimeout(function() {
+        convertArea();
+        calculatePricePerAcre();
+    }, 100);
+
+    // Get current location using Geolocation API
+    function getCurrentLocation() {
+        const latitudeInput = document.querySelector('input[name="latitude"]');
+        const longitudeInput = document.querySelector('input[name="longitude"]');
+        const getCurrentLocationBtn = document.getElementById('getCurrentLocationBtn');
+        
+        if (!navigator.geolocation) {
+            alert('Geolocation is not supported by your browser');
+            return;
+        }
+        
+        if (getCurrentLocationBtn) {
+            getCurrentLocationBtn.innerHTML = '<i class="bi bi-spinner-border spin"></i>';
+            getCurrentLocationBtn.disabled = true;
+            getCurrentLocationBtn.style.minWidth = '45px';
+            getCurrentLocationBtn.style.minHeight = '45px';
+        }
+        
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+                
+                if (latitudeInput) {
+                    latitudeInput.value = lat.toFixed(6);
+                }
+                if (longitudeInput) {
+                    longitudeInput.value = lng.toFixed(6);
+                }
+                
+                // Generate Google Maps URL from coordinates
+                const googleMapInput = document.querySelector('input[name="google_map_location"]');
+                if (googleMapInput) {
+                    googleMapInput.value = `https://www.google.com/maps?q=${lat},${lng}`;
+                }
+                
+                if (getCurrentLocationBtn) {
+                    getCurrentLocationBtn.innerHTML = '<i class="bi bi-check-circle"></i>';
+                    getCurrentLocationBtn.style.minWidth = '45px';
+                    getCurrentLocationBtn.style.minHeight = '45px';
+                    setTimeout(() => {
+                        getCurrentLocationBtn.innerHTML = '<i class="bi bi-geo-alt"></i>';
+                        getCurrentLocationBtn.disabled = false;
+                    }, 2000);
+                }
+            },
+            function(error) {
+                console.error('Error getting location:', error);
+                let errorMessage = 'Unable to retrieve location';
+                
+                switch(error.code) {
+                    case error.PERMISSION_DENIED:
+                        errorMessage = 'Location permission denied. Please enable location services.';
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        errorMessage = 'Location information is unavailable.';
+                        break;
+                    case error.TIMEOUT:
+                        errorMessage = 'Location request timed out.';
+                        break;
+                }
+                
+                alert(errorMessage);
+                
+                if (getCurrentLocationBtn) {
+                    getCurrentLocationBtn.innerHTML = '<i class="bi bi-geo-alt"></i>';
+                    getCurrentLocationBtn.disabled = false;
+                }
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0
+            }
+        );
+    }
+    
+    // Set up event listeners after DOM is loaded
+    setTimeout(function() {
+        const getCurrentLocationBtn = document.getElementById('getCurrentLocationBtn');
+        
+        if (getCurrentLocationBtn) {
+            getCurrentLocationBtn.addEventListener('click', getCurrentLocation);
+        }
+    }, 500);
 
     // Step navigation
     function showStep(step) {

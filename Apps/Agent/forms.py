@@ -346,6 +346,10 @@ class AgriculturalLandForm(forms.ModelForm):
             self.fields['featured_image'].required = True
         else:
             self.fields['featured_image'].required = False
+        
+        # Set area unit choices to agricultural land specific choices
+        from Apps.PublicPage.models import Property
+        self.fields['area_unit'].choices = Property.AGRI_AREA_UNIT_CHOICES
             
         # Populate state choices dynamically
         state_choices = [('', 'Select State')]
@@ -498,8 +502,8 @@ class AgriculturalLandForm(forms.ModelForm):
             'latitude': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Latitude', 'step': '0.000001'}),
             'longitude': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Longitude', 'step': '0.000001'}),
             # Investment Information
-            'price': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Total Price (₹)', 'step': '0.01'}),
-            'price_per_acre': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Price Per Acre (₹)', 'step': '0.01'}),
+            'price': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Total Price (₹)', 'step': '0.01', 'id': 'total_price_input'}),
+            'price_per_acre': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Price Per Acre (₹)', 'step': '0.01', 'readonly': 'readonly'}),
             'total_land_price': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Total Land Price (₹)', 'step': '0.01'}),
             'negotiable': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'expected_roi': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Expected ROI %', 'step': '0.01'}),
