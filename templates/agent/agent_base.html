@@ -35,9 +35,9 @@
 
     <!-- Custom CSS -->
 
-    <link rel="stylesheet" href="{% static 'css/agent-dashboard.css' %}?v=10">
+    <link rel="stylesheet" href="{% static 'css/agent-dashboard.css' %}?v=11">
 
-    <link rel="stylesheet" href="{% static 'css/responsive.css' %}?v=6">
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}?v=7">
 
     {% block extra_css %}{% endblock %}
 
@@ -1313,7 +1313,7 @@
 
     <button class="agent-mobile-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#agentSidebarOffcanvas"
 
-        aria-controls="agentSidebarOffcanvas" style="display: none;">
+        aria-controls="agentSidebarOffcanvas">
 
         <i class="bi bi-list"></i>
 
@@ -1354,6 +1354,34 @@
             }, 300);
 
         }
+
+        // Handle window resize for sidebar visibility
+        function handleResize() {
+            const width = window.innerWidth;
+            const sidebar = document.querySelector('.agent-sidebar');
+            const offcanvas = document.querySelector('.agent-sidebar-offcanvas');
+            const mobileToggle = document.querySelector('.agent-mobile-toggle');
+
+            if (width >= 993) {
+                // Desktop: show sidebar, hide offcanvas and toggle
+                if (sidebar) sidebar.style.display = 'flex';
+                if (offcanvas) {
+                    const offcanvasInstance = bootstrap.Offcanvas.getInstance(offcanvas);
+                    if (offcanvasInstance) offcanvasInstance.hide();
+                }
+                if (mobileToggle) mobileToggle.style.display = 'none';
+            } else {
+                // Mobile/Tablet: hide sidebar, show toggle
+                if (sidebar) sidebar.style.display = 'none';
+                if (mobileToggle) mobileToggle.style.display = 'block';
+            }
+        }
+
+        // Initialize on load and add resize listener
+        document.addEventListener('DOMContentLoaded', function() {
+            handleResize();
+            window.addEventListener('resize', handleResize);
+        });
 
     </script>
 

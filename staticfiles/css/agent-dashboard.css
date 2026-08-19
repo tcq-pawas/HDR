@@ -926,6 +926,11 @@ body {
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2) !important;
         font-size: 1.25rem !important;
     }
+
+    .agent-sidebar-offcanvas {
+        display: block !important;
+        width: 275px !important;
+    }
 }
 
 @media (min-width: 993px) {
@@ -935,6 +940,10 @@ body {
 
     .agent-sidebar-offcanvas {
         display: none !important;
+    }
+
+    .agent-sidebar {
+        display: flex !important;
     }
 }
 
