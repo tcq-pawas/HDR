@@ -200,6 +200,9 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 30px;
     align-items: stretch;
+    max-width: 1200px;
+    margin: 0 auto;
+    justify-content: center;
 }
 
 .pricing-card {

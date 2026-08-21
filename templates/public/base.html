@@ -383,10 +383,10 @@
                 </a>
                 <p class="footer-brand-description">Buy • Sell • Invest • Discover</p>
                 <div class="footer-social">
-                    <a href="#" class="footer-social-link" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
-                    <a href="#" class="footer-social-link" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
-                    <a href="#" class="footer-social-link" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
-                    <a href="#" class="footer-social-link" aria-label="X"><i class="bi bi-twitter"></i></a>
+                    <a href="https://facebook.com" target="_blank" rel="noopener" class="footer-social-link" title="Facebook">𝗙</a>
+                    <a href="https://instagram.com" target="_blank" rel="noopener" class="footer-social-link" title="Instagram">◎</a>
+                    <a href="https://linkedin.com" target="_blank" rel="noopener" class="footer-social-link" title="LinkedIn">in</a>
+                    <a href="https://twitter.com" target="_blank" rel="noopener" class="footer-social-link" title="Twitter/X">𝗫</a>
                 </div>
             </div>
 
@@ -404,22 +404,22 @@
 
             <div class="footer-column">
                 <h4>Services</h4>
-                <ul class="footer-links list-unstyled">
-                    <li><a href="#" class="footer-link">Managed Farmland</a></li>
-                    <li><a href="#" class="footer-link">Agricultural Land</a></li>
-                    <li><a href="#" class="footer-link">Farm Plots</a></li>
-                    <li><a href="#" class="footer-link">Plantation Projects</a></li>
-                    <li><a href="#" class="footer-link">Investment Consulting</a></li>
-                </ul>
+                <div class="footer-links">
+                    <a href="{% url 'buy:property_search' %}?category=managed_farmland" class="footer-link">Managed Farmland</a>
+                    <a href="{% url 'buy:property_search' %}?category=agricultural_land" class="footer-link">Agricultural Land</a>
+                    <a href="{% url 'buy:property_search' %}?category=farm_plots" class="footer-link">Farm Plots</a>
+                    <a href="{% url 'buy:property_search' %}?category=plantation_projects" class="footer-link">Plantation Projects</a>
+                    <a href="{% url 'public:contact' %}" class="footer-link">Investment Consulting</a>
+                </div>
             </div>
         </div>
 
         <div class="footer-bottom">
             <span>&copy; {% now "Y" %} All Rights Reserved.</span>
             <div class="footer-bottom-links">
-                <a href="#" class="footer-bottom-link">Privacy Policy</a>
-                <a href="#" class="footer-bottom-link">Terms of Use</a>
-                <a href="#" class="footer-bottom-link">Sitemap</a>
+                <a href="{% url 'public:about' %}" class="footer-bottom-link">Privacy Policy</a>
+                <a href="{% url 'public:about' %}" class="footer-bottom-link">Terms of Use</a>
+                <a href="/sitemap.xml" class="footer-bottom-link" target="_blank">Sitemap</a>
             </div>
         </div>
     </footer>

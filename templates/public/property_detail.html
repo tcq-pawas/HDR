@@ -20,8 +20,7 @@
             <div class="col-lg-8">
                 <div class="section-label">Property</div>
                 <h1 class="section-title" style="font-size: 2.8rem;">{{ property.title }}</h1>
-                <p style="color: var(--text-muted); font-size: 1.2rem;"><i class="bi bi-geo-alt"></i> {{
-                    property.location }}</p>
+                <p style="color: var(--text-muted); font-size: 1.2rem;"><i class="bi bi-geo-alt"></i> {{ property.location }}</p>
             </div>
         </div>
     </div>
@@ -40,18 +39,18 @@
                     {% for image in property.images.all %}
                     <div class="carousel-item {% if forloop.first %}active{% endif %}">
                         <img src="{{ image.image.url }}" class="d-block w-100" alt="Property Image"
-                            style="height: 500px; object-fit: cover;">
+                             style="height: 500px; object-fit: cover;">
                     </div>
                     {% endfor %}
                     {% elif property.featured_image %}
                     <div class="carousel-item active">
                         <img src="{{ property.featured_image.url }}" class="d-block w-100" alt="{{ property.title }}"
-                            style="height: 500px; object-fit: cover;">
+                             style="height: 500px; object-fit: cover;">
                     </div>
                     {% else %}
                     <div class="carousel-item active">
                         <img src="https://via.placeholder.com/800x500?text=No+Images" class="d-block w-100"
-                            alt="No Image" style="height: 500px; object-fit: cover;">
+                             alt="No Image" style="height: 500px; object-fit: cover;">
                     </div>
                     {% endif %}
                 </div>
@@ -100,8 +99,27 @@
                     </div>
                     <div class="col-md-4">
                         <strong style="color: var(--forest);">Price:</strong>
-                        <span style="color: var(--gold); font-weight: 700;">${{ property.price }}</span>
+                        <span style="color: var(--gold); font-weight: 700;">₹{{ property.price|floatformat:0 }}</span>
                     </div>
+                </div>
+            </div>
+
+            <!-- Location Map -->
+            <div class="invest-card"
+                style="border: 1px solid var(--border); background: var(--cloud-white); padding: 32px 28px; margin-top: 28px;">
+                <h3 style="font-family: var(--font-heading); color: var(--forest); margin-bottom: 16px;">
+                    <i class="bi bi-geo-alt"></i> Location
+                </h3>
+                <p style="color: var(--text-muted); margin-bottom: 16px;">{{ property.location }}</p>
+                <div style="border-radius: 12px; overflow: hidden; height: 320px; border: 1px solid var(--border);">
+                    <iframe 
+                        src="{% if property.google_map_link %}{{ property.google_map_link }}{% else %}https://maps.google.com/maps?q={{ property.location|urlencode }}&output=embed{% endif %}" 
+                        width="100%" 
+                        height="100%" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy">
+                    </iframe>
                 </div>
             </div>
 
@@ -140,7 +158,7 @@
                 style="border: 1px solid var(--border); background: var(--cloud-white); padding: 32px 28px; position: sticky; top: 100px;">
                 <div class="text-center mb-4">
                     <div class="section-label" style="margin: 0 auto 8px;">Price</div>
-                    <h2 class="section-title" style="font-size: 2.4rem; color: var(--gold);">${{ property.price }}</h2>
+                    <h2 class="section-title" style="font-size: 2.4rem; color: var(--gold);">₹{{ property.price|floatformat:0 }}</h2>
                 </div>
 
                 <div class="text-center mb-4">
