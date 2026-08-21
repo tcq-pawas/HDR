@@ -153,6 +153,25 @@
         background: #f0f9f4;
     }
     
+    .btn-view-details {
+        background: #F4B400;
+        color: #1F1F1F;
+        border: none;
+        border-radius: 999px;
+        padding: 10px 20px;
+        font-weight: 600;
+        font-size: 14px;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+        transition: 0.2s;
+    }
+    
+    .btn-view-details:hover {
+        background: #d9a000;
+        transform: translateY(-1px);
+    }
+    
     /* Map control button hover */
     .map-control-btn:hover {
         background: #0F6A3C;
@@ -437,13 +456,13 @@
             {% if properties %}
                 <div class="properties-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
                     {% for property in properties %}
-                        <a href="{% url 'buy:property_detail' property.id %}" class="property-card" data-property-id="{{ property.id }}" style="background: white; border-radius: 18px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); transition: all 0.3s; display: flex; flex-direction: column; text-decoration: none; color: inherit;">
+                        <div class="property-card" data-property-id="{{ property.id }}" style="background: white; border-radius: 18px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); transition: all 0.3s; display: flex; flex-direction: column;">
                             <!-- Image Slider -->
-                            <div style="position: relative; height: 200px; overflow: hidden; background: #e2e8f0;">
+                            <div style="position: relative; height: 200px; overflow: hidden; background: #e2e8f0; display: flex; align-items: center; justify-content: center;">
                                 {% if property.featured_image %}
-                                    <img src="{{ property.featured_image.url }}" alt="{{ property.title }}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; display: block;">
+                                    <img src="{{ property.featured_image.url }}" alt="{{ property.title }}" style="width: 100%; height: 100%; object-fit: contain; transition: transform 0.3s; display: block;">
                                 {% elif property.images.all %}
-                                    <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; display: block;">
+                                    <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}" style="width: 100%; height: 100%; object-fit: contain; transition: transform 0.3s; display: block;">
                                     {% if property.images.count > 1 %}
                                         <div style="position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 5;">
                                             {% for image in property.images.all %}
@@ -476,29 +495,20 @@
                             <!-- Property Info -->
                             <div style="padding: 20px; flex-grow: 1; display: flex; flex-direction: column;">
                                 <div style="flex-grow: 1;">
-                                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 4px;">
-                                        <div style="font-size: 1.5rem; font-weight: 700; color: #0F6A3C;">₹{{ property.price|floatformat:0 }}</div>
-                                        {% if property.seller.user_subscription and property.seller.user_subscription.status == 'active' and property.seller.user_subscription.plan.badge_image %}
-                                            <img src="{{ property.seller.user_subscription.plan.badge_image.url }}" alt="{{ property.seller.user_subscription.plan.name }}" style="height: 28px; object-fit: contain;" title="{{ property.seller.user_subscription.plan.name }} Plan">
-                                        {% endif %}
-                                    </div>
-                                    <div style="font-size: 0.8rem; color: #6b7a7a; background: #f1f5f4; padding: 4px 10px; border-radius: 12px; display: inline-block; margin-bottom: 8px;">Total Price</div>
-                                    <h3 style="font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 600; color: #1a2e2a; margin-bottom: 8px; line-height: 1.4;">{{ property.title }}</h3>
-                                    <div style="font-size: 0.9rem; color: #6b7a7a; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
-                                        <i class="bi bi-geo-alt" style="color: #0F6A3C;"></i> {{ property.location }}
-                                    </div>
-                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.85rem; color: #3d4f4a;">
-                                        <div><strong style="color: #1a2e2a; font-weight: 600;">Area:</strong> <span style="color: #0F6A3C; font-weight: 500;">{{ property.project_size_acre|default:"N/A" }}</span></div>
-                                        <div><strong style="color: #1a2e2a; font-weight: 600;">Type:</strong> <span style="color: #0F6A3C; font-weight: 500;">{{ property.property_type|default:"N/A" }}</span></div>
-                                    </div>
+                                    <div style="font-size: 12px; color: #6b7a7a; margin-bottom: 4px;">{{ property.location }}</div>
+                                    <div style="font-size: 12px; color: #0F6A3C; font-weight: 600; margin-bottom: 8px;">{{ property.get_property_type_display }}</div>
+                                    <h3 style="font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 600; color: #1a2e2a; margin-bottom: 8px; line-height: 1.4;">{{ property.title }}</h3>
+                                    <div style="font-size: 14px; color: #6b7a7a; margin-bottom: 12px;">{{ property.area_sqft }} sqft</div>
+                                    <div style="font-size: 18px; font-weight: 700; color: #0F6A3C; margin-bottom: 16px;">₹{{ property.price }}</div>
                                 </div>
-                                <div style="margin-top: 16px; display: flex; justify-content: flex-end;">
-                                    <button class="share-btn" style="padding: 8px 16px; border: 1px solid #e2e8f0; background: #f8fafc; border-radius: 10px; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: all 0.2s; color: #3d4f4a; display: inline-flex; align-items: center; gap: 6px;" onclick="event.stopPropagation()">
+                                <div style="margin-top: auto; display: flex; gap: 10px;">
+                                    <a href="{% url 'buy:property_detail' property.id %}" style="flex: 1; background: #F4B400; color: #1F1F1F; border: none; border-radius: 999px; padding: 10px 20px; font-weight: 600; font-size: 14px; text-decoration: none; display: inline-block; text-align: center;">View Details</a>
+                                    <button class="share-btn" data-property-title="{{ property.title|escapejs }}" data-property-url="{% url 'buy:property_detail' property.id %}" style="flex: 1; padding: 10px 16px; border: 1px solid #e2e8f0; background: #f8fafc; border-radius: 999px; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.2s; color: #3d4f4a; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
                                         <i class="bi bi-share"></i> Share
                                     </button>
                                 </div>
                             </div>
-                        </a>
+                        </div>
                     {% endfor %}
                 </div>
 

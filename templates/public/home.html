@@ -166,7 +166,12 @@
                     <div class="property-name">{{ property.title }}</div>
                     <div class="property-area">{{ property.area_sqft }} sqft</div>
                     <div class="property-price">₹{{ property.price }}</div>
-                    <a href="{% url 'buy:property_detail' property.id %}" class="btn-view-details">View Details</a>
+                    <div class="property-actions">
+                        <a href="{% url 'buy:property_detail' property.id %}" class="btn-view-details">View Details</a>
+                        <button class="share-btn" onclick="shareProperty('{{ property.title|escapejs }}', '{% url 'buy:property_detail' property.id %}')">
+                            <i class="bi bi-share"></i> Share
+                        </button>
+                    </div>
                 </div>
                 
             </div>
@@ -211,7 +216,12 @@
                     <div class="property-name">{{ property.title }}</div>
                     <div class="property-area">{{ property.area_sqft }} sqft</div>
                     <div class="property-price">₹{{ property.price }}</div>
-                    <a href="{% url 'buy:property_detail' property.id %}" class="btn-view-details">View Details</a>
+                    <div class="property-actions">
+                        <a href="{% url 'buy:property_detail' property.id %}" class="btn-view-details">View Details</a>
+                        <button class="share-btn" onclick="shareProperty('{{ property.title|escapejs }}', '{% url 'buy:property_detail' property.id %}')">
+                            <i class="bi bi-share"></i> Share
+                        </button>
+                    </div>
                 </div>
             </div>
             {% endfor %}
@@ -477,6 +487,27 @@ document.addEventListener('DOMContentLoaded', function() {
         // Initialize on load
         updateSlider();
     }
+
+    // Share functionality
+    window.shareProperty = function(title, url) {
+        const fullUrl = window.location.origin + url;
+        
+        if (navigator.share) {
+            navigator.share({
+                title: 'Check out this property: ' + title,
+                text: title,
+                url: fullUrl
+            }).catch((error) => console.log('Error sharing:', error));
+        } else {
+            // Fallback: copy to clipboard
+            navigator.clipboard.writeText(fullUrl).then(() => {
+                alert('Property link copied to clipboard!');
+            }).catch(() => {
+                // Final fallback: open in new tab
+                window.open(fullUrl, '_blank');
+            });
+        }
+    };
 });
 </script>
 
