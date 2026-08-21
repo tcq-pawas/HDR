@@ -169,7 +169,6 @@
                     <a href="{% url 'buy:property_detail' property.id %}" class="btn-view-details">View Details</a>
                 </div>
                 
-                <!-- <a href="{% url 'public:property_detail' property.slug %}" -->
             </div>
             {% endfor %}
         </div>
@@ -212,7 +211,7 @@
                     <div class="property-name">{{ property.title }}</div>
                     <div class="property-area">{{ property.area_sqft }} sqft</div>
                     <div class="property-price">₹{{ property.price }}</div>
-                    <a href="{% url 'public:property_detail' property.slug %}" class="btn-view-details">View Details</a>
+                    <a href="{% url 'buy:property_detail' property.id %}" class="btn-view-details">View Details</a>
                 </div>
             </div>
             {% endfor %}
