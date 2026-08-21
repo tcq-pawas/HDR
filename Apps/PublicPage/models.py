@@ -83,6 +83,14 @@ class Property(models.Model):
         ('guntha', 'Guntha'),
         ('sq_yard', 'Sq Yard'),
         ('sq_meter', 'Sq Meter'),
+        ('kattha', 'Kattha'),
+        ('biswa', 'Biswa'),
+        ('kanal', 'Kanal'),
+        ('marla', 'Marla'),
+        ('cent', 'Cent'),
+        ('ground', 'Ground'),
+        ('ankana', 'Ankana'),
+        ('dam', 'Dam'),
     )
     
     # Ownership Type

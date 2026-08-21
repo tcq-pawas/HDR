@@ -91,7 +91,7 @@ def property_search(request):
             ('₹1 Cr - ₹10 Cr', '1cr_10cr'),
             ('Above ₹10 Cr', 'above_10cr'),
         ],
-        'area_units': ['Acre', 'Bigha', 'Hectare', 'Sq Ft', 'Sq Yard'],
+        'area_units': ['Acre', 'Bigha', 'Hectare', 'Guntha', 'Kattha', 'Biswa', 'Kanal', 'Marla', 'Cent', 'Ground', 'Ankana', 'Dam', 'Sq Ft', 'Sq Yard'],
         'filters': {
             'q': query,
             'location': location,
