@@ -315,10 +315,10 @@
                 <div class="footer-brand-logo">HeyDay Realty</div>
                 <p class="footer-brand-description">HeyDay Realty helps investors discover verified farmland opportunities, managed plantation projects, and long-term agricultural assets across India.</p>
                 <div class="footer-social">
-                    <a href="#" class="footer-social-link">𝗙</a>
-                    <a href="#" class="footer-social-link">◎</a>
-                    <a href="#" class="footer-social-link">in</a>
-                    <a href="#" class="footer-social-link">𝗫</a>
+                    <a href="https://facebook.com" target="_blank" rel="noopener" class="footer-social-link" title="Facebook">𝗙</a>
+                    <a href="https://instagram.com" target="_blank" rel="noopener" class="footer-social-link" title="Instagram">◎</a>
+                    <a href="https://linkedin.com" target="_blank" rel="noopener" class="footer-social-link" title="LinkedIn">in</a>
+                    <a href="https://twitter.com" target="_blank" rel="noopener" class="footer-social-link" title="Twitter/X">𝗫</a>
                 </div>
             </div>
 
@@ -337,11 +337,11 @@
             <div class="footer-column">
                 <h4>Services</h4>
                 <div class="footer-links">
-                    <a href="#" class="footer-link">Managed Farmland</a>
-                    <a href="#" class="footer-link">Agricultural Land</a>
-                    <a href="#" class="footer-link">Farm Plots</a>
-                    <a href="#" class="footer-link">Plantation Projects</a>
-                    <a href="#" class="footer-link">Investment Consulting</a>
+                    <a href="{% url 'buy:property_search' %}?category=managed_farmland" class="footer-link">Managed Farmland</a>
+                    <a href="{% url 'buy:property_search' %}?category=agricultural_land" class="footer-link">Agricultural Land</a>
+                    <a href="{% url 'buy:property_search' %}?category=farm_plots" class="footer-link">Farm Plots</a>
+                    <a href="{% url 'buy:property_search' %}?category=plantation_projects" class="footer-link">Plantation Projects</a>
+                    <a href="{% url 'public:contact' %}" class="footer-link">Investment Consulting</a>
                 </div>
             </div>
         </div>
@@ -349,9 +349,9 @@
         <div class="footer-bottom">
             <span>© 2026 HeyDay Realty. All Rights Reserved.</span>
             <div class="footer-bottom-links">
-                <a href="#" class="footer-bottom-link">Privacy Policy</a>
-                <a href="#" class="footer-bottom-link">Terms of Use</a>
-                <a href="#" class="footer-bottom-link">Sitemap</a>
+                <a href="{% url 'public:about' %}" class="footer-bottom-link">Privacy Policy</a>
+                <a href="{% url 'public:about' %}" class="footer-bottom-link">Terms of Use</a>
+                <a href="/sitemap.xml" class="footer-bottom-link" target="_blank">Sitemap</a>
             </div>
         </div>
     </footer>

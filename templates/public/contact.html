@@ -75,7 +75,7 @@
                 </div>
                 <h5 class="contact-card-title">Phone</h5>
                 <p class="contact-card-value">+91 9506 688 688</p>
-                <a href="tel:+919506688688" class="contact-card-link">Call Now</a>
+                <a href="javascript:void(0)" class="contact-card-link" data-bs-toggle="modal" data-bs-target="#callModal">Call Now</a>
             </div>
 
             <!-- Email -->
@@ -85,7 +85,7 @@
                 </div>
                 <h5 class="contact-card-title">Email</h5>
                 <p class="contact-card-value">info@heydayrealty.in</p>
-                <a href="mailto:info@heydayrealty.in" class="contact-card-link">Send Email</a>
+                <a href="javascript:void(0)" class="contact-card-link" data-bs-toggle="modal" data-bs-target="#emailModal">Send Email</a>
             </div>
 
             <!-- Office Hours -->
@@ -95,7 +95,7 @@
                 </div>
                 <h5 class="contact-card-title">Office Hours</h5>
                 <p class="contact-card-value">Mon – Sat<br>9:00 AM – 7:00 PM</p>
-                <a href="#" class="contact-card-link">View Timings</a>
+                <a href="javascript:void(0)" class="contact-card-link" data-bs-toggle="modal" data-bs-target="#timingsModal">View Timings</a>
             </div>
 
             <!-- Office Location -->
@@ -105,7 +105,7 @@
                 </div>
                 <h5 class="contact-card-title">Office Location</h5>
                 <p class="contact-card-value">HeyDay Realty Pvt Ltd<br>123 Real Estate Blvd.</p>
-                <a href="#" class="contact-card-link">Get Directions</a>
+                <a href="https://maps.google.com/?q=HeyDay+Realty+Private+Limited" target="_blank" rel="noopener" class="contact-card-link">Get Directions</a>
             </div>
 
         </div>
@@ -300,5 +300,132 @@
         </div>
     </div>
 </section>
+
+<!-- Call Options Modal -->
+<div class="modal fade" id="callModal" tabindex="-1" aria-labelledby="callModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 440px;">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden text-center">
+            <div class="modal-header border-0 bg-success text-white p-4">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-circle bg-white shadow-sm d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; min-width: 44px;">
+                        <i class="fas fa-phone text-success fs-4"></i>
+                    </div>
+                    <div class="text-start">
+                        <h5 class="modal-title fw-bold mb-0" id="callModalLabel">Call HeyDay Realty</h5>
+                        <small class="text-white-50">+91 9506 688 688</small>
+                    </div>
+                </div>
+                <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <p class="text-secondary mb-4">Choose how you would like to connect with our investment advisory team:</p>
+                <div class="d-grid gap-3">
+                    <a href="tel:+919506688688" class="btn btn-success fw-semibold rounded-pill py-2">
+                        <i class="bi bi-telephone-fill me-2"></i> Call Directly (+91 9506 688 688)
+                    </a>
+                    <a href="https://wa.me/919506688688?text=Hi%2C%20I%20am%20interested%20in%20HeyDay%20Realty%20farmland%20investments." target="_blank" rel="noopener" class="btn btn-outline-success fw-semibold rounded-pill py-2">
+                        <i class="bi bi-whatsapp me-2"></i> Chat on WhatsApp
+                    </a>
+                    <button type="button" class="btn btn-light fw-semibold rounded-pill py-2 border" onclick="copyText('+919506688688', this)">
+                        <i class="bi bi-clipboard me-2"></i> Copy Phone Number
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Email Options Modal -->
+<div class="modal fade" id="emailModal" tabindex="-1" aria-labelledby="emailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 440px;">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden text-center">
+            <div class="modal-header border-0 bg-success text-white p-4">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-circle bg-white shadow-sm d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; min-width: 44px;">
+                        <i class="fas fa-envelope text-success fs-4"></i>
+                    </div>
+                    <div class="text-start">
+                        <h5 class="modal-title fw-bold mb-0" id="emailModalLabel">Send Us an Email</h5>
+                        <small class="text-white-50">info@heydayrealty.in</small>
+                    </div>
+                </div>
+                <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <p class="text-secondary mb-4">Choose your preferred email service or submit the message form below:</p>
+                <div class="d-grid gap-3">
+                    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=info@heydayrealty.in&su=Farmland%20Investment%20Enquiry" target="_blank" rel="noopener" class="btn btn-success fw-semibold rounded-pill py-2">
+                        <i class="bi bi-google me-2"></i> Open in Gmail Web
+                    </a>
+                    <a href="mailto:info@heydayrealty.in?subject=Farmland%20Investment%20Enquiry" class="btn btn-outline-success fw-semibold rounded-pill py-2">
+                        <i class="bi bi-envelope-fill me-2"></i> Open Default Mail App
+                    </a>
+                    <button type="button" class="btn btn-light fw-semibold rounded-pill py-2 border" onclick="copyText('info@heydayrealty.in', this)">
+                        <i class="bi bi-clipboard me-2"></i> Copy Email Address
+                    </button>
+                    <a href="#contactForm" class="btn btn-link text-success text-decoration-none fw-semibold" data-bs-dismiss="modal">
+                        Or fill the contact form below &darr;
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Office Timings Modal -->
+<div class="modal fade" id="timingsModal" tabindex="-1" aria-labelledby="timingsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 460px;">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="modal-header border-0 bg-success text-white p-4">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-circle bg-white shadow-sm d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; min-width: 44px;">
+                        <i class="fas fa-clock text-success fs-4"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title fw-bold mb-0" id="timingsModalLabel">Office Hours & Schedule</h5>
+                        <small class="text-white-50">HeyDay Realty Pvt Ltd</small>
+                    </div>
+                </div>
+                <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2 border-bottom">
+                        <span class="fw-semibold text-dark"><i class="bi bi-calendar-check text-success me-2"></i>Monday – Friday</span>
+                        <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2">9:00 AM – 7:00 PM</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2 border-bottom">
+                        <span class="fw-semibold text-dark"><i class="bi bi-calendar-check text-success me-2"></i>Saturday</span>
+                        <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2">9:00 AM – 6:00 PM</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2">
+                        <span class="fw-semibold text-muted"><i class="bi bi-calendar-x text-muted me-2"></i>Sunday</span>
+                        <span class="badge bg-light text-muted border px-3 py-2">Closed / By Appointment</span>
+                    </li>
+                </ul>
+                <div class="alert bg-success bg-opacity-10 text-success border-0 rounded-3 mt-3 mb-0 small">
+                    <i class="bi bi-info-circle me-1"></i> Our online enquiry & support team is available 24/7.
+                </div>
+            </div>
+            <div class="modal-footer border-0 bg-light p-3 d-flex justify-content-end">
+                <button type="button" class="btn btn-success fw-semibold rounded-pill px-4" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function copyText(text, btn) {
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => {
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<i class="bi bi-check-circle-fill text-success me-2"></i> Copied!';
+            setTimeout(() => { btn.innerHTML = originalHTML; }, 2000);
+        });
+    } else {
+        prompt('Copy to clipboard:', text);
+    }
+}
+</script>
 
 {% endblock %}

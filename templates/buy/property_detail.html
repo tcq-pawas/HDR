@@ -1112,6 +1112,11 @@
                         <a href="{{ property.google_map_link }}" target="_blank" class="map-button">
                             <i class="bi bi-map"></i> Google Maps
                         </a>
+                        {% elif property.location %}
+                        <iframe src="https://maps.google.com/maps?q={{ property.location|urlencode }}&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen loading="lazy"></iframe>
+                        <a href="https://maps.google.com/?q={{ property.location|urlencode }}" target="_blank" class="map-button">
+                            <i class="bi bi-map"></i> View on Google Maps
+                        </a>
                         {% else %}
                         <div
                             style="display: flex; align-items: center; justify-content: center; height: 100%; color: #6b7a7a;">
@@ -1214,10 +1219,10 @@
                         </a>
                     </div>
                     <div class="action-row">
-                        <a href="#" class="action-link">
-                            <i class="bi bi-share"></i> Share
+                        <a href="javascript:void(0)" class="action-link" onclick="shareProperty('{{ property.title|escapejs }}', window.location.href)">
+                            <i class="bi bi-share"></i> <span id="shareBtnText">Share</span>
                         </a>
-                        <a href="#" class="action-link">
+                        <a href="javascript:void(0)" class="action-link" onclick="downloadBrochure()">
                             <i class="bi bi-download"></i> Download Brochure
                         </a>
                     </div>
@@ -1348,5 +1353,30 @@
         if (e.key === 'ArrowRight') nextImage();
         if (e.key === 'ArrowLeft') prevImage();
     });
+
+    function shareProperty(title, url) {
+        if (navigator.share) {
+            navigator.share({
+                title: title,
+                text: 'Check out this property on HeyDay Realty: ' + title,
+                url: url
+            }).catch(err => console.log('Share dismissed:', err));
+        } else if (navigator.clipboard) {
+            navigator.clipboard.writeText(url).then(() => {
+                const btnText = document.getElementById('shareBtnText');
+                if (btnText) {
+                    const orig = btnText.textContent;
+                    btnText.textContent = 'Link Copied!';
+                    setTimeout(() => { btnText.textContent = orig; }, 2000);
+                }
+            });
+        } else {
+            prompt('Copy property link:', url);
+        }
+    }
+
+    function downloadBrochure() {
+        window.print();
+    }
 </script>
 {% endblock %}
