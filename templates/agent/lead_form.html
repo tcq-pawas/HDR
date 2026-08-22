@@ -25,7 +25,7 @@
             
             <div class="form-row">
                 <div class="form-group">
-                    <label for="{{ form.name.id_for_label }}">Lead Name *</label>
+                    <label for="{{ form.name.id_for_label }}">Lead Name <span class="text-danger">*</span></label>
                     {{ form.name }}
                     {% if form.name.errors %}
                         <div class="error-message">{{ form.name.errors }}</div>
@@ -33,7 +33,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="{{ form.phone.id_for_label }}">Phone Number *</label>
+                    <label for="{{ form.phone.id_for_label }}">Phone Number <span class="text-danger">*</span></label>
                     {{ form.phone }}
                     {% if form.phone.errors %}
                         <div class="error-message">{{ form.phone.errors }}</div>
@@ -61,7 +61,7 @@
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="{{ form.status.id_for_label }}">Status *</label>
+                    <label for="{{ form.status.id_for_label }}">Status <span class="text-danger">*</span></label>
                     {{ form.status }}
                     {% if form.status.errors %}
                         <div class="error-message">{{ form.status.errors }}</div>
@@ -69,7 +69,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="{{ form.source.id_for_label }}">Source *</label>
+                    <label for="{{ form.source.id_for_label }}">Source <span class="text-danger">*</span></label>
                     {{ form.source }}
                     {% if form.source.errors %}
                         <div class="error-message">{{ form.source.errors }}</div>
@@ -79,7 +79,7 @@
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="{{ form.priority.id_for_label }}">Priority *</label>
+                    <label for="{{ form.priority.id_for_label }}">Priority <span class="text-danger">*</span></label>
                     {{ form.priority }}
                     {% if form.priority.errors %}
                         <div class="error-message">{{ form.priority.errors }}</div>

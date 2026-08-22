@@ -73,12 +73,15 @@
         <!-- Row: Email & Phone -->
         <div class="row">
             <div class="col-md-6 mb-3">
-                <label class="form-label">Email Address</label>
+                <label class="form-label">Email Address <span class="text-danger">*</span></label>
                 <input type="email" name="email" class="form-control"
                        value="{{ organization.email|default:'' }}">
+                {% if errors.email %}
+                    <div class="text-danger small mt-1">{{ errors.email }}</div>
+                {% endif %}
             </div>
             <div class="col-md-6 mb-3">
-                <label class="form-label">Phone Number</label>
+                <label class="form-label">Phone Number <span class="text-danger">*</span></label>
                 <input type="text" name="phone" class="form-control"
                        value="{{ organization.phone|default:'' }}">
                 {% if errors.phone %}

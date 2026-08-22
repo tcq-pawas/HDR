@@ -726,17 +726,17 @@
                     {% csrf_token %}
                     <div class="row">
                         <div class="col-md-6 mb-4">
-                            <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">First Name *</label>
+                            <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">First Name <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="first_name" id="firstName" value="{{ profile.user.first_name|default:'' }}" style="border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.1); padding: 12px;">
                         </div>
                         <div class="col-md-6 mb-4">
-                            <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">Last Name *</label>
+                            <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">Last Name <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="last_name" id="lastName" value="{{ profile.user.last_name|default:'' }}" style="border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.1); padding: 12px;">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-4">
-                            <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">Email *</label>
+                            <label class="form-label fw-semibold" style="color: #475569; font-size: 0.875rem;">Email <span class="text-danger">*</span></label>
                             <input type="email" class="form-control" name="email" id="email" value="{{ profile.user.email|default:'' }}" style="border-radius: 12px; border: 1px solid rgba(0, 0, 0, 0.1); padding: 12px;">
                         </div>
                         <div class="col-md-6 mb-4">

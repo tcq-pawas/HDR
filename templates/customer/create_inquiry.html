@@ -45,6 +45,7 @@
     .section-body{ padding: 1.4rem 1.5rem; }
 
     .form-label{ font-weight: 600; font-size: 14px; color:#111827; margin-bottom:.4rem; }
+    .text-danger{ color: #dc3545 !important; font-weight: 700; }
     .form-control, .form-select{
         border-radius: 12px;
         border: 1px solid #E2E8F0;
@@ -268,12 +269,12 @@
             <div class="section-body">
                 <div class="row g-3">
                     <div class="col-md-4">
-                        <label class="form-label">Full Name *</label>
+                        <label class="form-label">Full Name <span class="text-danger">*</span></label>
                         {{ form.name }}
                         {% if form.name.errors %}<div class="invalid-feedback">{{ form.name.errors.0 }}</div>{% endif %}
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Phone Number *</label>
+                        <label class="form-label">Phone Number <span class="text-danger">*</span></label>
                         {{ form.phone_number }}
                         {% if form.phone_number.errors %}<div class="invalid-feedback">{{ form.phone_number.errors.0 }}</div>{% endif %}
                     </div>
@@ -292,7 +293,7 @@
             <div class="section-body">
                 <div class="row g-3">
                     <div class="col-md-7">
-                        <label class="form-label">Select Property Advisor *</label>
+                        <label class="form-label">Select Property Advisor <span class="text-danger">*</span></label>
                         {{ form.agent_profile }}
                         {% if form.agent_profile.errors %}<div class="invalid-feedback">{{ form.agent_profile.errors.0 }}</div>{% endif %}
                     </div>
@@ -392,12 +393,12 @@
             <div class="section-header">4. Your Enquiry</div>
             <div class="section-body">
                 <div class="mb-3">
-                    <label class="form-label">Subject *</label>
+                    <label class="form-label">Subject <span class="text-danger">*</span></label>
                     {{ form.subject }}
                     {% if form.subject.errors %}<div class="invalid-feedback">{{ form.subject.errors.0 }}</div>{% endif %}
                 </div>
                 <div>
-                    <label class="form-label">Requirements / Message *</label>
+                    <label class="form-label">Requirements / Message <span class="text-danger">*</span></label>
                     {{ form.message }}
                     <div class="char-counter"><span id="charCount">0</span> / 1000</div>
                     {% if form.message.errors %}<div class="invalid-feedback">{{ form.message.errors.0 }}</div>{% endif %}

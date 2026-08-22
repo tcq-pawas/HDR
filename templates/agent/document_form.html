@@ -25,7 +25,7 @@
             
             <div class="form-row">
                 <div class="form-group">
-                    <label for="{{ form.document_type.id_for_label }}">Document Type *</label>
+                    <label for="{{ form.document_type.id_for_label }}">Document Type <span class="text-danger">*</span></label>
                     {{ form.document_type }}
                     {% if form.document_type.errors %}
                         <div class="error-message">{{ form.document_type.errors }}</div>
@@ -33,7 +33,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="{{ form.category.id_for_label }}">Category *</label>
+                    <label for="{{ form.category.id_for_label }}">Category <span class="text-danger">*</span></label>
                     {{ form.category }}
                     {% if form.category.errors %}
                         <div class="error-message">{{ form.category.errors }}</div>
@@ -42,7 +42,7 @@
             </div>
 
             <div class="form-group">
-                <label for="{{ form.title.id_for_label }}">Document Title *</label>
+                <label for="{{ form.title.id_for_label }}">Document Title <span class="text-danger">*</span></label>
                 {{ form.title }}
                 {% if form.title.errors %}
                     <div class="error-message">{{ form.title.errors }}</div>
@@ -68,7 +68,7 @@
             </div>
 
             <div class="form-group">
-                <label for="{{ form.file.id_for_label }}">File *</label>
+                <label for="{{ form.file.id_for_label }}">File <span class="text-danger">*</span></label>
                 {{ form.file }}
                 {% if form.file.errors %}
                     <div class="error-message">{{ form.file.errors }}</div>

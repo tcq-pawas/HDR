@@ -1,6 +1,16 @@
 {% extends 'public/base.html' %}
 {% load static %}
 
+{% block extra_css %}
+<style>
+    .share-btn:hover {
+        border-color: #0F6A3C;
+        color: #0F6A3C;
+        background: #f0f9f4;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <!-- Hero Section -->
 <section class="hero-section">
@@ -160,7 +170,12 @@
                     <div class="property-name">{{ property.title }}</div>
                     <div class="property-area">{{ property.area_sqft }} sqft</div>
                     <div class="property-price">₹{{ property.price }}</div>
-                    <a href="{% url 'buy:property_detail' property.id %}" class="btn-view-details">View Details</a>
+                    <div style="display: flex; gap: 8px; align-items: center; margin-top: 12px;">
+                        <a href="{% url 'buy:property_detail' property.id %}" class="btn-view-details" style="flex: 1; text-align: center;">View Details</a>
+                        <button class="share-btn" style="padding: 8px 14px; border: 1px solid #e2e8f0; background: #f8fafc; border-radius: 10px; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: all 0.2s; color: #3d4f4a; display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0;" onclick="event.stopPropagation()">
+                            <i class="bi bi-share"></i> Share
+                        </button>
+                    </div>
                 </div>
                 
                 <!-- <a href="{% url 'public:property_detail' property.slug %}" -->
@@ -206,7 +221,12 @@
                     <div class="property-name">{{ property.title }}</div>
                     <div class="property-area">{{ property.area_sqft }} sqft</div>
                     <div class="property-price">₹{{ property.price }}</div>
-                    <a href="{% url 'buy:property_detail' property.id %}" class="btn-view-details">View Details</a>
+                    <div style="display: flex; gap: 8px; align-items: center; margin-top: 12px;">
+                        <a href="{% url 'buy:property_detail' property.id %}" class="btn-view-details" style="flex: 1; text-align: center;">View Details</a>
+                        <button class="share-btn" style="padding: 8px 14px; border: 1px solid #e2e8f0; background: #f8fafc; border-radius: 10px; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: all 0.2s; color: #3d4f4a; display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0;" onclick="event.stopPropagation()">
+                            <i class="bi bi-share"></i> Share
+                        </button>
+                    </div>
                 </div>
             </div>
             {% empty %}
@@ -322,4 +342,23 @@
     </div>
 </section>
 
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.share-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const card = this.closest('.property-card');
+                const title = card ? (card.querySelector('.property-name') ? card.querySelector('.property-name').innerText : 'Property') : 'Property';
+                if (navigator.share) {
+                    navigator.share({ title: 'Check out this property', text: title, url: window.location.href });
+                } else {
+                    alert('Share this property!');
+                }
+            });
+        });
+    });
+</script>
 {% endblock %}

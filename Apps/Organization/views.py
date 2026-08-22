@@ -112,7 +112,12 @@ def create_organization(request):
         if not data["organization_name"]:
             errors["organization_name"] = "Organization name is required."
 
-        if data["phone"] and not data["phone"].replace("+", "").isdigit():
+        if not data["email"]:
+            errors["email"] = "Email address is required."
+
+        if not data["phone"]:
+            errors["phone"] = "Phone number is required."
+        elif not data["phone"].replace("+", "").isdigit():
             errors["phone"] = "Phone number must contain only digits."
 
         if not errors:
@@ -177,7 +182,12 @@ def edit_organization(request, organization_id):
         if not org_name:
             errors["organization_name"] = "Organization name is required."
 
-        if phone and not phone.replace("+", "").isdigit():
+        if not email:
+            errors["email"] = "Email address is required."
+
+        if not phone:
+            errors["phone"] = "Phone number is required."
+        elif phone and not phone.replace("+", "").isdigit():
             errors["phone"] = "Phone number must contain only digits."
 
         if not errors:

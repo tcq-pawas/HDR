@@ -24,7 +24,7 @@
             {% csrf_token %}
             
             <div class="form-group">
-                <label for="{{ form.name.id_for_label }}">Template Name *</label>
+                <label for="{{ form.name.id_for_label }}">Template Name <span class="text-danger">*</span></label>
                 {{ form.name }}
                 {% if form.name.errors %}
                     <div class="error-message">{{ form.name.errors }}</div>
@@ -32,7 +32,7 @@
             </div>
 
             <div class="form-group">
-                <label for="{{ form.template_type.id_for_label }}">Template Type *</label>
+                <label for="{{ form.template_type.id_for_label }}">Template Type <span class="text-danger">*</span></label>
                 {{ form.template_type }}
                 {% if form.template_type.errors %}
                     <div class="error-message">{{ form.template_type.errors }}</div>
@@ -48,7 +48,7 @@
             </div>
 
             <div class="form-group">
-                <label for="{{ form.content.id_for_label }}">Message Content *</label>
+                <label for="{{ form.content.id_for_label }}">Message Content <span class="text-danger">*</span></label>
                 {{ form.content }}
                 {% if form.content.errors %}
                     <div class="error-message">{{ form.content.errors }}</div>
