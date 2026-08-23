@@ -11,7 +11,7 @@ services:
     image: postgres:15
     command: postgres -c 'max_connections=500'
     env_file:
-      - .env
+      - ./docker/env/postgres/.env
     container_name: "hdr-postgres"
     hostname: "hdr-postgres"
     healthcheck:
@@ -39,7 +39,7 @@ services:
     expose:
       - "8000"
     env_file:
-      - .env
+      - ./docker/env/backend/.env
     depends_on:
       postgres:
         condition: service_healthy
@@ -61,6 +61,55 @@ services:
       
     depends_on:
       - web
+
+  db-backup:
+    image: postgres:15
+    container_name: hdr-postgres-backup
+    restart: unless-stopped
+
+    networks:
+      - hdr_network
+
+    env_file:
+      - ./docker/env/postgres/.env
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    volumes:
+      - ./backups/postgres:/backups
+
+    entrypoint: /bin/sh
+
+    command:
+      - -c
+      - |
+        set -e
+
+        while true; do
+          echo "======================================"
+          echo "Creating PostgreSQL backup..."
+          echo "Database: $$POSTGRES_DB"
+          echo "User: $$POSTGRES_USER"
+
+          PGPASSWORD="$$POSTGRES_PASSWORD" pg_dump \
+            -h postgres \
+            -U "$$POSTGRES_USER" \
+            -d "$$POSTGRES_DB" \
+            -Fc \
+            -f "/backups/postgres_$$(date +%Y-%m-%d_%H-%M-%S).dump"
+
+          echo "Backup completed."
+
+          ls -lh /backups
+
+          find /backups -type f -name "*.dump" -mtime +7 -delete
+
+          echo "Waiting 24 hours..."
+
+          sleep 86400
+        done
 
 networks:
   hdr_network:
