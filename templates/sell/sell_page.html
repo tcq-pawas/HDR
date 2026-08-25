@@ -24,6 +24,40 @@
     font-family: 'Inter', sans-serif;
 }
 
+/* =========================================
+   GLOBAL TYPOGRAPHY
+   ========================================= */
+
+/* Main Headings - 1.5rem */
+.sell-page-body h1,
+.sell-page-body h2,
+.sell-hero-title,
+.sell-section-heading,
+.support-section-title,
+.cta-text h2 {
+    font-size: 1.5rem !important;
+}
+
+/* Subheadings - 1.4rem */
+.sell-page-body h3,
+.get-started-content h3,
+.support-content h3,
+.faq-question {
+    font-size: 1.4rem !important;
+}
+
+/* Body Text - 14px */
+.sell-page-body p,
+.sell-hero-subtitle,
+.sell-section-subtitle,
+.get-started-content p,
+.security-text,
+.support-content p,
+.faq-body,
+.cta-text p {
+    font-size: 14px !important;
+}
+
 /* Hero Section */
 .sell-hero {
     position: relative;
@@ -436,7 +470,7 @@
 .cta-banner::after {
     content: '🌿';
     position: absolute;
-    font-size: 3.5rem;
+    font-size: 1.5rem;
     opacity: 0.18;
 }
 
@@ -508,41 +542,34 @@
     .sell-hero {
         min-height: 350px;
     }
-    .sell-hero-title {
-        font-size: 2.25rem;
-    }
-    
+
     .support-card {
         flex-direction: column;
         text-align: center;
         min-height: auto;
         padding: 32px;
     }
-    
+
     .phone-mockup {
         margin-top: 20px;
         width: 200px;
         height: 360px;
     }
-    
-    .support-section-title {
-        font-size: 32px;
-    }
-    
+
     .cta-banner {
         flex-direction: column;
         text-align: center;
     }
-    
+
     .cta-left {
         flex-direction: column;
     }
-    
+
     .cta-buttons {
         flex-direction: column;
         width: 100%;
     }
-    
+
     .cta-buttons a {
         width: 100%;
     }
@@ -552,56 +579,39 @@
     .sell-hero {
         min-height: 300px;
     }
-    
-    .sell-hero-title {
-        font-size: 1.75rem;
-    }
-    
-    .sell-hero-subtitle {
-        font-size: 1rem;
-    }
-    
-    .sell-section-heading {
-        font-size: 1.75rem;
-    }
-    
+
     .get-started-card {
         flex-direction: column;
         text-align: center;
     }
-    
+
     .faq-body {
         padding: 0 20px 20px 20px;
     }
-    
+
     .cta-banner {
         padding: 24px 28px;
         min-height: auto;
     }
-    
+
     .cta-left {
         gap: 16px;
     }
-    
+
     .cta-icon {
         width: 56px;
         height: 56px;
         font-size: 1.5rem;
     }
-    
-    .cta-text h2 {
-        font-size: 24px;
-    }
-    
+
     .cta-text p {
-        font-size: 14px;
         max-width: 300px;
     }
-    
+
     .cta-buttons {
         gap: 10px;
     }
-    
+
     .cta-buttons a {
         padding: 0 20px;
         font-size: 14px;
@@ -611,14 +621,6 @@
 @media (max-width: 480px) {
     .sell-hero {
         min-height: 220px;
-    }
-
-    .sell-hero-title {
-        font-size: 1.5rem;
-    }
-
-    .sell-hero-subtitle {
-        font-size: 0.9rem;
     }
 }
 </style>

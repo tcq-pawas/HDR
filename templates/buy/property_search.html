@@ -427,20 +427,20 @@
         <div>
             <!-- Listings Header -->
             <div style="margin-bottom: 24px;">
-                <h1 style="font-family: 'Playfair Display', serif; font-size: 1.75rem; font-weight: 700; color: #1a2e2a; margin-bottom: 8px;">Farmland and Agriculture Land for Sale</h1>
+                <h1 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: #1a2e2a; margin-bottom: 8px; padding-top: 30px;">Farmland and Agriculture Land for Sale</h1>
                 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
                     <div style="font-size: 0.9rem; color: #6b7a7a;">
                         <a href="{% url 'public:home' %}" style="color: #0F6A3C; text-decoration: none; font-weight: 500;">Home</a> &gt; <span style="color: #6b7a7a;">Map</span>
                     </div>
                     <div style="background: #0F6A3C; color: white; padding: 10px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">{{ total_results }} Results</div>
-                    <div style="margin-left: auto;">
+                    <div style="margin-left: 80px;">
                         <form method="get" style="display: inline;">
                             {% for key, value in filters.items %}
                                 {% if key != 'sort_by' %}
                                     <input type="hidden" name="{{ key }}" value="{{ value }}">
                                 {% endif %}
                             {% endfor %}
-                            <select name="sort_by" onchange="this.form.submit()" style="height: 40px; border: 1px solid #e2e8f0; border-radius: 10px; padding: 0 16px; font-size: 0.9rem; font-weight: 500; background: white; color: #1a2e2a; cursor: pointer;">
+                            <select name="sort_by" onchange="this.form.submit()" style="height: 40px; border: 1px solid #e2e8f0; border-radius: 10px; padding: 0 16px; font-size: 12px; font-weight: 500; background: white; color: #1a2e2a; cursor: pointer;">
                                 <option value="-created_at" {% if filters.sort_by == '-created_at' %}selected{% endif %}>Latest</option>
                                 <option value="price" {% if filters.sort_by == 'price' %}selected{% endif %}>Price: Low to High</option>
                                 <option value="-price" {% if filters.sort_by == '-price' %}selected{% endif %}>Price: High to Low</option>
@@ -534,7 +534,7 @@
                 {% endif %}
             {% else %}
                 <div style="text-align: center; padding: 60px 20px; background: white; border-radius: 18px;">
-                    <h3 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: #1a2e2a; margin-bottom: 12px;">No Properties Found</h3>
+                    <h3 style="font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: #1a2e2a; margin-bottom: 12px;">No Properties Found</h3>
                     <p style="color: #6b7a7a; margin-bottom: 24px;">Try adjusting your filters or search terms to find properties.</p>
                     <a href="{% url 'buy:property_search' %}" style="display: inline-block; padding: 12px 32px; background: #F4B400; color: white; border: none; border-radius: 12px; font-weight: 600; text-decoration: none; transition: 0.2s;">Clear All Filters</a>
                 </div>

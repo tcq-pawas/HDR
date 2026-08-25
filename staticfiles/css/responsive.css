@@ -260,7 +260,7 @@ iframe, embed, object, video {
 
         padding-left: 15px;
 
-        padding-top: 75px;
+        padding-top: 0;
 
         padding-right: 15px;
 
@@ -1735,6 +1735,50 @@ iframe, embed, object, video {
 
 
 
+    /* CTA button adjustments for mobile */
+
+
+
+    .cta-banner-buttons {
+
+
+
+        gap: 10px;
+
+
+
+    }
+
+
+
+    .btn-cta-yellow,
+
+
+
+    .btn-cta-outline {
+
+
+
+        padding: 9px 15px;
+
+
+
+        font-size: 12px;
+
+
+
+        line-height: 1.2;
+
+
+
+        min-height: 40px;
+
+
+
+    }
+
+
+
 }
 
 
@@ -1778,6 +1822,8 @@ iframe, embed, object, video {
         padding-right: 12px;
 
 
+        padding-top: 6px;
+       
 
     }
 
@@ -1827,7 +1873,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 2rem;
+        font-size: 1.5rem;
 
 
 
@@ -2698,7 +2744,7 @@ iframe, embed, object, video {
         margin-bottom: 0.5rem;
 
 
-
+        text-align: center;
     }
 
 

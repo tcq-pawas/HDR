@@ -77,7 +77,7 @@ h6 {
 }
 
 .section-heading {
-    font-size: 54px;
+    font-size: 1.5rem;
     font-weight: 800;
     line-height: 1.15;
     letter-spacing: -1px;
@@ -382,7 +382,7 @@ select:focus {
     bottom: -4px;
     width: 0;
     height: 2px;
-    background: #D4A23A;
+
     transition: .3s;
 }
 
@@ -427,6 +427,18 @@ select:focus {
 
 @media(max-width:991px) {
 
+   /* Mobile Navbar Gradient */
+    .navbar {
+        background: linear-gradient(
+            90deg,
+            #1B5E20 0%,
+            #ddeed9 45%,
+            #ddeed9 22%,
+            #1B5E20 100%
+        ) !important;
+        border-bottom: none !important;
+    }
+
     .navbar-brand img {
         height: 70px;
     }
@@ -437,9 +449,40 @@ select:focus {
         margin-top: 10px;
         border-radius: 16px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
+        border-top: none !important;
     }
 
+    /* Remove yellow line from nav links on mobile */
+    .nav-link::after {
+        display: none !important;
+    }
 
+    /* Mobile profile button styling */
+    .dropdown button.btn-success {
+        background: linear-gradient(135deg, #0F6A3C 0%, #0A4D2D 100%) !important;
+        padding: 2px 10px !important;
+        font-size: 0.85rem !important;
+        box-shadow: 0 2px 6px rgba(15, 106, 60, 0.25) !important;
+    }
+
+    .dropdown button.btn-success img {
+        width: 27px !important;
+        height: 27px !important;
+        border: 2px solid rgba(255, 255, 255, 0.8) !important;
+    }
+
+    .dropdown button.btn-success span {
+        font-size: 0.85rem !important;
+    }
+
+    /* Improve mobile menu spacing */
+    .navbar-nav {
+        gap: 0.5rem !important;
+    }
+
+    .nav-link {
+        padding: 10px 16px !important;
+    }
 
     .features-grid {
         grid-template-columns: 1fr;
@@ -3990,9 +4033,9 @@ footer:not(.site-footer) {
 
 /* ========== NEW LANDING PAGE STYLES ========== */
 
-/* Navbar */
+/* Navbar - Desktop */
 .navbar {
-    background: linear-gradient(90deg, #1B5E20 0%, #ffffff 30%, #ffffff 70%, #1B5E20 100%) !important;
+    background: linear-gradient(90deg, #1B5E20 0%, #ffffff 30%, #ffffff 70%, #1B5E20 100%);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     padding: 16px 0;
 }
@@ -4516,7 +4559,7 @@ footer:not(.site-footer) {
 
 .section-heading {
     font-family: var(--font-heading);
-    font-size: 2.5rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: var(--text-dark);
     margin-bottom: 16px;
@@ -5460,7 +5503,7 @@ footer.footer.site-footer,
 
 @media (max-width: 768px) {
     .hero-heading {
-        font-size: 2.5rem;
+        font-size: 2rem;
     }
 
     .hero-features {
@@ -5500,17 +5543,6 @@ footer.footer.site-footer,
         line-height: 1.5;
         word-wrap: break-word;
         overflow-wrap: break-word;
-    }
-
-    /* Fix section headings on small screens */
-    .section-heading {
-        font-size: 2rem;
-        line-height: 1.2;
-    }
-
-    .section-subtitle {
-        font-size: 1rem;
-        line-height: 1.6;
     }
 
     .why-invest-cards {
@@ -5557,14 +5589,6 @@ footer.footer.site-footer,
 
     .trust-description {
         font-size: 13px;
-    }
-
-    .section-heading {
-        font-size: 1.75rem;
-    }
-
-    .section-subtitle {
-        font-size: 0.95rem;
     }
 
     .why-invest-card {

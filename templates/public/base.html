@@ -92,7 +92,7 @@
 </head>
 
 <body>
-<nav class="navbar navbar-expand-lg sticky-top py-2 shadow-sm border-bottom" style="background: linear-gradient(90deg, #1B5E20 0%, #ffffff 30%, #ffffff 70%, #1B5E20 100%) !important;">
+<nav class="navbar navbar-expand-lg sticky-top py-2 shadow-sm border-bottom">
   <div class="container-fluid px-4 px-lg-5">
 
     <!-- LEFT: Logo -->
@@ -144,11 +144,11 @@
       {% if user.is_authenticated %}
         <div class="d-flex align-items-center gap-2 mt-2 mt-lg-0 ms-lg-2">
           <div class="dropdown">
-            <button class="btn btn-success d-flex align-items-center gap-2 px-3 py-2 rounded-pill dropdown-toggle" type="button" data-bs-toggle="dropdown" style="background: linear-gradient(135deg, #198754 0%, #034330 100%);border: none;box-shadow: 0 2px 8px rgba(25, 135, 84, 0.3);">
+            <button class="btn btn-success d-flex align-items-center gap-2 px-2 py-1 rounded-pill dropdown-toggle" type="button" data-bs-toggle="dropdown" style="background: linear-gradient(135deg, #198754 0%, #034330 100%);border: none;box-shadow: 0 2px 8px rgba(52, 67, 60, 0.3);">
               {% if user.agent_profile and user.agent_profile.profile_image and user.agent_profile.profile_image.name %}
-                <img src="{{ user.agent_profile.profile_image.url }}" alt="Profile" class="rounded-circle" style="width:44px; height:44px; object-fit:cover; border:3px solid #fff; flex-shrink:0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <img src="{{ user.agent_profile.profile_image.url }}" alt="Profile" class="rounded-circle" style="width:27px; height:27px; object-fit:cover; border:3px solid #fff; flex-shrink:0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
               {% else %}
-                <img src="https://ui-avatars.com/api/?name={% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}&background=198754&color=fff&size=44&bold=true" alt="Profile" class="rounded-circle" style="width:44px; height:44px; object-fit:cover; border:3px solid #fff; flex-shrink:0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <img src="https://ui-avatars.com/api/?name={% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}&background=198754&color=fff&size=44&bold=true" alt="Profile" class="rounded-circle" style="width:27px; height:27px; object-fit:cover; border:3px solid #fff; flex-shrink:0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
               {% endif %}
               <span class="fw-semibold text-white">{% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}</span>
             </button>
