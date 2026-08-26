@@ -11,8 +11,8 @@
 <section class="agents-hero">
     <div class="hero-overlay"></div>
     <div class="hero-content">
-        <h1 class="hero-title">Find Trusted Real Estate Agents</h1>
-        <p class="hero-subtitle">Connect with verified and experienced agents near you.</p>
+        <h1 class="hero-title" style="font-size: 2.5rem;">Find Trusted Real Estate Agents</h1>
+        <p class="hero-subtitle" style="font-size: 1.1rem;">Connect with verified and experienced agents near you.</p>
         <div class="hero-features">
             <div class="hero-feature">
                 <i class="fas fa-check-circle"></i>
@@ -40,10 +40,10 @@
         <div class="search-card">
             <form method="GET" action="{% url 'public:agents' %}" class="search-form">
                 <div class="search-inputs">
-                    <input type="text" name="search" class="search-input" placeholder="Search" value="{{ search_query }}">
-                    <input type="text" name="location" class="search-input" placeholder="Location" value="{{ location }}">
-                    <input type="text" name="specialization" class="search-input" placeholder="Specialization" value="{{ specialization }}">
-                    <input type="text" name="languages" class="search-input" placeholder="Languages" value="{{ languages }}">
+                    <input type="text" name="search" class="search-input" placeholder="Search" value="{{ search_query }}" style="font-size: 12px !important;">
+                    <input type="text" name="location" class="search-input" placeholder="Location" value="{{ location }}" style="font-size: 12px !important;">
+                    <input type="text" name="specialization" class="search-input" placeholder="Specialization" value="{{ specialization }}" style="font-size: 12px !important;">
+                    <input type="text" name="languages" class="search-input" placeholder="Languages" value="{{ languages }}" style="font-size: 12px !important;">
                     <button type="submit" class="search-btn">
                         <i class="fas fa-search"></i>
                     </button>
@@ -54,9 +54,9 @@
             </form>
         </div>
         <div class="popular-searches">
-            <span class="popular-label">Popular Searches:</span>
+            <span class="popular-label" style="font-size: 12px !important;">Popular Searches:</span>
             {% for search in popular_searches %}
-                <a href="?search={{ search }}" class="popular-chip">{{ search }}</a>
+                <a href="?search={{ search }}" class="popular-chip" style="font-size: 12px !important;">{{ search }}</a>
             {% endfor %}
         </div>
     </div>
@@ -66,9 +66,9 @@
 <section class="results-section">
     <div class="page-container">
         <div class="results-header">
-            <div class="results-count">{{ page_obj.paginator.count }} Verified Agents Found</div>
+            <div class="results-count" style="font-size: 12px !important;">{{ page_obj.paginator.count }} Verified Agents Found</div>
             <div class="results-sort">
-                <select class="sort-select">
+                <select class="sort-select" style="font-size: 12px !important;">
                     <option>Sort By: Relevance</option>
                     <option>Rating: High to Low</option>
                     <option>Rating: Low to High</option>
@@ -83,10 +83,10 @@
                     <div class="agent-card">
                         <div class="card-top">
                             {% if agent.is_verified %}
-                                <span class="premium-badge">Premium</span>
+                                <span class="premium-badge" style="font-size: 12px !important;">Premium</span>
                             {% endif %}
                             {% if agent.is_verified %}
-                                <div class="verified-badge-corner">Verified</div>
+                                <div class="verified-badge-corner" style="font-size: 12px !important;">Verified</div>
                             {% endif %}
                         </div>
                         <div class="card-profile">
@@ -99,32 +99,32 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <h3 class="agent-name">{{ agent.user.get_full_name|default:agent.user.username }}</h3>
+                            <h3 class="agent-name" style="font-size: 1.3rem !important;">{{ agent.user.get_full_name|default:agent.user.username }}</h3>
                             <div class="agent-rating">
                                 <i class="fas fa-star"></i>
-                                <span>4.8</span>
-                                <span class="rating-count">(124)</span>
+                                <span style="font-size: 12px !important;">4.8</span>
+                                <span class="rating-count" style="font-size: 12px !important;">(124)</span>
                             </div>
-                            <p class="agent-specialization">{{ agent.bio|truncatewords:8|default:"Real Estate Specialist" }}</p>
-                            <div class="agent-location">
+                            <p class="agent-specialization" style="font-size: 12px !important;">{{ agent.bio|truncatewords:8|default:"Real Estate Specialist" }}</p>
+                            <div class="agent-location" style="font-size: 12px !important;">
                                 <i class="fas fa-map-marker-alt"></i>
                                 {{ agent.territory|default:"India" }}
                             </div>
                             <div class="agent-stats">
                                 <div class="stat">
-                                    <span class="stat-value">{{ agent.created_at|timesince }}</span>
-                                    <span class="stat-label">Experience</span>
+                                    <span class="stat-value" style="font-size: 12px !important;">{{ agent.created_at|timesince }}</span>
+                                    <span class="stat-label" style="font-size: 12px !important;">Experience</span>
                                 </div>
                                 <div class="stat">
-                                    <span class="stat-value">{{ agent.user.bookings.count|default:0 }}</span>
-                                    <span class="stat-label">Properties Sold</span>
+                                    <span class="stat-value" style="font-size: 12px !important;">{{ agent.user.bookings.count|default:0 }}</span>
+                                    <span class="stat-label" style="font-size: 12px !important;">Properties Sold</span>
                                 </div>
                             </div>
                             <div class="agent-tags">
-                                <span class="tag">Residential</span>
-                                <span class="tag">Commercial</span>
+                                <span class="tag" style="font-size: 12px !important;">Residential</span>
+                                <span class="tag" style="font-size: 12px !important;">Commercial</span>
                             </div>
-                            <a href="{% url 'public:agent_profile' agent.id %}" class="view-profile-btn">View Profile</a>
+                            <a href="{% url 'public:agent_profile' agent.id %}" class="view-profile-btn" style="font-size: 12px !important;">View Profile</a>
                         </div>
                     </div>
                 {% endfor %}
@@ -140,9 +140,9 @@
                     {% endif %}
                     {% for num in page_obj.paginator.page_range %}
                         {% if page_obj.number == num %}
-                            <span class="pagination-btn active">{{ num }}</span>
+                            <span class="pagination-btn active" style="font-size: 12px !important;">{{ num }}</span>
                         {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                            <a href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if location %}&location={{ location }}{% endif %}{% if specialization %}&specialization={{ specialization }}{% endif %}{% if languages %}&languages={{ languages }}{% endif %}" class="pagination-btn">{{ num }}</a>
+                            <a href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if location %}&location={{ location }}{% endif %}{% if specialization %}&specialization={{ specialization }}{% endif %}{% if languages %}&languages={{ languages }}{% endif %}" class="pagination-btn" style="font-size: 12px !important;">{{ num }}</a>
                         {% endif %}
                     {% endfor %}
                     {% if page_obj.has_next %}
@@ -155,8 +155,8 @@
         {% else %}
             <div class="empty-state">
                 <i class="fas fa-user-tie"></i>
-                <h3>No Agents Found</h3>
-                <p>Try adjusting your search filters or check back later.</p>
+                <h3 style="font-size: 1.3rem !important;">No Agents Found</h3>
+                <p style="font-size: 12px !important;">Try adjusting your search filters or check back later.</p>
             </div>
         {% endif %}
     </div>
@@ -199,7 +199,6 @@
     }
 
     .hero-title {
-        font-size: 48px;
         font-weight: 700;
         margin-bottom: 12px;
         font-family: var(--font-heading);
@@ -207,7 +206,6 @@
     }
 
     .hero-subtitle {
-        font-size: 18px;
         opacity: 0.9;
         margin-bottom: 32px;
     }
@@ -222,7 +220,6 @@
         display: flex;
         align-items: center;
         gap: 8px;
-        font-size: 16px;
         font-weight: 500;
     }
 
@@ -260,7 +257,6 @@
         border: 2px solid #e0e0e0;
         border-radius: 12px;
         padding: 14px 20px;
-        font-size: 15px;
         transition: all 0.2s ease;
     }
 
@@ -316,7 +312,6 @@
     .popular-label {
         font-weight: 600;
         color: #666;
-        font-size: 14px;
     }
 
     .popular-chip {
@@ -324,7 +319,6 @@
         color: #0F6A3C;
         padding: 8px 20px;
         border-radius: 20px;
-        font-size: 14px;
         font-weight: 500;
         text-decoration: none;
         transition: all 0.2s ease;
@@ -348,7 +342,6 @@
     }
 
     .results-count {
-        font-size: 20px;
         font-weight: 600;
         color: #1F1F1F;
     }
@@ -481,7 +474,6 @@
     }
 
     .agent-name {
-        font-size: 18px;
         font-weight: 700;
         color: #1F1F1F;
         margin-bottom: 8px;
@@ -507,19 +499,16 @@
 
     .rating-count {
         color: #666 !important;
-        font-size: 13px !important;
         font-weight: 400 !important;
     }
 
     .agent-specialization {
-        font-size: 14px;
         color: #666;
         margin-bottom: 12px;
         line-height: 1.4;
     }
 
     .agent-location {
-        font-size: 13px;
         color: #666;
         margin-bottom: 16px;
         display: flex;
@@ -544,7 +533,7 @@
 
     .stat-value {
         display: block;
-        font-size: 16px;
+        font-size: 12px;
         font-weight: 700;
         color: #0F6A3C;
     }
@@ -567,7 +556,7 @@
         color: #0F6A3C;
         padding: 4px 12px;
         border-radius: 12px;
-        font-size: 11px;
+        font-size: 12px;
         font-weight: 500;
     }
 
@@ -636,7 +625,7 @@
     }
 
     .empty-state h3 {
-        font-size: 24px;
+        font-size: 1.3rem;
         color: #1F1F1F;
         margin-bottom: 8px;
     }
@@ -657,13 +646,7 @@
             grid-template-columns: repeat(3, 1fr);
         }
         .agents-hero {
-            height: 280px;
-        }
-        .hero-title {
-            font-size: 36px;
-        }
-        .hero-subtitle {
-            font-size: 16px;
+            height: 400px;
         }
         .hero-features {
             gap: 24px;
@@ -685,8 +668,8 @@
             grid-template-columns: 1fr;
         }
         .agents-hero {
-            height: auto;
-            min-height: 300px;
+            height: 400px;
+            min-height: 400px;
             padding: 40px 20px;
             display: flex;
             align-items: center;
@@ -697,18 +680,16 @@
             max-width: 100%;
         }
         .hero-title {
-            font-size: 28px;
+            font-size: 1.75rem !important;
             margin-bottom: 8px;
             color: #fff;
         }
         .hero-subtitle {
-            font-size: 14px;
             margin-bottom: 20px;
         }
         .hero-features {
             flex-direction: column;
             gap: 12px;
-            font-size: 14px;
             align-items: center;
         }
         .hero-feature {
@@ -738,21 +719,19 @@
 
     @media (max-width: 480px) {
         .agents-hero {
-            height: auto;
+            height: 400px;
             min-height: 260px;
             padding: 30px 15px;
         }
         .hero-title {
-            font-size: 22px;
+            font-size: 1.5rem !important;
             margin-bottom: 6px;
         }
         .hero-subtitle {
-            font-size: 13px;
             margin-bottom: 16px;
         }
         .hero-features {
             gap: 10px;
-            font-size: 13px;
         }
         .hero-feature {
             gap: 6px;

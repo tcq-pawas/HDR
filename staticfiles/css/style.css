@@ -27,7 +27,7 @@ body {
     color: var(--text-dark);
     background: var(--background);
     line-height: 1.6;
-    font-size: 16px;
+    font-size: 12px;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -53,11 +53,11 @@ h6,
 
 
 h1 {
-    font-size: 2rem;
+    font-size: 1.5rem;
 }
 
 h2 {
-    font-size: 1.6rem;
+    font-size: 1.3rem;
 }
 
 h3 {
@@ -617,7 +617,7 @@ select:focus {
 /* Inner Hero Section for Pages */
 .inner-hero {
     position: relative;
-    height: 320px;
+    height: 400px;
     background-size: cover;
     background-position: center;
     display: flex;
@@ -2115,6 +2115,7 @@ a:focus {
     opacity: 1;
 }
 
+
 .cta-banner {
     padding: 40px 0 80px;
 }
@@ -2982,7 +2983,7 @@ nav {
 .section-label {
     display: inline-block;
     background: #062916;
-    color: #4ead83;
+    color: #fff;
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 2px;
@@ -3418,11 +3419,20 @@ nav {
     color: var(--text-muted);
 }
 
+
 /* CTA Banner */
 .cta-banner {
     padding: 40px 48px 88px;
     background: var(--cloud-white);
 }
+
+.cta-banner-description{
+    color: rgba(255, 255, 255, 0.9); 
+    font-size: 1.1rem;
+    line-height: 1.6;
+    max-width: 400px;
+}
+
 
 .cta-inner {
     max-width: 1200px;
@@ -4106,6 +4116,7 @@ footer:not(.site-footer) {
     justify-content: center;
     padding: 0 10%;
     max-width: 1200px;
+    height: 100vh;
 }
 
 .hero-badge {
@@ -5105,7 +5116,7 @@ footer:not(.site-footer) {
 .cta-banner {
     background: #024e28;
     border-radius: var(--card-radius);
-    padding: 64px 10%;
+    padding: 40px 10%;
     position: relative;
     overflow: hidden;
     max-width: 100%;
@@ -5134,16 +5145,27 @@ footer:not(.site-footer) {
     margin-bottom: 12px;
 }
 
-.cta-banner-description {
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 1.1rem;
-    line-height: 1.6;
-    max-width: 400px;
+@media (max-width: 768px) {
+    .cta-banner-content{
+        grid-template-columns: 1fr;
+    }
+
+    .cta-banner-icon {
+        text-align: center;
+    }
+
+    .cta-banner-title {
+        font-size: 1.5rem;
+        text-align: center;
+    }
 }
+
 
 .cta-banner-buttons {
     display: flex;
     gap: 16px;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn-cta-yellow {
@@ -5735,7 +5757,7 @@ footer.footer.site-footer,
     flex-direction: column !important;
     background: #fff !important;
     border-radius: 24px !important;
-    padding: 32px !important;
+    padding: 20px !important;
     border: 1px solid rgba(0, 0, 0, 0.06) !important;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
     transition: 0.3s !important;

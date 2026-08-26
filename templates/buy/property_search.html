@@ -290,7 +290,7 @@
     @media (max-width: 480px) {
         /* Extra small adjustments */
         .hero-banner {
-            height: 200px !important;
+            height: 400px !important;
         }
         
         .hero-banner h1 {
@@ -304,7 +304,7 @@
 <section class="hero-banner" style="background: url('{% static 'images/hero-img-all.png' %}') center/cover no-repeat; height: 400px; display: flex; align-items: center; justify-content: center; position: relative;">
     <div class="hero-content text-center" style="color: white; z-index: 2;">
         <h1 style="font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; text-shadow: 0 2px 8px rgba(0,0,0,0.3); color: white;">Buy Farmland & Agricultural Land</h1>
-        <p style="font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 700; opacity: 0.95;">Invest in your future with the perfect property 🌿</p>
+        <p style="font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 700;">Invest in your future with the perfect property 🌿</p>
     </div>
 </section>
 {% endblock %}
@@ -429,10 +429,10 @@
             <div style="margin-bottom: 24px;">
                 <h1 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: #1a2e2a; margin-bottom: 8px; padding-top: 30px;">Farmland and Agriculture Land for Sale</h1>
                 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
-                    <div style="font-size: 0.9rem; color: #6b7a7a;">
+                    <div style="font-size: 12px; color: #6b7a7a;">
                         <a href="{% url 'public:home' %}" style="color: #0F6A3C; text-decoration: none; font-weight: 500;">Home</a> &gt; <span style="color: #6b7a7a;">Map</span>
                     </div>
-                    <div style="background: #0F6A3C; color: white; padding: 10px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">{{ total_results }} Results</div>
+                    <div style="background: #0F6A3C; color: white; padding: 10px 16px; border-radius: 20px; font-size: 12px; font-weight: 600;">{{ total_results }} Results</div>
                     <div style="margin-left: 80px;">
                         <form method="get" style="display: inline;">
                             {% for key, value in filters.items %}
@@ -534,7 +534,7 @@
                 {% endif %}
             {% else %}
                 <div style="text-align: center; padding: 60px 20px; background: white; border-radius: 18px;">
-                    <h3 style="font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: #1a2e2a; margin-bottom: 12px;">No Properties Found</h3>
+                    <h3 style="font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: #1a2e2a; margin-bottom: 12px;">No Properties Found</h3>
                     <p style="color: #6b7a7a; margin-bottom: 24px;">Try adjusting your filters or search terms to find properties.</p>
                     <a href="{% url 'buy:property_search' %}" style="display: inline-block; padding: 12px 32px; background: #F4B400; color: white; border: none; border-radius: 12px; font-weight: 600; text-decoration: none; transition: 0.2s;">Clear All Filters</a>
                 </div>
