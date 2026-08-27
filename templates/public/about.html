@@ -91,6 +91,11 @@
 
     /* ---- CTA banner: stack on mobile instead of squeezing into a row ---- */
     @media (max-width: 768px) {
+
+        .inner-hero-title{
+            font-size: 1.75rem !important;
+        }
+
         .cta-inner {
             flex-direction: column !important;
             align-items: flex-start !important;
@@ -117,6 +122,9 @@
         .inner-hero-content {
             padding-left: 20px !important;
         }
+        .inner-hero-title{
+            font-size: 1.5rem !important;
+        }
     }
 </style>
 {% endblock %}
@@ -126,7 +134,7 @@
     style="background-image: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80'); height: 400px;">
     <div class="inner-hero-content" style="text-align: left; ">
         <h1 class="inner-hero-title" style="font-size: 2.5rem;">About HHectare</h1>
-        <p class="inner-hero-quote" style="font-style: normal; font-size: 1.1rem; ">
+        <p class="inner-hero-quote" style="font-style: normal; text-align: center; font-size: 1.1rem; ">
             Invest in Income Generating Farmland
         </p>
         <div style="display: flex; align-items: center; gap: 12px; margin-top: 16px;">

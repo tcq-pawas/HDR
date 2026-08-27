@@ -4,202 +4,1133 @@
 {% block title %}Investor Dashboard - HHectare{% endblock %}
 
 {% block extra_css %}
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
-<style>
-  body {
-    background: #f4f6f9;
-    font-family: 'Inter', sans-serif;
-  }
 
-  .card-shadow {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, .05);
-  }
+<link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    rel="stylesheet"
+>
+
+<style>
+
+    /* =========================================================
+       DASHBOARD BASE
+    ========================================================= */
+
+    body {
+        background: #f4f6f9;
+        font-family: 'Inter', sans-serif;
+        overflow-x: hidden;
+    }
+
+    .investor-dashboard {
+        overflow-x: hidden;
+    }
+
+    .dashboard-content {
+        width: 100%;
+        max-width: 100%;
+    }
+
+
+    /* =========================================================
+       COMMON CARD
+    ========================================================= */
+
+    .card-shadow {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .dashboard-card {
+        background: #ffffff;
+        border-radius: 14px;
+        border: 1px solid #edf0f3;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.07);
+    }
+
+
+    /* =========================================================
+       KPI CARDS
+    ========================================================= */
+
+    .kpi-card {
+        position: relative;
+        height: 100%;
+        min-height: 155px;
+
+        padding: 22px !important;
+
+        border-radius: 14px;
+
+        overflow: hidden;
+
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .kpi-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.10);
+    }
+
+    .kpi-card h5 {
+        margin: 0;
+        font-size: 0.92rem;
+        font-weight: 500;
+        line-height: 1.4;
+    }
+
+    .kpi-card h2 {
+        margin-top: 10px !important;
+        margin-bottom: 0;
+        font-size: 1.9rem !important;
+        line-height: 1.2;
+        font-weight: 700;
+    }
+
+    .kpi-card p {
+        margin-top: 12px !important;
+        margin-bottom: 0;
+        font-size: 0.78rem;
+        opacity: 0.9;
+    }
+
+    .kpi-icon {
+        position: absolute;
+
+        right: 18px;
+        bottom: 16px;
+
+        width: 42px;
+        height: 42px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 50%;
+
+        background: rgba(255, 255, 255, 0.15);
+
+        font-size: 17px;
+    }
+
+
+    /* =========================================================
+       SECTION HEADINGS
+    ========================================================= */
+
+    .dashboard-section-title {
+        margin: 0;
+
+        color: #1e293b;
+
+        font-size: 1.15rem;
+        font-weight: 700;
+
+        line-height: 1.4;
+    }
+
+
+    /* =========================================================
+       ANALYTICS CARDS
+    ========================================================= */
+
+    .analytics-card {
+        min-height: 390px;
+        padding: 24px !important;
+    }
+
+    .analytics-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 15px;
+
+        margin-bottom: 20px;
+    }
+
+    .analytics-select {
+        width: auto;
+        min-width: 145px;
+
+        border-radius: 8px;
+
+        border-color: #dee2e6;
+
+        font-size: 0.85rem;
+        padding: 8px 32px 8px 12px;
+
+        box-shadow: none !important;
+    }
+
+    .chart-placeholder {
+        width: 100%;
+        min-height: 290px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 12px;
+
+        background: linear-gradient(
+            180deg,
+            #f8fafc 0%,
+            #f1f5f9 100%
+        );
+
+        border: 1px dashed #d8dee6;
+
+        color: #94a3b8;
+
+        font-size: 0.9rem;
+    }
+
+
+    /* =========================================================
+       ROI CARD
+    ========================================================= */
+
+    .roi-card {
+        min-height: 390px;
+        padding: 24px !important;
+    }
+
+    .roi-circle {
+        width: 176px;
+        height: 176px;
+
+        margin: 25px auto 0;
+
+        border-radius: 50%;
+
+        border: 14px solid #198754;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background: #ffffff;
+
+        box-shadow:
+            inset 0 0 0 8px #f8fafc,
+            0 5px 20px rgba(25, 135, 84, 0.08);
+    }
+
+    .roi-circle h2 {
+        margin: 0;
+
+        color: #1e293b;
+
+        font-size: 1.8rem !important;
+        font-weight: 700;
+    }
+
+    .roi-circle p {
+        margin: 4px 0 0;
+
+        color: #64748b;
+
+        font-size: 0.78rem;
+    }
+
+
+    /* =========================================================
+       INVESTMENTS CARD
+    ========================================================= */
+
+    .investments-card {
+        padding: 24px !important;
+    }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 15px;
+
+        margin-bottom: 20px;
+    }
+
+    .view-all-btn {
+        white-space: nowrap;
+
+        border-radius: 8px;
+
+        font-size: 0.82rem;
+        font-weight: 500;
+
+        padding: 7px 14px;
+    }
+
+
+    /* =========================================================
+       TABLE
+    ========================================================= */
+
+    .investments-table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+
+        border-radius: 8px;
+    }
+
+    .investments-table {
+        width: 100%;
+        min-width: 650px;
+
+        margin-bottom: 0;
+
+        vertical-align: middle;
+    }
+
+    .investments-table thead th {
+        color: #64748b;
+
+        font-size: 0.76rem;
+        font-weight: 600;
+
+        white-space: nowrap;
+
+        border-bottom: 1px solid #e9ecef;
+
+        padding: 12px 10px;
+    }
+
+    .investments-table tbody td {
+        color: #475569;
+
+        font-size: 0.82rem;
+
+        padding: 15px 10px;
+
+        white-space: nowrap;
+
+        border-bottom: 1px solid #f1f3f5;
+    }
+
+    .investments-table tbody tr:last-child td {
+        border-bottom: 0;
+    }
+
+    .property-name {
+        color: #1e293b;
+
+        font-weight: 600;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+
+        padding: 5px 10px;
+
+        border-radius: 20px;
+
+        font-size: 0.72rem;
+        font-weight: 600;
+
+        white-space: nowrap;
+    }
+
+
+    /* =========================================================
+       NOTIFICATIONS
+    ========================================================= */
+
+    .notifications-card {
+        padding: 24px !important;
+    }
+
+    .notification-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .notification-item {
+        position: relative;
+
+        padding: 13px 14px !important;
+
+        background: #f8fafc;
+
+        border: 1px solid #eef1f4;
+
+        border-radius: 10px;
+
+        color: #475569;
+
+        font-size: 0.82rem;
+        line-height: 1.5;
+
+        transition:
+            background-color 0.2s ease,
+            transform 0.2s ease;
+    }
+
+    .notification-item:hover {
+        background: #f1f5f9;
+        transform: translateX(2px);
+    }
+
+    .notification-icon {
+        width: 30px;
+        min-width: 30px;
+        height: 30px;
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        margin-right: 8px;
+
+        border-radius: 50%;
+
+        background: #e8f5ee;
+
+        color: #198754;
+
+        font-size: 12px;
+    }
+
+
+    /* =========================================================
+       TABLET
+    ========================================================= */
+
+    @media (max-width: 991.98px) {
+
+        .kpi-card {
+            min-height: 145px;
+        }
+
+        .kpi-card h2 {
+            font-size: 1.7rem !important;
+        }
+
+        .analytics-card,
+        .roi-card {
+            min-height: 360px;
+        }
+
+        .chart-placeholder {
+            min-height: 260px;
+        }
+
+        .roi-circle {
+            width: 160px;
+            height: 160px;
+
+            border-width: 12px;
+        }
+
+        .roi-circle h2 {
+            font-size: 1.65rem !important;
+        }
+    }
+
+
+    /* =========================================================
+       MOBILE
+    ========================================================= */
+
+    @media (max-width: 767.98px) {
+
+        /* KPI */
+
+        .kpi-card {
+            min-height: 140px;
+
+            padding: 19px !important;
+
+            border-radius: 12px;
+        }
+
+        .kpi-card h5 {
+            font-size: 0.88rem;
+        }
+
+        .kpi-card h2 {
+            font-size: 1.65rem !important;
+        }
+
+        .kpi-card p {
+            font-size: 0.74rem;
+        }
+
+
+        /* Cards */
+
+        .analytics-card,
+        .roi-card,
+        .investments-card,
+        .notifications-card {
+            padding: 19px !important;
+
+            border-radius: 12px;
+        }
+
+
+        /* Section header */
+
+        .analytics-header,
+        .section-header {
+            align-items: flex-start;
+        }
+
+        .dashboard-section-title {
+            font-size: 1.05rem;
+        }
+
+        .analytics-select {
+            min-width: 135px;
+            font-size: 0.8rem;
+        }
+
+
+        /* Chart */
+
+        .chart-placeholder {
+            min-height: 220px;
+        }
+
+
+        /* ROI */
+
+        .roi-card {
+            min-height: auto;
+        }
+
+        .roi-circle {
+            width: 155px;
+            height: 155px;
+
+            margin-top: 15px;
+
+            border-width: 11px;
+        }
+
+
+        /* Table */
+
+        .investments-table-wrapper {
+            margin-left: -2px;
+            width: calc(100% + 4px);
+        }
+
+        .investments-table {
+            min-width: 620px;
+        }
+
+
+        /* Notifications */
+
+        .notification-item {
+            padding: 12px !important;
+
+            font-size: 0.8rem;
+        }
+    }
+
+
+    /* =========================================================
+       SMALL MOBILE
+    ========================================================= */
+
+    @media (max-width: 575.98px) {
+
+        /* KPI becomes one column */
+
+        .kpi-row {
+            row-gap: 12px !important;
+        }
+
+        .kpi-card {
+            min-height: 130px;
+        }
+
+        .kpi-card h2 {
+            font-size: 1.55rem !important;
+        }
+
+        .kpi-icon {
+            right: 15px;
+            bottom: 14px;
+
+            width: 38px;
+            height: 38px;
+
+            font-size: 15px;
+        }
+
+
+        /* Headers */
+
+        .analytics-header,
+        .section-header {
+            flex-direction: column;
+
+            align-items: stretch;
+
+            gap: 12px;
+        }
+
+        .analytics-select {
+            width: 100%;
+            min-width: 0;
+        }
+
+        .view-all-btn {
+            width: 100%;
+        }
+
+
+        /* Chart */
+
+        .chart-placeholder {
+            min-height: 190px;
+
+            font-size: 0.8rem;
+        }
+
+
+        /* ROI */
+
+        .roi-circle {
+            width: 145px;
+            height: 145px;
+
+            border-width: 10px;
+        }
+
+        .roi-circle h2 {
+            font-size: 1.5rem !important;
+        }
+
+
+        /* Spacing */
+
+        .dashboard-card {
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.045);
+        }
+    }
+
+
+    /* =========================================================
+       VERY SMALL MOBILE
+    ========================================================= */
+
+    @media (max-width: 380px) {
+
+        .kpi-card {
+            padding: 17px !important;
+        }
+
+        .kpi-card h5 {
+            font-size: 0.82rem;
+        }
+
+        .kpi-card h2 {
+            font-size: 1.45rem !important;
+        }
+
+        .kpi-card p {
+            font-size: 0.7rem;
+        }
+
+        .analytics-card,
+        .roi-card,
+        .investments-card,
+        .notifications-card {
+            padding: 16px !important;
+        }
+
+        .dashboard-section-title {
+            font-size: 1rem;
+        }
+
+        .chart-placeholder {
+            min-height: 175px;
+        }
+
+        .roi-circle {
+            width: 135px;
+            height: 135px;
+        }
+    }
+
+
+    /* =========================================================
+       EXTRA SMALL DEVICES
+    ========================================================= */
+
+    @media (max-width: 320px) {
+
+        .kpi-card h2 {
+            font-size: 1.35rem !important;
+        }
+
+        .kpi-card h5 {
+            font-size: 0.78rem;
+        }
+
+        .kpi-card p {
+            font-size: 0.68rem;
+        }
+
+        .chart-placeholder {
+            min-height: 160px;
+        }
+
+        .roi-circle {
+            width: 125px;
+            height: 125px;
+
+            border-width: 9px;
+        }
+
+        .roi-circle h2 {
+            font-size: 1.3rem !important;
+        }
+    }
+
 </style>
+
 {% endblock %}
 
-{% block page_title %}Welcome Back, {{ user.first_name|default:user.username }} 👋{% endblock %}
-{% block page_subtitle %}<p class="page-subtitle">Monitor your agricultural land portfolio, investments, and business operations from a single dashboard.</p>{% endblock %}
+
+{% block page_title %}
+Welcome Back, {{ user.first_name|default:user.username }} 👋
+{% endblock %}
+
+
+{% block page_subtitle %}
+<p class="page-subtitle">
+    Monitor your agricultural land portfolio, investments, and business operations from a single dashboard.
+</p>
+{% endblock %}
+
 
 {% block content %}
 
+<div class="dashboard-content">
 
-<!-- KPI Cards -->
-<div class="row g-4 mb-4">
 
-  <div class="col-md-3">
-    <div class="bg-success rounded-3 text-white p-4 card-shadow">
-      <h5>Total Portfolio Value</h5>
-      <h2 class="fw-bold mt-2 fs-2">₹2.5Cr</h2>
-      <p class="mt-3 small">↑ 12.5% vs last month</p>
-    </div>
-  </div>
+    <!-- =========================================================
+         KPI CARDS
+    ========================================================= -->
 
-  <div class="col-md-3">
-    <div class="bg-primary rounded-3 text-white p-4 card-shadow">
-      <h5>Total ROI</h5>
-      <h2 class="fw-bold mt-2 fs-2">38.5%</h2>
-      <p class="mt-3 small">↑ 6.8% vs last month</p>
-    </div>
-  </div>
+    <div class="row g-4 mb-4 kpi-row">
 
-  <div class="col-md-3">
-    <div class="bg-info rounded-3 text-white p-4 card-shadow">
-      <h5>Active Investments</h5>
-      <h2 class="fw-bold mt-2 fs-2">12</h2>
-      <p class="mt-3 small">↑ 2 new this month</p>
-    </div>
-  </div>
+        <!-- Portfolio -->
 
-  <div class="col-md-3">
-    <div class="bg-warning rounded-3 text-white p-4 card-shadow">
-      <h5>Total Profit</h5>
-      <h2 class="fw-bold mt-2 fs-2">₹48.75L</h2>
-      <p class="mt-3 small">↑ 15.3% vs last month</p>
-    </div>
-  </div>
+        <div class="col-12 col-sm-6 col-xl-3">
 
-</div>
+            <div class="bg-success text-white kpi-card">
 
-<!-- Analytics Section -->
-<div class="row g-4 mb-4">
+                <h5>
+                    Total Portfolio Value
+                </h5>
 
-  <div class="col-md-8">
-    <div class="bg-white rounded-3 p-4 card-shadow">
+                <h2 class="fw-bold fs-2">
+                    ₹2.5Cr
+                </h2>
 
-      <div class="d-flex justify-content-between mb-4">
-        <h3 class="fw-bold">
-          Portfolio Growth
-        </h3>
+                <p>
+                    <i class="fas fa-arrow-up me-1"></i>
+                    12.5% vs last month
+                </p>
 
-        <select class="form-select w-auto">
-          <option>Last 6 Months</option>
-        </select>
-      </div>
+                <div class="kpi-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
 
-      <div class="d-flex align-items-center justify-content-center text-muted" style="height: 320px;">
-        Chart.js Line Chart Here
-      </div>
+            </div>
 
-    </div>
-  </div>
-
-  <div class="col-md-4">
-    <div class="bg-white rounded-3 p-4 card-shadow">
-
-      <h3 class="fw-bold mb-4">
-        ROI Summary
-      </h3>
-
-      <div class="text-center mt-4">
-
-        <div
-          class="rounded-circle border border-success border-5 mx-auto d-flex align-items-center justify-content-center"
-          style="width: 176px; height: 176px; border-width: 14px !important;">
-          <div>
-            <h2 class="fw-bold fs-2">
-              38.5%
-            </h2>
-            <p class="small">Total ROI</p>
-          </div>
         </div>
 
-      </div>
 
-    </div>
-  </div>
+        <!-- ROI -->
 
-</div>
+        <div class="col-12 col-sm-6 col-xl-3">
 
-<!-- Bottom Section -->
-<div class="row g-4 mb-4">
+            <div class="bg-primary text-white kpi-card">
 
-  <!-- Investments -->
-  <div class="col-md-8">
-    <div class="bg-white rounded-3 p-4 card-shadow">
+                <h5>
+                    Total ROI
+                </h5>
 
-      <div class="d-flex justify-content-between mb-4">
-        <h3 class="fw-bold">
-          Recent Investments
-        </h3>
+                <h2 class="fw-bold fs-2">
+                    38.5%
+                </h2>
 
-        <button class="btn btn-outline-secondary">
-          View All
-        </button>
-      </div>
+                <p>
+                    <i class="fas fa-arrow-up me-1"></i>
+                    6.8% vs last month
+                </p>
 
-      <div class="table-responsive">
-        <table class="table">
+                <div class="kpi-icon">
+                    <i class="fas fa-percent"></i>
+                </div>
 
-          <thead>
-            <tr class="border-bottom">
-              <th class="py-3">Property</th>
-              <th>Location</th>
-              <th>Area</th>
-              <th>ROI</th>
-              <th>Status</th>
-            </tr>
-          </thead>
+            </div>
 
-          <tbody>
-
-            <tr class="border-bottom">
-              <td class="py-3">Green Valley Farms</td>
-              <td>Hyderabad</td>
-              <td>5 Acre</td>
-              <td>30%</td>
-              <td>
-                <span class="badge bg-success bg-opacity-10 text-success">
-                  Active
-                </span>
-              </td>
-            </tr>
-
-            <tr class="border-bottom">
-              <td class="py-3">River View Agriculture</td>
-              <td>Vijayawada</td>
-              <td>10 Acre</td>
-              <td>37%</td>
-              <td>
-                <span class="badge bg-success bg-opacity-10 text-success">
-                  Active
-                </span>
-              </td>
-            </tr>
-
-          </tbody>
-
-        </table>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- Notifications -->
-  <div class="col-md-4">
-    <div class="bg-white rounded-3 p-4 card-shadow">
-
-      <h3 class="fw-bold mb-4">
-        Notifications
-      </h3>
-
-      <div class="d-flex flex-column gap-3">
-
-        <div class="p-3 bg-light rounded-3">
-          Property value increased by 5.2%
         </div>
 
-        <div class="p-3 bg-light rounded-3">
-          New investment opportunity available
+
+        <!-- Investments -->
+
+        <div class="col-12 col-sm-6 col-xl-3">
+
+            <div class="bg-info text-white kpi-card">
+
+                <h5>
+                    Active Investments
+                </h5>
+
+                <h2 class="fw-bold fs-2">
+                    12
+                </h2>
+
+                <p>
+                    <i class="fas fa-arrow-up me-1"></i>
+                    2 new this month
+                </p>
+
+                <div class="kpi-icon">
+                    <i class="fas fa-coins"></i>
+                </div>
+
+            </div>
+
         </div>
 
-        <div class="p-3 bg-light rounded-3">
-          New report uploaded
-        </div>
 
-      </div>
+        <!-- Profit -->
+
+        <div class="col-12 col-sm-6 col-xl-3">
+
+            <div class="bg-warning text-white kpi-card">
+
+                <h5>
+                    Total Profit
+                </h5>
+
+                <h2 class="fw-bold fs-2">
+                    ₹48.75L
+                </h2>
+
+                <p>
+                    <i class="fas fa-arrow-up me-1"></i>
+                    15.3% vs last month
+                </p>
+
+                <div class="kpi-icon">
+                    <i class="fas fa-indian-rupee-sign"></i>
+                </div>
+
+            </div>
+
+        </div>
 
     </div>
-  </div>
+
+
+
+    <!-- =========================================================
+         ANALYTICS SECTION
+    ========================================================= -->
+
+    <div class="row g-4 mb-4">
+
+
+        <!-- Portfolio Growth -->
+
+        <div class="col-12 col-lg-8">
+
+            <div class="dashboard-card analytics-card">
+
+                <div class="analytics-header">
+
+                    <h3 class="dashboard-section-title">
+                        Portfolio Growth
+                    </h3>
+
+                    <select class="form-select analytics-select">
+                        <option>Last 6 Months</option>
+                    </select>
+
+                </div>
+
+
+                <div class="chart-placeholder">
+
+                    <span>
+                        <i class="fas fa-chart-line me-2"></i>
+                        Chart.js Line Chart Here
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ROI Summary -->
+
+        <div class="col-12 col-lg-4">
+
+            <div class="dashboard-card roi-card">
+
+                <h3 class="dashboard-section-title mb-3">
+                    ROI Summary
+                </h3>
+
+
+                <div class="text-center">
+
+                    <div class="roi-circle">
+
+                        <div>
+
+                            <h2 class="fw-bold fs-2">
+                                38.5%
+                            </h2>
+
+                            <p>
+                                Total ROI
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================================================
+         BOTTOM SECTION
+    ========================================================= -->
+
+    <div class="row g-4 mb-4">
+
+
+        <!-- =====================================================
+             RECENT INVESTMENTS
+        ===================================================== -->
+
+        <div class="col-12 col-lg-8">
+
+            <div class="dashboard-card investments-card">
+
+                <div class="section-header">
+
+                    <h3 class="dashboard-section-title">
+                        Recent Investments
+                    </h3>
+
+                    <button class="btn btn-outline-secondary view-all-btn">
+                        View All
+                    </button>
+
+                </div>
+
+
+                <div class="investments-table-wrapper">
+
+                    <table class="table investments-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Property
+                                </th>
+
+                                <th>
+                                    Location
+                                </th>
+
+                                <th>
+                                    Area
+                                </th>
+
+                                <th>
+                                    ROI
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            <tr>
+
+                                <td>
+                                    <span class="property-name">
+                                        Green Valley Farms
+                                    </span>
+                                </td>
+
+                                <td>
+                                    Hyderabad
+                                </td>
+
+                                <td>
+                                    5 Acre
+                                </td>
+
+                                <td>
+                                    30%
+                                </td>
+
+                                <td>
+
+                                    <span class="status-badge bg-success bg-opacity-10 text-success">
+                                        <i class="fas fa-circle me-1" style="font-size: 6px;"></i>
+                                        Active
+                                    </span>
+
+                                </td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td>
+                                    <span class="property-name">
+                                        River View Agriculture
+                                    </span>
+                                </td>
+
+                                <td>
+                                    Vijayawada
+                                </td>
+
+                                <td>
+                                    10 Acre
+                                </td>
+
+                                <td>
+                                    37%
+                                </td>
+
+                                <td>
+
+                                    <span class="status-badge bg-success bg-opacity-10 text-success">
+                                        <i class="fas fa-circle me-1" style="font-size: 6px;"></i>
+                                        Active
+                                    </span>
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =====================================================
+             NOTIFICATIONS
+        ===================================================== -->
+
+        <div class="col-12 col-lg-4">
+
+            <div class="dashboard-card notifications-card">
+
+                <h3 class="dashboard-section-title mb-3">
+                    Notifications
+                </h3>
+
+
+                <div class="notification-list">
+
+
+                    <div class="notification-item d-flex align-items-center">
+
+                        <span class="notification-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </span>
+
+                        <span>
+                            Property value increased by 5.2%
+                        </span>
+
+                    </div>
+
+
+                    <div class="notification-item d-flex align-items-center">
+
+                        <span class="notification-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </span>
+
+                        <span>
+                            New investment opportunity available
+                        </span>
+
+                    </div>
+
+
+                    <div class="notification-item d-flex align-items-center">
+
+                        <span class="notification-icon">
+                            <i class="fas fa-file-lines"></i>
+                        </span>
+
+                        <span>
+                            New report uploaded
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </div>
 
