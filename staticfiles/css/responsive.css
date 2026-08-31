@@ -803,22 +803,15 @@ iframe, embed, object, video {
 
 
 
+
     .hero-section {
 
-
-
-        padding: 60px 0;
-
-
+        padding: 0 0;
+        padding-top: 0 !important;
 
         min-height: auto;
 
-
-
     }
-
-
-
 
 
 
@@ -2549,7 +2542,8 @@ iframe, embed, object, video {
 
 
 
-        padding: 40px 0;
+        padding: 0 0;
+        padding-top: 0 !important;
 
 
 
@@ -6041,15 +6035,15 @@ iframe, embed, object, video {
 
 
 
-    .form-select {
+    .form-select,
+
+
+
+    .hero-section {
 
 
 
         min-height: 44px;
-
-
-
-    }
 
 
 
@@ -10455,4 +10449,3 @@ footer.footer.site-footer,
         font-size: 0.75rem !important;
     }
 }
-

@@ -266,13 +266,48 @@
             text-align: center;
         }
 
-        /* Hero text size adjustment */
+        /* Hero mobile improvements */
+        .hero-banner {
+            height: 420px !important;
+            min-height: 420px !important;
+            position: relative !important;
+        }
+
+        /* Gradient overlay for text readability */
+        .hero-banner::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                180deg,
+                rgba(0,0,0,0.42) 0%,
+                rgba(0,0,0,0.18) 35%,
+                rgba(0,0,0,0.08) 55%,
+                rgba(0,0,0,0.38) 100%
+            );
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .hero-banner .hero-content {
+            z-index: 2 !important;
+            padding: 0 20px !important;
+            max-width: 100% !important;
+        }
+
         .hero-banner h1 {
             font-size: 1.75rem !important;
+            line-height: 1.2 !important;
+            text-align: center !important;
+            margin-bottom: 0.75rem !important;
         }
 
         .hero-banner p {
             font-size: 0.95rem !important;
+            line-height: 1.5 !important;
+            text-align: center !important;
+            max-width: 320px !important;
+            margin: 0 auto !important;
         }
 
         /* Map height adjustment */
@@ -290,11 +325,18 @@
     @media (max-width: 480px) {
         /* Extra small adjustments */
         .hero-banner {
-            height: 400px !important;
+            height: 380px !important;
+            min-height: 380px !important;
         }
         
         .hero-banner h1 {
             font-size: 1.5rem !important;
+            line-height: 1.15 !important;
+        }
+
+        .hero-banner p {
+            font-size: 0.9rem !important;
+            max-width: 280px !important;
         }
     }
 </style>

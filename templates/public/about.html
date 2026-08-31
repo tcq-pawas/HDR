@@ -18,6 +18,104 @@
         box-sizing: border-box;
     }
 
+    /* ---- Hero Section ---- */
+    .inner-hero {
+        position: relative;
+        min-height: 400px;
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .inner-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+            180deg,
+            rgba(15, 106, 60, 0.5) 0%,
+            rgba(15, 106, 60, 0.3) 50%,
+            rgba(15, 106, 60, 0.5) 100%
+        );
+        z-index: 1;
+    }
+
+    .inner-hero-content {
+        position: relative;
+        z-index: 2;
+        color: white;
+        max-width: 600px;
+        padding: 40px 24px;
+    }
+
+    .inner-hero-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.5rem;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 16px;
+        color: white;
+    }
+
+    .inner-hero-quote {
+        font-family: 'Inter', sans-serif;
+        font-size: 1.1rem;
+        line-height: 1.5;
+        margin-bottom: 16px;
+        color: rgba(255, 255, 255, 0.95);
+    }
+
+    /* Hero Responsive */
+    @media (max-width: 1024px) {
+        .inner-hero {
+            min-height: 350px;
+        }
+        .inner-hero-content {
+            max-width: 500px;
+            padding: 32px 20px;
+        }
+        .inner-hero-title {
+            font-size: 2rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .inner-hero {
+            min-height: 320px;
+        }
+        .inner-hero-content {
+            max-width: 100%;
+            padding: 24px 16px;
+        }
+        .inner-hero-title {
+            font-size: 1.75rem;
+        }
+        .inner-hero-quote {
+            font-size: 1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .inner-hero {
+            min-height: 280px;
+        }
+        .inner-hero-content {
+            padding: 20px 16px;
+        }
+        .inner-hero-title {
+            font-size: 1.5rem;
+            line-height: 1.15;
+        }
+        .inner-hero-quote {
+            font-size: 0.95rem;
+        }
+    }
+
     /* ---- Statistics section ---- */
     .stats-row .stat-col {
         margin-bottom: 24px;
@@ -92,10 +190,6 @@
     /* ---- CTA banner: stack on mobile instead of squeezing into a row ---- */
     @media (max-width: 768px) {
 
-        .inner-hero-title{
-            font-size: 1.75rem !important;
-        }
-
         .cta-inner {
             flex-direction: column !important;
             align-items: flex-start !important;
@@ -119,11 +213,8 @@
     }
 
     @media (max-width: 480px) {
-        .inner-hero-content {
-            padding-left: 20px !important;
-        }
-        .inner-hero-title{
-            font-size: 1.5rem !important;
+        .cta-btns {
+            flex-direction: column;
         }
     }
 </style>
@@ -131,10 +222,10 @@
 
 {% block inner_hero %}
 <section class="inner-hero"
-    style="background-image: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80'); height: 400px;">
-    <div class="inner-hero-content" style="text-align: left; ">
-        <h1 class="inner-hero-title" style="font-size: 2.5rem;">About HHectare</h1>
-        <p class="inner-hero-quote" style="font-style: normal; text-align: center; font-size: 1.1rem; ">
+    style="background-image: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80');">
+    <div class="inner-hero-content">
+        <h1 class="inner-hero-title">About HHectare</h1>
+        <p class="inner-hero-quote">
             Invest in Income Generating Farmland
         </p>
         <div style="display: flex; align-items: center; gap: 12px; margin-top: 16px;">

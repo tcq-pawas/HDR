@@ -79,7 +79,13 @@
     right: 0;
     bottom: 0;
     z-index: 0;
-    /* background: rgba(0,0,0,0.55); */
+    background: linear-gradient(
+        180deg,
+        rgba(0,0,0,0.42) 0%,
+        rgba(0,0,0,0.18) 35%,
+        rgba(0,0,0,0.08) 55%,
+        rgba(0,0,0,0.38) 100%
+    );
 }
 
 .sell-hero-content {
@@ -100,12 +106,46 @@
 @media (max-width:480px){
     .sell-hero-title {
         font-size: 1.5rem !important;
+        line-height: 1.15 !important;
+    }
+
+    .sell-hero-subtitle {
+        font-size: 0.9rem !important;
+        line-height: 1.5 !important;
+        max-width: 280px !important;
+        margin: 0 auto 1.5rem auto !important;
+    }
+
+    .sell-hero {
+        min-height: 380px !important;
+        padding: 40px 16px !important;
     }
 }
 
 @media (max-width:768px){
     .sell-hero-title {
         font-size: 1.75rem !important;
+        line-height: 1.2 !important;
+    }
+
+    .sell-hero-subtitle {
+        font-size: 0.95rem !important;
+        line-height: 1.5 !important;
+        max-width: 320px !important;
+        margin: 0 auto 1.5rem auto !important;
+    }
+
+    .sell-hero {
+        min-height: 420px !important;
+        padding: 40px 20px !important;
+    }
+
+    .sell-section {
+        padding: 48px 0 !important;
+    }
+
+    .sell-section-subtitle {
+        margin-bottom: 2rem !important;
     }
 }
 
@@ -568,11 +608,15 @@
     .cta-buttons a {
         width: 100%;
     }
+
+    .sell-section {
+        padding: 56px 0;
+    }
 }
 
 @media (max-width: 767px) {
     .sell-hero {
-        min-height: 400px;
+        min-height: 420px;
     }
 
     .get-started-card {
@@ -610,11 +654,15 @@
     .cta-buttons a {
         padding: 0 20px;
     }
+
+    .sell-section {
+        padding: 48px 0;
+    }
 }
 
 @media (max-width: 480px) {
     .sell-hero {
-        min-height: 400px;
+        min-height: 380px;
     }
 }
 </style>
@@ -690,7 +738,7 @@
             </div>
             <div class="phone-mockup">
                 <div class="phone-screen">
-                    <img src="{% static 'sell/mobile-sell.png' %}" alt="Mobile Sell" style="width: 100%; height: 92%; object-fit: cover;">
+                    <img src="{% static 'sell/mobile-sell.png' %}" alt="Mobile Sell" style="width: 100%; height: 80%; object-fit: cover;">
                 </div>
             </div>
         </div>

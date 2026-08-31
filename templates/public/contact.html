@@ -10,28 +10,109 @@
 <link rel="stylesheet" href="{% static 'css/contact.css' %}">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 <style>
-    @media (max-width: 768px) {
+    /* ---- Hero Section ---- */
+    .contact-hero {
+        position: relative;
+        min-height: 400px;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .contact-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+            180deg,
+            rgba(15, 106, 60, 0.5) 0%,
+            rgba(15, 106, 60, 0.3) 50%,
+            rgba(15, 106, 60, 0.5) 100%
+        );
+        z-index: 1;
+    }
+
+    .contact-hero-content {
+        position: relative;
+        z-index: 2;
+        color: white;
+        max-width: 800px;
+        padding: 40px 24px;
+    }
+
+    .contact-hero-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.5rem;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 16px;
+        color: white;
+    }
+
+    .contact-hero-subtitle {
+        font-family: 'Inter', sans-serif;
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-bottom: 24px;
+        color: rgba(255, 255, 255, 0.95);
+    }
+
+    .hero-divider {
+        margin-top: 16px;
+        font-size: 1.5rem;
+        color: #F4B400;
+    }
+
+    /* Hero Responsive */
+    @media (max-width: 1024px) {
         .contact-hero {
-            height: 200px !important;
+            min-height: 350px;
+        }
+        .contact-hero-content {
+            max-width: 700px;
+            padding: 32px 20px;
         }
         .contact-hero-title {
-            font-size: 1.75rem !important;
-            color: #fff;
-        }
-        .contact-hero-subtitle {
-            font-size: 0.95rem !important;
+            font-size: 2rem;
         }
     }
-    @media (max-width: 480px) {
+
+    @media (max-width: 768px) {
         .contact-hero {
-            height: 160px !important;
+            min-height: 300px;
+        }
+        .contact-hero-content {
+            max-width: 100%;
+            padding: 24px 16px;
         }
         .contact-hero-title {
-            font-size: 1.5rem !important;
-            color: #fff;
+            font-size: 1.75rem;
         }
         .contact-hero-subtitle {
-            font-size: 0.85rem !important;
+            font-size: 0.95rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .contact-hero {
+            min-height: 260px;
+        }
+        .contact-hero-content {
+            padding: 20px 16px;
+        }
+        .contact-hero-title {
+            font-size: 1.5rem;
+            line-height: 1.15;
+        }
+        .contact-hero-subtitle {
+            font-size: 0.9rem;
         }
     }
 </style>
@@ -42,9 +123,9 @@
 <section class="contact-hero"
     style="background: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80'); background-size: cover; background-position: center; height: 400px !important; display: flex; align-items: center; position: relative; text-align: center;">
     <div class="container">
-        <div class="contact-hero-content" style="color: white; padding-top: 45px;">
-            <h1 class="contact-hero-title" style="font-size: 2.5rem;">Contact HHectare</h1>
-            <p class="contact-hero-subtitle" style="font-size: 1rem;">
+        <div class="contact-hero-content">
+            <h1 class="contact-hero-title">Contact HHectare</h1>
+            <p class="contact-hero-subtitle">
                 Let's discuss your farmland investment goals
             </p>
             <div class="hero-divider">
