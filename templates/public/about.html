@@ -24,6 +24,7 @@
         min-height: 400px;
         background-size: cover;
         background-position: center;
+        background-image: url('{% static "images/hero-img-all.png" %}');
         display: flex;
         align-items: center;
         justify-content: flex-start;
@@ -38,9 +39,10 @@
         bottom: 0;
         background: linear-gradient(
             180deg,
-            rgba(15, 106, 60, 0.5) 0%,
-            rgba(15, 106, 60, 0.3) 50%,
-            rgba(15, 106, 60, 0.5) 100%
+            rgba(0,0,0,0.42) 0%,
+            rgba(0,0,0,0.18) 35%,
+            rgba(0,0,0,0.08) 55%,
+            rgba(0,0,0,0.38) 100%
         );
         z-index: 1;
     }
@@ -221,8 +223,7 @@
 {% endblock %}
 
 {% block inner_hero %}
-<section class="inner-hero"
-    style="background-image: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80');">
+<section class="inner-hero">
     <div class="inner-hero-content">
         <h1 class="inner-hero-title">About HHectare</h1>
         <p class="inner-hero-quote">
