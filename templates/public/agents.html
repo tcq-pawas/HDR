@@ -41,9 +41,11 @@
             <form method="GET" action="{% url 'public:agents' %}" class="search-form">
                 <div class="search-inputs">
                     <input type="text" name="search" class="search-input" placeholder="Search" value="{{ search_query }}" style="font-size: 12px !important;">
-                    <input type="text" name="location" class="search-input" placeholder="Location" value="{{ location }}" style="font-size: 12px !important;">
+                    <div class="location-autocomplete-wrap">
+                        <input type="text" id="location-search" name="location" placeholder="Location" value="{{ location }}" autocomplete="off" style="font-size: 12px !important; flex: 1; min-width: 0; border: 2px solid #e0e0e0; border-radius: 12px; padding: 14px 20px; transition: all 0.2s ease;">
+                        <div id="location-suggestions" class="location-suggestions" role="listbox"></div>
+                    </div>
                     <input type="text" name="specialization" class="search-input" placeholder="Specialization" value="{{ specialization }}" style="font-size: 12px !important;">
-                    <input type="text" name="languages" class="search-input" placeholder="Languages" value="{{ languages }}" style="font-size: 12px !important;">
                     <button type="submit" class="search-btn">
                         <i class="fas fa-search"></i>
                     </button>
@@ -134,7 +136,7 @@
             {% if page_obj.has_other_pages %}
                 <div class="pagination">
                     {% if page_obj.has_previous %}
-                        <a href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if location %}&location={{ location }}{% endif %}{% if specialization %}&specialization={{ specialization }}{% endif %}{% if languages %}&languages={{ languages }}{% endif %}" class="pagination-btn">
+                        <a href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if location %}&location={{ location }}{% endif %}{% if specialization %}&specialization={{ specialization }}{% endif %}" class="pagination-btn">
                             <i class="fas fa-chevron-left"></i>
                         </a>
                     {% endif %}
@@ -142,11 +144,11 @@
                         {% if page_obj.number == num %}
                             <span class="pagination-btn active" style="font-size: 12px !important;">{{ num }}</span>
                         {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                            <a href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if location %}&location={{ location }}{% endif %}{% if specialization %}&specialization={{ specialization }}{% endif %}{% if languages %}&languages={{ languages }}{% endif %}" class="pagination-btn" style="font-size: 12px !important;">{{ num }}</a>
+                            <a href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if location %}&location={{ location }}{% endif %}{% if specialization %}&specialization={{ specialization }}{% endif %}" class="pagination-btn" style="font-size: 12px !important;">{{ num }}</a>
                         {% endif %}
                     {% endfor %}
                     {% if page_obj.has_next %}
-                        <a href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if location %}&location={{ location }}{% endif %}{% if specialization %}&specialization={{ specialization }}{% endif %}{% if languages %}&languages={{ languages }}{% endif %}" class="pagination-btn">
+                        <a href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if location %}&location={{ location }}{% endif %}{% if specialization %}&specialization={{ specialization }}{% endif %}" class="pagination-btn">
                             <i class="fas fa-chevron-right"></i>
                         </a>
                     {% endif %}
@@ -167,6 +169,49 @@
         max-width: 1440px;
         margin: 0 auto;
         padding: 0 24px;
+    }
+
+    /* Location autocomplete */
+    .location-autocomplete-wrap {
+        position: relative;
+    }
+
+    .location-suggestions {
+        display: none;
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        max-height: 260px;
+        overflow-y: auto;
+    }
+
+    .location-suggestions.active {
+        display: block;
+    }
+
+    .location-suggestion-item {
+        padding: 12px 16px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: #1a2e2e;
+        cursor: pointer;
+        transition: background 0.15s;
+    }
+
+    .location-suggestion-item:hover,
+    .location-suggestion-item.highlighted {
+        background: #f0f9f4;
+        color: #0F6A3C;
+    }
+
+    .location-suggestion-item:not(:last-child) {
+        border-bottom: 1px solid #f1f5f9;
     }
 
     /* Hero Section */
@@ -263,7 +308,7 @@
 
     .search-card {
         background: white;
-        width: 90%;
+        width: 100%;
         margin: 0 auto;
         height: 140px;
         border-radius: 20px;
@@ -281,10 +326,18 @@
 
     .search-input {
         flex: 1;
+        min-width: 0;
         border: 2px solid #e0e0e0;
         border-radius: 12px;
         padding: 14px 20px;
         transition: all 0.2s ease;
+    }
+
+    .location-autocomplete-wrap {
+        flex: 1;
+        min-width: 0;
+        position: relative;
+        display: flex;
     }
 
     .search-input:focus {
@@ -947,4 +1000,110 @@
         }
     }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // ---- Location autocomplete ----
+    const locationInput = document.getElementById('location-search');
+    const suggestionsBox = document.getElementById('location-suggestions');
+    let locationFetchTimer = null;
+    let highlightedIndex = -1;
+
+    function countAlphaChars(value) {
+        return (value.match(/[a-zA-Z]/g) || []).length;
+    }
+
+    function hideSuggestions() {
+        suggestionsBox.classList.remove('active');
+        suggestionsBox.innerHTML = '';
+        highlightedIndex = -1;
+    }
+
+    function selectSuggestion(value) {
+        locationInput.value = value;
+        hideSuggestions();
+    }
+
+    function renderSuggestions(results) {
+        suggestionsBox.innerHTML = '';
+        highlightedIndex = -1;
+
+        if (!results.length) {
+            hideSuggestions();
+            return;
+        }
+
+        results.forEach((name, index) => {
+            const item = document.createElement('div');
+            item.className = 'location-suggestion-item';
+            item.textContent = name;
+            item.setAttribute('role', 'option');
+            item.dataset.index = index;
+            item.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                selectSuggestion(name);
+            });
+            suggestionsBox.appendChild(item);
+        });
+
+        suggestionsBox.classList.add('active');
+    }
+
+    function fetchLocationSuggestions(query) {
+        fetch(`{% url 'buy:location_autocomplete' %}?q=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(data => renderSuggestions(data.results || []))
+            .catch(() => hideSuggestions());
+    }
+
+    if (locationInput && suggestionsBox) {
+        locationInput.addEventListener('input', function() {
+            const query = this.value.trim();
+            clearTimeout(locationFetchTimer);
+
+            if (countAlphaChars(query) < 3) {
+                hideSuggestions();
+                return;
+            }
+
+            locationFetchTimer = setTimeout(() => fetchLocationSuggestions(query), 250);
+        });
+
+        locationInput.addEventListener('keydown', function(e) {
+            const items = suggestionsBox.querySelectorAll('.location-suggestion-item');
+            if (!items.length) return;
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                highlightedIndex = (highlightedIndex + 1) % items.length;
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                highlightedIndex = (highlightedIndex - 1 + items.length) % items.length;
+            } else if (e.key === 'Enter' && highlightedIndex >= 0) {
+                e.preventDefault();
+                selectSuggestion(items[highlightedIndex].textContent);
+                return;
+            } else if (e.key === 'Escape') {
+                hideSuggestions();
+                return;
+            } else {
+                return;
+            }
+
+            items.forEach((item, idx) => {
+                item.classList.toggle('highlighted', idx === highlightedIndex);
+            });
+            if (highlightedIndex >= 0) {
+                items[highlightedIndex].scrollIntoView({ block: 'nearest' });
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!locationInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
+                hideSuggestions();
+            }
+        });
+    }
+});
+</script>
 {% endblock %}
