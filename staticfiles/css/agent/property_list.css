@@ -23,7 +23,7 @@
 }
 
 .header-title h1 {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: #ffffff;
     margin: 0 0 0.5rem 0;
@@ -32,7 +32,7 @@
 
 .header-subtitle {
     color: #94a3b8;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     margin: 0;
     font-weight: 400;
 }
@@ -45,7 +45,7 @@
     border-radius: 12px;
     text-decoration: none;
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: inline-flex;
     align-items: center;
@@ -82,14 +82,14 @@
 .filter-label {
     font-weight: 600;
     color: #475569;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
 }
 
 .premium-select {
     padding: 0.625rem 1rem;
     border: 2px solid #e2e8f0;
     border-radius: 8px;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     background: white;
     color: #1e293b;
     font-weight: 500;
@@ -129,7 +129,7 @@
     text-align: left;
     font-weight: 700;
     color: #1e293b;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 1px;
     border-bottom: 2px solid #cbd5e1;
@@ -139,7 +139,7 @@
     padding: 1.25rem 1.5rem;
     border-bottom: 1px solid #e2e8f0;
     color: #475569;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
 }
 
 .property-row {
