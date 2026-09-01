@@ -528,13 +528,13 @@ class Communication(models.Model):
 
 class MessageTemplate(models.Model):
     """Message templates for quick communication"""
-    
+
     TEMPLATE_TYPE_CHOICES = [
         ('whatsapp', 'WhatsApp'),
         ('email', 'Email'),
         ('sms', 'SMS'),
     ]
-    
+
     PURPOSE_CHOICES = [
         ('lead_followup', 'Lead Follow-up'),
         ('site_visit_reminder', 'Site Visit Reminder'),
@@ -544,7 +544,7 @@ class MessageTemplate(models.Model):
         ('promotion', 'Promotion'),
         ('other', 'Other'),
     ]
-    
+
     agent = models.ForeignKey(User, on_delete=models.CASCADE, related_name='message_templates')
     template_type = models.CharField(max_length=20, choices=TEMPLATE_TYPE_CHOICES)
     purpose = models.CharField(max_length=30, choices=PURPOSE_CHOICES, default='other')
@@ -563,3 +563,36 @@ class MessageTemplate(models.Model):
         verbose_name = "Message Template"
         verbose_name_plural = "Message Templates"
         ordering = ['name']
+
+
+class AgentReview(models.Model):
+    """Reviews submitted by users for agents"""
+
+    RATING_CHOICES = [
+        (1, '1 Star'),
+        (2, '2 Stars'),
+        (3, '3 Stars'),
+        (4, '4 Stars'),
+        (5, '5 Stars'),
+    ]
+
+    agent = models.ForeignKey(
+        AgentProfile,
+        on_delete=models.CASCADE,
+        related_name='reviews'
+    )
+    reviewer_name = models.CharField(max_length=100, help_text="Name of the reviewer")
+    reviewer_email = models.EmailField(blank=True, help_text="Email of the reviewer (optional)")
+    reviewer_phone = models.CharField(max_length=20, blank=True, help_text="Phone of the reviewer (optional)")
+    rating = models.PositiveSmallIntegerField(choices=RATING_CHOICES, help_text="Star rating (1-5)")
+    review_text = models.TextField(help_text="Review description/thoughts")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Review by {self.reviewer_name} for {self.agent.user.get_full_name()} - {self.rating} stars"
+
+    class Meta:
+        verbose_name = "Agent Review"
+        verbose_name_plural = "Agent Reviews"
+        ordering = ['-created_at']

@@ -172,9 +172,13 @@
             box-sizing: border-box;
 
 
-
         }
 
+        @media (max-width: 768px) {
+            body {
+                padding-top: 70px;
+            }
+        }
 
 
 
@@ -1346,7 +1350,7 @@
 
         .main-content-wrapper {
             width: 100%;
-            max-width: 1600px;
+            /* max-width: 1600px; */
             margin: 0 auto;
         }
 
@@ -1412,6 +1416,7 @@
             line-height: 1.25;
             white-space: normal;
             text-align: center;
+            word-wrap: normal !important;
         }
 
         .btn i,

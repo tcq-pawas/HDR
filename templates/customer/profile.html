@@ -425,7 +425,120 @@
         box-shadow: none;
     }
 
+    /*
+     * Responsive enhancements
+     * Existing markup, Bootstrap grid, Django/Jinja logic and functionality
+     * are preserved. These rules only improve sizing, wrapping and spacing.
+     */
+
+    .main-content-wrapper,
+    .profile-content,
+    .profile-wrap,
+    .profile-banner,
+    .section-card,
+    .widget {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+
+    .profile-identity > div:last-child,
+    .banner-actions,
+    .section-card,
+    .widget,
+    .info-item,
+    .timeline,
+    .w-item {
+        min-width: 0;
+    }
+
+    .profile-name,
+    .contact-chips,
+    .contact-chips .glass,
+    .stat-value,
+    .info-item .value,
+    .timeline-title,
+    .timeline-desc,
+    .w-value {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    .contact-chips .glass {
+        max-width: 100%;
+    }
+
+    .contact-chips .glass > span:last-child {
+        min-width: 0;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    .profile-banner .row,
+    .section-card .row,
+    .widget .row {
+        min-width: 0;
+    }
+
+    .info-item {
+        overflow: hidden;
+    }
+
+    .info-item > div:last-child {
+        min-width: 0;
+        flex: 1 1 auto;
+    }
+
+    .banner-actions {
+        width: 100%;
+    }
+
+    .edit-profile-btn {
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .banner-stats .glass {
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    .banner-stats .glass > .d-flex {
+        min-width: 0;
+    }
+
+    .banner-stats .glass > .d-flex > div:first-child {
+        min-width: 0;
+        flex: 1 1 auto;
+    }
+
+    .stat-icon {
+        flex: 0 0 36px;
+    }
+
+    @media (min-width: 1200px) {
+        .main-content-wrapper {
+            padding-left: 30px;
+            padding-right: 30px;
+        }
+    }
+
+    @media (max-width: 1199.98px) {
+        .main-content-wrapper {
+            padding: 22px 24px;
+        }
+
+        .profile-banner {
+            padding: 1.35rem;
+        }
+    }
+
     @media (max-width: 991.98px) {
+        .main-content-wrapper {
+            padding: 20px;
+        }
+
         .banner-actions {
             margin-top: 0.5rem;
         }
@@ -436,7 +549,20 @@
         }
 
         .banner-stats {
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .profile-banner .col-lg-7,
+        .profile-banner .col-lg-5 {
+            width: 100%;
+        }
+
+        .profile-banner .profile-identity {
+            width: 100%;
+        }
+
+        .profile-banner .banner-actions {
+            width: 100%;
         }
     }
 
@@ -451,6 +577,16 @@
             margin-bottom: 16px;
         }
 
+        .hero-banner h1 {
+            font-size: 1.4rem;
+            line-height: 1.25;
+        }
+
+        .hero-banner p {
+            font-size: 13px;
+            line-height: 1.55;
+        }
+
         .profile-banner,
         .section-card,
         .widget {
@@ -460,6 +596,7 @@
 
         .profile-identity {
             align-items: flex-start;
+            gap: 0.85rem;
         }
 
         .avatar-shell {
@@ -470,15 +607,271 @@
         .avatar-fallback {
             font-size: 1.5rem;
         }
+
+        .profile-name {
+            font-size: 1.25rem;
+            line-height: 1.3;
+        }
+
+        .contact-chips {
+            gap: 0.45rem;
+        }
+
+        .contact-chips .glass {
+            padding: 0.45rem 0.65rem;
+            font-size: 0.8rem;
+        }
+
+        .banner-stats {
+            grid-template-columns: 1fr;
+            gap: 0.6rem;
+        }
+
+        .banner-stats .glass {
+            width: 100%;
+        }
+
+        .section-title-premium {
+            gap: 0.6rem;
+            font-size: 1rem;
+        }
+
+        .section-title-premium i {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+        }
+
+        .info-item,
+        .w-item {
+            min-height: 0;
+        }
+
+        .timeline-item {
+            padding-left: 1.2rem;
+        }
     }
 
     @media (max-width: 575.98px) {
-        .banner-stats {
-            gap: 0.6rem;
+        .main-content-wrapper {
+            padding: 14px 12px;
+        }
+
+        .hero-banner {
+            padding: 20px 16px;
+            border-radius: 9px;
+        }
+
+        .hero-banner h1 {
+            font-size: 1.3rem;
+        }
+
+        .hero-banner p {
+            font-size: 13px;
+        }
+
+        .profile-banner,
+        .section-card,
+        .widget {
+            padding: 1rem;
+            border-radius: 12px;
+        }
+
+        .profile-identity {
+            gap: 0.7rem;
+        }
+
+        .avatar-shell {
+            width: 64px;
+            height: 64px;
+        }
+
+        .avatar-fallback {
+            font-size: 1.35rem;
+        }
+
+        .profile-name {
+            font-size: 1.15rem;
+        }
+
+        .contact-chips {
+            width: 100%;
         }
 
         .contact-chips .glass {
             width: 100%;
+            box-sizing: border-box;
+        }
+
+        .banner-stats {
+            gap: 0.55rem;
+        }
+
+        .stat-icon {
+            width: 34px;
+            height: 34px;
+            flex-basis: 34px;
+        }
+
+        .stat-value {
+            font-size: 0.9rem;
+        }
+
+        .info-item {
+            padding: 0.85rem;
+            gap: 0.6rem;
+        }
+
+        .info-item .icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+        }
+
+        .info-item .value {
+            font-size: 13px;
+        }
+
+        .w-item {
+            padding: 0.85rem;
+        }
+
+        .w-item .w-label {
+            font-size: 11px;
+        }
+
+        .w-item .w-value {
+            font-size: 0.9rem;
+        }
+
+        .empty-inline {
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
+    }
+
+    @media (max-width: 479.98px) {
+        .main-content-wrapper {
+            padding: 12px 10px;
+        }
+
+        .hero-banner {
+            padding: 18px 14px;
+            margin-bottom: 14px;
+        }
+
+        .profile-banner,
+        .section-card,
+        .widget {
+            padding: 0.9rem;
+        }
+
+        .profile-identity {
+            align-items: flex-start;
+        }
+
+        .avatar-shell {
+            width: 58px;
+            height: 58px;
+        }
+
+        .avatar-fallback {
+            font-size: 1.2rem;
+        }
+
+        .profile-name {
+            font-size: 1.08rem;
+        }
+
+        .contact-chips .glass {
+            font-size: 0.78rem;
+        }
+
+        .section-title-premium {
+            font-size: 0.95rem;
+        }
+
+        .section-title-premium i {
+            width: 34px;
+            height: 34px;
+        }
+
+        .info-item {
+            padding: 0.75rem;
+        }
+    }
+
+    @media (max-width: 374.98px) {
+        .main-content-wrapper {
+            padding: 10px 8px;
+        }
+
+        .hero-banner {
+            padding: 16px 12px;
+            border-radius: 8px;
+        }
+
+        .hero-banner h1 {
+            font-size: 1.25rem;
+        }
+
+        .hero-banner p {
+            font-size: 12.5px;
+        }
+
+        .profile-banner,
+        .section-card,
+        .widget {
+            padding: 0.8rem;
+        }
+
+        .profile-identity {
+            gap: 0.6rem;
+        }
+
+        .avatar-shell {
+            width: 52px;
+            height: 52px;
+        }
+
+        .avatar-fallback {
+            font-size: 1.1rem;
+        }
+
+        .profile-name {
+            font-size: 1rem;
+        }
+
+        .contact-chips .glass {
+            padding: 0.4rem 0.55rem;
+            font-size: 0.75rem;
+        }
+
+        .info-item {
+            gap: 0.5rem;
+            padding: 0.7rem;
+        }
+
+        .info-item .icon {
+            width: 34px;
+            height: 34px;
+        }
+
+        .w-item {
+            padding: 0.7rem;
+        }
+    }
+
+    @media (min-width: 1920px) {
+        .main-content-wrapper {
+            padding-left: 36px;
+            padding-right: 36px;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .edit-profile-btn {
+            transition: none;
         }
     }
 </style>

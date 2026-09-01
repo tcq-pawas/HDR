@@ -26,7 +26,7 @@
     }
 
     /* Hero */
-    @media (max-width: 991px) {
+    @media (max-width: 768px) {
         .subscription-hero-content {
             flex-direction: column;
             gap: 24px;
@@ -46,15 +46,13 @@
             margin: 0 auto;
             display: block;
         }
-    }
 
-    @media (max-width: 768px) {
         .subscription-hero {
             padding: 32px 0;
         }
 
         .subscription-hero-title {
-            font-size: 28px;
+            font-size: 1.75rem !important;
             line-height: 1.25;
         }
 
@@ -64,7 +62,11 @@
 
         .subscription-hero-features {
             flex-wrap: wrap;
-            gap: 12px 20px;
+            gap: 7px 4px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
         .subscription-hero-feature {
@@ -75,7 +77,7 @@
 
     @media (max-width: 480px) {
         .subscription-hero-title {
-            font-size: 24px;
+            font-size: 1.5rem !important;
         }
 
         .subscription-hero-feature {
@@ -196,6 +198,9 @@
             white-space: nowrap;
         }
 
+        .subscription-hero-title{
+            font-size: 1.75rem !important;
+        }
         .feature-column,
         .plan-name-column {
             position: sticky;
@@ -214,6 +219,7 @@
     .why-choose-cards {
         display: flex;
         flex-wrap: wrap;
+        justify-content: center;
         gap: 24px;
     }
 
@@ -238,6 +244,10 @@
 
         .why-choose-card-description {
             font-size: 13px;
+        }
+
+        .subscription-hero-title{
+            font-size: 1.5rem !important;
         }
     }
 
@@ -272,8 +282,8 @@
     <div class="container">
         <div class="subscription-hero-content">
             <div class="subscription-hero-left">
-                <h1 class="subscription-hero-title">Agent Subscription Plans</h1>
-                <p class="subscription-hero-description">Power up your property business with the right plan. List more. Get more leads. Grow more.</p>
+                <h1 class="subscription-hero-title" style="font-size: 2.5rem;">Agent Subscription Plans</h1>
+                <p class="subscription-hero-description" style="font-size: 1rem;">Power up your property business with the right plan. List more. Get more leads. Grow more.</p>
                 <div class="subscription-hero-features">
                     <div class="subscription-hero-feature">
                         <i class="fa fa-shield"></i>
@@ -382,12 +392,12 @@
 <!-- Compare Features Table -->
 <section class="compare-section">
     <div class="container">
-        <h2 class="section-heading">Compare Features</h2>
+        <h2 class="section-heading" style="font-size: 1.5rem;">Compare Features</h2>
         <div class="compare-table-wrapper">
             <table class="compare-table">
                 <thead>
                     <tr>
-                        <th class="feature-column">Features</th>
+                        <th class="feature-column" >Features</th>
                         {% for plan in plans %}
                         <th class="plan-column plan-{{ plan.slug }}">{{ plan.name }}</th>
                         {% endfor %}
@@ -426,7 +436,7 @@
 <!-- Billing Comparison Table -->
 <section class="billing-comparison-section">
     <div class="container">
-        <h2 class="section-heading">Billing Comparison</h2>
+        <h2 class="section-heading" style="font-size: 1.5rem;">Billing Comparison</h2>
         <div class="billing-table-wrapper">
             <table class="billing-table">
                 <thead>
@@ -467,7 +477,7 @@
 <!-- Why Choose Section -->
 <section class="why-choose-subscription-section">
     <div class="container">
-        <h2 class="section-heading">Why Choose HHectare?</h2>
+        <h2 class="section-heading" style="font-size: 1.5rem;">Why Choose HHectare?</h2>
         <div class="why-choose-cards">
             <div class="why-choose-card">
                 <div class="why-choose-card-icon">

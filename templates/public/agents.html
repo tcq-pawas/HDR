@@ -11,8 +11,8 @@
 <section class="agents-hero">
     <div class="hero-overlay"></div>
     <div class="hero-content">
-        <h1 class="hero-title">Find Trusted Real Estate Agents</h1>
-        <p class="hero-subtitle">Connect with verified and experienced agents near you.</p>
+        <h1 class="hero-title" style="font-size: 2.5rem;">Find Trusted Real Estate Agents</h1>
+        <p class="hero-subtitle" style="font-size: 1.1rem;">Connect with verified and experienced agents near you.</p>
         <div class="hero-features">
             <div class="hero-feature">
                 <i class="fas fa-check-circle"></i>
@@ -40,10 +40,12 @@
         <div class="search-card">
             <form method="GET" action="{% url 'public:agents' %}" class="search-form">
                 <div class="search-inputs">
-                    <input type="text" name="search" class="search-input" placeholder="Search" value="{{ search_query }}">
-                    <input type="text" name="location" class="search-input" placeholder="Location" value="{{ location }}">
-                    <input type="text" name="specialization" class="search-input" placeholder="Specialization" value="{{ specialization }}">
-                    <input type="text" name="languages" class="search-input" placeholder="Languages" value="{{ languages }}">
+                    <input type="text" name="search" class="search-input" placeholder="Search" value="{{ search_query }}" style="font-size: 12px !important;">
+                    <div class="location-autocomplete-wrap">
+                        <input type="text" id="location-search" name="location" placeholder="Location" value="{{ location }}" autocomplete="off" style="font-size: 12px !important; flex: 1; min-width: 0; border: 2px solid #e0e0e0; border-radius: 12px; padding: 14px 20px; transition: all 0.2s ease;">
+                        <div id="location-suggestions" class="location-suggestions" role="listbox"></div>
+                    </div>
+                    <input type="text" name="specialization" class="search-input" placeholder="Specialization" value="{{ specialization }}" style="font-size: 12px !important;">
                     <button type="submit" class="search-btn">
                         <i class="fas fa-search"></i>
                     </button>
@@ -54,9 +56,9 @@
             </form>
         </div>
         <div class="popular-searches">
-            <span class="popular-label">Popular Searches:</span>
+            <span class="popular-label" style="font-size: 12px !important;">Popular Searches:</span>
             {% for search in popular_searches %}
-                <a href="?search={{ search }}" class="popular-chip">{{ search }}</a>
+                <a href="?search={{ search }}" class="popular-chip" style="font-size: 12px !important;">{{ search }}</a>
             {% endfor %}
         </div>
     </div>
@@ -66,9 +68,9 @@
 <section class="results-section">
     <div class="page-container">
         <div class="results-header">
-            <div class="results-count">{{ page_obj.paginator.count }} Verified Agents Found</div>
+            <div class="results-count" style="font-size: 12px !important;">{{ page_obj.paginator.count }} Verified Agents Found</div>
             <div class="results-sort">
-                <select class="sort-select">
+                <select class="sort-select" style="font-size: 12px !important;">
                     <option>Sort By: Relevance</option>
                     <option>Rating: High to Low</option>
                     <option>Rating: Low to High</option>
@@ -83,10 +85,10 @@
                     <div class="agent-card">
                         <div class="card-top">
                             {% if agent.is_verified %}
-                                <span class="premium-badge">Premium</span>
+                                <span class="premium-badge" style="font-size: 12px !important;">Premium</span>
                             {% endif %}
                             {% if agent.is_verified %}
-                                <div class="verified-badge-corner">Verified</div>
+                                <div class="verified-badge-corner" style="font-size: 12px !important;">Verified</div>
                             {% endif %}
                         </div>
                         <div class="card-profile">
@@ -99,32 +101,32 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <h3 class="agent-name">{{ agent.user.get_full_name|default:agent.user.username }}</h3>
+                            <h3 class="agent-name" style="font-size: 1.3rem !important;">{{ agent.user.get_full_name|default:agent.user.username }}</h3>
                             <div class="agent-rating">
                                 <i class="fas fa-star"></i>
-                                <span>4.8</span>
-                                <span class="rating-count">(124)</span>
+                                <span style="font-size: 12px !important;">4.8</span>
+                                <span class="rating-count" style="font-size: 12px !important;">(124)</span>
                             </div>
-                            <p class="agent-specialization">{{ agent.bio|truncatewords:8|default:"Real Estate Specialist" }}</p>
-                            <div class="agent-location">
+                            <p class="agent-specialization" style="font-size: 12px !important;">{{ agent.bio|truncatewords:8|default:"Real Estate Specialist" }}</p>
+                            <div class="agent-location" style="font-size: 12px !important;">
                                 <i class="fas fa-map-marker-alt"></i>
                                 {{ agent.territory|default:"India" }}
                             </div>
                             <div class="agent-stats">
                                 <div class="stat">
-                                    <span class="stat-value">{{ agent.created_at|timesince }}</span>
-                                    <span class="stat-label">Experience</span>
+                                    <span class="stat-value" style="font-size: 12px !important;">{{ agent.created_at|timesince }}</span>
+                                    <span class="stat-label" style="font-size: 12px !important;">Experience</span>
                                 </div>
                                 <div class="stat">
-                                    <span class="stat-value">{{ agent.user.bookings.count|default:0 }}</span>
-                                    <span class="stat-label">Properties Sold</span>
+                                    <span class="stat-value" style="font-size: 12px !important;">{{ agent.user.bookings.count|default:0 }}</span>
+                                    <span class="stat-label" style="font-size: 12px !important;">Properties Sold</span>
                                 </div>
                             </div>
                             <div class="agent-tags">
-                                <span class="tag">Residential</span>
-                                <span class="tag">Commercial</span>
+                                <span class="tag" style="font-size: 12px !important;">Residential</span>
+                                <span class="tag" style="font-size: 12px !important;">Commercial</span>
                             </div>
-                            <a href="{% url 'public:agent_profile' agent.id %}" class="view-profile-btn">View Profile</a>
+                            <a href="{% url 'public:agent_profile' agent.id %}" class="view-profile-btn" style="font-size: 12px !important;">View Profile</a>
                         </div>
                     </div>
                 {% endfor %}
@@ -134,19 +136,19 @@
             {% if page_obj.has_other_pages %}
                 <div class="pagination">
                     {% if page_obj.has_previous %}
-                        <a href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if location %}&location={{ location }}{% endif %}{% if specialization %}&specialization={{ specialization }}{% endif %}{% if languages %}&languages={{ languages }}{% endif %}" class="pagination-btn">
+                        <a href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if location %}&location={{ location }}{% endif %}{% if specialization %}&specialization={{ specialization }}{% endif %}" class="pagination-btn">
                             <i class="fas fa-chevron-left"></i>
                         </a>
                     {% endif %}
                     {% for num in page_obj.paginator.page_range %}
                         {% if page_obj.number == num %}
-                            <span class="pagination-btn active">{{ num }}</span>
+                            <span class="pagination-btn active" style="font-size: 12px !important;">{{ num }}</span>
                         {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                            <a href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if location %}&location={{ location }}{% endif %}{% if specialization %}&specialization={{ specialization }}{% endif %}{% if languages %}&languages={{ languages }}{% endif %}" class="pagination-btn">{{ num }}</a>
+                            <a href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}{% if location %}&location={{ location }}{% endif %}{% if specialization %}&specialization={{ specialization }}{% endif %}" class="pagination-btn" style="font-size: 12px !important;">{{ num }}</a>
                         {% endif %}
                     {% endfor %}
                     {% if page_obj.has_next %}
-                        <a href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if location %}&location={{ location }}{% endif %}{% if specialization %}&specialization={{ specialization }}{% endif %}{% if languages %}&languages={{ languages }}{% endif %}" class="pagination-btn">
+                        <a href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if location %}&location={{ location }}{% endif %}{% if specialization %}&specialization={{ specialization }}{% endif %}" class="pagination-btn">
                             <i class="fas fa-chevron-right"></i>
                         </a>
                     {% endif %}
@@ -155,8 +157,8 @@
         {% else %}
             <div class="empty-state">
                 <i class="fas fa-user-tie"></i>
-                <h3>No Agents Found</h3>
-                <p>Try adjusting your search filters or check back later.</p>
+                <h3 style="font-size: 1.3rem !important;">No Agents Found</h3>
+                <p style="font-size: 12px !important;">Try adjusting your search filters or check back later.</p>
             </div>
         {% endif %}
     </div>
@@ -169,11 +171,54 @@
         padding: 0 24px;
     }
 
+    /* Location autocomplete */
+    .location-autocomplete-wrap {
+        position: relative;
+    }
+
+    .location-suggestions {
+        display: none;
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        max-height: 260px;
+        overflow-y: auto;
+    }
+
+    .location-suggestions.active {
+        display: block;
+    }
+
+    .location-suggestion-item {
+        padding: 12px 16px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: #1a2e2e;
+        cursor: pointer;
+        transition: background 0.15s;
+    }
+
+    .location-suggestion-item:hover,
+    .location-suggestion-item.highlighted {
+        background: #f0f9f4;
+        color: #0F6A3C;
+    }
+
+    .location-suggestion-item:not(:last-child) {
+        border-bottom: 1px solid #f1f5f9;
+    }
+
     /* Hero Section */
     .agents-hero {
         position: relative;
         height: 320px;
-        background-image: url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1920&q=80');
+        background-image: url('{% static "images/hero-img-all.png" %}');
         background-size: cover;
         background-position: center;
         display: flex;
@@ -188,7 +233,13 @@
         left: 0;
         right: 0;
         bottom: 0;
-        /* background: rgba(15, 106, 60, 0.85); */
+        background: linear-gradient(
+            180deg,
+            rgba(0,0,0,0.42) 0%,
+            rgba(0,0,0,0.18) 35%,
+            rgba(0,0,0,0.08) 55%,
+            rgba(0,0,0,0.38) 100%
+        );
     }
 
     .hero-content {
@@ -199,7 +250,6 @@
     }
 
     .hero-title {
-        font-size: 48px;
         font-weight: 700;
         margin-bottom: 12px;
         font-family: var(--font-heading);
@@ -207,27 +257,45 @@
     }
 
     .hero-subtitle {
-        font-size: 18px;
         opacity: 0.9;
         margin-bottom: 32px;
     }
 
     .hero-features {
-        display: flex;
-        justify-content: center;
-        gap: 48px;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: clamp(8px, 2vw, 48px);
+        background: rgba(15, 106, 60, 0.72);
+        border: none;
+        border-radius: 16px;
+        padding: clamp(12px, 2vw, 24px);
+        box-sizing: border-box;
+        width: 100%;
+        max-width: 100%;
     }
 
     .hero-feature {
         display: flex;
+        flex-direction: column;
         align-items: center;
-        gap: 8px;
-        font-size: 16px;
+        gap: 6px;
         font-weight: 500;
+        min-width: 0;
+        width: 100%;
+        box-sizing: border-box;
+        text-align: center;
     }
 
     .hero-feature i {
-        font-size: 20px;
+        font-size: clamp(16px, 3vw, 20px);
+    }
+
+    .hero-feature span {
+        white-space: normal;
+        overflow-wrap: break-word;
+        word-break: normal;
+        text-align: center;
+        font-size: clamp(10px, 2.5vw, 12px);
     }
 
     /* Search Section */
@@ -240,12 +308,13 @@
 
     .search-card {
         background: white;
-        width: 90%;
+        width: 100%;
         margin: 0 auto;
         height: 140px;
         border-radius: 20px;
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
         padding: 24px 32px;
+        box-sizing: border-box;
     }
 
     .search-inputs {
@@ -257,11 +326,18 @@
 
     .search-input {
         flex: 1;
+        min-width: 0;
         border: 2px solid #e0e0e0;
         border-radius: 12px;
         padding: 14px 20px;
-        font-size: 15px;
         transition: all 0.2s ease;
+    }
+
+    .location-autocomplete-wrap {
+        flex: 1;
+        min-width: 0;
+        position: relative;
+        display: flex;
     }
 
     .search-input:focus {
@@ -307,7 +383,7 @@
 
     .popular-searches {
         display: flex;
-        justify-content: center;
+        
         align-items: center;
         gap: 12px;
         margin-top: 24px;
@@ -316,7 +392,6 @@
     .popular-label {
         font-weight: 600;
         color: #666;
-        font-size: 14px;
     }
 
     .popular-chip {
@@ -324,7 +399,6 @@
         color: #0F6A3C;
         padding: 8px 20px;
         border-radius: 20px;
-        font-size: 14px;
         font-weight: 500;
         text-decoration: none;
         transition: all 0.2s ease;
@@ -348,7 +422,6 @@
     }
 
     .results-count {
-        font-size: 20px;
         font-weight: 600;
         color: #1F1F1F;
     }
@@ -357,7 +430,7 @@
         padding: 10px 20px;
         border: 2px solid #e0e0e0;
         border-radius: 10px;
-        font-size: 14px;
+        font-size: 12px;
         background: white;
         cursor: pointer;
     }
@@ -481,7 +554,6 @@
     }
 
     .agent-name {
-        font-size: 18px;
         font-weight: 700;
         color: #1F1F1F;
         margin-bottom: 8px;
@@ -507,19 +579,16 @@
 
     .rating-count {
         color: #666 !important;
-        font-size: 13px !important;
         font-weight: 400 !important;
     }
 
     .agent-specialization {
-        font-size: 14px;
         color: #666;
         margin-bottom: 12px;
         line-height: 1.4;
     }
 
     .agent-location {
-        font-size: 13px;
         color: #666;
         margin-bottom: 16px;
         display: flex;
@@ -544,7 +613,7 @@
 
     .stat-value {
         display: block;
-        font-size: 16px;
+        font-size: 12px;
         font-weight: 700;
         color: #0F6A3C;
     }
@@ -567,7 +636,7 @@
         color: #0F6A3C;
         padding: 4px 12px;
         border-radius: 12px;
-        font-size: 11px;
+        font-size: 12px;
         font-weight: 500;
     }
 
@@ -636,7 +705,7 @@
     }
 
     .empty-state h3 {
-        font-size: 24px;
+        font-size: 1.3rem;
         color: #1F1F1F;
         margin-bottom: 8px;
     }
@@ -657,13 +726,7 @@
             grid-template-columns: repeat(3, 1fr);
         }
         .agents-hero {
-            height: 280px;
-        }
-        .hero-title {
-            font-size: 36px;
-        }
-        .hero-subtitle {
-            font-size: 16px;
+            height: 400px;
         }
         .hero-features {
             gap: 24px;
@@ -680,13 +743,133 @@
         }
     }
 
+    @media (min-width: 769px) and (max-width: 1024px) {
+        .page-container {
+            padding: 0 20px;
+        }
+        .agents-hero {
+            height: 380px;
+            padding-top: 80px;
+        }
+        .hero-title {
+            font-size: 2rem;
+        }
+        .hero-subtitle {
+            font-size: 1rem;
+        }
+        .hero-features {
+            gap: 20px;
+        }
+        .hero-feature {
+            font-size: 14px;
+        }
+        .hero-feature i {
+            font-size: 18px;
+        }
+        .search-card {
+            width: 100%;
+            height: auto;
+            padding: 20px;
+        }
+        .search-inputs {
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .search-input {
+            flex: 1 1 calc(25% - 12px);
+            min-width: 140px;
+        }
+        .search-btn,
+        .reset-btn {
+            flex: 0 0 auto;
+            width: 56px;
+        }
+        .popular-searches {
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .popular-label {
+            margin-right: 12px;
+        }
+        .popular-chip {
+            flex-shrink: 0;
+        }
+        .results-header {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+        }
+        .results-sort {
+            flex-shrink: 0;
+        }
+    }
+
+    @media (min-width: 1025px) and (max-width: 1200px) {
+        .search-card {
+            width: 100%;
+            height: auto;
+        }
+        .search-inputs {
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .search-input {
+            flex: 1 1 calc(25% - 12px);
+            min-width: 150px;
+        }
+        .search-btn,
+        .reset-btn {
+            flex: 0 0 auto;
+            width: 56px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .hero-features {
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .hero-feature {
+            font-size: 14px;
+        }
+        .hero-feature i {
+            font-size: 18px;
+        }
+    }
+
+    @media (min-width: 577px) and (max-width: 768px) {
+        .popular-searches {
+            flex-direction: row;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+        .popular-label {
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        .popular-chip {
+            flex-shrink: 0;
+        }
+    }
+
     @media (max-width: 768px) {
         .agents-grid {
             grid-template-columns: 1fr;
         }
         .agents-hero {
-            height: auto;
-            min-height: 300px;
+            height: 420px;
+            min-height: 420px;
             padding: 40px 20px;
             display: flex;
             align-items: center;
@@ -697,28 +880,39 @@
             max-width: 100%;
         }
         .hero-title {
-            font-size: 28px;
+            font-size: 1.75rem !important;
+            line-height: 1.2 !important;
             margin-bottom: 8px;
             color: #fff;
         }
         .hero-subtitle {
-            font-size: 14px;
+            font-size: 0.95rem !important;
+            line-height: 1.5 !important;
             margin-bottom: 20px;
+            max-width: 320px;
+            margin-left: auto;
+            margin-right: auto;
         }
         .hero-features {
             flex-direction: column;
             gap: 12px;
-            font-size: 14px;
             align-items: center;
+            width: 100%;
+            max-width: 100%;
         }
         .hero-feature {
             justify-content: center;
         }
         .search-card {
-            width: 100%;
+            width: calc(100% - 32px);
+            margin-left: 16px;
+            margin-right: 16px;
+            height: auto;
+            padding: 20px;
         }
         .search-inputs {
             flex-direction: column;
+            gap: 12px;
         }
         .search-input,
         .search-btn,
@@ -731,28 +925,52 @@
             align-items: flex-start;
         }
         .popular-searches {
-            flex-direction: column;
-            align-items: flex-start;
+            flex-direction: row;
+            align-items: center;
+            overflow-x: auto;
+            overflow-y: hidden;
+            width: 100%;
+            max-width: 100%;
+            padding: 0;
+            margin-left: 0;
+            margin-right: 0;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .popular-searches::-webkit-scrollbar {
+            display: none;
+        }
+        .popular-label {
+            flex-shrink: 0;
+            margin-right: 12px;
+        }
+        .popular-chip {
+            flex-shrink: 0;
+            white-space: nowrap;
         }
     }
 
     @media (max-width: 480px) {
         .agents-hero {
-            height: auto;
-            min-height: 260px;
-            padding: 30px 15px;
+            height: 380px;
+            min-height: 380px;
+            padding: 30px 16px;
         }
         .hero-title {
-            font-size: 22px;
+            font-size: 1.5rem !important;
+            line-height: 1.15 !important;
             margin-bottom: 6px;
         }
         .hero-subtitle {
-            font-size: 13px;
+            font-size: 0.9rem !important;
+            line-height: 1.5 !important;
             margin-bottom: 16px;
+            max-width: 280px;
+            margin-left: auto;
+            margin-right: auto;
         }
         .hero-features {
             gap: 10px;
-            font-size: 13px;
         }
         .hero-feature {
             gap: 6px;
@@ -760,6 +978,132 @@
         .hero-feature i {
             font-size: 18px;
         }
+        .search-card {
+            width: calc(100% - 32px);
+            margin-left: 16px;
+            margin-right: 16px;
+            padding: 16px;
+        }
+        .popular-searches {
+            padding: 0;
+            margin-left: 0;
+            margin-right: 0;
+        }
+        .results-header {
+            align-items: stretch;
+        }
+        .results-sort {
+            width: 100%;
+        }
+        .sort-select {
+            width: 100%;
+        }
     }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // ---- Location autocomplete ----
+    const locationInput = document.getElementById('location-search');
+    const suggestionsBox = document.getElementById('location-suggestions');
+    let locationFetchTimer = null;
+    let highlightedIndex = -1;
+
+    function countAlphaChars(value) {
+        return (value.match(/[a-zA-Z]/g) || []).length;
+    }
+
+    function hideSuggestions() {
+        suggestionsBox.classList.remove('active');
+        suggestionsBox.innerHTML = '';
+        highlightedIndex = -1;
+    }
+
+    function selectSuggestion(value) {
+        locationInput.value = value;
+        hideSuggestions();
+    }
+
+    function renderSuggestions(results) {
+        suggestionsBox.innerHTML = '';
+        highlightedIndex = -1;
+
+        if (!results.length) {
+            hideSuggestions();
+            return;
+        }
+
+        results.forEach((name, index) => {
+            const item = document.createElement('div');
+            item.className = 'location-suggestion-item';
+            item.textContent = name;
+            item.setAttribute('role', 'option');
+            item.dataset.index = index;
+            item.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                selectSuggestion(name);
+            });
+            suggestionsBox.appendChild(item);
+        });
+
+        suggestionsBox.classList.add('active');
+    }
+
+    function fetchLocationSuggestions(query) {
+        fetch(`{% url 'buy:location_autocomplete' %}?q=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(data => renderSuggestions(data.results || []))
+            .catch(() => hideSuggestions());
+    }
+
+    if (locationInput && suggestionsBox) {
+        locationInput.addEventListener('input', function() {
+            const query = this.value.trim();
+            clearTimeout(locationFetchTimer);
+
+            if (countAlphaChars(query) < 3) {
+                hideSuggestions();
+                return;
+            }
+
+            locationFetchTimer = setTimeout(() => fetchLocationSuggestions(query), 250);
+        });
+
+        locationInput.addEventListener('keydown', function(e) {
+            const items = suggestionsBox.querySelectorAll('.location-suggestion-item');
+            if (!items.length) return;
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                highlightedIndex = (highlightedIndex + 1) % items.length;
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                highlightedIndex = (highlightedIndex - 1 + items.length) % items.length;
+            } else if (e.key === 'Enter' && highlightedIndex >= 0) {
+                e.preventDefault();
+                selectSuggestion(items[highlightedIndex].textContent);
+                return;
+            } else if (e.key === 'Escape') {
+                hideSuggestions();
+                return;
+            } else {
+                return;
+            }
+
+            items.forEach((item, idx) => {
+                item.classList.toggle('highlighted', idx === highlightedIndex);
+            });
+            if (highlightedIndex >= 0) {
+                items[highlightedIndex].scrollIntoView({ block: 'nearest' });
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!locationInput.contains(e.target) && !suggestionsBox.contains(e.target)) {
+                hideSuggestions();
+            }
+        });
+    }
+});
+</script>
 {% endblock %}

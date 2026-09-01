@@ -74,19 +74,358 @@
         grid-template-columns: repeat(2, 1fr);
     }
 
-    @media (max-width: 768px) {
-        .premium-metrics-grid {
-            grid-template-columns: 1fr;
+    /*
+     * Responsive dashboard enhancements
+     * ---------------------------------
+     * Existing classes/markup are preserved. These rules only control
+     * sizing, wrapping, spacing and layout at smaller/medium widths.
+     */
+
+    .main-content-wrapper {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        min-width: 0;
+    }
+
+    .dashboard-hero,
+    .premium-metrics-container,
+    .leads-section {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+
+    .dashboard-hero h1,
+    .dashboard-hero p,
+    .leads-header h2,
+    .view-all-link,
+    .metric-label,
+    .trend-text,
+    .leads-table td,
+    .leads-table th {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    .premium-metrics-grid {
+        display: grid;
+        width: 100%;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+    }
+
+    .premium-metric-card {
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .metric-card-content {
+        min-width: 0;
+    }
+
+    .metric-header-row {
+        min-width: 0;
+    }
+
+    .metric-value {
+        min-width: 0;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+    }
+
+    .leads-section {
+        overflow: hidden;
+    }
+
+    .leads-header-flex {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        min-width: 0;
+    }
+
+    .leads-header-flex > * {
+        min-width: 0;
+    }
+
+    .leads-header-flex h2 {
+        margin: 0;
+    }
+
+    .leads-table-container {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+    }
+
+    .leads-table {
+        width: 100%;
+        max-width: 100%;
+        table-layout: auto;
+    }
+
+    .leads-table th,
+    .leads-table td {
+        vertical-align: middle;
+    }
+
+    .leads-table td strong {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    .leads-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .leads-actions .btn {
+        flex: 0 0 auto;
+        white-space: nowrap;
+    }
+
+    .empty-state {
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .empty-state p {
+        overflow-wrap: anywhere;
+    }
+
+    @media (max-width: 1199.98px) {
+        .main-content-wrapper {
+            padding: 22px 24px;
         }
 
+        .dashboard-hero {
+            padding: 32px 24px;
+        }
+
+        .premium-metrics-grid {
+            gap: 16px;
+        }
+
+        .leads-header-flex {
+            gap: 12px;
+        }
+    }
+
+    @media (max-width: 991.98px) {
         .main-content-wrapper {
-            padding: 16px 18px;
+            padding: 20px;
+        }
+
+        .dashboard-hero {
+            padding: 28px 22px;
+            margin-bottom: 20px;
+        }
+
+        .premium-metrics-container {
+            margin-bottom: 1.5rem;
+        }
+
+        .premium-metrics-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .leads-table-container {
+            border-radius: 8px;
+        }
+
+        .leads-table {
+            min-width: 720px;
+        }
+    }
+
+    @media (max-width: 767.98px) {
+        .main-content-wrapper {
+            padding: 16px;
         }
 
         .dashboard-hero {
             padding: 24px 18px;
             border-radius: 10px;
             margin-bottom: 16px;
+        }
+
+        .dashboard-hero h1 {
+            font-size: 1.4rem;
+            line-height: 1.25;
+        }
+
+        .dashboard-hero p {
+            font-size: 14px;
+            line-height: 1.55;
+        }
+
+        .premium-metrics-grid {
+            grid-template-columns: 1fr;
+            gap: 14px;
+        }
+
+        .premium-metrics-container {
+            margin-bottom: 1.25rem;
+        }
+
+        .leads-header-flex {
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 8px 12px;
+        }
+
+        .leads-header-flex h2 {
+            flex: 1 1 180px;
+        }
+
+        .view-all-link {
+            flex: 0 0 auto;
+        }
+
+        /*
+         * Tables keep their full content and behavior on phones.
+         * The container scrolls horizontally only when the table genuinely
+         * needs more width, preventing the entire page from overflowing.
+         */
+        .leads-table {
+            min-width: 680px;
+        }
+
+        .leads-table th,
+        .leads-table td {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+    }
+
+    @media (max-width: 575.98px) {
+        .main-content-wrapper {
+            padding: 14px 12px;
+        }
+
+        .dashboard-hero {
+            padding: 20px 16px;
+            border-radius: 9px;
+        }
+
+        .dashboard-hero h1 {
+            font-size: 1.35rem;
+            margin-bottom: 7px;
+        }
+
+        .dashboard-hero p {
+            font-size: 13px;
+            line-height: 1.55;
+        }
+
+        .premium-metrics-grid {
+            gap: 12px;
+        }
+
+        .leads-header-flex {
+            align-items: stretch;
+        }
+
+        .leads-header-flex h2 {
+            flex-basis: 100%;
+        }
+
+        .view-all-link {
+            align-self: flex-start;
+        }
+
+        .leads-table-container {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .leads-table {
+            min-width: 640px;
+        }
+
+        .leads-actions {
+            gap: 6px;
+        }
+    }
+
+    @media (max-width: 479.98px) {
+        .main-content-wrapper {
+            padding: 12px 10px;
+        }
+
+        .dashboard-hero {
+            padding: 18px 14px;
+            margin-bottom: 14px;
+        }
+
+        .dashboard-hero h1 {
+            font-size: 1.3rem;
+        }
+
+        .dashboard-hero p {
+            font-size: 13px;
+        }
+
+        .premium-metrics-container {
+            margin-bottom: 1rem;
+        }
+
+        .leads-table {
+            min-width: 620px;
+        }
+    }
+
+    @media (max-width: 374.98px) {
+        .main-content-wrapper {
+            padding: 10px 8px;
+        }
+
+        .dashboard-hero {
+            padding: 16px 12px;
+            border-radius: 8px;
+        }
+
+        .dashboard-hero h1 {
+            font-size: 1.25rem;
+        }
+
+        .dashboard-hero p {
+            font-size: 12.5px;
+        }
+
+        .premium-metrics-grid {
+            gap: 10px;
+        }
+
+        .leads-table {
+            min-width: 600px;
+        }
+    }
+
+    @media (min-width: 1920px) {
+        .main-content-wrapper {
+            padding-left: 36px;
+            padding-right: 36px;
+        }
+
+        .premium-metrics-grid {
+            gap: 24px;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .leads-table-container {
+            scroll-behavior: auto;
         }
     }
 </style>
@@ -330,6 +669,3 @@
 
 
 {% endblock %}
-
-
-

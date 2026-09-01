@@ -382,7 +382,7 @@
 
 .section-heading {
     font-family: 'Playfair Display', serif;
-    font-size: 42px;
+    font-size: 1.5rem;
     font-weight: 700;
     color: var(--subscription-text-dark);
     text-align: center;
@@ -646,7 +646,7 @@
     }
     
     .subscription-hero-title {
-        font-size: 28px;
+        
     }
     
     .subscription-hero-description {
@@ -687,7 +687,7 @@
     }
     
     .section-heading {
-        font-size: 32px;
+        font-size: 1.5rem;
     }
     
     .why-choose-cards {
@@ -705,6 +705,10 @@
         flex-direction: column;
         align-items: center;
         gap: 12px;
+    }
+
+    .subscription-hero-title {
+        
     }
     
     .billing-toggle-btn {

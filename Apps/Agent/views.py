@@ -24,7 +24,7 @@ from Apps.Subscriptions.utils import (
 from .models import (
     AgentProfile, Lead, LeadFollowUp, SiteVisit,
     Booking, Installment, Commission, Document, VerificationDocument,
-    Communication, MessageTemplate
+    Communication, MessageTemplate, AgentReview
 )
 from .validators import validate_image_file, validate_document_file, validate_video_file, ValidationError
 from .forms import (
@@ -184,7 +184,24 @@ def dashboard(request):
     recent_inquiries = PropertyInquiry.objects.filter(
         agent_profile__user=request.user
     ).select_related('related_property').order_by('-created_at')[:5]
-    
+
+    # Recent reviews
+    recent_reviews = AgentReview.objects.filter(
+        agent=agent_profile
+    ).order_by('-created_at')[:5]
+
+    # Calculate review statistics
+    all_reviews = AgentReview.objects.filter(agent=agent_profile)
+    total_reviews = all_reviews.count()
+
+    if all_reviews.exists():
+        avg_rating = sum(review.rating for review in all_reviews) / all_reviews.count()
+        stats['average_rating'] = round(avg_rating, 1)
+    else:
+        stats['average_rating'] = 0
+
+    stats['total_reviews'] = total_reviews
+
     context = {
         'agent_profile': agent_profile,
         'stats': stats,
@@ -193,9 +210,35 @@ def dashboard(request):
         'recent_inquiries': recent_inquiries,
         'upcoming_visits': upcoming_visits,
         'recent_bookings': recent_bookings,
+        'recent_reviews': recent_reviews,
     }
-    
+
     return render(request, 'agent/dashboard.html', context)
+
+
+@login_required
+def agent_reviews(request):
+    """View all reviews for the agent"""
+    user_role = get_user_role(request.user)
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
+
+    agent_profile = get_object_or_404(AgentProfile, user=request.user)
+
+    # Get all reviews for this agent
+    reviews = AgentReview.objects.filter(agent=agent_profile).order_by('-created_at')
+
+    # Pagination
+    paginator = Paginator(reviews, 10)
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'agent_profile': agent_profile,
+        'reviews': page_obj,
+    }
+
+    return render(request, 'agent/reviews.html', context)
 
 
 @login_required

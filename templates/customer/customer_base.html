@@ -1,9 +1,7 @@
 {% load static %}
-
 {% load humanize %}
 
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
@@ -13,38 +11,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>{% block title %}Customer Dashboard - HHectare{% endblock %}</title>
+
     <meta name="robots" content="noindex, nofollow">
     <meta name="description" content="Customer dashboard.">
     <link rel="canonical" href="{{ request.build_absolute_uri }}">
     <meta name="application-name" content="Real Estate Platform">
+
     <link rel="icon" href="{% static 'img/favicon.ico' %}">
 
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
+    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
+    <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" rel="stylesheet">
 
+
+    <!-- Basic Body Styling -->
     <style>
+
         body {
             background-color: #f8f9fa;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
+
     </style>
 
-    
 
+    <!-- Global Responsive CSS -->
     <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+
     {% block extra_css %}{% endblock %}
 
+
+    <!-- Customer Dashboard Specific Styling -->
     <style>
-        /* Keep every customer page header aligned with the sidebar menu color */
+
+        /* =========================================================
+           CUSTOMER DASHBOARD THEME
+           ========================================================= */
+
         .customer-dashboard {
             --customer-menu: #004526;
+
             --customer-menu-glow:
-                radial-gradient(900px circle at 10% 10%, rgba(16, 185, 129, 0.35), transparent 55%),
-                radial-gradient(900px circle at 90% 40%, rgba(59, 130, 246, 0.25), transparent 60%);
+                radial-gradient(
+                    900px circle at 10% 10%,
+                    rgba(16, 185, 129, 0.35),
+                    transparent 55%
+                ),
+                radial-gradient(
+                    900px circle at 90% 40%,
+                    rgba(59, 130, 246, 0.25),
+                    transparent 60%
+                );
         }
+
+
+        /* =========================================================
+           CUSTOMER DASHBOARD HERO SECTIONS
+           ========================================================= */
 
         .customer-dashboard .dashboard-hero,
         .customer-dashboard .hero-banner,
@@ -53,14 +81,24 @@
         .customer-dashboard .inquiry-hero,
         .customer-dashboard .edit-hero,
         .customer-dashboard .inquiry-detail-hero {
+
             background: var(--customer-menu) !important;
+
             position: relative;
+
             overflow: hidden;
+
             border-color: rgba(0, 69, 38, 0.35) !important;
-            box-shadow: 0 4px 15px rgba(0, 69, 38, 0.18) !important;
+
+            box-shadow:
+                0 4px 15px rgba(0, 69, 38, 0.18) !important;
         }
 
-        /* Same glow treatment as .customer-dashboard .sidebar::after */
+
+        /* =========================================================
+           HERO GLOW
+           ========================================================= */
+
         .customer-dashboard .dashboard-hero::before,
         .customer-dashboard .hero-banner::before,
         .customer-dashboard .premium-hero::before,
@@ -68,22 +106,42 @@
         .customer-dashboard .inquiry-hero::before,
         .customer-dashboard .edit-hero::before,
         .customer-dashboard .inquiry-detail-hero::before {
+
             content: "" !important;
+
             position: absolute !important;
+
             inset: 0 !important;
+
             right: auto !important;
+
             top: auto !important;
+
             width: auto !important;
+
             height: auto !important;
+
             border-radius: 0 !important;
+
             opacity: 1 !important;
+
             transform: none !important;
+
             filter: none !important;
+
             background-image: none !important;
+
             background: var(--customer-menu-glow) !important;
+
             pointer-events: none !important;
+
             z-index: 0 !important;
         }
+
+
+        /* =========================================================
+           REMOVE EXISTING HERO AFTER EFFECT
+           ========================================================= */
 
         .customer-dashboard .dashboard-hero::after,
         .customer-dashboard .hero-banner::after,
@@ -92,8 +150,14 @@
         .customer-dashboard .inquiry-hero::after,
         .customer-dashboard .edit-hero::after,
         .customer-dashboard .inquiry-detail-hero::after {
+
             display: none !important;
         }
+
+
+        /* =========================================================
+           HERO CONTENT ABOVE GLOW
+           ========================================================= */
 
         .customer-dashboard .dashboard-hero > *,
         .customer-dashboard .hero-banner > *,
@@ -102,54 +166,152 @@
         .customer-dashboard .inquiry-detail-hero > *,
         .customer-dashboard .premium-hero > *,
         .customer-dashboard .sp-hero > * {
+
             position: relative;
+
             z-index: 1;
         }
+
+
+        /* =========================================================
+           MOBILE MENU TOGGLE
+           ========================================================= */
+
+        /*
+         * responsive.css makes .mobile-menu-toggle visible
+         * below 768px.
+         *
+         * These customer-specific rules override it without
+         * modifying the global responsive.css file.
+         */
+
+        @media (max-width: 768px) {
+
+            .customer-dashboard .mobile-menu-toggle {
+
+                display: block;
+
+                position: fixed;
+
+                z-index: 1001;
+            }
+
+
+            /*
+             * Hide hamburger while sidebar is open.
+             */
+            .customer-dashboard .mobile-menu-toggle.hide {
+
+                display: none !important;
+            }
+
+        }
+
+
+        /*
+         * Keep hamburger hidden on desktop.
+         */
+        @media (min-width: 769px) {
+
+            .customer-dashboard .mobile-menu-toggle {
+
+                display: none !important;
+            }
+
+        }
+
     </style>
+
 
     {% block extra_head %}{% endblock %}
 
 </head>
 
-<body class="customer-dashboard">
 
-    <!-- Mobile Menu Toggle -->
+<body class="customer-dashboard" style="padding-top: 70px;">
 
-    <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+
+    <!-- =========================================================
+         MOBILE MENU TOGGLE
+         ========================================================= -->
+
+    <button
+        class="mobile-menu-toggle"
+        onclick="toggleSidebar()"
+        aria-label="Open navigation menu"
+        type="button">
 
         <i class="fas fa-bars"></i>
 
     </button>
 
-    
 
     <div class="app-container">
 
-        <!-- Fixed Sidebar -->
+
+        <!-- =====================================================
+             FIXED SIDEBAR
+             ===================================================== -->
 
         <div class="sidebar p-3" id="sidebar">
 
+
+            <!-- =================================================
+                 LOGO / CUSTOMER PORTAL
+                 ================================================= -->
+
             <div class="text-center mb-4">
 
-                <a href="{% url 'customer:dashboard' %}" style="text-decoration:none; display:inline-block; color:inherit;">
-                    <img src="{% static 'img/logo.png' %}" alt="Logo" title="Logo" style="height:40px; width:auto; display:block; margin:0 auto 8px;">
+                <a
+                    href="{% url 'customer:dashboard' %}"
+                    style="text-decoration:none; display:inline-block; color:inherit;">
+
+                    <img
+                        src="{% static 'img/logo.png' %}"
+                        alt="Logo"
+                        title="Logo"
+                        style="
+                            height:40px;
+                            width:auto;
+                            display:block;
+                            margin:0 auto 8px;
+                        ">
+
                 </a>
 
-                <small class="text-white-50 d-block mt-2">Customer Portal</small>
+                <small class="text-white-50 d-block mt-2">
+                    Customer Portal
+                </small>
 
             </div>
 
-            
+
+            <!-- =================================================
+                 CUSTOMER PROFILE
+                 ================================================= -->
 
             <div class="mb-4">
 
                 <div class="text-center">
 
-                    <div class="rounded-circle bg-white text-primary d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                    <div
+                        class="rounded-circle bg-white text-primary d-inline-flex align-items-center justify-content-center"
+                        style="
+                            width:60px;
+                            height:60px;
+                        ">
 
                         {% if profile.profile_picture %}
 
-                            <img src="{{ profile.profile_picture.url }}" alt="Profile" class="rounded-circle" style="width: 56px; height: 56px; object-fit: cover;">
+                            <img
+                                src="{{ profile.profile_picture.url }}"
+                                alt="Profile"
+                                class="rounded-circle"
+                                style="
+                                    width:56px;
+                                    height:56px;
+                                    object-fit:cover;
+                                ">
 
                         {% else %}
 
@@ -159,15 +321,23 @@
 
                     </div>
 
+
                     <div class="mt-2">
 
-                        <strong>{{ user.username }}</strong>
+                        <strong>
+                            {{ user.username }}
+                        </strong>
 
-                        <div class="small text-white-50">Customer</div>
+                        <div class="small text-white-50">
+                            Customer
+                        </div>
+
 
                         {% if profile.verified %}
 
-                            <span class="badge bg-light text-primary">Verified</span>
+                            <span class="badge bg-light text-primary">
+                                Verified
+                            </span>
 
                         {% endif %}
 
@@ -177,47 +347,78 @@
 
             </div>
 
-            
+
+            <!-- =================================================
+                 SIDEBAR NAVIGATION
+                 ================================================= -->
 
             <nav class="nav flex-column">
 
-                <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'customer:dashboard' %}">
 
-                    <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                <!-- Dashboard -->
 
-                </a>
+                <a
+                    class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"
+                    href="{% url 'customer:dashboard' %}">
 
-                <a class="nav-link {% if request.resolver_match.url_name == 'profile-page' %}active{% endif %}" href="{% url 'customer:profile-page' %}">
-
-                    <i class="fas fa-user me-2"></i> Profile
-
-                </a>
-
-                <a class="nav-link {% if request.resolver_match.url_name == 'inquiries-page' %}active{% endif %}" href="{% url 'customer:inquiries-page' %}">
-
-                    <i class="fas fa-envelope me-2"></i> Inquiries
+                    <i class="fas fa-tachometer-alt me-2"></i>
+                    Dashboard
 
                 </a>
 
-                <a class="nav-link {% if request.resolver_match.url_name == 'saved-properties-page' %}active{% endif %}" href="{% url 'customer:saved-properties-page' %}">
 
-                    <i class="fas fa-heart me-2"></i> Saved Properties
+                <!-- Profile -->
+
+                <a
+                    class="nav-link {% if request.resolver_match.url_name == 'profile-page' %}active{% endif %}"
+                    href="{% url 'customer:profile-page' %}">
+
+                    <i class="fas fa-user me-2"></i>
+                    Profile
+
+                </a>
+
+
+                <!-- Inquiries -->
+
+                <a
+                    class="nav-link {% if request.resolver_match.url_name == 'inquiries-page' %}active{% endif %}"
+                    href="{% url 'customer:inquiries-page' %}">
+
+                    <i class="fas fa-envelope me-2"></i>
+                    Inquiries
+
+                </a>
+
+
+                <!-- Saved Properties -->
+
+                <a
+                    class="nav-link {% if request.resolver_match.url_name == 'saved-properties-page' %}active{% endif %}"
+                    href="{% url 'customer:saved-properties-page' %}">
+
+                    <i class="fas fa-heart me-2"></i>
+                    Saved Properties
 
                 </a>
 
             </nav>
 
-            
 
-            <!-- Logout at bottom -->
+            <!-- =================================================
+                 LOGOUT
+                 ================================================= -->
 
             <div class="mt-auto">
 
                 <hr class="border-white-50">
 
-                <a class="nav-link" href="{% url 'auth:logout' %}">
+                <a
+                    class="nav-link"
+                    href="{% url 'auth:logout' %}">
 
-                    <i class="fas fa-sign-out-alt me-2"></i> Logout
+                    <i class="fas fa-sign-out-alt me-2"></i>
+                    Logout
 
                 </a>
 
@@ -225,31 +426,55 @@
 
         </div>
 
-        
 
-        <!-- Main Content -->
+        <!-- =====================================================
+             MAIN CONTENT
+             ===================================================== -->
 
         <div class="main-content">
 
             <div class="main-content-wrapper">
 
+
+                <!-- =================================================
+                     HEADER
+                     ================================================= -->
+
                 {% block header %}
 
-                <div class="page-header-white mb-4">
+                    <div class="page-header-white mb-4">
 
-                    <div>
+                        <div>
 
-                        <h1 class="page-title">{% block page_title %}Customer Dashboard{% endblock %}</h1>
+                            <h1 class="page-title">
 
-                        <p class="welcome-message">Welcome back, {{ user.first_name|default:user.username }}! Here's what's happening with your property search today.</p>
+                                {% block page_title %}
+                                    Customer Dashboard
+                                {% endblock %}
+
+                            </h1>
+
+
+                            <p class="welcome-message">
+
+                                Welcome back,
+                                {{ user.first_name|default:user.username }}!
+
+                                Here's what's happening with your
+                                property search today.
+
+                            </p>
+
+                        </div>
 
                     </div>
 
-                </div>
-
                 {% endblock %}
 
-                
+
+                <!-- =================================================
+                     PAGE CONTENT
+                     ================================================= -->
 
                 {% block content %}{% endblock %}
 
@@ -260,36 +485,107 @@
     </div>
 
 
+    <!-- =========================================================
+         BOOTSTRAP JAVASCRIPT
+         ========================================================= -->
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
+
+    <!-- =========================================================
+         CUSTOMER SIDEBAR JAVASCRIPT
+         ========================================================= -->
+
     <script>
 
+        /*
+         * Toggle Sidebar
+         *
+         * Closed:
+         *     Sidebar hidden
+         *     Hamburger visible
+         *
+         * Open:
+         *     Sidebar visible
+         *     Hamburger hidden
+         */
         function toggleSidebar() {
 
             const sidebar = document.getElementById('sidebar');
+            const toggle = document.querySelector('.mobile-menu-toggle');
+
+            if (!sidebar || !toggle) {
+                return;
+            }
+
 
             sidebar.classList.toggle('show');
 
+
+            /*
+             * Hide hamburger when sidebar is open.
+             */
+            if (sidebar.classList.contains('show')) {
+
+                toggle.classList.add('hide');
+
+            }
+
+            /*
+             * Show hamburger when sidebar is closed.
+             */
+            else {
+
+                toggle.classList.remove('hide');
+
+            }
+
         }
 
-        
 
-        // Close sidebar when clicking outside on mobile
+        /*
+         * =========================================================
+         * CLOSE SIDEBAR WHEN CLICKING OUTSIDE
+         * =========================================================
+         */
 
-        document.addEventListener('click', function(event) {
+        document.addEventListener('click', function (event) {
 
             const sidebar = document.getElementById('sidebar');
-
             const toggle = document.querySelector('.mobile-menu-toggle');
 
-            
 
+            if (!sidebar || !toggle) {
+                return;
+            }
+
+
+            /*
+             * Only apply this behavior on mobile.
+             */
             if (window.innerWidth <= 768) {
 
-                if (!sidebar.contains(event.target) && !toggle.contains(event.target)) {
 
+                /*
+                 * If sidebar is open and the user clicks outside
+                 * both the sidebar and hamburger button...
+                 */
+                if (
+                    sidebar.classList.contains('show') &&
+                    !sidebar.contains(event.target) &&
+                    !toggle.contains(event.target)
+                ) {
+
+                    /*
+                     * Close sidebar.
+                     */
                     sidebar.classList.remove('show');
+
+
+                    /*
+                     * Show hamburger again.
+                     */
+                    toggle.classList.remove('hide');
 
                 }
 
@@ -297,17 +593,35 @@
 
         });
 
-        
 
-        // Handle window resize
+        /*
+         * =========================================================
+         * HANDLE WINDOW RESIZE
+         * =========================================================
+         */
 
-        window.addEventListener('resize', function() {
+        window.addEventListener('resize', function () {
 
             const sidebar = document.getElementById('sidebar');
+            const toggle = document.querySelector('.mobile-menu-toggle');
 
+
+            if (!sidebar || !toggle) {
+                return;
+            }
+
+
+            /*
+             * When moving to desktop:
+             *
+             * - Close sidebar
+             * - Reset hamburger state
+             */
             if (window.innerWidth > 768) {
 
                 sidebar.classList.remove('show');
+
+                toggle.classList.remove('hide');
 
             }
 
@@ -315,9 +629,10 @@
 
     </script>
 
+
     {% block extra_js %}{% endblock %}
+
 
 </body>
 
 </html>
-
