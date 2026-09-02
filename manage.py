@@ -7,6 +7,9 @@ import sys
 def main():
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'HeyDayRealty.settings')
+    # Fix for Storj: boto3 >= 1.36 uses streaming checksums that Storj doesn't support
+    os.environ.setdefault('AWS_REQUEST_CHECKSUM_CALCULATION', 'when_required')
+    os.environ.setdefault('AWS_RESPONSE_CHECKSUM_VALIDATION', 'when_required')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

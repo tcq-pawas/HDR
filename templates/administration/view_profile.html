@@ -884,7 +884,9 @@
                 <!-- Edit -->
                 <div class="align-self-start">
 
-                    <a href="{% url 'admin_dash:system-settings-page' %}"
+                    <a href="#"
+                       data-bs-toggle="modal"
+                       data-bs-target="#editProfileModal"
                        class="btn btn-edit-profile">
 
                         <i class="fas fa-pencil-alt"></i>
@@ -1203,6 +1205,25 @@ function previewAvatar(input) {
 
         document.getElementById('modalAvatarInput').files =
             input.files;
+            
+        // Auto-submit when using the quick dropdown
+        const formData = new FormData();
+        formData.append('profile_picture', input.files[0]);
+        
+        fetch("{% url 'admin_dash:update_profile' %}", {
+            method: 'POST',
+            headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+            body: formData
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                // Silently succeed, as the preview is already updated
+            } else {
+                alert('Error updating profile picture: ' + (data.message || 'Unknown error'));
+            }
+        })
+        .catch(() => alert('An error occurred while uploading.'));
     }
 }
 

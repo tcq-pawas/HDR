@@ -14,3 +14,5 @@ django-cors-headers
 django-import-export
 openpyxl
 cashfree_pg
+django-storages
+boto3

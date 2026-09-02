@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'Apps.sell',
     'Apps.Subscriptions',
     'Apps.Organization',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -297,3 +298,29 @@ CORS_ALLOW_METHODS = [
     'POST',
     'PUT',
 ]
+
+# Storj.io (S3 Compatible) Storage Configuration
+# Make sure to add these to your .env file
+
+# CRITICAL FIX: boto3 >= 1.36 uses streaming trailer checksums by default,
+# which Storj and other S3-compatible gateways don't support.
+# This must be set BEFORE boto3 is imported/used.
+os.environ.setdefault('AWS_REQUEST_CHECKSUM_CALCULATION', 'when_required')
+os.environ.setdefault('AWS_RESPONSE_CHECKSUM_VALIDATION', 'when_required')
+
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_S3_ENDPOINT_URL = os.getenv('AWS_S3_ENDPOINT_URL', 'https://gateway.storjshare.io')
+AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME', 'us-east-1') # Usually ignored by Storj, but required by boto3
+AWS_DEFAULT_ACL = None # Storj usually manages access via grants/policies
+AWS_S3_FILE_OVERWRITE = False
+
+# Role-based Bucket Names
+AWS_AGENT_BUCKET_NAME = os.getenv('AWS_AGENT_BUCKET_NAME', 'heyday-agent')
+AWS_CUSTOMER_BUCKET_NAME = os.getenv('AWS_CUSTOMER_BUCKET_NAME', 'heyday-customer')
+AWS_ADMIN_BUCKET_NAME = os.getenv('AWS_ADMIN_BUCKET_NAME', 'heyday-admin')
+AWS_PROPERTY_BUCKET_NAME = os.getenv('AWS_PROPERTY_BUCKET_NAME', 'heyday-property')
+AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME', 'heyday-general')
+
+# Set default storage to General for everything else not explicitly set
+DEFAULT_FILE_STORAGE = 'HeyDayRealty.storage_backends.GeneralMediaStorage'
