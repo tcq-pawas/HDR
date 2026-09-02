@@ -178,7 +178,7 @@ jobs:
           echo "::group::🔍 Service health check"
 
           # PostgreSQL
-          if docker compose -f "$COMPOSE_FILE exec -T postgres pg_isready -U postgres 2>/dev/null; then
+          if docker compose -f "$COMPOSE_FILE" exec -T postgres pg_isready -U postgres 2>/dev/null; then
             echo "✓ PostgreSQL: Healthy"
           else
             echo "✗ PostgreSQL: Unhealthy"
@@ -186,20 +186,21 @@ jobs:
           fi
 
           # Django/Gunicorn
-          if docker compose -f "$COMPOSE_FILE exec -T web pgrep -f gunicorn 2>/dev/null; then
+          if docker compose -f "$COMPOSE_FILE" exec -T web pgrep -f gunicorn 2>/dev/null; then
             echo "✓ Gunicorn: Running"
           else
             echo "✗ Gunicorn: Not running"
-            docker compose -f "$COMPOSE_FILE logs web --tail=30
+            docker compose -f "$COMPOSE_FILE" logs web --tail=30
           fi
 
           # Nginx
-          if docker compose -f "$COMPOSE_FILE exec -T nginx pgrep -f nginx 2>/dev/null; then
+          if docker compose -f "$COMPOSE_FILE" exec -T nginx pgrep -f nginx 2>/dev/null; then
             echo "✓ Nginx: Running"
           else
             echo "✗ Nginx: Not running"
-            docker compose -f "$COMPOSE_FILE logs nginx --tail=20
+            docker compose -f "$COMPOSE_FILE" logs nginx --tail=20
           fi
+
           echo "::endgroup::"
           echo ""
 
