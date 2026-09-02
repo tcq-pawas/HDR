@@ -207,7 +207,7 @@
 
 .contact-form-description {
     font-family: 'Inter', sans-serif;
-    font-size: 12px;
+    font-size: 15px !important;
     line-height: 1.6;
     opacity: 0.9;
     margin-bottom: 32px;
@@ -354,7 +354,7 @@
 
 .location-description {
     font-family: 'Inter', sans-serif;
-    font-size: 12px;
+    font-size: 14px !important;
     color: var(--text-gray);
     line-height: 1.6;
     margin-bottom: 32px;

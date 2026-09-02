@@ -784,6 +784,7 @@ iframe, embed, object, video {
 
 
         padding: 0.75rem 1rem;
+        font-size: 16px;
 
 
 
@@ -803,22 +804,15 @@ iframe, embed, object, video {
 
 
 
+
     .hero-section {
 
-
-
-        padding: 60px 0;
-
-
+        padding: 0 0;
+        padding-top: 0 !important;
 
         min-height: auto;
 
-
-
     }
-
-
-
 
 
 
@@ -1873,7 +1867,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 1.5rem;
+        font-size: 2rem;
 
 
 
@@ -2549,7 +2543,8 @@ iframe, embed, object, video {
 
 
 
-        padding: 40px 0;
+        padding: 0 0;
+        padding-top: 0 !important;
 
 
 
@@ -6041,15 +6036,15 @@ iframe, embed, object, video {
 
 
 
-    .form-select {
+    .form-select,
+
+
+
+    .hero-section {
 
 
 
         min-height: 44px;
-
-
-
-    }
 
 
 
@@ -7450,6 +7445,7 @@ iframe, embed, object, video {
 
 
         padding: 0.75rem 1rem;
+        font-size: 16px;
 
 
 
@@ -7561,7 +7557,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 12px;
+        font-size: 16px;
 
 
 
@@ -7713,7 +7709,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 12px;
+        font-size: 16px;
 
 
 
@@ -10363,7 +10359,7 @@ footer.footer.site-footer,
         padding: 0 4% !important;
     }
 
-    .footer.site-footer .footer-bottom {
+    .footer.site-footer {
         padding-left: 4% !important;
         padding-right: 4% !important;
     }
@@ -10455,4 +10451,3 @@ footer.footer.site-footer,
         font-size: 0.75rem !important;
     }
 }
-
