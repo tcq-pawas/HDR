@@ -4702,7 +4702,7 @@ footer:not(.site-footer) {
 }
 
 .section-subtitle {
-    font-size: 1.1rem;
+    font-size: 16px;
     color: var(--text-muted);
     max-width: 600px;
     margin: 0 auto 48px;
@@ -4754,7 +4754,7 @@ footer:not(.site-footer) {
 }
 
 .why-invest-card-description {
-    font-size: 16px;
+    font-size: 14px !important;
     color: var(--text-muted);
     line-height: 1.6;
 }
@@ -5718,7 +5718,7 @@ footer.footer.site-footer,
     }
 
     .why-invest-card-description {
-        font-size: 13px;
+        font-size: 14px;
     }
 
     .testimonials-premium-section .testimonial-name {
