@@ -366,6 +366,94 @@ HHectare{% endblock %}
     </div>
 </div>
 
+<!-- Recent Reviews Section -->
+<div class="leads-section mt-5">
+    <div class="leads-header leads-header-flex">
+        <h2>Recent Reviews</h2>
+        <span class="review-stats">
+            <span class="stat-badge">Avg Rating: {{ stats.average_rating }}/5</span>
+            <span class="stat-badge">Total: {{ stats.total_reviews }}</span>
+        </span>
+    </div>
+    <div class="leads-table-container table-responsive">
+        <table class="table table-hover leads-table">
+            <thead>
+                <tr>
+                    <th>Reviewer</th>
+                    <th>Rating</th>
+                    <th>Review</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if recent_reviews %}
+                {% for review in recent_reviews %}
+                <tr>
+                    <td><strong>{{ review.reviewer_name }}</strong></td>
+                    <td>
+                        <div class="star-rating">
+                            {% if review.rating == 5 %}
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                            {% elif review.rating == 4 %}
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star"></i>
+                            {% elif review.rating == 3 %}
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star"></i>
+                                <i class="bi bi-star"></i>
+                            {% elif review.rating == 2 %}
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star"></i>
+                                <i class="bi bi-star"></i>
+                                <i class="bi bi-star"></i>
+                            {% elif review.rating == 1 %}
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star"></i>
+                                <i class="bi bi-star"></i>
+                                <i class="bi bi-star"></i>
+                                <i class="bi bi-star"></i>
+                            {% endif %}
+                            <span>{{ review.rating }}/5</span>
+                        </div>
+                    </td>
+                    <td>{{ review.review_text|truncatewords:15 }}</td>
+                    <td>{{ review.created_at|date:"M d, Y" }}</td>
+                    <td>
+                        <div class="leads-actions">
+                            <button class="btn btn-sm btn-outline-primary" style="border-radius: 6px; padding: 3px 12px; font-weight: 500;" disabled>View</button>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr>
+                    <td colspan="5">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <i class="bi bi-star"></i>
+                            </div>
+                            <h3>No Reviews Yet</h3>
+                            <p>Customer reviews will appear here</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
 
 
 {% endblock %}
@@ -375,6 +463,47 @@ HHectare{% endblock %}
 {% block extra_css %}
 
 <link rel="stylesheet" href="{% static 'css/agent/dashboard.css' %}">
+
+<style>
+    .review-stats {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .stat-badge {
+        background: rgba(15, 106, 60, 0.1);
+        color: #0F6A3C;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .stat-badge.pending {
+        background: rgba(244, 180, 0, 0.1);
+        color: #F4B400;
+    }
+
+    .star-rating {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        color: #F4B400;
+        font-size: 14px;
+    }
+
+    .star-rating span {
+        color: #666;
+        font-size: 12px;
+        margin-left: 4px;
+    }
+
+    .status-badge.status-rejected {
+        background: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+    }
+</style>
 
 {% endblock %}
 

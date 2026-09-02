@@ -22,10 +22,11 @@ urlpatterns = [
     path('agents/', views.agents, name='agents'),
     path('robots.txt', views.robots_txt, name='robots_txt'),
     path('agents/<int:agent_id>/', views.agent_profile, name='agent_profile'),
+    path('agents/<int:agent_id>/submit-review/', views.submit_agent_review, name='submit_agent_review'),
     path('career/', views.career, name='career'),
     path('nri/', views.nri, name='nri'),
     path('subscription/', views.subscription_plans, name='subscription_plans'),
-    
+
     # API endpoints
     path('api/', include(router.urls)),
     path('admin/enquiries/', views.website_enquiry_list, name='website_enquiry_list'),

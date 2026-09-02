@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import (
     AgentProfile, Lead, LeadFollowUp, SiteVisit,
     Booking, Installment, Commission, Document, VerificationDocument,
-    Communication, MessageTemplate
+    Communication, MessageTemplate, AgentReview
 )
 
 
@@ -94,4 +94,12 @@ class MessageTemplateAdmin(admin.ModelAdmin):
     list_display = ['name', 'agent', 'template_type', 'purpose', 'is_active', 'created_at']
     list_filter = ['template_type', 'purpose', 'is_active', 'created_at']
     search_fields = ['name', 'agent__username']
+    readonly_fields = ['created_at', 'updated_at']
+
+
+@admin.register(AgentReview)
+class AgentReviewAdmin(admin.ModelAdmin):
+    list_display = ['agent', 'reviewer_name', 'rating', 'created_at']
+    list_filter = ['rating', 'created_at']
+    search_fields = ['agent__username', 'reviewer_name', 'review_text']
     readonly_fields = ['created_at', 'updated_at']

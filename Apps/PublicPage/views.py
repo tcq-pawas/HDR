@@ -416,10 +416,13 @@ def agent_profile(request, agent_id=None):
     listed properties, and reviews.
     """
     from django.shortcuts import get_object_or_404
-    
+    from Apps.Agent.models import AgentReview
+    from django.utils import timezone
+    import datetime
+
     # Get agent profile
     agent = get_object_or_404(AgentProfile, id=agent_id)
-    
+
     # Get agent's listed properties (active and approved)
     agent_properties = Property.objects.filter(
         seller=agent.user,
@@ -428,39 +431,40 @@ def agent_profile(request, agent_id=None):
         show_to_public=True,
         is_admin_list=False
     ).prefetch_related('images').order_by('-created_at')
-    
+
     # Calculate statistics
     active_listings = agent_properties.count()
     properties_sold = agent.user.bookings.count() if hasattr(agent.user, 'bookings') else 0
     years_experience = 1  # Default, could be calculated from created_at
-    rating = 4.8  # Default rating, could be calculated from reviews
+
+    # Get all reviews (no status filtering)
+    reviews = agent.reviews.all().order_by('-created_at')
+
+    # Calculate average rating
+    reviews_list = list(reviews)
+    if reviews_list:
+        avg_rating = sum(review.rating for review in reviews_list) / len(reviews_list)
+        rating = round(avg_rating, 1)
+    else:
+        rating = 0
+
+    # Calculate rating distribution
+    rating_distribution = {5: 0, 4: 0, 3: 0, 2: 0, 1: 0}
+    for review in reviews_list:
+        if review.rating in rating_distribution:
+            rating_distribution[review.rating] += 1
+
+    # Calculate percentages for distribution
+    total_reviews_count = len(reviews_list)
+    rating_percentages = {}
+    for star in [5, 4, 3, 2, 1]:
+        if total_reviews_count > 0:
+            rating_percentages[star] = (rating_distribution[star] / total_reviews_count) * 100
+        else:
+            rating_percentages[star] = 0
+
     response_rate = 95  # Default response rate
-    
-    # Sample reviews data (in production, this would come from a Review model)
-    sample_reviews = [
-        {
-            'name': 'Rajesh Kumar',
-            'avatar': 'https://randomuser.me/api/portraits/men/32.jpg',
-            'rating': 5,
-            'review': 'Excellent service! Very professional and knowledgeable about farmland investments.',
-            'date': '2 weeks ago'
-        },
-        {
-            'name': 'Priya Sharma',
-            'avatar': 'https://randomuser.me/api/portraits/women/44.jpg',
-            'rating': 4,
-            'review': 'Good experience. Helped me find the perfect agricultural land for my needs.',
-            'date': '1 month ago'
-        },
-        {
-            'name': 'Amit Patel',
-            'avatar': 'https://randomuser.me/api/portraits/men/67.jpg',
-            'rating': 5,
-            'review': 'Highly recommended. Very responsive and transparent throughout the process.',
-            'date': '1 month ago'
-        }
-    ]
-    
+
     context = {
         'agent': agent,
         'agent_properties': agent_properties,
@@ -469,10 +473,59 @@ def agent_profile(request, agent_id=None):
         'years_experience': years_experience,
         'rating': rating,
         'response_rate': response_rate,
-        'reviews': sample_reviews,
+        'reviews': reviews,
+        'rating_distribution': rating_distribution,
+        'rating_percentages': rating_percentages,
     }
 
     return render(request, 'public/agent_profile.html', context)
+
+
+def submit_agent_review(request, agent_id):
+    """
+    Handle review submission for an agent
+    """
+    from django.shortcuts import get_object_or_404, redirect
+    from Apps.Agent.models import AgentReview
+    from django.contrib import messages
+
+    agent = get_object_or_404(AgentProfile, id=agent_id)
+
+    if request.method == 'POST':
+        reviewer_name = request.POST.get('reviewer_name')
+        reviewer_email = request.POST.get('reviewer_email', '')
+        reviewer_phone = request.POST.get('reviewer_phone', '')
+        rating = request.POST.get('rating')
+        review_text = request.POST.get('review_text')
+
+        # Validate required fields
+        if not reviewer_name or not rating or not review_text:
+            messages.error(request, 'Please fill in all required fields.')
+            return redirect('public:agent_profile', agent_id=agent.id)
+
+        try:
+            rating = int(rating)
+            if rating < 1 or rating > 5:
+                messages.error(request, 'Rating must be between 1 and 5.')
+                return redirect('public:agent_profile', agent_id=agent.id)
+        except ValueError:
+            messages.error(request, 'Invalid rating.')
+            return redirect('public:agent_profile', agent_id=agent.id)
+
+        # Create review
+        AgentReview.objects.create(
+            agent=agent,
+            reviewer_name=reviewer_name,
+            reviewer_email=reviewer_email,
+            reviewer_phone=reviewer_phone,
+            rating=rating,
+            review_text=review_text
+        )
+
+        messages.success(request, 'Thank you for your review!')
+        return redirect('public:agent_profile', agent_id=agent.id)
+
+    return redirect('public:agent_profile', agent_id=agent.id)
 
 
 def robots_txt(request):
