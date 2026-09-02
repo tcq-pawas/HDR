@@ -77,7 +77,7 @@ h6 {
 }
 
 .section-heading {
-    font-size: 1.5rem;
+    font-size: 2rem;
     font-weight: 800;
     line-height: 1.15;
     letter-spacing: -1px;
@@ -382,7 +382,7 @@ select:focus {
     bottom: -4px;
     width: 0;
     height: 2px;
-
+    background: #D4A23A;
     transition: .3s;
 }
 
@@ -2961,7 +2961,7 @@ nav {
 
 .trust-title {
     font-weight: 600;
-    font-size: 14px;
+    font-size: 18px;
     color: var(--forest);
     margin-bottom: 4px;
 }
@@ -4059,6 +4059,7 @@ footer:not(.site-footer) {
 .nav-link {
     color: var(--text-dark);
     font-weight: 500;
+    font-size: 16px;
     padding: 8px 16px;
     transition: var(--transition);
 }
@@ -4150,10 +4151,10 @@ footer:not(.site-footer) {
 }
 
 .hero-description {
-    font-size: clamp(11px, 1vw, 14px);
+    font-size: clamp(14px, 1vw, 20px);
     color: #333333;
     line-height: 1.4;
-    margin-bottom: clamp(10px, 1.5vw, 16px);
+    margin-bottom: clamp(10px, 1.5vw, 30px);
     max-width: 100%;
     text-align: left;
 }
@@ -4163,7 +4164,7 @@ footer:not(.site-footer) {
     flex-direction: row;
     flex-wrap: nowrap;
     gap: clamp(6px, 1.2vw, 16px);
-    margin-bottom: clamp(16px, 2.5vw, 25px);
+    margin-bottom: clamp(16px, 2.5vw, 35px);
     align-items: flex-start;
     justify-content: flex-start;
 }
@@ -4334,7 +4335,7 @@ footer:not(.site-footer) {
 }
 
 .hero-stat-label {
-    font-size: clamp(7px, 0.85vw, 12px);
+    font-size: clamp(12px, 15vw, 15px);
     color: var(--text-muted);
     font-weight: 500;
     line-height: 1.3;
@@ -4428,7 +4429,6 @@ footer:not(.site-footer) {
     .hero-description {
         margin: 0 0 16px 0;
         max-width: 340px;
-        font-size: 12px !important;
         line-height: 1.45;
         color: var(--text-dark);
     }
@@ -4564,7 +4564,6 @@ footer:not(.site-footer) {
 
     .hero-description {
         max-width: 310px;
-        font-size: 12px !important;
     }
 
     .hero-feature-title {
@@ -4696,14 +4695,14 @@ footer:not(.site-footer) {
 
 .section-heading {
     font-family: var(--font-heading);
-    font-size: 1.5rem;
+    font-size: 2rem;
     font-weight: 700;
     color: var(--text-dark);
     margin-bottom: 16px;
 }
 
 .section-subtitle {
-    font-size: 1.1rem;
+    font-size: 16px;
     color: var(--text-muted);
     max-width: 600px;
     margin: 0 auto 48px;
@@ -4755,7 +4754,7 @@ footer:not(.site-footer) {
 }
 
 .why-invest-card-description {
-    font-size: 14px;
+    font-size: 14px !important;
     color: var(--text-muted);
     line-height: 1.6;
 }
@@ -5548,9 +5547,11 @@ footer.footer.site-footer,
 }
 
 .footer-bottom {
-    max-width: var(--max-width);
+    margin: 32px 0 0 !important;
+    padding: 16px 5% !important;
+    max-width: none !important;
+    width: 100% !important;
     margin: 48px auto 0;
-    padding: 24px 24px 0;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     justify-content: space-between;
@@ -5648,7 +5649,7 @@ footer.footer.site-footer,
     }
 
     .trust-title {
-        font-size: 16px;
+        font-size: 18px;
         line-height: 1.4;
         margin-bottom: 8px;
         word-wrap: break-word;
@@ -5656,7 +5657,7 @@ footer.footer.site-footer,
     }
 
     .trust-description {
-        font-size: 14px;
+        font-size: 15px;
         line-height: 1.5;
         word-wrap: break-word;
         overflow-wrap: break-word;
@@ -5700,12 +5701,12 @@ footer.footer.site-footer,
     }
 
     .trust-title {
-        font-size: 15px;
+        font-size: 18px;
         margin-bottom: 6px;
     }
 
     .trust-description {
-        font-size: 13px;
+        font-size: 15px;
     }
 
     .why-invest-card {
@@ -5717,7 +5718,7 @@ footer.footer.site-footer,
     }
 
     .why-invest-card-description {
-        font-size: 13px;
+        font-size: 14px;
     }
 
     .testimonials-premium-section .testimonial-name {

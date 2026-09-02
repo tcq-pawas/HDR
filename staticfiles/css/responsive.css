@@ -784,6 +784,7 @@ iframe, embed, object, video {
 
 
         padding: 0.75rem 1rem;
+        font-size: 16px;
 
 
 
@@ -1866,7 +1867,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 1.5rem;
+        font-size: 2rem;
 
 
 
@@ -7444,6 +7445,7 @@ iframe, embed, object, video {
 
 
         padding: 0.75rem 1rem;
+        font-size: 16px;
 
 
 
@@ -7555,7 +7557,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 12px;
+        font-size: 16px;
 
 
 
@@ -7707,7 +7709,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 12px;
+        font-size: 16px;
 
 
 
@@ -10357,7 +10359,7 @@ footer.footer.site-footer,
         padding: 0 4% !important;
     }
 
-    .footer.site-footer .footer-bottom {
+    .footer.site-footer {
         padding-left: 4% !important;
         padding-right: 4% !important;
     }

@@ -672,7 +672,7 @@
 <section class="sell-hero">
     <div class="sell-hero-content">
         <h1 class="sell-hero-title" style="font-size: 2.2rem;">Sell Your Farmland</h1>
-        <p class="sell-hero-subtitle" style="font-size: 1.1rem !important;">Connect with serious buyers and investors looking for verified agricultural land opportunities.</p>
+        <p class="sell-hero-subtitle" style="font-size: 20px !important;">Connect with serious buyers and investors looking for verified agricultural land opportunities.</p>
         <div class="sell-hero-divider">
             <span>🌿</span>
             <span>✦</span>
@@ -687,8 +687,8 @@
 <!-- ========== GET STARTED SECTION ========== -->
 <section class="sell-section">
     <div class="container" style="max-width: 2500px; margin: auto;">
-        <h2 class="sell-section-heading" style="font-size: 1.3rem !important;">LET'S GET YOU STARTED</h2>
-        <p class="sell-section-subtitle" style="font-size: 12px !important;">Choose the best way to get started with listing your farmland.</p>
+        <h2 class="sell-section-heading">LET'S GET YOU STARTED</h2>
+        <p class="sell-section-subtitle" style="font-size: 18px !important;">Choose the best way to get started with listing your farmland.</p>
         
         <div class="sell-card get-started-card">
             <div class="get-started-icon">
@@ -697,7 +697,7 @@
             <div class="get-started-content">
                 {% if user.is_authenticated %}
                     <h3 style="font-size: 1.3rem !important;">Welcome back, {{ user.first_name|default:user.username }}!</h3>
-                    <p style="font-size: 12px !important;">Access your agent dashboard to manage your property listings.</p>
+                    <p style="font-size: 15px !important;">Access your agent dashboard to manage your property listings.</p>
                     <a href="{% url 'agent:dashboard' %}" class="btn-sell-primary" style="font-size: 12px !important;">
                         <i class="bi bi-speedometer2"></i> Go To Dashboard
                     </a>
@@ -711,7 +711,7 @@
             </div>
         </div>
         
-        <div class="security-text" style="font-size: 12px !important;">
+        <div class="security-text" style="font-size: 15px !important;">
             <i class="bi bi-shield-check"></i>
             Your information is secure and protected
         </div>
@@ -721,7 +721,7 @@
 <!-- ========== WHATSAPP SUPPORT SECTION ========== -->
 <section class="sell-section">
     <div class="container" style="max-width: 1750px; margin: auto;">
-        <h2 class="sell-section-heading support-section-title" style="font-size: 1.3rem !important;">Need Help Listing Your Farmland?</h2>
+        <h2 class="sell-section-heading support-section-title" ">Need Help Listing Your Farmland?</h2>
         <div class="support-underline"></div>
         
         <div class="sell-card support-card">
@@ -729,10 +729,10 @@
                 <i class="bi bi-whatsapp"></i>
             </div>
             <div class="support-content">
-                <h3 style="font-size: 1.3rem !important;">Quick Chat Support</h3>
-                <p style="font-size: 12px !important;">Have questions about selling your property? Our experts are available on WhatsApp to help you 24/7.</p>
-                <p style="font-size: 12px !important;">We'll guide you through every step of the process and help you get the best deal for your land.</p>
-                <a href="https://wa.me/919506688688" target="_blank" class="btn-whatsapp" style="font-size: 12px !important;">
+                <h3 style="font-size: 1.5rem !important;">Quick Chat Support</h3>
+                <p style="font-size: 16px !important;">Have questions about selling your property? Our experts are available on WhatsApp to help you 24/7.</p>
+                <p style="font-size: 16px !important;">We'll guide you through every step of the process and help you get the best deal for your land.</p>
+                <a href="https://wa.me/919506688688" target="_blank" class="btn-whatsapp" style="font-size: 14px !important;">
                     <i class="bi bi-whatsapp"></i> Chat With Us on WhatsApp
                 </a>
             </div>
@@ -748,7 +748,7 @@
 <!-- ========== FAQ SECTION ========== -->
 <section class="sell-section">
     <div class="container" style="max-width: 2500px; margin: auto;">
-        <h2 class="sell-section-heading" style="font-size: 1.3rem !important;">FREQUENTLY ASKED QUESTIONS</h2>
+        <h2 class="sell-section-heading">FREQUENTLY ASKED QUESTIONS</h2>
         
         <div class="faq-container">
             <!-- FAQ 1 -->
@@ -761,7 +761,7 @@
                     <i class="bi bi-chevron-down faq-chevron"></i>
                 </button>
                 <div id="faq1" class="collapse show" data-bs-parent=".faq-container">
-                    <div class="faq-body" style="font-size: 12px !important;">
+                    <div class="faq-body" style="font-size: 14px !important;">
                         Simply log in to your account and click "Add Property" from your agent dashboard. Fill in the property details, upload images, and submit. Your listing will be reviewed by our admin team and published once approved.
                     </div>
                 </div>
@@ -777,7 +777,7 @@
                     <i class="bi bi-chevron-down faq-chevron"></i>
                 </button>
                 <div id="faq2" class="collapse" data-bs-parent=".faq-container">
-                    <div class="faq-body" style="font-size: 12px !important;">
+                    <div class="faq-body" style="font-size: 14px !important;">
                         You'll need the property deed, proof of ownership, recent survey map, and any relevant documents. Our team will guide you through the exact requirements when you're ready to finalize the sale.
                     </div>
                 </div>
@@ -793,7 +793,7 @@
                     <i class="bi bi-chevron-down faq-chevron"></i>
                 </button>
                 <div id="faq3" class="collapse" data-bs-parent=".faq-container">
-                    <div class="faq-body" style="font-size: 12px !important;">
+                    <div class="faq-body" style="font-size: 14px !important;">
                         The time varies depending on property location, price, and market conditions. On average, most properties sell within 2-6 months. Our expert marketing strategies help speed up the process.
                     </div>
                 </div>
@@ -809,7 +809,7 @@
                     <i class="bi bi-chevron-down faq-chevron"></i>
                 </button>
                 <div id="faq4" class="collapse" data-bs-parent=".faq-container">
-                    <div class="faq-body" style="font-size: 12px !important;">
+                    <div class="faq-body" style="font-size: 14px !important;">
                         We offer competitive commission rates that vary based on property type and location. Contact our team directly for a customized quote. We aim to provide the best value for your sale.
                     </div>
                 </div>
@@ -825,7 +825,7 @@
                     <i class="bi bi-chevron-down faq-chevron"></i>
                 </button>
                 <div id="faq5" class="collapse" data-bs-parent=".faq-container">
-                    <div class="faq-body" style="font-size: 12px !important;">
+                    <div class="faq-body" style="font-size: 14px !important;">
                         Yes! You can edit your property details, upload new images, update pricing, and modify any information from your agent dashboard anytime. Changes will be reflected immediately on the platform.
                     </div>
                 </div>
@@ -841,7 +841,7 @@
                     <i class="bi bi-chevron-down faq-chevron"></i>
                 </button>
                 <div id="faq6" class="collapse" data-bs-parent=".faq-container">
-                    <div class="faq-body" style="font-size: 12px !important;">
+                    <div class="faq-body" style="font-size: 14px !important;">
                         All buyer inquiries will be sent to your agent dashboard. You'll also receive email notifications, and interested buyers may contact you directly via the information you provide in your listing.
                     </div>
                 </div>
@@ -859,8 +859,8 @@
                     <i class="fa fa-sprout"></i>
                 </div>
                 <div class="cta-text">
-                    <h2 style="font-size: 1.3rem !important;">Ready to sell your farmland?</h2>
-                    <p style="font-size: 12px !important;">List your property today and connect with genuine buyers and investors.</p>
+                    <h2 >Ready to sell your farmland?</h2>
+                    <p style="font-size: 14px !important;">List your property today and connect with genuine buyers and investors.</p>
                 </div>
             </div>
             <div class="cta-right">
