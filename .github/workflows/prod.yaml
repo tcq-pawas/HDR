@@ -3,7 +3,7 @@ name: Deploy to Production
 on:
   push:
     branches:
-      - Production
+      - main
   workflow_dispatch:
 
 jobs:
@@ -103,8 +103,9 @@ jobs:
           set -e
 
           PROJECT_DIR="/home/ubuntu/HDR"
-          BRANCH="Production"
-          DEPLOYMENT_URL="https://x-realtors.in"
+          BRANCH="main"
+          DEPLOYMENT_URL="https://hhectare.com/"
+          COMPOSE_FILE="docker-compose.prod.yml"
 
           cd "$PROJECT_DIR"
 
@@ -130,7 +131,10 @@ jobs:
 
           # Cleanup
           echo "::group::🧹 Cleaning up resources"
-          if docker compose down --remove-orphans 2>/dev/null && \
+          if docker compose \
+             -f "$COMPOSE_FILE" \
+             down \
+             --remove-orphans 2>/dev/null && \
              docker system prune -af --volumes 2>/dev/null && \
              sudo rm -rf /tmp/* /var/tmp/* 2>/dev/null; then
             echo "✓ Cleanup completed"
@@ -142,23 +146,16 @@ jobs:
 
           # Build
           echo "::group::🔨 Building Docker image"
-          if DOCKER_BUILDKIT=1 docker compose build --progress=auto 2>&1 | tee /tmp/build.log; then
-            echo "✓ Docker image built successfully"
+          if docker compose \
+             -f "$COMPOSE_FILE" \
+             up -d \
+             --build \
+             --force-recreate \
+             --remove-orphans 2>&1 | tee /tmp/deploy.log; then
+            echo "✓ Production docker image built successfully"
           else
-            echo "✗ Docker build failed"
+            echo "✗ Productiondeployment failed"
             cat /tmp/build.log
-            exit 1
-          fi
-          echo "::endgroup::"
-          echo ""
-
-          # Start containers
-          echo "::group::▶️  Starting containers"
-          if docker compose up -d --force-recreate 2>&1 | tee /tmp/start.log; then
-            echo "✓ Containers started"
-          else
-            echo "✗ Failed to start containers"
-            cat /tmp/start.log
             exit 1
           fi
           echo "::endgroup::"
@@ -173,35 +170,35 @@ jobs:
 
           # Check container status
           echo "::group::📊 Container status"
-          docker compose ps --format "table {{.Name}}\t{{.Status}}\t{{.Ports}}"
+          docker compose -f "$COMPOSE_FILE" ps --format "table {{.Name}}\t{{.Status}}\t{{.Ports}}"
           echo "::endgroup::"
           echo ""
 
           # Check services
           echo "::group::🔍 Service health check"
-          
+
           # PostgreSQL
-          if docker compose exec -T postgres pg_isready -U postgres 2>/dev/null; then
+          if docker compose -f "$COMPOSE_FILE exec -T postgres pg_isready -U postgres 2>/dev/null; then
             echo "✓ PostgreSQL: Healthy"
           else
             echo "✗ PostgreSQL: Unhealthy"
-            docker compose logs postgres --tail=20
+            docker compose -f "$COMPOSE_FILE" logs postgres --tail=20
           fi
 
           # Django/Gunicorn
-          if docker compose exec -T web pgrep -f gunicorn 2>/dev/null; then
+          if docker compose -f "$COMPOSE_FILE exec -T web pgrep -f gunicorn 2>/dev/null; then
             echo "✓ Gunicorn: Running"
           else
             echo "✗ Gunicorn: Not running"
-            docker compose logs web --tail=30
+            docker compose -f "$COMPOSE_FILE logs web --tail=30
           fi
 
           # Nginx
-          if docker compose exec -T nginx pgrep -f nginx 2>/dev/null; then
+          if docker compose -f "$COMPOSE_FILE exec -T nginx pgrep -f nginx 2>/dev/null; then
             echo "✓ Nginx: Running"
           else
             echo "✗ Nginx: Not running"
-            docker compose logs nginx --tail=20
+            docker compose -f "$COMPOSE_FILE logs nginx --tail=20
           fi
           echo "::endgroup::"
           echo ""
