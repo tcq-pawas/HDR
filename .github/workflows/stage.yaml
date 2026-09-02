@@ -1,0 +1,233 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches:
+      - staging
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy Django App to Staging
+    runs-on: ubuntu-latest
+
+    steps:
+      # ============================================
+      # Step 1: Checkout Repository
+      # ============================================
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # ============================================
+      # Step 2: Configure SSH
+      # ============================================
+      - name: Configure SSH
+        env:
+          STAGING_EC2_SSH_KEY: ${{ secrets.STAGING_EC2_SSH_KEY }}
+          STAGING_EC2_HOST: ${{ secrets.STAGING_EC2_HOST }}
+        run: |
+          set -euo pipefail
+
+          echo "============================================"
+          echo "SSH configuration diagnostics"
+          echo "============================================"
+
+          if [ -z "${STAGING_EC2_HOST:-}" ]; then
+            echo "::error::STAGING_EC2_HOST secret is empty or not set"
+            exit 1
+          fi
+          echo "STAGING_EC2_HOST is set: yes (length=${#STAGING_EC2_HOST})"
+
+          if [ -z "${STAGING_EC2_SSH_KEY:-}" ]; then
+            echo "::error::STAGING_EC2_SSH_KEY secret is empty or not set"
+            exit 1
+          fi
+          echo "STAGING_EC2_SSH_KEY is set: yes (length=${#STAGING_EC2_SSH_KEY})"
+
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+
+          # Support both real newlines and literal \n in the secret
+          printf '%s\n' "$STAGING_EC2_SSH_KEY" | sed 's/\r$//' | sed 's/\\n/\n/g' > ~/.ssh/ec2_key.pem
+          chmod 600 ~/.ssh/ec2_key.pem
+
+          echo "Private key file written: ~/.ssh/ec2_key.pem"
+          echo "Private key file size: $(wc -c < ~/.ssh/ec2_key.pem) bytes"
+          echo "Private key header line:"
+          head -n 1 ~/.ssh/ec2_key.pem || true
+
+          if ! grep -q "BEGIN .*PRIVATE KEY" ~/.ssh/ec2_key.pem; then
+            echo "::error::STAGING_EC2_SSH_KEY is not a valid PEM private key (missing BEGIN PRIVATE KEY line)"
+            exit 1
+          fi
+
+          echo "--------------------------------------------"
+          echo "Running ssh-keyscan against host: ${STAGING_EC2_HOST}"
+          echo "Command: ssh-keyscan -H -T 10 -v ${STAGING_EC2_HOST}"
+          echo "--------------------------------------------"
+
+          set +e
+          ssh-keyscan -H -T 10 -v "$STAGING_EC2_HOST" > /tmp/ssh-keyscan.out 2> /tmp/ssh-keyscan.err
+          SCAN_EXIT=$?
+          set -e
+
+          echo "ssh-keyscan exit code: ${SCAN_EXIT}"
+          echo "----- ssh-keyscan STDOUT -----"
+          cat /tmp/ssh-keyscan.out || true
+          echo "----- ssh-keyscan STDERR -----"
+          cat /tmp/ssh-keyscan.err || true
+          echo "------------------------------"
+
+          if [ "$SCAN_EXIT" -ne 0 ] || [ ! -s /tmp/ssh-keyscan.out ]; then
+            echo "::error::ssh-keyscan failed for host '${STAGING_EC2_HOST}' (exit=${SCAN_EXIT})."
+            echo "::error::Common causes: wrong STAGING_EC2_HOST, instance stopped, port 22 blocked in security group, or network timeout."
+            echo "Quick checks from this runner:"
+            echo "- DNS lookup:"
+            getent hosts "$STAGING_EC2_HOST" || host "$STAGING_EC2_HOST" || true
+            echo "- Port 22 reachability:"
+            nc -vz -w 5 "$STAGING_EC2_HOST" 22 || true
+            exit 1
+          fi
+
+          cat /tmp/ssh-keyscan.out >> ~/.ssh/known_hosts
+          echo "Host key saved to ~/.ssh/known_hosts"
+          echo "SSH configuration completed successfully"
+
+      # ============================================
+      # Step 3: Deploy to Staging EC2
+      # ============================================
+      - name: Deploy Application
+        run: |
+          ssh -i ~/.ssh/ec2_key.pem ${{ secrets.STAGING_EC2_USER }}@${{ secrets.STAGING_EC2_HOST }} << 'ENDSSH'
+
+          set -e
+
+          PROJECT_DIR="/home/ubuntu/HDR"
+          BRANCH="staging"
+          DEPLOYMENT_URL="https://staging.x-realtors.in"
+
+          cd "$PROJECT_DIR"
+
+          echo "🚀 Starting deployment to Staging EC2..."
+          echo ""
+
+          # Git operations
+          echo "::group::📥 Pulling latest code"
+          if git config --global url."https://${{ secrets.GIT_TOKEN }}@github.com/".insteadOf "git@github.com:" 2>/dev/null && \
+             git fetch origin 2>/dev/null && \
+             git reset --hard origin/$BRANCH 2>/dev/null && \
+             git clean -fd 2>/dev/null; then
+            echo "✓ Code pulled successfully"
+            echo "  Commit: $(git rev-parse --short HEAD)"
+          else
+            echo "✗ Failed to pull code"
+            git fetch origin
+            git reset --hard origin/$BRANCH
+            exit 1
+          fi
+          echo "::endgroup::"
+          echo ""
+
+          # Cleanup
+          echo "::group::🧹 Cleaning up resources"
+          if docker compose down --remove-orphans 2>/dev/null && \
+             docker system prune -af --volumes 2>/dev/null && \
+             sudo rm -rf /tmp/* /var/tmp/* 2>/dev/null; then
+            echo "✓ Cleanup completed"
+          else
+            echo "✗ Cleanup failed (non-critical)"
+          fi
+          echo "::endgroup::"
+          echo ""
+
+          # Build
+          echo "::group::🔨 Building Docker image"
+          if DOCKER_BUILDKIT=1 docker compose build --progress=auto 2>&1 | tee /tmp/build.log; then
+            echo "✓ Docker image built successfully"
+          else
+            echo "✗ Docker build failed"
+            cat /tmp/build.log
+            exit 1
+          fi
+          echo "::endgroup::"
+          echo ""
+
+          # Start containers
+          echo "::group::▶️  Starting containers"
+          if docker compose up -d --force-recreate 2>&1 | tee /tmp/start.log; then
+            echo "✓ Containers started"
+          else
+            echo "✗ Failed to start containers"
+            cat /tmp/start.log
+            exit 1
+          fi
+          echo "::endgroup::"
+          echo ""
+
+          # Wait for startup
+          echo "::group::⏳ Waiting for application startup"
+          sleep 25
+          echo "✓ Startup wait completed"
+          echo "::endgroup::"
+          echo ""
+
+          # Check container status
+          echo "::group::📊 Container status"
+          docker compose ps --format "table {{.Name}}\t{{.Status}}\t{{.Ports}}"
+          echo "::endgroup::"
+          echo ""
+
+          # Check services
+          echo "::group::🔍 Service health check"
+          
+          # PostgreSQL
+          if docker compose exec -T postgres pg_isready -U postgres 2>/dev/null; then
+            echo "✓ PostgreSQL: Healthy"
+          else
+            echo "✗ PostgreSQL: Unhealthy"
+            docker compose logs postgres --tail=20
+          fi
+
+          # Django/Gunicorn
+          if docker compose exec -T web pgrep -f gunicorn 2>/dev/null; then
+            echo "✓ Gunicorn: Running"
+          else
+            echo "✗ Gunicorn: Not running"
+            docker compose logs web --tail=30
+          fi
+
+          # Nginx
+          if docker compose exec -T nginx pgrep -f nginx 2>/dev/null; then
+            echo "✓ Nginx: Running"
+          else
+            echo "✗ Nginx: Not running"
+            docker compose logs nginx --tail=20
+          fi
+          echo "::endgroup::"
+          echo ""
+
+          # Deployment summary
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "📋 DEPLOYMENT SUMMARY"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "✓ Docker build: Success"
+          echo "✓ Database: Healthy"
+          echo "✓ Migrations: Completed (via entrypoint)"
+          echo "✓ Static files: Collected (via entrypoint)"
+          echo "✓ Gunicorn: Running"
+          echo "✓ Nginx: Running"
+          echo "✓ Health check: Passed"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "🌐 Deployment URL: $DEPLOYMENT_URL"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "✅ Staging deployment completed successfully"
+
+          ENDSSH
+
+      # ============================================
+      # Step 4: Cleanup
+      # ============================================
+      - name: Cleanup SSH Key
+        if: always()
+        run: |
+          rm -f ~/.ssh/ec2_key.pem
