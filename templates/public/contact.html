@@ -117,6 +117,280 @@
             font-size: 0.9rem;
         }
     }
+
+    /* ---- Office Info Panel (replaces map) ---- */
+    .office-info-panel {
+        background: #ffffff;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    /* Stats Row */
+    .office-stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        padding: 32px 28px;
+        gap: 0;
+    }
+
+    .office-stat-item {
+        text-align: center;
+        padding: 0 16px;
+        position: relative;
+    }
+
+    .office-stat-item:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 8px;
+        bottom: 8px;
+        width: 1px;
+        background: rgba(0, 0, 0, 0.08);
+    }
+
+    .office-stat-icon {
+        width: 56px;
+        height: 56px;
+        background: #F3F5F0;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 14px;
+        font-size: 24px;
+        color: #0F6A3C;
+    }
+
+    .office-stat-number {
+        font-family: 'Playfair Display', serif;
+        font-size: 28px;
+        font-weight: 700;
+        color: #0F6A3C;
+        margin-bottom: 8px;
+    }
+
+    .office-stat-label {
+        font-size: 13px;
+        color: #666;
+        line-height: 1.4;
+    }
+
+    /* Section Titles */
+    .office-section-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #1F1F1F;
+        margin-bottom: 6px;
+        position: relative;
+        display: inline-block;
+        padding-bottom: 10px;
+    }
+
+    .office-section-title::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 40px;
+        height: 3px;
+        background: #0F6A3C;
+        border-radius: 2px;
+    }
+
+    /* Why Visit Section */
+    .office-why-section {
+        padding: 28px;
+        border-top: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .office-why-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0;
+        margin-top: 22px;
+    }
+
+    .office-why-item {
+        padding: 0 16px;
+        position: relative;
+    }
+
+    .office-why-item:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 1px;
+        background: rgba(0, 0, 0, 0.08);
+    }
+
+    .office-why-icon {
+        font-size: 26px;
+        color: #0F6A3C;
+        margin-bottom: 14px;
+    }
+
+    .office-why-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: #1F1F1F;
+        margin-bottom: 8px;
+        line-height: 1.3;
+    }
+
+    .office-why-desc {
+        font-size: 13px;
+        color: #666;
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    /* What to Expect Section */
+    .office-expect-section {
+        background: #F3F3F1;
+        padding: 28px;
+    }
+
+    .office-steps-row {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-top: 24px;
+        gap: 0;
+    }
+
+    .office-step {
+        flex: 1;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        padding: 0 8px;
+    }
+
+    .office-step-number {
+        width: 24px;
+        height: 24px;
+        background: #0F6A3C;
+        color: #fff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .office-step-icon {
+        width: 60px;
+        height: 60px;
+        background: #ffffff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        color: #0F6A3C;
+        margin-bottom: 14px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    }
+
+    .office-step-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: #1F1F1F;
+        margin-bottom: 6px;
+    }
+
+    .office-step-desc {
+        font-size: 12.5px;
+        color: #666;
+        line-height: 1.4;
+        margin: 0;
+    }
+
+    .office-step-connector {
+        flex: 0 0 auto;
+        width: 60px;
+        height: 2px;
+        background-image: repeating-linear-gradient(to right, #0F6A3C 0, #0F6A3C 6px, transparent 6px, transparent 12px);
+        margin-top: 42px;
+    }
+
+    /* Responsive */
+    @media (max-width: 991px) {
+        .office-stats-row,
+        .office-why-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px 0;
+        }
+
+        .office-stat-item:nth-child(2n)::after,
+        .office-why-item:nth-child(2n)::after {
+            display: none;
+        }
+
+        .office-stat-item:nth-child(1)::after,
+        .office-stat-item:nth-child(3)::after,
+        .office-why-item:nth-child(1)::after,
+        .office-why-item:nth-child(3)::after {
+            display: block;
+        }
+
+        .office-steps-row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .office-step {
+            flex-direction: row;
+            text-align: left;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+        }
+
+        .office-step-number {
+            position: absolute;
+            top: -6px;
+            left: 46px;
+            margin: 0;
+        }
+
+        .office-step-icon {
+            margin-bottom: 0;
+            flex-shrink: 0;
+        }
+
+        .office-step-connector {
+            display: none;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .office-stats-row,
+        .office-why-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .office-stat-item::after,
+        .office-why-item::after {
+            display: none !important;
+        }
+
+        .office-stats-row,
+        .office-why-section,
+        .office-expect-section {
+            padding: 20px;
+        }
+    }
 </style>
 {% endblock %}
 
@@ -162,7 +436,7 @@
                     <i class="bi bi-telephone"></i>
                 </div>
                 <h5 class="contact-card-title">Phone</h5>
-                <p class="contact-card-value">+91 9506 688 688</p>
+                <p class="contact-card-value">+91 9161 554 321</p>
                 <a href="javascript:void(0)" class="contact-card-link" data-bs-toggle="modal" data-bs-target="#callModal">Call Now</a>
             </div>
 
@@ -172,7 +446,7 @@
                     <i class="bi bi-envelope"></i>
                 </div>
                 <h5 class="contact-card-title">Email</h5>
-                <p class="contact-card-value">info@hhectare.com</p>
+                <p class="contact-card-value">hhectareofficial@gmail.com</p>
                 <a href="mailto:info@hhectare.com" class="contact-card-link">Send Email</a>
             </div>
 
@@ -379,9 +653,58 @@
             
             <!-- Right Panel -->
             <div class="location-right">
-                <div class="location-map">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3561.3082633412605!2d83.37546060000001!3d26.798311500000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399145b795d2cae9%3A0x98b3202d1e49fd25!2sHHectare%20Realty%20Private%20Limited!5e0!3m2!1sen!2sin!4v1770203420984!5m2!1sen!2sin"
-                            width="100%" height="600px" style="border:0; border-radius: 18px;" allowfullscreen="" loading="lazy"></iframe>
+                <div class="office-info-panel">
+
+                    <!-- Stats Row -->
+                    <div class="office-stats-row">
+                        <div class="office-stat-item">
+                            <div class="office-stat-icon"><i class="bi bi-hand-thumbs-up"></i></div>
+                            <div class="office-stat-number">15+</div>
+                            <div class="office-stat-label">Years of Experience<br>in real estate</div>
+                        </div>
+                        <div class="office-stat-item">
+                            <div class="office-stat-icon"><i class="bi bi-house-door"></i></div>
+                            <div class="office-stat-number">500+</div>
+                            <div class="office-stat-label">Properties Sold<br>across India</div>
+                        </div>
+                        <div class="office-stat-item">
+                            <div class="office-stat-icon"><i class="bi bi-people"></i></div>
+                            <div class="office-stat-number">1000+</div>
+                            <div class="office-stat-label">Happy Clients<br>and growing</div>
+                        </div>
+                        <div class="office-stat-item">
+                            <div class="office-stat-icon"><i class="bi bi-shield-check"></i></div>
+                            <div class="office-stat-number">100%</div>
+                            <div class="office-stat-label">Verified &amp; Transparent<br>deals only</div>
+                        </div>
+                    </div>
+
+                    <!-- Why Visit Section -->
+                    <div class="office-why-section">
+                        <h3 class="office-section-title">Why visit our office?</h3>
+                        <div class="office-why-grid">
+                            <div class="office-why-item">
+                                <div class="office-why-icon"><i class="bi bi-chat-square-text"></i></div>
+                                <h4 class="office-why-title">Personalized Consultation</h4>
+                                <p class="office-why-desc">Get expert advice tailored to your investment goals.</p>
+                            </div>
+                            <div class="office-why-item">
+                                <div class="office-why-icon"><i class="bi bi-file-earmark-check"></i></div>
+                                <h4 class="office-why-title">Verified Documentation</h4>
+                                <p class="office-why-desc">Review property documents with complete transparency.</p>
+                            </div>
+                            <div class="office-why-item">
+                                <div class="office-why-icon"><i class="bi bi-geo-alt"></i></div>
+                                <h4 class="office-why-title">Site Visit Assistance</h4>
+                                <p class="office-why-desc">We help you visit and evaluate the right land.</p>
+                            </div>
+                            <div class="office-why-item">
+                                <div class="office-why-icon"><i class="bi bi-graph-up-arrow"></i></div>
+                                <h4 class="office-why-title">Investment Guidance</h4>
+                                <p class="office-why-desc">Make informed decisions with future growth insights.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             
