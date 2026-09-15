@@ -13,9 +13,6 @@
 }
 
 .profile-header-section {
-    display: flex;
-    align-items: flex-start;
-    gap: 24px;
     margin-bottom: 24px;
     padding-bottom: 24px;
     border-bottom: 1px solid #F1F5F9;
@@ -28,9 +25,6 @@
     background: linear-gradient(135deg, #004526 0%, #006638 100%);
     border: 4px solid #F8FAFC;
     box-shadow: 0 4px 12px rgba(0, 69, 38, 0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
     font-size: 2.5rem;
     font-weight: 700;
     color: white;
@@ -60,16 +54,7 @@
     margin-bottom: 12px;
 }
 
-.profile-badges {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
 .role-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
     padding: 6px 14px;
     border-radius: 20px;
     font-size: 0.8rem;
@@ -77,9 +62,6 @@
 }
 
 .status-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
     padding: 6px 14px;
     border-radius: 20px;
     font-size: 0.8rem;
@@ -96,12 +78,6 @@
     color: #DC2626;
 }
 
-.action-bar {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-
 .action-btn {
     padding: 10px 18px;
     border-radius: 10px;
@@ -111,9 +87,6 @@
     border: 1px solid #E2E8F0;
     background: #FFFFFF;
     color: #0F172A;
-    display: flex;
-    align-items: center;
-    gap: 8px;
 }
 
 .action-btn:hover {
@@ -159,9 +132,6 @@
     padding-bottom: 12px;
     border-bottom: 1px solid #F1F5F9;
     font-size: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
 }
 
 .info-card h5 i {
@@ -169,8 +139,6 @@
 }
 
 .info-row {
-    display: flex;
-    justify-content: space-between;
     padding: 12px 0;
     border-bottom: 1px solid #F8FAFC;
 }
@@ -210,9 +178,6 @@
     width: 48px;
     height: 48px;
     border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     margin: 0 auto 12px;
     font-size: 1.25rem;
 }
@@ -280,9 +245,6 @@
 }
 
 .permission-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
     padding: 8px 16px;
     border-radius: 10px;
     font-size: 0.85rem;
@@ -293,9 +255,6 @@
 }
 
 .back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
     color: #64748B;
     font-weight: 500;
     font-size: 0.9rem;
@@ -342,9 +301,6 @@
         font-size: 0.85rem;
     }
 
-    .profile-badges {
-        justify-content: center;
-    }
 
     /* Action buttons - clean 2x2 grid instead of a tall stack */
     .action-bar {
@@ -355,7 +311,6 @@
 
     .action-btn {
         width: 100%;
-        justify-content: center;
         padding: 12px 8px;
         font-size: 0.78rem;
         text-align: center;
@@ -396,9 +351,7 @@
     }
 
     .info-row {
-        gap: 12px;
         padding: 10px 0;
-        align-items: flex-start;
     }
 
     .info-label {
@@ -414,11 +367,6 @@
         min-width: 0;
     }
 
-    /* Financial Ledger header - stack title and balance cleanly */
-    .ledger-header {
-        flex-wrap: wrap;
-        gap: 10px;
-    }
 
     .ledger-balance {
         width: 100%;

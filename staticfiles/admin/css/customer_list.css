@@ -28,12 +28,6 @@
     margin: 0;
 }
 
-.customers-filter-form {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
 .customers-search {
     width: 190px;
     min-width: 190px;

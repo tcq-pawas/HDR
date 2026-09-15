@@ -11,50 +11,58 @@
 
 {% block content %}
 
-<div class="kyc-dash">
+<div class="card border rounded-3 shadow-sm p-3">
     <!-- Status summary -->
-    <div class="kyc-status-grid" role="tablist" aria-label="Document status filters">
-        <button type="button" class="kyc-status-card active" data-filter="pending" role="tab" aria-selected="true">
-            <span class="status-top"><span class="status-dot"></span> Pending Review</span>
-            <span class="status-count">{{ pending_count }}</span>
-        </button>
-        <button type="button" class="kyc-status-card" data-filter="verified" role="tab" aria-selected="false">
-            <span class="status-top"><span class="status-dot"></span> Verified</span>
-            <span class="status-count">{{ verified_count }}</span>
-        </button>
-        <button type="button" class="kyc-status-card" data-filter="reupload" role="tab" aria-selected="false">
-            <span class="status-top"><span class="status-dot"></span> Re-upload Required</span>
-            <span class="status-count">{{ rejected_count }}</span>
-        </button>
-        <button type="button" class="kyc-status-card" data-filter="submitted" role="tab" aria-selected="false">
-            <span class="status-top"><span class="status-dot"></span> Submitted by Agent</span>
-            <span class="status-count">{{ submitted_count }}</span>
-        </button>
+    <div class="row g-2" role="tablist" aria-label="Document status filters">
+        <div class="col-6 col-lg-3">
+            <button type="button" class="kyc-status-card active w-100 d-flex flex-column" data-filter="pending" role="tab" aria-selected="true">
+                <span class="status-top d-flex align-items-center gap-1"><span class="status-dot"></span> Pending Review</span>
+                <span class="status-count">{{ pending_count }}</span>
+            </button>
+        </div>
+        <div class="col-6 col-lg-3">
+            <button type="button" class="kyc-status-card w-100 d-flex flex-column" data-filter="verified" role="tab" aria-selected="false">
+                <span class="status-top d-flex align-items-center gap-1"><span class="status-dot"></span> Verified</span>
+                <span class="status-count">{{ verified_count }}</span>
+            </button>
+        </div>
+        <div class="col-6 col-lg-3">
+            <button type="button" class="kyc-status-card w-100 d-flex flex-column" data-filter="reupload" role="tab" aria-selected="false">
+                <span class="status-top d-flex align-items-center gap-1"><span class="status-dot"></span> Re-upload Required</span>
+                <span class="status-count">{{ rejected_count }}</span>
+            </button>
+        </div>
+        <div class="col-6 col-lg-3">
+            <button type="button" class="kyc-status-card w-100 d-flex flex-column" data-filter="submitted" role="tab" aria-selected="false">
+                <span class="status-top d-flex align-items-center gap-1"><span class="status-dot"></span> Submitted by Agent</span>
+                <span class="status-count">{{ submitted_count }}</span>
+            </button>
+        </div>
     </div>
 
     <!-- Section header -->
-    <div class="kyc-section-header">
+    <div class="d-flex align-items-start justify-content-between gap-2 pb-3 mb-3 border-bottom">
         <div>
-            <h2>Document Verification</h2>
-            <p>Review and manage documents submitted by agents.</p>
+            <h2 class="fw-bold mb-1">Document Verification</h2>
+            <p class="mb-0 text-muted small">Review and manage documents submitted by agents.</p>
         </div>
-        <a href="#kycDocList" class="header-link" id="kycManageLink">Manage Documents</a>
+        <a href="#kycDocList" class="header-link fw-semibold text-decoration-none" id="kycManageLink">Manage Documents</a>
     </div>
 
     <div id="kycDocList">
         <!-- PENDING -->
         <div class="kyc-pane active" id="pane-pending" data-pane="pending">
             {% if pending_docs %}
-            <div class="kyc-doc-list">
+            <div class="d-flex flex-column gap-2">
                 {% for doc in pending_docs %}
                 {% include "administration/_kyc_doc_card.html" with doc=doc show_review_actions="1" status_class="pending" %}
                 {% endfor %}
             </div>
             {% else %}
-            <div class="kyc-empty pending">
-                <div class="empty-icon"><i class="fas fa-check"></i></div>
-                <h3>No Pending Documents</h3>
-                <p>You're all caught up. There are no documents waiting for review.</p>
+            <div class="kyc-empty pending text-center p-4 border rounded-3 bg-light">
+                <div class="empty-icon rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3"><i class="fas fa-check"></i></div>
+                <h3 class="fw-semibold mb-1">No Pending Documents</h3>
+                <p class="mb-0 text-muted small">You're all caught up. There are no documents waiting for review.</p>
             </div>
             {% endif %}
         </div>
@@ -62,16 +70,16 @@
         <!-- VERIFIED -->
         <div class="kyc-pane" id="pane-verified" data-pane="verified">
             {% if verified_docs %}
-            <div class="kyc-doc-list">
+            <div class="d-flex flex-column gap-2">
                 {% for doc in verified_docs %}
                 {% include "administration/_kyc_doc_card.html" with doc=doc status_class="verified" %}
                 {% endfor %}
             </div>
             {% else %}
-            <div class="kyc-empty verified">
-                <div class="empty-icon"><i class="fas fa-check-circle"></i></div>
-                <h3>No Verified Documents</h3>
-                <p>Verified documents will appear here once approved.</p>
+            <div class="kyc-empty verified text-center p-4 border rounded-3 bg-light">
+                <div class="empty-icon rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3"><i class="fas fa-check-circle"></i></div>
+                <h3 class="fw-semibold mb-1">No Verified Documents</h3>
+                <p class="mb-0 text-muted small">Verified documents will appear here once approved.</p>
             </div>
             {% endif %}
         </div>
@@ -79,16 +87,16 @@
         <!-- RE-UPLOAD -->
         <div class="kyc-pane" id="pane-reupload" data-pane="reupload">
             {% if rejected_docs %}
-            <div class="kyc-doc-list">
+            <div class="d-flex flex-column gap-2">
                 {% for doc in rejected_docs %}
                 {% include "administration/_kyc_doc_card.html" with doc=doc status_class="reupload" show_reason="1" %}
                 {% endfor %}
             </div>
             {% else %}
-            <div class="kyc-empty reupload">
-                <div class="empty-icon"><i class="fas fa-redo"></i></div>
-                <h3>No Re-upload Required</h3>
-                <p>Documents needing a new upload will show up here.</p>
+            <div class="kyc-empty reupload text-center p-4 border rounded-3 bg-light">
+                <div class="empty-icon rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3"><i class="fas fa-redo"></i></div>
+                <h3 class="fw-semibold mb-1">No Re-upload Required</h3>
+                <p class="mb-0 text-muted small">Documents needing a new upload will show up here.</p>
             </div>
             {% endif %}
         </div>
@@ -96,7 +104,7 @@
         <!-- SUBMITTED BY AGENT -->
         <div class="kyc-pane" id="pane-submitted" data-pane="submitted">
             {% if submitted_docs %}
-            <div class="kyc-doc-list">
+            <div class="d-flex flex-column gap-2">
                 {% for doc in submitted_docs %}
                     {% if doc.status == 'verified' %}
                         {% include "administration/_kyc_doc_card.html" with doc=doc status_class="verified" %}
@@ -108,21 +116,21 @@
                 {% endfor %}
             </div>
             {% else %}
-            <div class="kyc-empty submitted">
-                <div class="empty-icon"><i class="fas fa-file-alt"></i></div>
-                <h3>No Documents Submitted</h3>
-                <p>Documents uploaded by agents will appear here.</p>
+            <div class="kyc-empty submitted text-center p-4 border rounded-3 bg-light">
+                <div class="empty-icon rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3"><i class="fas fa-file-alt"></i></div>
+                <h3 class="fw-semibold mb-1">No Documents Submitted</h3>
+                <p class="mb-0 text-muted small">Documents uploaded by agents will appear here.</p>
             </div>
             {% endif %}
 
             {% if pending_profiles %}
-            <div class="kyc-bulk-strip">
-                <h4>Agents awaiting overall KYC decision</h4>
+            <div class="border-top pt-3 mt-3">
+                <h4 class="fw-semibold mb-2">Agents awaiting overall KYC decision</h4>
                 {% for profile in pending_profiles %}
-                <div class="kyc-bulk-row">
+                <div class="d-flex align-items-center justify-content-between gap-2 p-2 border rounded-3 bg-light mb-2 flex-wrap">
                     <div>
-                        <div class="name">{{ profile.user.get_full_name|default:profile.user.username }}</div>
-                        <div class="email">{{ profile.user.email }}</div>
+                        <div class="name fw-semibold">{{ profile.user.get_full_name|default:profile.user.username }}</div>
+                        <div class="email text-muted small">{{ profile.user.email }}</div>
                     </div>
                     <div class="d-flex gap-2 flex-wrap">
                         <form method="post" action="{% url 'admin_dash:approve_kyc' profile.id %}">

@@ -38,12 +38,12 @@ dashboard.{% endblock %}
 <div class="row mb-4">
     <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
         <div class="kpi-card">
-            <div class="kpi-icon" style="background: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);">
+            <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);">
                 <i class="fas fa-building"></i>
             </div>
             <div class="kpi-value">{{ system_stats.total_properties|default:"0"|intcomma }}</div>
             <div class="kpi-label">Total Properties</div>
-            <div class="kpi-trend positive">
+            <div class="kpi-trend positive d-flex align-items-center gap-1">
                 <i class="fas fa-arrow-up"></i>
                 <span>5%</span>
                 <span style="color: var(--text-secondary); font-weight: 400; margin-left: 4px;">vs last month</span>
@@ -52,12 +52,12 @@ dashboard.{% endblock %}
     </div>
     <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
         <div class="kpi-card">
-            <div class="kpi-icon stat-icon-success">
+            <div class="kpi-icon stat-icon-success d-flex align-items-center justify-content-center">
                 <i class="fas fa-home"></i>
             </div>
             <div class="kpi-value">{{ property_analytics.active_properties|default:"0"|intcomma }}</div>
             <div class="kpi-label">Active Listings</div>
-            <div class="kpi-trend positive">
+            <div class="kpi-trend positive d-flex align-items-center gap-1">
                 <i class="fas fa-arrow-up"></i>
                 <span>3%</span>
                 <span style="color: var(--text-secondary); font-weight: 400; margin-left: 4px;">vs last month</span>
@@ -66,12 +66,12 @@ dashboard.{% endblock %}
     </div>
     <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
         <div class="kpi-card">
-            <div class="kpi-icon stat-icon-info">
+            <div class="kpi-icon stat-icon-info d-flex align-items-center justify-content-center">
                 <i class="fas fa-dollar-sign"></i>
             </div>
             <div class="kpi-value">${{ business_metrics.total_investment_amount|default:0|intcomma }}</div>
             <div class="kpi-label">Total Investments</div>
-            <div class="kpi-trend positive">
+            <div class="kpi-trend positive d-flex align-items-center gap-1">
                 <i class="fas fa-arrow-up"></i>
                 <span>{{ growth_metrics.investment_growth|default:0 }}%</span>
                 <span style="color: var(--text-secondary); font-weight: 400; margin-left: 4px;">vs last month</span>
@@ -80,12 +80,12 @@ dashboard.{% endblock %}
     </div>
     <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
         <div class="kpi-card">
-            <div class="kpi-icon stat-icon-warning">
+            <div class="kpi-icon stat-icon-warning d-flex align-items-center justify-content-center">
                 <i class="fas fa-wallet"></i>
             </div>
             <div class="kpi-value">₹{{ subscription_revenue|default:0|intcomma }}</div>
             <div class="kpi-label">Sub Revenue (30d)</div>
-            <div class="kpi-trend positive">
+            <div class="kpi-trend positive d-flex align-items-center gap-1">
                 <i class="fas fa-arrow-up"></i>
                 <span>18%</span>
                 <span style="color: var(--text-secondary); font-weight: 400; margin-left: 4px;">vs last month</span>

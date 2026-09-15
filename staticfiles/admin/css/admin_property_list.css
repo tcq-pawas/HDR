@@ -94,9 +94,6 @@
    ========================================================= */
 
 .properties-sort-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 8px;
     min-width: 0;
     flex: 0 0 auto;
 }
@@ -183,12 +180,6 @@
     border-radius: 8px !important;
 }
 
-.property-placeholder {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 .property-title {
     max-width: 220px;
     margin: 0 !important;
@@ -220,10 +211,6 @@
    ========================================================= */
 
 .property-actions {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 5px;
     white-space: nowrap;
 }
 
@@ -755,10 +742,6 @@ body {
     border-radius: 8px;
     background: #fff;
     color: #495057;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
     font-size: .68rem;
     text-align: left;
     cursor: pointer;

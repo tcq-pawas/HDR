@@ -5,14 +5,6 @@
     overflow-x: hidden;
 }
 
-/* Header */
-.communication-page .communication-page-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-}
-
 .communication-page .communication-page-title {
     font-size: 1.5rem;
     font-weight: 600;
@@ -30,13 +22,6 @@
     border-radius: 16px;
 }
 
-.communication-page .communication-card-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-}
-
 .communication-page .communication-card-title {
     font-size: 1rem;
     font-weight: 600;
@@ -45,13 +30,6 @@
 
 .communication-page .send-message-btn {
     white-space: nowrap;
-}
-
-/* Filters */
-.communication-page .communication-filters {
-    display: flex;
-    align-items: center;
-    gap: 10px;
 }
 
 .communication-page .communication-type-filter {

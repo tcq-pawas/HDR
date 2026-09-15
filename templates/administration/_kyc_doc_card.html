@@ -3,7 +3,7 @@ Reusable KYC document card for admin verification list.
 Expected: doc, status_class (pending|verified|reupload),
 optional: show_review_actions, show_reason
 {% endcomment %}
-<div class="kyc-doc-card">
+<div class="d-flex align-items-center gap-3 p-3 bg-white border rounded-3">
     <button type="button" class="kyc-thumb" onclick="showDocPreviewModal({{ doc.id }})" title="Preview document" aria-label="Preview {{ doc.display_name }}">
         {% if doc.front_file %}
             {% with name=doc.front_file.name|lower %}
@@ -20,36 +20,36 @@ optional: show_review_actions, show_reason
         {% endif %}
     </button>
 
-    <div class="kyc-doc-body">
-        <div class="kyc-doc-title-row">
-            <h3 class="kyc-doc-title">{{ doc.display_name }}</h3>
+    <div class="flex-1 min-w-0">
+        <div class="d-flex align-items-center justify-content-between gap-2 mb-1 flex-wrap">
+            <h3 class="kyc-doc-title mb-0">{{ doc.display_name }}</h3>
             {% if status_class == "verified" %}
-            <span class="kyc-status-pill verified"><i class="fas fa-check-circle"></i> Verified</span>
+            <span class="kyc-status-pill verified d-inline-flex align-items-center gap-1"><i class="fas fa-check-circle"></i> Verified</span>
             {% elif status_class == "reupload" %}
-            <span class="kyc-status-pill reupload"><i class="fas fa-exclamation-circle"></i> {{ doc.get_status_display }}</span>
+            <span class="kyc-status-pill reupload d-inline-flex align-items-center gap-1"><i class="fas fa-exclamation-circle"></i> {{ doc.get_status_display }}</span>
             {% else %}
-            <span class="kyc-status-pill pending"><i class="fas fa-clock"></i> {{ doc.get_status_display }}</span>
+            <span class="kyc-status-pill pending d-inline-flex align-items-center gap-1"><i class="fas fa-clock"></i> {{ doc.get_status_display }}</span>
             {% endif %}
         </div>
 
-        <p class="kyc-agent-line">
+        <p class="kyc-agent-line mb-0">
             <strong>{{ doc.agent.get_full_name|default:doc.agent.username }}</strong>
             · {{ doc.agent.email }}
         </p>
 
-        <div class="kyc-meta-row">
+        <div class="d-flex flex-wrap align-items-center gap-2 small text-muted">
             {% if doc.front_file %}
-            <span class="kyc-side-chip ok"><i class="fas fa-check"></i> Front</span>
+            <span class="kyc-side-chip ok d-inline-flex align-items-center gap-1"><i class="fas fa-check"></i> Front</span>
             {% else %}
-            <span class="kyc-side-chip missing">Front missing</span>
+            <span class="kyc-side-chip missing d-inline-flex align-items-center gap-1">Front missing</span>
             {% endif %}
 
             {% if not doc.has_back_side %}
             <span class="kyc-side-chip na">Back N/A</span>
             {% elif doc.back_file %}
-            <span class="kyc-side-chip ok"><i class="fas fa-check"></i> Back</span>
+            <span class="kyc-side-chip ok d-inline-flex align-items-center gap-1"><i class="fas fa-check"></i> Back</span>
             {% else %}
-            <span class="kyc-side-chip missing">Back missing</span>
+            <span class="kyc-side-chip missing d-inline-flex align-items-center gap-1">Back missing</span>
             {% endif %}
 
             <span>· Submitted {{ doc.submitted_at|date:"d M Y" }}</span>
@@ -59,11 +59,11 @@ optional: show_review_actions, show_reason
         </div>
 
         {% if show_reason and doc.rejection_reason %}
-        <div class="kyc-reason"><strong>Reason:</strong> {{ doc.rejection_reason }}</div>
+        <div class="kyc-reason mt-1"><strong>Reason:</strong> {{ doc.rejection_reason }}</div>
         {% endif %}
     </div>
 
-    <div class="kyc-doc-actions">
+    <div class="d-flex flex-wrap gap-2 justify-content-end flex-shrink-0">
         <button type="button" class="btn btn-outline-primary btn-sm" onclick="showDocPreviewModal({{ doc.id }})">
             <i class="fas fa-eye me-1"></i> View Document
         </button>
