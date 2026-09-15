@@ -3,6 +3,7 @@ from django.utils.text import slugify
 from django.contrib.auth.models import User
 import random
 from django.conf import settings
+from HeyDayRealty.storage_backends import PropertyMediaStorage, get_property_image_path
 
 
 # Deferred import to avoid circular imports at module load time
@@ -348,21 +349,21 @@ class Property(models.Model):
     emi_availability = models.BooleanField(default=False, help_text="EMI Availability")
     
     # ==================== Media Management Fields ====================
-    featured_image = models.ImageField(upload_to='properties/featured/', null=True, blank=True, help_text="Featured Image")
-    property_video = models.FileField(upload_to='properties/videos/', null=True, blank=True, help_text="Property Video")
-    drone_video = models.FileField(upload_to='properties/videos/drone/', null=True, blank=True, help_text="Drone Video")
+    featured_image = models.ImageField(upload_to=get_property_image_path, storage=PropertyMediaStorage(), null=True, blank=True, help_text="Featured Image")
+    property_video = models.FileField(upload_to=get_property_image_path, storage=PropertyMediaStorage(), null=True, blank=True, help_text="Property Video")
+    drone_video = models.FileField(upload_to=get_property_image_path, storage=PropertyMediaStorage(), null=True, blank=True, help_text="Drone Video")
     virtual_tour_360 = models.URLField(null=True, blank=True, help_text="360° Virtual Tour URL")
-    floor_plan = models.ImageField(upload_to='properties/floorplans/', null=True, blank=True, help_text="Floor Plan Image")
+    floor_plan = models.ImageField(upload_to=get_property_image_path, storage=PropertyMediaStorage(), null=True, blank=True, help_text="Floor Plan Image")
     
     # ==================== Document Management Fields ====================
-    registry_copy = models.FileField(upload_to='properties/documents/registry/', null=True, blank=True, help_text="Registry Copy")
-    sale_deed = models.FileField(upload_to='properties/documents/sale_deed/', null=True, blank=True, help_text="Sale Deed")
-    mutation = models.FileField(upload_to='properties/documents/mutation/', null=True, blank=True, help_text="Mutation Document")
-    building_approval = models.FileField(upload_to='properties/documents/approval/', null=True, blank=True, help_text="Building Approval")
-    completion_certificate = models.FileField(upload_to='properties/documents/completion/', null=True, blank=True, help_text="Completion Certificate")
-    noc = models.FileField(upload_to='properties/documents/noc/', null=True, blank=True, help_text="NOC Document")
-    layout_plan = models.FileField(upload_to='properties/documents/layout/', null=True, blank=True, help_text="Layout Plan")
-    property_brochure = models.FileField(upload_to='properties/documents/brochure/', null=True, blank=True, help_text="Property Brochure PDF")
+    registry_copy = models.FileField(upload_to=get_property_image_path, storage=PropertyMediaStorage(), null=True, blank=True, help_text="Registry Copy")
+    sale_deed = models.FileField(upload_to=get_property_image_path, storage=PropertyMediaStorage(), null=True, blank=True, help_text="Sale Deed")
+    mutation = models.FileField(upload_to=get_property_image_path, storage=PropertyMediaStorage(), null=True, blank=True, help_text="Mutation Document")
+    building_approval = models.FileField(upload_to=get_property_image_path, storage=PropertyMediaStorage(), null=True, blank=True, help_text="Building Approval")
+    completion_certificate = models.FileField(upload_to=get_property_image_path, storage=PropertyMediaStorage(), null=True, blank=True, help_text="Completion Certificate")
+    noc = models.FileField(upload_to=get_property_image_path, storage=PropertyMediaStorage(), null=True, blank=True, help_text="NOC Document")
+    layout_plan = models.FileField(upload_to=get_property_image_path, storage=PropertyMediaStorage(), null=True, blank=True, help_text="Layout Plan")
+    property_brochure = models.FileField(upload_to=get_property_image_path, storage=PropertyMediaStorage(), null=True, blank=True, help_text="Property Brochure PDF")
     
     # ==================== Location Management Fields ====================
     state = models.CharField(max_length=100, null=True, blank=True, help_text="State")
@@ -510,7 +511,7 @@ class PropertyImage(models.Model):
         ('Neighborhood', 'Neighborhood / Lifestyle'),
     )
     property = models.ForeignKey(Property, related_name='images', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='properties/')
+    image = models.ImageField(upload_to=get_property_image_path, storage=PropertyMediaStorage())
     category = models.CharField(max_length=20, choices=IMAGE_CATEGORIES, default='General')
 
     def __str__(self):

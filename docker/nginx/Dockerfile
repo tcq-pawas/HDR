@@ -4,17 +4,14 @@ ENV APP_HOST=web
 ENV APP_PORT=8000
 ENV LISTEN_PORT=80
 
+ARG NGINX_CONFIG
+
 COPY ./start.sh /start.sh
-RUN sed -i 's/\r$//' /start.sh && \
-    chmod +x /start.sh
+COPY ${NGINX_CONFIG} /etc/nginx/templates/default.conf.template
+COPY ./proxy_params /etc/nginx/proxy_params
 
-RUN touch /etc/nginx/conf.d/default.conf
-
-COPY ./proxy_params /etc/nginx/
-COPY ./default.conf.tpl /etc/nginx/
-
-# Remove default nginx content to reduce image size
-RUN rm -rf /usr/share/nginx/html/* && \
-    rm -rf /var/cache/apk/*
+RUN sed -i 's/\r$//' /start.sh \
+    && chmod +x /start.sh \
+    && rm -rf /usr/share/nginx/html/*
 
 ENTRYPOINT [ "/bin/sh", "/start.sh" ]

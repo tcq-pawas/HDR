@@ -238,3 +238,89 @@ class RoleBasedDashboardView(TemplateView):
 def unauthorized_access(request, exception=None):
     """View for 403 Forbidden errors"""
     return render(request, 'auth/unauthorized.html', status=403)
+
+
+from django.views import View
+from django.utils import timezone
+from Apps.Administration.models import UserVerification
+from Apps.Administration.utils import generate_otp, send_msg91_otp, send_email_otp
+
+class RequestOTPView(View):
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return JsonResponse({'success': False, 'message': 'Authentication required'}, status=401)
+            
+        verification_type = request.POST.get('type')  # 'email' or 'mobile'
+        
+        # Get or create UserVerification
+        verification, created = UserVerification.objects.get_or_create(user=request.user)
+        
+        otp = generate_otp()
+        verification.otp_created_at = timezone.now()
+        
+        if verification_type == 'email':
+            verification.email_otp = otp
+            verification.save()
+            success = send_email_otp(request.user.email, otp)
+            if success:
+                return JsonResponse({'success': True, 'message': 'OTP sent to email'})
+            else:
+                return JsonResponse({'success': False, 'message': 'Failed to send email'}, status=500)
+                
+        elif verification_type == 'mobile':
+            # Check if phone number is provided or exists
+            phone = request.POST.get('phone') or verification.phone_number
+            if not phone:
+                return JsonResponse({'success': False, 'message': 'Phone number required'}, status=400)
+            
+            verification.phone_number = phone
+            verification.mobile_otp = otp
+            verification.save()
+            
+            success = send_msg91_otp(phone, otp)
+            if success:
+                return JsonResponse({'success': True, 'message': 'OTP sent via SMS'})
+            else:
+                return JsonResponse({'success': False, 'message': 'Failed to send SMS'}, status=500)
+                
+        return JsonResponse({'success': False, 'message': 'Invalid verification type'}, status=400)
+
+
+class VerifyOTPView(View):
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return JsonResponse({'success': False, 'message': 'Authentication required'}, status=401)
+            
+        verification_type = request.POST.get('type')  # 'email' or 'mobile'
+        submitted_otp = request.POST.get('otp')
+        
+        try:
+            verification = UserVerification.objects.get(user=request.user)
+        except UserVerification.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'No pending verification'}, status=400)
+            
+        # Check OTP expiration (e.g., 10 minutes)
+        if verification.otp_created_at:
+            delta = timezone.now() - verification.otp_created_at
+            if delta.total_seconds() > 600:
+                return JsonResponse({'success': False, 'message': 'OTP expired'}, status=400)
+        
+        if verification_type == 'email':
+            if verification.email_otp == submitted_otp:
+                verification.is_email_verified = True
+                verification.email_otp = None
+                verification.save()
+                return JsonResponse({'success': True, 'message': 'Email verified successfully'})
+            else:
+                return JsonResponse({'success': False, 'message': 'Invalid OTP'}, status=400)
+                
+        elif verification_type == 'mobile':
+            if verification.mobile_otp == submitted_otp:
+                verification.is_mobile_verified = True
+                verification.mobile_otp = None
+                verification.save()
+                return JsonResponse({'success': True, 'message': 'Mobile number verified successfully'})
+            else:
+                return JsonResponse({'success': False, 'message': 'Invalid OTP'}, status=400)
+                
+        return JsonResponse({'success': False, 'message': 'Invalid verification type'}, status=400)
