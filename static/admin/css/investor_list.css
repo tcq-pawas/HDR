@@ -26,9 +26,6 @@
     width: 52px;
     height: 52px;
     min-width: 52px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 /* Table Card */
@@ -90,9 +87,6 @@
 
 /* Action Buttons */
 .investor-actions {
-    display: flex;
-    align-items: center;
-    gap: 5px;
     white-space: nowrap;
 }
 
@@ -237,9 +231,6 @@
         width: 28px;
         height: 28px;
         padding: 0;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
         margin: 0 !important;
     }
 
@@ -268,7 +259,6 @@
 
     .custom-modal .modal-footer {
         padding: 0 18px 18px;
-        gap: 8px;
     }
 
     .custom-modal .modal-footer .btn {

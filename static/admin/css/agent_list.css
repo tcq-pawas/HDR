@@ -23,11 +23,6 @@
     background: #fff;
     padding: 18px 20px;
     border-bottom: 1px solid #edf1f5;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
 }
 
 .agents-title {
@@ -41,12 +36,6 @@
 /* =========================================
    FILTER
    ========================================= */
-
-.agents-filter-form {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
 
 .agents-search {
     width: 190px;

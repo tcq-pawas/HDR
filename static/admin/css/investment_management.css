@@ -12,22 +12,9 @@
     border-radius: 12px;
 }
 
-/* Action buttons */
-.investment-page .investment-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
 /* Recent Investments header */
 .investment-page .investment-card-header {
     gap: 16px;
-}
-
-.investment-page .investment-filters {
-    display: flex;
-    align-items: center;
-    gap: 8px;
 }
 
 .investment-page .investment-search {

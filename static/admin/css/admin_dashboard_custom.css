@@ -16,9 +16,6 @@
     width: 56px;
     height: 56px;
     border-radius: var(--radius-sm);
-    display: flex;
-    align-items: center;
-    justify-content: center;
     font-size: 1.5rem;
     margin-bottom: 16px;
 }
@@ -36,9 +33,6 @@
     margin-bottom: 12px;
 }
 .kpi-trend {
-    display: flex;
-    align-items: center;
-    gap: 4px;
     font-size: 0.85rem;
     font-weight: 600;
 }
@@ -70,9 +64,6 @@
     width: 48px;
     height: 48px;
     border-radius: var(--radius-sm);
-    display: flex;
-    align-items: center;
-    justify-content: center;
     font-size: 1.25rem;
     margin-bottom: 12px;
     background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
@@ -164,19 +155,11 @@
     font-family: 'Poppins', sans-serif;
 }
 .system-health-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     padding: 12px 0;
     border-bottom: 1px solid var(--border);
 }
 .system-health-item:last-child {
     border-bottom: none;
-}
-.health-status {
-    display: flex;
-    align-items: center;
-    gap: 8px;
 }
 .health-indicator {
     width: 8px;
@@ -210,11 +193,6 @@
 .welcome-header p {
     color: rgba(255, 255, 255, 0.9);
     margin-bottom: 0;
-}
-.header-actions {
-    display: flex;
-    gap: 12px;
-    align-items: center;
 }
 .header-btn {
     background: rgba(255, 255, 255, 0.2);

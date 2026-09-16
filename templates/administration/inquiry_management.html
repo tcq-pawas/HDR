@@ -8,10 +8,6 @@
 
 {% block page_subtitle %}Manage and respond to customer inquiries{% endblock %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'admin/css/inquiry_management.css' %}">
-{% endblock %}
-
 {% block content %}
 <div class="inquiry-page-wrapper">
 
@@ -21,7 +17,7 @@
 
         <div class="col-6 col-lg-3">
 
-            <div class="stat-card-modern h-100 d-flex align-items-start justify-content-between">
+            <div class="stat-card-modern d-flex align-items-start justify-content-between">
 
                 <div>
 
@@ -31,7 +27,7 @@
 
                 </div>
 
-                <div class="stat-icon-circle stat-icon-blue rounded-circle d-flex align-items-center justify-content-center"><i class="fas fa-envelope"></i></div>
+                <div class="stat-icon-circle stat-icon-blue d-flex align-items-center justify-content-center"><i class="fas fa-envelope"></i></div>
 
             </div>
         
@@ -39,7 +35,7 @@
         
         <div class="col-6 col-lg-3">
             
-            <div class="stat-card-modern h-100 d-flex align-items-start justify-content-between">
+            <div class="stat-card-modern d-flex align-items-start justify-content-between">
 
                 <div>
 
@@ -57,7 +53,7 @@
 
         <div class="col-6 col-lg-3">
 
-            <div class="stat-card-modern h-100 d-flex align-items-start justify-content-between">
+            <div class="stat-card-modern d-flex align-items-start justify-content-between">
 
                 <div>
 
@@ -75,7 +71,7 @@
 
         <div class="col-6 col-lg-3">
 
-            <div class="stat-card-modern h-100 d-flex align-items-start justify-content-between">
+            <div class="stat-card-modern d-flex align-items-start justify-content-between">
 
                 <div>
 
@@ -332,7 +328,7 @@
                                            
                                             {% cycle 'iq-avatar-1' 'iq-avatar-2' 'iq-avatar-3' 'iq-avatar-4' 'iq-avatar-5' as avatar_color silent %}
                                            
-                                            <div class="iq-avatar-circle {{ avatar_color }} rounded-circle overflow-hidden text-center p-0 d-flex align-items-center justify-content-center" data-name="{{ inquiry.full_name }}"></div>
+                                            <div class="iq-avatar-circle {{ avatar_color }} d-flex align-items-center justify-content-center" data-name="{{ inquiry.full_name }}"></div>
                                            
                                             <div>
                                            
@@ -364,11 +360,11 @@
 
                                         {% if inquiry.status == 'new' %}
 
-                                            <span class="status-pill status-new d-inline-flex align-items-center gap-1 py-1 px-3 rounded-pill"><span class="dot rounded-circle"></span>New</span>
+                                            <span class="status-pill status-new d-inline-flex align-items-center gap-1"><span class="dot"></span>New</span>
 
                                         {% elif inquiry.status == 'viewed' %}
 
-                                            <span class="status-pill status-contacted d-inline-flex align-items-center gap-1 py-1 px-3 rounded-pill"> <span class="dot rounded-circle"></span>Viewed </span>
+                                            <span class="status-pill status-contacted d-inline-flex align-items-center gap-1"> <span class="dot"></span>Viewed </span>
 
                                         {% endif %}
 
@@ -385,12 +381,12 @@
                                     <td>
                                         <div class="d-flex gap-2 align-items-center">
 
-                                            <a href="{% url 'admin_dash:inquiry-detail-page' inquiry.id %}" class="action-icon-btn bg-white rounded-2 flex-shrink-0 d-inline-flex align-items-center justify-content-center" title="View">
+                                            <a href="{% url 'admin_dash:inquiry-detail-page' inquiry.id %}" class="action-icon-btn d-inline-flex align-items-center justify-content-center" title="View">
 
                                                 <i class="fas fa-eye"></i>
 
                                             </a>
-                                            <button type="button" class="action-icon-btn bg-white rounded-2 flex-shrink-0 d-inline-flex align-items-center justify-content-center" title="Share"
+                                            <button type="button" class="action-icon-btn d-inline-flex align-items-center justify-content-center" title="Share"
 
                                                 onclick="shareInquiry('{{ inquiry.enquiry_id }}', '{{ inquiry.full_name|default:''|escapejs }}', '{{ inquiry.email|default:'-'|escapejs }}', '{{ inquiry.phone_number|default:'-'|escapejs }}', '{% url 'admin_dash:inquiry-detail-page' inquiry.id %}')">
 
@@ -400,7 +396,7 @@
 
                                             <form method="POST" action="{% url 'admin_dash:inquiry-delete' inquiry.id %}" class="m-0">
                                                 {% csrf_token %}
-                                                <button type="button" class="action-icon-btn bg-white rounded-2 danger flex-shrink-0 d-inline-flex align-items-center justify-content-center" title="Delete"
+                                                <button type="button" class="action-icon-btn danger d-inline-flex align-items-center justify-content-center" title="Delete"
                                                     onclick="confirmDeleteInquiry(this, '{{ inquiry.enquiry_id }}')">
                                                     <i class="fas fa-trash"></i>
                                                 </button>

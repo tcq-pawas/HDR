@@ -17,10 +17,6 @@
     background: #fff;
     padding: 18px 20px;
     border-bottom: 1px solid #edf1f5;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
 }
 
 .investor-update-title {
@@ -81,9 +77,6 @@
 
 /* Form Actions */
 .form-actions {
-    display: flex;
-    gap: 12px;
-    justify-content: flex-end;
     margin-top: 24px;
 }
 
@@ -123,10 +116,6 @@
     .investor-update-card {
         max-width: 100%;
     }
-
-    .investor-update-card .card-header {
-        gap: 14px;
-    }
 }
 
 /* Mobile */
@@ -142,7 +131,6 @@
     }
 
     .investor-update-card .card-header {
-        display: block !important;
         padding: 14px 12px;
     }
 
@@ -177,8 +165,7 @@
     }
 
     .form-actions {
-        flex-direction: column;
-        gap: 10px;
+        margin-top: 24px;
     }
 
     .form-cancel-btn,

@@ -5,11 +5,6 @@
     overflow-x: hidden;
 }
 
-/* Page Header */
-.property-review-header {
-    gap: 20px;
-}
-
 .property-review-header h1 {
     font-size: 1.5rem;
     font-weight: 700;
@@ -78,12 +73,6 @@
     font-size: 0.875rem;
 }
 
-.property-filter-actions {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
 /* Property Table */
 .property-table-card {
     border-radius: 12px;
@@ -92,7 +81,6 @@
 
 .property-table-header {
     min-height: 58px;
-    gap: 12px;
 }
 
 .property-table-header h5 {
@@ -175,13 +163,6 @@
     font-size: 0.7rem;
     font-weight: 600;
     white-space: nowrap;
-}
-
-/* Action buttons */
-.property-actions {
-    display: flex;
-    gap: 5px;
-    flex-wrap: nowrap;
 }
 
 .property-actions .btn {

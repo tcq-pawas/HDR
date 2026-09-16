@@ -16,10 +16,6 @@
    --------------------------------------------------------- */
 
 .profile-breadcrumb {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 8px;
     font-size: 0.9rem;
     line-height: 1.4;
 }
@@ -82,7 +78,6 @@
 
 .profile-header-content > .d-flex {
     width: 100%;
-    gap: 24px;
 }
 
 
@@ -100,9 +95,6 @@
     border: 5px solid #fff;
     box-shadow: 0 8px 25px rgba(0, 69, 38, 0.16);
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .profile-avatar-large img {
@@ -122,9 +114,6 @@
     border-radius: 50%;
     background: rgba(0, 69, 38, 0.72);
     color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     opacity: 0;
     transition: opacity 0.2s ease;
     font-size: 1.3rem;
@@ -152,9 +141,6 @@
 }
 
 .badge-role {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
     padding: 6px 13px;
     border-radius: 999px;
     background: rgba(0, 69, 38, 0.1);
@@ -179,10 +165,6 @@
    --------------------------------------------------------- */
 
 .btn-edit-profile {
-    display: inline-flex !important;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
     min-height: 42px;
     padding: 9px 17px !important;
     border-radius: 10px !important;
@@ -222,9 +204,6 @@
 .info-item {
     min-width: 0;
     min-height: 125px;
-    display: flex;
-    align-items: flex-start;
-    gap: 16px;
     padding: 24px 28px;
     border-bottom: 1px solid #e2e8f0;
 }
@@ -240,9 +219,6 @@
     border-radius: 12px;
     background: rgba(0, 69, 38, 0.08);
     color: var(--primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
     font-size: 1rem;
 }
 
@@ -323,9 +299,6 @@
     position: relative;
     cursor: pointer;
     background: #f1f5f9;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .modal-avatar-img {
@@ -426,7 +399,6 @@
     .info-item {
         min-height: 115px;
         padding: 20px;
-        gap: 13px;
     }
 
     .info-icon {
@@ -468,7 +440,6 @@
         flex-direction: column;
         align-items: center !important;
         text-align: center;
-        gap: 15px;
     }
 
     .profile-avatar-large {
@@ -522,7 +493,6 @@
         min-height: auto;
         width: 100%;
         padding: 17px 16px;
-        gap: 12px;
         border-right: 0 !important;
         border-bottom: 1px solid #e2e8f0 !important;
     }
@@ -582,7 +552,6 @@
 
     .profile-breadcrumb {
         font-size: 0.72rem;
-        gap: 5px;
     }
 
     .profile-header-content {
@@ -669,7 +638,6 @@
 
     .info-item {
         padding: 13px 10px;
-        gap: 9px;
     }
 
     .info-icon {
