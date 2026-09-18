@@ -6,7 +6,6 @@
 
 {% block extra_css %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<link rel="stylesheet" href="{% static 'investor/roi_data.css' %}">
 {% endblock %}
 
 {% block page_title %}ROI Data & Analytics{% endblock %}
@@ -14,8 +13,9 @@
 
 {% block content %}
 
+<div class="roi-data-page">
     <!-- ROI Summary Cards -->
-    <div class="row mb-4">
+    <div class="row mb-4 roi-summary-cards">
         <div class="col-md-3">
             <div class="card roi-card bg-success text-white">
                 <div class="card-body">
@@ -178,20 +178,21 @@
                     {% endfor %}
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">ROI Distribution</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="chart-container">
-                            <canvas id="roiDistributionChart"></canvas>
-                        </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">ROI Distribution</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="roiDistributionChart"></canvas>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 {% endblock %}
 
 <!-- Month Details Modal -->

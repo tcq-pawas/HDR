@@ -9,53 +9,6 @@
 
 
 {% block extra_css %}
-
-<style>
-
-.investment-card {
-
-    border: none;
-
-    border-radius: 12px;
-
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-
-    transition: transform 0.2s;
-
-}
-
-.investment-card:hover {
-
-    transform: translateY(-2px);
-
-}
-
-.status-badge {
-
-    font-size: 0.8rem;
-
-    padding: 0.25rem 0.75rem;
-
-}
-
-.roi-positive {
-
-    color: #28a745;
-
-    font-weight: bold;
-
-}
-
-.roi-negative {
-
-    color: #dc3545;
-
-    font-weight: bold;
-
-}
-
-</style>
-
 {% endblock %}
 
 
@@ -70,9 +23,7 @@
 
 {% block content %}
 
-
-
-
+<div class="investments-page">
 
     <!-- Investments List -->
 
@@ -370,7 +321,7 @@
 
                                         <span class="badge status-badge bg-success">Confirmed</span>
 
-                                        <span class="ms-3 badge bg-info">Equity Investment</span>
+                                        <span class="status-badge badge bg-info">Equity Investment</span>
 
                                     </div>
 
@@ -422,6 +373,7 @@
 
     </div>
 
+</div>
 {% endblock %}
 
 

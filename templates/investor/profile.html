@@ -5,7 +5,6 @@
 {% block title %}Investor Dashboard - HHectare{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'investor/profile.css' %}">
 {% endblock %}
 
 {% block page_title %}Investor Profile{% endblock %}
@@ -13,6 +12,7 @@
 
 
 {% block content %}
+<div class="profile-page">
 <!-- Premium Investor Hero Section -->
 <div class="premium-hero mb-5">
     <div class="row align-items-center">
@@ -116,7 +116,7 @@
                 <div class="action-icon" style="background: linear-gradient(135deg, #ede9fe, #ddd6fe); color: #7c3aed;">
                     <i class="fas fa-percentage"></i>
                 </div>
-                <span class="badge bg-light text-purple rounded-pill">+5%</span>
+                <span class="badge bg-light text-black rounded-pill">+5%</span>
             </div>
             <div class="kpi-number">{{ roi_analysis.total_roi_percentage|floatformat:1|default:"0.0" }}%</div>
             <div class="text-muted mt-1" style="font-size: 0.875rem;">Average ROI</div>
@@ -137,7 +137,7 @@
                     <button class="btn btn-outline-success btn-sm">3M</button>
                 </div>
             </div>
-            <div style="position: relative; height: 320px; width: 100%;">
+            <div class="portfolio-chart-wrapper">
                 <canvas id="portfolioChart"></canvas>
             </div>
         </div>
@@ -900,4 +900,5 @@
         }
     }
 </script>
+</div>
 {% endblock %}

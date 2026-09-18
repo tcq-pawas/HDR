@@ -215,6 +215,7 @@
     flex-direction: column;
     position: relative;
     border: 2px solid transparent;
+    width: 300px;
 }
 
 .pricing-card:hover {

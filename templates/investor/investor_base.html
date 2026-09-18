@@ -16,8 +16,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
 
-    <!-- Investor Base CSS -->
-    <link rel="stylesheet" href="{% static 'investor/investor_base.css' %}">
+    <!-- Investor CSS -->
+    <link rel="stylesheet" href="{% static 'investor/investor.css' %}">
 
     {% block extra_css %}{% endblock %}
     {% block extra_head %}{% endblock %}
@@ -48,7 +48,7 @@
                             {% endif %}
                         </div>
                         <div class="mt-2">
-                            <strong>{{ user.get_full_name|default:user.username }}</strong>
+                            <strong style="color: #fff;">{{ user.get_full_name|default:user.username }}</strong>
                             <div class="small text-white-50">Investor</div>
                             {% if profile.verified %}
                                 <span class="badge bg-light text-success">Verified</span>
