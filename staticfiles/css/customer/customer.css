@@ -492,7 +492,7 @@ a:active {
     box-shadow: var(--shadow-soft);
     border: 1px solid rgba(2, 6, 23, 0.06);
     padding: 1.25rem;
-    margin-bottom: 1.25rem;
+    margin-bottom: 2.25rem;
     height: 100%;
 }
 
@@ -3196,6 +3196,18 @@ select.form-input {
     }
 }
 
+@media (max-width: 1467.98px) {
+    .toolbar-grid, .sp-toolbar-grid {
+        grid-template-columns: repeat(2, minmax(0, 2fr));
+    }
+}
+
+@media (max-width: 1700px) {
+    .banner-stats{
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+}
+
 /* Tablet Portrait */
 @media (max-width: 991.98px) {
     .main-content-wrapper {
@@ -3233,7 +3245,7 @@ select.form-input {
     }
 
     .banner-stats {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(1, minmax(0, 1fr));
     }
 
     .profile-banner .col-lg-7,
@@ -3289,7 +3301,7 @@ select.form-input {
 
     .toolbar-grid,
     .sp-toolbar-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: 1fr;
     }
 
     .panel-header {

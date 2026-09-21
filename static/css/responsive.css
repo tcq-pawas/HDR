@@ -10286,7 +10286,7 @@ footer.footer.site-footer,
 }
 
 .footer.site-footer .footer-brand-logo {
-    font-family: 'Playfair Display', serif !important;
+    font-family: var(--font-body) !important;
     font-size: 1.25rem !important;
     font-weight: 700 !important;
     color: #ffffff !important;
@@ -10451,4 +10451,180 @@ footer.footer.site-footer,
         font-size: 0.75rem !important;
     }
 }
+}
+
+/* ===== Public site typography polish ===== */
+body {
+    font-family: var(--font-body);
+    font-size: 16px;
+}
+
+body h1,
+body h2,
+body h3,
+body h4,
+body h5,
+body h6,
+body p,
+body a,
+body button,
+body input,
+body select,
+body textarea,
+body label,
+body small,
+body li,
+body td,
+body th,
+body .hero-title,
+body .hero-heading,
+body .section-heading,
+body .section-title,
+body .inner-hero-title,
+body .contact-hero-title,
+body .subscription-hero-title,
+body .agent-name,
+body .stat-number,
+body .footer-brand-logo {
+    font-family: var(--font-body) !important;
+}
+
+.nav-link,
+.footer-link,
+.footer-bottom-link,
+.trust-description,
+.why-invest-card-description,
+.property-state,
+.property-category,
+.property-area,
+.btn-view-details,
+.share-btn {
+    font-size: 14px;
+}
+
+.section-badge,
+.hero-badge {
+    font-size: 12px;
+}
+
+.section-heading {
+    font-size: 1.75rem;
+    line-height: 1.22;
+    letter-spacing: 0;
+}
+
+.section-subtitle,
+.hero-description,
+.testimonial-text {
+    font-size: 15px;
+}
+
+.trust-title,
+.why-invest-card-title,
+.property-price,
+.testimonial-name {
+    font-size: 16px;
+}
+
+.property-name {
+    font-size: 15px;
+}
+
+.agents-hero .hero-title,
+.subscription-hero-title,
+.contact-hero-title,
+.inner-hero-title {
+    font-size: 1.75rem !important;
+    line-height: 1.2;
+    letter-spacing: 0;
+}
+
+.agents-hero .hero-subtitle,
+.subscription-hero-description,
+.contact-hero-subtitle,
+.inner-hero-quote,
+.agent-specialization,
+.agent-location,
+.rating-count,
+.results-count,
+.popular-label,
+.sort-select {
+    font-size: 15px !important;
+    line-height: 1.5;
+}
+
+.agent-name,
+.why-choose-card-title,
+.pricing-card-title {
+    font-size: 1rem !important;
+}
+
+.premium-badge,
+.verified-badge-corner,
+.popular-chip,
+.tag,
+.stat-value,
+.stat-label {
+    font-size: 12px !important;
+}
+
+@media (max-width: 768px) {
+    body {
+        font-size: 15px;
+    }
+
+    h1 {
+        font-size: 1.75rem;
+    }
+
+    h2,
+    .section-heading {
+        font-size: 1.5rem;
+    }
+
+    h3 {
+        font-size: 1.2rem;
+    }
+
+    .hero-section {
+        min-height: 640px;
+    }
+
+    .hero-description,
+    .section-subtitle {
+        font-size: 14px;
+    }
+
+    .agents-hero .hero-title,
+    .subscription-hero-title,
+    .contact-hero-title,
+    .inner-hero-title {
+        font-size: 1.5rem !important;
+    }
+}
+
+@media (max-width: 576px) {
+    body {
+        font-size: 14px;
+    }
+
+    h1,
+    .section-heading {
+        font-size: 1.4rem;
+    }
+
+    h2 {
+        font-size: 1.3rem;
+    }
+
+    .hero-heading {
+        font-size: clamp(28px, 8vw, 34px);
+    }
+
+    .hero-description,
+    .section-subtitle,
+    .trust-description,
+    .why-invest-card-description {
+        font-size: 14px;
+    }
 }

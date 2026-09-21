@@ -12136,20 +12136,20 @@ tbody tr:hover {
 }
 
 .price-amount {
-    font-size: 48px;
+    font-size: 28px;
     font-weight: 800;
     color: #1e293b;
     line-height: 1;
 }
 
 .price-period {
-    font-size: 16px;
+    font-size: 12px;
     color: #64748b;
     font-weight: 500;
 }
 
 .pricing-card-billing {
-    font-size: 14px;
+    font-size: 12px;
     color: #64748b;
     margin: 0;
 }

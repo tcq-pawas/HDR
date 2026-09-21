@@ -2673,7 +2673,7 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .communication-page .communication-page-title {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     font-weight: 600;
     color: #212529;
 }
@@ -4034,7 +4034,7 @@ h1, h2, h3, h4, h5, h6,
 /* Filter bar */
 .filter-bar-modern .btn:focus { box-shadow: none !important; outline: none !important; }
 .filter-bar-modern .form-select, .filter-bar-modern .form-control { height: 42px; border-radius: 10px; border-color: #e2e6e8; }
-.filter-bar-modern .col-md-1 .btn { min-width: 46px; padding-left: 10px; padding-right: 10px; }
+.filter-bar-modern .col-md-1 .btn { min-width: 46px; padding-left: 10px; padding-right: 10px; color: grey;}
 
 @media (min-width: 768px) {
     .filter-bar-modern .row > [class*="col-md-"] { padding-left: .35rem; padding-right: .35rem; }
@@ -5996,7 +5996,7 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .property-review-header h1 {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     font-weight: 700;
     margin-bottom: 6px;
 }

@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap');
+/* Import global typography system */
+@import url('typography.css');
 
 :root {
     --primary: #0F6A3C;
@@ -11,9 +12,6 @@
     --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.08);
     --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.12);
 
-    --font-heading: 'Playfair Display', serif;
-    --font-body: 'Outfit', sans-serif;
-
     --max-width: 1280px;
     --section-spacing: 96px;
     --card-radius: 20px;
@@ -23,11 +21,11 @@
 }
 
 body {
-    font-family: var(--font-body);
+     
     color: var(--text-dark);
     background: var(--background);
-    line-height: 1.6;
-    font-size: 12px;
+    line-height: var(--line-height-body);
+    font-size: var(--font-body-size);
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -269,7 +267,7 @@ footer a:hover,
 .top-bar {
     background: #091A2C;
     color: #ffffff;
-    font-size: 0.75rem;
+    font-size: var(--font-small);
     padding: 4px 0;
     border-bottom: none;
 }
@@ -531,10 +529,10 @@ select:focus {
 }
 
 .hero-headline {
-    font-family: 'Outfit', sans-serif;
-    font-size: 88px;
-    font-weight: 800;
-    line-height: .95;
+    font-family: var(--font-heading);
+    font-size: var(--font-h1);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-heading);
     letter-spacing: -3px;
     color: #fff;
     max-width: 820px;
@@ -552,20 +550,20 @@ select:focus {
 
     border-radius: 30px;
 
-    font-size: 13px;
+    font-size: var(--font-small);
 
     letter-spacing: 2px;
 
-    font-weight: 700;
+    font-weight: var(--font-weight-bold);
 
     margin-bottom: 25px;
 }
 
 .hero-subheadings {
     color: #ffffff;
-    font-size: 1.2rem;
+    font-size: var(--font-body-size);
     margin-bottom: 40px;
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
 }
 
 .hero-subheadings ul {
@@ -599,8 +597,8 @@ select:focus {
 .hero-buttons .btn {
     padding: 18px 36px;
     border-radius: 14px;
-    font-weight: 700;
-    font-size: 16px;
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-button);
     box-shadow: none;
 
 }
@@ -650,8 +648,8 @@ select:focus {
 }
 
 .inner-hero-title {
-    font-size: 3.2rem;
-    font-weight: 700;
+    font-size: var(--font-h1);
+    font-weight: var(--font-weight-bold);
     margin-bottom: 15px;
     text-shadow: 0 4px 20px rgba(0, 0, 0, .5);
     color: #ffffff;
@@ -669,7 +667,7 @@ select:focus {
 }
 
 .inner-hero-quote {
-    font-size: 1.15rem;
+    font-size: var(--font-body-size);
     font-style: italic;
     opacity: 1;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
@@ -919,7 +917,7 @@ footer .social-icons a:hover {
     padding: 25px 0;
     margin-top: 50px;
     color: #a0a0a0;
-    font-size: 0.9rem;
+    font-size: var(--font-small);
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 } */
 
@@ -935,17 +933,17 @@ footer:not(.site-footer) {
 
 footer:not(.site-footer) h5 {
     color: #fff;
-    font-size: 22px;
-    font-weight: 700;
+    font-size: var(--font-h4);
+    font-weight: var(--font-weight-bold);
     margin-bottom: 25px;
-    font-family: sans-serif;
+    font-family: var(--font-heading);
 
 }
 
 .footer-desc {
     color: #d7dde7;
-    line-height: 2;
-    font-size: 15px;
+    line-height: var(--line-height-body);
+    font-size: var(--font-body-size);
 }
 
 footer:not(.site-footer) .footer-links li {
@@ -994,7 +992,7 @@ footer:not(.site-footer) .footer-links a:hover {
     width: 42px;
     height: 42px;
     background: none !important;
-    font-size: 22px;
+    font-size: var(--font-h4);
 }
 
 footer .social-icons a {
@@ -1199,15 +1197,15 @@ a:focus {
 }
 
 .land-card-body h5 {
-    font-size: 22px;
-    font-weight: 600;
+    font-size: var(--font-h4);
+    font-weight: var(--font-weight-semibold);
     color: #1f2937;
     margin-bottom: 8px;
 }
 
 .property-location {
     color: #7b8794;
-    font-size: 15px;
+    font-size: var(--font-body-size);
     margin-bottom: 15px;
 }
 
@@ -1216,7 +1214,7 @@ a:focus {
     gap: 18px;
     margin-bottom: 20px;
     color: #6b7280;
-    font-size: 14px;
+    font-size: var(--font-small);
 }
 
 @media (max-width: 768px) {
@@ -1234,8 +1232,8 @@ a:focus {
 
 .land-price {
     color: #ED8B39;
-    font-size: 34px;
-    font-weight: 700;
+    font-size: var(--font-price);
+    font-weight: var(--font-weight-bold);
 }
 
 .badge-sale {
@@ -1244,7 +1242,7 @@ a:focus {
     left: 15px;
     background: #1E73BE;
     color: #fff;
-    font-size: 13px;
+    font-size: var(--font-small);
     padding: 7px 12px;
     border-radius: 6px;
 }
@@ -1369,8 +1367,8 @@ a:focus {
 }
 
 .category-title {
-    font-size: 1.4rem;
-    font-weight: 700;
+    font-size: var(--font-h3);
+    font-weight: var(--font-weight-bold);
     margin-bottom: 5px;
 }
 
@@ -1388,16 +1386,16 @@ a:focus {
 }
 
 .counter-number {
-    font-size: 3.5rem;
-    font-weight: 700;
+    font-size: var(--font-kpi);
+    font-weight: var(--font-weight-bold);
     color: #D4A24C;
     /* color: #fff; */
     margin-bottom: 10px;
 }
 
 .counter-label {
-    font-size: 1.1rem;
-    font-weight: 500;
+    font-size: var(--font-body-size);
+    font-weight: var(--font-weight-medium);
     color: rgba(255, 255, 255, 0.9);
 }
 
@@ -1413,12 +1411,12 @@ a:focus {
 }
 
 .investment-section h2 {
-    font-size: 1.4rem;
+    font-size: var(--font-h3);
     margin-bottom: 12px;
 }
 
 .investment-section>.container>.row>.col-lg-6:last-child>p {
-    font-size: 0.85rem;
+    font-size: var(--font-small);
     margin-bottom: 20px;
 }
 
@@ -1439,14 +1437,14 @@ a:focus {
 }
 
 .investment-card h5 {
-    font-size: 0.85rem;
-    font-weight: 600;
+    font-size: var(--font-small);
+    font-weight: var(--font-weight-semibold);
     margin-bottom: 6px;
 }
 
 .investment-card p {
-    font-size: 0.75rem;
-    line-height: 1.3;
+    font-size: var(--font-small);
+    line-height: var(--line-height-small);
     margin-bottom: 0;
 }
 
@@ -1482,8 +1480,8 @@ a:focus {
 }
 
 .premium-cta h2 {
-    font-size: 3rem;
-    font-weight: 700;
+    font-size: var(--font-h1);
+    font-weight: var(--font-weight-bold);
     margin-bottom: 20px;
 }
 
@@ -1519,8 +1517,8 @@ a:focus {
 }
 
 .testimonial-card p {
-    font-size: 20px;
-    line-height: 1.8;
+    font-size: var(--font-body-size);
+    line-height: var(--line-height-body);
     color: #475569;
 }
 
@@ -1585,8 +1583,8 @@ a:focus {
 
 .search-item label {
     display: block;
-    font-size: 13px;
-    font-weight: 600;
+    font-size: var(--font-small);
+    font-weight: var(--font-weight-semibold);
     margin-bottom: 10px;
     color: #222;
 }
@@ -1700,18 +1698,18 @@ a:focus {
 }
 
 .feature-item h4 {
-    font-size: 18px;
-    line-height: 1.2;
-    font-weight: 700;
+    font-size: var(--font-h4);
+    line-height: var(--line-height-heading);
+    font-weight: var(--font-weight-bold);
     margin-bottom: 8px;
     color: #1a1a1a;
 }
 
 .feature-item p {
-    font-size: 14px;
+    font-size: var(--font-small);
     margin: 0;
     color: #6b7280;
-    line-height: 1.7;
+    line-height: var(--line-height-body);
 }
 
 
@@ -1720,8 +1718,8 @@ a:focus {
 }
 
 .showcase-title {
-    font-size: 32px;
-    font-weight: 700;
+    font-size: var(--font-h2);
+    font-weight: var(--font-weight-bold);
     margin: 0;
 }
 
@@ -1770,10 +1768,10 @@ a:focus {
 }
 
 .card-content h5 {
-    font-size: 22px;
+    font-size: var(--font-h4);
     margin-bottom: 8px;
     min-height: 60px;
-    line-height: 1.3;
+    line-height: var(--line-height-heading);
 }
 
 .card-content p {
@@ -1783,8 +1781,8 @@ a:focus {
 
 .price {
     color: #ED8B39;
-    font-size: 30px;
-    font-weight: 700;
+    font-size: var(--font-price);
+    font-weight: var(--font-weight-bold);
 }
 
 .carousel-indicators button {
@@ -1836,8 +1834,8 @@ a:focus {
     color: #fff;
     border-radius: 30px;
     padding: 8px 14px;
-    font-size: 12px;
-    font-weight: 700;
+    font-size: var(--font-small);
+    font-weight: var(--font-weight-bold);
     z-index: 2;
 }
 
@@ -1936,11 +1934,11 @@ a:focus {
 }
 
 .section-header h2 {
-    font-size: 40px;
-    font-weight: 800;
+    font-size: 32px;
+    font-weight: var(--font-weight-bold);
     color: #0b1736;
     margin-bottom: 10px;
-    text-transform: uppercase;
+    
 }
 
 .title-line {
@@ -2012,17 +2010,17 @@ a:focus {
 
 .content-text h4 {
     color: #fff;
-    font-size: 38px;
-    font-weight: 700;
+    font-size: var(--font-h2);
+    font-weight: var(--font-weight-bold);
     margin-bottom: 8px;
 }
 
 .content-text p {
     color: #fff;
-    font-size: 22px;
+    font-size: var(--font-body-size);
     margin: 0;
     max-width: 420px;
-    line-height: 1.5;
+    line-height: var(--line-height-body);
 }
 
 @media (max-width:768px) {
@@ -2065,8 +2063,8 @@ a:focus {
 }
 
 .testimonial-title {
-    font-size: 42px;
-    font-weight: 700;
+    font-size: var(--font-h1);
+    font-weight: var(--font-weight-bold);
     color: #0f2b47;
     margin-bottom: 10px;
 }
@@ -2077,19 +2075,19 @@ a:focus {
 }
 
 .quote-icon {
-    font-size: 40px;
+    font-size: var(--font-h2);
     color: #d4a24c;
 }
 
 .testimonial-content p {
-    font-size: 22px;
+    font-size: var(--font-body-size);
     color: #444;
-    line-height: 1.8;
+    line-height: var(--line-height-body);
 }
 
 .stars {
     color: #f7a21b;
-    font-size: 26px;
+    font-size: var(--font-h3);
     margin: 20px 0;
 }
 
@@ -2110,7 +2108,7 @@ a:focus {
     justify-content: center;
 
     color: #1E73BE;
-    font-size: 28px;
+    font-size: var(--font-h3);
 }
 
 .carousel-control-prev,
@@ -2140,8 +2138,8 @@ a:focus {
 .cta-text p {
     margin: 0;
     color: #fff;
-    font-size: 20px;
-    line-height: 2;
+    font-size: var(--font-body-size);
+    line-height: var(--line-height-body);
 }
 
 .cta-btn {
@@ -2182,14 +2180,14 @@ a:focus {
 
 .cta-box h2 {
     color: #fff;
-    font-size: 52px;
-    font-weight: 700;
+    font-size: var(--font-h1);
+    font-weight: var(--font-weight-bold);
     margin-bottom: 15px;
 }
 
 .cta-box p {
     color: #fff;
-    font-size: 22px;
+    font-size: var(--font-body-size);
     max-width: 500px;
     margin-bottom: 30px;
 }
@@ -2224,7 +2222,7 @@ a:focus {
 .location-chip {
     display: inline-block;
 
-    font-size: 13px;
+    font-size: var(--font-small);
 
     color: #6b7280;
 
@@ -2246,9 +2244,9 @@ a:focus {
 
     border-radius: 30px;
 
-    font-size: 12px;
+    font-size: var(--font-small);
 
-    font-weight: 600;
+    font-weight: var(--font-weight-semibold);
 }
 
 .price-row {
@@ -2268,9 +2266,9 @@ a:focus {
 
     border-radius: 10px;
 
-    font-size: 13px;
+    font-size: var(--font-small);
 
-    font-weight: 600;
+    font-weight: var(--font-weight-semibold);
 }
 
 
@@ -2385,17 +2383,17 @@ a:focus {
 
     border-radius: 30px;
 
-    font-size: 13px;
+    font-size: var(--font-small);
 
     letter-spacing: 2px;
 
-    font-weight: 700;
+    font-weight: var(--font-weight-bold);
 
     margin-bottom: 25px;
 }
 
 .cta-content h2 {
-    font-size: 56px;
+    font-size: var(--font-h1);
 
     color: #fff;
 
@@ -2403,9 +2401,9 @@ a:focus {
 }
 
 .cta-content p {
-    font-size: 18px;
+    font-size: var(--font-body-size);
 
-    line-height: 1.8;
+    line-height: var(--line-height-body);
 
     opacity: .9;
 
@@ -2475,11 +2473,11 @@ a:focus {
 
     border-radius: 30px;
 
-    font-size: 13px;
+    font-size: var(--font-small);
 
     letter-spacing: 2px;
 
-    font-weight: 700;
+    font-weight: var(--font-weight-bold);
 }
 
 .section-subheading {
@@ -2522,7 +2520,7 @@ a:focus {
     align-items: center;
     justify-content: center;
 
-    font-size: 36px;
+    font-size: var(--font-h2);
 
     background: #FAF8F3;
 
@@ -2530,36 +2528,23 @@ a:focus {
 }
 
 .invest-card h4 {
-    font-size: 20px;
-    font-weight: 700;
-    line-height: 1.3;
+    font-size: var(--font-h4);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-heading);
 }
 
 .invest-card p {
     color: #64748B;
 
-    line-height: 1.8;
+    line-height: var(--line-height-body);
 
     margin: 0;
 }
 
 @media(max-width:768px) {
 
-    .hero-headline {
-        font-size: 42px;
-    }
-
-
     .features-grid {
         grid-template-columns: 1fr;
-    }
-
-    .cta-content h2 {
-        font-size: 34px;
-    }
-
-    .section-header h2 {
-        font-size: 30px;
     }
 
     .invest-card {
@@ -2569,8 +2554,8 @@ a:focus {
 
 
 .property-title {
-    font-size: 22px;
-    font-weight: 700;
+    font-size: var(--font-h4);
+    font-weight: var(--font-weight-bold);
     margin-bottom: 10px;
     color: #1F2937;
 }
@@ -2629,8 +2614,7 @@ a:focus {
 
     /* Listing Header */
     .listing-header h1 {
-        font-size: 28px !important;
-        line-height: 1.2 !important;
+        line-height: var(--line-height-heading) !important;
     }
 
     .listing-controls {
@@ -2668,12 +2652,7 @@ a:focus {
     }
 
     .property-title {
-        font-size: 20px !important;
-        line-height: 1.3 !important;
-    }
-
-    .property-price {
-        font-size: 24px !important;
+        line-height: var(--line-height-heading) !important;
     }
 
     /* Details */
@@ -5921,33 +5900,8 @@ footer.footer.site-footer,
         gap: 10px;
     }
 
-    .trust-title {
-        font-size: 18px;
-        margin-bottom: 6px;
-    }
-
-    .trust-description {
-        font-size: 15px;
-    }
-
     .why-invest-card {
         padding: 20px 16px;
-    }
-
-    .why-invest-card-title {
-        font-size: 15px;
-    }
-
-    .why-invest-card-description {
-        font-size: 14px;
-    }
-
-    .testimonials-premium-section .testimonial-name {
-        font-size: 15px;
-    }
-
-    .testimonials-premium-section .testimonial-designation {
-        font-size: 12px;
     }
 
     .property-card {
@@ -6101,31 +6055,31 @@ footer.footer.site-footer,
 }
 
 .testimonials-premium-section .testimonial-quote-icon {
-    font-size: 32px;
+    font-size: var(--font-h3);
     color: var(--gold);
     margin-bottom: 16px;
 }
 
 .testimonial-quote-icon {
-    font-size: 32px;
+    font-size: var(--font-h3);
     color: var(--gold);
     margin-bottom: 16px;
     line-height: 1;
-    font-family: Georgia, serif;
-    font-weight: 400;
+    font-family: var(--font-heading);
+    font-weight: var(--font-weight-regular);
 }
 
 .testimonial-stars {
     color: #FFD700;
-    font-size: 18px;
+    font-size: var(--font-h4);
     margin-bottom: 16px;
     letter-spacing: 2px;
 }
 
 .testimonial-text {
-    font-size: 15px;
+    font-size: var(--font-small);
     color: var(--text-mid);
-    line-height: 1.7;
+    line-height: var(--line-height-body);
     margin: 0;
     flex-grow: 1;
 }
@@ -6151,8 +6105,8 @@ footer.footer.site-footer,
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 700;
-    font-size: 16px;
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-button);
     font-family: var(--font-body);
 }
 
@@ -6162,29 +6116,29 @@ footer.footer.site-footer,
 }
 
 .testimonial-name {
-    font-size: 18px;
-    font-weight: 700;
+    font-size: var(--font-h4);
+    font-weight: var(--font-weight-bold);
     color: var(--text-dark);
     margin-bottom: 4px;
     font-family: var(--font-body);
 }
 
 .testimonial-designation {
-    font-size: 14px;
+    font-size: var(--font-small);
     color: var(--text-muted);
 }
 
 .testimonials-premium-section .testimonial-stars {
     color: #FFD700;
-    font-size: 18px;
+    font-size: var(--font-h4);
     margin-bottom: 16px;
     letter-spacing: 2px;
 }
 
 .testimonials-premium-section .testimonial-text {
-    font-size: 15px;
+    font-size: var(--font-small);
     color: var(--text-mid);
-    line-height: 1.7;
+    line-height: var(--line-height-body);
     margin: 0;
     flex-grow: 1;
 }
@@ -6211,8 +6165,8 @@ footer.footer.site-footer,
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 700;
-    font-size: 16px;
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-button);
     font-family: var(--font-body);
 }
 
@@ -6222,15 +6176,15 @@ footer.footer.site-footer,
 }
 
 .testimonials-premium-section .testimonial-name {
-    font-size: 18px;
-    font-weight: 700;
+    font-size: var(--font-h4);
+    font-weight: var(--font-weight-bold);
     color: var(--text-dark);
     margin-bottom: 4px;
     font-family: var(--font-body);
 }
 
 .testimonials-premium-section .testimonial-designation {
-    font-size: 14px;
+    font-size: var(--font-small);
     color: var(--text-muted);
 }
 

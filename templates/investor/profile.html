@@ -26,7 +26,7 @@
                     {% endif %}
                 </div>
                 <div class="text-white">
-                    <h1 class="mb-1 fw-bold" style="font-size: 2.5rem;">{{ profile.user.get_full_name|default:profile.user.username }}</h1>
+                    <h1 class="mb-1 fw-bold" style="font-size: 1.5rem;">{{ profile.user.get_full_name|default:profile.user.username }}</h1>
                     <p class="mb-2 opacity-75" style="font-size: 1.1rem;">{{ profile.user.email }}</p>
                     <div class="d-flex gap-2 flex-wrap">
                         <span class="badge badge-premium badge-emerald">Investor</span>

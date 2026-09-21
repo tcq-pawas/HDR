@@ -37,9 +37,10 @@
     </div>
 
     <!-- Section header -->
-    <div class="d-flex align-items-start justify-content-between gap-2 pb-3 mb-3 border-bottom">
+     
+    <div class="d-flex align-items-end justify-content-between pt-5 border-bottom">
         <div>
-            <h2 class="fw-bold mb-1">Document Verification</h2>
+            <h2 class="fw-bold mb-1" style="font-size: 25px;">Document Verification</h2>
             <p class="mb-0 text-muted small">Review and manage documents submitted by agents.</p>
         </div>
         <a href="#kycDocList" class="header-link fw-semibold text-decoration-none" id="kycManageLink">Manage Documents</a>
@@ -57,7 +58,7 @@
             {% else %}
             <div class="kyc-empty pending text-center p-4 border rounded-3 bg-light">
                 <div class="empty-icon rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3"><i class="fas fa-check"></i></div>
-                <h3 class="fw-semibold mb-1">No Pending Documents</h3>
+                <h3 class=" mb-1" style="font-size: 1.3rem;">No Pending Documents</h3>
                 <p class="mb-0 text-muted small">You're all caught up. There are no documents waiting for review.</p>
             </div>
             {% endif %}

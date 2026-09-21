@@ -101,118 +101,99 @@
                     
                     <div class="filter-bar-modern mb-4">
                     
-                        <form method="GET" class="row g-2 align-items-center" style="margin-bottom: 0;">
+                        <form method="GET" style="margin-bottom: 0;">
 
-                            <div class="col-12 col-md-3 col-lg-3">
+                            <div class="row g-2 align-items-center">
 
-                                <div class="input-group">
+                                <div class="col-12 col-md-3 col-lg-3">
 
-                                    <input type="text" name="search" class="form-control no-left-radius"
+                                    <div class="input-group">
 
-                                    placeholder="Search by name, email or phone..." value="{{ search }}">
+                                        <input type="text" name="search" class="form-control no-left-radius"
+
+                                        placeholder="Search by name, email or phone..." value="{{ search }}">
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col-6 col-md-2 col-lg-2">
+
+                                    <div class="custom-filter-dropdown">
+                                        <input type="hidden" name="budget" value="{{ selected_budget|default:'' }}">
+                                        <button type="button" class="custom-filter-toggle bg-white text-start overflow-hidden d-flex align-items-center justify-content-between gap-2" aria-expanded="false">
+                                            <span class="custom-filter-value overflow-hidden text-truncate text-nowrap">{% if selected_budget %}{{ selected_budget }}{% else %}All Budgets{% endif %}</span>
+                                            <i class="fas fa-chevron-down flex-shrink-0"></i>
+                                        </button>
+                                        <div class="custom-filter-menu overflow-x-hidden bg-white">
+                                            <button type="button" class="custom-filter-option d-block w-100 border-0 bg-transparent text-start {% if not selected_budget %}active{% endif %}" data-value="">All Budgets</button>
+                                            {% for b in budget_choices %}
+                                            <button type="button" class="custom-filter-option d-block w-100 border-0 bg-transparent text-start {% if selected_budget == b %}active{% endif %}" data-value="{{ b|escapejs }}">{{ b }}</button>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-6 col-md-2 col-lg-2">
+
+                                    <div class="custom-filter-dropdown">
+                                        <input type="hidden" name="date_filter" value="{{ selected_date_filter|default:'' }}">
+                                        <button type="button" class="custom-filter-toggle bg-white text-start overflow-hidden d-flex align-items-center justify-content-between gap-2" aria-expanded="false">
+                                            <span class="custom-filter-value overflow-hidden text-truncate text-nowrap">{% if selected_date_filter == 'today' %}Today{% elif selected_date_filter == 'week' %}This Week{% elif selected_date_filter == 'month' %}This Month{% else %}Any Date{% endif %}</span>
+                                            <i class="fas fa-chevron-down flex-shrink-0"></i>
+                                        </button>
+                                        <div class="custom-filter-menu overflow-x-hidden bg-white">
+                                            <button type="button" class="custom-filter-option d-block w-100 border-0 bg-transparent text-start {% if not selected_date_filter %}active{% endif %}" data-value="">Any Date</button>
+                                            <button type="button" class="custom-filter-option d-block w-100 border-0 bg-transparent text-start {% if selected_date_filter == 'today' %}active{% endif %}" data-value="today">Today</button>
+                                            <button type="button" class="custom-filter-option d-block w-100 border-0 bg-transparent text-start {% if selected_date_filter == 'week' %}active{% endif %}" data-value="week">This Week</button>
+                                            <button type="button" class="custom-filter-option d-block w-100 border-0 bg-transparent text-start {% if selected_date_filter == 'month' %}active{% endif %}" data-value="month">This Month</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-6 col-md-2 col-lg-2">
+
+                                    <div class="custom-filter-dropdown">
+                                        <input type="hidden" name="status" value="{{ selected_status|default:'' }}">
+                                        <button type="button" class="custom-filter-toggle bg-white text-start overflow-hidden d-flex align-items-center justify-content-between gap-2" aria-expanded="false">
+                                            <span class="custom-filter-value overflow-hidden text-truncate text-nowrap">{% if selected_status %}{% for value, label in status_choices %}{% if selected_status == value %}{{ label }}{% endif %}{% endfor %}{% else %}All Status{% endif %}</span>
+                                            <i class="fas fa-chevron-down flex-shrink-0"></i>
+                                        </button>
+                                        <div class="custom-filter-menu overflow-x-hidden bg-white">
+                                            <button type="button" class="custom-filter-option d-block w-100 border-0 bg-transparent text-start {% if not selected_status %}active{% endif %}" data-value="">All Status</button>
+                                            {% for value, label in status_choices %}
+                                            <button type="button" class="custom-filter-option d-block w-100 border-0 bg-transparent text-start {% if selected_status == value %}active{% endif %}" data-value="{{ value|escapejs }}">{{ label }}</button>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
 
                                 </div>
 
                             </div>
 
-                            <div class="col-6 col-md-2 col-lg-2">
-
-                                <div class="custom-filter-dropdown">
-                                    <input type="hidden" name="budget" value="{{ selected_budget|default:'' }}">
-                                    <button type="button" class="custom-filter-toggle bg-white text-start overflow-hidden d-flex align-items-center justify-content-between gap-2" aria-expanded="false">
-                                        <span class="custom-filter-value overflow-hidden text-truncate text-nowrap">{% if selected_budget %}{{ selected_budget }}{% else %}All Budgets{% endif %}</span>
-                                        <i class="fas fa-chevron-down flex-shrink-0"></i>
+                            <!-- Actions on second row -->
+                            <div class="inquiry-filter-actions-row">
+                                <div class="inquiry-filter-actions d-flex align-items-center gap-2">
+                                    <button type="submit" class="btn btn-brand" style="border-radius:10px; height:42px; color: gray;">
+                                        <i class="fas fa-search"></i> Search
                                     </button>
-                                    <div class="custom-filter-menu overflow-x-hidden bg-white">
-                                        <button type="button" class="custom-filter-option d-block w-100 border-0 bg-transparent text-start {% if not selected_budget %}active{% endif %}" data-value="">All Budgets</button>
-                                        {% for b in budget_choices %}
-                                        <button type="button" class="custom-filter-option d-block w-100 border-0 bg-transparent text-start {% if selected_budget == b %}active{% endif %}" data-value="{{ b|escapejs }}">{{ b }}</button>
-                                        {% endfor %}
+                                    <a href="{% url 'admin_dash:inquiry-management-page' %}" class="btn btn-outline-secondary d-flex align-items-center justify-content-center" style="height:42px; border-radius:10px;">
+                                        <i class="fas fa-rotate-left"></i> Reset
+                                    </a>
+                                    <div class="dropdown">
+                                        <button class="btn btn-outline-secondary dropdown-toggle" id="exportDropdownBtn" type="button"
+                                                data-bs-toggle="dropdown" data-bs-boundary="viewport" aria-expanded="false"
+                                                style="border-radius:10px; height:42px; white-space: nowrap;">
+                                            <i class="fas fa-download"></i> Export
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="exportDropdownBtn">
+                                            <li><a class="dropdown-item" href="#" onclick="exportInquiries('csv'); return false;">Export as CSV</a></li>
+                                            <li><a class="dropdown-item" href="#" onclick="exportInquiries('xlsx'); return false;">Export as Excel</a></li>
+                                        </ul>
                                     </div>
                                 </div>
-
-                            </div>
-
-                            <div class="col-6 col-md-2 col-lg-2">
-
-                                <div class="custom-filter-dropdown">
-                                    <input type="hidden" name="date_filter" value="{{ selected_date_filter|default:'' }}">
-                                    <button type="button" class="custom-filter-toggle bg-white text-start overflow-hidden d-flex align-items-center justify-content-between gap-2" aria-expanded="false">
-                                        <span class="custom-filter-value overflow-hidden text-truncate text-nowrap">{% if selected_date_filter == 'today' %}Today{% elif selected_date_filter == 'week' %}This Week{% elif selected_date_filter == 'month' %}This Month{% else %}Any Date{% endif %}</span>
-                                        <i class="fas fa-chevron-down flex-shrink-0"></i>
-                                    </button>
-                                    <div class="custom-filter-menu overflow-x-hidden bg-white">
-                                        <button type="button" class="custom-filter-option d-block w-100 border-0 bg-transparent text-start {% if not selected_date_filter %}active{% endif %}" data-value="">Any Date</button>
-                                        <button type="button" class="custom-filter-option d-block w-100 border-0 bg-transparent text-start {% if selected_date_filter == 'today' %}active{% endif %}" data-value="today">Today</button>
-                                        <button type="button" class="custom-filter-option d-block w-100 border-0 bg-transparent text-start {% if selected_date_filter == 'week' %}active{% endif %}" data-value="week">This Week</button>
-                                        <button type="button" class="custom-filter-option d-block w-100 border-0 bg-transparent text-start {% if selected_date_filter == 'month' %}active{% endif %}" data-value="month">This Month</button>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="col-6 col-md-2 col-lg-2">
-
-                                <div class="custom-filter-dropdown">
-                                    <input type="hidden" name="status" value="{{ selected_status|default:'' }}">
-                                    <button type="button" class="custom-filter-toggle bg-white text-start overflow-hidden d-flex align-items-center justify-content-between gap-2" aria-expanded="false">
-                                        <span class="custom-filter-value overflow-hidden text-truncate text-nowrap">{% if selected_status %}{% for value, label in status_choices %}{% if selected_status == value %}{{ label }}{% endif %}{% endfor %}{% else %}All Status{% endif %}</span>
-                                        <i class="fas fa-chevron-down flex-shrink-0"></i>
-                                    </button>
-                                    <div class="custom-filter-menu overflow-x-hidden bg-white">
-                                        <button type="button" class="custom-filter-option d-block w-100 border-0 bg-transparent text-start {% if not selected_status %}active{% endif %}" data-value="">All Status</button>
-                                        {% for value, label in status_choices %}
-                                        <button type="button" class="custom-filter-option d-block w-100 border-0 bg-transparent text-start {% if selected_status == value %}active{% endif %}" data-value="{{ value|escapejs }}">{{ label }}</button>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="col-4 col-md-1 col-lg-1">
-
-                                <button type="submit" class="btn btn-brand w-100" style="border-radius:10px; height:42px;">
-
-                                    <i class="fas fa-search"></i> Search
-
-                                </button>
-
-                            </div>
-
-                            <div class="col-4 col-md-1 col-lg-1">
-
-                                <a href="{% url 'admin_dash:inquiry-management-page' %}" class="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-center" style="height:42px; border-radius:10px;">
-
-                                    <i class="fas fa-rotate-left"></i> Reset
-
-                                </a>
-
-                            </div>
-
-                            <div class="col-4 col-md-1 col-lg-1">
-
-                                <div class="dropdown">
-
-                                    <button class="btn btn-outline-secondary dropdown-toggle px-2" id="exportDropdownBtn" type="button"
-
-                                            data-bs-toggle="dropdown" data-bs-boundary="viewport" aria-expanded="false"
-
-                                            style="border-radius:10px; height:42px; min-width:auto;">
-
-                                        <i class="fas fa-download"></i> Export
-
-                                    </button>
-
-                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="exportDropdownBtn">
-
-                                        <li><a class="dropdown-item" href="#" onclick="exportInquiries('csv'); return false;">Export as CSV</a></li>
-
-                                        <li><a class="dropdown-item" href="#" onclick="exportInquiries('xlsx'); return false;">Export as Excel</a></li>
-
-                                    </ul>
-
-                                </div>
-
                             </div>
 
                         </form>
@@ -879,6 +860,36 @@
     });
 
 </script>
+
+<style>
+    /* Scoped CSS for inquiry filter actions responsive layout */
+    .inquiry-filter-actions-row {
+        display: flex;
+        justify-content: flex-start;
+        width: 100%;
+        margin-top: 8px;
+    }
+
+    .inquiry-filter-actions {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        width: fit-content;
+        max-width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .inquiry-filter-actions > .btn,
+    .inquiry-filter-actions > .dropdown {
+        width: auto;
+        flex: 0 0 auto;
+    }
+
+    .inquiry-filter-actions .dropdown > .btn {
+        width: auto;
+        white-space: nowrap;
+    }
+</style>
 
 <!-- Delete confirmation modal -->
 <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">

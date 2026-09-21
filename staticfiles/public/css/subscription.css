@@ -1,5 +1,8 @@
 /* Subscription Plans Page Styles */
 
+/* Import global typography system */
+@import url('../../css/typography.css');
+
 :root {
     --subscription-primary: #0F6A3C;
     --subscription-accent: #F4B400;
@@ -62,17 +65,17 @@
 }
 
 .subscription-hero-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 48px;
-    font-weight: 700;
-    line-height: 1.2;
+    font-family: var(--font-heading);
+    font-size: var(--font-h1);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-heading);
     margin-bottom: 20px;
     color: #ffffff;
 }
 
 .subscription-hero-description {
-    font-size: 18px;
-    line-height: 1.6;
+    font-size: var(--font-body-size);
+    line-height: var(--line-height-body);
     margin-bottom: 30px;
     color: rgba(255, 255, 255, 0.9);
 }
@@ -87,13 +90,13 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 14px;
-    font-weight: 500;
+    font-size: var(--font-small);
+    font-weight: var(--font-weight-medium);
 }
 
 .subscription-hero-feature i {
     color: var(--subscription-accent);
-    font-size: 16px;
+    font-size: var(--font-button);
 }
 
 .subscription-hero-right {
@@ -123,13 +126,13 @@
 }
 
 .annual-billing-icon {
-    font-size: 24px;
+    font-size: var(--font-h3);
     color: #ffffff;
 }
 
 .annual-billing-text {
-    font-size: 18px;
-    font-weight: 600;
+    font-size: var(--font-body-size);
+    font-weight: var(--font-weight-semibold);
     color: #ffffff;
 }
 
@@ -158,13 +161,13 @@
     border: none;
     background: transparent;
     border-radius: 40px;
-    font-size: 14px;
-    font-weight: 600;
+    font-size: var(--font-small);
+    font-weight: var(--font-weight-semibold);
     color: var(--subscription-text-muted);
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
-    font-family: 'Outfit', sans-serif;
+    font-family: var(--font-body);
 }
 
 .billing-toggle-btn:hover {
@@ -182,8 +185,8 @@
     right: -8px;
     background: var(--subscription-accent);
     color: #ffffff;
-    font-size: 10px;
-    font-weight: 700;
+    font-size: var(--font-small);
+    font-weight: var(--font-weight-bold);
     padding: 4px 8px;
     border-radius: 12px;
     text-transform: uppercase;
@@ -248,8 +251,8 @@
     transform: translateX(-50%);
     background: var(--subscription-accent);
     color: #ffffff;
-    font-size: 12px;
-    font-weight: 700;
+    font-size: var(--font-small);
+    font-weight: var(--font-weight-bold);
     padding: 8px 20px;
     border-radius: 20px;
     text-transform: uppercase;
@@ -262,17 +265,17 @@
 }
 
 .pricing-card-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 28px;
-    font-weight: 700;
+    font-family: var(--font-heading);
+    font-size: var(--font-h2);
+    font-weight: var(--font-weight-bold);
     color: var(--subscription-text-dark);
     margin-bottom: 8px;
 }
 
 .pricing-card-subtitle {
-    font-size: 14px;
+    font-size: var(--font-small);
     color: var(--subscription-text-muted);
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
 }
 
 .pricing-card-price {
@@ -281,25 +284,25 @@
 }
 
 .price-currency {
-    font-size: 24px;
-    font-weight: 600;
+    font-size: var(--font-h3);
+    font-weight: var(--font-weight-semibold);
     color: var(--subscription-text-dark);
 }
 
 .price-amount {
-    font-size: 48px;
-    font-weight: 700;
+    font-size: var(--font-h1);
+    font-weight: var(--font-weight-bold);
     color: var(--subscription-text-dark);
 }
 
 .price-period {
-    font-size: 16px;
+    font-size: var(--font-button);
     color: var(--subscription-text-muted);
 }
 
 .pricing-card-billing {
     text-align: center;
-    font-size: 14px;
+    font-size: var(--font-small);
     color: var(--subscription-text-muted);
     margin-bottom: 30px;
 }
@@ -317,7 +320,7 @@
     gap: 12px;
     padding: 12px 0;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    font-size: 14px;
+    font-size: var(--font-small);
     color: var(--subscription-text-dark);
 }
 
@@ -327,12 +330,12 @@
 
 .feature-included i {
     color: var(--subscription-primary);
-    font-size: 16px;
+    font-size: var(--font-button);
 }
 
 .feature-excluded i {
     color: #ccc;
-    font-size: 16px;
+    font-size: var(--font-button);
 }
 
 .feature-excluded span {
@@ -344,11 +347,11 @@
     text-align: center;
     padding: 14px 32px;
     border-radius: 50px;
-    font-weight: 600;
-    font-size: 14px;
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-small);
     text-decoration: none;
     transition: all 0.3s ease;
-    font-family: 'Outfit', sans-serif;
+    font-family: var(--font-body);
 }
 
 .pricing-card-btn.btn-primary {
@@ -382,9 +385,9 @@
 }
 
 .section-heading {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.5rem;
-    font-weight: 700;
+    font-family: var(--font-heading);
+    font-size: var(--font-h2);
+    font-weight: var(--font-weight-bold);
     color: var(--subscription-text-dark);
     text-align: center;
     margin-bottom: 50px;
@@ -411,9 +414,9 @@
 }
 
 .compare-table th {
-    font-family: 'Outfit', sans-serif;
-    font-weight: 600;
-    font-size: 14px;
+    font-family: var(--font-body);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-small);
     color: var(--subscription-text-dark);
 }
 
@@ -443,9 +446,9 @@
 }
 
 .category-header {
-    font-family: 'Playfair Display', serif;
-    font-weight: 600;
-    font-size: 16px;
+    font-family: var(--font-heading);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-button);
     color: var(--subscription-primary);
     text-align: left;
     padding: 20px;
@@ -497,9 +500,9 @@
 }
 
 .billing-table th {
-    font-family: 'Outfit', sans-serif;
-    font-weight: 600;
-    font-size: 14px;
+    font-family: var(--font-body);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-small);
     color: var(--subscription-text-dark);
 }
 
@@ -526,22 +529,22 @@
 .old-price {
     text-decoration: line-through;
     color: var(--subscription-text-muted);
-    font-size: 14px;
+    font-size: var(--font-small);
     margin-right: 8px;
 }
 
 .current-price {
-    font-weight: 700;
+    font-weight: var(--font-weight-bold);
     color: var(--subscription-primary);
-    font-size: 18px;
+    font-size: var(--font-body-size);
 }
 
 .save-badge-small {
     display: inline-block;
     background: var(--subscription-accent);
     color: #ffffff;
-    font-size: 10px;
-    font-weight: 700;
+    font-size: var(--font-small);
+    font-weight: var(--font-weight-bold);
     padding: 4px 8px;
     border-radius: 8px;
     margin-left: 8px;
@@ -595,30 +598,26 @@
 }
 
 .why-choose-card-icon i {
-    font-size: 24px;
+    font-size: var(--font-h3);
     color: var(--subscription-primary);
 }
 
 .why-choose-card-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 20px;
-    font-weight: 600;
+    font-family: var(--font-heading);
+    font-size: var(--font-h3);
+    font-weight: var(--font-weight-semibold);
     color: var(--subscription-text-dark);
     margin-bottom: 12px;
 }
 
 .why-choose-card-description {
-    font-size: 15px;
-    line-height: 1.6;
+    font-size: var(--font-body-size);
+    line-height: var(--line-height-body);
     color: var(--subscription-text-muted);
 }
 
 /* Responsive Design */
 @media (max-width: 1024px) {
-    .subscription-hero-title {
-        font-size: 36px;
-    }
-    
     .pricing-cards {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -652,24 +651,12 @@
         justify-content: center;
     }
     
-    .subscription-hero-title {
-        
-    }
-    
-    .subscription-hero-description {
-        font-size: 16px;
-    }
-    
     .subscription-hero-features {
         justify-content: center;
     }
     
     .subscription-hero-image {
         max-width: 200px;
-    }
-    
-    .annual-billing-text {
-        font-size: 14px;
     }
     
     .billing-toggle {
@@ -682,7 +669,6 @@
         flex: 1;
         min-width: 80px;
         padding: 10px 16px;
-        font-size: 12px;
     }
     
     .pricing-cards {
@@ -691,10 +677,6 @@
     
     .pricing-card {
         padding: 30px 20px;
-    }
-    
-    .section-heading {
-        font-size: 1.5rem;
     }
     
     .compare-table-wrapper,
@@ -710,24 +692,11 @@
         gap: 12px;
     }
 
-    .subscription-hero-title {
-        
-    }
-    
     .billing-toggle-btn {
         padding: 8px 12px;
-        font-size: 11px;
     }
     
     .save-badge {
         display: none;
-    }
-    
-    .pricing-card-title {
-        font-size: 24px;
-    }
-    
-    .price-amount {
-        font-size: 36px;
     }
 }
