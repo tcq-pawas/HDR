@@ -308,11 +308,11 @@
         </div>
 
         <!-- Premium Quick Actions -->
-        <div class="info-card p-4 mb-4">
+        <!-- <div class="info-card p-4 mb-4">
             <h4 class="fw-bold mb-4" style="color: #1e293b;">Quick Actions</h4>
-            <div class="row g-3">
+            <div class="row g-3 text-decoration-none">
                 <div class="col-6">
-                    <a href="{% url 'investor:investments-page' %}" class="action-card">
+                    <a href="{% url 'investor:investments-page' %}" class="action-card text-decoration-none">
                         <div class="action-icon" style="background: linear-gradient(135deg, #d1fae5, #a7f3d0); color: #059669;">
                             <i class="fas fa-plus"></i>
                         </div>
@@ -320,7 +320,7 @@
                     </a>
                 </div>
                 <div class="col-6">
-                    <a href="{% url 'investor:roi-data-page' %}" class="action-card">
+                    <a href="{% url 'investor:roi-data-page' %}" class="action-card text-decoration-none">
                         <div class="action-icon" style="background: linear-gradient(135deg, #dbeafe, #bfdbfe); color: #2563eb;">
                             <i class="fas fa-chart-pie"></i>
                         </div>
@@ -328,7 +328,7 @@
                     </a>
                 </div>
                 <div class="col-6">
-                    <a href="{% url 'investor:documents-page' %}" class="action-card">
+                    <a href="{% url 'investor:documents-page' %}" class="action-card text-decoration-none">
                         <div class="action-icon" style="background: linear-gradient(135deg, #ede9fe, #ddd6fe); color: #7c3aed;">
                             <i class="fas fa-file-alt"></i>
                         </div>
@@ -336,15 +336,15 @@
                     </a>
                 </div>
                 <div class="col-6">
-                    <button class="action-card" onclick="downloadReport()">
+                    <a class="action-card text-decoration-none" onclick="downloadReport()">
                         <div class="action-icon" style="background: linear-gradient(135deg, #fef3c7, #fde68a); color: #d97706;">
                             <i class="fas fa-download"></i>
                         </div>
                         <div class="fw-semibold" style="font-size: 0.875rem;">Download Statements</div>
-                    </button>
+                    </a>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <!-- Investor Achievements -->
         <div class="info-card p-4 mb-4">
@@ -391,7 +391,7 @@
                             <small class="text-muted" style="font-size: 0.75rem;">Updated today</small>
                         </div>
                     </div>
-                    <button class="btn btn-sm btn-outline-success rounded-pill"><i class="fas fa-download"></i></button>
+                    <button class="btn btn-sm btn-outline-success rounded-pill" style="width: 48px;"><i class="fas fa-download"></i></button>
                 </div>
             </div>
             <div class="document-item">
@@ -405,7 +405,7 @@
                             <small class="text-muted" style="font-size: 0.75rem;">Updated 2 days ago</small>
                         </div>
                     </div>
-                    <button class="btn btn-sm btn-outline-success rounded-pill"><i class="fas fa-download"></i></button>
+                    <button class="btn btn-sm btn-outline-success rounded-pill" style="width: 48px;"><i class="fas fa-download"></i></button>
                 </div>
             </div>
             <div class="document-item">
@@ -419,7 +419,7 @@
                             <small class="text-muted" style="font-size: 0.75rem;">Updated 1 week ago</small>
                         </div>
                     </div>
-                    <button class="btn btn-sm btn-outline-success rounded-pill"><i class="fas fa-download"></i></button>
+                    <button class="btn btn-sm btn-outline-success rounded-pill" style="width: 48px;"><i class="fas fa-download"></i></button>
                 </div>
             </div>
         </div>

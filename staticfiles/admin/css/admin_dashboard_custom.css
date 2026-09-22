@@ -13,10 +13,14 @@
     transform: translateY(-4px);
 }
 .kpi-icon {
-    width: 56px;
-    height: 56px;
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    min-height: 48px;
     border-radius: var(--radius-sm);
-    font-size: 1.5rem;
+    font-size: 20px;
+    line-height: 1;
+    margin: 0;
     margin-bottom: 16px;
 }
 .kpi-value {

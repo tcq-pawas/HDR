@@ -293,7 +293,11 @@ nav.sidebar .nav-item {
    PAGE HEADER
    ============================================================ */
 .page-header {
-    background: var(--surface);
+    background: linear-gradient(
+      rgb(0, 69, 38) 0%,
+      rgb(0, 57, 31) 55%,
+      rgb(0, 40, 21) 100%
+    );
     padding: 24px 32px;
     margin-bottom: 32px;
     border-bottom: 1px solid var(--border);
@@ -302,7 +306,7 @@ nav.sidebar .nav-item {
 }
 
 .page-title {
-    color: var(--text-primary);
+    color: #ffffff;
     font-weight: 700;
     margin: 0;
     font-size: 1.75rem;
