@@ -23,7 +23,7 @@ jobs:
       # ============================================
       - name: Configure SSH
         env:
-          STAGING_EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+          STAGING_EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY}}
           EC2_HOST: ${{ secrets.EC2_HOST }}
         run: |
           set -euo pipefail
@@ -39,10 +39,10 @@ jobs:
           echo "EC2_HOST is set: yes (length=${#EC2_HOST})"
 
           if [ -z "${EC2_SSH_KEY:-}" ]; then
-            echo "::error::EC2_SSH_KEY secret is empty or not set"
+            echo "::error::EC2_SSH_KEYsecret is empty or not set"
             exit 1
           fi
-          echo "EC2_SSH_KEY is set: yes (length=${#EC2_SSH_KEY})"
+          echo "EC2_SSH_KEYis set: yes (length=${#EC2_SSH_KEY})"
 
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
@@ -57,7 +57,7 @@ jobs:
           head -n 1 ~/.ssh/ec2_key.pem || true
 
           if ! grep -q "BEGIN .*PRIVATE KEY" ~/.ssh/ec2_key.pem; then
-            echo "::error::EC2_SSH_KEY is not a valid PEM private key (missing BEGIN PRIVATE KEY line)"
+            echo "::error::EC2_SSH_KEYis not a valid PEM private key (missing BEGIN PRIVATE KEY line)"
             exit 1
           fi
 
