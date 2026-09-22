@@ -1,908 +1,65 @@
 {% extends "administration/admin_base.html" %}
+{% load static %}
 
 {% block title %}KYC Verifications - Admin Dashboard{% endblock %}
 {% block page_title %}KYC Verifications{% endblock %}
 {% block page_subtitle %}Review and manage agent document verification submissions{% endblock %}
 
 {% block content %}
-<style>
-    .kyc-dash {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 14px;
-        box-shadow: var(--shadow-sm);
-        padding: 1.25rem 1.35rem 1.35rem;
-    }
 
-    /* Status summary cards */
-    .kyc-status-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 0.75rem;
-        margin-bottom: 1.15rem;
-    }
-
-    .kyc-status-card {
-        display: flex;
-        flex-direction: column;
-        gap: 0.35rem;
-        padding: 0.85rem 1rem;
-        border-radius: 12px;
-        border: 1.5px solid transparent;
-        background: #f8fafc;
-        cursor: pointer;
-        text-align: left;
-        transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
-        width: 100%;
-    }
-
-    .kyc-status-card:hover {
-        box-shadow: var(--shadow-sm);
-    }
-
-    .kyc-status-card .status-top {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 0.8rem;
-        font-weight: 600;
-        color: var(--text-secondary);
-        line-height: 1.2;
-    }
-
-    .kyc-status-card .status-dot {
-        width: 9px;
-        height: 9px;
-        border-radius: 50%;
-        flex-shrink: 0;
-    }
-
-    .kyc-status-card .status-count {
-        font-size: 1.65rem;
-        font-weight: 700;
-        font-family: 'Poppins', sans-serif;
-        color: var(--text-primary);
-        line-height: 1.1;
-        padding-left: 1.1rem;
-    }
-
-    .kyc-status-card[data-filter="pending"] {
-        background: #fffbeb;
-        border-color: #fde68a;
-    }
-    .kyc-status-card[data-filter="pending"] .status-dot { background: #f59e0b; }
-    .kyc-status-card[data-filter="pending"].active {
-        border-color: #f59e0b;
-        background: #fef3c7;
-        box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
-    }
-
-    .kyc-status-card[data-filter="verified"] {
-        background: #f0fdf4;
-        border-color: #bbf7d0;
-    }
-    .kyc-status-card[data-filter="verified"] .status-dot { background: #10b981; }
-    .kyc-status-card[data-filter="verified"].active {
-        border-color: #10b981;
-        background: #dcfce7;
-        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
-    }
-
-    .kyc-status-card[data-filter="reupload"] {
-        background: #fef2f2;
-        border-color: #fecaca;
-    }
-    .kyc-status-card[data-filter="reupload"] .status-dot { background: #ef4444; }
-    .kyc-status-card[data-filter="reupload"].active {
-        border-color: #ef4444;
-        background: #fee2e2;
-        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
-    }
-
-    .kyc-status-card[data-filter="submitted"] {
-        background: #eff6ff;
-        border-color: #bfdbfe;
-    }
-    .kyc-status-card[data-filter="submitted"] .status-dot { background: #3b82f6; }
-    .kyc-status-card[data-filter="submitted"].active {
-        border-color: #3b82f6;
-        background: #dbeafe;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
-    }
-
-    /* Section header */
-    .kyc-section-header {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 1rem;
-        padding: 0.35rem 0 1rem;
-        border-bottom: 1px solid var(--border);
-        margin-bottom: 1rem;
-    }
-
-    .kyc-section-header h2 {
-        font-size: 1.15rem;
-        font-weight: 700;
-        margin: 0 0 0.2rem;
-        color: var(--text-primary);
-        font-family: 'Poppins', sans-serif;
-    }
-
-    .kyc-section-header p {
-        margin: 0;
-        font-size: 0.85rem;
-        color: var(--text-secondary);
-    }
-
-    .kyc-section-header .header-link {
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: var(--primary);
-        text-decoration: none;
-        white-space: nowrap;
-        padding-top: 0.2rem;
-    }
-
-    .kyc-section-header .header-link:hover {
-        text-decoration: underline;
-    }
-
-    /* Document list */
-    .kyc-doc-list {
-        display: flex;
-        flex-direction: column;
-        gap: 0.65rem;
-        min-height: 0;
-    }
-
-    .kyc-doc-card {
-        display: flex;
-        align-items: center;
-        gap: 0.9rem;
-        padding: 0.85rem 1rem;
-        background: #fff;
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        transition: border-color 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    .kyc-doc-card:hover {
-        border-color: #cbd5e1;
-        box-shadow: var(--shadow-sm);
-    }
-
-    .kyc-thumb {
-        width: 56px;
-        height: 56px;
-        border-radius: 8px;
-        border: 1px solid var(--border);
-        background: #f1f5f9;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        flex-shrink: 0;
-        cursor: pointer;
-        padding: 0;
-        color: #94a3b8;
-        font-size: 1.35rem;
-        transition: border-color 0.15s ease;
-    }
-
-    .kyc-thumb:hover {
-        border-color: var(--primary);
-        color: var(--primary);
-    }
-
-    .kyc-thumb img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .kyc-doc-body {
-        flex: 1;
-        min-width: 0;
-    }
-
-    .kyc-doc-title-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 0.75rem;
-        margin-bottom: 0.25rem;
-        flex-wrap: wrap;
-    }
-
-    .kyc-doc-title {
-        font-size: 0.95rem;
-        font-weight: 600;
-        color: var(--text-primary);
-        margin: 0;
-        font-family: 'Poppins', sans-serif;
-    }
-
-    .kyc-agent-line {
-        font-size: 0.8rem;
-        color: var(--text-secondary);
-        margin: 0 0 0.35rem;
-    }
-
-    .kyc-agent-line strong {
-        color: #334155;
-        font-weight: 600;
-    }
-
-    .kyc-meta-row {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 0.45rem 0.65rem;
-        font-size: 0.78rem;
-        color: var(--text-secondary);
-    }
-
-    .kyc-side-chip {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.25rem;
-        padding: 0.12rem 0.45rem;
-        border-radius: 6px;
-        background: #f1f5f9;
-        font-weight: 600;
-        font-size: 0.72rem;
-        color: #475569;
-    }
-
-    .kyc-side-chip.ok { background: #ecfdf5; color: #047857; }
-    .kyc-side-chip.missing { background: #fef2f2; color: #b91c1c; }
-    .kyc-side-chip.na { background: #f8fafc; color: #94a3b8; }
-
-    .kyc-reason {
-        margin-top: 0.45rem;
-        font-size: 0.78rem;
-        color: #b91c1c;
-        background: #fef2f2;
-        border-radius: 6px;
-        padding: 0.35rem 0.55rem;
-        display: inline-block;
-        max-width: 100%;
-    }
-
-    .kyc-status-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.3rem;
-        font-size: 0.75rem;
-        font-weight: 700;
-        padding: 0.25rem 0.6rem;
-        border-radius: 999px;
-        white-space: nowrap;
-    }
-
-    .kyc-status-pill.pending {
-        background: #fef3c7;
-        color: #b45309;
-    }
-    .kyc-status-pill.verified {
-        background: #dcfce7;
-        color: #047857;
-    }
-    .kyc-status-pill.reupload {
-        background: #fee2e2;
-        color: #b91c1c;
-    }
-
-    .kyc-doc-actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.4rem;
-        justify-content: flex-end;
-        flex-shrink: 0;
-    }
-
-    .kyc-doc-actions .btn {
-        font-size: 0.78rem;
-        font-weight: 600;
-        padding: 0.35rem 0.7rem;
-        border-radius: 8px;
-    }
-
-    .btn-kyc-approve {
-        background: var(--primary);
-        border-color: var(--primary);
-        color: #fff;
-    }
-    .btn-kyc-approve:hover {
-        background: var(--primary-dark);
-        border-color: var(--primary-dark);
-        color: #fff;
-    }
-
-    /* Empty state */
-    .kyc-empty {
-        text-align: center;
-        padding: 2rem 1rem;
-        border: 1px dashed #cbd5e1;
-        border-radius: 12px;
-        background: #f8fafc;
-    }
-
-    .kyc-empty .empty-icon {
-        width: 44px;
-        height: 44px;
-        margin: 0 auto 0.75rem;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.25rem;
-        background: #e2e8f0;
-        color: #64748b;
-    }
-
-    .kyc-empty.pending .empty-icon { background: #fef3c7; color: #d97706; }
-    .kyc-empty.verified .empty-icon { background: #dcfce7; color: #059669; }
-    .kyc-empty.reupload .empty-icon { background: #fee2e2; color: #dc2626; }
-    .kyc-empty.submitted .empty-icon { background: #dbeafe; color: #2563eb; }
-
-    .kyc-empty h3 {
-        font-size: 0.98rem;
-        font-weight: 600;
-        margin: 0 0 0.35rem;
-        color: var(--text-primary);
-    }
-
-    .kyc-empty p {
-        margin: 0;
-        font-size: 0.82rem;
-        color: var(--text-secondary);
-        max-width: 280px;
-        margin-inline: auto;
-    }
-
-    /* Bulk agent strip inside submitted filter */
-    .kyc-bulk-strip {
-        margin-top: 1rem;
-        padding-top: 1rem;
-        border-top: 1px solid var(--border);
-    }
-
-    .kyc-bulk-strip h4 {
-        font-size: 0.9rem;
-        font-weight: 600;
-        margin: 0 0 0.65rem;
-        color: var(--text-primary);
-    }
-
-    .kyc-bulk-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 0.75rem;
-        padding: 0.65rem 0.85rem;
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        background: #f8fafc;
-        margin-bottom: 0.5rem;
-        flex-wrap: wrap;
-    }
-
-    .kyc-bulk-row .name {
-        font-weight: 600;
-        font-size: 0.88rem;
-    }
-
-    .kyc-bulk-row .email {
-        font-size: 0.75rem;
-        color: var(--text-secondary);
-    }
-
-    /* Preview modal helpers */
-    .kyc-preview-side {
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        border-radius: 12px;
-        padding: 1rem;
-        height: 100%;
-    }
-    .kyc-preview-side h6 {
-        font-size: 0.8rem;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-        color: #64748b;
-        font-weight: 700;
-        margin-bottom: 0.75rem;
-    }
-    .kyc-preview-img {
-        width: 100%;
-        max-height: 420px;
-        object-fit: contain;
-        border-radius: 8px;
-        background: #fff;
-        border: 1px solid #e2e8f0;
-    }
-    .kyc-preview-pdf {
-        width: 100%;
-        height: 420px;
-        border: 1px solid #e2e8f0;
-        border-radius: 8px;
-        background: #fff;
-    }
-    .kyc-preview-empty {
-        min-height: 160px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #94a3b8;
-        background: #fff;
-        border: 1px dashed #cbd5e1;
-        border-radius: 8px;
-    }
-    .kyc-meta-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0.75rem 1rem;
-        margin-bottom: 1.25rem;
-    }
-    .kyc-meta-label {
-        display: block;
-        font-size: 0.72rem;
-        text-transform: uppercase;
-        letter-spacing: 0.03em;
-        color: #94a3b8;
-        font-weight: 700;
-        margin-bottom: 0.15rem;
-    }
-
-    .kyc-pane { display: none; }
-    .kyc-pane.active { display: block; }
-
-    @media (max-width: 992px) {
-        .kyc-status-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-
-    @media (max-width: 768px) {
-        .kyc-doc-card {
-            flex-direction: column;
-            align-items: stretch;
-        }
-        .kyc-doc-actions {
-            justify-content: stretch;
-        }
-        .kyc-doc-actions .btn,
-        .kyc-doc-actions form {
-            flex: 1;
-        }
-        .kyc-doc-actions form .btn {
-            width: 100%;
-        }
-        .kyc-section-header {
-            flex-direction: column;
-        }
-    }
-
-    @media (max-width: 576px) {
-        .kyc-meta-grid { grid-template-columns: 1fr; }
-        .kyc-dash { padding: 1rem; }
-    }
-
-    /* =====================================================
-       RESPONSIVE ENHANCEMENTS
-       Page-specific overrides; existing functionality kept
-       ===================================================== */
-
-    @media (max-width: 992px) {
-        .kyc-dash {
-            padding: 1rem;
-        }
-
-        .kyc-status-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 0.65rem;
-        }
-
-        .kyc-status-card {
-            padding: 0.75rem 0.85rem;
-        }
-
-        .kyc-status-card .status-count {
-            font-size: 1.45rem;
-        }
-
-        .kyc-doc-card {
-            gap: 0.75rem;
-        }
-
-        .kyc-doc-actions .btn {
-            font-size: 0.72rem;
-            padding: 0.32rem 0.58rem;
-        }
-
-        .kyc-preview-img {
-            max-height: 340px;
-        }
-
-        .kyc-preview-pdf {
-            height: 340px;
-        }
-    }
-
-    @media (max-width: 768px) {
-        .kyc-dash {
-            padding: 0.85rem;
-            border-radius: 12px;
-        }
-
-        /* Status filters */
-        .kyc-status-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 0.55rem;
-            margin-bottom: 0.9rem;
-        }
-
-        .kyc-status-card {
-            min-width: 0;
-            padding: 0.7rem 0.75rem;
-            border-radius: 10px;
-        }
-
-        .kyc-status-card .status-top {
-            font-size: 0.7rem;
-            gap: 0.4rem;
-            min-width: 0;
-        }
-
-        .kyc-status-card .status-dot {
-            width: 8px;
-            height: 8px;
-        }
-
-        .kyc-status-card .status-count {
-            font-size: 1.25rem;
-            padding-left: 0.95rem;
-        }
-
-        /* Section header */
-        .kyc-section-header {
-            gap: 0.6rem;
-            padding-bottom: 0.75rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .kyc-section-header h2 {
-            font-size: 1rem;
-        }
-
-        .kyc-section-header p {
-            font-size: 0.75rem;
-            line-height: 1.45;
-        }
-
-        .kyc-section-header .header-link {
-            font-size: 0.75rem;
-            padding-top: 0;
-        }
-
-        /* Document cards */
-        .kyc-doc-card {
-            flex-direction: column;
-            align-items: stretch;
-            gap: 0.7rem;
-            padding: 0.75rem;
-            border-radius: 10px;
-        }
-
-        .kyc-thumb {
-            width: 52px;
-            height: 52px;
-            font-size: 1.15rem;
-        }
-
-        .kyc-doc-title-row {
-            align-items: flex-start;
-            gap: 0.45rem;
-            margin-bottom: 0.2rem;
-        }
-
-        .kyc-doc-title {
-            font-size: 0.85rem;
-            line-height: 1.3;
-        }
-
-        .kyc-agent-line {
-            font-size: 0.72rem;
-            line-height: 1.4;
-        }
-
-        .kyc-meta-row {
-            gap: 0.35rem 0.45rem;
-            font-size: 0.68rem;
-        }
-
-        .kyc-side-chip {
-            font-size: 0.64rem;
-            padding: 0.12rem 0.38rem;
-        }
-
-        .kyc-status-pill {
-            font-size: 0.65rem;
-            padding: 0.22rem 0.5rem;
-        }
-
-        .kyc-reason {
-            font-size: 0.68rem;
-            line-height: 1.4;
-        }
-
-        /* Actions become easy-to-tap full-width controls */
-        .kyc-doc-actions {
-            width: 100%;
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 0.45rem;
-        }
-
-        .kyc-doc-actions .btn,
-        .kyc-doc-actions form,
-        .kyc-doc-actions form .btn {
-            width: 100%;
-            min-width: 0;
-        }
-
-        .kyc-doc-actions .btn {
-            min-height: 38px;
-            font-size: 0.7rem;
-            padding: 0.45rem 0.55rem;
-        }
-
-        /* Bulk agent rows */
-        .kyc-bulk-strip {
-            margin-top: 0.8rem;
-            padding-top: 0.8rem;
-        }
-
-        .kyc-bulk-strip h4 {
-            font-size: 0.82rem;
-        }
-
-        .kyc-bulk-row {
-            align-items: stretch;
-            gap: 0.65rem;
-            padding: 0.7rem;
-        }
-
-        .kyc-bulk-row .name {
-            font-size: 0.78rem;
-        }
-
-        .kyc-bulk-row .email {
-            font-size: 0.68rem;
-            overflow-wrap: anywhere;
-        }
-
-        .kyc-bulk-row > div:last-child {
-            width: 100%;
-        }
-
-        .kyc-bulk-row > div:last-child form,
-        .kyc-bulk-row > div:last-child .btn {
-            flex: 1 1 0;
-        }
-
-        /* Preview */
-        .kyc-preview-side {
-            padding: 0.75rem;
-        }
-
-        .kyc-preview-img {
-            max-height: 300px;
-        }
-
-        .kyc-preview-pdf {
-            height: 300px;
-        }
-
-        .kyc-meta-grid {
-            grid-template-columns: 1fr 1fr;
-            gap: 0.65rem;
-            margin-bottom: 1rem;
-        }
-    }
-
-    @media (max-width: 576px) {
-        .kyc-dash {
-            padding: 0.7rem;
-            border-radius: 10px;
-        }
-
-        /* Four status cards become a clean 2x2 grid */
-        .kyc-status-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 0.45rem;
-        }
-
-        .kyc-status-card {
-            padding: 0.6rem;
-        }
-
-        .kyc-status-card .status-top {
-            font-size: 0.64rem;
-        }
-
-        .kyc-status-card .status-count {
-            font-size: 1.1rem;
-            padding-left: 0.85rem;
-        }
-
-        .kyc-section-header {
-            flex-direction: column;
-            align-items: stretch;
-        }
-
-        .kyc-section-header .header-link {
-            align-self: flex-start;
-        }
-
-        .kyc-doc-title-row {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .kyc-doc-title {
-            font-size: 0.8rem;
-        }
-
-        .kyc-agent-line {
-            font-size: 0.68rem;
-        }
-
-        .kyc-meta-row {
-            font-size: 0.64rem;
-        }
-
-        .kyc-doc-actions {
-            grid-template-columns: 1fr;
-        }
-
-        .kyc-doc-actions .btn {
-            min-height: 40px;
-        }
-
-        .kyc-bulk-row > div:last-child {
-            flex-direction: column;
-        }
-
-        .kyc-bulk-row > div:last-child form,
-        .kyc-bulk-row > div:last-child .btn {
-            width: 100%;
-        }
-
-        .kyc-meta-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .kyc-preview-img {
-            max-height: 240px;
-        }
-
-        .kyc-preview-pdf {
-            height: 260px;
-        }
-
-        /* Mobile modal */
-        #docPreviewModal .modal-dialog,
-        #rejectModal .modal-dialog,
-        #rejectDocModal .modal-dialog {
-            width: auto;
-            max-width: calc(100% - 16px);
-            margin: 8px auto;
-        }
-
-        #docPreviewModal .modal-header,
-        #rejectModal .modal-header,
-        #rejectDocModal .modal-header {
-            padding: 0.8rem 0.9rem;
-        }
-
-        #docPreviewModal .modal-body,
-        #rejectModal .modal-body,
-        #rejectDocModal .modal-body {
-            padding: 0.85rem;
-        }
-
-        #docPreviewModal .modal-footer,
-        #rejectModal .modal-footer,
-        #rejectDocModal .modal-footer {
-            padding: 0.65rem 0.85rem;
-            gap: 0.45rem;
-            flex-wrap: wrap;
-        }
-
-        #docPreviewModal .modal-footer .btn,
-        #rejectModal .modal-footer .btn,
-        #rejectDocModal .modal-footer .btn {
-            min-height: 38px;
-        }
-    }
-
-    @media (max-width: 400px) {
-        .kyc-dash {
-            padding: 0.55rem;
-        }
-
-        .kyc-status-card .status-top {
-            font-size: 0.59rem;
-        }
-
-        .kyc-status-card .status-count {
-            font-size: 1rem;
-        }
-
-        .kyc-doc-card {
-            padding: 0.65rem;
-        }
-
-        .kyc-thumb {
-            width: 48px;
-            height: 48px;
-        }
-
-        .kyc-meta-row {
-            align-items: flex-start;
-            flex-direction: column;
-        }
-    }
-
-</style>
-
-<div class="kyc-dash">
+<div class="card border rounded-3 shadow-sm p-3">
     <!-- Status summary -->
-    <div class="kyc-status-grid" role="tablist" aria-label="Document status filters">
-        <button type="button" class="kyc-status-card active" data-filter="pending" role="tab" aria-selected="true">
-            <span class="status-top"><span class="status-dot"></span> Pending Review</span>
-            <span class="status-count">{{ pending_count }}</span>
-        </button>
-        <button type="button" class="kyc-status-card" data-filter="verified" role="tab" aria-selected="false">
-            <span class="status-top"><span class="status-dot"></span> Verified</span>
-            <span class="status-count">{{ verified_count }}</span>
-        </button>
-        <button type="button" class="kyc-status-card" data-filter="reupload" role="tab" aria-selected="false">
-            <span class="status-top"><span class="status-dot"></span> Re-upload Required</span>
-            <span class="status-count">{{ rejected_count }}</span>
-        </button>
-        <button type="button" class="kyc-status-card" data-filter="submitted" role="tab" aria-selected="false">
-            <span class="status-top"><span class="status-dot"></span> Submitted by Agent</span>
-            <span class="status-count">{{ submitted_count }}</span>
-        </button>
+    <div class="row g-2" role="tablist" aria-label="Document status filters">
+        <div class="col-6 col-lg-3">
+            <button type="button" class="kyc-status-card active w-100 d-flex flex-column" data-filter="pending" role="tab" aria-selected="true">
+                <span class="status-top d-flex align-items-center gap-1"><span class="status-dot"></span> Pending Review</span>
+                <span class="status-count">{{ pending_count }}</span>
+            </button>
+        </div>
+        <div class="col-6 col-lg-3">
+            <button type="button" class="kyc-status-card w-100 d-flex flex-column" data-filter="verified" role="tab" aria-selected="false">
+                <span class="status-top d-flex align-items-center gap-1"><span class="status-dot"></span> Verified</span>
+                <span class="status-count">{{ verified_count }}</span>
+            </button>
+        </div>
+        <div class="col-6 col-lg-3">
+            <button type="button" class="kyc-status-card w-100 d-flex flex-column" data-filter="reupload" role="tab" aria-selected="false">
+                <span class="status-top d-flex align-items-center gap-1"><span class="status-dot"></span> Re-upload Required</span>
+                <span class="status-count">{{ rejected_count }}</span>
+            </button>
+        </div>
+        <div class="col-6 col-lg-3">
+            <button type="button" class="kyc-status-card w-100 d-flex flex-column" data-filter="submitted" role="tab" aria-selected="false">
+                <span class="status-top d-flex align-items-center gap-1"><span class="status-dot"></span> Submitted by Agent</span>
+                <span class="status-count">{{ submitted_count }}</span>
+            </button>
+        </div>
     </div>
 
     <!-- Section header -->
-    <div class="kyc-section-header">
+     
+    <div class="d-flex align-items-end justify-content-between pt-5 border-bottom">
         <div>
-            <h2>Document Verification</h2>
-            <p>Review and manage documents submitted by agents.</p>
+            <h2 class="fw-bold mb-1" style="font-size: 25px;">Document Verification</h2>
+            <p class="mb-0 text-muted small">Review and manage documents submitted by agents.</p>
         </div>
-        <a href="#kycDocList" class="header-link" id="kycManageLink">Manage Documents</a>
+        <a href="#kycDocList" class="header-link fw-semibold text-decoration-none" id="kycManageLink">Manage Documents</a>
     </div>
 
     <div id="kycDocList">
         <!-- PENDING -->
         <div class="kyc-pane active" id="pane-pending" data-pane="pending">
             {% if pending_docs %}
-            <div class="kyc-doc-list">
+            <div class="d-flex flex-column gap-2">
                 {% for doc in pending_docs %}
                 {% include "administration/_kyc_doc_card.html" with doc=doc show_review_actions="1" status_class="pending" %}
                 {% endfor %}
             </div>
             {% else %}
-            <div class="kyc-empty pending">
-                <div class="empty-icon"><i class="fas fa-check"></i></div>
-                <h3>No Pending Documents</h3>
-                <p>You're all caught up. There are no documents waiting for review.</p>
+            <div class="kyc-empty pending text-center p-4 border rounded-3 bg-light">
+                <div class="empty-icon rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3"><i class="fas fa-check"></i></div>
+                <h3 class=" mb-1" style="font-size: 1.3rem;">No Pending Documents</h3>
+                <p class="mb-0 text-muted small">You're all caught up. There are no documents waiting for review.</p>
             </div>
             {% endif %}
         </div>
@@ -910,16 +67,16 @@
         <!-- VERIFIED -->
         <div class="kyc-pane" id="pane-verified" data-pane="verified">
             {% if verified_docs %}
-            <div class="kyc-doc-list">
+            <div class="d-flex flex-column gap-2">
                 {% for doc in verified_docs %}
                 {% include "administration/_kyc_doc_card.html" with doc=doc status_class="verified" %}
                 {% endfor %}
             </div>
             {% else %}
-            <div class="kyc-empty verified">
-                <div class="empty-icon"><i class="fas fa-check-circle"></i></div>
-                <h3>No Verified Documents</h3>
-                <p>Verified documents will appear here once approved.</p>
+            <div class="kyc-empty verified text-center p-4 border rounded-3 bg-light">
+                <div class="empty-icon rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3"><i class="fas fa-check-circle"></i></div>
+                <h3 class="fw-semibold mb-1">No Verified Documents</h3>
+                <p class="mb-0 text-muted small">Verified documents will appear here once approved.</p>
             </div>
             {% endif %}
         </div>
@@ -927,16 +84,16 @@
         <!-- RE-UPLOAD -->
         <div class="kyc-pane" id="pane-reupload" data-pane="reupload">
             {% if rejected_docs %}
-            <div class="kyc-doc-list">
+            <div class="d-flex flex-column gap-2">
                 {% for doc in rejected_docs %}
                 {% include "administration/_kyc_doc_card.html" with doc=doc status_class="reupload" show_reason="1" %}
                 {% endfor %}
             </div>
             {% else %}
-            <div class="kyc-empty reupload">
-                <div class="empty-icon"><i class="fas fa-redo"></i></div>
-                <h3>No Re-upload Required</h3>
-                <p>Documents needing a new upload will show up here.</p>
+            <div class="kyc-empty reupload text-center p-4 border rounded-3 bg-light">
+                <div class="empty-icon rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3"><i class="fas fa-redo"></i></div>
+                <h3 class="fw-semibold mb-1">No Re-upload Required</h3>
+                <p class="mb-0 text-muted small">Documents needing a new upload will show up here.</p>
             </div>
             {% endif %}
         </div>
@@ -944,7 +101,7 @@
         <!-- SUBMITTED BY AGENT -->
         <div class="kyc-pane" id="pane-submitted" data-pane="submitted">
             {% if submitted_docs %}
-            <div class="kyc-doc-list">
+            <div class="d-flex flex-column gap-2">
                 {% for doc in submitted_docs %}
                     {% if doc.status == 'verified' %}
                         {% include "administration/_kyc_doc_card.html" with doc=doc status_class="verified" %}
@@ -956,21 +113,21 @@
                 {% endfor %}
             </div>
             {% else %}
-            <div class="kyc-empty submitted">
-                <div class="empty-icon"><i class="fas fa-file-alt"></i></div>
-                <h3>No Documents Submitted</h3>
-                <p>Documents uploaded by agents will appear here.</p>
+            <div class="kyc-empty submitted text-center p-4 border rounded-3 bg-light">
+                <div class="empty-icon rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3"><i class="fas fa-file-alt"></i></div>
+                <h3 class="fw-semibold mb-1">No Documents Submitted</h3>
+                <p class="mb-0 text-muted small">Documents uploaded by agents will appear here.</p>
             </div>
             {% endif %}
 
             {% if pending_profiles %}
-            <div class="kyc-bulk-strip">
-                <h4>Agents awaiting overall KYC decision</h4>
+            <div class="border-top pt-3 mt-3">
+                <h4 class="fw-semibold mb-2">Agents awaiting overall KYC decision</h4>
                 {% for profile in pending_profiles %}
-                <div class="kyc-bulk-row">
+                <div class="d-flex align-items-center justify-content-between gap-2 p-2 border rounded-3 bg-light mb-2 flex-wrap">
                     <div>
-                        <div class="name">{{ profile.user.get_full_name|default:profile.user.username }}</div>
-                        <div class="email">{{ profile.user.email }}</div>
+                        <div class="name fw-semibold">{{ profile.user.get_full_name|default:profile.user.username }}</div>
+                        <div class="email text-muted small">{{ profile.user.email }}</div>
                     </div>
                     <div class="d-flex gap-2 flex-wrap">
                         <form method="post" action="{% url 'admin_dash:approve_kyc' profile.id %}">

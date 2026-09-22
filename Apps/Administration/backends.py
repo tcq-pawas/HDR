@@ -96,11 +96,20 @@ def get_user_by_login_identifier(identifier):
         if user:
             return user
 
-    # 3) Mobile from profiles
+    # 3) Mobile from UserVerification model (Centralized)
     login_digits = _digits_only(identifier)
     if len(login_digits) < 7:
         return None
 
+    try:
+        from Apps.Administration.models import UserVerification
+        for verification in UserVerification.objects.select_related('user').iterator():
+            if _phones_match(verification.phone_number, login_digits):
+                return verification.user
+    except Exception:
+        pass
+
+    # 4) Mobile from profiles (Fallback)
     user = _find_user_by_profile_phone(login_digits)
     if user:
         return user

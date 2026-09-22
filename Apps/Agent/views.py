@@ -242,29 +242,69 @@ def agent_reviews(request):
 
 
 @login_required
+def settings(request):
+    """Agent settings page - update profile information"""
+    user_role = get_user_role(request.user)
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
+
+    try:
+        agent_profile = request.user.agent_profile
+    except AgentProfile.DoesNotExist:
+        agent_profile = AgentProfile.objects.create(user=request.user)
+
+    # Check if profile image file exists, if not clear the field
+    if agent_profile.profile_image:
+        try:
+            # Try to access the file to check if it exists
+            agent_profile.profile_image.open('rb')
+            agent_profile.profile_image.close()
+        except (FileNotFoundError, IOError):
+            # File doesn't exist, clear the field
+            agent_profile.profile_image = None
+            agent_profile.save()
+
+    if request.method == 'POST':
+        form = AgentProfileForm(request.POST, request.FILES, instance=agent_profile, user=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Profile updated successfully!")
+            return redirect('agent:settings')
+    else:
+        form = AgentProfileForm(instance=agent_profile, user=request.user)
+
+    context = {
+        'form': form,
+        'agent_profile': agent_profile,
+    }
+
+    return render(request, 'agent/settings.html', context)
+
+
+@login_required
 def profile(request):
     """View agent profile"""
     user_role = get_user_role(request.user)
     if user_role not in ['agent', 'owner']:
         raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
-        
+
     agent_profile = get_object_or_404(AgentProfile, user=request.user)
-    
+
     # Get statistics
     total_properties = Property.objects.filter(seller=request.user).count()
     total_leads = Lead.objects.filter(property__seller=request.user).count()
-    
+
     stats = {
         'total_properties': total_properties,
         'total_leads': total_leads,
     }
-    
+
     context = {
         'agent_profile': agent_profile,
         'user': request.user,
         'stats': stats,
     }
-    
+
     return render(request, 'agent/profile.html', context)
 
 

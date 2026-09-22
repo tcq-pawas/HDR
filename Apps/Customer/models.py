@@ -2,13 +2,14 @@ from django.db import models
 from django.contrib.auth.models import User
 from Apps.PublicPage.models import Property
 from Apps.Agent.models import Lead
+from HeyDayRealty.storage_backends import CustomerMediaStorage, get_customer_profile_path
 
 
 class CustomerProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='customer_profile')
     phone = models.CharField(max_length=20, blank=True, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
-    profile_picture = models.ImageField(upload_to='customer_profiles/', blank=True, null=True)
+    profile_picture = models.ImageField(upload_to=get_customer_profile_path, storage=CustomerMediaStorage(), blank=True, null=True)
     preferred_contact_method = models.CharField(
         max_length=20,
         choices=[('email', 'Email'), ('phone', 'Phone'), ('both', 'Both')],

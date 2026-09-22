@@ -5164,7 +5164,7 @@ iframe, embed, object, video {
 
 
 
-        margin-left: 240px;
+       min-width: 240px;
 
 
 
@@ -5216,7 +5216,7 @@ iframe, embed, object, video {
 
 
 
-        left: 275px;
+        left: 0;
 
 
 
@@ -5516,7 +5516,7 @@ iframe, embed, object, video {
 
 
 
-        margin-left: 275px;
+       
 
 
 
@@ -5568,7 +5568,7 @@ iframe, embed, object, video {
 
 
 
-        left: 275px;
+        left: 0;
 
 
 
@@ -8653,7 +8653,7 @@ iframe, embed, object, video {
 
 
 
-   CUSTOMER DASHBOARD SIDEBAR STYLES
+   CUSTOMER DASHBOARD LAYOUT
 
 
 
@@ -8663,311 +8663,25 @@ iframe, embed, object, video {
 
 
 
-
-
 .app-container {
-
-
-
     display: flex;
-
-
-
     min-height: 100vh;
-
-
-
     width: 100%;
-
-
-
     overflow: hidden;
-
-
-
+    background-color: #f0f0f0;
 }
 
-
-
-
-
-
-
-.customer-dashboard .sidebar {
-
-
-
-    background: #004526;
-
-
-
-    height: 100vh;
-
-
-
-    color: white;
-
-
-
-    position: fixed;
-
-
-
-    top: 0;
-
-
-
-    left: 0;
-
-
-
-    z-index: 1000;
-
-
-
-    width: 280px;
-
-
-
-    overflow-y: auto;
-
-
-
-    overflow-x: hidden;
-
-
-
-    -webkit-overflow-scrolling: touch;
-
-
-
-    transform: translateX(0);
-
-
-
-    transition: transform 0.3s ease;
-
-
-
-    flex-shrink: 0;
-
-
-
-    display: flex;
-
-
-
-    flex-direction: column;
-
-
-
-    backdrop-filter: blur(12px);
-
-
-
-    -webkit-backdrop-filter: blur(12px);
-
-
-
-}
-
-
-
-
-
-
-
-.customer-dashboard .sidebar::after {
-
-
-
-    content: "";
-
-
-
-    position: absolute;
-
-
-
-    inset: 0;
-
-
-
-    background: radial-gradient(900px circle at 10% 10%, rgba(16, 185, 129, 0.35), transparent 55%),
-
-
-
-                radial-gradient(900px circle at 90% 40%, rgba(59, 130, 246, 0.25), transparent 60%);
-
-
-
-    pointer-events: none;
-
-
-
-    z-index: 0;
-
-
-
-}
-
-
-
-
-
-
-
-.customer-dashboard .sidebar > * {
-
-
-
-    position: relative;
-
-
-
-    z-index: 1;
-
-
-
-}
-
-
-
-
-
-
-
-.customer-dashboard .sidebar .nav-link {
-
-
-
-    color: rgba(255, 255, 255, 0.82);
-
-
-
-    border-radius: 14px;
-
-
-
-    margin: 2px 0;
-
-
-
-    transition: all 0.25s ease;
-
-
-
-    padding: 12px 18px;
-
-
-
-    display: flex;
-
-
-
-    align-items: center;
-
-
-
-    gap: 10px;
-
-
-
-}
-
-
-
-
-
-
-
-.customer-dashboard .sidebar .nav-link:hover {
-
-
-
-    background-color: rgba(255, 255, 255, 0.12);
-
-
-
-    color: white;
-
-
-
-    transform: translateY(-1px);
-
-
-
-}
-
-
-
-
-
-
-
-.customer-dashboard .sidebar .nav-link.active {
-
-
-
-    color: white;
-
-
-
-    background: rgba(255, 255, 255, 0.14);
-
-
-
-    box-shadow: 0 10px 30px rgba(0,0,0,0.18);
-
-
-
-    border: 1px solid rgba(255, 255, 255, 0.18);
-
-
-
-}
-
-
-
-
-
-
+/* Customer dashboard navigation styles moved to customer.css */
 
 .customer-dashboard .main-content {
-
-
-
     margin-left: 280px;
-
-
-
     min-height: 100vh;
-
-
-
     width: calc(100% - 280px);
-
-
-
     overflow-x: hidden;
-
-
-
     overflow-y: auto;
-
-
-
     display: flex;
-
-
-
     flex-direction: column;
-
-
-
 }
-
-
 
 
 
@@ -10450,4 +10164,5 @@ footer.footer.site-footer,
     .footer.site-footer .footer-bottom-link {
         font-size: 0.75rem !important;
     }
+}
 }

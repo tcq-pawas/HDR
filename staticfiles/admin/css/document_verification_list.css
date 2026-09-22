@@ -1,0 +1,350 @@
+/* Status summary cards - custom styling for status-specific colors and active states */
+.kyc-status-card {
+    gap: 0.35rem;
+    padding: 0.85rem 1rem;
+    border-radius: 12px;
+    border: 1.5px solid transparent;
+    background: #f8fafc;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.kyc-status-card:hover {
+    box-shadow: var(--shadow-sm);
+}
+
+.kyc-status-card .status-top {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    line-height: 1.2;
+}
+
+.kyc-status-card .status-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.kyc-status-card .status-count {
+    font-size: 1.65rem;
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-primary);
+    line-height: 1.1;
+    padding-left: 1.1rem;
+}
+
+.kyc-status-card[data-filter="pending"] {
+    background: #fffbeb;
+    border-color: #fde68a;
+}
+.kyc-status-card[data-filter="pending"] .status-dot { background: #f59e0b; }
+.kyc-status-card[data-filter="pending"].active {
+    border-color: #f59e0b;
+    background: #fef3c7;
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+}
+
+.kyc-status-card[data-filter="verified"] {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+}
+.kyc-status-card[data-filter="verified"] .status-dot { background: #10b981; }
+.kyc-status-card[data-filter="verified"].active {
+    border-color: #10b981;
+    background: #dcfce7;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+
+.kyc-status-card[data-filter="reupload"] {
+    background: #fef2f2;
+    border-color: #fecaca;
+}
+.kyc-status-card[data-filter="reupload"] .status-dot { background: #ef4444; }
+.kyc-status-card[data-filter="reupload"].active {
+    border-color: #ef4444;
+    background: #fee2e2;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
+}
+
+.kyc-status-card[data-filter="submitted"] {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+}
+.kyc-status-card[data-filter="submitted"] .status-dot { background: #3b82f6; }
+.kyc-status-card[data-filter="submitted"].active {
+    border-color: #3b82f6;
+    background: #dbeafe;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+/* Header link styling */
+.header-link {
+    color: var(--primary);
+}
+.header-link:hover {
+    text-decoration: underline;
+}
+
+/* Document card hover effect */
+.kyc-doc-card {
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.kyc-doc-card:hover {
+    border-color: #cbd5e1;
+    box-shadow: var(--shadow-sm);
+}
+
+/* Thumbnail - fixed dimensions not available in Bootstrap */
+.kyc-thumb {
+    width: 56px;
+    height: 56px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: #f1f5f9;
+    overflow: hidden;
+    flex-shrink: 0;
+    cursor: pointer;
+    padding: 0;
+    color: #94a3b8;
+    font-size: 1.35rem;
+    transition: border-color 0.15s ease;
+}
+
+.kyc-thumb:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.kyc-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Document title - custom font family */
+.kyc-doc-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Agent line - custom styling */
+.kyc-agent-line strong {
+    color: #334155;
+    font-weight: 600;
+}
+
+/* Side chips - custom status colors */
+.kyc-side-chip {
+    padding: 0.12rem 0.45rem;
+    border-radius: 6px;
+    background: #f1f5f9;
+    font-weight: 600;
+    font-size: 0.72rem;
+    color: #475569;
+}
+
+.kyc-side-chip.ok { background: #ecfdf5; color: #047857; }
+.kyc-side-chip.missing { background: #fef2f2; color: #b91c1c; }
+.kyc-side-chip.na { background: #f8fafc; color: #94a3b8; }
+
+/* Rejection reason */
+.kyc-reason {
+    font-size: 0.78rem;
+    color: #b91c1c;
+    background: #fef2f2;
+    border-radius: 6px;
+    padding: 0.35rem 0.55rem;
+    display: inline-block;
+    max-width: 100%;
+}
+
+/* Status pills - custom colors */
+.kyc-status-pill {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.kyc-status-pill.pending {
+    background: #fef3c7;
+    color: #b45309;
+}
+.kyc-status-pill.verified {
+    background: #dcfce7;
+    color: #047857;
+}
+.kyc-status-pill.reupload {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+/* Custom approve button - uses theme primary color */
+.btn-kyc-approve {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+}
+.btn-kyc-approve:hover {
+    background: var(--primary-dark);
+    border-color: var(--primary-dark);
+    color: #fff;
+}
+
+/* Empty state - dashed border not in Bootstrap */
+.kyc-empty {
+    border: 1px dashed #cbd5e1;
+}
+
+.kyc-empty .empty-icon {
+    width: 44px;
+    height: 44px;
+    font-size: 1.25rem;
+    background: #e2e8f0;
+    color: #64748b;
+}
+
+.kyc-empty.pending .empty-icon { background: #fef3c7; color: #d97706; }
+.kyc-empty.verified .empty-icon { background: #dcfce7; color: #059669; }
+.kyc-empty.reupload .empty-icon { background: #fee2e2; color: #dc2626; }
+.kyc-empty.submitted .empty-icon { background: #dbeafe; color: #2563eb; }
+
+.kyc-empty p {
+    max-width: 280px;
+    margin-inline: auto;
+}
+
+/* Bulk row name/email styling */
+.kyc-bulk-row .name {
+    font-weight: 600;
+    font-size: 0.88rem;
+}
+
+.kyc-bulk-row .email {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+/* Preview modal helpers - custom dimensions */
+.kyc-preview-side h6 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #64748b;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+}
+
+.kyc-preview-img {
+    width: 100%;
+    max-height: 420px;
+    object-fit: contain;
+    border-radius: 8px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+}
+
+.kyc-preview-pdf {
+    width: 100%;
+    height: 420px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.kyc-preview-empty {
+    min-height: 160px;
+    color: #94a3b8;
+    background: #fff;
+    border: 1px dashed #cbd5e1;
+    border-radius: 8px;
+}
+
+.kyc-meta-label {
+    display: block;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: #94a3b8;
+    font-weight: 700;
+    margin-bottom: 0.15rem;
+}
+
+.kyc-pane { display: none; }
+.kyc-pane.active { display: block; }
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+    .kyc-doc-card {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .kyc-doc-actions {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.45rem;
+    }
+    .kyc-doc-actions .btn,
+    .kyc-doc-actions form,
+    .kyc-doc-actions form .btn {
+        width: 100%;
+        min-width: 0;
+    }
+    .kyc-doc-actions .btn {
+        min-height: 38px;
+        font-size: 0.7rem;
+        padding: 0.45rem 0.55rem;
+    }
+    .kyc-thumb {
+        width: 52px;
+        height: 52px;
+        font-size: 1.15rem;
+    }
+    .kyc-preview-img {
+        max-height: 300px;
+    }
+    .kyc-preview-pdf {
+        height: 300px;
+    }
+}
+
+@media (max-width: 576px) {
+    .kyc-doc-actions {
+        grid-template-columns: 1fr;
+    }
+    .kyc-doc-actions .btn {
+        min-height: 40px;
+    }
+    .kyc-meta-grid {
+        grid-template-columns: 1fr;
+    }
+    .kyc-preview-img {
+        max-height: 240px;
+    }
+    .kyc-preview-pdf {
+        height: 260px;
+    }
+    /* Mobile modal */
+    #docPreviewModal .modal-dialog,
+    #rejectModal .modal-dialog,
+    #rejectDocModal .modal-dialog {
+        width: auto;
+        max-width: calc(100% - 16px);
+        margin: 8px auto;
+    }
+}
+
+@media (max-width: 400px) {
+    .kyc-thumb {
+        width: 48px;
+        height: 48px;
+    }
+}

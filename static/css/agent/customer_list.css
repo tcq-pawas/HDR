@@ -1,0 +1,205 @@
+/* Premium Container */
+.premium-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    min-height: 100vh;
+}
+
+/* Premium Header */
+.premium-header {
+    background: linear-gradient(135deg, #005427 0%, #003d1c 100%);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 40px rgba(0, 84, 39, 0.15);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-title h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 0.5rem 0;
+    letter-spacing: -0.5px;
+}
+
+.header-subtitle {
+    color: #e2e8f0;
+    font-size: 0.95rem;
+    margin: 0;
+    font-weight: 400;
+}
+
+/* Premium Table Wrapper */
+.premium-table-wrapper {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    overflow-x: auto;
+    overflow-y: hidden;
+    position: relative;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-color: #005427 transparent;
+    scrollbar-width: thin;
+}
+
+.premium-table-wrapper::-webkit-scrollbar {
+    height: 8px;
+}
+
+.premium-table-wrapper::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.premium-table-wrapper::-webkit-scrollbar-thumb {
+    background: #005427;
+    border-radius: 999px;
+}
+
+.premium-table-wrapper::-webkit-scrollbar-button {
+    width: 0 !important;
+    height: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    color: transparent !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+.premium-table-wrapper::-webkit-scrollbar-button:start:decrement,
+.premium-table-wrapper::-webkit-scrollbar-button:end:increment,
+.premium-table-wrapper::-webkit-scrollbar-button:vertical:start:decrement,
+.premium-table-wrapper::-webkit-scrollbar-button:vertical:end:increment {
+    width: 0 !important;
+    height: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    color: transparent !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+.premium-table {
+    width: max-content;
+    min-width: 100%;
+}
+
+.premium-table table {
+    width: max-content;
+    min-width: 100%;
+    border-collapse: collapse;
+}
+
+.premium-table thead {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.premium-table th {
+    padding: 1.25rem 1.5rem;
+    text-align: left;
+    font-weight: 700;
+    color: #1e293b;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #cbd5e1;
+}
+
+.premium-table td {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+    color: #475569;
+    font-size: 0.95rem;
+}
+
+tbody tr:hover {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+.source-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.source-booking { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); color: #1e40af; }
+.source-lead { background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); color: #065f46; }
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.action-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    border: 2px solid #e2e8f0;
+    transition: all 0.2s ease;
+    background: white;
+    font-size: 0.9rem;
+}
+
+.action-btn:hover {
+    background: #f8fafc;
+    transform: translateY(-2px);
+}
+
+/* Premium Empty State */
+.premium-empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.empty-icon {
+    font-size: 4rem;
+    color: #cbd5e1;
+    margin-bottom: 1.5rem;
+}
+
+.premium-empty-state h2 {
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.premium-empty-state p {
+    color: #64748b;
+    margin-bottom: 2rem;
+    font-size: 1rem;
+}
+
+
+.status-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-viewed {
+    background: linear-gradient(135deg, #fff2df 0%, #ffedd5 100%);
+    color: #b45309;
+}

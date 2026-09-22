@@ -7,167 +7,6 @@
 <span>My Profile</span>
 {% endblock %}
 
-{% block extra_css %}
-<style>
-    .profile-hero {
-        background: linear-gradient(135deg, #005427 0%, #6AAE48 100%);
-        padding: 60px 30px;
-        border-radius: 12px;
-        margin-bottom: 30px;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .profile-hero::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -20%;
-        width: 400px;
-        height: 400px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 50%;
-    }
-    
-    .profile-hero::after {
-        content: '';
-        position: absolute;
-        bottom: -30%;
-        left: -10%;
-        width: 300px;
-        height: 300px;
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 50%;
-    }
-    
-    .profile-avatar-large {
-        width: 140px;
-        height: 140px;
-        border: 4px solid rgba(255, 255, 255, 0.3);
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-    }
-    
-    .profile-avatar-large img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-    
-    .profile-stat-card {
-        background: white;
-        border-radius: 12px;
-        padding: 24px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-        border: 1px solid rgba(0, 0, 0, 0.05);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    
-    .profile-stat-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-    }
-    
-    .profile-stat-icon {
-        width: 50px;
-        height: 50px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 24px;
-        margin-bottom: 16px;
-    }
-    
-    .profile-stat-value {
-        font-size: 32px;
-        font-weight: 700;
-        color: #005427;
-        margin-bottom: 4px;
-    }
-    
-    .profile-stat-label {
-        font-size: 13px;
-        color: #64748b;
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-    
-    .info-card {
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-        border: 1px solid rgba(0, 0, 0, 0.05);
-        overflow: hidden;
-    }
-    
-    .info-card-header {
-        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-        padding: 20px 24px;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    }
-    
-    .info-card-header h5 {
-        margin: 0;
-        font-weight: 600;
-        color: #1e293b;
-        font-size: 16px;
-    }
-    
-    .info-row {
-        padding: 16px 24px;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        display: flex;
-        align-items: flex-start;
-    }
-    
-    .info-row:last-child {
-        border-bottom: none;
-    }
-    
-    .info-label {
-        width: 140px;
-        font-size: 13px;
-        font-weight: 600;
-        color: #64748b;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        flex-shrink: 0;
-    }
-    
-    .info-value {
-        flex: 1;
-        font-size: 14px;
-        color: #1e293b;
-        font-weight: 500;
-    }
-    
-    .verified-badge {
-        background: rgba(16, 185, 129, 0.1);
-        color: #10b981;
-        padding: 6px 16px;
-        border-radius: 20px;
-        font-size: 13px;
-        font-weight: 600;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-    }
-    
-    .unverified-badge {
-        background: rgba(245, 158, 11, 0.1);
-        color: #f59e0b;
-        padding: 6px 16px;
-        border-radius: 20px;
-        font-size: 13px;
-        font-weight: 600;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-    }
-</style>
-{% endblock %}
 
 {% block content %}
 <div class="container-fluid py-4">
@@ -261,11 +100,25 @@
                 </div>
                 <div class="info-row">
                     <div class="info-label">Email Address</div>
-                    <div class="info-value">{{ user.email }}</div>
+                    <div class="info-value d-flex justify-content-between align-items-center w-100">
+                        <span>{{ user.email }}</span>
+                        {% if user.verification.is_email_verified %}
+                            <span class="badge bg-success rounded-pill"><i class="bi bi-check-circle me-1"></i> Verified</span>
+                        {% elif user.email %}
+                            <button class="btn btn-sm btn-outline-warning rounded-pill" onclick="requestOTP('email', '{{ user.email }}')">Verify Now</button>
+                        {% endif %}
+                    </div>
                 </div>
                 <div class="info-row">
                     <div class="info-label">Phone Number</div>
-                    <div class="info-value">{{ agent_profile.phone|default:"Not provided" }}</div>
+                    <div class="info-value d-flex justify-content-between align-items-center w-100">
+                        <span>{{ agent_profile.phone|default:user.verification.phone_number|default:"Not provided" }}</span>
+                        {% if user.verification.is_mobile_verified %}
+                            <span class="badge bg-success rounded-pill"><i class="bi bi-check-circle me-1"></i> Verified</span>
+                        {% elif agent_profile.phone or user.verification.phone_number %}
+                            <button class="btn btn-sm btn-outline-warning rounded-pill" onclick="requestOTP('mobile', '{{ agent_profile.phone|default:user.verification.phone_number }}')">Verify Now</button>
+                        {% endif %}
+                    </div>
                 </div>
                 <div class="info-row">
                     <div class="info-label">Company Name</div>
@@ -357,4 +210,178 @@
         </div>
     </div>
 </div>
+
+<!-- ================= PREMIUM OTP VERIFICATION MODAL ================= -->
+<div class="modal fade" id="otpModal" tabindex="-1" aria-labelledby="otpModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="width: 380px !important; max-width: 95% !important; margin: 0 auto;">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden; background: #ffffff;">
+            <div class="modal-header border-0 pb-0 position-relative">
+                <button type="button" class="btn-close position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close" style="z-index: 10;"></button>
+            </div>
+            <div class="modal-body px-4 pb-4 pt-0 text-center">
+                <div class="mb-3 d-inline-flex align-items-center justify-content-center" style="width: 64px; height: 64px; background: #e8f5e9; border-radius: 50%; color: #005427;">
+                    <i class="bi bi-shield-lock-fill" style="font-size: 1.8rem;"></i>
+                </div>
+                <h5 class="fw-bold mb-2 text-dark" style="font-size: 1.4rem;" id="otpModalLabel">Verify <span id="otpTypeLabel"></span></h5>
+                <p class="text-muted mb-4" style="font-size: 0.9rem; line-height: 1.4;">
+                    Code sent to <br>
+                    <strong id="otpTargetDisplay" class="text-dark"></strong>
+                </p>
+                <input type="hidden" id="otpVerifyType">
+                <input type="hidden" id="otpInput">
+                
+                <div class="d-flex justify-content-center gap-2 mb-4">
+                    <input type="text" class="form-control text-center fw-bold otp-digit" maxlength="1" pattern="\d*" style="width: 45px; height: 55px; font-size: 1.5rem; border: 2px solid #e2e8f0; border-radius: 12px; padding: 0; background: #f8fafc; color: #0f172a; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                    <input type="text" class="form-control text-center fw-bold otp-digit" maxlength="1" pattern="\d*" style="width: 45px; height: 55px; font-size: 1.5rem; border: 2px solid #e2e8f0; border-radius: 12px; padding: 0; background: #f8fafc; color: #0f172a; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                    <input type="text" class="form-control text-center fw-bold otp-digit" maxlength="1" pattern="\d*" style="width: 45px; height: 55px; font-size: 1.5rem; border: 2px solid #e2e8f0; border-radius: 12px; padding: 0; background: #f8fafc; color: #0f172a; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                    <input type="text" class="form-control text-center fw-bold otp-digit" maxlength="1" pattern="\d*" style="width: 45px; height: 55px; font-size: 1.5rem; border: 2px solid #e2e8f0; border-radius: 12px; padding: 0; background: #f8fafc; color: #0f172a; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                    <input type="text" class="form-control text-center fw-bold otp-digit" maxlength="1" pattern="\d*" style="width: 45px; height: 55px; font-size: 1.5rem; border: 2px solid #e2e8f0; border-radius: 12px; padding: 0; background: #f8fafc; color: #0f172a; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                    <input type="text" class="form-control text-center fw-bold otp-digit" maxlength="1" pattern="\d*" style="width: 45px; height: 55px; font-size: 1.5rem; border: 2px solid #e2e8f0; border-radius: 12px; padding: 0; background: #f8fafc; color: #0f172a; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                </div>
+                
+                <div id="otpErrorMsg" class="text-danger mb-3 d-none fw-medium" style="font-size: 0.85rem;">
+                    <i class="bi bi-exclamation-circle me-1"></i> Invalid or expired OTP.
+                </div>
+                
+                <button type="button" class="btn w-100 py-2 fw-semibold text-white" 
+                        style="background: linear-gradient(135deg, #005427 0%, #6AAE48 100%); border-radius: 12px; font-size: 1rem; border: none; box-shadow: 0 4px 10px rgba(0, 84, 39, 0.2); transition: all 0.3s ease;" 
+                        onclick="submitOTP()" id="verifyBtn">
+                    Verify Code
+                </button>
+                
+                <div class="mt-3 pt-3 border-top border-light">
+                    <p class="text-muted small mb-0" style="font-size: 0.8rem;">Didn't receive the code? <br><a href="#" onclick="requestOTP(document.getElementById('otpVerifyType').value, document.getElementById('otpTargetDisplay').innerText); return false;" class="text-success text-decoration-none fw-semibold">Resend OTP</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        window.otpModal = new bootstrap.Modal(document.getElementById('otpModal'));
+        
+        // Setup 6-digit OTP boxes logic
+        const otpInputs = document.querySelectorAll('.otp-digit');
+        otpInputs.forEach((input, index) => {
+            input.addEventListener('input', function(e) {
+                // Allow only numbers
+                this.value = this.value.replace(/[^0-9]/g, '');
+                
+                if (this.value && index < otpInputs.length - 1) {
+                    otpInputs[index + 1].focus();
+                }
+                updateHiddenOTP();
+            });
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Backspace' && !this.value && index > 0) {
+                    otpInputs[index - 1].focus();
+                }
+            });
+            // Handle paste event
+            input.addEventListener('paste', function(e) {
+                e.preventDefault();
+                const pastedData = e.clipboardData.getData('text').replace(/[^0-9]/g, '').slice(0, 6);
+                for (let i = 0; i < pastedData.length; i++) {
+                    if (otpInputs[index + i]) {
+                        otpInputs[index + i].value = pastedData[i];
+                    }
+                }
+                if (pastedData.length > 0) {
+                    const focusIndex = Math.min(index + pastedData.length, 5);
+                    otpInputs[focusIndex].focus();
+                }
+                updateHiddenOTP();
+            });
+        });
+    });
+    
+    function updateHiddenOTP() {
+        const otpInputs = document.querySelectorAll('.otp-digit');
+        const otpString = Array.from(otpInputs).map(i => i.value).join('');
+        document.getElementById('otpInput').value = otpString;
+    }
+    
+    function requestOTP(type, target) {
+        const btn = event.currentTarget;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="bi bi-arrow-repeat spin"></i> Sending...';
+        btn.disabled = true;
+
+        fetch("{% url 'auth:request_otp' %}", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: new URLSearchParams({
+                type: type,
+                phone: target
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            
+            if (data.success) {
+                document.getElementById('otpTypeLabel').innerText = type === 'email' ? 'Email' : 'Mobile Number';
+                document.getElementById('otpTargetDisplay').innerText = target;
+                document.getElementById('otpVerifyType').value = type;
+                document.getElementById('otpInput').value = '';
+                document.getElementById('otpErrorMsg').classList.add('d-none');
+                window.otpModal.show();
+            } else {
+                alert("Failed to send OTP: " + data.message);
+            }
+        })
+        .catch(err => {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            alert("Network error occurred.");
+        });
+    }
+
+    function submitOTP() {
+        const type = document.getElementById('otpVerifyType').value;
+        const otp = document.getElementById('otpInput').value;
+        const errorMsg = document.getElementById('otpErrorMsg');
+        
+        if (otp.length < 6) {
+            errorMsg.innerText = "Please enter a valid 6-digit OTP.";
+            errorMsg.classList.remove('d-none');
+            return;
+        }
+
+        fetch("{% url 'auth:verify_otp' %}", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: new URLSearchParams({
+                type: type,
+                otp: otp
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.otpModal.hide();
+                window.location.reload(); 
+            } else {
+                errorMsg.innerText = data.message || "Invalid OTP.";
+                errorMsg.classList.remove('d-none');
+            }
+        })
+        .catch(err => {
+            errorMsg.innerText = "Network error occurred.";
+            errorMsg.classList.remove('d-none');
+        });
+    }
+</script>
+<style>
+    .spin { animation: spin 1s infinite linear; }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+</style>
 {% endblock %}

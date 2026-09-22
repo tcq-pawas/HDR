@@ -7,9 +7,6 @@
 <span>Settings</span>
 {% endblock %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/agent/settings.css' %}">
-{% endblock %}
 
 {% block content %}
 <div class="settings-container">
@@ -19,7 +16,7 @@
     </div>
 
     <!-- Profile Form -->
-    <div class="settings-card" style="margin-bottom: 1.5rem;">
+    <div class="settings-card settings-card-margin">
         <h3>Profile Information</h3>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
@@ -138,7 +135,7 @@
                     <div class="settings-item-label">Delete Account</div>
                     <div class="settings-item-description">Permanently delete your account</div>
                 </div>
-                <a href="{% url 'agent:delete_account' %}" class="settings-btn" style="background: #ef4444;">Delete</a>
+                <a href="{% url 'agent:delete_account' %}" class="settings-btn danger">Delete</a>
             </div>
         </div>
     </div>

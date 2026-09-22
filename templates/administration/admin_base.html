@@ -47,15 +47,12 @@
 
     <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
 
+    <link rel="stylesheet" href="{% static 'admin/css/administration.css' %}">
+
+    <!-- Global Typography System -->
+    <link rel="stylesheet" href="{% static 'css/typography.css' %}">
+
     {% block extra_css %}{% endblock %}
-
-
-
-    <link
-
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
-
-        rel="stylesheet">
 
 
 
@@ -156,23 +153,6 @@
 
 
 
-
-        * {
-
-
-
-            margin: 0;
-
-
-
-            padding: 0;
-
-
-
-            box-sizing: border-box;
-
-
-        }
 
         @media (max-width: 768px) {
             body {
@@ -2359,8 +2339,8 @@
 
 
 
-                <a href="{% url 'admin_dash:dashboard' %}" style="text-decoration:none; display:inline-block; color:inherit;">
-                    <img src="{% static 'img/logo.png' %}" alt="Logo" title="Logo" style="height:40px; width:auto; display:block; margin-bottom:6px;">
+                <a href="{% url 'admin_dash:dashboard' %}" class="text-decoration-none d-inline-block text-reset">
+                    <img src="{% static 'img/logo.png' %}" alt="Logo" title="Logo" class="d-block mb-1" style="height:40px; width:auto;">
                 </a>
 
 
@@ -2430,7 +2410,7 @@
 
 
                             <div class="small text-white-50">Administrator</div>
-                            <a href="{% url 'admin_dash:view_profile' %}" class="btn btn-xs mt-2 w-100" style="font-size: 0.75rem; padding: 0.15rem 0.4rem; background: rgba(255, 255, 255, 0.15); border: none; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2); display: flex; align-items: center; justify-content: center; text-align: center; color: white;">
+                            <a href="{% url 'admin_dash:view_profile' %}" class="btn btn-xs mt-2 w-100 d-flex align-items-center justify-content-center text-center text-white" style="font-size: 0.75rem; padding: 0.15rem 0.4rem; background: rgba(255, 255, 255, 0.15); border: none; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);">
                                 View Profile
                             </a>
                         </div>
@@ -2988,7 +2968,6 @@
                     container.id = 'inquiry-toast-container';
 
                     container.className = 'position-fixed bottom-0 end-0 p-3';
-
                     container.style.zIndex = '1090';
 
                     document.body.appendChild(container);
@@ -3001,7 +2980,7 @@
 
                 const toastHtml = `
 
-                    <div id="${toastId}" class="toast align-items-center text-white border-0 shadow-lg show" role="alert" aria-live="assertive" aria-atomic="true" style="background: linear-gradient(135deg, #004526 0%, #002815 100%); min-width: 320px; border-radius: 12px; margin-top: 10px; opacity: 1; transition: opacity 0.4s ease;">
+                    <div id="${toastId}" class="toast align-items-center text-white border-0 shadow-lg show rounded-3" role="alert" aria-live="assertive" aria-atomic="true" style="background: linear-gradient(135deg, #004526 0%, #002815 100%); min-width: 320px; margin-top: 10px; opacity: 1; transition: opacity 0.4s ease;">
 
                         <div class="d-flex">
 
@@ -3025,13 +3004,13 @@
 
                                 </div>
 
-                                <p class="mb-1 text-white" style="font-size: 0.9rem;"><strong>${inquiry.full_name}</strong> has submitted an enquiry.</p>
+                                <p class="mb-1 text-white fs-6"><strong>${inquiry.full_name}</strong> has submitted an enquiry.</p>
 
-                                <div class="text-white-50 mb-2" style="font-size: 0.8rem;">Budget: ${inquiry.investment_budget}</div>
+                                <div class="text-white-50 mb-2 small">Budget: ${inquiry.investment_budget}</div>
 
                                 <div class="d-flex gap-2 justify-content-end mt-2 pt-2 border-top border-white-50 border-opacity-25">
 
-                                    <a href="/admin-dashboard/inquiries/${inquiry.id}/" class="btn btn-xs btn-light fw-bold text-teal" style="font-size: 0.75rem; padding: 3px 10px; border-radius: 6px; color: #004526; text-decoration: none;">View Detail</a>
+                                    <a href="/admin-dashboard/inquiries/${inquiry.id}/" class="btn btn-xs btn-light fw-bold text-decoration-none" style="font-size: 0.75rem; padding: 3px 10px; border-radius: 6px; color: #004526;">View Detail</a>
 
                                     <button type="button" class="btn btn-xs btn-outline-light text-white" style="font-size: 0.75rem; padding: 3px 10px; border-radius: 6px;" onclick="document.getElementById('${toastId}').remove()">Dismiss</button>
 

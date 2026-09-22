@@ -150,40 +150,45 @@
             </div>
             <a href="{% url 'buy:property_search' %}" class="view-all-link">View All Listings →</a>
         </div>
-        <div class="property-cards">
-            {% for property in farmland_listings %}
-            <div class="property-card">
-                <div class="property-card-image">
-                    {% if property.images.first %}
-                    <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}">
-                    {% elif property.featured_image %}
-                    <img src="{{ property.featured_image.url }}" alt="{{ property.title }}">
-                    {% else %}
-                    <img src="https://via.placeholder.com/400x300?text=Property" alt="{{ property.title }}">
-                    {% endif %}
-                    <div class="property-badge">Verified</div>
-                    <div class="property-wishlist">♡</div>
-                </div>
-                <div class="property-card-content">
-                    <div class="property-state">{{ property.location }}</div>
-                    <div class="property-category">{{ property.get_property_type_display }}</div>
-                    <div class="property-name">{{ property.title }}</div>
-                    <div class="property-area">{{ property.area_sqft }} sqft</div>
-                    <div class="property-price">₹{{ property.price }}</div>
-                    <div class="property-actions">
-                        <a href="{% url 'buy:property_detail' property.id %}" class="btn-view-details">View Details</a>
-                        <button class="share-btn" onclick="shareProperty('{{ property.title|escapejs }}', '{% url 'buy:property_detail' property.id %}')">
-                            <i class="bi bi-share"></i> Share
-                        </button>
+        <div class="carousel-viewport" data-carousel>
+            <div class="carousel-track">
+                {% for property in farmland_listings %}
+                <div class="carousel-slide">
+                    <div class="property-card">
+                        <div class="property-card-image">
+                            {% if property.images.first %}
+                            <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}">
+                            {% elif property.featured_image %}
+                            <img src="{{ property.featured_image.url }}" alt="{{ property.title }}">
+                            {% else %}
+                            <img src="https://via.placeholder.com/400x300?text=Property" alt="{{ property.title }}">
+                            {% endif %}
+                            <div class="property-badge">Verified</div>
+                            <div class="property-wishlist">♡</div>
+                        </div>
+                        <div class="property-card-content">
+                            <div class="property-state">{{ property.location }}</div>
+                            <div class="property-category">{{ property.get_property_type_display }}</div>
+                            <div class="property-name">{{ property.title }}</div>
+                            <div class="property-area">{{ property.area_sqft }} sqft</div>
+                            <div class="property-price">₹{{ property.price }}</div>
+                            <div class="property-actions">
+                                <a href="{% url 'buy:property_detail' property.id %}" class="btn-view-details">View Details</a>
+                                <button class="share-btn" onclick="shareProperty('{{ property.title|escapejs }}', '{% url 'buy:property_detail' property.id %}')">
+                                    <i class="bi bi-share"></i> Share
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
-        <div class="carousel-arrows">
-            <button class="carousel-arrow">←</button>
-            <button class="carousel-arrow">→</button>
+
+        <div class="carousel-controls">
+            <button class="carousel-arrow" data-carousel-prev aria-label="Previous">←</button>
+            <div class="carousel-dots" data-carousel-dots></div>
+            <button class="carousel-arrow" data-carousel-next aria-label="Next">→</button>
         </div>
     </div>
 </section>
@@ -200,39 +205,45 @@
             </div>
             <a href="{% url 'buy:property_search' %}" class="view-all-link">View All Listings →</a>
         </div>
-        <div class="property-cards">
-            {% for property in verified_properties %}
-            <div class="property-card">
-                <div class="property-card-image">
-                    {% if property.images.first %}
-                    <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}">
-                    {% elif property.featured_image %}
-                    <img src="{{ property.featured_image.url }}" alt="{{ property.title }}">
-                    {% else %}
-                    <img src="https://via.placeholder.com/400x300?text=Property" alt="{{ property.title }}">
-                    {% endif %}
-                    <div class="property-badge">Verified</div>
-                    <div class="property-wishlist">♡</div>
-                </div>
-                <div class="property-card-content">
-                    <div class="property-state">{{ property.location }}</div>
-                    <div class="property-category">{{ property.get_property_type_display }}</div>
-                    <div class="property-name">{{ property.title }}</div>
-                    <div class="property-area">{{ property.area_sqft }} sqft</div>
-                    <div class="property-price">₹{{ property.price }}</div>
-                    <div class="property-actions">
-                        <a href="{% url 'buy:property_detail' property.id %}" class="btn-view-details">View Details</a>
-                        <button class="share-btn" onclick="shareProperty('{{ property.title|escapejs }}', '{% url 'buy:property_detail' property.id %}')">
-                            <i class="bi bi-share"></i> Share
-                        </button>
+        <div class="carousel-viewport" data-carousel>
+            <div class="carousel-track">
+                {% for property in verified_properties %}
+                <div class="carousel-slide">
+                    <div class="property-card">
+                        <div class="property-card-image">
+                            {% if property.images.first %}
+                            <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}">
+                            {% elif property.featured_image %}
+                            <img src="{{ property.featured_image.url }}" alt="{{ property.title }}">
+                            {% else %}
+                            <img src="https://via.placeholder.com/400x300?text=Property" alt="{{ property.title }}">
+                            {% endif %}
+                            <div class="property-badge">Verified</div>
+                            <div class="property-wishlist">♡</div>
+                        </div>
+                        <div class="property-card-content">
+                            <div class="property-state">{{ property.location }}</div>
+                            <div class="property-category">{{ property.get_property_type_display }}</div>
+                            <div class="property-name">{{ property.title }}</div>
+                            <div class="property-area">{{ property.area_sqft }} sqft</div>
+                            <div class="property-price">₹{{ property.price }}</div>
+                            <div class="property-actions">
+                                <a href="{% url 'buy:property_detail' property.id %}" class="btn-view-details">View Details</a>
+                                <button class="share-btn" onclick="shareProperty('{{ property.title|escapejs }}', '{% url 'buy:property_detail' property.id %}')">
+                                    <i class="bi bi-share"></i> Share
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
-        <div class="carousel-arrows">
-            <button class="carousel-arrow">←</button>
-            <button class="carousel-arrow">→</button>
+
+        <div class="carousel-controls">
+            <button class="carousel-arrow" data-carousel-prev aria-label="Previous">←</button>
+            <div class="carousel-dots" data-carousel-dots></div>
+            <button class="carousel-arrow" data-carousel-next aria-label="Next">→</button>
         </div>
     </div>
 </section>
@@ -495,7 +506,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Share functionality
     window.shareProperty = function(title, url) {
         const fullUrl = window.location.origin + url;
-        
+
         if (navigator.share) {
             navigator.share({
                 title: 'Check out this property: ' + title,
@@ -512,6 +523,141 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     };
+
+    // Property carousel functionality
+    function initCarousel(viewport) {
+        const track = viewport.querySelector('.carousel-track');
+        const controls = viewport.parentElement.querySelector('.carousel-controls') || viewport.nextElementSibling;
+        const dotsContainer = controls.querySelector('[data-carousel-dots]');
+        const prevBtn = controls.querySelector('[data-carousel-prev]');
+        const nextBtn = controls.querySelector('[data-carousel-next]');
+
+        const originalSlides = Array.from(track.children);
+        const slideCount = originalSlides.length;
+        if (slideCount === 0) return;
+
+        let visibleCount = getVisibleCount();
+        let currentIndex = 0;
+        let cloneCount = 0;
+        let isAnimating = false;
+
+        function getVisibleCount() {
+            const w = window.innerWidth;
+            if (w <= 768) return 1;
+            if (w <= 1200) return 2;
+            return 4;
+        }
+
+        function setSlideWidths() {
+            const width = 100 / visibleCount;
+            Array.from(track.children).forEach(slide => {
+                slide.style.flex = `0 0 ${width}%`;
+                slide.style.maxWidth = `${width}%`;
+            });
+        }
+
+        function setupClones() {
+            cloneCount = Math.min(visibleCount, slideCount);
+            track.innerHTML = '';
+            const headClones = originalSlides.slice(-cloneCount).map(n => n.cloneNode(true));
+            const tailClones = originalSlides.slice(0, cloneCount).map(n => n.cloneNode(true));
+            [...headClones, ...originalSlides, ...tailClones].forEach(node => track.appendChild(node));
+            setSlideWidths();
+            goToSlide(cloneCount, false);
+        }
+
+        function goToSlide(index, animate = true) {
+            isAnimating = animate;
+            track.style.transition = animate ? 'transform 0.5s ease' : 'none';
+            const width = 100 / visibleCount;
+            track.style.transform = `translateX(-${index * width}%)`;
+            currentIndex = index;
+            updateDots();
+        }
+
+        function next() {
+            if (isAnimating) return;
+            goToSlide(currentIndex + 1);
+        }
+
+        function prev() {
+            if (isAnimating) return;
+            goToSlide(currentIndex - 1);
+        }
+
+        track.addEventListener('transitionend', () => {
+            isAnimating = false;
+            if (currentIndex >= cloneCount + slideCount) {
+                goToSlide(currentIndex - slideCount, false);
+            } else if (currentIndex < cloneCount) {
+                goToSlide(currentIndex + slideCount, false);
+            }
+        });
+
+        function buildDots() {
+            if (!dotsContainer) return;
+            dotsContainer.innerHTML = '';
+            for (let i = 0; i < slideCount; i++) {
+                const dot = document.createElement('button');
+                dot.className = 'carousel-dot';
+                dot.addEventListener('click', () => goToSlide(i + cloneCount));
+                dotsContainer.appendChild(dot);
+            }
+        }
+
+        function updateDots() {
+            if (!dotsContainer) return;
+            let realIndex = (currentIndex - cloneCount) % slideCount;
+            if (realIndex < 0) realIndex += slideCount;
+            Array.from(dotsContainer.children).forEach((d, i) => {
+                d.classList.toggle('active', i === realIndex);
+            });
+        }
+
+        if (prevBtn) prevBtn.addEventListener('click', prev);
+        if (nextBtn) nextBtn.addEventListener('click', next);
+
+        let startX = 0, deltaX = 0, dragging = false;
+        function dragStart(x) { dragging = true; startX = x; track.style.transition = 'none'; }
+        function dragMove(x) { if (dragging) deltaX = x - startX; }
+        function dragEnd() {
+            if (!dragging) return;
+            dragging = false;
+            if (deltaX > 50) prev();
+            else if (deltaX < -50) next();
+            else goToSlide(currentIndex);
+            deltaX = 0;
+        }
+        viewport.addEventListener('touchstart', e => dragStart(e.touches[0].clientX));
+        viewport.addEventListener('touchmove', e => dragMove(e.touches[0].clientX));
+        viewport.addEventListener('touchend', dragEnd);
+        viewport.addEventListener('mousedown', e => dragStart(e.clientX));
+        viewport.addEventListener('mousemove', e => dragMove(e.clientX));
+        viewport.addEventListener('mouseup', dragEnd);
+        viewport.addEventListener('mouseleave', () => { if (dragging) dragEnd(); });
+
+        // Re-check breakpoint on resize (debounced) — rebuilds clones whenever the 
+        // visible-card count actually changes (crossing 1200px or 768px)
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                const newVisible = getVisibleCount();
+                if (newVisible !== visibleCount) {
+                    visibleCount = newVisible;
+                    setupClones();
+                }
+            }, 150);
+        });
+
+        buildDots();
+        setupClones();
+
+        setInterval(() => { if (!dragging) next(); }, 5000);
+    }
+
+    // Initialize all carousels
+    document.querySelectorAll('[data-carousel]').forEach(initCarousel);
 });
 </script>
 

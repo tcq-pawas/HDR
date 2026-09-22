@@ -7,9 +7,6 @@
 <span>Site Visits</span>
 {% endblock %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/agent/site_visit_list.css' %}">
-{% endblock %}
 
 {% block content %}
 <div class="premium-container">
@@ -142,4 +139,8 @@
     </div>
     {% endif %}
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/table-scroller.js' %}"></script>
 {% endblock %}

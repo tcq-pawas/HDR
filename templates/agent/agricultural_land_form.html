@@ -7,36 +7,6 @@
 <span>{{ title }}</span>
 {% endblock %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/agent/agricultural_land_form.css' %}">
-<style>
-/* Spinner animation */
-.spin {
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-/* Location button styling */
-.location-btn {
-    padding: 12px 15px;
-    white-space: nowrap;
-    flex-shrink: 0;
-    min-width: 45px;
-    min-height: 45px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.location-btn i {
-    font-size: 1.2rem;
-}
-</style>
-{% endblock %}
 
 {% block content %}
 <div class="wizard-container">
@@ -49,7 +19,7 @@
     <!-- Progress Indicator -->
     <div class="progress-container">
         <div class="progress">
-            <div class="progress-bar" id="progressBar" style="width: 12.5%"></div>
+            <div class="progress-bar wizard-progress-bar" id="progressBar"></div>
         </div>
         <div class="step-indicators">
             <div class="step-indicator active" data-step="1">

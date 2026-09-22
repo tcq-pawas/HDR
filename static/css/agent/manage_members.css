@@ -1,0 +1,176 @@
+/* Manage Members Styles */
+
+.members-hero {
+    background: linear-gradient(135deg, #1a4a2e 0%, #2d7a4f 60%, #3da668 100%);
+    border-radius: 16px;
+    padding: 1.6rem 2rem;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+
+.members-hero h4 {
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+}
+
+.btn-hero-glass {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+
+.btn-hero-glass:hover {
+    background: rgba(255,255,255,0.25);
+    color: #fff;
+}
+
+.btn-hero-add {
+    background: #fff;
+    color: #2d7a4f;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    transition: all 0.2s ease;
+}
+
+.btn-hero-add:hover {
+    background: #f0fdf4;
+    color: #1a4a2e;
+    transform: translateY(-1px);
+}
+
+.members-card {
+    background: #fff;
+    border-radius: 14px;
+    border: 1px solid #e8f0ea;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    overflow: hidden;
+}
+
+.role-badge-owner {
+    background: #fef3c7;
+    color: #d97706;
+    border: 1px solid #fcd34d;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.role-badge-member {
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.status-pending {
+    background: #fff7ed;
+    color: #c2410c;
+    border: 1px solid #fdba74;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.status-active {
+    background: #f0fdf4;
+    color: #15803d;
+    border: 1px solid #86efac;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.status-inactive {
+    background: #f8fafc;
+    color: #64748b;
+    border: 1px solid #cbd5e1;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.invite-link-box {
+    max-width: 220px;
+    font-size: 11px;
+    color: #64748b;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 4px 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.action-btn {
+    border-radius: 6px;
+    font-size: 12px;
+    padding: 3px 10px;
+    margin-left: 4px;
+    margin-bottom: 4px;
+}
+
+.copy-toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #1a4a2e;
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    z-index: 1050;
+    display: none;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+/* Table styles */
+.members-card thead tr {
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #64748b;
+    letter-spacing: 0.5px;
+}
+
+.members-card tbody td {
+    color: #1e293b;
+}
+
+.members-card tbody td i {
+    font-size: 16px;
+}
+
+/* Breadcrumb separator */
+.breadcrumb-separator {
+    font-size: 0.7rem;
+    color: #94a3b8;
+}
