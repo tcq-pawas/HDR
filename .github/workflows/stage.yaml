@@ -23,7 +23,7 @@ jobs:
       # ============================================
       - name: Configure SSH
         env:
-          STAGING_EC2_SSH_KEY: ${{ secrets.STAGING_EC2_SSH_KEY }}
+          STAGING_EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
           EC2_HOST: ${{ secrets.EC2_HOST }}
         run: |
           set -euo pipefail
@@ -38,17 +38,17 @@ jobs:
           fi
           echo "EC2_HOST is set: yes (length=${#EC2_HOST})"
 
-          if [ -z "${STAGING_EC2_SSH_KEY:-}" ]; then
-            echo "::error::STAGING_EC2_SSH_KEY secret is empty or not set"
+          if [ -z "${EC2_SSH_KEY:-}" ]; then
+            echo "::error::EC2_SSH_KEY secret is empty or not set"
             exit 1
           fi
-          echo "STAGING_EC2_SSH_KEY is set: yes (length=${#STAGING_EC2_SSH_KEY})"
+          echo "EC2_SSH_KEY is set: yes (length=${#EC2_SSH_KEY})"
 
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
 
           # Support both real newlines and literal \n in the secret
-          printf '%s\n' "$STAGING_EC2_SSH_KEY" | sed 's/\r$//' | sed 's/\\n/\n/g' > ~/.ssh/ec2_key.pem
+          printf '%s\n' "$EC2_SSH_KEY" | sed 's/\r$//' | sed 's/\\n/\n/g' > ~/.ssh/ec2_key.pem
           chmod 600 ~/.ssh/ec2_key.pem
 
           echo "Private key file written: ~/.ssh/ec2_key.pem"
@@ -57,7 +57,7 @@ jobs:
           head -n 1 ~/.ssh/ec2_key.pem || true
 
           if ! grep -q "BEGIN .*PRIVATE KEY" ~/.ssh/ec2_key.pem; then
-            echo "::error::STAGING_EC2_SSH_KEY is not a valid PEM private key (missing BEGIN PRIVATE KEY line)"
+            echo "::error::EC2_SSH_KEY is not a valid PEM private key (missing BEGIN PRIVATE KEY line)"
             exit 1
           fi
 
@@ -98,7 +98,7 @@ jobs:
       # ============================================
       - name: Deploy Application
         run: |
-          ssh -i ~/.ssh/ec2_key.pem ${{ secrets.STAGING_EC2_USER }}@${{ secrets.EC2_HOST }} << 'ENDSSH'
+          ssh -i ~/.ssh/ec2_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'ENDSSH'
 
           set -e
 
