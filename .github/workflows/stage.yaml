@@ -39,7 +39,7 @@ jobs:
           echo "EC2_HOST is set: yes (length=${#EC2_HOST})"
 
           if [ -z "${EC2_SSH_KEY:-}" ]; then
-            echo "::error::EC2_SSH_KEYsecret is empty or not set"
+            echo "::error::EC2_SSH_KEY secret is empty or not set"
             exit 1
           fi
           echo "EC2_SSH_KEYis set: yes (length=${#EC2_SSH_KEY})"
