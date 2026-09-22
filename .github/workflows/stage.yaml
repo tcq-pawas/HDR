@@ -23,7 +23,7 @@ jobs:
       # ============================================
       - name: Configure SSH
         env:
-          STAGING_EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY}}
+          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
           EC2_HOST: ${{ secrets.EC2_HOST }}
         run: |
           set -euo pipefail
