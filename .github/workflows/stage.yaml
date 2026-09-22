@@ -42,7 +42,7 @@ jobs:
             echo "::error::EC2_SSH_KEY secret is empty or not set"
             exit 1
           fi
-          echo "EC2_SSH_KEYis set: yes (length=${#EC2_SSH_KEY})"
+          echo "EC2_SSH_KEY is set: yes (length=${#EC2_SSH_KEY})"
 
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
