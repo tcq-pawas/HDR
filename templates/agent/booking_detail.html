@@ -7,9 +7,6 @@
 <span>Booking Details</span>
 {% endblock %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/agent/booking_detail.css' %}">
-{% endblock %}
 
 {% block content %}
 <div class="booking-detail-container">
@@ -84,14 +81,14 @@
         <!-- Quick Actions -->
         <div class="card">
             <h3>Quick Actions</h3>
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                <a href="{% url 'agent:site_visit_add' %}?customer_name={{ booking.customer_name }}&customer_phone={{ booking.customer_phone }}" class="btn btn-primary" style="text-align: center;">
+            <div class="quick-actions-container">
+                <a href="{% url 'agent:site_visit_add' %}?customer_name={{ booking.customer_name }}&customer_phone={{ booking.customer_phone }}" class="btn btn-primary quick-action-btn">
                     <i class="bi bi-calendar-event"></i> Schedule Site Visit
                 </a>
-                <a href="{% url 'agent:communication_send' %}?recipient={{ booking.customer_phone }}" class="btn btn-secondary" style="text-align: center;">
+                <a href="{% url 'agent:communication_send' %}?recipient={{ booking.customer_phone }}" class="btn btn-secondary quick-action-btn">
                     <i class="bi bi-chat-dots"></i> Send Message
                 </a>
-                <a href="{% url 'agent:document_add' %}?booking_id={{ booking.id }}" class="btn btn-success" style="text-align: center;">
+                <a href="{% url 'agent:document_add' %}?booking_id={{ booking.id }}" class="btn btn-success quick-action-btn">
                     <i class="bi bi-file-earmark"></i> Upload Document
                 </a>
             </div>
@@ -108,21 +105,21 @@
                         <span class="installment-number">Installment #{{ installment.installment_number }}</span>
                         <span class="installment-amount">₹{{ installment.amount|floatformat:0 }}</span>
                     </div>
-                    <div style="color: #64748b; font-size: 0.85rem;">
+                    <div class="installment-details">
                         Due: {{ installment.due_date|date:"M d, Y" }} | 
                         Status: {{ installment.get_status_display }} |
                         {% if installment.paid_date %}Paid: {{ installment.paid_date|date:"M d, Y" }}{% endif %}
                     </div>
-                    <div style="margin-top: 0.5rem;">
-                        <a href="{% url 'agent:installment_edit' installment.id %}" class="btn btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">
+                    <div class="installment-actions">
+                        <a href="{% url 'agent:installment_edit' installment.id %}" class="btn btn-secondary installment-edit-btn">
                             <i class="bi bi-pencil"></i> Edit
                         </a>
                     </div>
                 </div>
             {% endfor %}
         {% else %}
-            <p style="color: #64748b; text-align: center; padding: 2rem;">No installments recorded yet.</p>
-            <div style="text-align: center;">
+            <p class="no-installments-text">No installments recorded yet.</p>
+            <div class="no-installments-actions">
                 <a href="{% url 'agent:installment_add' booking.id %}" class="btn btn-primary">
                     <i class="bi bi-plus-lg"></i> Add First Installment
                 </a>

@@ -11,8 +11,8 @@
 <section class="agents-hero">
     <div class="hero-overlay"></div>
     <div class="hero-content">
-        <h1 class="hero-title" style="font-size: 2.5rem;">Find Trusted Real Estate Agents</h1>
-        <p class="hero-subtitle" style="font-size: 18px;">Connect with verified and experienced agents near you.</p>
+        <h1 class="hero-title">Find Trusted Real Estate Agents</h1>
+        <p class="hero-subtitle">Connect with verified and experienced agents near you.</p>
         <div class="hero-features">
             <div class="hero-feature">
                 <i class="fas fa-check-circle"></i>
@@ -56,7 +56,7 @@
             </form>
         </div>
         <div class="popular-searches">
-            <span class="popular-label" style="font-size: 18px !important;">Popular Searches:</span>
+            <span class="popular-label">Popular Searches:</span>
             {% for search in popular_searches %}
                 <a href="?search={{ search }}" class="popular-chip" style="font-size: 12px !important;">{{ search }}</a>
             {% endfor %}
@@ -68,9 +68,9 @@
 <section class="results-section">
     <div class="page-container">
         <div class="results-header">
-            <div class="results-count" style="font-size: 18px !important;">{{ page_obj.paginator.count }} Verified Agents Found</div>
+            <div class="results-count">{{ page_obj.paginator.count }} Verified Agents Found</div>
             <div class="results-sort">
-                <select class="sort-select" style="font-size: 18px !important;">
+                <select class="sort-select">
                     <option>Sort By: Relevance</option>
                     <option>Rating: High to Low</option>
                     <option>Rating: Low to High</option>
@@ -85,10 +85,10 @@
                     <div class="agent-card">
                         <div class="card-top">
                             {% if agent.is_verified %}
-                                <span class="premium-badge" style="font-size: 18px !important;">Premium</span>
+                                <span class="premium-badge">Premium</span>
                             {% endif %}
                             {% if agent.is_verified %}
-                                <div class="verified-badge-corner" style="font-size: 18px !important;">Verified</div>
+                                <div class="verified-badge-corner">Verified</div>
                             {% endif %}
                         </div>
                         <div class="card-profile">
@@ -101,14 +101,14 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <h3 class="agent-name" style="font-size: 1.5rem !important;">{{ agent.user.get_full_name|default:agent.user.username }}</h3>
+                            <h3 class="agent-name">{{ agent.user.get_full_name|default:agent.user.username }}</h3>
                             <div class="agent-rating">
                                 <i class="fas fa-star"></i>
                                 <span style="font-size: 12px !important;">4.8</span>
-                                <span class="rating-count" style="font-size: 18px !important;">(124)</span>
+                                <span class="rating-count">(124)</span>
                             </div>
-                            <p class="agent-specialization" style="font-size: 18px !important;">{{ agent.bio|truncatewords:8|default:"Real Estate Specialist" }}</p>
-                            <div class="agent-location" style="font-size: 18px !important;">
+                            <p class="agent-specialization">{{ agent.bio|truncatewords:8|default:"Real Estate Specialist" }}</p>
+                            <div class="agent-location">
                                 <i class="fas fa-map-marker-alt"></i>
                                 {{ agent.territory|default:"India" }}
                             </div>
@@ -250,6 +250,7 @@
     }
 
     .hero-title {
+        font-size: 2.5rem;
         font-weight: 700;
         margin-bottom: 12px;
         font-family: var(--font-heading);

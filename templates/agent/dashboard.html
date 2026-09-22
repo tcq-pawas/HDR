@@ -195,11 +195,9 @@ HHectare{% endblock %}
                     <td>{{ property.created_at|date:"M d, Y" }}</td>
 
                     <td>
-
                         <div class="leads-actions">
-                            <a href="{% url 'agent:property_view' property.id %}" class="btn btn-sm btn-outline-primary" style="border-radius: 6px; padding: 3px 12px; font-weight: 500;">View</a>
+                            <a href="{% url 'agent:property_view' property.id %}" class="btn btn-sm btn-outline-primary">View</a>
                         </div>
-
                     </td>
 
                 </tr>
@@ -284,9 +282,9 @@ HHectare{% endblock %}
                     <td>
                         <div class="leads-actions">
                             {% if inquiry.phone_number %}
-                            <a href="{% url 'agent:customer_detail' inquiry.phone_number %}" class="btn btn-sm btn-outline-primary" style="border-radius: 6px; padding: 3px 12px; font-weight: 500;">View Customer</a>
+                            <a href="{% url 'agent:customer_detail' inquiry.phone_number %}" class="btn btn-sm btn-outline-primary">View Customer</a>
                             {% else %}
-                            <span class="text-muted" style="font-size: 0.85rem;">No details</span>
+                            <span class="text-muted small-text">No details</span>
                             {% endif %}
                         </div>
                     </td>
@@ -343,7 +341,7 @@ HHectare{% endblock %}
                     <td>{{ lead.created_at|date:"M d, Y" }}</td>
                     <td>
                         <div class="leads-actions">
-                            <a href="{% url 'agent:lead_detail' lead.id %}" class="btn btn-sm btn-outline-primary" style="border-radius: 6px; padding: 3px 12px; font-weight: 500;">View Detail</a>
+                            <a href="{% url 'agent:lead_detail' lead.id %}" class="btn btn-sm btn-outline-primary">View Detail</a>
                         </div>
                     </td>
                 </tr>
@@ -431,7 +429,7 @@ HHectare{% endblock %}
                     <td>{{ review.created_at|date:"M d, Y" }}</td>
                     <td>
                         <div class="leads-actions">
-                            <button class="btn btn-sm btn-outline-primary" style="border-radius: 6px; padding: 3px 12px; font-weight: 500;" disabled>View</button>
+                            <button class="btn btn-sm btn-outline-primary" disabled>View</button>
                         </div>
                     </td>
                 </tr>
@@ -455,55 +453,6 @@ HHectare{% endblock %}
 </div>
 
 
-
-{% endblock %}
-
-
-
-{% block extra_css %}
-
-<link rel="stylesheet" href="{% static 'css/agent/dashboard.css' %}">
-
-<style>
-    .review-stats {
-        display: flex;
-        gap: 12px;
-        align-items: center;
-    }
-
-    .stat-badge {
-        background: rgba(15, 106, 60, 0.1);
-        color: #0F6A3C;
-        padding: 6px 12px;
-        border-radius: 8px;
-        font-size: 13px;
-        font-weight: 600;
-    }
-
-    .stat-badge.pending {
-        background: rgba(244, 180, 0, 0.1);
-        color: #F4B400;
-    }
-
-    .star-rating {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        color: #F4B400;
-        font-size: 14px;
-    }
-
-    .star-rating span {
-        color: #666;
-        font-size: 12px;
-        margin-left: 4px;
-    }
-
-    .status-badge.status-rejected {
-        background: rgba(220, 53, 69, 0.1);
-        color: #dc3545;
-    }
-</style>
 
 {% endblock %}
 

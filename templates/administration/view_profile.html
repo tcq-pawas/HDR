@@ -4,7 +4,7 @@
 {% block title %}Admin Profile | HHectare{% endblock %}
 
 {% block page_title %}
-<div class="profile-breadcrumb">
+<div class="profile-breadcrumb d-flex align-items-center flex-wrap gap-2">
     <span class="breadcrumb-active">Administration</span>
     <span class="breadcrumb-separator">/</span>
     <span class="breadcrumb-current">View Profile</span>
@@ -12,760 +12,6 @@
 {% endblock %}
 
 {% block page_subtitle %}{% endblock %}
-
-{% block extra_css %}
-<style>
-/* =========================================================
-   ADMIN PROFILE PAGE
-   FULLY RESPONSIVE
-   Desktop → Laptop → Tablet → Mobile → 360px
-   ========================================================= */
-
-.profile-container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0;
-}
-
-/* ---------------------------------------------------------
-   BREADCRUMB
-   --------------------------------------------------------- */
-
-.profile-breadcrumb {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 8px;
-    font-size: 0.9rem;
-    line-height: 1.4;
-}
-
-.breadcrumb-active {
-    color: var(--primary);
-    font-weight: 700;
-}
-
-.breadcrumb-separator {
-    color: #94a3b8;
-}
-
-.breadcrumb-current {
-    color: #64748b;
-    font-weight: 500;
-}
-
-
-/* ---------------------------------------------------------
-   PROFILE HEADER
-   --------------------------------------------------------- */
-
-.profile-header-card {
-    position: relative;
-    width: 100%;
-    min-height: 240px;
-    background: #fff;
-    border-radius: 18px;
-    overflow: hidden;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.08);
-    margin-bottom: 20px;
-}
-
-.profile-header-bg {
-    position: absolute;
-    inset: 0;
-    height: 100%;
-    overflow: hidden;
-    pointer-events: none;
-}
-
-.profile-header-bg svg {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    bottom: 0;
-    left: 0;
-}
-
-.profile-header-content {
-    position: relative;
-    z-index: 2;
-    min-height: 240px;
-    display: flex;
-    align-items: center;
-    padding: 35px 40px;
-}
-
-.profile-header-content > .d-flex {
-    width: 100%;
-    gap: 24px;
-}
-
-
-/* ---------------------------------------------------------
-   AVATAR
-   --------------------------------------------------------- */
-
-.profile-avatar-large {
-    width: 120px;
-    height: 120px;
-    min-width: 120px;
-    border-radius: 50%;
-    overflow: hidden;
-    background: #f1f5f9;
-    border: 5px solid #fff;
-    box-shadow: 0 8px 25px rgba(0, 69, 38, 0.16);
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.profile-avatar-large img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.default-avatar-icon {
-    font-size: 3.2rem;
-    color: var(--primary);
-}
-
-.avatar-upload-overlay {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background: rgba(0, 69, 38, 0.72);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-    font-size: 1.3rem;
-}
-
-.profile-avatar-large:hover .avatar-upload-overlay {
-    opacity: 1;
-}
-
-
-/* ---------------------------------------------------------
-   PROFILE HEADER TEXT
-   --------------------------------------------------------- */
-
-.profile-header-text {
-    min-width: 0;
-}
-
-.profile-header-text h2 {
-    margin: 0 0 10px;
-    font-size: clamp(1.4rem, 2vw, 2rem);
-    font-weight: 700;
-    color: #0f172a;
-    overflow-wrap: anywhere;
-}
-
-.badge-role {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 6px 13px;
-    border-radius: 999px;
-    background: rgba(0, 69, 38, 0.1);
-    color: var(--primary);
-    border: 1px solid rgba(0, 69, 38, 0.15);
-    font-size: 0.78rem;
-    font-weight: 700;
-}
-
-.profile-joined {
-    font-size: 0.82rem;
-    line-height: 1.4;
-}
-
-.calendar-icon {
-    color: var(--primary);
-}
-
-
-/* ---------------------------------------------------------
-   EDIT BUTTON
-   --------------------------------------------------------- */
-
-.btn-edit-profile {
-    display: inline-flex !important;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
-    min-height: 42px;
-    padding: 9px 17px !important;
-    border-radius: 10px !important;
-    background: var(--primary);
-    color: white !important;
-    border: 0;
-    font-size: 0.82rem;
-    font-weight: 600;
-    white-space: nowrap;
-    box-shadow: 0 4px 12px rgba(0, 69, 38, 0.18);
-    transition: all 0.2s ease;
-}
-
-.btn-edit-profile:hover {
-    background: var(--primary-dark);
-    transform: translateY(-1px);
-}
-
-
-/* ---------------------------------------------------------
-   INFORMATION CARD
-   --------------------------------------------------------- */
-
-.profile-info-card {
-    width: 100%;
-    background: #fff;
-    border: 1px solid #e2e8f0;
-    border-radius: 18px;
-    overflow: hidden;
-    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.07);
-}
-
-.info-grid {
-    width: 100%;
-}
-
-.info-item {
-    min-width: 0;
-    min-height: 125px;
-    display: flex;
-    align-items: flex-start;
-    gap: 16px;
-    padding: 24px 28px;
-    border-bottom: 1px solid #e2e8f0;
-}
-
-.info-item:nth-child(odd) {
-    border-right: 1px solid #e2e8f0;
-}
-
-.info-icon {
-    width: 44px;
-    height: 44px;
-    min-width: 44px;
-    border-radius: 12px;
-    background: rgba(0, 69, 38, 0.08);
-    color: var(--primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-}
-
-.info-details {
-    min-width: 0;
-    flex: 1;
-}
-
-.info-details label {
-    display: block;
-    margin-bottom: 5px;
-    color: #64748b;
-    font-size: 0.72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-}
-
-.info-details p {
-    margin: 0;
-    color: #1e293b;
-    font-size: 0.9rem;
-    font-weight: 600;
-    line-height: 1.55;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-}
-
-
-/* ---------------------------------------------------------
-   MODAL
-   --------------------------------------------------------- */
-
-#editProfileModal .modal-dialog {
-    width: calc(100% - 30px);
-    max-width: 520px;
-    margin: 1.75rem auto;
-}
-
-#editProfileModal .modal-content {
-    border: 0;
-    border-radius: 18px;
-    overflow: hidden;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
-}
-
-#editProfileModal .modal-header {
-    padding: 18px 22px;
-    border-bottom: 1px solid #e2e8f0;
-}
-
-#editProfileModal .modal-title {
-    font-size: 1rem;
-    font-weight: 700;
-}
-
-#editProfileModal .modal-body {
-    padding: 22px;
-}
-
-#editProfileModal .modal-footer {
-    padding: 15px 22px;
-    border-top: 1px solid #e2e8f0;
-    gap: 8px;
-}
-
-#editProfileModal .form-control {
-    min-height: 44px;
-    border-radius: 9px;
-}
-
-.modal-avatar-wrapper {
-    width: 100px;
-    height: 100px;
-    margin: 0 auto;
-    border-radius: 50%;
-    overflow: hidden;
-    position: relative;
-    cursor: pointer;
-    background: #f1f5f9;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.modal-avatar-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.modal-avatar-placeholder {
-    font-size: 2.5rem;
-    color: var(--primary);
-}
-
-
-/* =========================================================
-   LARGE DESKTOP
-   ========================================================= */
-
-@media (min-width: 1400px) {
-
-    .profile-container {
-        max-width: 1250px;
-    }
-
-    .profile-header-content {
-        padding: 40px 48px;
-    }
-
-    .info-item {
-        padding: 28px 32px;
-    }
-}
-
-
-/* =========================================================
-   LAPTOP
-   ========================================================= */
-
-@media (min-width: 992px) and (max-width: 1399.98px) {
-
-    .profile-container {
-        max-width: 1100px;
-    }
-
-    .profile-header-content {
-        padding: 32px;
-    }
-
-    .profile-avatar-large {
-        width: 105px;
-        height: 105px;
-        min-width: 105px;
-    }
-
-    .info-item {
-        padding: 22px;
-    }
-}
-
-
-/* =========================================================
-   TABLET
-   ========================================================= */
-
-@media (min-width: 768px) and (max-width: 991.98px) {
-
-    .profile-container {
-        width: 100%;
-    }
-
-    .profile-header-card {
-        min-height: 220px;
-    }
-
-    .profile-header-content {
-        min-height: 220px;
-        padding: 28px;
-    }
-
-    .profile-header-content > .d-flex {
-        gap: 18px;
-    }
-
-    .profile-avatar-large {
-        width: 92px;
-        height: 92px;
-        min-width: 92px;
-    }
-
-    .default-avatar-icon {
-        font-size: 2.5rem;
-    }
-
-    .profile-header-text h2 {
-        font-size: 1.45rem;
-    }
-
-    .info-item {
-        min-height: 115px;
-        padding: 20px;
-        gap: 13px;
-    }
-
-    .info-icon {
-        width: 40px;
-        height: 40px;
-        min-width: 40px;
-    }
-
-    .info-details p {
-        font-size: 0.82rem;
-    }
-}
-
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
-
-@media (max-width: 767.98px) {
-
-    .profile-container {
-        width: 100%;
-        max-width: 100%;
-    }
-
-    /* Header becomes stacked */
-    .profile-header-card {
-        min-height: auto;
-        border-radius: 14px;
-        margin-bottom: 14px;
-    }
-
-    .profile-header-content {
-        min-height: auto;
-        padding: 24px 18px;
-    }
-
-    .profile-header-content > .d-flex {
-        flex-direction: column;
-        align-items: center !important;
-        text-align: center;
-        gap: 15px;
-    }
-
-    .profile-avatar-large {
-        width: 92px;
-        height: 92px;
-        min-width: 92px;
-        border-width: 4px;
-    }
-
-    .default-avatar-icon {
-        font-size: 2.4rem;
-    }
-
-    .profile-header-text {
-        width: 100%;
-    }
-
-    .profile-header-text h2 {
-        font-size: 1.3rem;
-        margin-bottom: 7px;
-    }
-
-    .badge-role {
-        font-size: 0.7rem;
-        padding: 5px 11px;
-    }
-
-    .profile-joined {
-        margin-top: 9px !important;
-        font-size: 0.72rem;
-    }
-
-    /* Edit button moves underneath */
-    .profile-header-content .align-self-start {
-        align-self: center !important;
-        width: auto;
-    }
-
-    .btn-edit-profile {
-        min-height: 38px;
-        padding: 8px 14px !important;
-        font-size: 0.72rem;
-    }
-
-    /* Information card becomes one column */
-    .profile-info-card {
-        border-radius: 14px;
-    }
-
-    .info-item {
-        min-height: auto;
-        width: 100%;
-        padding: 17px 16px;
-        gap: 12px;
-        border-right: 0 !important;
-        border-bottom: 1px solid #e2e8f0 !important;
-    }
-
-    .info-item:last-child {
-        border-bottom: 0 !important;
-    }
-
-    .info-icon {
-        width: 38px;
-        height: 38px;
-        min-width: 38px;
-        border-radius: 10px;
-        font-size: 0.85rem;
-    }
-
-    .info-details label {
-        font-size: 0.63rem;
-        margin-bottom: 3px;
-    }
-
-    .info-details p {
-        font-size: 0.76rem;
-        line-height: 1.45;
-    }
-
-    /* Modal */
-    #editProfileModal .modal-dialog {
-        width: calc(100% - 20px);
-        max-width: none;
-        margin: 10px auto;
-    }
-
-    #editProfileModal .modal-body {
-        padding: 18px;
-    }
-
-    #editProfileModal .modal-header {
-        padding: 15px 17px;
-    }
-
-    #editProfileModal .modal-footer {
-        padding: 12px 17px;
-    }
-
-    #editProfileModal .modal-footer .btn {
-        flex: 1;
-    }
-}
-
-
-/* =========================================================
-   SMALL MOBILE
-   ========================================================= */
-
-@media (max-width: 480px) {
-
-    .profile-breadcrumb {
-        font-size: 0.72rem;
-        gap: 5px;
-    }
-
-    .profile-header-content {
-        padding: 20px 14px;
-    }
-
-    .profile-avatar-large {
-        width: 82px;
-        height: 82px;
-        min-width: 82px;
-    }
-
-    .default-avatar-icon {
-        font-size: 2.1rem;
-    }
-
-    .profile-header-text h2 {
-        font-size: 1.15rem;
-    }
-
-    .profile-joined {
-        font-size: 0.68rem;
-    }
-
-    .info-item {
-        padding: 15px 13px;
-    }
-
-    .info-icon {
-        width: 34px;
-        height: 34px;
-        min-width: 34px;
-        font-size: 0.76rem;
-    }
-
-    .info-details label {
-        font-size: 0.58rem;
-    }
-
-    .info-details p {
-        font-size: 0.7rem;
-    }
-
-    .btn-edit-profile {
-        min-height: 36px;
-        padding: 7px 12px !important;
-        font-size: 0.68rem;
-    }
-}
-
-
-/* =========================================================
-   VERY SMALL PHONES — 360px
-   ========================================================= */
-
-@media (max-width: 360px) {
-
-    .profile-header-content {
-        padding: 17px 11px;
-    }
-
-    .profile-avatar-large {
-        width: 74px;
-        height: 74px;
-        min-width: 74px;
-    }
-
-    .default-avatar-icon {
-        font-size: 1.9rem;
-    }
-
-    .profile-header-text h2 {
-        font-size: 1.05rem;
-    }
-
-    .badge-role {
-        font-size: 0.62rem;
-        padding: 4px 9px;
-    }
-
-    .profile-joined {
-        font-size: 0.62rem;
-    }
-
-    .info-item {
-        padding: 13px 10px;
-        gap: 9px;
-    }
-
-    .info-icon {
-        width: 31px;
-        height: 31px;
-        min-width: 31px;
-        border-radius: 8px;
-        font-size: 0.68rem;
-    }
-
-    .info-details label {
-        font-size: 0.53rem;
-    }
-
-    .info-details p {
-        font-size: 0.65rem;
-    }
-
-    #editProfileModal .modal-dialog {
-        width: calc(100% - 12px);
-        margin: 6px auto;
-    }
-
-    #editProfileModal .modal-body {
-        padding: 14px;
-    }
-}
-
-
-/* =========================================================
-   LANDSCAPE MOBILE
-   ========================================================= */
-
-@media (max-width: 767.98px) and (orientation: landscape) {
-
-    .profile-header-content {
-        padding: 18px 20px;
-    }
-
-    .profile-header-content > .d-flex {
-        flex-direction: row;
-        text-align: left;
-        align-items: center !important;
-    }
-
-    .profile-avatar-large {
-        width: 75px;
-        height: 75px;
-        min-width: 75px;
-    }
-
-    .profile-header-content .align-self-start {
-        margin-left: auto;
-    }
-
-    .info-item {
-        padding: 14px 16px;
-    }
-}
-
-
-/* Prevent horizontal overflow */
-.profile-container,
-.profile-header-card,
-.profile-info-card,
-.info-grid,
-.info-item,
-.profile-header-content,
-.profile-header-text {
-    max-width: 100%;
-    min-width: 0;
-}
-
-.profile-container * {
-    max-width: 100%;
-}
-</style>
-{% endblock %}
-
 
 {% block content %}
 
@@ -788,12 +34,12 @@
 
         <div class="profile-header-content">
 
-            <div class="d-flex align-items-center position-relative z-1">
+            <div class="d-flex align-items-center position-relative z-1 gap-4">
 
                 <!-- Avatar -->
                 <div class="dropdown" title="Profile Photo Options">
 
-                    <div class="profile-avatar-large"
+                    <div class="profile-avatar-large d-flex align-items-center justify-content-center"
                          id="avatarWrapper"
                          data-bs-toggle="dropdown"
                          aria-expanded="false"
@@ -812,7 +58,7 @@
 
                         {% endif %}
 
-                        <div class="avatar-upload-overlay">
+                        <div class="avatar-upload-overlay d-flex align-items-center justify-content-center">
                             <i class="fas fa-camera"></i>
                         </div>
 
@@ -865,7 +111,7 @@
                         {{ user.username|default:"admin_test" }}
                     </h2>
 
-                    <span class="badge-role">
+                    <span class="badge-role d-inline-flex align-items-center justify-content-center">
                         Administrator
                     </span>
 
@@ -887,7 +133,7 @@
                     <a href="#"
                        data-bs-toggle="modal"
                        data-bs-target="#editProfileModal"
-                       class="btn btn-edit-profile">
+                       class="btn btn-edit-profile d-inline-flex align-items-center justify-content-center gap-2">
 
                         <i class="fas fa-pencil-alt"></i>
                         <span>Edit</span>
@@ -909,9 +155,9 @@
 
         <div class="row info-grid g-0">
 
-            <div class="col-md-6 info-item">
+            <div class="col-md-6 info-item d-flex align-items-start gap-4">
 
-                <div class="info-icon">
+                <div class="info-icon d-flex align-items-center justify-content-center">
                     <i class="fas fa-building"></i>
                 </div>
 
@@ -926,9 +172,9 @@
             </div>
 
 
-            <div class="col-md-6 info-item">
+            <div class="col-md-6 info-item d-flex align-items-start gap-4">
 
-                <div class="info-icon">
+                <div class="info-icon d-flex align-items-center justify-content-center">
                     <i class="fas fa-map-marker-alt"></i>
                 </div>
 
@@ -946,9 +192,9 @@
             </div>
 
 
-            <div class="col-md-6 info-item">
+            <div class="col-md-6 info-item d-flex align-items-start gap-4">
 
-                <div class="info-icon">
+                <div class="info-icon d-flex align-items-center justify-content-center">
                     <i class="fas fa-file-alt"></i>
                 </div>
 
@@ -965,9 +211,9 @@
             </div>
 
 
-            <div class="col-md-6 info-item">
+            <div class="col-md-6 info-item d-flex align-items-start gap-4">
 
-                <div class="info-icon">
+                <div class="info-icon d-flex align-items-center justify-content-center">
                     <i class="far fa-clock"></i>
                 </div>
 
@@ -982,9 +228,9 @@
             </div>
 
 
-            <div class="col-md-6 info-item">
+            <div class="col-md-6 info-item d-flex align-items-start gap-4">
 
-                <div class="info-icon">
+                <div class="info-icon d-flex align-items-center justify-content-center">
                     <i class="far fa-envelope"></i>
                 </div>
 
@@ -1007,9 +253,9 @@
             </div>
 
 
-            <div class="col-md-6 info-item">
+            <div class="col-md-6 info-item d-flex align-items-start gap-4">
 
-                <div class="info-icon">
+                <div class="info-icon d-flex align-items-center justify-content-center">
                     <i class="fas fa-phone-alt"></i>
                 </div>
 
@@ -1075,7 +321,7 @@
 
                     <div class="mb-3 text-center">
 
-                        <div class="modal-avatar-wrapper"
+                        <div class="modal-avatar-wrapper d-flex align-items-center justify-content-center"
                              onclick="document.getElementById('modalAvatarInput').click()"
                              title="Click to change photo">
 

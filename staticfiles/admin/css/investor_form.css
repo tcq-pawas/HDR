@@ -1,0 +1,216 @@
+/* Investor Form Page Styles */
+.investor-form-page {
+    width: 100%;
+}
+
+.investor-form-card {
+    border: 1px solid #e8edf2;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.investor-form-card .card-header {
+    background: #fff;
+    padding: 18px 20px;
+    border-bottom: 1px solid #edf1f5;
+}
+
+.investor-form-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.investor-form-back-btn {
+    white-space: nowrap;
+    font-size: 0.85rem;
+    padding: 6px 12px;
+}
+
+.investor-form-card .card-body {
+    padding: 24px 20px;
+}
+
+/* Form Groups */
+.form-row {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 8px;
+}
+
+.form-control {
+    font-size: 0.9rem;
+    padding: 10px 12px;
+    border: 1px solid #e5eaf0;
+    border-radius: 8px;
+    transition: border-color 0.2s;
+}
+
+.form-control:focus {
+    border-color: #006b45;
+    box-shadow: 0 0 0 3px rgba(0, 107, 69, 0.1);
+}
+
+.form-select {
+    font-size: 0.9rem;
+    padding: 10px 12px;
+    border: 1px solid #e5eaf0;
+    border-radius: 8px;
+    transition: border-color 0.2s;
+}
+
+.form-select:focus {
+    border-color: #006b45;
+    box-shadow: 0 0 0 3px rgba(0, 107, 69, 0.1);
+}
+
+.form-text {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    margin-top: 5px;
+}
+
+/* Form Actions */
+.form-actions {
+    margin-top: 24px;
+}
+
+.form-cancel-btn {
+    padding: 10px 20px;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.form-submit-btn {
+    padding: 10px 20px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    background: #006b45;
+    border-color: #006b45;
+}
+
+.form-submit-btn:hover {
+    background: #005538;
+    border-color: #005538;
+}
+
+/* Alert Messages */
+.alert {
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 0.85rem;
+}
+
+.alert-dismissible .btn-close {
+    padding: 0.5rem 0.75rem;
+}
+
+/* Tablet */
+@media (max-width: 992px) {
+    .investor-form-card {
+        max-width: 100%;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .investor-form-page {
+        width: 100%;
+        padding: 0;
+    }
+
+    .investor-form-card {
+        border-radius: 12px;
+        margin: 0;
+    }
+
+    .investor-form-card .card-header {
+        padding: 14px 12px;
+    }
+
+    .investor-form-title {
+        font-size: 0.82rem;
+        line-height: 1.2;
+        margin-bottom: 10px !important;
+    }
+
+    .investor-form-back-btn {
+        width: 100%;
+        font-size: 0.85rem;
+        padding: 10px 16px;
+    }
+
+    .investor-form-card .card-body {
+        padding: 16px 12px;
+    }
+
+    .form-row {
+        margin-bottom: 16px;
+    }
+
+    .form-label {
+        font-size: 0.82rem;
+    }
+
+    .form-control,
+    .form-select {
+        font-size: 0.85rem;
+        padding: 9px 11px;
+    }
+
+    .form-text {
+        font-size: 0.72rem;
+    }
+
+    .form-actions {
+        margin-top: 24px;
+    }
+
+    .form-cancel-btn,
+    .form-submit-btn {
+        width: 100%;
+        padding: 10px 16px;
+    }
+
+    .alert {
+        font-size: 0.82rem;
+        padding: 10px 14px;
+    }
+}
+
+/* Very Small Mobile */
+@media (max-width: 400px) {
+    .investor-form-card .card-header {
+        padding: 12px 9px;
+    }
+
+    .investor-form-title {
+        font-size: 0.78rem;
+    }
+
+    .investor-form-card .card-body {
+        padding: 14px 10px;
+    }
+
+    .form-label {
+        font-size: 0.78rem;
+    }
+
+    .form-control,
+    .form-select {
+        font-size: 0.82rem;
+        padding: 8px 10px;
+    }
+}

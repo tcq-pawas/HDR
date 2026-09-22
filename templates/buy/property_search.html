@@ -544,7 +544,7 @@
                                     <div style="font-size: 18px; font-weight: 700; color: #0F6A3C; margin-bottom: 16px;">₹{{ property.price }}</div>
                                 </div>
                                 <div style="margin-top: auto; display: flex; gap: 10px;">
-                                    <a href="{% url 'buy:property_detail' property.id %}" style="flex: 1; background: #F4B400; color: #1F1F1F; border: none; border-radius: 999px; padding: 10px 20px; font-weight: 600; font-size: 14px; text-decoration: none; display: inline-block; text-align: center;">View Details</a>
+                                    <a href="{% url 'buy:property_detail' property.id %}" style="flex: 1; background: #F4B400; color: #1F1F1F; border: none; border-radius: 999px; padding: 10px 20px; font-weight: 600; font-size: 14px; text-decoration: none; display: inline-block; text-align: center; text-wrap: nowrap;">View Details</a>
                                     <button class="share-btn" data-property-title="{{ property.title|escapejs }}" data-property-url="{% url 'buy:property_detail' property.id %}" style="flex: 1; padding: 10px 16px; border: 1px solid #e2e8f0; background: #f8fafc; border-radius: 999px; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.2s; color: #3d4f4a; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
                                         <i class="bi bi-share"></i> Share
                                     </button>
