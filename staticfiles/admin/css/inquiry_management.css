@@ -19,8 +19,14 @@
 .stat-card-modern .stat-label { font-size: .85rem; color: var(--muted); }
 
 .stat-icon-circle {
-    width: 46px; height: 46px; border-radius: 50%;
-    flex-shrink: 0; font-size: 1.05rem;
+    width: 48px; height: 48px; min-width: 48px; min-height: 48px; border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.stat-icon-circle i {
+    font-size: 20px;
+    line-height: 1;
+    margin: 0;
 }
 
 .stat-icon-blue { background: #e7edff; color: #3b5bfd; }
@@ -219,9 +225,16 @@
     }
 
     .stat-icon-circle {
-        width: 40px;
-        height: 40px;
-        font-size: .9rem;
+        width: 48px;
+        height: 48px;
+        min-width: 48px;
+        min-height: 48px;
+    }
+
+    .stat-icon-circle i {
+        font-size: 20px;
+        line-height: 1;
+        margin: 0;
     }
 
     .filter-bar-modern .row {
@@ -288,9 +301,16 @@
     }
 
     .stat-icon-circle {
-        width: 34px;
-        height: 34px;
-        font-size: .78rem;
+        width: 48px;
+        height: 48px;
+        min-width: 48px;
+        min-height: 48px;
+    }
+
+    .stat-icon-circle i {
+        font-size: 20px;
+        line-height: 1;
+        margin: 0;
     }
 
     /* Main inquiry card */
@@ -568,8 +588,16 @@
     }
 
     .stat-icon-circle {
-        width: 27px;
-        height: 27px;
+        width: 48px;
+        height: 48px;
+        min-width: 48px;
+        min-height: 48px;
+    }
+
+    .stat-icon-circle i {
+        font-size: 20px;
+        line-height: 1;
+        margin: 0;
     }
 
     .filter-bar-modern .form-control,

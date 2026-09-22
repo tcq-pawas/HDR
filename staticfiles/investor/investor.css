@@ -28,7 +28,7 @@
 
 body {
     background-color: #f8f9fa;
-    font-family: var(--font-body);
+    
     font-size: var(--font-body-size);
     line-height: var(--line-height-body);
 }
@@ -152,7 +152,7 @@ body {
 
 body.investor-dashboard {
     background: #f4f6f9;
-    font-family: var(--font-body);
+    
     overflow-x: hidden;
 }
 
@@ -536,14 +536,14 @@ body.investor-dashboard {
 
 .roi-data-page .roi-card .card-title {
     margin-bottom: 0.35rem;
-    font-size: var(--font-h4);
+    font-size: 28px;
     line-height: var(--line-height-heading);
     overflow-wrap: anywhere;
 }
 
 .roi-data-page .roi-card .card-text {
     margin-bottom: 0;
-    font-size: var(--font-small);
+    font-size: 18px;
     line-height: var(--line-height-body);
 }
 

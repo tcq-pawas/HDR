@@ -1035,7 +1035,7 @@
 
 
 
-            background: var(--surface);
+         
 
 
 
@@ -1071,7 +1071,7 @@
 
 
 
-            color: var(--text-primary);
+            color: #ffffff;
 
 
 
@@ -1099,7 +1099,7 @@
 
 
 
-            color: var(--text-secondary);
+            color: #ffffff;
 
 
 
@@ -1111,6 +1111,21 @@
 
 
 
+        }
+
+        /* Ensure all text inside page-header is white */
+        .page-header * {
+            color: #ffffff;
+        }
+
+        .page-header a {
+            color: #ffffff;
+        }
+
+        .page-header .breadcrumb,
+        .page-header .breadcrumb-item,
+        .page-header .breadcrumb-item a {
+            color: #ffffff;
         }
 
 
@@ -1570,7 +1585,8 @@
         /* ============================================================
            MOBILE — up to 767px
            ============================================================ */
-        @media (max-width: 767.98px) {
+
+        @media (max-width: 967.98px) {
             body {
                 font-size: 14px;
                 line-height: 1.5;
