@@ -57,7 +57,7 @@ jobs:
           head -n 1 ~/.ssh/ec2_key.pem || true
 
           if ! grep -q "BEGIN .*PRIVATE KEY" ~/.ssh/ec2_key.pem; then
-            echo "::error::EC2_SSH_KEYis not a valid PEM private key (missing BEGIN PRIVATE KEY line)"
+            echo "::error::EC2_SSH_KEY is not a valid PEM private key (missing BEGIN PRIVATE KEY line)"
             exit 1
           fi
 
