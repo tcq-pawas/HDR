@@ -378,7 +378,7 @@ class CustomerProfileView(CustomerDashboardMixin, TemplateView):
             activities.append({
                 'type': 'joined',
                 'title': 'Account Created',
-                'description': 'Joined HeyDay Realty customer portal',
+                'description': 'Joined HHectare customer portal',
                 'date': user.date_joined,
                 'icon': 'fa-user-plus',
             })

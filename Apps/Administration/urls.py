@@ -12,7 +12,7 @@ from . import communication_views
 from . import contact_views
 contact_docs_view = contact_views.ContactAPIDocumentationView()
 from Apps.Agent import views as agent_views
-from Apps.Agent.views import property_type_select
+from Apps.Agent.views import property_type_select, property_add
 from .views import AdminPropertyDetailAPIView, AdminPropertyListAPIView
 from drf_spectacular.views import (
     SpectacularAPIView,
@@ -61,6 +61,7 @@ urlpatterns = [
     # Admin-managed property list
     path('admin-properties/', AdminPropertyListView.as_view(), name='admin-property-list'),
     path('property/add/', property_type_select, name='property_type_select'),
+    path('property/add/<str:property_type>/', property_add, name='property_add'),
     
     # API endpoints (admin-only access)
     path('api/profile/', views.AdminProfileView.as_view(), name='profile'),
@@ -102,6 +103,8 @@ urlpatterns = [
     path('document-verifications/', views.document_verification_list, name='document_verification_list'),
     path('document-verifications/<int:profile_id>/approve/', views.approve_kyc, name='approve_kyc'),
     path('document-verifications/<int:profile_id>/reject/', views.reject_kyc, name='reject_kyc'),
+    path('document-verifications/doc/<int:doc_id>/approve/', views.approve_verification_document, name='approve_verification_document'),
+    path('document-verifications/doc/<int:doc_id>/reject/', views.reject_verification_document, name='reject_verification_document'),
     
     path('api/settings/save-security/', views.save_security_settings, name='save-security-settings'),
     path('api/settings/save-general/', views.save_general_settings, name='save-general-settings'),

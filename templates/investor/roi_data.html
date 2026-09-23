@@ -1,37 +1,11 @@
 {% extends "investor/investor_base.html" %}
+{% load static %}
 {% load humanize %}
 
-{% block title %}ROI Data - HeyDay Realty{% endblock %}
+{% block title %}ROI Data - HHectare{% endblock %}
 
 {% block extra_css %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-.roi-card {
-    border: none;
-    border-radius: 12px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-    transition: transform 0.2s;
-}
-.roi-card:hover {
-    transform: translateY(-2px);
-}
-.roi-positive {
-    color: #28a745;
-    font-weight: bold;
-}
-.roi-negative {
-    color: #dc3545;
-    font-weight: bold;
-}
-.roi-neutral {
-    color: #6c757d;
-    font-weight: bold;
-}
-.chart-container {
-    position: relative;
-    height: 300px;
-}
-</style>
 {% endblock %}
 
 {% block page_title %}ROI Data & Analytics{% endblock %}
@@ -39,8 +13,9 @@
 
 {% block content %}
 
+<div class="roi-data-page">
     <!-- ROI Summary Cards -->
-    <div class="row mb-4">
+    <div class="row mb-4 roi-summary-cards">
         <div class="col-md-3">
             <div class="card roi-card bg-success text-white">
                 <div class="card-body">
@@ -203,20 +178,21 @@
                     {% endfor %}
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">ROI Distribution</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="chart-container">
-                            <canvas id="roiDistributionChart"></canvas>
-                        </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">ROI Distribution</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="roiDistributionChart"></canvas>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 {% endblock %}
 
 <!-- Month Details Modal -->

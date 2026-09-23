@@ -6,7 +6,7 @@
 
 {% block title %}{% if 'owner' in request.user.groups.all|stringformat:"s" %}Owner{% else %}Agent{% endif %} Dashboard |
 
-HeyDay Realty{% endblock %}
+HHectare{% endblock %}
 
 
 
@@ -195,11 +195,9 @@ HeyDay Realty{% endblock %}
                     <td>{{ property.created_at|date:"M d, Y" }}</td>
 
                     <td>
-
                         <div class="leads-actions">
-                            <a href="{% url 'agent:property_view' property.id %}" class="btn btn-sm btn-outline-primary" style="border-radius: 6px; padding: 3px 12px; font-weight: 500;">View</a>
+                            <a href="{% url 'agent:property_view' property.id %}" class="btn btn-sm btn-outline-primary">View</a>
                         </div>
-
                     </td>
 
                 </tr>
@@ -284,9 +282,9 @@ HeyDay Realty{% endblock %}
                     <td>
                         <div class="leads-actions">
                             {% if inquiry.phone_number %}
-                            <a href="{% url 'agent:customer_detail' inquiry.phone_number %}" class="btn btn-sm btn-outline-primary" style="border-radius: 6px; padding: 3px 12px; font-weight: 500;">View Customer</a>
+                            <a href="{% url 'agent:customer_detail' inquiry.phone_number %}" class="btn btn-sm btn-outline-primary">View Customer</a>
                             {% else %}
-                            <span class="text-muted" style="font-size: 0.85rem;">No details</span>
+                            <span class="text-muted small-text">No details</span>
                             {% endif %}
                         </div>
                     </td>
@@ -343,7 +341,7 @@ HeyDay Realty{% endblock %}
                     <td>{{ lead.created_at|date:"M d, Y" }}</td>
                     <td>
                         <div class="leads-actions">
-                            <a href="{% url 'agent:lead_detail' lead.id %}" class="btn btn-sm btn-outline-primary" style="border-radius: 6px; padding: 3px 12px; font-weight: 500;">View Detail</a>
+                            <a href="{% url 'agent:lead_detail' lead.id %}" class="btn btn-sm btn-outline-primary">View Detail</a>
                         </div>
                     </td>
                 </tr>
@@ -366,15 +364,95 @@ HeyDay Realty{% endblock %}
     </div>
 </div>
 
+<!-- Recent Reviews Section -->
+<div class="leads-section mt-5">
+    <div class="leads-header leads-header-flex">
+        <h2>Recent Reviews</h2>
+        <span class="review-stats">
+            <span class="stat-badge">Avg Rating: {{ stats.average_rating }}/5</span>
+            <span class="stat-badge">Total: {{ stats.total_reviews }}</span>
+        </span>
+    </div>
+    <div class="leads-table-container table-responsive">
+        <table class="table table-hover leads-table">
+            <thead>
+                <tr>
+                    <th>Reviewer</th>
+                    <th>Rating</th>
+                    <th>Review</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if recent_reviews %}
+                {% for review in recent_reviews %}
+                <tr>
+                    <td><strong>{{ review.reviewer_name }}</strong></td>
+                    <td>
+                        <div class="star-rating">
+                            {% if review.rating == 5 %}
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                            {% elif review.rating == 4 %}
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star"></i>
+                            {% elif review.rating == 3 %}
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star"></i>
+                                <i class="bi bi-star"></i>
+                            {% elif review.rating == 2 %}
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star"></i>
+                                <i class="bi bi-star"></i>
+                                <i class="bi bi-star"></i>
+                            {% elif review.rating == 1 %}
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star"></i>
+                                <i class="bi bi-star"></i>
+                                <i class="bi bi-star"></i>
+                                <i class="bi bi-star"></i>
+                            {% endif %}
+                            <span>{{ review.rating }}/5</span>
+                        </div>
+                    </td>
+                    <td>{{ review.review_text|truncatewords:15 }}</td>
+                    <td>{{ review.created_at|date:"M d, Y" }}</td>
+                    <td>
+                        <div class="leads-actions">
+                            <button class="btn btn-sm btn-outline-primary" disabled>View</button>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr>
+                    <td colspan="5">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <i class="bi bi-star"></i>
+                            </div>
+                            <h3>No Reviews Yet</h3>
+                            <p>Customer reviews will appear here</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
 
 
-{% endblock %}
-
-
-
-{% block extra_css %}
-
-<link rel="stylesheet" href="{% static 'css/agent/dashboard.css' %}">
 
 {% endblock %}
 

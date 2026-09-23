@@ -3,17 +3,17 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Welcome to HeyDay Realty</title>
+    <title>Welcome to HHectare</title>
 </head>
 <body style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f8fafc; margin: 0; padding: 40px 0;">
     <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
         <div style="background: linear-gradient(135deg, #004526 0%, #002815 100%); padding: 30px 20px; text-align: center;">
-            <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700; letter-spacing: 1px;">HeyDay Realty</h1>
+            <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700; letter-spacing: 1px;">HHectare</h1>
         </div>
         <div style="padding: 40px 30px;">
             <h2 style="color: #1F2937; margin-top: 0; font-size: 22px;">Welcome to Your Investor Portal</h2>
             <p style="color: #4B5563; font-size: 16px; line-height: 1.6;">Hello {{ user.get_full_name|default:user.username }},</p>
-            <p style="color: #4B5563; font-size: 16px; line-height: 1.6;">An investor account has been created for you at HeyDay Realty. To get started and access your investment dashboard, please set up your secure password by clicking the button below:</p>
+            <p style="color: #4B5563; font-size: 16px; line-height: 1.6;">An investor account has been created for you at HHectare. To get started and access your investment dashboard, please set up your secure password by clicking the button below:</p>
             
             <div style="text-align: center; margin: 35px 0;">
                 <a href="{{ protocol }}://{{ domain }}{% url 'auth:password_reset_confirm' uidb64=uid token=token %}" 
@@ -27,10 +27,10 @@
             </div>
             
             <p style="color: #4B5563; font-size: 16px; line-height: 1.6;">If you have any questions or need assistance, please do not hesitate to contact our administrative team.</p>
-            <p style="color: #4B5563; font-size: 16px; line-height: 1.6;">Best regards,<br><strong style="color: #004526;">HeyDay Realty Administration</strong></p>
+            <p style="color: #4B5563; font-size: 16px; line-height: 1.6;">Best regards,<br><strong style="color: #004526;">HHectare Administration</strong></p>
         </div>
         <div style="background-color: #F9FAFB; padding: 20px; text-align: center; border-top: 1px solid #e5e7eb;">
-            <p style="color: #9CA3AF; font-size: 13px; margin: 0;">&copy; {% now "Y" %} HeyDay Realty. All rights reserved.</p>
+            <p style="color: #9CA3AF; font-size: 13px; margin: 0;">&copy; {% now "Y" %} HHectare. All rights reserved.</p>
         </div>
     </div>
 </body>

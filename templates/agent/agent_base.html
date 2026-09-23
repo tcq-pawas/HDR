@@ -14,9 +14,12 @@
 
     <title>{% block title %}{% if 'owner' in request.user.groups.all|stringformat:"s" %}Owner{% else %}Agent{% endif %}
 
-        Dashboard | HeyDay Realty{% endblock %}</title>
-
+        Dashboard{% endblock %}</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Agent dashboard for managing properties, leads, and bookings.">
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
     <link rel="icon" href="{% static 'img/favicon.ico' %}">
+    <meta name="application-name" content="Real Estate Platform">
 
     <!-- Bootstrap 5 -->
 
@@ -32,572 +35,14 @@
 
     <!-- Custom CSS -->
 
-    <link rel="stylesheet" href="{% static 'css/agent-dashboard.css' %}?v=9">
+    <link rel="stylesheet" href="{% static 'css/agent-dashboard.css' %}?v=11">
 
-    <link rel="stylesheet" href="{% static 'css/responsive.css' %}?v=5">
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}?v=7">
 
-    {% block extra_css %}{% endblock %}
+    <link rel="stylesheet" href="{% static 'css/agent/agent.css' %}?v=1">
 
-    <style>
-
-        /* Hide scrollbars in sidebar while maintaining scroll functionality */
-        .agent-sidebar,
-        .agent-sidebar .sidebar-nav {
-            scrollbar-width: none !important; /* Firefox */
-            -ms-overflow-style: none !important; /* IE and Edge */
-        }
-
-        .agent-sidebar::-webkit-scrollbar,
-        .agent-sidebar .sidebar-nav::-webkit-scrollbar,
-        .agent-sidebar *::-webkit-scrollbar {
-            display: none !important; /* Chrome, Safari, Opera */
-            width: 0 !important;
-            height: 0 !important;
-        }
-
-        .agent-header {
-
-            background: #FFFFFF !important;
-
-        }
-
-        .logout-btn{
-
-            border-radius: 8px !important;
-
-            transition: background-color 0.3s ease,
-
-            color 0.3s ease, transform 0.3s ease !important ;
-
-        }
-
-        .logout-btn:hover {
-
-            background-color: #6AAE48 !important;
-
-            color: #005427 !important;
-
-            transform: translateX(6px) !important;
-
-            box-shadow: 0 4px 12px rgba(106, 174, 72, 0.25) !important;
-
-        }
-
-        .logout-btn:hover i,
-
-        .logout-btn:hover span {
-         
-            color: #005427 !important;
-
-        }
-        
-        .btn-primary {
-
-            background-color: #005427 !important;
-
-            border-color: #005427 !important;
-
-            color: #FFFFFF !important;
-
-            transition: all 0.2s ease-in-out !important;
-
-        }
-
-        .btn-primary:hover, .btn-primary:focus, .btn-primary:active {
-
-            background-color: #6AAE48 !important;
-            
-            border-color: #6AAE48 !important;
-            
-            color: #FFFFFF !important;
-            
-            box-shadow: 0 4px 12px rgba(106, 174, 72, 0.3) !important;
-
-        }
-
-        .sidebar-nav .nav-link {
-
-            padding: 12px 20px !important;
-
-            font-size: 14px !important;
-            
-            gap: 15px !important;
-            
-            border-radius: 8px !important;
-            
-            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease !important;
-        
-        }
-
-        .sidebar-nav .nav-link i {
-
-            font-size: 18px !important;
-            
-            transition: color 0.3s ease, transform 0.3s ease !important;
-        
-        }
-
-        .sidebar-nav .nav-link span {
-
-            transition: color 0.3s ease !important;
-
-        }
-
-       .sidebar-nav .nav-link:hover,
-
-        .sidebar-nav .nav-link.active {
-            
-        background-color: #6AAE48 !important;
-        color: #005427 !important;
-        transform: translateX(6px) !important;
-        box-shadow: 0 4px 12px rgba(106, 174, 72, 0.25) !important;
-        }
-        
-
-        .sidebar-nav .nav-link:hover i,
-        .sidebar-nav .nav-link.active i {
-            color: #005427 !important;
-            transform: scale(1.15) !important;
-        }
-        
-        .sidebar-nav .nav-link:hover span {
-        
-            color: #005427 !important;
-        
-        }
-        
-
-        /* Status Badge Colors Global Override */
-        
-        .status-badge {
-        
-            padding: 4px 12px !important;
-        
-            border-radius: 20px !important;
-        
-            font-size: 12px !important;
-        
-            display: inline-block !important;
-        
-            text-transform: capitalize !important;
-        
-        }
-
-        /* Pending status badge color (Light Orange background + Dark Orange text) */
-        
-        .status-badge.status-pending,
-        
-        span.status-pending {
-        
-            background-color: #FFEDD5 !important;
-        
-            color: #C2410C !important;
-        
-            font-weight: 600 !important;
-        
-        }
-
-        /* Approved / Active status badge color (Light Green background + Dark Green text) */
-        
-        .status-badge.status-approved,
-        
-        .status-badge.status-active,
-        
-        
-        .status-badge.status-new,
-        
-        span.status-approved,
-        
-        span.status-active {
-        
-            background-color: #c0f4d9 !important;
-        
-            color: #0b4230 !important;
-        
-            font-weight: 600 !important;
-        }
-
-        /* Rejected status badge color (Light Red background + Red text) */
-        
-        .status-badge.status-rejected,
-        
-        span.status-rejected {
-        
-            background-color: #FEE2E2 !important;
-        
-            color: #DC2626 !important;
-        
-            font-weight: 600 !important;
-        
-        }
-
-        @media (min-width: 993px) {
-        
-            .agent-sidebar {
-        
-                width: 260px !important;
-        
-                min-width: 260px !important;
-        
-                max-width: 260px !important;
-        
-            }
-        
-            .agent-main {
-        
-                margin-left: 260px !important;
-        
-            }
-        
-            .agent-header {
-        
-                left: 260px !important;
-        
-            }
-        
-        }
-
-        /* Critical Mobile Fixes - Inline to ensure they load */
-
-        @media (max-width: 992px) {
-
-            .agent-mobile-toggle {
-
-                display: block !important;
-
-            }
-
-            /* Fix offcanvas active state for tablet */
-
-            .agent-sidebar-offcanvas .nav-link.active {
-
-                background: #FFFFFF !important;
-
-                color: #005427 !important;
-
-                font-weight: 600 !important;
-
-            }
-
-            .agent-sidebar-offcanvas .nav-link.active i {
-
-                color: #005427 !important;
-
-            }
-
-        }
-
-        @media (min-width: 993px) {
-
-            .agent-mobile-toggle {
-
-                display: none !important;
-
-            }
-
-        }
-
-        @media (max-width: 768px) {
-
-            .agent-header {
-
-                left: 0 !important;
-
-                width: 100% !important;
-
-                max-width: 100vw !important;
-
-            }
-
-            .agent-sidebar {
-
-                display: none !important;
-
-            }
-
-
-
-            .agent-main {
-
-                margin-left: 0 !important;
-
-                padding: 15px !important;
-
-                width: 100% !important;
-
-                max-width: 100vw !important;
-
-            }
-
-            .agent-layout {
-
-                margin-top: 60px !important;
-
-                width: 100% !important;
-
-                max-width: 100vw !important;
-
-            }
-
-            .header-center {
-
-                display: none !important;
-
-            }
-
-            .kpi-cards-grid {
-
-                grid-template-columns: repeat(2, 1fr) !important;
-
-                gap: 0.5rem !important;
-
-            }
-
-            /* Ensure mobile toggle button is visible */
-
-            .agent-mobile-toggle {
-
-                display: block !important;
-
-                position: fixed !important;
-
-                top: 12px !important;
-
-                left: 12px !important;
-
-                z-index: 9999 !important;
-
-                background: #005427 !important;
-
-                color: white !important;
-
-                border: none !important;
-
-                border-radius: 8px !important;
-
-                padding: 10px 15px !important;
-
-                cursor: pointer !important;
-
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2) !important;
-
-                font-size: 1.25rem !important;
-
-            }
-
-            /* Ensure offcanvas is visible */
-
-            .agent-sidebar-offcanvas {
-
-                display: block !important;
-
-                background: #005427 !important;
-
-                width: 280px !important;
-
-            }
-
-            .agent-sidebar-offcanvas .nav-link {
-
-                color: white !important;
-
-                padding: 12px 20px !important;
-
-                display: block !important;
-
-                text-decoration: none !important;
-
-            }
-
-            .agent-sidebar-offcanvas .nav-link i {
-
-                margin-right: 10px !important;
-
-            }
-
-            .agent-sidebar-offcanvas .nav-link.active {
-
-                background: #005427 !important;
-
-                color: #FFFFFF !important;
-
-                font-weight: 600 !important;
-
-            }
-
-            .agent-sidebar-offcanvas .nav-link.active i {
-
-                color: #FFFFFF !important;
-
-            }
-
-            .agent-sidebar-offcanvas .brand-logo {
-
-                color: white !important;
-
-                font-size: 1.2rem !important;
-
-            }
-
-        }
-
-        @media (max-width: 480px) {
-
-            .kpi-cards-grid {
-
-                grid-template-columns: 1fr !important;
-
-            }
-
-            .agent-main {
-
-                padding: 10px !important;
-
-            }
-
-            .agent-mobile-toggle {
-
-                padding: 8px 12px !important;
-
-                font-size: 1.1rem !important;
-
-            }
-
-        }
-
-        html,
-        body {
-
-            overflow-x: hidden !important;
-
-            max-width: 100vw !important;
-
-        }
-
-        * {
-
-            max-width: 100% !important;
-
-            box-sizing: border-box !important;
-
-        }
-
-        /* Sidebar Profile Card */
-        .sidebar-profile-card {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px 10px;
-            margin-bottom: 24px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            position: relative;
-        }
-
-        .profile-image-wrapper {
-            width: 70px;
-            height: 70px;
-            margin-bottom: 12px;
-        }
-
-        .profile-circle-img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .profile-circle-placeholder {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #6AAE48 0%, #005427 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            font-weight: 700;
-            color: white;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .profile-name-text {
-            font-size: 15px;
-            font-weight: 600;
-            color: #FFFFFF;
-            margin-bottom: 8px;
-            text-align: center;
-        }
-
-        .profile-top-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            margin-bottom: 12px;
-        }
-
-        .profile-group-name {
-            font-size: 11px;
-            font-weight: 600;
-            color: #FFFFFF;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 4px 10px;
-            border-radius: 12px;
-        }
-
-        .profile-verification-status {
-            position: static;
-        }
-
-        .verified-badge {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 11px;
-            font-weight: 600;
-            color: #10b981;
-            background: rgba(16, 185, 129, 0.2);
-            padding: 4px 8px;
-            border-radius: 12px;
-        }
-
-        .not-verified-badge {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 11px;
-            font-weight: 600;
-            color: #f59e0b;
-            background: rgba(245, 158, 11, 0.2);
-            padding: 4px 8px;
-            border-radius: 12px;
-        }
-
-        .view-profile-link {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.9);
-            text-decoration: none;
-            padding: 6px 16px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .view-profile-link:hover {
-            background: rgba(255, 255, 255, 0.25);
-            color: #FFFFFF;
-            transform: translateY(-1px);
-        }
-    </style>
+    <!-- Global Typography System -->
+    <link rel="stylesheet" href="{% static 'css/typography.css' %}">
 
 </head>
 
@@ -617,7 +62,7 @@
 
                 <div class="header-left">
 
-                    {% block header_title %}{% endblock %}
+                    <!-- Welcome message can be added here if needed -->
 
                 </div>
 
@@ -643,13 +88,10 @@
             <div class="offcanvas-header">
 
                 <a class="brand-logo" href="{% url 'agent:dashboard' %}"
-
+                    style="display:flex; align-items:center; gap:10px; text-decoration:none;"
                     onclick="closeOffcanvasAndNavigate(event, this.href)">
 
-                    <img src="{% static 'img/logo.png' %}" alt="HeyDay Realty">
-
-                    <span>HeyDay Realty</span>
-
+                    <img src="{% static 'img/logo.png' %}" alt="Logo" title="Logo" style="height:40px; width:auto;">
                 </a>
 
                 <button type="button" class="btn-close text-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -685,9 +127,9 @@
                     </a>
                 </div>
 
-                <nav class="sidebar-nav">
+                <nav class="sidebar-nav" style="overflow-x: visible;">
 
-                    <ul class="nav-list">
+                    <ul class="nav-list" style="overflow-x: visible;">
 
                         <li class="nav-item">
 
@@ -767,6 +209,7 @@
 
 
 
+                        {% comment %}
                         <li class="nav-item">
 
                             <a href="{% url 'agent:booking_list' %}"
@@ -804,6 +247,7 @@
                             </a>
 
                         </li>
+                        {% endcomment %}
 
 
 
@@ -877,6 +321,22 @@
 
                         </li>
 
+                        <li class="nav-item">
+
+                            <a href="{% url 'agent:reviews' %}"
+
+                                class="nav-link {% if request.resolver_match.url_name == 'reviews' %}active{% endif %}"
+
+                                onclick="closeOffcanvasAndNavigate(event, this.href)">
+
+                                <i class="bi bi-star-fill"></i>
+
+                                <span>Reviews</span>
+
+                            </a>
+
+                        </li>
+
                     </ul>
 
                 </nav>
@@ -910,11 +370,9 @@
 
                 <!-- Logo -->
 
-                <a class="brand-logo" href="{% url 'agent:dashboard' %}">
+                <a class="brand-logo" href="{% url 'agent:dashboard' %}" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
 
-                    <img src="{% static 'img/logo.png' %}" alt="HeyDay Realty">
-
-                    <span>HeyDay Realty</span>
+                    <img src="{% static 'img/logo.png' %}" alt="Logo" title="Logo" style="height:40px; width:auto;">
 
                 </a>
 
@@ -946,9 +404,9 @@
                 </div>
 
 
-                <nav class="sidebar-nav">
+                <nav class="sidebar-nav" style="overflow-x: visible;">
 
-                    <ul class="nav-list">
+                    <ul class="nav-list" style="overflow-x: visible;">
 
                         <li class="nav-item">
 
@@ -1032,6 +490,7 @@
 
 
 
+                        {% comment %}
                         <li class="nav-item">
 
                             <a href="{% url 'agent:booking_list' %}"
@@ -1065,6 +524,7 @@
                             </a>
 
                         </li>
+                        {% endcomment %}
 
 
 
@@ -1121,7 +581,7 @@
                         <li class="nav-item">
 
                             <a href="{% url 'agent:communication_list' %}"
-                            
+
                                 class="nav-link {% if request.resolver_match.url_name in 'communication_list communication_send message_template_list' %}active{% endif %}">
 
                                 <i class="bi bi-chat-dots"></i>
@@ -1129,6 +589,20 @@
                                 <span>Communication</span>
 
                                 {% if sidebar_communication_count %}<span class="badge bg-white text-dark ms-auto" style="font-size:11px; min-width:22px; padding:2px 6px; border-radius:10px;">{{ sidebar_communication_count }}</span>{% endif %}
+
+                            </a>
+
+                        </li>
+
+                        <li class="nav-item">
+
+                            <a href="{% url 'agent:reviews' %}"
+
+                                class="nav-link {% if request.resolver_match.url_name == 'reviews' %}active{% endif %}">
+
+                                <i class="bi bi-star-fill"></i>
+
+                                <span>Reviews</span>
 
                             </a>
 
@@ -1171,6 +645,10 @@
                     {% block breadcrumb_items %}{% endblock %}
                 </div>
                 {% endblock %}
+
+
+
+                {% block header_title %}{% endblock %}
 
 
 
@@ -1222,7 +700,7 @@
 
     <button class="agent-mobile-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#agentSidebarOffcanvas"
 
-        aria-controls="agentSidebarOffcanvas" style="display: none;">
+        aria-controls="agentSidebarOffcanvas">
 
         <i class="bi bi-list"></i>
 
@@ -1263,6 +741,48 @@
             }, 300);
 
         }
+
+        // Handle window resize for sidebar visibility
+        function handleResize() {
+            const width = window.innerWidth;
+            const sidebar = document.querySelector('.agent-sidebar');
+            const offcanvas = document.querySelector('.agent-sidebar-offcanvas');
+            const mobileToggle = document.querySelector('.agent-mobile-toggle');
+
+            if (width >= 993) {
+                // Desktop: show sidebar, hide offcanvas and toggle
+                if (sidebar) sidebar.style.display = 'flex';
+                if (offcanvas) {
+                    const offcanvasInstance = bootstrap.Offcanvas.getInstance(offcanvas);
+                    if (offcanvasInstance) offcanvasInstance.hide();
+                }
+                if (mobileToggle) mobileToggle.style.display = 'none';
+            } else {
+                // Mobile/Tablet: hide sidebar, show toggle
+                if (sidebar) sidebar.style.display = 'none';
+                if (mobileToggle) mobileToggle.style.display = 'block';
+            }
+        }
+
+        // Initialize on load and add resize listener
+        document.addEventListener('DOMContentLoaded', function() {
+            handleResize();
+            window.addEventListener('resize', handleResize);
+
+            // Handle offcanvas show/hide to toggle hamburger visibility
+            const offcanvasElement = document.getElementById('agentSidebarOffcanvas');
+            const mobileToggle = document.querySelector('.agent-mobile-toggle');
+
+            if (offcanvasElement && mobileToggle) {
+                offcanvasElement.addEventListener('show.bs.offcanvas', function() {
+                    mobileToggle.classList.add('hidden');
+                });
+
+                offcanvasElement.addEventListener('hidden.bs.offcanvas', function() {
+                    mobileToggle.classList.remove('hidden');
+                });
+            }
+        });
 
     </script>
 

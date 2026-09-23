@@ -1,4 +1,4 @@
-# HeyDay Realty - Manual Testing Use Case
+# HHectare - Manual Testing Use Case
 
 ## UC-01: Property listing to customer inquiry
 

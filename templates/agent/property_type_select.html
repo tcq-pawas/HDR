@@ -1,84 +1,220 @@
-{% extends base_template %}
-
-{% block title %}Select Property Type | Agent Dashboard{% endblock %}
+{% extends "agent/agent_base.html" %}
+{% load static %}
+{% block title %}Add Property | HHectare{% endblock %}
 
 {% block breadcrumb_items %}
 <span>Add Property</span>
 {% endblock %}
 
+
+
 {% block content %}
-<div class="page-header">
-    <div class="header-title">
-        <h1>Select Property Type</h1>
-        <p class="text-muted">Choose the type of property you want to add</p>
-    </div>
-</div>
 
-{% if limit_message %}
-<!-- Limit Reached Modal -->
-<div class="modal fade show" style="display: block; background: rgba(0,0,0,0.5);" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="border-radius: 16px; border: none; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-      <div class="modal-header" style="background: #fff8e1; border-bottom: none; padding: 20px 24px;">
-        <h5 class="modal-title" style="color: #F4B400; font-weight: 700; display: flex; align-items: center; gap: 8px;">
-            <i class="bi bi-exclamation-triangle-fill"></i> {{ limit_title }}
-        </h5>
-        <a href="{% url 'agent:dashboard' %}" class="btn-close" style="opacity: 0.5;"></a>
-      </div>
-      <div class="modal-body text-center" style="padding: 30px 24px;">
-        <div style="background: #fff3cd; width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
-            <i class="bi bi-shield-lock-fill" style="font-size: 2rem; color: #F4B400;"></i>
+<div class="property-type-page">
+
+    <!-- ================= HEADER ================= -->
+
+    <div class="property-type-header">
+
+        <div class="property-type-header-content">
+
+            <div class="property-type-eyebrow">
+                <i class="bi bi-plus-circle-fill"></i>
+                Add New Property
+            </div>
+
+            <h1>Select Property Type</h1>
+
+            <p>
+                Choose the type of property you want to add.
+                Select the option that best matches your listing.
+            </p>
+
         </div>
-        <p style="font-size: 1.1rem; color: #495057; font-weight: 500; margin-bottom: 0;">{{ limit_message }}</p>
-      </div>
-      <div class="modal-footer" style="border-top: 1px solid #f1f3f5; padding: 16px 24px; justify-content: center;">
-        <a href="{% url 'agent:dashboard' %}" class="btn btn-secondary px-4 py-2" style="border-radius: 8px; font-weight: 500;">Back to Dashboard</a>
-      </div>
-    </div>
-  </div>
-</div>
-{% endif %}
 
-<div class="row">
-    <div class="col-md-6">
-        {% if request.resolver_match.namespace == 'admin_dash' %}
-        <a href="{% url 'admin_dash:property_add' 'land' %}" class="card property-type-card text-decoration-none">
+    </div>
+
+
+    <!-- ================= PROPERTY TYPES ================= -->
+
+    <div class="row g-3 property-type-grid">
+
+        <!-- Agricultural Land -->
+
+        <div class="col-md-6 property-type-col">
+
+            {% if request.resolver_match.namespace == 'admin_dash' %}
+
+                <a
+                    href="{% url 'admin_dash:property_add' 'land' %}"
+                    class="card property-type-card"
+                    aria-label="Add Agricultural Land"
+                >
+
             {% else %}
-            <a href="{% url 'agent:property_add' 'land' %}" class="card property-type-card text-decoration-none">
-                {% endif %}
-                <!-- <a href="{% url 'agent:property_add' 'land' %}" class="card property-type-card text-decoration-none"> -->
-                <div class="card-body text-center">
-                    <div class="property-type-icon">
-                        <i class="bi bi-map"></i>
+
+                <a
+                    href="{% url 'agent:property_add' 'land' %}"
+                    class="card property-type-card"
+                    aria-label="Add Agricultural Land"
+                >
+
+            {% endif %}
+
+                    <div class="card-body">
+
+                        <div class="property-type-icon">
+                            <i class="bi bi-map"></i>
+                        </div>
+
+                        <h3>
+                            Agricultural Land
+                        </h3>
+
+                        <p>
+                            Add agricultural land, farmland, plantations,
+                            and agro-investment properties.
+                        </p>
+
+                        <span class="btn btn-primary mt-2">
+                            <i class="bi bi-arrow-right me-1"></i>
+                            Select Agri Land
+                        </span>
+
                     </div>
-                    <h3>Agricultural Land</h3>
-                    <p class="text-muted">Add agricultural land, farmland, plantations, and agro-investment properties
+
+                </a>
+
+        </div>
+
+
+        <!-- House / Building -->
+
+        <div class="col-md-6 property-type-col">
+
+            {% if request.resolver_match.namespace == 'admin_dash' %}
+
+                <a
+                    href="{% url 'admin_dash:property_add' 'house' %}"
+                    class="card property-type-card"
+                    aria-label="Add House or Building"
+                >
+
+            {% else %}
+
+                <a
+                    href="{% url 'agent:property_add' 'house' %}"
+                    class="card property-type-card"
+                    aria-label="Add House or Building"
+                >
+
+            {% endif %}
+
+                    <div class="card-body">
+
+                        <div class="property-type-icon">
+                            <i class="bi bi-house"></i>
+                        </div>
+
+                        <h3>
+                            House / Building
+                        </h3>
+
+                        <p>
+                            Add houses, apartments, villas,
+                            or commercial buildings.
+                        </p>
+
+                        <span class="btn btn-primary mt-2">
+                            <i class="bi bi-arrow-right me-1"></i>
+                            Select House
+                        </span>
+
+                    </div>
+
+                </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= LIMIT MODAL ================= -->
+
+    {% if limit_message %}
+
+    <div
+        class="modal fade show property-limit-modal"
+        style="display: flex;"
+        tabindex="-1"
+        role="dialog"
+        aria-modal="true"
+    >
+
+        <div class="modal-dialog modal-dialog-centered property-limit-dialog">
+
+            <div class="modal-content property-limit-content">
+
+                <!-- Header -->
+
+                <div class="modal-header property-limit-header">
+
+                    <h5 class="modal-title property-limit-title">
+
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+
+                        {{ limit_title }}
+
+                    </h5>
+
+                    <a
+                        href="{% url 'agent:dashboard' %}"
+                        class="btn-close property-limit-close"
+                        aria-label="Close"
+                    ></a>
+
+                </div>
+
+
+                <!-- Body -->
+
+                <div class="modal-body property-limit-body">
+
+                    <div class="property-limit-icon">
+
+                        <i class="bi bi-shield-lock-fill"></i>
+
+                    </div>
+
+                    <p class="property-limit-message">
+                        {{ limit_message }}
                     </p>
-                    <button class="btn btn-primary mt-2">Select Agri Land</button>
+
                 </div>
-            </a>
-    </div>
-    <div class="col-md-6">
-        {% if request.resolver_match.namespace == 'admin_dash' %}
-        <a href="{% url 'admin_dash:property_add' 'house' %}" class="card property-type-card text-decoration-none">
-            {% else %}
-            <a href="{% url 'agent:property_add' 'house' %}" class="card property-type-card text-decoration-none">
-                {% endif %}
-                <!-- <a href="{% url 'agent:property_add' 'house' %}" class="card property-type-card text-decoration-none"> -->
-                <div class="card-body text-center">
-                    <div class="property-type-icon">
-                        <i class="bi bi-house"></i>
-                    </div>
-                    <h3>House / Building</h3>
-                    <p class="text-muted">Add houses, apartments, villas, or commercial buildings</p>
-                    <button class="btn btn-primary mt-2">Select House</button>
+
+
+                <!-- Footer -->
+
+                <div class="modal-footer property-limit-footer">
+
+                    <a
+                        href="{% url 'agent:dashboard' %}"
+                        class="btn btn-secondary"
+                    >
+                        <i class="bi bi-arrow-left me-1"></i>
+                        Back to Dashboard
+                    </a>
+
                 </div>
-            </a>
+
+            </div>
+
+        </div>
+
     </div>
+
+    {% endif %}
+
 </div>
 
-{% load static %}
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/agent/property_type_select.css' %}">
-{% endblock %}
 {% endblock %}

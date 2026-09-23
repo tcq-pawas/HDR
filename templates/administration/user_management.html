@@ -1,20 +1,12 @@
 {% extends "administration/admin_base.html" %}
-
+{% load static %}
 {% load humanize %}
-
-
 
 {% block title %}User Management - Admin Dashboard{% endblock %}
 
-
-
 {% block page_title %}User Management{% endblock %}
 
-
-
 {% block page_subtitle %}Manage all platform users, permissions and access.{% endblock %}
-
-
 
 {% block content %}
 
@@ -291,14 +283,28 @@
 
                         <h5 class="mb-0" style="font-weight: 600; color: #0F172A;">All Users ({{ total_users }})</h5>
                         <div class="d-flex gap-2">
-                            <select class="form-select" id="roleFilter" onchange="filterUsers()" style="width: 150px; border-radius: 8px; border-color: #E2E8F0; color: #64748B;">
-                                <option value="">All Roles</option>
-                                <option value="admin">Admin</option>
-                                <option value="owner">Owner</option>
-                                <option value="agent">Agent</option>
-                                <option value="investor">Investor</option>
-                                <option value="customer">Customer</option>
-                            </select>
+                            <div class="custom-dropdown" id="roleFilterDropdown">
+                                <button type="button" class="custom-dropdown-toggle" id="roleFilterToggle" onclick="toggleRoleDropdown()" aria-haspopup="listbox" aria-expanded="false">
+                                    <span id="roleFilterLabel">All Roles</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                                <div class="custom-dropdown-menu" id="roleFilterMenu" role="listbox" style="display: none;">
+                                    <div class="custom-dropdown-option active" role="option" data-value="" data-label="All Roles">All Roles</div>
+                                    <div class="custom-dropdown-option" role="option" data-value="admin" data-label="Admin">Admin</div>
+                                    <div class="custom-dropdown-option" role="option" data-value="owner" data-label="Owner">Owner</div>
+                                    <div class="custom-dropdown-option" role="option" data-value="agent" data-label="Agent">Agent</div>
+                                    <div class="custom-dropdown-option" role="option" data-value="investor" data-label="Investor">Investor</div>
+                                    <div class="custom-dropdown-option" role="option" data-value="customer" data-label="Customer">Customer</div>
+                                </div>
+                                <select id="roleFilter" onchange="filterUsers()" style="display: none;">
+                                    <option value="">All Roles</option>
+                                    <option value="admin">Admin</option>
+                                    <option value="owner">Owner</option>
+                                    <option value="agent">Agent</option>
+                                    <option value="investor">Investor</option>
+                                    <option value="customer">Customer</option>
+                                </select>
+                            </div>
                             <div class="input-group" style="width: 300px;">
                                 <span class="input-group-text bg-light border-end-0" style="border-radius: 8px 0 0 8px; border-color: #E2E8F0;">
                                     <i class="fas fa-search text-muted"></i>
@@ -310,6 +316,43 @@
                     </div>
 
                 </div>
+
+                <script>
+                    (function() {
+                        const toggleBtn = document.getElementById('roleFilterToggle');
+                        const menu = document.getElementById('roleFilterMenu');
+                        const label = document.getElementById('roleFilterLabel');
+                        const hiddenSelect = document.getElementById('roleFilter');
+                        const wrapper = document.getElementById('roleFilterDropdown');
+
+                        window.toggleRoleDropdown = function() {
+                            const isOpen = menu.style.display === 'block';
+                            menu.style.display = isOpen ? 'none' : 'block';
+                            toggleBtn.setAttribute('aria-expanded', String(!isOpen));
+                        };
+
+                        menu.querySelectorAll('.custom-dropdown-option').forEach(function(opt) {
+                            opt.addEventListener('click', function() {
+                                menu.querySelectorAll('.custom-dropdown-option').forEach(function(o) {
+                                    o.classList.remove('active');
+                                });
+                                this.classList.add('active');
+                                label.textContent = this.getAttribute('data-label');
+                                hiddenSelect.value = this.getAttribute('data-value');
+                                hiddenSelect.dispatchEvent(new Event('change'));
+                                menu.style.display = 'none';
+                                toggleBtn.setAttribute('aria-expanded', 'false');
+                            });
+                        });
+
+                        document.addEventListener('click', function(e) {
+                            if (wrapper && !wrapper.contains(e.target)) {
+                                menu.style.display = 'none';
+                                toggleBtn.setAttribute('aria-expanded', 'false');
+                            }
+                        });
+                    })();
+                </script>
 
                 <div class="card-body p-0">
 
@@ -908,4 +951,3 @@
 </script>
 
 {% endblock %}
-

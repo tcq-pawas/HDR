@@ -4,6 +4,7 @@ from django.contrib.contenttypes.models import ContentType
 from Apps.PublicPage.models import Property
 from Apps.Customer.models import Inquiry, CustomerFeedback
 from Apps.Investor.models import Investment, InvestmentListing
+from HeyDayRealty.storage_backends import AdminMediaStorage, get_admin_profile_path
 
 
 class AdminProfile(models.Model):
@@ -18,7 +19,7 @@ class AdminProfile(models.Model):
     ])
     position = models.CharField(max_length=100)
     phone = models.CharField(max_length=20, blank=True, null=True)
-    profile_picture = models.ImageField(upload_to='admin_profiles/', blank=True, null=True)
+    profile_picture = models.ImageField(upload_to=get_admin_profile_path, storage=AdminMediaStorage(), blank=True, null=True)
     is_super_admin = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -288,7 +289,7 @@ class PropertyReview(models.Model):
 
 
 class WebsiteInquiry(models.Model):
-    website = models.CharField(max_length=50)  # HeyDay Realty / TheCodiQ Global
+    website = models.CharField(max_length=50)  # HHectare / TheCodiQ Global
 
     full_name = models.CharField(max_length=150)
     phone_number = models.CharField(max_length=20)
@@ -321,3 +322,16 @@ class WebsiteInquiry(models.Model):
 
     def __str__(self):
         return f"{self.full_name} ({self.website})"
+
+
+class UserVerification(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='verification')
+    phone_number = models.CharField(max_length=20, blank=True, null=True, unique=True, help_text="Centralized phone number for login")
+    is_email_verified = models.BooleanField(default=False)
+    is_mobile_verified = models.BooleanField(default=False)
+    email_otp = models.CharField(max_length=6, blank=True, null=True)
+    mobile_otp = models.CharField(max_length=6, blank=True, null=True)
+    otp_created_at = models.DateTimeField(blank=True, null=True)
+    
+    def __str__(self):
+        return f"{self.user.username} Verification"

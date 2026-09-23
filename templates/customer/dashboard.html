@@ -6,91 +6,14 @@
 
 
 
-{% block title %}Customer Dashboard - HeyDay Realty{% endblock %}
+{% block title %}Customer Dashboard - HHectare{% endblock %}
 
 {% block page_title %}Customer Dashboard{% endblock %}
 
 
 
 {% block extra_css %}
-
-<link rel="stylesheet" href="{% static 'css/agent/dashboard.css' %}">
-
-<style>
-    .page-header-white {
-        display: none;
-    }
-
-    .main-content-wrapper {
-        padding: 24px 30px;
-    }
-
-    .dashboard-hero {
-        background: #004526;
-        padding: 36px 28px;
-        border-radius: 12px;
-        margin: 0 0 24px;
-        box-shadow: 0 4px 15px rgba(0, 69, 38, 0.18);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .dashboard-hero::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background:
-            radial-gradient(900px circle at 10% 10%, rgba(16, 185, 129, 0.35), transparent 55%),
-            radial-gradient(900px circle at 90% 40%, rgba(59, 130, 246, 0.25), transparent 60%);
-        pointer-events: none;
-        z-index: 0;
-    }
-
-    .dashboard-hero > * {
-        position: relative;
-        z-index: 1;
-    }
-
-    .dashboard-hero h1 {
-        color: #fff;
-        font-weight: 700;
-        font-size: clamp(1.35rem, 2.5vw, 1.75rem);
-        margin: 0 0 8px;
-        line-height: 1.2;
-    }
-
-    .dashboard-hero p {
-        color: rgba(255, 255, 255, 0.9);
-        margin: 0;
-        font-size: 14px;
-    }
-
-    .premium-metrics-container {
-        margin-bottom: 2rem;
-    }
-
-    /* Two equal-width metric cards spanning the full metrics section */
-    .premium-metrics-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    @media (max-width: 768px) {
-        .premium-metrics-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .main-content-wrapper {
-            padding: 16px 18px;
-        }
-
-        .dashboard-hero {
-            padding: 24px 18px;
-            border-radius: 10px;
-            margin-bottom: 16px;
-        }
-    }
-</style>
-
+<link rel="stylesheet" href="{% static 'css/customer/customer.css' %}">
 {% endblock %}
 
 
@@ -330,6 +253,3 @@
 
 
 {% endblock %}
-
-
-

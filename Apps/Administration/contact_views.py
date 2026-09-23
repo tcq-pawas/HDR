@@ -37,13 +37,13 @@ class ContactInquiryAPIView(APIView):
     @extend_schema(
         tags=['Contact Inquiry'],
         summary='Submit contact inquiry',
-        description='Submit a contact inquiry from any configured website (HeyDay Realty or TheCodiQ Global). The API dynamically validates fields based on the website configuration. Requires X-API-Key header for authentication.',
+        description='Submit a contact inquiry from any configured website (HHectare or TheCodiQ Global). The API dynamically validates fields based on the website configuration. Requires X-API-Key header for authentication.',
         parameters=[
             OpenApiParameter(
                 name='X-API-Key',
                 type=OpenApiTypes.STR,
                 location=OpenApiParameter.HEADER,
-                description='API key for authentication (HeyDay or CodiQ key)',
+                description='API key for authentication (HHectare or CodiQ key)',
                 required=True
             )
         ],
@@ -56,8 +56,8 @@ class ContactInquiryAPIView(APIView):
         },
         examples=[
             OpenApiExample(
-                'HeyDay Realty Inquiry',
-                summary='Submit a property inquiry for HeyDay Realty',
+                'HHectare Inquiry',
+                summary='Submit a property inquiry for HHectare',
                 value={
                     'website': 'heyday',
                     'full_name': 'John Doe',

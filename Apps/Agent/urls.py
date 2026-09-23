@@ -11,6 +11,7 @@ urlpatterns = [
     path('change-password/', views.change_password, name='change_password'),
     path('delete-account/', views.delete_account, name='delete_account'),
     path('document-verification/', views.document_verification, name='document_verification'),
+    path('reviews/', views.agent_reviews, name='reviews'),
     
     # Property Management
     path('properties/', views.property_list, name='property_list'),
@@ -50,6 +51,7 @@ urlpatterns = [
     
     # Document Management
     path('documents/', views.document_list, name='document_list'),
+    path('documents/<int:pk>/detail/', views.verification_document_detail, name='verification_document_detail'),
     path('document/add/', views.document_add, name='document_add'),
     path('document/<int:pk>/delete/', views.document_delete, name='document_delete'),
     

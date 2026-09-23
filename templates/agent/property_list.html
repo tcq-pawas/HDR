@@ -2,15 +2,12 @@
 
 {% load static %}
 
-{% block title %}My Properties | HeyDay Realty{% endblock %}
+{% block title %}My Properties | HHectare{% endblock %}
 
 {% block breadcrumb_items %}
 <span>My Properties</span>
 {% endblock %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/agent/property_list.css' %}">
-{% endblock %}
 
 {% block content %}
 <div class="premium-container">
@@ -136,4 +133,8 @@
     </div>
     {% endif %}
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/table-scroller.js' %}"></script>
 {% endblock %}

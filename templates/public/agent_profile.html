@@ -1,7 +1,10 @@
 {% extends 'public/base.html' %}
 {% load static %}
 
-{% block title %}{{ agent.user.get_full_name|default:agent.user.username }} - Agent Profile | HeyDay Realty{% endblock %}
+{% block title %}{{ agent.user.get_full_name|default:agent.user.username }} - Agent Profile | HHectare{% endblock %}
+{% block meta_description %}Connect with {{ agent.user.get_full_name|default:agent.user.username }}, a verified real estate agent on HHectare. Browse listings and request property consultations.{% endblock %}
+{% block og_title %}{{ agent.user.get_full_name|default:agent.user.username }} - Agent Profile | HHectare{% endblock %}
+{% block twitter_title %}{{ agent.user.get_full_name|default:agent.user.username }} - Agent Profile | HHectare{% endblock %}
 
 {% block content %}
 <!-- Breadcrumb -->
@@ -189,7 +192,7 @@
                     <i class="fas fa-envelope"></i>
                     <div class="contact-info">
                         <span class="contact-label">Email</span>
-                        <span class="contact-value">{{ agent.user.email|default:"agent@heydayrealty.in" }}</span>
+                        <span class="contact-value">{{ agent.user.email|default:"agent@hhectare.com" }}</span>
                     </div>
                 </div>
                 <div class="contact-item">
@@ -230,7 +233,9 @@
                     {% for property in agent_properties %}
                         <div class="property-card">
                             <div class="property-image-wrapper">
-                                {% if property.images.first %}
+                                {% if property.featured_image %}
+                                    <img src="{{ property.featured_image.url }}" alt="{{ property.title }}" class="property-image">
+                                {% elif property.images.first %}
                                     <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}" class="property-image">
                                 {% else %}
                                     <img src="https://via.placeholder.com/400x300?text={{ property.title }}" alt="{{ property.title }}" class="property-image">
@@ -279,103 +284,181 @@
 
         <!-- Reviews Tab -->
         <div class="tab-content" id="reviews">
-            <div class="reviews-container">
-                <div class="rating-summary">
+            <!-- Top Review Card -->
+            <div class="review-top-card">
+                <!-- Left Side - Write a Review Form -->
+                <div class="review-form-section">
+                    <h3>Write a Review</h3>
+                    <form method="POST" action="{% url 'public:submit_agent_review' agent.id %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="reviewer_name">Your Name *</label>
+                            <input type="text" id="reviewer_name" name="reviewer_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="rating">Rating *</label>
+                            <select id="rating" name="rating" required>
+                                <option value="">Select Rating</option>
+                                <option value="5">5 Stars - Excellent</option>
+                                <option value="4">4 Stars - Very Good</option>
+                                <option value="3">3 Stars - Good</option>
+                                <option value="2">2 Stars - Fair</option>
+                                <option value="1">1 Star - Poor</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="review_text">Your Review *</label>
+                            <textarea id="review_text" name="review_text" rows="4" required placeholder="Share your experience with this agent..."></textarea>
+                        </div>
+                        <button type="submit" class="submit-review-btn">Submit Review</button>
+                    </form>
+                </div>
+
+                <!-- Vertical Divider -->
+                <div class="review-divider"></div>
+
+                <!-- Right Side - Rating Summary -->
+                <div class="rating-summary-section">
+                    <h3>Overall Rating</h3>
                     <div class="rating-large">{{ rating }}</div>
                     <div class="rating-stars-large">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star-half-alt"></i>
+                        {% if rating >= 4.5 %}
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        {% elif rating >= 3.5 %}
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        {% elif rating >= 2.5 %}
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                            <i class="far fa-star"></i>
+                        {% elif rating >= 1.5 %}
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                            <i class="far fa-star"></i>
+                            <i class="far fa-star"></i>
+                        {% elif rating >= 0.5 %}
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                            <i class="far fa-star"></i>
+                            <i class="far fa-star"></i>
+                            <i class="far fa-star"></i>
+                        {% else %}
+                            <i class="far fa-star"></i>
+                            <i class="far fa-star"></i>
+                            <i class="far fa-star"></i>
+                            <i class="far fa-star"></i>
+                            <i class="far fa-star"></i>
+                        {% endif %}
                     </div>
                     <div class="total-reviews">{{ reviews|length }} Reviews</div>
                     <div class="rating-distribution">
                         <div class="rating-bar">
                             <span class="rating-label">5</span>
                             <div class="progress-bar">
-                                <div class="progress-fill" style="width: 70%"></div>
+                                <div class="progress-fill" style="width: {{ rating_percentages.5 }}%"></div>
                             </div>
                         </div>
                         <div class="rating-bar">
                             <span class="rating-label">4</span>
                             <div class="progress-bar">
-                                <div class="progress-fill" style="width: 20%"></div>
+                                <div class="progress-fill" style="width: {{ rating_percentages.4 }}%"></div>
                             </div>
                         </div>
                         <div class="rating-bar">
                             <span class="rating-label">3</span>
                             <div class="progress-bar">
-                                <div class="progress-fill" style="width: 5%"></div>
+                                <div class="progress-fill" style="width: {{ rating_percentages.3 }}%"></div>
                             </div>
                         </div>
                         <div class="rating-bar">
                             <span class="rating-label">2</span>
                             <div class="progress-bar">
-                                <div class="progress-fill" style="width: 3%"></div>
+                                <div class="progress-fill" style="width: {{ rating_percentages.2 }}%"></div>
                             </div>
                         </div>
                         <div class="rating-bar">
                             <span class="rating-label">1</span>
                             <div class="progress-bar">
-                                <div class="progress-fill" style="width: 2%"></div>
+                                <div class="progress-fill" style="width: {{ rating_percentages.1 }}%"></div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="reviews-list">
-                    {% for review in reviews %}
-                        <div class="review-card">
-                            <div class="review-header">
-                                <img src="{{ review.avatar }}" alt="{{ review.name }}" class="review-avatar">
-                                <div class="review-info">
-                                    <div class="review-name">{{ review.name }}</div>
-                                    <div class="review-stars">
-                                        {% if review.rating == 5 %}
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                        {% elif review.rating == 4 %}
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="far fa-star"></i>
-                                        {% elif review.rating == 3 %}
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="far fa-star"></i>
-                                            <i class="far fa-star"></i>
-                                        {% elif review.rating == 2 %}
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="far fa-star"></i>
-                                            <i class="far fa-star"></i>
-                                            <i class="far fa-star"></i>
-                                        {% elif review.rating == 1 %}
-                                            <i class="fas fa-star"></i>
-                                            <i class="far fa-star"></i>
-                                            <i class="far fa-star"></i>
-                                            <i class="far fa-star"></i>
-                                            <i class="far fa-star"></i>
-                                        {% else %}
-                                            <i class="far fa-star"></i>
-                                            <i class="far fa-star"></i>
-                                            <i class="far fa-star"></i>
-                                            <i class="far fa-star"></i>
-                                            <i class="far fa-star"></i>
-                                        {% endif %}
+            </div>
+
+            <!-- Reviews List -->
+            <div class="reviews-list-container">
+                {% if reviews %}
+                    <div class="reviews-list">
+                        {% for review in reviews %}
+                            <div class="review-card">
+                                <div class="review-header">
+                                    <img src="https://ui-avatars.com/api/?name={{ review.reviewer_name }}&background=0F6A3C&color=fff&size=50" alt="{{ review.reviewer_name }}" class="review-avatar">
+                                    <div class="review-info">
+                                        <div class="review-name">{{ review.reviewer_name }}</div>
+                                        <div class="review-stars">
+                                            {% if review.rating == 5 %}
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                            {% elif review.rating == 4 %}
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="far fa-star"></i>
+                                            {% elif review.rating == 3 %}
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="far fa-star"></i>
+                                                <i class="far fa-star"></i>
+                                            {% elif review.rating == 2 %}
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="far fa-star"></i>
+                                                <i class="far fa-star"></i>
+                                                <i class="far fa-star"></i>
+                                            {% elif review.rating == 1 %}
+                                                <i class="fas fa-star"></i>
+                                                <i class="far fa-star"></i>
+                                                <i class="far fa-star"></i>
+                                                <i class="far fa-star"></i>
+                                                <i class="far fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                                <i class="far fa-star"></i>
+                                                <i class="far fa-star"></i>
+                                                <i class="far fa-star"></i>
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        </div>
                                     </div>
+                                    <div class="review-date">{{ review.created_at|date:"M d, Y" }}</div>
                                 </div>
-                                <div class="review-date">{{ review.date }}</div>
+                                <p class="review-text">{{ review.review_text }}</p>
                             </div>
-                            <p class="review-text">{{ review.review }}</p>
-                        </div>
-                    {% endfor %}
-                </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-reviews-state">
+                        <i class="fas fa-comment-alt"></i>
+                        <h3>No Reviews Yet</h3>
+                        <p>Be the first to share your experience!</p>
+                    </div>
+                {% endif %}
             </div>
         </div>
 
@@ -435,6 +518,7 @@
         max-width: 1440px;
         margin: 0 auto;
         padding: 0 24px;
+        box-sizing: border-box;
     }
 
     /* Breadcrumb */
@@ -448,6 +532,7 @@
         align-items: center;
         gap: 8px;
         font-size: 14px;
+        flex-wrap: wrap;
     }
 
     .breadcrumb-item {
@@ -515,6 +600,7 @@
         position: relative;
         width: 150px;
         height: 150px;
+        flex-shrink: 0;
     }
 
     .profile-image {
@@ -546,6 +632,7 @@
         display: flex;
         flex-direction: column;
         gap: 12px;
+        min-width: 0;
     }
 
     .agent-header {
@@ -561,11 +648,14 @@
         color: #1F1F1F;
         margin: 0;
         font-family: var(--font-heading);
+        overflow-wrap: break-word;
+        word-break: break-word;
     }
 
     .agent-badges {
         display: flex;
         gap: 8px;
+        flex-wrap: wrap;
     }
 
     .badge {
@@ -573,6 +663,7 @@
         border-radius: 12px;
         font-size: 12px;
         font-weight: 600;
+        white-space: nowrap;
     }
 
     .verified-badge-text {
@@ -589,12 +680,14 @@
         display: flex;
         align-items: center;
         gap: 8px;
+        flex-wrap: wrap;
     }
 
     .stars {
         display: flex;
         gap: 2px;
         color: #F4B400;
+        flex-shrink: 0;
     }
 
     .rating-value {
@@ -613,6 +706,7 @@
         font-size: 14px;
         line-height: 1.6;
         margin: 0;
+        overflow-wrap: break-word;
     }
 
     .agent-meta {
@@ -631,6 +725,7 @@
 
     .meta-item i {
         color: #0F6A3C;
+        flex-shrink: 0;
     }
 
     .agent-categories {
@@ -646,12 +741,14 @@
         border-radius: 12px;
         font-size: 12px;
         font-weight: 500;
+        white-space: nowrap;
     }
 
     .profile-right {
         display: flex;
         flex-direction: column;
         gap: 12px;
+        min-width: 0;
     }
 
     .action-btn {
@@ -667,6 +764,8 @@
         transition: all 0.2s ease;
         border: none;
         cursor: pointer;
+        box-sizing: border-box;
+        white-space: nowrap;
     }
 
     .call-btn {
@@ -718,6 +817,7 @@
         padding: 24px;
         text-align: center;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        box-sizing: border-box;
     }
 
     .stat-icon {
@@ -763,6 +863,8 @@
         border-radius: 18px;
         padding: 32px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        box-sizing: border-box;
+        min-width: 0;
     }
 
     .card-title {
@@ -778,6 +880,8 @@
         font-size: 14px;
         line-height: 1.6;
         margin-bottom: 20px;
+        overflow-wrap: break-word;
+        word-break: break-word;
     }
 
     .checklist {
@@ -790,13 +894,19 @@
         display: flex;
         align-items: center;
         gap: 10px;
-        font-size: 14px;
+        font-size: 16px;
         color: #1F1F1F;
     }
 
     .checklist-item i {
         color: #10B981;
         font-size: 16px;
+        flex-shrink: 0;
+    }
+
+    .checklist-item span {
+        overflow-wrap: break-word;
+        min-width: 0;
     }
 
     .contact-item {
@@ -821,12 +931,15 @@
         justify-content: center;
         color: #0F6A3C;
         font-size: 16px;
+        flex-shrink: 0;
     }
 
     .contact-info {
         display: flex;
         flex-direction: column;
         gap: 4px;
+        min-width: 0;
+        flex: 1;
     }
 
     .contact-label {
@@ -838,6 +951,8 @@
         font-size: 14px;
         color: #1F1F1F;
         font-weight: 500;
+        overflow-wrap: break-word;
+        word-break: break-word;
     }
 
     /* Properties Section */
@@ -868,6 +983,7 @@
         position: relative;
         white-space: nowrap;
         transition: color 0.2s ease;
+        flex-shrink: 0;
     }
 
     .tab-btn:hover {
@@ -952,6 +1068,7 @@
         color: #666;
         font-size: 16px;
         line-height: 1;
+        flex-shrink: 0;
     }
 
     .action-icon:hover {
@@ -961,6 +1078,7 @@
 
     .property-details {
         padding: 20px;
+        box-sizing: border-box;
     }
 
     .property-price {
@@ -976,6 +1094,7 @@
         color: #1F1F1F;
         margin-bottom: 8px;
         line-height: 1.4;
+        overflow-wrap: break-word;
     }
 
     .property-location {
@@ -985,6 +1104,7 @@
         font-size: 13px;
         color: #666;
         margin-bottom: 12px;
+        overflow-wrap: break-word;
     }
 
     .property-meta {
@@ -992,6 +1112,7 @@
         gap: 16px;
         padding-top: 12px;
         border-top: 1px solid #e0e0e0;
+        flex-wrap: wrap;
     }
 
     .meta-item {
@@ -1027,18 +1148,50 @@
     }
 
     /* Reviews Section */
-    .reviews-container {
-        display: grid;
-        grid-template-columns: 1fr 2fr;
-        gap: 32px;
-    }
-
-    .rating-summary {
+    .review-top-card {
+        display: flex;
         background: white;
         border-radius: 18px;
         padding: 32px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        max-width: 1200px;
+        margin: 0 auto 32px;
+        box-sizing: border-box;
+    }
+
+    .review-form-section {
+        flex: 0 0 65%;
+        padding-right: 32px;
+        box-sizing: border-box;
+    }
+
+    .review-form-section h3 {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1F1F1F;
+        margin-bottom: 24px;
+        font-family: var(--font-heading);
+    }
+
+    .review-divider {
+        width: 1px;
+        background: #e0e0e0;
+        flex-shrink: 0;
+    }
+
+    .rating-summary-section {
+        flex: 0 0 30%;
+        padding-left: 32px;
+        box-sizing: border-box;
         text-align: center;
+    }
+
+    .rating-summary-section h3 {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1F1F1F;
+        margin-bottom: 16px;
+        font-family: var(--font-heading);
     }
 
     .rating-large {
@@ -1067,22 +1220,26 @@
         display: flex;
         flex-direction: column;
         gap: 8px;
+        align-items: center;
     }
 
     .rating-bar {
         display: flex;
         align-items: center;
         gap: 8px;
+        width: 100%;
     }
 
     .rating-label {
         width: 20px;
         font-size: 13px;
         color: #666;
+        flex-shrink: 0;
     }
 
     .progress-bar {
         flex: 1;
+        min-width: 0;
         height: 8px;
         background: #e0e0e0;
         border-radius: 4px;
@@ -1093,6 +1250,11 @@
         height: 100%;
         background: #F4B400;
         border-radius: 4px;
+    }
+
+    .reviews-list-container {
+        max-width: 1200px;
+        margin: 0 auto;
     }
 
     .reviews-list {
@@ -1106,13 +1268,15 @@
         border-radius: 18px;
         padding: 24px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        box-sizing: border-box;
     }
 
     .review-header {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         gap: 16px;
         margin-bottom: 16px;
+        flex-wrap: wrap;
     }
 
     .review-avatar {
@@ -1120,10 +1284,12 @@
         height: 48px;
         border-radius: 50%;
         object-fit: cover;
+        flex-shrink: 0;
     }
 
     .review-info {
         flex: 1;
+        min-width: 120px;
     }
 
     .review-name {
@@ -1131,6 +1297,7 @@
         font-weight: 600;
         color: #1F1F1F;
         margin-bottom: 4px;
+        overflow-wrap: break-word;
     }
 
     .review-stars {
@@ -1143,6 +1310,8 @@
     .review-date {
         font-size: 12px;
         color: #999;
+        flex-shrink: 0;
+        white-space: nowrap;
     }
 
     .review-text {
@@ -1150,6 +1319,123 @@
         font-size: 14px;
         line-height: 1.6;
         margin: 0;
+        overflow-wrap: break-word;
+    }
+
+    .empty-reviews-state {
+        background: white;
+        border-radius: 18px;
+        padding: 48px 32px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        text-align: center;
+        box-sizing: border-box;
+    }
+
+    .empty-reviews-state i {
+        font-size: 48px;
+        color: #e0e0e0;
+        margin-bottom: 16px;
+    }
+
+    .empty-reviews-state h3 {
+        font-size: 20px;
+        font-weight: 600;
+        color: #1F1F1F;
+        margin-bottom: 8px;
+        font-family: var(--font-heading);
+    }
+
+    .empty-reviews-state p {
+        font-size: 14px;
+        color: #666;
+        margin: 0;
+    }
+
+    /* Review Form Styles */
+    .review-form-section .form-group {
+        margin-bottom: 20px;
+    }
+
+    .review-form-section label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: #1F1F1F;
+        margin-bottom: 8px;
+    }
+
+    .review-form-section input,
+    .review-form-section select,
+    .review-form-section textarea {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 14px;
+        font-family: inherit;
+        transition: border-color 0.2s ease;
+        box-sizing: border-box;
+    }
+
+    .review-form-section input:focus,
+    .review-form-section select:focus,
+    .review-form-section textarea:focus {
+        outline: none;
+        border-color: #0F6A3C;
+    }
+
+    .review-form-section textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    .submit-review-btn {
+        background: #0F6A3C;
+        color: white;
+        border: none;
+        padding: 14px 32px;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s ease;
+    }
+
+    .submit-review-btn:hover {
+        background: #0a4d2b;
+    }
+
+    /* Responsive Design for Reviews */
+    @media (max-width: 768px) {
+        .review-top-card {
+            flex-direction: column;
+            padding: 24px;
+        }
+
+        .review-form-section {
+            flex: 1;
+            padding-right: 0;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .review-divider {
+            display: none;
+        }
+
+        .rating-summary-section {
+            flex: 1;
+            padding-left: 0;
+            padding-top: 24px;
+        }
+
+        .rating-large {
+            font-size: 48px;
+        }
+
+        .rating-stars-large {
+            font-size: 20px;
+        }
     }
 
     /* About Tab Content */
@@ -1158,6 +1444,7 @@
         border-radius: 18px;
         padding: 32px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        box-sizing: border-box;
     }
 
     .about-content h3 {
@@ -1166,6 +1453,7 @@
         color: #1F1F1F;
         margin-bottom: 16px;
         font-family: var(--font-heading);
+        overflow-wrap: break-word;
     }
 
     .about-content p {
@@ -1173,6 +1461,7 @@
         font-size: 14px;
         line-height: 1.8;
         margin-bottom: 16px;
+        overflow-wrap: break-word;
     }
 
     .highlights {
@@ -1181,6 +1470,7 @@
         margin-top: 24px;
         padding-top: 24px;
         border-top: 1px solid #e0e0e0;
+        flex-wrap: wrap;
     }
 
     .highlight-item {
@@ -1194,6 +1484,11 @@
     .highlight-item i {
         color: #0F6A3C;
         font-size: 20px;
+        flex-shrink: 0;
+    }
+
+    .highlight-item span {
+        overflow-wrap: break-word;
     }
 
     /* Expertise Grid */
@@ -1210,6 +1505,7 @@
         text-align: center;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         transition: all 0.3s ease;
+        box-sizing: border-box;
     }
 
     .expertise-card:hover {
@@ -1228,12 +1524,14 @@
         font-weight: 600;
         color: #1F1F1F;
         margin-bottom: 8px;
+        overflow-wrap: break-word;
     }
 
     .expertise-card p {
         font-size: 13px;
         color: #666;
         margin: 0;
+        overflow-wrap: break-word;
     }
 
     /* Empty State */
@@ -1343,6 +1641,25 @@
             flex-direction: column;
             gap: 16px;
         }
+
+        .about-card,
+        .contact-card,
+        .about-content,
+        .rating-summary,
+        .review-card,
+        .expertise-card {
+            padding: 20px;
+        }
+
+        .contact-item {
+            gap: 12px;
+        }
+
+        .contact-item i {
+            width: 34px;
+            height: 34px;
+            font-size: 14px;
+        }
     }
 
     @media (max-width: 480px) {
@@ -1352,6 +1669,19 @@
         .agent-name {
             font-size: 18px;
         }
+
+        .review-header {
+            gap: 10px;
+        }
+
+        .review-avatar {
+            width: 40px;
+            height: 40px;
+        }
+
+        .contact-item {
+            align-items: flex-start;
+        }
     }
 </style>
 
@@ -1360,7 +1690,7 @@
         if (navigator.share) {
             navigator.share({
                 title: '{{ agent.user.get_full_name|default:agent.user.username }} - Agent Profile',
-                text: 'Check out this agent profile on HeyDay Realty',
+                text: 'Check out this agent profile on HHectare',
                 url: window.location.href
             });
         } else {

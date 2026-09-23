@@ -1,8 +1,10 @@
 from django.db import models
+import secrets
 import uuid
 from django.conf import settings
 from django.core.validators import RegexValidator
 from django.urls import reverse
+from django.utils import timezone
 
 
 class Organization(models.Model):
@@ -91,6 +93,7 @@ class AgentOrganizationMapping(models.Model):
     """
 
     class Status(models.TextChoices):
+        PENDING_INVITATION = "pending_invitation", "Pending Invitation"
         ACTIVE = "active", "Active"
         INACTIVE = "inactive", "Inactive"
         REMOVED = "removed", "Removed"
@@ -111,7 +114,7 @@ class AgentOrganizationMapping(models.Model):
     is_owner = models.BooleanField(default=False)
 
     status = models.CharField(
-        max_length=10, choices=Status.choices, default=Status.ACTIVE
+        max_length=20, choices=Status.choices, default=Status.ACTIVE
     )
 
     joined_at = models.DateTimeField(auto_now_add=True)
@@ -132,3 +135,92 @@ class AgentOrganizationMapping(models.Model):
     def __str__(self):
         role = "Owner" if self.is_owner else "Member"
         return f"{self.agent} -> {self.organization} ({role})"
+
+    @property
+    def invitation_status_label(self):
+        if self.status == self.Status.PENDING_INVITATION:
+            return "Pending"
+        if self.status == self.Status.ACTIVE:
+            return "Active"
+        if self.status == self.Status.INACTIVE:
+            return "Inactive"
+        return self.get_status_display()
+
+
+class AgentInvitation(models.Model):
+    """
+    Invitation token for organization agent onboarding.
+    Remains valid until the agent successfully creates their account (no auto-expiry).
+    """
+
+    class Status(models.TextChoices):
+        PENDING = "pending", "Pending"
+        USED = "used", "Used"
+        REVOKED = "revoked", "Revoked"
+
+    id = models.BigAutoField(primary_key=True)
+    token = models.CharField(max_length=64, unique=True, db_index=True)
+
+    agent = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="agent_invitations",
+    )
+    organization = models.ForeignKey(
+        Organization,
+        on_delete=models.CASCADE,
+        related_name="invitations",
+    )
+    mapping = models.OneToOneField(
+        AgentOrganizationMapping,
+        on_delete=models.CASCADE,
+        related_name="invitation",
+    )
+    invited_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="sent_agent_invitations",
+    )
+
+    status = models.CharField(
+        max_length=20, choices=Status.choices, default=Status.PENDING
+    )
+    email = models.EmailField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    used_at = models.DateTimeField(null=True, blank=True)
+    last_sent_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Agent Invitation"
+        verbose_name_plural = "Agent Invitations"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["organization", "email"],
+                condition=models.Q(status="pending"),
+                name="unique_pending_invitation_per_org_email",
+            )
+        ]
+
+    def __str__(self):
+        return f"Invitation {self.email} -> {self.organization} ({self.status})"
+
+    @staticmethod
+    def generate_token():
+        return secrets.token_urlsafe(32)
+
+    def get_absolute_url(self):
+        return reverse("create-account", kwargs={"token": self.token})
+
+    def mark_used(self):
+        self.status = self.Status.USED
+        self.used_at = timezone.now()
+        self.save(update_fields=["status", "used_at", "updated_at"])
+
+    @property
+    def is_valid(self):
+        return self.status == self.Status.PENDING

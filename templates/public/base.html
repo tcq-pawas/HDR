@@ -6,8 +6,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}HeyDay Realty{% endblock %}</title>
+    <title>{% block title %}Premium Real Estate & Property Platform{% endblock %}</title>
+
+    <meta name="description" content="{% block meta_description %}Premium real estate platform offering residential, commercial, luxury, and agricultural properties with verified listings across India.{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}Real Estate, Property, Buy Property, Sell Property, Luxury Property, Plots, Apartments, Commercial Property, Agricultural Land, Investment Property, Property Consultant, Verified Properties, India Real Estate{% endblock %}">
+    <meta name="author" content="Real Estate Platform">
+    <meta name="robots" content="{% block meta_robots %}index, follow{% endblock %}">
+
+    <link rel="canonical" href="{% block canonical_url %}{{ request.build_absolute_uri }}{% endblock %}">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="{% block og_title %}Premium Real Estate Platform{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Discover premium residential, commercial, and agricultural properties.{% endblock %}">
+    <meta property="og:site_name" content="Real Estate Platform">
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:url" content="{% block og_url %}{{ request.build_absolute_uri }}{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo.png' %}{% endblock %}">
+    <meta property="og:locale" content="en_IN">
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="{% block twitter_card %}summary_large_image{% endblock %}">
+    <meta name="twitter:title" content="{% block twitter_title %}Premium Real Estate Platform{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}Discover premium residential, commercial, and agricultural properties.{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo.png' %}{% endblock %}">
+
+    <!-- Favicon & PWA -->
     <link rel="icon" href="{% static 'img/favicon.ico' %}">
+    <link rel="apple-touch-icon" href="{% static 'img/logo.png' %}">
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+    <meta name="theme-color" content="#1B4332">
+    <meta name="application-name" content="Real Estate Platform">
+
+    <!-- Schema.org Organization + WebSite -->
+    {% block schema_jsonld %}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "Organization",
+                "@id": "{{ request.scheme }}://{{ request.get_host }}/#organization",
+                "name": "Real Estate Platform",
+                "url": "{{ request.scheme }}://{{ request.get_host }}/",
+                "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo.png' %}",
+                "description": "Premium real estate platform offering residential, commercial, luxury, and agricultural properties with verified listings across India.",
+                "sameAs": []
+            },
+            {
+                "@type": "WebSite",
+                "@id": "{{ request.scheme }}://{{ request.get_host }}/#website",
+                "name": "Real Estate Platform",
+                "url": "{{ request.scheme }}://{{ request.get_host }}/",
+                "publisher": { "@id": "{{ request.scheme }}://{{ request.get_host }}/#organization" },
+                "potentialAction": {
+                    "@type": "SearchAction",
+                    "target": "{{ request.scheme }}://{{ request.get_host }}/buy/?q={search_term_string}",
+                    "query-input": "required name=search_term_string"
+                }
+            },
+            {
+                "@type": "RealEstateAgent",
+                "@id": "{{ request.scheme }}://{{ request.get_host }}/#localbusiness",
+                "name": "Real Estate Platform",
+                "url": "{{ request.scheme }}://{{ request.get_host }}/",
+                "image": "{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo.png' %}",
+                "priceRange": "$$",
+                "areaServed": "India"
+            }
+        ]
+    }
+    </script>
+    {% endblock %}
+
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
@@ -16,29 +86,26 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- Global Typography System -->
+    <link rel="stylesheet" href="{% static 'css/typography.css' %}">
     <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+    <!-- Bootstrap 5 JS Bundle (loaded in head for reliable navbar initialization) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     {% block extra_css %}{% endblock %}
+    {% block extra_head %}{% endblock %}
 </head>
 
 <body>
-<nav class="navbar navbar-expand-lg sticky-top py-2 shadow-sm border-bottom" style="background: var(--cloud-white);">
+<nav class="navbar navbar-expand-lg sticky-top py-2 shadow-sm border-bottom">
   <div class="container-fluid px-4 px-lg-5">
 
     <!-- LEFT: Logo -->
     <a class="navbar-brand p-0" href="{% url 'public:home' %}">
-      <div class="d-flex align-items-center gap-2">
-        <div class="bg-success bg-gradient rounded-3 d-flex align-items-center justify-content-center"
-             style="width:42px; height:42px; font-size:1.3rem;">
-          🌿
-        </div>
-        <div>
-          <div class="fw-bold lh-1" style="font-family:'Playfair Display',serif; font-size:1.25rem; color:#1B4332;">
-            HeyDay
-          </div>
-          <div class="small text-uppercase fw-semibold lh-1" style="font-size:0.6rem; letter-spacing:2px; color:#40916C;">
-            Realty
-          </div>
-        </div>
+      <div class="d-flex align-items-center">
+        <img src="{% static 'img/logo.png' %}"
+             alt="Logo"
+             title="Logo"
+             style="height:48px; width:auto; display:block;">
       </div>
     </a>
 
@@ -81,11 +148,11 @@
       {% if user.is_authenticated %}
         <div class="d-flex align-items-center gap-2 mt-2 mt-lg-0 ms-lg-2">
           <div class="dropdown">
-            <button class="btn btn-success d-flex align-items-center gap-2 px-3 py-2 rounded-pill dropdown-toggle" type="button" data-bs-toggle="dropdown" style="background: linear-gradient(135deg, #198754 0%, #034330 100%);border: none;box-shadow: 0 2px 8px rgba(25, 135, 84, 0.3);">
+            <button class="btn btn-success d-flex align-items-center gap-2 px-2 py-1 rounded-pill dropdown-toggle" type="button" data-bs-toggle="dropdown" style="background: linear-gradient(135deg, #198754 0%, #034330 100%);border: none;box-shadow: 0 2px 8px rgba(52, 67, 60, 0.3);">
               {% if user.agent_profile and user.agent_profile.profile_image and user.agent_profile.profile_image.name %}
-                <img src="{{ user.agent_profile.profile_image.url }}" alt="Profile" class="rounded-circle" style="width:44px; height:44px; object-fit:cover; border:3px solid #fff; flex-shrink:0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <img src="{{ user.agent_profile.profile_image.url }}" alt="Profile" class="rounded-circle" style="width:27px; height:27px; object-fit:cover; border:3px solid #fff; flex-shrink:0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
               {% else %}
-                <img src="https://ui-avatars.com/api/?name={% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}&background=198754&color=fff&size=44&bold=true" alt="Profile" class="rounded-circle" style="width:44px; height:44px; object-fit:cover; border:3px solid #fff; flex-shrink:0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <img src="https://ui-avatars.com/api/?name={% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}&background=198754&color=fff&size=44&bold=true" alt="Profile" class="rounded-circle" style="width:27px; height:27px; object-fit:cover; border:3px solid #fff; flex-shrink:0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
               {% endif %}
               <span class="fw-semibold text-white">{% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}</span>
             </button>
@@ -121,17 +188,17 @@
                 <div class="col-lg-3 col-md-6 mb-4">
                     <!-- <h5>Company</h5> 
 
-                    <img src="{% static '/img/logo-2.png' %}" alt="HeyDay Realty"
+                    <img src="{% static '/img/logo.png' %}" alt="Logo"
                         style="max-width:220px; margin-bottom:20px;">
 
                     <!-- <p class="footer-desc">
-                        HeyDay Realty is a premium real estate agency dedicated to finding your dream
+                        This platform is a premium real estate agency dedicated to finding your dream
                         home. We pride ourselves on transparency, integrity, and excellence in every
                         transaction.
                     </p> 
 
                     <p class="footer-desc">
-    HeyDay Realty helps investors and land buyers discover verified farmland opportunities, managed plantation projects, and long-term agricultural investment assets across India.
+    This platform helps investors and land buyers discover verified farmland opportunities, managed plantation projects, and long-term agricultural investment assets across India.
 </p>
 
                     <div class="social-icons mt-4">
@@ -144,7 +211,7 @@
                 <!-- <div class="col-lg-3 col-md-6 mb-4">
                     <h5>Company</h5>
                     <p class="small" style="line-height: 1.8; color: #e0e0e0;">
-                        HeyDay Realty is your trusted partner for premium land investments and residential properties.
+                        This platform is your trusted partner for premium land investments and residential properties.
                         With 15+ years of experience, we help you find the perfect property for your future.
                     </p>
                     <div class="social-icons mt-3">
@@ -253,7 +320,7 @@
 
                         <li>
                             <i class="bi bi-envelope"></i>
-                            info@heydayrealty.in
+                            info@hhectare.com
                         </li>
 
                         <li>
@@ -270,7 +337,7 @@
                         <li class="mb-3"><i class="bi bi-geo-alt-fill text-accent me-2"></i> 123 Real Estate Blvd, City,
                             Country</li>
                         <li class="mb-3"><i class="bi bi-telephone-fill text-accent me-2"></i> +91 9506688688</li>
-                        <li class="mb-3"><i class="bi bi-envelope-fill text-accent me-2"></i> info@heydayrealty.in</li>
+                        <li class="mb-3"><i class="bi bi-envelope-fill text-accent me-2"></i> info@hhectare.com</li>
                     </ul>
                     <h5 class="mt-4">Newsletter</h5>
                     <div class="input-group mb-3">
@@ -303,17 +370,22 @@
         </div>
         <div class="copyright-bar">
             <div class="container text-center">
-                <p class="mb-0">&copy; 2026 HeyDay Realty. All Rights Reserved. Designed by <span
+                <p class="mb-0">&copy; 2026 All Rights Reserved. Designed by <span
                         class="text-white">Antigravity</span>.</p>
             </div>
         </div>
     </footer> -->
 
-    <footer class="footer">
+    <footer class="footer site-footer">
         <div class="footer-container">
             <div class="footer-brand">
-                <div class="footer-brand-logo">HeyDay Realty</div>
-                <p class="footer-brand-description">HeyDay Realty helps investors discover verified farmland opportunities, managed plantation projects, and long-term agricultural assets across India.</p>
+                <a href="{% url 'public:home' %}" class="footer-logo-container">
+                    <img src="{% static 'img/logo.png' %}"
+                         alt="Logo"
+                         title="Logo"
+                         class="footer-logo-img">
+                </a>
+                <p class="footer-brand-description">Buy • Sell • Invest • Discover</p>
                 <div class="footer-social">
                     <a href="https://facebook.com" target="_blank" rel="noopener" class="footer-social-link" title="Facebook">𝗙</a>
                     <a href="https://instagram.com" target="_blank" rel="noopener" class="footer-social-link" title="Instagram">◎</a>
@@ -324,14 +396,14 @@
 
             <div class="footer-column">
                 <h4>Quick Links</h4>
-                <div class="footer-links">
-                    <a href="{% url 'public:home' %}" class="footer-link">Home</a>
-                    <a href="{% url 'buy:property_search' %}" class="footer-link">Buy Property</a>
-                    <a href="{% url 'sell:sell_page' %}" class="footer-link">Sell Property</a>
-                    <a href="{% url 'public:agents' %}" class="footer-link">Find Agents</a>
-                    <a href="{% url 'public:about' %}" class="footer-link">About Us</a>
-                    <a href="{% url 'public:contact' %}" class="footer-link">Contact</a>
-                </div>
+                <ul class="footer-links list-unstyled">
+                    <li><a href="{% url 'public:home' %}" class="footer-link" >Home</a></li>
+                    <li><a href="{% url 'buy:property_search' %}" class="footer-link">Buy Property</a></li>
+                    <li><a href="{% url 'sell:sell_page' %}" class="footer-link">Sell Property</a></li>
+                    <li><a href="{% url 'public:agents' %}" class="footer-link">Find Agents</a></li>
+                    <li><a href="{% url 'public:about' %}" class="footer-link">About Us</a></li>
+                    <li><a href="{% url 'public:contact' %}" class="footer-link">Contact</a></li>
+                </ul>
             </div>
 
             <div class="footer-column">
@@ -347,21 +419,19 @@
         </div>
 
         <div class="footer-bottom">
-            <span>© 2026 HeyDay Realty. All Rights Reserved.</span>
+            <span>&copy; {% now "Y" %} All Rights Reserved.</span>
             <div class="footer-bottom-links">
                 <a href="{% url 'public:about' %}" class="footer-bottom-link">Privacy Policy</a>
                 <a href="{% url 'public:about' %}" class="footer-bottom-link">Terms of Use</a>
-                <a href="/sitemap.xml" class="footer-bottom-link" target="_blank">Sitemap</a>
             </div>
         </div>
     </footer>
 
     <!-- WhatsApp Floating Button -->
-    <a href="https://wa.me/919506688688" class="whatsapp-float" target="_blank">
+    <a href="https://wa.me/919506688688" class="whatsapp-float" target="_blank" style="margin-bottom: 32px !important;">
         <i class="fa-brands fa-whatsapp"></i>
     </a>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     {% block extra_js %}{% endblock %}
 </body>
 

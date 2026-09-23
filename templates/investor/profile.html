@@ -1,295 +1,10 @@
 {% extends "investor/investor_base.html" %}
+{% load static %}
 {% load humanize %}
 
-{% block title %}Investor Dashboard - HeyDay Realty{% endblock %}
+{% block title %}Investor Dashboard - HHectare{% endblock %}
 
 {% block extra_css %}
-<style>
-.premium-hero {
-    background: linear-gradient(135deg, rgba(2, 44, 34, 0.95) 0%, rgba(6, 78, 59, 0.9) 50%, rgba(6, 95, 70, 0.85) 100%),
-                url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
-    background-size: cover;
-    background-position: center;
-    border-radius: 24px;
-    padding: 40px;
-    position: relative;
-    overflow: hidden;
-}
-
-.premium-hero::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
-    pointer-events: none;
-}
-
-.avatar-premium {
-    width: 140px;
-    height: 140px;
-    border-radius: 50%;
-    border: 5px solid rgba(255, 255, 255, 0.3);
-    background: linear-gradient(135deg, #10b981, #059669);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3.5rem;
-    font-weight: 700;
-    color: white;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    position: relative;
-    transition: all 0.3s ease;
-}
-
-.avatar-premium:hover {
-    transform: scale(1.05);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
-}
-
-.avatar-premium::after {
-    content: '\f030';
-    font-family: 'Font Awesome 6 Free';
-    font-weight: 900;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.avatar-premium:hover::after {
-    opacity: 1;
-}
-
-.kpi-card {
-    border-radius: 20px;
-    padding: 24px;
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.kpi-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #10b981, #059669);
-}
-
-.kpi-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-}
-
-.kpi-card.gradient-1::before {
-    background: linear-gradient(90deg, #3b82f6, #2563eb);
-}
-
-.kpi-card.gradient-2::before {
-    background: linear-gradient(90deg, #10b981, #059669);
-}
-
-.kpi-card.gradient-3::before {
-    background: linear-gradient(90deg, #f59e0b, #d97706);
-}
-
-.kpi-card.gradient-4::before {
-    background: linear-gradient(90deg, #8b5cf6, #7c3aed);
-}
-
-.kpi-number {
-    font-size: 2.5rem;
-    font-weight: 700;
-    background: linear-gradient(135deg, #1e293b, #0f172a);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.info-card {
-    border-radius: 20px;
-    background: white;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
-}
-
-.info-card:hover {
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-}
-
-.info-label {
-    font-size: 0.875rem;
-    color: #64748b;
-    font-weight: 500;
-    margin-bottom: 8px;
-}
-
-.info-value {
-    font-size: 1rem;
-    color: #1e293b;
-    font-weight: 600;
-}
-
-.badge-premium {
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-weight: 600;
-    font-size: 0.875rem;
-}
-
-.badge-gold {
-    background: linear-gradient(135deg, #f59e0b, #d97706);
-    color: white;
-}
-
-.badge-emerald {
-    background: linear-gradient(135deg, #10b981, #059669);
-    color: white;
-}
-
-.badge-blue {
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-    color: white;
-}
-
-.action-card {
-    border-radius: 16px;
-    padding: 20px;
-    background: white;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
-    cursor: pointer;
-    text-decoration: none;
-    color: inherit;
-    display: block;
-}
-
-.action-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    border-color: #10b981;
-}
-
-.action-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.25rem;
-    margin-bottom: 12px;
-}
-
-.achievement-card {
-    border-radius: 16px;
-    padding: 16px;
-    background: linear-gradient(135deg, #fef3c7, #fde68a);
-    border: 1px solid rgba(245, 158, 11, 0.2);
-    text-align: center;
-    transition: all 0.3s ease;
-}
-
-.achievement-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
-}
-
-.document-item {
-    border-radius: 12px;
-    padding: 16px;
-    background: white;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    margin-bottom: 12px;
-    transition: all 0.3s ease;
-}
-
-.document-item:hover {
-    border-color: #10b981;
-    background: #f8fafc;
-}
-
-.insight-card {
-    border-radius: 16px;
-    padding: 20px;
-    background: linear-gradient(135deg, #f0fdf4, #dcfce7);
-    border: 1px solid rgba(16, 185, 129, 0.2);
-}
-
-.chart-container {
-    border-radius: 20px;
-    background: white;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    padding: 24px;
-}
-
-.investment-table {
-    border-radius: 16px;
-    overflow: hidden;
-    background: white;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-}
-
-.investment-table thead {
-    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
-}
-
-.investment-table th {
-    padding: 16px;
-    font-weight: 600;
-    color: #475569;
-    font-size: 0.875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.investment-table td {
-    padding: 16px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.investment-table tbody tr:hover {
-    background: #f8fafc;
-}
-
-@media (max-width: 768px) {
-    .premium-hero {
-        padding: 24px;
-        border-radius: 16px;
-    }
-    
-    .avatar-premium {
-        width: 100px;
-        height: 100px;
-        font-size: 2.5rem;
-    }
-    
-    .kpi-number {
-        font-size: 2rem;
-    }
-}
-</style>
 {% endblock %}
 
 {% block page_title %}Investor Profile{% endblock %}
@@ -297,6 +12,7 @@
 
 
 {% block content %}
+<div class="profile-page">
 <!-- Premium Investor Hero Section -->
 <div class="premium-hero mb-5">
     <div class="row align-items-center">
@@ -310,7 +26,7 @@
                     {% endif %}
                 </div>
                 <div class="text-white">
-                    <h1 class="mb-1 fw-bold" style="font-size: 2.5rem;">{{ profile.user.get_full_name|default:profile.user.username }}</h1>
+                    <h1 class="mb-1 fw-bold" style="font-size: 1.5rem;">{{ profile.user.get_full_name|default:profile.user.username }}</h1>
                     <p class="mb-2 opacity-75" style="font-size: 1.1rem;">{{ profile.user.email }}</p>
                     <div class="d-flex gap-2 flex-wrap">
                         <span class="badge badge-premium badge-emerald">Investor</span>
@@ -400,7 +116,7 @@
                 <div class="action-icon" style="background: linear-gradient(135deg, #ede9fe, #ddd6fe); color: #7c3aed;">
                     <i class="fas fa-percentage"></i>
                 </div>
-                <span class="badge bg-light text-purple rounded-pill">+5%</span>
+                <span class="badge bg-light text-black rounded-pill">+5%</span>
             </div>
             <div class="kpi-number">{{ roi_analysis.total_roi_percentage|floatformat:1|default:"0.0" }}%</div>
             <div class="text-muted mt-1" style="font-size: 0.875rem;">Average ROI</div>
@@ -421,7 +137,7 @@
                     <button class="btn btn-outline-success btn-sm">3M</button>
                 </div>
             </div>
-            <div style="position: relative; height: 320px; width: 100%;">
+            <div class="portfolio-chart-wrapper">
                 <canvas id="portfolioChart"></canvas>
             </div>
         </div>
@@ -592,11 +308,11 @@
         </div>
 
         <!-- Premium Quick Actions -->
-        <div class="info-card p-4 mb-4">
+        <!-- <div class="info-card p-4 mb-4">
             <h4 class="fw-bold mb-4" style="color: #1e293b;">Quick Actions</h4>
-            <div class="row g-3">
+            <div class="row g-3 text-decoration-none">
                 <div class="col-6">
-                    <a href="{% url 'investor:investments-page' %}" class="action-card">
+                    <a href="{% url 'investor:investments-page' %}" class="action-card text-decoration-none">
                         <div class="action-icon" style="background: linear-gradient(135deg, #d1fae5, #a7f3d0); color: #059669;">
                             <i class="fas fa-plus"></i>
                         </div>
@@ -604,7 +320,7 @@
                     </a>
                 </div>
                 <div class="col-6">
-                    <a href="{% url 'investor:roi-data-page' %}" class="action-card">
+                    <a href="{% url 'investor:roi-data-page' %}" class="action-card text-decoration-none">
                         <div class="action-icon" style="background: linear-gradient(135deg, #dbeafe, #bfdbfe); color: #2563eb;">
                             <i class="fas fa-chart-pie"></i>
                         </div>
@@ -612,7 +328,7 @@
                     </a>
                 </div>
                 <div class="col-6">
-                    <a href="{% url 'investor:documents-page' %}" class="action-card">
+                    <a href="{% url 'investor:documents-page' %}" class="action-card text-decoration-none">
                         <div class="action-icon" style="background: linear-gradient(135deg, #ede9fe, #ddd6fe); color: #7c3aed;">
                             <i class="fas fa-file-alt"></i>
                         </div>
@@ -620,15 +336,15 @@
                     </a>
                 </div>
                 <div class="col-6">
-                    <button class="action-card" onclick="downloadReport()">
+                    <a class="action-card text-decoration-none" onclick="downloadReport()">
                         <div class="action-icon" style="background: linear-gradient(135deg, #fef3c7, #fde68a); color: #d97706;">
                             <i class="fas fa-download"></i>
                         </div>
                         <div class="fw-semibold" style="font-size: 0.875rem;">Download Statements</div>
-                    </button>
+                    </a>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <!-- Investor Achievements -->
         <div class="info-card p-4 mb-4">
@@ -675,7 +391,7 @@
                             <small class="text-muted" style="font-size: 0.75rem;">Updated today</small>
                         </div>
                     </div>
-                    <button class="btn btn-sm btn-outline-success rounded-pill"><i class="fas fa-download"></i></button>
+                    <button class="btn btn-sm btn-outline-success rounded-pill" style="width: 48px;"><i class="fas fa-download"></i></button>
                 </div>
             </div>
             <div class="document-item">
@@ -689,7 +405,7 @@
                             <small class="text-muted" style="font-size: 0.75rem;">Updated 2 days ago</small>
                         </div>
                     </div>
-                    <button class="btn btn-sm btn-outline-success rounded-pill"><i class="fas fa-download"></i></button>
+                    <button class="btn btn-sm btn-outline-success rounded-pill" style="width: 48px;"><i class="fas fa-download"></i></button>
                 </div>
             </div>
             <div class="document-item">
@@ -703,7 +419,7 @@
                             <small class="text-muted" style="font-size: 0.75rem;">Updated 1 week ago</small>
                         </div>
                     </div>
-                    <button class="btn btn-sm btn-outline-success rounded-pill"><i class="fas fa-download"></i></button>
+                    <button class="btn btn-sm btn-outline-success rounded-pill" style="width: 48px;"><i class="fas fa-download"></i></button>
                 </div>
             </div>
         </div>
@@ -1184,4 +900,5 @@
         }
     }
 </script>
+</div>
 {% endblock %}

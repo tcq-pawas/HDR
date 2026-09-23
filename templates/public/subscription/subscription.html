@@ -1,10 +1,239 @@
 {% extends 'public/base.html' %}
 {% load static %}
 
-{% block title %}Subscription Plans - HeyDay Realty{% endblock %}
+{% block title %}Subscription Plans | HHectare{% endblock %}
+{% block meta_description %}Choose HHectare subscription plans designed for agents and partners to grow their real estate business with premium tools and listings.{% endblock %}
+{% block og_title %}Subscription Plans | HHectare{% endblock %}
+{% block twitter_title %}Subscription Plans | HHectare{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'public/css/subscription.css' %}">
+<style>
+    /* ===== Mobile responsive fixes ===== */
+    html, body {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+
+    .container {
+        width: 100%;
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    /* Hero */
+    @media (max-width: 768px) {
+        .subscription-hero-content {
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .subscription-hero-left,
+        .subscription-hero-right {
+            width: 100%;
+            max-width: 100%;
+            flex: none;
+        }
+
+        .subscription-hero-image {
+            width: 100%;
+            height: auto;
+            max-width: 320px;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .subscription-hero {
+            padding: 32px 0;
+        }
+
+        .subscription-hero-title {
+            font-size: 1.75rem !important;
+            line-height: 1.25;
+        }
+
+        .subscription-hero-description {
+            font-size: 15px;
+        }
+
+        .subscription-hero-features {
+            flex-wrap: wrap;
+            gap: 7px 4px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .subscription-hero-feature {
+            flex: 1 1 45%;
+            font-size: 13px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .subscription-hero-title {
+            font-size: 1.5rem !important;
+        }
+
+        .subscription-hero-feature {
+            flex: 1 1 100%;
+        }
+    }
+
+    /* Annual billing banner */
+    @media (max-width: 480px) {
+        .annual-billing-content {
+            flex-wrap: wrap;
+            text-align: center;
+            gap: 8px;
+        }
+
+        .annual-billing-text {
+            font-size: 13px;
+        }
+    }
+
+    /* Billing toggle (1M / 3M / 6M / 12M) */
+    @media (max-width: 768px) {
+        .billing-toggle {
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .billing-toggle-btn {
+            flex: 1 1 auto;
+            min-width: 45%;
+            font-size: 13px;
+            padding: 8px 10px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .billing-toggle-btn {
+            min-width: 100%;
+        }
+
+        .save-badge {
+            display: block;
+            margin-top: 2px;
+        }
+    }
+
+    /* Pricing cards */
+    .pricing-cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 24px;
+    }
+
+    @media (max-width: 991px) {
+        .pricing-cards {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .pricing-card {
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .pricing-card-featured {
+            order: -1;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .pricing-card {
+            padding: 20px 16px;
+            max-width: 100%;
+        }
+
+        .pricing-card-title {
+            font-size: 20px;
+        }
+
+        .price-amount {
+            font-size: 28px;
+        }
+
+        .pricing-card-features {
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .pricing-card-features li {
+            font-size: 13px;
+        }
+    }
+
+    /* Compare Features table + Billing Comparison table */
+    .compare-table-wrapper,
+    .billing-table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .compare-table,
+    .billing-table {
+        width: 100%;
+        min-width: 600px;
+        border-collapse: collapse;
+    }
+
+    @media (max-width: 768px) {
+        .compare-table th,
+        .compare-table td,
+        .billing-table th,
+        .billing-table td {
+            font-size: 13px;
+            padding: 10px 12px;
+            white-space: nowrap;
+        }
+
+        .subscription-hero-title{
+            font-size: 1.75rem !important;
+        }
+        .feature-column,
+        .plan-name-column {
+            position: sticky;
+            left: 0;
+            background: #fff;
+            z-index: 1;
+        }
+
+        .section-heading {
+            font-size: 22px;
+            text-align: center;
+        }
+    }
+
+    /* Why Choose cards font-size overrides */
+    @media (max-width: 480px) {
+        .why-choose-card-title {
+            font-size: 16px;
+        }
+
+        .why-choose-card-description {
+            font-size: 15px;
+        }
+    }
+
+    /* Alerts/messages block */
+    @media (max-width: 480px) {
+        .alert {
+            font-size: 13px;
+            padding: 10px 12px;
+        }
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -29,7 +258,7 @@
         <div class="subscription-hero-content">
             <div class="subscription-hero-left">
                 <h1 class="subscription-hero-title">Agent Subscription Plans</h1>
-                <p class="subscription-hero-description">Power up your property business with the right plan. List more. Get more leads. Grow more.</p>
+                <p class="subscription-hero-description" style="font-size: 1rem;">Power up your property business with the right plan. List more. Get more leads. Grow more.</p>
                 <div class="subscription-hero-features">
                     <div class="subscription-hero-feature">
                         <i class="fa fa-shield"></i>
@@ -138,12 +367,12 @@
 <!-- Compare Features Table -->
 <section class="compare-section">
     <div class="container">
-        <h2 class="section-heading">Compare Features</h2>
+        <h2 class="section-heading" style="font-size: 1.5rem;">Compare Features</h2>
         <div class="compare-table-wrapper">
             <table class="compare-table">
                 <thead>
                     <tr>
-                        <th class="feature-column">Features</th>
+                        <th class="feature-column" >Features</th>
                         {% for plan in plans %}
                         <th class="plan-column plan-{{ plan.slug }}">{{ plan.name }}</th>
                         {% endfor %}
@@ -182,7 +411,7 @@
 <!-- Billing Comparison Table -->
 <section class="billing-comparison-section">
     <div class="container">
-        <h2 class="section-heading">Billing Comparison</h2>
+        <h2 class="section-heading" style="font-size: 1.5rem;">Billing Comparison</h2>
         <div class="billing-table-wrapper">
             <table class="billing-table">
                 <thead>
@@ -223,7 +452,7 @@
 <!-- Why Choose Section -->
 <section class="why-choose-subscription-section">
     <div class="container">
-        <h2 class="section-heading">Why Choose HeyDay Realty?</h2>
+        <h2 class="section-heading" style="font-size: 1.5rem;">Why Choose HHectare?</h2>
         <div class="why-choose-cards">
             <div class="why-choose-card">
                 <div class="why-choose-card-icon">
@@ -251,7 +480,7 @@
                     <i class="fa fa-shield"></i>
                 </div>
                 <h3 class="why-choose-card-title">Trusted Platform</h3>
-                <p class="why-choose-card-description">Join 10,000+ agents who trust HeyDay Realty for their property business needs.</p>
+                <p class="why-choose-card-description">Join 10,000+ agents who trust HHectare for their property business needs.</p>
             </div>
         </div>
     </div>

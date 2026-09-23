@@ -7,7 +7,7 @@ class PlanPricingInline(admin.TabularInline):
     model = PlanPricing
     extra = 1
     fields = ("billing_cycle", "price", "original_price", "save_percentage",
-              "is_default", "stripe_price_id")
+              "is_default", "cashfree_plan_id")
 
 
 class SubscriptionPlanFeatureInline(admin.TabularInline):
@@ -45,7 +45,7 @@ class PlanPricingAdmin(admin.ModelAdmin):
     list_display = ("plan", "billing_cycle", "price", "original_price",
                      "save_percentage", "is_default")
     list_filter = ("billing_cycle", "is_default", "plan")
-    search_fields = ("plan__name", "stripe_price_id")
+    search_fields = ("plan__name", "cashfree_plan_id")
     autocomplete_fields = ("plan",)
     list_editable = ("price", "is_default")
 

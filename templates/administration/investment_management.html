@@ -1,22 +1,15 @@
 {% extends "administration/admin_base.html" %}
-
+{% load static %}
 {% load humanize %}
-
-
 
 {% block title %}Investment Management - Admin Dashboard{% endblock %}
 
-
-
 {% block page_title %}Investment Management{% endblock %}
-
-
 
 {% block page_subtitle %}Monitor and manage all investment activities{% endblock %}
 
-
-
 {% block content %}
+<div class="investment-page">
 
 {% if messages %}
 {% for message in messages %}
@@ -47,7 +40,7 @@
 
                     </div>
 
-                    <i class="fas fa-coins fa-2x opacity-75"></i>
+                    <i class="fas fa-coins opacity-75"></i>
 
                 </div>
 
@@ -73,7 +66,7 @@
 
                     </div>
 
-                    <i class="fas fa-dollar-sign fa-2x opacity-75"></i>
+                    <i class="fas fa-dollar-sign opacity-75"></i>
 
                 </div>
 
@@ -99,7 +92,7 @@
 
                     </div>
 
-                    <i class="fas fa-clock fa-2x opacity-75"></i>
+                    <i class="fas fa-clock opacity-75"></i>
 
                 </div>
 
@@ -125,7 +118,7 @@
 
                     </div>
 
-                    <i class="fas fa-check-circle fa-2x opacity-75"></i>
+                    <i class="fas fa-check-circle opacity-75"></i>
 
                 </div>
 
@@ -149,7 +142,7 @@
 
             <div class="card-body">
 
-                <div class="d-flex gap-2 flex-wrap">
+                <div class="d-flex gap-2 flex-wrap investment-actions">
 
                     <button class="btn btn-primary" onclick="approveInvestments()">
 
@@ -189,16 +182,15 @@
 
         <div class="card">
 
-            <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="card-header d-flex justify-content-between align-items-center investment-card-header">
 
                 <h5 class="mb-0">Recent Investments</h5>
 
-                <div class="d-flex gap-2">
+                <div class="d-flex gap-2 investment-filters">
 
-                    <input type="text" class="form-control form-control-sm" placeholder="Search investments..."
-                        style="width: 200px;">
+                    <input type="text" class="form-control form-control-sm investment-search" placeholder="Search investments...">
 
-                    <select class="form-select form-select-sm" style="width: 150px;">
+                    <select class="form-select form-select-sm investment-status-select">
 
                         <option value="">All Status</option>
 
@@ -216,9 +208,9 @@
 
             <div class="card-body">
 
-                <div class="table-responsive">
+                <div class="table-responsive investment-table-wrap">
 
-                    <table class="table table-hover">
+                    <table class="table table-hover investment-table">
 
                         <thead>
 
@@ -542,6 +534,7 @@
 
 </div>
 
+</div>
 {% endblock %}
 
 

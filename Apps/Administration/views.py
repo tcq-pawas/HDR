@@ -743,7 +743,7 @@ def activate_user(request, user_id):
         html_message = f"""
         <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
             <div style="background: linear-gradient(135deg, #0F766E 0%, #115E59 100%); padding: 30px 20px; text-align: center;">
-                <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700; letter-spacing: 1px;">🌱 HeyDay Realty</h1>
+                <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700; letter-spacing: 1px;">🌱 HHectare</h1>
             </div>
             <div style="padding: 40px 30px; background-color: #ffffff;">
                 <h2 style="color: #1F2937; margin-top: 0; font-size: 22px;">Account Approved! 🎉</h2>
@@ -757,16 +757,16 @@ def activate_user(request, user_id):
                 
                 <p style="color: #6B7280; font-size: 14px; line-height: 1.5;">If the button doesn't work, copy and paste this link into your browser:<br><a href="{reset_url}" style="color: #0F766E; word-break: break-all;">{reset_url}</a></p>
                 
-                <p style="color: #4B5563; font-size: 16px; line-height: 1.6; margin-top: 30px;">Best regards,<br><strong style="color: #0F766E;">HeyDay Realty Team</strong></p>
+                <p style="color: #4B5563; font-size: 16px; line-height: 1.6; margin-top: 30px;">Best regards,<br><strong style="color: #0F766E;">HHectare Team</strong></p>
             </div>
             <div style="background-color: #F9FAFB; padding: 20px; text-align: center; border-top: 1px solid #e5e7eb;">
-                <p style="color: #9CA3AF; font-size: 13px; margin: 0;">&copy; 2026 HeyDay Realty. All rights reserved.</p>
+                <p style="color: #9CA3AF; font-size: 13px; margin: 0;">&copy; 2026 HHectare. All rights reserved.</p>
             </div>
         </div>
         """
         send_mail(
-            subject='Account Approved - HeyDay Realty',
-            message=f'Hello {user.first_name},\n\nGreat news! Your account has been approved by the administration team.\n\nPlease click the link below to set your password and log in to your dashboard:\n{reset_url}\n\nBest regards,\nHeyDay Realty Team',
+            subject='Account Approved - HHectare',
+            message=f'Hello {user.first_name},\n\nGreat news! Your account has been approved by the administration team.\n\nPlease click the link below to set your password and log in to your dashboard:\n{reset_url}\n\nBest regards,\nHHectare Team',
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[user.email],
             html_message=html_message,
@@ -1189,7 +1189,7 @@ def save_email_settings(request):
         SystemSettings.objects.update_or_create(setting_key='EMAIL_HOST_USER', defaults={'setting_value': username})
         SystemSettings.objects.update_or_create(setting_key='EMAIL_HOST_PASSWORD', defaults={'setting_value': password})
         SystemSettings.objects.update_or_create(setting_key='EMAIL_USE_TLS', defaults={'setting_value': use_tls})
-        SystemSettings.objects.update_or_create(setting_key='DEFAULT_FROM_EMAIL', defaults={'setting_value': request.data.get('emailFrom', 'noreply@heydayrealty.com')})
+        SystemSettings.objects.update_or_create(setting_key='DEFAULT_FROM_EMAIL', defaults={'setting_value': request.data.get('emailFrom', 'noreply@hhectare.com')})
 
         return Response({'success': True, 'message': 'Email settings saved successfully'})
     except Exception as e:
@@ -1205,10 +1205,10 @@ def test_email_settings(request):
         # Ensure latest settings are used by clearing any cached connection
         # We can just use send_mail, which will instantiate the backend with current DB settings
         send_mail(
-            subject='Test Email from HeyDay Realty Admin',
+            subject='Test Email from HHectare Admin',
             message='This is a test email to verify your SMTP settings are configured correctly.',
             from_email=None,  # Uses DEFAULT_FROM_EMAIL
-            recipient_list=[request.user.email or request.data.get('testEmail', 'noreply@heydayrealty.com')],
+            recipient_list=[request.user.email or request.data.get('testEmail', 'noreply@hhectare.com')],
             fail_silently=False,
         )
         return Response({'success': True, 'message': 'Test email sent successfully!'})
@@ -1258,9 +1258,9 @@ def save_general_settings(request):
             request.user.username = username
             request.user.save()
         
-        site_name = request.data.get('siteName', 'HeyDay Realty')
+        site_name = request.data.get('siteName', 'HHectare')
         site_description = request.data.get('siteDescription', 'Professional real estate investment platform')
-        contact_email = request.data.get('contactEmail', 'info@heydayrealty.com')
+        contact_email = request.data.get('contactEmail', 'info@hhectare.com')
         phone_number = request.data.get('phoneNumber', '+1 (555) 123-4567')
         address = request.data.get('address', '123 Business Ave, Suite 100\nNew York, NY 10001')
         timezone = request.data.get('timezone', 'America/New_York')
@@ -1372,48 +1372,208 @@ def document_verification_list(request):
     if get_user_role(request.user) != 'admin':
         from django.core.exceptions import PermissionDenied
         raise PermissionDenied("Admin access required.")
-        
-    from Apps.Agent.models import AgentProfile
-    # Group profiles by status
-    pending = AgentProfile.objects.filter(verification_status='pending').select_related('user').order_by('-user__date_joined')
-    approved = AgentProfile.objects.filter(verification_status='approved').select_related('user').order_by('-user__date_joined')
-    rejected = AgentProfile.objects.filter(verification_status='rejected').select_related('user').order_by('-user__date_joined')
-    
+
+    from Apps.Agent.models import AgentProfile, VerificationDocument
+
+    pending_docs = list(VerificationDocument.objects.filter(
+        is_current=True,
+        status__in=['pending_review', 'under_review']
+    ).select_related('agent').order_by('-submitted_at'))
+
+    verified_docs = list(VerificationDocument.objects.filter(
+        is_current=True, status='verified'
+    ).select_related('agent').order_by('-admin_reviewed_at', '-submitted_at'))
+
+    rejected_docs = list(VerificationDocument.objects.filter(
+        is_current=True,
+        status__in=['rejected', 'reupload_required']
+    ).select_related('agent').order_by('-updated_at'))
+
+    # All current docs submitted by agents (any review state)
+    submitted_docs = list(VerificationDocument.objects.filter(
+        is_current=True
+    ).select_related('agent').order_by('-submitted_at'))
+
+    # Profile-level groupings for overall KYC bulk actions
+    pending_profiles = AgentProfile.objects.filter(
+        verification_status='pending'
+    ).select_related('user').order_by('-updated_at')
+    approved_profiles = AgentProfile.objects.filter(
+        verification_status='approved'
+    ).select_related('user').order_by('-updated_at')
+    rejected_profiles = AgentProfile.objects.filter(
+        verification_status='rejected'
+    ).select_related('user').order_by('-updated_at')
+
     context = {
-        'pending_profiles': pending,
-        'approved_profiles': approved,
-        'rejected_profiles': rejected,
+        'pending_docs': pending_docs,
+        'verified_docs': verified_docs,
+        'rejected_docs': rejected_docs,
+        'submitted_docs': submitted_docs,
+        'pending_count': len(pending_docs),
+        'verified_count': len(verified_docs),
+        'rejected_count': len(rejected_docs),
+        'submitted_count': len(submitted_docs),
+        'pending_profiles': pending_profiles,
+        'approved_profiles': approved_profiles,
+        'rejected_profiles': rejected_profiles,
         'page_title': "KYC Verifications",
     }
     return render(request, 'administration/document_verification_list.html', context)
 
 
 @login_required
-def approve_kyc(request, profile_id):
-    """View to approve an agent's KYC documents"""
+def approve_verification_document(request, doc_id):
+    """Approve a single verification document."""
     from .auth_utils import get_user_role
+    from django.http import JsonResponse
+    if get_user_role(request.user) != 'admin':
+        return JsonResponse({'success': False, 'message': 'Admin access required.'}, status=403)
+
+    from Apps.Agent.models import VerificationDocument
+    from django.contrib import messages
+    from django.shortcuts import redirect
+    from django.utils import timezone
+
+    if request.method == 'POST':
+        try:
+            doc = VerificationDocument.objects.select_related('agent').get(id=doc_id, is_current=True)
+            doc.status = 'verified'
+            doc.rejection_reason = ''
+            doc.admin_reviewed_by = request.user
+            doc.admin_reviewed_at = timezone.now()
+            doc.save()
+
+            profile = VerificationDocument.sync_agent_profile_status(doc.agent)
+
+            # If overall profile became approved, activate pending subscription
+            if profile and profile.verification_status == 'approved':
+                from Apps.Subscriptions.models import UserSubscription
+                from datetime import timedelta
+                from django.core.mail import send_mail
+                from django.template.loader import render_to_string
+                from django.utils.html import strip_tags
+                from django.conf import settings
+
+                user_sub = UserSubscription.objects.filter(user=doc.agent, status='pending').first()
+                if user_sub:
+                    user_sub.status = 'active'
+                    user_sub.start_date = timezone.now()
+                    cycle_mapping = {'1M': 30, '3M': 90, '6M': 180, '12M': 365}
+                    days = cycle_mapping.get(user_sub.pricing.billing_cycle, 30) if user_sub.pricing else 30
+                    user_sub.end_date = timezone.now() + timedelta(days=days)
+                    user_sub.save()
+
+                subject = 'Your HHectare Account has been Approved!'
+                html_message = render_to_string('administration/emails/kyc_approved.html', {'user': doc.agent})
+                plain_message = strip_tags(html_message)
+                if doc.agent.email:
+                    send_mail(
+                        subject, plain_message, settings.DEFAULT_FROM_EMAIL,
+                        [doc.agent.email], html_message=html_message, fail_silently=True
+                    )
+
+            messages.success(request, f"{doc.display_name} for {doc.agent.get_full_name() or doc.agent.username} approved.")
+        except VerificationDocument.DoesNotExist:
+            messages.error(request, 'Document not found.')
+
+    return redirect('admin_dash:document_verification_list')
+
+
+@login_required
+def reject_verification_document(request, doc_id):
+    """Reject a single verification document and request re-upload."""
+    from .auth_utils import get_user_role
+    from django.http import JsonResponse
+    if get_user_role(request.user) != 'admin':
+        return JsonResponse({'success': False, 'message': 'Admin access required.'}, status=403)
+
+    from Apps.Agent.models import VerificationDocument
+    from django.contrib import messages
+    from django.shortcuts import redirect
+    from django.utils import timezone
+    from django.core.mail import send_mail
+    from django.template.loader import render_to_string
+    from django.utils.html import strip_tags
+    from django.conf import settings
+
+    if request.method == 'POST':
+        reason = (request.POST.get('reason') or '').strip()
+        if not reason:
+            messages.error(request, 'Rejection reason is required.')
+            return redirect('admin_dash:document_verification_list')
+
+        try:
+            doc = VerificationDocument.objects.select_related('agent').get(id=doc_id, is_current=True)
+            doc.status = 'reupload_required'
+            doc.rejection_reason = reason
+            doc.admin_reviewed_by = request.user
+            doc.admin_reviewed_at = timezone.now()
+            doc.save()
+
+            VerificationDocument.sync_agent_profile_status(doc.agent)
+
+            subject = 'Action Required: HHectare Document Verification'
+            html_message = render_to_string('administration/emails/kyc_rejected.html', {
+                'user': doc.agent,
+                'reason': f"{doc.display_name}: {reason}",
+            })
+            plain_message = strip_tags(html_message)
+            if doc.agent.email:
+                send_mail(
+                    subject, plain_message, settings.DEFAULT_FROM_EMAIL,
+                    [doc.agent.email], html_message=html_message, fail_silently=True
+                )
+
+            messages.success(
+                request,
+                f"{doc.display_name} for {doc.agent.get_full_name() or doc.agent.username} marked for re-upload."
+            )
+        except VerificationDocument.DoesNotExist:
+            messages.error(request, 'Document not found.')
+
+    return redirect('admin_dash:document_verification_list')
+
+
+@login_required
+def approve_kyc(request, profile_id):
+    """Approve all current pending documents for an agent profile (bulk)."""
+    from .auth_utils import get_user_role
+    from django.http import JsonResponse
     if get_user_role(request.user) != 'admin':
         return JsonResponse({'success': False, 'message': 'Admin access required.'}, status=403)
         
-    from Apps.Agent.models import AgentProfile
+    from Apps.Agent.models import AgentProfile, VerificationDocument
     from django.core.mail import send_mail
     from django.template.loader import render_to_string
     from django.utils.html import strip_tags
     from django.conf import settings
     from django.contrib import messages
     from django.shortcuts import redirect
-    from django.http import JsonResponse
+    from django.utils import timezone
     
     if request.method == 'POST':
         try:
             profile = AgentProfile.objects.get(id=profile_id)
+            now = timezone.now()
+            VerificationDocument.objects.filter(
+                agent=profile.user,
+                is_current=True,
+                status__in=['pending_review', 'under_review', 'reupload_required', 'rejected']
+            ).update(
+                status='verified',
+                rejection_reason='',
+                admin_reviewed_by=request.user,
+                admin_reviewed_at=now,
+            )
+
             profile.verification_status = 'approved'
             profile.is_verified = True
+            profile.verification_remarks = ''
             profile.save()
             
             # Activate pending subscription if it exists
             from Apps.Subscriptions.models import UserSubscription
-            from django.utils import timezone
             from datetime import timedelta
             
             user_sub = UserSubscription.objects.filter(user=profile.user, status='pending').first()
@@ -1426,7 +1586,7 @@ def approve_kyc(request, profile_id):
                 user_sub.save()
             
             # Send Email
-            subject = 'Your HeyDay Realty Account has been Approved!'
+            subject = 'Your HHectare Account has been Approved!'
             html_message = render_to_string('administration/emails/kyc_approved.html', {'user': profile.user})
             plain_message = strip_tags(html_message)
             from_email = settings.DEFAULT_FROM_EMAIL
@@ -1446,35 +1606,47 @@ def approve_kyc(request, profile_id):
 
 @login_required
 def reject_kyc(request, profile_id):
-    """View to reject an agent's KYC documents with a reason"""
+    """Reject an agent's KYC documents with a reason"""
     from .auth_utils import get_user_role
+    from django.http import JsonResponse
     if get_user_role(request.user) != 'admin':
         return JsonResponse({'success': False, 'message': 'Admin access required.'}, status=403)
         
-    from Apps.Agent.models import AgentProfile
+    from Apps.Agent.models import AgentProfile, VerificationDocument
     from django.core.mail import send_mail
     from django.template.loader import render_to_string
     from django.utils.html import strip_tags
     from django.conf import settings
     from django.contrib import messages
     from django.shortcuts import redirect
-    from django.http import JsonResponse
+    from django.utils import timezone
     
     if request.method == 'POST':
         reason = request.POST.get('reason')
         if not reason:
             messages.error(request, 'Rejection reason is required.')
-            return redirect('administration:document_verification_list')
+            return redirect('admin_dash:document_verification_list')
             
         try:
             profile = AgentProfile.objects.get(id=profile_id)
             profile.verification_status = 'rejected'
             profile.is_verified = False
-            # Store the rejection reason if we want it in DB, but for now we just email it
+            profile.verification_remarks = reason
             profile.save()
+
+            VerificationDocument.objects.filter(
+                agent=profile.user,
+                is_current=True,
+                status__in=['pending_review', 'under_review', 'verified']
+            ).update(
+                status='reupload_required',
+                rejection_reason=reason,
+                admin_reviewed_by=request.user,
+                admin_reviewed_at=timezone.now(),
+            )
             
             # Send Email
-            subject = 'Action Required: HeyDay Realty Document Verification'
+            subject = 'Action Required: HHectare Document Verification'
             html_message = render_to_string('administration/emails/kyc_rejected.html', {
                 'user': profile.user,
                 'reason': reason

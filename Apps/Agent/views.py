@@ -5,6 +5,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.core.paginator import Paginator
 from django.http import HttpResponse, JsonResponse, Http404
+from django.db import transaction
 from django.db.models import Q, Count, Sum
 from django.utils.text import slugify
 from django.core.exceptions import PermissionDenied
@@ -15,14 +16,22 @@ import csv
 from django.views.decorators.http import require_GET
 from Apps.PublicPage.models import Property, PropertyInquiry, LocationData, PropertyImage
 from Apps.Administration.auth_utils import get_user_role
+from Apps.Subscriptions.models import UserSubscription
+from Apps.Subscriptions.utils import (
+    SUBSCRIPTION_UNSET,
+    check_property_listing_eligibility,
+)
 from .models import (
     AgentProfile, Lead, LeadFollowUp, SiteVisit,
-    Booking, Installment, Commission, Document, Communication, MessageTemplate
+    Booking, Installment, Commission, Document, VerificationDocument,
+    Communication, MessageTemplate, AgentReview
 )
+from .validators import validate_image_file, validate_document_file, validate_video_file, ValidationError
 from .forms import (
     PropertyForm, AgriculturalLandForm, AgentProfileForm, LeadForm,
     LeadFollowUpForm, SiteVisitForm, BookingForm, InstallmentForm,
-    CommissionForm, DocumentForm, CommunicationForm, MessageTemplateForm
+    CommissionForm, DocumentForm, VerificationDocumentForm,
+    CommunicationForm, MessageTemplateForm
 )
 
 from datetime import datetime, timedelta
@@ -175,7 +184,24 @@ def dashboard(request):
     recent_inquiries = PropertyInquiry.objects.filter(
         agent_profile__user=request.user
     ).select_related('related_property').order_by('-created_at')[:5]
-    
+
+    # Recent reviews
+    recent_reviews = AgentReview.objects.filter(
+        agent=agent_profile
+    ).order_by('-created_at')[:5]
+
+    # Calculate review statistics
+    all_reviews = AgentReview.objects.filter(agent=agent_profile)
+    total_reviews = all_reviews.count()
+
+    if all_reviews.exists():
+        avg_rating = sum(review.rating for review in all_reviews) / all_reviews.count()
+        stats['average_rating'] = round(avg_rating, 1)
+    else:
+        stats['average_rating'] = 0
+
+    stats['total_reviews'] = total_reviews
+
     context = {
         'agent_profile': agent_profile,
         'stats': stats,
@@ -184,9 +210,75 @@ def dashboard(request):
         'recent_inquiries': recent_inquiries,
         'upcoming_visits': upcoming_visits,
         'recent_bookings': recent_bookings,
+        'recent_reviews': recent_reviews,
     }
-    
+
     return render(request, 'agent/dashboard.html', context)
+
+
+@login_required
+def agent_reviews(request):
+    """View all reviews for the agent"""
+    user_role = get_user_role(request.user)
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
+
+    agent_profile = get_object_or_404(AgentProfile, user=request.user)
+
+    # Get all reviews for this agent
+    reviews = AgentReview.objects.filter(agent=agent_profile).order_by('-created_at')
+
+    # Pagination
+    paginator = Paginator(reviews, 10)
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'agent_profile': agent_profile,
+        'reviews': page_obj,
+    }
+
+    return render(request, 'agent/reviews.html', context)
+
+
+@login_required
+def settings(request):
+    """Agent settings page - update profile information"""
+    user_role = get_user_role(request.user)
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
+
+    try:
+        agent_profile = request.user.agent_profile
+    except AgentProfile.DoesNotExist:
+        agent_profile = AgentProfile.objects.create(user=request.user)
+
+    # Check if profile image file exists, if not clear the field
+    if agent_profile.profile_image:
+        try:
+            # Try to access the file to check if it exists
+            agent_profile.profile_image.open('rb')
+            agent_profile.profile_image.close()
+        except (FileNotFoundError, IOError):
+            # File doesn't exist, clear the field
+            agent_profile.profile_image = None
+            agent_profile.save()
+
+    if request.method == 'POST':
+        form = AgentProfileForm(request.POST, request.FILES, instance=agent_profile, user=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Profile updated successfully!")
+            return redirect('agent:settings')
+    else:
+        form = AgentProfileForm(instance=agent_profile, user=request.user)
+
+    context = {
+        'form': form,
+        'agent_profile': agent_profile,
+    }
+
+    return render(request, 'agent/settings.html', context)
 
 
 @login_required
@@ -195,24 +287,24 @@ def profile(request):
     user_role = get_user_role(request.user)
     if user_role not in ['agent', 'owner']:
         raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
-        
+
     agent_profile = get_object_or_404(AgentProfile, user=request.user)
-    
+
     # Get statistics
     total_properties = Property.objects.filter(seller=request.user).count()
     total_leads = Lead.objects.filter(property__seller=request.user).count()
-    
+
     stats = {
         'total_properties': total_properties,
         'total_leads': total_leads,
     }
-    
+
     context = {
         'agent_profile': agent_profile,
         'user': request.user,
         'stats': stats,
     }
-    
+
     return render(request, 'agent/profile.html', context)
 
 
@@ -244,73 +336,67 @@ def property_list(request):
     return render(request, 'agent/property_list.html', context)
 
 
+def _agent_listing_limit_response(request, check):
+    """
+    Build the HTTP response for a failed listing-eligibility check.
+    Preserves the existing UX (plans redirect or limit modal).
+    """
+    if check.redirect_to_plans:
+        messages.warning(request, check.message)
+        return redirect('public:subscription_plans')
+    return render(
+        request,
+        'agent/property_type_select.html',
+        {
+            'base_template': 'agent/agent_base.html',
+            'limit_message': check.message,
+            'limit_title': check.title,
+        },
+    )
+
+
+def _enforce_agent_property_listing(request, user_role, subscription=SUBSCRIPTION_UNSET):
+    """
+    Run subscription listing validation for agents.
+    Returns an HttpResponse when blocked; otherwise None.
+    """
+    if user_role != 'agent':
+        return None
+    check = check_property_listing_eligibility(
+        request.user, subscription=subscription
+    )
+    if check.allowed:
+        return None
+    return _agent_listing_limit_response(request, check)
+
+
 @login_required
 def property_type_select(request):
     """Select property type before adding"""
     user_role = get_user_role(request.user)
     if user_role not in ['agent', 'owner', 'admin'] and not request.user.is_superuser and not request.user.is_staff:
         raise PermissionDenied("Access denied. This page is only accessible to agents, owners, or admins.")
-    
-    # Check subscription for agents
-    if user_role == 'agent':
-        if not hasattr(request.user, 'user_subscription') or request.user.user_subscription.status != 'active':
-            messages.warning(request, "You must select a subscription plan before adding properties.")
-            return redirect('public:subscription_plans')
-            
-        user_sub = request.user.user_subscription
-        plan = user_sub.plan
-        if plan:
-            limit = plan.property_limit
-            current_count = Property.objects.filter(seller=request.user).count()
-            if current_count >= limit:
-                limit_msg = f"You have reached your plan's maximum limit of {limit} properties. Please upgrade your plan to add more."
-                return render(request, 'agent/property_type_select.html', {'base_template': 'agent/agent_base.html', 'limit_message': limit_msg, 'limit_title': "Plan Limit Reached"})
-                
-            if plan.slug and 'seed' in plan.slug.lower():
-                last_property = Property.objects.filter(seller=request.user).order_by('-created_at').first()
-                if last_property:
-                    days_passed = (timezone.now() - last_property.created_at).days
-                    if days_passed < 4:
-                        days_left = 4 - days_passed
-                        limit_msg = f"Now your today limit is reached, you can add another property after {days_left} days (Seed Plan Limit)."
-                        return render(request, 'agent/property_type_select.html', {'base_template': 'agent/agent_base.html', 'limit_message': limit_msg, 'limit_title': "Seed Plan Cooldown"})
-    
+
+    blocked = _enforce_agent_property_listing(request, user_role)
+    if blocked is not None:
+        return blocked
+
     base_template = 'administration/admin_base.html' if (user_role == 'admin' or request.user.is_superuser or request.user.is_staff) else 'agent/agent_base.html'
     return render(request, 'agent/property_type_select.html', {'base_template': base_template})
 
 
 @login_required
 def property_add(request, property_type):
-    # Check if user is an agent
+    """Add a new property with subscription-based listing limit validation."""
     user_role = get_user_role(request.user)
     if user_role not in ['agent', 'owner', 'admin'] and not request.user.is_superuser and not request.user.is_staff:
         raise PermissionDenied("Access denied. This page is only accessible to agents, owners, or admins.")
-        
-    # Check subscription for agents
-    if user_role == 'agent':
-        if not hasattr(request.user, 'user_subscription') or request.user.user_subscription.status != 'active':
-            messages.warning(request, "You must select a subscription plan before adding properties.")
-            return redirect('public:subscription_plans')
-            
-        user_sub = request.user.user_subscription
-        plan = user_sub.plan
-        if plan:
-            limit = plan.property_limit
-            current_count = Property.objects.filter(seller=request.user).count()
-            if current_count >= limit:
-                limit_msg = f"You have reached your plan's maximum limit of {limit} properties. Please upgrade your plan to add more."
-                return render(request, 'agent/property_type_select.html', {'base_template': 'agent/agent_base.html', 'limit_message': limit_msg, 'limit_title': "Plan Limit Reached"})
-                
-            if plan.slug and 'seed' in plan.slug.lower():
-                last_property = Property.objects.filter(seller=request.user).order_by('-created_at').first()
-                if last_property:
-                    days_passed = (timezone.now() - last_property.created_at).days
-                    if days_passed < 4:
-                        days_left = 4 - days_passed
-                        limit_msg = f"Now your today limit is reached, you can add another property after {days_left} days (Seed Plan Limit)."
-                        return render(request, 'agent/property_type_select.html', {'base_template': 'agent/agent_base.html', 'limit_message': limit_msg, 'limit_title': "Seed Plan Cooldown"})
-            
-    """Add a new property"""
+
+    # Gate form access for agents (inactive/expired/at-limit) before they fill the form
+    blocked = _enforce_agent_property_listing(request, user_role)
+    if blocked is not None:
+        return blocked
+
     is_admin = user_role == 'admin' or request.user.is_superuser or request.user.is_staff
     if request.method == 'POST':
         # Use AgriculturalLandForm for land properties
@@ -318,41 +404,41 @@ def property_add(request, property_type):
             form = AgriculturalLandForm(request.POST, request.FILES)
         else:
             form = PropertyForm(request.POST, request.FILES)
-        
+
         if form.is_valid():
-            property_obj = form.save(commit=False)
-            property_obj.seller = request.user
-            if is_admin:
-                property_obj.status = 'approved'
-                property_obj.is_admin_list = True
+            # Re-validate on Submit Property under a lock so concurrent posts cannot bypass limits
+            if user_role == 'agent':
+                with transaction.atomic():
+                    # Lock only UserSubscription — plan FK is nullable, so
+                    # FOR UPDATE + OUTER JOIN fails on PostgreSQL.
+                    locked_sub = (
+                        UserSubscription.objects
+                        .select_for_update(of=('self',))
+                        .select_related('plan')
+                        .filter(user_id=request.user.pk)
+                        .first()
+                    )
+                    blocked = _enforce_agent_property_listing(
+                        request, user_role, subscription=locked_sub
+                    )
+                    if blocked is not None:
+                        return blocked
+                    property_obj = _save_new_property(
+                        form, request, property_type, is_admin=False
+                    )
             else:
-                property_obj.status = 'pending'
-                property_obj.created_by = request.user
-                property_obj.last_updated_by = request.user
-            
-            # Set property type and category based on selection
-            if property_type == 'land':
-                property_obj.property_type = 'sale'
-                property_obj.category = 'Plots'
-            elif property_type == 'house':
-                property_obj.property_type = 'sale'
-                property_obj.category = 'Apartments'
-            
-            # Slug will be automatically generated and deduplicated in the Property.save() method
-            
-            property_obj.save()
-            
-            # Save multiple images to the PropertyImage gallery table
-            gallery_images = request.FILES.getlist('gallery_images')
-            for image in gallery_images:
-                PropertyImage.objects.create(property=property_obj, image=image, category='General')
-                
+                property_obj = _save_new_property(
+                    form, request, property_type, is_admin=is_admin
+                )
+
             if is_admin:
                 messages.success(request, "Property created successfully!")
                 return redirect('admin_dash:admin-property-list')
-            else:
-                messages.success(request, "Property created successfully! It's pending admin approval.")
-                return redirect('agent:property_list')
+            messages.success(
+                request,
+                "Property created successfully! It's pending admin approval.",
+            )
+            return redirect('agent:property_list')
         else:
             print("Form errors:", form.errors)
             # Build a clean, human-readable error message
@@ -369,7 +455,7 @@ def property_add(request, property_type):
         else:
             initial_category = 'Apartments' if property_type == 'house' else 'Plots'
             form = PropertyForm(initial={'property_type': 'sale', 'category': initial_category})
-    
+
     base_template = 'administration/admin_base.html' if is_admin else 'agent/agent_base.html'
     context = {
         'form': form,
@@ -377,12 +463,44 @@ def property_add(request, property_type):
         'title': f'Add {property_type.title()}',
         'base_template': base_template
     }
-    
+
     # Use different template for agricultural land
     if property_type == 'land':
         return render(request, 'agent/agricultural_land_form.html', context)
     else:
         return render(request, 'agent/property_form.html', context)
+
+
+def _save_new_property(form, request, property_type, is_admin=False):
+    """Persist a new property and its gallery images using the existing add workflow."""
+    property_obj = form.save(commit=False)
+    property_obj.seller = request.user
+    if is_admin:
+        property_obj.status = 'approved'
+        property_obj.is_admin_list = True
+    else:
+        property_obj.status = 'pending'
+        property_obj.created_by = request.user
+        property_obj.last_updated_by = request.user
+
+    if property_type == 'land':
+        property_obj.property_type = 'sale'
+        property_obj.category = 'Plots'
+    elif property_type == 'house':
+        property_obj.property_type = 'sale'
+        property_obj.category = 'Apartments'
+
+    # Slug is generated/deduplicated in Property.save()
+    property_obj.save()
+
+    for image in request.FILES.getlist('gallery_images'):
+        try:
+            validate_image_file(image)
+            PropertyImage.objects.create(property=property_obj, image=image, category='General')
+        except ValidationError:
+            pass
+
+    return property_obj
 
 
 @login_required
@@ -441,7 +559,11 @@ def property_edit(request, pk):
             # Save multiple images to the PropertyImage gallery table
             gallery_images = request.FILES.getlist('gallery_images')
             for image in gallery_images:
-                PropertyImage.objects.create(property=property_obj, image=image, category='General')
+                try:
+                    validate_image_file(image)
+                    PropertyImage.objects.create(property=property_obj, image=image, category='General')
+                except ValidationError:
+                    pass
                 
             messages.success(request, "Property updated successfully!")
             if is_admin:
@@ -1074,49 +1196,230 @@ def commission_detail(request, pk):
 
 @login_required
 def document_list(request):
-    """Agent verification page - upload ID proof & address proof"""
+    """Agent document verification management page."""
     user_role = get_user_role(request.user)
     if user_role not in ['agent', 'owner']:
         raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
 
     try:
         agent_profile = request.user.agent_profile
-    # pyrefly: ignore [missing-attribute]
     except AgentProfile.DoesNotExist:
-        # pyrefly: ignore [missing-attribute]
         agent_profile = AgentProfile.objects.create(user=request.user)
 
+    form = VerificationDocumentForm()
+    reupload_doc = None
+
     if request.method == 'POST':
-        proof_type = request.POST.get('proof_type')
-        uploaded_file = request.FILES.get('file')
+        action = request.POST.get('action', 'submit')
+        reupload_id = request.POST.get('reupload_id')
 
-        if uploaded_file and proof_type == 'id_proof':
-            agent_profile.id_proof_document = uploaded_file
-            if agent_profile.verification_status == 'not_started':
-                agent_profile.verification_status = 'pending'
-            agent_profile.save()
-            messages.success(request, "ID Proof uploaded successfully!")
-        elif uploaded_file and proof_type == 'address_proof':
-            agent_profile.address_proof_document = uploaded_file
-            if agent_profile.verification_status == 'not_started':
-                agent_profile.verification_status = 'pending'
-            agent_profile.save()
-            messages.success(request, "Address Proof uploaded successfully!")
+        if action == 'reupload' and reupload_id:
+            reupload_doc = get_object_or_404(
+                VerificationDocument,
+                pk=reupload_id,
+                agent=request.user,
+                is_current=True,
+            )
+            if not reupload_doc.can_reupload:
+                messages.error(request, "This document cannot be re-uploaded in its current status.")
+                return redirect(request.path)
+
+        form = VerificationDocumentForm(request.POST, request.FILES)
+        if form.is_valid():
+            doc_type = form.cleaned_data['document_type']
+            if not reupload_doc:
+                already = VerificationDocument.objects.filter(
+                    agent=request.user,
+                    document_type=doc_type,
+                    is_current=True,
+                ).exclude(status__in=['rejected', 'reupload_required']).first()
+                if already:
+                    messages.error(
+                        request,
+                        f"You already have a {already.display_name} submission "
+                        f"({already.get_status_display()}). "
+                        "Use Re-upload only if admin requests it."
+                    )
+                    return redirect(request.path)
+
+            with transaction.atomic():
+                if reupload_doc:
+                    reupload_doc.is_current = False
+                    reupload_doc.save(update_fields=['is_current', 'updated_at'])
+
+                doc = form.save(commit=False)
+                doc.agent = request.user
+                doc.has_back_side = form.cleaned_data.get('has_back_side', True)
+                if not doc.has_back_side:
+                    doc.back_file = None
+                doc.status = 'pending_review'
+                doc.rejection_reason = ''
+                if reupload_doc:
+                    doc.replaces = reupload_doc
+                    # Keep document type aligned with the rejected submission when re-uploading
+                    doc.document_type = reupload_doc.document_type
+                    if reupload_doc.document_type != 'other':
+                        doc.document_name = ''
+                    else:
+                        doc.document_name = form.cleaned_data.get('document_name') or reupload_doc.document_name
+                doc.save()
+
+                VerificationDocument.objects.filter(
+                    agent=request.user,
+                    document_type=doc.document_type,
+                    is_current=True,
+                ).exclude(pk=doc.pk).update(is_current=False)
+
+                VerificationDocument.sync_agent_profile_status(request.user)
+
+            messages.success(
+                request,
+                f"{doc.display_name} submitted for verification successfully!"
+            )
+            return redirect(request.path)
         else:
-            messages.error(request, "Please select a valid file to upload.")
+            messages.error(request, "Please correct the errors below and try again.")
 
-        return redirect('agent:document_list')
+    submitted_docs = VerificationDocument.objects.filter(
+        agent=request.user, is_current=True
+    ).order_by('-submitted_at')
+
+    submitted_type_codes = set(submitted_docs.values_list('document_type', flat=True))
+    required_types = VerificationDocument.required_types()
+    additional_types = VerificationDocument.additional_types()
+
+    required_submitted_count = sum(
+        1 for t in required_types if t['code'] in submitted_type_codes
+    )
+    required_verified_count = sum(
+        1 for t in required_types
+        if submitted_docs.filter(document_type=t['code'], status='verified').exists()
+    )
+    all_required_submitted = required_submitted_count == len(required_types)
+    all_required_verified = required_verified_count == len(required_types)
+    has_any_docs = submitted_docs.exists()
+    has_pending_or_review = submitted_docs.filter(
+        status__in=['pending_review', 'under_review']
+    ).exists()
+    admin_review_done = (
+        agent_profile.verification_status in ['approved', 'rejected']
+        or submitted_docs.filter(
+            status__in=['verified', 'rejected', 'reupload_required']
+        ).exists()
+    ) and not has_pending_or_review and has_any_docs
+
+    # Progress steps
+    step_docs_submitted = has_any_docs
+    step_under_review = has_any_docs and (
+        has_pending_or_review or admin_review_done or all_required_verified
+    )
+    step_admin_review = admin_review_done or all_required_verified
+    step_complete = agent_profile.is_verified or all_required_verified
+
+    checklist_items = []
+    for t in required_types:
+        doc = submitted_docs.filter(document_type=t['code']).first()
+        if doc and doc.status == 'verified':
+            state = 'done'
+            label = f"{t['label']} Verified"
+        elif doc and doc.status in ('rejected', 'reupload_required'):
+            state = 'rejected'
+            label = f"{t['label']} — Re-upload Required"
+        elif doc:
+            state = 'done'
+            label = f"{t['label']} Submitted"
+        else:
+            state = 'pending'
+            label = f"{t['label']} Required"
+        checklist_items.append({'label': label, 'state': state})
+
+    for doc in submitted_docs.exclude(
+        document_type__in=VerificationDocument.REQUIRED_DOCUMENT_TYPES
+    ):
+        if doc.status == 'verified':
+            checklist_items.append({'label': f"{doc.display_name} Verified", 'state': 'done'})
+        elif doc.status in ('rejected', 'reupload_required'):
+            checklist_items.append({
+                'label': f"{doc.display_name} — Re-upload Required",
+                'state': 'rejected',
+            })
+        else:
+            checklist_items.append({'label': f"{doc.display_name} Submitted", 'state': 'done'})
+
+    if step_admin_review:
+        checklist_items.append({'label': 'Admin Review Completed', 'state': 'done'})
+    elif has_any_docs:
+        checklist_items.append({'label': 'Admin Review', 'state': 'active'})
+    else:
+        checklist_items.append({'label': 'Admin Review', 'state': 'pending'})
+
+    if step_complete:
+        checklist_items.append({'label': 'Verification Complete', 'state': 'done'})
+    else:
+        checklist_items.append({'label': 'Verification Complete', 'state': 'locked'})
 
     context = {
         'agent_profile': agent_profile,
-        'id_proof_uploaded': bool(agent_profile.id_proof_document),
-        'address_proof_uploaded': bool(agent_profile.address_proof_document),
+        'form': form,
+        'submitted_docs': submitted_docs,
+        'required_types': required_types,
+        'additional_types': additional_types,
+        'submitted_type_codes': submitted_type_codes,
         'verification_status': agent_profile.verification_status,
-        'admin_review_done': agent_profile.verification_status in ['approved', 'rejected'],
-        'is_verified': agent_profile.is_verified,  # existing boolean field use kiya
+        'is_verified': agent_profile.is_verified or all_required_verified,
+        'step_docs_submitted': step_docs_submitted,
+        'step_under_review': step_under_review,
+        'step_admin_review': step_admin_review,
+        'step_complete': step_complete,
+        'checklist_items': checklist_items,
+        'all_required_submitted': all_required_submitted,
+        'all_required_verified': all_required_verified,
+        'title': 'Documents Verification',
     }
 
     return render(request, 'agent/document_list.html', context)
+
+
+@login_required
+def verification_document_detail(request, pk):
+    """Return JSON details for a submitted verification document (View modal)."""
+    user_role = get_user_role(request.user)
+    if user_role not in ['agent', 'owner']:
+        raise PermissionDenied("Access denied.")
+
+    doc = get_object_or_404(VerificationDocument, pk=pk, agent=request.user)
+
+    def file_payload(field):
+        if not field:
+            return None
+        name = field.name.rsplit('/', 1)[-1]
+        url = field.url
+        ext = name.rsplit('.', 1)[-1].lower() if '.' in name else ''
+        return {
+            'name': name,
+            'url': url,
+            'is_image': ext in ('jpg', 'jpeg', 'png', 'webp', 'gif'),
+            'is_pdf': ext == 'pdf',
+        }
+
+    return JsonResponse({
+        'id': doc.id,
+        'document_type': doc.document_type,
+        'document_type_display': doc.get_document_type_display(),
+        'display_name': doc.display_name,
+        'status': doc.status,
+        'status_display': doc.get_status_display(),
+        'rejection_reason': doc.rejection_reason or '',
+        'submitted_at': doc.submitted_at.strftime('%d %b %Y'),
+        'admin_reviewed_at': (
+            doc.admin_reviewed_at.strftime('%d %b %Y') if doc.admin_reviewed_at else ''
+        ),
+        'has_back_side': doc.has_back_side,
+        'can_reupload': doc.can_reupload,
+        'front': file_payload(doc.front_file),
+        'back': file_payload(doc.back_file) if doc.has_back_side else None,
+    })
+
 
 @login_required
 def document_add(request):
@@ -1565,42 +1868,15 @@ def subscription_plans(request):
 
 @login_required
 def document_verification(request):
-    """View to enforce KYC document upload for paid subscriptions"""
+    """KYC gate page for paid subscriptions — same workflow as Documents page."""
     user_role = get_user_role(request.user)
     if user_role not in ['agent', 'owner']:
         raise PermissionDenied("Access denied.")
-        
+
     from Apps.Subscriptions.models import UserSubscription
     if not UserSubscription.objects.filter(user=request.user).exists():
         messages.info(request, "Please choose a subscription plan first.")
         return redirect('public:subscription_plans')
-        
-    try:
-        agent_profile = request.user.agent_profile
-    except AgentProfile.DoesNotExist:
-        agent_profile = AgentProfile.objects.create(user=request.user)
-        
-    if request.method == 'POST':
-        # Ensure at least one file is uploaded
-        if not any(k in request.FILES for k in ['id_proof_front', 'id_proof_back', 'address_proof']):
-            messages.error(request, 'At least 1 document is required.')
-            return redirect('agent:document_verification')
-            
-        # Handle uploads
-        if 'id_proof_front' in request.FILES:
-            agent_profile.id_proof_document = request.FILES['id_proof_front']
-        if 'id_proof_back' in request.FILES:
-            agent_profile.id_proof_back_document = request.FILES['id_proof_back']
-        if 'address_proof' in request.FILES:
-            agent_profile.address_proof_document = request.FILES['address_proof']
-            
-        agent_profile.verification_status = 'pending'
-        agent_profile.save()
-        messages.success(request, "Documents submitted successfully! They are now under review by our administration team.")
-        return redirect('agent:document_verification')
-        
-    context = {
-        'agent_profile': agent_profile,
-        'title': 'Document Verification',
-    }
-    return render(request, 'agent/document_verification.html', context)
+
+    # Reuse the full document management page
+    return document_list(request)

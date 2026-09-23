@@ -8,6 +8,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from Apps.Administration.auth_utils import get_user_role, role_required
 from .models import Property, PropertyImage
+from django.db.models import Q
+from django.utils import timezone
 from .public_serializers import (
     PublicPropertySerializer, AuthenticatedPropertySerializer,
     PropertyImageSerializer, PublicPropertyListSerializer
@@ -207,13 +209,23 @@ def public_property_detail(request, slug):
 
 def public_home(request):
     """Template view for public home page - only approved properties shown"""
+
     approved_properties = Property.objects.filter(
         status='approved',
         is_admin_list=False
     ).order_by('-created_at')
 
-    farmland_listings = approved_properties
-    verified_properties = approved_properties
+    # Premium: properties from agents who purchased an active (paid) subscription
+    farmland_listings = approved_properties.filter(
+        seller__user_subscription__status='active',
+        seller__user_subscription__pricing__price__gt=0,
+    ).filter(
+        Q(seller__user_subscription__end_date__isnull=True) |
+        Q(seller__user_subscription__end_date__gt=timezone.now())
+    )[:5]
+
+    # Verified: latest 5 approved properties
+    verified_properties = approved_properties[:5]
 
     context = {
         'farmland_listings': farmland_listings,

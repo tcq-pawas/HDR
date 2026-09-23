@@ -1,0 +1,310 @@
+/* Agent List Page Styles */
+/* =========================================
+   AGENTS PAGE
+   ========================================= */
+
+.agents-page {
+    width: 100%;
+}
+
+.agents-card {
+    border: 1px solid #e8edf2;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* =========================================
+   HEADER
+   ========================================= */
+
+.agents-card .card-header {
+    background: #fff;
+    padding: 18px 20px;
+    border-bottom: 1px solid #edf1f5;
+}
+
+.agents-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+    white-space: nowrap;
+}
+
+/* =========================================
+   FILTER
+   ========================================= */
+
+.agents-search {
+    width: 190px;
+    min-width: 190px;
+}
+
+.agents-status {
+    width: 125px;
+    min-width: 125px;
+}
+
+.agents-filter-btn {
+    white-space: nowrap;
+    background: #006b45;
+    border-color: #006b45;
+}
+
+.agents-filter-btn:hover {
+    background: #005538;
+    border-color: #005538;
+}
+
+/* =========================================
+   BODY
+   ========================================= */
+
+.agents-card .card-body {
+    padding: 18px 20px;
+}
+
+/* =========================================
+   TABLE
+   ========================================= */
+
+.agents-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+}
+
+.agents-table {
+    min-width: 760px;
+    margin-bottom: 0;
+}
+
+.agents-table thead th {
+    background: #f7f9fb;
+    color: #64748b;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 11px 12px;
+    border-bottom: 1px solid #e5eaf0;
+    white-space: nowrap;
+}
+
+.agents-table tbody td {
+    color: #334155;
+    font-size: 0.78rem;
+    padding: 14px 12px;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.agent-name {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.agent-status {
+    font-size: 0.68rem;
+    padding: 4px 8px;
+    border-radius: 5px;
+}
+
+.agent-details-btn {
+    font-size: 0.72rem;
+    padding: 5px 10px;
+    white-space: nowrap;
+}
+
+/* =========================================
+   TOTAL
+   ========================================= */
+
+.agents-total {
+    margin-top: 14px !important;
+    padding-top: 12px;
+    border-top: 1px solid #edf1f5;
+    font-size: 0.8rem;
+    color: #334155;
+}
+
+/* =========================================
+   TABLET
+   ========================================= */
+
+@media (max-width: 992px) {
+
+    .agents-card .card-header {
+        gap: 14px;
+    }
+
+    .agents-search {
+        width: 170px;
+        min-width: 170px;
+    }
+
+    .agents-status {
+        width: 115px;
+        min-width: 115px;
+    }
+
+}
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 768px) {
+
+    .agents-page {
+        width: 100%;
+        padding: 0;
+    }
+
+    .agents-card {
+        border-radius: 12px;
+        margin: 0;
+    }
+
+    /* Header */
+
+    .agents-card .card-header {
+        display: block !important;
+        padding: 14px 12px;
+    }
+
+    .agents-title {
+        font-size: 0.82rem;
+        line-height: 1.2;
+        margin-bottom: 10px !important;
+    }
+
+    /* Filter row */
+
+    .agents-filter-form {
+        width: 100%;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 96px auto;
+        gap: 5px;
+        align-items: center;
+    }
+
+    .agents-search {
+        width: 100%;
+        min-width: 0;
+        height: 36px;
+        font-size: 0.68rem;
+        padding: 6px 8px;
+    }
+
+    .agents-status {
+        width: 96px;
+        min-width: 96px;
+        height: 36px;
+        font-size: 0.62rem;
+        padding: 6px 24px 6px 7px;
+        margin-left: 0 !important;
+    }
+
+    .agents-filter-btn {
+        height: 36px;
+        font-size: 0.65rem;
+        padding: 6px 10px;
+        margin-left: 0 !important;
+    }
+
+    /* Body */
+
+    .agents-card .card-body {
+        padding: 10px 8px;
+    }
+
+    /* Table */
+
+    .agents-table-wrapper {
+        border-radius: 9px;
+        overflow-x: auto;
+    }
+
+    .agents-table {
+        min-width: 700px;
+    }
+
+    .agents-table thead th {
+        font-size: 0.62rem;
+        padding: 9px 10px;
+    }
+
+    .agents-table tbody td {
+        font-size: 0.65rem;
+        padding: 11px 10px;
+    }
+
+    .agent-status {
+        font-size: 0.58rem;
+        padding: 3px 6px;
+    }
+
+    .agent-details-btn {
+        font-size: 0.62rem;
+        padding: 4px 8px;
+    }
+
+    /* Total */
+
+    .agents-total {
+        font-size: 0.68rem;
+        margin-top: 10px !important;
+        padding-top: 9px;
+    }
+
+}
+
+/* =========================================
+   VERY SMALL MOBILE
+   ========================================= */
+
+@media (max-width: 400px) {
+
+    .agents-card .card-header {
+        padding: 12px 9px;
+    }
+
+    .agents-title {
+        font-size: 0.78rem;
+    }
+
+    .agents-filter-form {
+        grid-template-columns: minmax(0, 1fr) 92px auto;
+        gap: 4px;
+    }
+
+    .agents-search {
+        font-size: 0.62rem;
+        height: 34px;
+    }
+
+    .agents-status {
+        width: 92px;
+        min-width: 92px;
+        height: 34px;
+        font-size: 0.6rem;
+        padding: 5px 22px 5px 6px;
+    }
+
+    .agents-filter-btn {
+        height: 34px;
+        font-size: 0.6rem;
+        padding: 5px 8px;
+    }
+
+    .agents-card .card-body {
+        padding: 8px 6px;
+    }
+
+    .agents-table {
+        min-width: 680px;
+    }
+
+}

@@ -117,7 +117,13 @@ class AgentDashboardMixin(RoleBasedDashboardMixin):
                 if has_paid_plan and request.user.agent_profile.verification_status != 'approved':
                     try:
                         verification_url = reverse('agent:document_verification')
-                        if request.path != verification_url:
+                        documents_url = reverse('agent:document_list')
+                        allowed = (
+                            request.path.startswith(verification_url)
+                            or request.path.startswith(documents_url)
+                            or request.path.startswith('/agent/document/')
+                        )
+                        if not allowed:
                             from django.contrib import messages
                             messages.warning(request, "Please verify your documents to access the dashboard.")
                             return redirect(verification_url)

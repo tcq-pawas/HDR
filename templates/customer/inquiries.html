@@ -1,244 +1,12 @@
 {% extends "customer/customer_base.html" %}
 {% load static %}
 
-{% block title %}My Inquiries - HeyDay Realty{% endblock %}
+{% block title %}My Inquiries - HHectare{% endblock %}
 
 {% block page_title %}My Inquiries{% endblock %}
 
 {% block extra_css %}
-<style>
-    :root{
-        --primary:#004526;
-        --secondary:#006638;
-        --blue:#3B82F6;
-        --orange:#F59E0B;
-        --purple:#8B5CF6;
-        --red:#EF4444;
-        --bg:#F8FAFC;
-        --card:#FFFFFF;
-        --radius:20px;
-    }
-
-    /* Premium layout blocks */
-    .inquiries-page{ background: transparent; padding: 24px 30px; }
-    
-    .page-header-white {
-        display: none;
-    }
-
-    .premium-hero{
-        position: relative;
-        overflow: hidden;
-        border-radius: var(--radius);
-        box-shadow: 0 16px 50px rgba(15,118,110,0.14);
-        border: 1px solid rgba(15,118,110,0.22);
-        background: linear-gradient(180deg, #004526 0%, #002815 50%, #002200 100%);
-        min-height: 210px;
-    }
-
-    a:focus,
-    a:active {
-        outline: none;
-        box-shadow: none;
-    }
-
-    .premium-hero::before{
-        content:"";
-        position:absolute;
-        inset:-40px;
-        background: url("{% static 'img/agricultural_land_branding.jpg' %}") center/cover no-repeat;
-        opacity: .18;
-        transform: rotate(-2deg) scale(1.05);
-        filter: saturate(1.1) contrast(1.05);
-    }
-
-    .premium-hero::after{
-        content:"";
-        position:absolute;
-        inset:0;
-        /* background: linear-gradient(90deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.06) 35%, rgba(255,255,255,0) 70%); */
-        pointer-events:none;
-    }
-
-    .premium-hero-inner{ position: relative; z-index: 2; padding: 1.4rem 1.6rem; display:flex; gap: 1.1rem; align-items:flex-start; justify-content: space-between; flex-wrap: wrap; color:#fff; }
-
-    .premium-hero-left{ flex: 1 1 520px; min-width: 280px; }
-
-    .hero-eyebrow{
-        display:inline-flex; gap:.6rem; align-items:center;
-        padding:.45rem .75rem; border-radius: 999px;
-        background: rgba(255,255,255,0.14);
-        border: 1px solid rgba(255,255,255,0.22);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        font-weight: 600;
-        letter-spacing: .2px;
-        margin-bottom: .85rem;
-        font-size: .95rem;
-    }
-
-    .hero-title{ font-size: 28px; font-weight: 700; margin: 0 0 .35rem 0; line-height: 1.15; }
-    .hero-subtitle{ margin: 0; color: rgba(255,255,255,0.92); font-weight: 400; max-width: 760px; font-size: 14px; }
-
-    .hero-meta{
-        display:grid;
-        grid-template-columns: repeat(2, minmax(210px, 1fr));
-        gap: .8rem;
-        flex: 0 1 430px;
-        align-content: start;
-    }
-
-    @media (max-width: 768px){
-        .hero-meta{ grid-template-columns: 1fr; width: 100%; }
-        .premium-hero-inner{ padding: 1.1rem 1.05rem; }
-        .premium-hero{ height: 240px; }
-        .hero-title{ font-size: 1.5rem; }
-        .hero-subtitle{ font-size: 0.9rem; }
-    }
-
-    @media (max-width: 480px){
-        .premium-hero{ height: 200px; }
-        .premium-hero-inner{ padding: 1rem 1.2rem; }
-        .hero-title{ font-size: 1.25rem; }
-        .hero-subtitle{ font-size: 0.85rem; }
-    }
-
-    .glass{
-        background: rgba(255,255,255,0.12);
-        border: 1px solid rgba(255,255,255,0.22);
-        border-radius: 18px;
-        backdrop-filter: blur(14px);
-        -webkit-backdrop-filter: blur(14px);
-        box-shadow: 0 14px 45px rgba(0,0,0,0.12);
-        padding: .95rem 1rem;
-        color:#fff;
-    }
-
-    .meta-label{ font-size: 12px; opacity: .92; text-transform: uppercase; letter-spacing: .08em; font-weight: 600; margin-bottom: .35rem; }
-    .meta-value{ font-weight: 500; font-size: 16px; margin: 0; }
-
-    /* KPI cards */
-    .kpi-grid{ display:grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .95rem; }
-    @media (max-width: 992px){ .kpi-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-    @media (max-width: 576px){ .kpi-grid{ grid-template-columns: 1fr; } }
-
-    .kpi-card{
-        border-radius: 20px;
-        border: 1px solid rgba(255,255,255,0.2);
-        box-shadow: 0 18px 48px rgba(15,118,110,0.10);
-        color: #fff;
-        overflow:hidden;
-        position: relative;
-        min-height: 122px;
-        transition: transform .18s ease, box-shadow .18s ease;
-    }
-    .kpi-card:hover{ transform: translateY(-5px); box-shadow: 0 26px 80px rgba(15,118,110,0.18); }
-    .kpi-card::after{
-        content:""; position:absolute; inset:0;
-        background: radial-gradient(500px circle at 10% 10%, rgba(255,255,255,0.25), transparent 55%);
-        pointer-events:none;
-    }
-    .kpi-card-inner{ position: relative; z-index: 1; padding: 1rem 1rem; display:flex; align-items:center; justify-content: space-between; gap: .85rem; }
-    .kpi-icon{ width: 46px; height: 46px; border-radius: 16px; display:flex; align-items:center; justify-content:center; background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.24); font-size: 1.15rem; }
-    .kpi-count{ font-size: 32px; font-weight: 600; line-height: 1; margin-top: .15rem; }
-    .kpi-label{ font-weight: 400; opacity: .98; font-size: 13px; }
-
-    /* Toolbar */
-    .toolbar-grid{ display:grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .95rem; }
-    @media (max-width: 992px){ .toolbar-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-    @media (max-width: 576px){ .toolbar-grid{ grid-template-columns: 1fr; } }
-
-    .action-card{
-        border-radius: var(--radius);
-        border: 1px solid rgba(15,118,110,0.12);
-        background: rgba(255,255,255,0.92);
-        box-shadow: 0 16px 45px rgba(15,118,110,0.08);
-        overflow:hidden;
-        transition: transform .18s ease, box-shadow .18s ease;
-        padding: 1rem;
-        display:flex;
-        align-items:center;
-        justify-content: space-between;
-        gap: .9rem;
-        cursor: pointer;
-    }
-    .action-card:hover{ transform: translateY(-4px); box-shadow: 0 26px 80px rgba(15,118,110,0.16); }
-    .action-left{ display:flex; gap: .8rem; align-items:center; }
-    .action-icon{ width: 44px; height: 44px; border-radius: 16px; display:flex; align-items:center; justify-content:center; color:#fff; }
-    .action-title{ font-weight: 700; margin:0; font-size: 14px; }
-    .action-sub{ margin: .15rem 0 0 0; color: rgba(2,6,23,0.62); font-weight: 400; font-size: 13px; }
-
-    /* Table */
-    .panel{ border-radius: var(--radius); overflow:hidden; border: 1px solid rgba(15,118,110,0.12); box-shadow: 0 16px 50px rgba(15,118,110,0.08); background: rgba(255,255,255,0.75); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
-    .panel-header{ padding: 1.1rem 1.3rem; border-bottom: 1px solid rgba(15,118,110,0.10); background: linear-gradient(180deg, rgba(15,118,110,0.06), rgba(255,255,255,0.0)); display:flex; align-items:center; justify-content: space-between; gap: .8rem; flex-wrap: wrap; }
-    .panel-body{ padding: 1.1rem 1.3rem; }
-
-    .table-modern{ width:100%; border-collapse: separate; border-spacing: 0 10px; }
-    .table-modern th{ text-align:left; color:#64748b; font-size:12px; font-weight: 600; padding: 0 10px; }
-    .table-modern td{ background:#fff; padding: 14px 10px; vertical-align: middle; border-top: 1px solid rgba(15,118,110,0.08); border-bottom: 1px solid rgba(15,118,110,0.08); font-size: 13px; }
-
-    .row-card{ border-radius: 16px; box-shadow: 0 10px 30px rgba(15,118,110,0.10); }
-
-    .status-badge{ padding: .5rem .85rem; border-radius: 999px; font-weight: 500; font-size: 12px; border: 1px solid rgba(0,0,0,0.06); white-space: nowrap; }
-    .s-pending{ background: rgba(245,158,11,0.15); color: #b45309; border-color: rgba(245,158,11,0.25); }
-    .s-responded{ background: rgba(59,130,246,0.15); color: #1d4ed8; border-color: rgba(59,130,246,0.25); }
-    .s-site{ background: rgba(139,92,246,0.15); color: #6d28d9; border-color: rgba(139,92,246,0.25); }
-    .s-closed{ background: rgba(16,185,129,0.15); color: #047857; border-color: rgba(16,185,129,0.25); }
-    .s-rejected{ background: rgba(239,68,68,0.15); color: #b91c1c; border-color: rgba(239,68,68,0.25); }
-
-    /* Empty state */
-    .empty-state{ padding: 2.2rem 1rem; text-align:center; }
-    .empty-illustration{ width: 138px; height: 138px; margin: 0 auto 1rem auto; border-radius: 40px; background: linear-gradient(180deg, rgba(15,118,110,0.16), rgba(16,185,129,0.08)); border: 1px dashed rgba(15,118,110,0.35); box-shadow: 0 16px 40px rgba(15,118,110,0.12); overflow:hidden; display:flex; align-items:center; justify-content:center; }
-    .empty-illustration i{ color: var(--primary); font-size: 2rem; }
-
-    .btn-premium{
-        border-radius: 14px;
-        font-weight: 500;
-        padding: .65rem .9rem;
-        border: 1px solid rgba(15,118,110,0.15);
-        background: linear-gradient(180deg, rgba(15,118,110,0.96), rgba(6,78,59,0.96));
-        color:#fff;
-        transition: transform .16s ease, filter .16s ease;
-        display:inline-flex;
-        align-items:center;
-        justify-content:center;
-        gap:.55rem;
-    }
-    .btn-premium:hover{ transform: translateY(-1px); filter: brightness(1.06); color:#fff; }
-
-    .btn-outline-premium{
-        border-radius: 14px;
-        font-weight: 500;
-        padding: .65rem .9rem;
-        border: 1px solid rgba(15,118,110,0.25);
-        background: rgba(255,255,255,0.7);
-        color: var(--primary);
-        transition: transform .16s ease, background .16s ease;
-        display:inline-flex;
-        align-items:center;
-        justify-content:center;
-        gap:.55rem;
-    }
-    .btn-outline-premium:hover{ transform: translateY(-1px); background: rgba(255,255,255,0.95); color: var(--primary); }
-
-    /* Drawer-like modal */
-    .drawer-modal .modal-dialog{ margin: 0; position: fixed; right: 0; top: 0; height: 100vh; width: min(720px, 100%); transform: translateX(100%); transition: transform .25s ease; }
-    .drawer-modal.show .modal-dialog{ transform: translateX(0); }
-    .drawer-modal .modal-content{ height: 100vh; border-radius: 0; border: 0; }
-    .drawer-modal .modal-header{ background: linear-gradient(180deg, rgba(15,118,110,0.10), rgba(255,255,255,0.0)); }
-    .drawer-modal .modal-body{ overflow:auto; }
-
-    /* Timeline */
-    .timeline{ position: relative; padding-left: 1.4rem; }
-    .timeline::before{ content:""; position:absolute; left: 7px; top: 4px; bottom: 4px; width: 3px; background: linear-gradient(180deg, rgba(15,118,110,0.65), rgba(16,185,129,0.25)); border-radius: 999px; }
-    .timeline-item{ position: relative; margin-bottom: 1rem; padding-left: 1.15rem; }
-    .timeline-item:last-child{ margin-bottom: 0; }
-    .timeline-dot{ position:absolute; left: -18px; top: 10px; width: 26px; height: 26px; border-radius: 10px; background: rgba(15,118,110,0.16); border: 1px solid rgba(15,118,110,0.28); display:flex; align-items:center; justify-content:center; color: var(--primary); font-weight: 400; }
-    .timeline-card{ background: rgba(255,255,255,0.94); border: 1px solid rgba(15,118,110,0.10); border-radius: 18px; padding: .85rem .95rem; box-shadow: 0 14px 35px rgba(15,118,110,0.06); }
-    .timeline-title{ font-weight: 700; margin-bottom: .25rem; font-size: 14px; }
-    .timeline-desc{ color: #64748b; font-weight: 400; font-size: 13px; margin-bottom: .35rem; }
-    .timeline-date{ color: #94a3b8; font-weight: 400; font-size: 12px; }
-</style>
+<link rel="stylesheet" href="{% static 'css/customer/customer.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -257,10 +25,12 @@
                     <div class="meta-label">Customer</div>
                     <p class="meta-value">{{ user.first_name|default:user.username }}</p>
                 </div>
+
                 <div class="glass">
                     <div class="meta-label">Total Inquiries</div>
                     <p class="meta-value">{{ inquiries.count|default:0 }}</p>
                 </div>
+
                 <div class="glass">
                     <div class="meta-label">Current Status Summary</div>
                     {% with c=inquiries %}
@@ -275,9 +45,10 @@
                         {% endif %}
                     {% endwith %}
                 </div>
+
                 <div class="glass">
                     <div class="meta-label">Quick Create</div>
-                    <a href="{% url 'customer:create_inquiry' %}" class="btn-premium">
+                    <a href="{% url 'customer:create_inquiry' %}" class="btn-premium" style="text-decoration: none;">
                         <i class="fas fa-plus"></i> Create Inquiry
                     </a>
                 </div>
@@ -289,7 +60,9 @@
     <div class="toolbar-grid mb-4">
         <div class="action-card" onclick="document.querySelector('[data-bs-target="#newInquiryModal"]').click()">
             <div class="action-left">
-                <div class="action-icon" style="background: linear-gradient(135deg, #004526, #006638);"><i class="fas fa-plus"></i></div>
+                <div class="action-icon" style="background: linear-gradient(135deg, #004526, #006638);">
+                    <i class="fas fa-plus"></i>
+                </div>
                 <div>
                     <p class="action-title">New Inquiry</p>
                     <p class="action-sub">Start a request</p>
@@ -300,7 +73,9 @@
 
         <div class="action-card" onclick="window.location.href='{% url "buy:property_search" %}'">
             <div class="action-left">
-                <div class="action-icon" style="background: linear-gradient(135deg, #3B82F6, rgba(59,130,246,0.6));"><i class="fas fa-house-chimney"></i></div>
+                <div class="action-icon" style="background: linear-gradient(135deg, #3B82F6, rgba(59,130,246,0.6));">
+                    <i class="fas fa-house-chimney"></i>
+                </div>
                 <div>
                     <p class="action-title">Browse Properties</p>
                     <p class="action-sub">Explore premium land</p>
@@ -311,7 +86,9 @@
 
         <div class="action-card" onclick="window.location.href='{% url "customer:saved-properties-page" %}'">
             <div class="action-left">
-                <div class="action-icon" style="background: linear-gradient(135deg, #10B981, rgba(16,185,129,0.6));"><i class="fas fa-heart"></i></div>
+                <div class="action-icon" style="background: linear-gradient(135deg, #10B981, rgba(16,185,129,0.6));">
+                    <i class="fas fa-heart"></i>
+                </div>
                 <div>
                     <p class="action-title">Saved Properties</p>
                     <p class="action-sub">Your shortlist</p>
@@ -320,9 +97,11 @@
             <i class="fas fa-chevron-right" style="color:#10B981;"></i>
         </div>
 
-        <div class="action-card" onclick="window.location.href='mailto:support@heydayrealty.com'">
+        <div class="action-card" onclick="window.location.href='mailto:support@hhectare.com'">
             <div class="action-left">
-                <div class="action-icon" style="background: linear-gradient(135deg, #8B5CF6, rgba(139,92,246,0.6));"><i class="fas fa-headset"></i></div>
+                <div class="action-icon" style="background: linear-gradient(135deg, #8B5CF6, rgba(139,92,246,0.6));">
+                    <i class="fas fa-headset"></i>
+                </div>
                 <div>
                     <p class="action-title">Contact Support</p>
                     <p class="action-sub">We’ll help you</p>
@@ -341,6 +120,7 @@
             </div>
             <span class="badge bg-light text-dark" style="font-weight:400;">{{ inquiries.count|default:0 }} total</span>
         </div>
+
         <div class="panel-body">
             {% if inquiries %}
                 <div class="table-responsive">
@@ -358,18 +138,41 @@
                                 <th style="width: 240px;"></th>
                             </tr>
                         </thead>
+
                         <tbody>
                             {% for inquiry in inquiries %}
                                 <tr class="row-card">
-                                    <td><span class="fw-bold" style="color: var(--primary);">{{ inquiry.enquiry_id|default:inquiry.id }}</span></td>
                                     <td>
-                                        <div class="fw-bold" style="line-height:1.2;">{{ inquiry.related_property.title|default:"General Inquiry" }}</div>
-                                        <div class="text-muted fw-bold" style="font-size:.9rem;">{{ inquiry.message|truncatechars:55 }}</div>
+                                        <span class="fw-bold" style="color: var(--primary);">
+                                            {{ inquiry.enquiry_id|default:inquiry.id }}
+                                        </span>
                                     </td>
-                                    <td class="text-muted fw-bold">{{ inquiry.related_property.property_type|default:"Agricultural Land" }}</td>
-                                    <td class="text-muted fw-bold">{{ inquiry.related_property.location|default:"—" }}</td>
-                                    <td class="text-muted fw-bold">{{ inquiry.created_at|date:"M d, Y H:i" }}</td>
-                                    <td class="text-muted fw-bold">{{ inquiry.phone_number|default:"—" }}</td>
+
+                                    <td>
+                                        <div class="fw-bold" style="line-height:1.2;">
+                                            {{ inquiry.related_property.title|default:"General Inquiry" }}
+                                        </div>
+                                        <div class="text-muted fw-bold" style="font-size:.9rem;">
+                                            {{ inquiry.message|truncatechars:55 }}
+                                        </div>
+                                    </td>
+
+                                    <td class="text-muted fw-bold">
+                                        {{ inquiry.related_property.property_type|default:"Agricultural Land" }}
+                                    </td>
+
+                                    <td class="text-muted fw-bold">
+                                        {{ inquiry.related_property.location|default:"—" }}
+                                    </td>
+
+                                    <td class="text-muted fw-bold">
+                                        {{ inquiry.created_at|date:"M d, Y H:i" }}
+                                    </td>
+
+                                    <td class="text-muted fw-bold">
+                                        {{ inquiry.phone_number|default:"—" }}
+                                    </td>
+
                                     <td>
                                         {% with st=inquiry.status %}
                                             {% if st == 'new' %}
@@ -377,19 +180,24 @@
                                             {% elif st == 'viewed' %}
                                                 <span class="status-badge s-responded">✅ Seen by Agent</span>
                                             {% else %}
-                                                <span class="status-badge s-pending">{{ inquiry.get_status_display }}</span>
+                                                <span class="status-badge s-pending">
+                                                    {{ inquiry.get_status_display }}
+                                                </span>
                                             {% endif %}
                                         {% endwith %}
                                     </td>
-                                    <td class="text-muted fw-bold">{{ inquiry.created_at|date:"M d, Y H:i" }}</td>
+
+                                    <td class="text-muted fw-bold">
+                                        {{ inquiry.created_at|date:"M d, Y H:i" }}
+                                    </td>
+
                                     <td class="text-end">
                                         <div class="btn-group" role="group">
                                             <a href="{% url 'customer:inquiry-detail-page' inquiry.id %}"
-                                                class="btn btn-sm btn-primary"
-                                                style="border-radius:14px;font-weight:500;">
-                                                    <i class="fas fa-eye"></i> View Inquiry
+                                               class="btn btn-sm btn-primary"
+                                               style="border-radius:14px;font-weight:500;">
+                                                <i class="fas fa-eye"></i> View Inquiry
                                             </a>
-                                           
                                         </div>
                                     </td>
                                 </tr>
@@ -402,15 +210,25 @@
                     <div class="empty-illustration">
                         <i class="fas fa-envelope-open-text"></i>
                     </div>
+
                     <h4 class="fw-bold">No inquiries yet</h4>
-                    <p class="text-muted" style="font-weight:900; max-width: 520px; margin: .25rem auto 0 auto;">
+
+                    <p class="text-muted"
+                       style="font-weight:900; max-width: 520px; margin: .25rem auto 0 auto;">
                         Start exploring premium agricultural land opportunities and submit your first inquiry.
                     </p>
+
                     <div class="d-flex gap-3 justify-content-center flex-wrap mt-3">
-                        <button class="btn-outline-premium" type="button" onclick="window.location.href='{% url "buy:property_search" %}'">
+                        <button class="btn-outline-premium"
+                                type="button"
+                                onclick="window.location.href='{% url "buy:property_search" %}'">
                             <i class="fas fa-search"></i> Browse Properties
                         </button>
-                        <button class="btn-premium" type="button" data-bs-toggle="modal" data-bs-target="#newInquiryModal">
+
+                        <button class="btn-premium"
+                                type="button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#newInquiryModal">
                             <i class="fas fa-plus"></i> Create Inquiry
                         </button>
                     </div>
@@ -420,53 +238,100 @@
     </div>
 
     <!-- View Inquiry Drawer Modal (same ids + function names) -->
-    <div class="modal fade drawer-modal" id="viewInquiryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade drawer-modal"
+         id="viewInquiryModal"
+         tabindex="-1"
+         aria-hidden="true">
+
         <div class="modal-dialog" role="document">
             <div class="modal-content">
+
                 <div class="modal-header">
                     <h5 class="modal-title">Inquiry Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"></button>
                 </div>
+
                 <div class="modal-body">
-                    <div id="inquiryDetails"><!-- content loaded dynamically --></div>
+                    <div id="inquiryDetails">
+                        <!-- content loaded dynamically -->
+                    </div>
                 </div>
+
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-warning" onclick="followUp()">Follow Up</button>
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+                        Close
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-warning"
+                            onclick="followUp()">
+                        Follow Up
+                    </button>
                 </div>
+
             </div>
         </div>
     </div>
 
     <!-- Follow Up Modal (unchanged ids + function names) -->
-    <div class="modal fade" id="followUpModal" tabindex="-1">
+    <div class="modal fade"
+         id="followUpModal"
+         tabindex="-1">
+
         <div class="modal-dialog">
             <div class="modal-content">
+
                 <div class="modal-header">
                     <h5 class="modal-title">Follow Up on Inquiry</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"></button>
                 </div>
+
                 <div class="modal-body">
                     <form>
                         <div class="mb-3">
                             <label class="form-label">Follow-up Message</label>
-                            <textarea class="form-control" rows="4" placeholder="Enter your follow-up message..."></textarea>
+
+                            <textarea class="form-control"
+                                      rows="4"
+                                      placeholder="Enter your follow-up message..."></textarea>
                         </div>
+
                         <div class="mb-3">
                             <label class="form-label">Attachment (Optional)</label>
-                            <input type="file" class="form-control">
+
+                            <input type="file"
+                                   class="form-control">
                         </div>
                     </form>
                 </div>
+
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-warning" onclick="sendFollowUp()">Send Follow Up</button>
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-warning"
+                            onclick="sendFollowUp()">
+                        Send Follow Up
+                    </button>
                 </div>
+
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
         function viewInquiry(inquiryId) {
             // Use plain string concatenation to avoid template-literal parsing issues.
@@ -484,7 +349,9 @@
 
                 document.getElementById('inquiryDetails').innerHTML =
                     '<div class="row g-3">' +
+
                         '<div class="col-md-7">' +
+
                             '<div class="glass-card" style="border-radius:18px; background: rgba(255,255,255,0.9); border: 1px solid rgba(15,118,110,0.10); padding: 1rem;">' +
                                 '<h6 style="font-weight:1000;">Inquiry Information</h6>' +
                                 '<p class="mb-1"><strong>Inquiry Number:</strong> #' + inquiryId + '</p>' +
@@ -492,9 +359,12 @@
                                 '<p class="mb-1"><strong>Property Details:</strong> Modern Agricultural Land Parcel</p>' +
                                 '<p class="mb-0"><strong>Inquiry Message:</strong> Need land details, paperwork, and viewing schedule.</p>' +
                             '</div>' +
+
                             '<div class="mt-3 glass-card" style="border-radius:18px; background: rgba(255,255,255,0.9); border: 1px solid rgba(15,118,110,0.10); padding: 1rem;">' +
                                 '<h6 style="font-weight:1000;">Status Timeline</h6>' +
+
                                 '<div class="timeline mt-2">' +
+
                                     '<div class="timeline-item">' +
                                         '<div class="timeline-dot"><i class="fas fa-paper-plane"></i></div>' +
                                         '<div class="timeline-card">' +
@@ -503,6 +373,7 @@
                                             '<div class="timeline-date">' + dateOnly + '</div>' +
                                         '</div>' +
                                     '</div>' +
+
                                     '<div class="timeline-item">' +
                                         '<div class="timeline-dot"><i class="fas fa-user-tie"></i></div>' +
                                         '<div class="timeline-card">' +
@@ -511,6 +382,7 @@
                                             '<div class="timeline-date">Soon</div>' +
                                         '</div>' +
                                     '</div>' +
+
                                     '<div class="timeline-item">' +
                                         '<div class="timeline-dot"><i class="fas fa-reply"></i></div>' +
                                         '<div class="timeline-card">' +
@@ -519,6 +391,7 @@
                                             '<div class="timeline-date">Pending</div>' +
                                         '</div>' +
                                     '</div>' +
+
                                     '<div class="timeline-item">' +
                                         '<div class="timeline-dot"><i class="fas fa-map-marker-alt"></i></div>' +
                                         '<div class="timeline-card">' +
@@ -527,6 +400,7 @@
                                             '<div class="timeline-date">Pending</div>' +
                                         '</div>' +
                                     '</div>' +
+
                                     '<div class="timeline-item">' +
                                         '<div class="timeline-dot"><i class="fas fa-check"></i></div>' +
                                         '<div class="timeline-card">' +
@@ -535,50 +409,74 @@
                                             '<div class="timeline-date">—</div>' +
                                         '</div>' +
                                     '</div>' +
+
                                 '</div>' +
                             '</div>' +
+
                         '</div>' +
 
                         '<div class="col-md-5">' +
+
                             '<div class="glass-card" style="border-radius:18px; background: rgba(255,255,255,0.9); border: 1px solid rgba(15,118,110,0.10); padding: 1rem;">' +
                                 '<h6 style="font-weight:1000;">Agent Information</h6>' +
-                                '<p class="mb-1"><strong>Agent Name:</strong> HeyDay Realty Associate</p>' +
+                                '<p class="mb-1"><strong>Agent Name:</strong> HHectare Associate</p>' +
                                 '<p class="mb-1"><strong>Phone:</strong> +1 (000) 000-0000</p>' +
-                                '<p class="mb-1"><strong>Email:</strong> agent@heydayrealty.com</p>' +
+                                '<p class="mb-1"><strong>Email:</strong> agent@hhectare.com</p>' +
+
                                 '<div class="mt-3">' +
                                     '<span class="status-badge s-site">Site Visit Scheduled</span>' +
                                 '</div>' +
                             '</div>' +
+
                             '<div class="mt-3 glass-card" style="border-radius:18px; background: rgba(255,255,255,0.9); border: 1px solid rgba(15,118,110,0.10); padding: 1rem;">' +
                                 '<h6 style="font-weight:1000;">Next Best Step</h6>' +
                                 '<p class="text-muted" style="font-weight:900;">Follow up to confirm documents, viewing time slots, and land suitability.</p>' +
-                                '<button type="button" class="btn btn-warning w-100" onclick="followUp()"><i class="fas fa-bell me-2"></i> Follow Up</button>' +
+
+                                '<button type="button" class="btn btn-warning w-100" onclick="followUp()">' +
+                                    '<i class="fas fa-bell me-2"></i> Follow Up' +
+                                '</button>' +
                             '</div>' +
+
                         '</div>' +
+
                     '</div>';
 
-                new bootstrap.Modal(document.getElementById('viewInquiryModal')).show();
+                new bootstrap.Modal(
+                    document.getElementById('viewInquiryModal')
+                ).show();
+
             }, 800);
         }
 
-
         function followUp(inquiryId) {
             if (inquiryId) {
-                bootstrap.Modal.getInstance(document.getElementById('viewInquiryModal')).hide();
+                bootstrap.Modal
+                    .getInstance(document.getElementById('viewInquiryModal'))
+                    .hide();
             }
-            new bootstrap.Modal(document.getElementById('followUpModal')).show();
+
+            new bootstrap.Modal(
+                document.getElementById('followUpModal')
+            ).show();
         }
 
         function sendFollowUp() {
             alert('Follow-up message sent successfully!');
-            bootstrap.Modal.getInstance(document.getElementById('followUpModal')).hide();
+
+            bootstrap.Modal
+                .getInstance(document.getElementById('followUpModal'))
+                .hide();
         }
 
         function deleteInquiry(inquiryId) {
-            if (confirm('Are you sure you want to delete this inquiry? This action cannot be undone.')) {
+            if (
+                confirm(
+                    'Are you sure you want to delete this inquiry? This action cannot be undone.'
+                )
+            ) {
                 alert('Inquiry deleted successfully!');
             }
         }
     </script>
+</div>
 {% endblock %}
-

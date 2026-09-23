@@ -1,6 +1,6 @@
 # Role-Based Authentication and Dashboard System
 
-This document describes the comprehensive role-based authentication and dashboard system implemented for the HeyDay Realty Django application.
+This document describes the comprehensive role-based authentication and dashboard system implemented for the HHectare Django application.
 
 ## Overview
 
@@ -354,4 +354,4 @@ This role-based authentication system provides:
 - ✅ **Scalable architecture** for future enhancements
 - ✅ **Comprehensive testing** for reliability
 
-The system ensures that users can only access their designated dashboards and data, providing a secure and scalable foundation for the HeyDay Realty application.
+The system ensures that users can only access their designated dashboards and data, providing a secure and scalable foundation for the HHectare application.

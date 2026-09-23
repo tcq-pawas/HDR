@@ -260,7 +260,7 @@ iframe, embed, object, video {
 
         padding-left: 15px;
 
-
+        padding-top: 0;
 
         padding-right: 15px;
 
@@ -318,7 +318,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.9rem;
+        font-size: 12px;
 
 
 
@@ -338,7 +338,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.85rem;
+        font-size: 12px;
 
 
 
@@ -447,7 +447,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.9rem;
+        font-size: 12px;
 
 
 
@@ -499,7 +499,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.9rem;
+        font-size: 12px;
 
 
 
@@ -784,6 +784,7 @@ iframe, embed, object, video {
 
 
         padding: 0.75rem 1rem;
+        font-size: 16px;
 
 
 
@@ -803,22 +804,15 @@ iframe, embed, object, video {
 
 
 
+
     .hero-section {
 
-
-
-        padding: 60px 0;
-
-
+        padding: 0 0;
+        padding-top: 0 !important;
 
         min-height: auto;
 
-
-
     }
-
-
-
 
 
 
@@ -847,7 +841,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 1rem;
+        font-size: 12px;
 
 
 
@@ -907,7 +901,7 @@ iframe, embed, object, video {
 
 
 
-        height: 250px;
+        height: 400px;
 
 
 
@@ -923,7 +917,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 2rem;
+        font-size: 1.75rem;
 
 
 
@@ -1079,7 +1073,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.9rem;
+        font-size: 12px;
 
 
 
@@ -1707,7 +1701,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.85rem;
+        font-size: 12px;
 
 
 
@@ -1728,6 +1722,50 @@ iframe, embed, object, video {
 
 
         font-size: 0.8rem;
+
+
+
+    }
+
+
+
+    /* CTA button adjustments for mobile */
+
+
+
+    .cta-banner-buttons {
+
+
+
+        gap: 10px;
+
+
+
+    }
+
+
+
+    .btn-cta-yellow,
+
+
+
+    .btn-cta-outline {
+
+
+
+        padding: 9px 15px;
+
+
+
+        font-size: 12px;
+
+
+
+        line-height: 1.2;
+
+
+
+        min-height: 40px;
 
 
 
@@ -1778,6 +1816,8 @@ iframe, embed, object, video {
         padding-right: 12px;
 
 
+        padding-top: 6px;
+       
 
     }
 
@@ -1855,7 +1895,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.85rem;
+        font-size: 12px;
 
 
 
@@ -2019,7 +2059,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.9rem;
+        font-size: 12px;
 
 
 
@@ -2043,7 +2083,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.85rem;
+        font-size: 12px;
 
 
 
@@ -2099,7 +2139,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.85rem;
+        font-size: 12px;
 
 
 
@@ -2119,7 +2159,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.85rem;
+        font-size: 12px;
 
 
 
@@ -2171,7 +2211,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.85rem;
+        font-size: 12px;
 
 
 
@@ -2319,7 +2359,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.9rem;
+        font-size: 12px;
 
 
 
@@ -2351,7 +2391,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 1rem;
+        font-size: 1.3rem;
 
 
 
@@ -2503,7 +2543,8 @@ iframe, embed, object, video {
 
 
 
-        padding: 40px 0;
+        padding: 0 0;
+        padding-top: 0 !important;
 
 
 
@@ -2523,7 +2564,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 2rem;
+        font-size: 1.5rem;
 
 
 
@@ -2571,7 +2612,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.9rem;
+        font-size: 12px;
 
 
 
@@ -2635,7 +2676,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.9rem;
+        font-size: 12px;
 
 
 
@@ -2675,7 +2716,7 @@ iframe, embed, object, video {
 
 
 
-        height: 200px;
+        height: 400px;
 
 
 
@@ -2698,10 +2739,8 @@ iframe, embed, object, video {
         margin-bottom: 0.5rem;
 
 
-
+        text-align: center;
     }
-
-
 
 
 
@@ -2711,7 +2750,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.9rem;
+        font-size: 12px;
 
 
 
@@ -2757,6 +2796,48 @@ iframe, embed, object, video {
 
     }
 
+    .footer-brand-tagline {
+
+
+
+        font-size: 0.6rem;
+
+
+
+        letter-spacing: 0.4px;
+
+
+
+    }
+
+    .footer-logo-container {
+
+
+
+        flex-direction: column;
+
+
+
+        text-align: center;
+
+
+
+        gap: 8px;
+
+
+
+    }
+
+    .footer-logo-img {
+
+
+
+        height: 40px;
+
+
+
+    }
+
 
 
 
@@ -2767,11 +2848,11 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.85rem;
+        font-size: 12px;
 
 
 
-        line-height: 1.6;
+        line-height: 1.4;
 
 
 
@@ -2787,7 +2868,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 1rem;
+        font-size: 1.3rem;
 
 
 
@@ -2807,7 +2888,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.85rem;
+        font-size: 12px;
 
 
 
@@ -2835,7 +2916,11 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.85rem;
+        font-size: 12px;
+
+
+
+        line-height: 1;
 
 
 
@@ -2860,6 +2945,10 @@ iframe, embed, object, video {
 
 
         text-align: center;
+
+
+
+        align-items: center;
 
 
 
@@ -2915,7 +3004,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 1rem;
+        font-size: 1.3rem;
 
 
 
@@ -2963,7 +3052,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 1rem;
+        font-size: 1.3rem;
 
 
 
@@ -2979,7 +3068,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.85rem;
+        font-size: 12px;
 
 
 
@@ -3079,7 +3168,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.9rem;
+        font-size: 12px;
 
 
 
@@ -3175,7 +3264,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.85rem;
+        font-size: 12px;
 
 
 
@@ -3315,7 +3404,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 1rem;
+        font-size: 1.3rem;
 
 
 
@@ -3355,7 +3444,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.85rem;
+        font-size: 12px;
 
 
 
@@ -3399,7 +3488,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.9rem;
+        font-size: 12px;
 
 
 
@@ -3515,7 +3604,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.85rem;
+        font-size: 12px;
 
 
 
@@ -3919,7 +4008,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.85rem;
+        font-size: 12px;
 
 
 
@@ -3935,7 +4024,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.85rem;
+        font-size: 12px;
 
 
 
@@ -3995,7 +4084,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.9rem;
+        font-size: 12px;
 
 
 
@@ -4095,7 +4184,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 1rem;
+        font-size: 1.5rem;
 
 
 
@@ -4343,7 +4432,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.85rem;
+        font-size: 12px;
 
 
 
@@ -4455,7 +4544,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.85rem;
+        font-size: 12px;
 
 
 
@@ -4491,7 +4580,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.9rem;
+        font-size: 12px;
 
 
 
@@ -4515,7 +4604,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.85rem;
+        font-size: 12px;
 
 
 
@@ -4535,7 +4624,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.85rem;
+        font-size: 12px;
 
 
 
@@ -4559,7 +4648,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.85rem;
+        font-size: 12px;
 
 
 
@@ -4583,7 +4672,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.85rem;
+        font-size: 12px;
 
 
 
@@ -4643,7 +4732,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.85rem;
+        font-size: 12px;
 
 
 
@@ -4983,7 +5072,7 @@ iframe, embed, object, video {
 
 
 
-        height: 280px;
+        height: 400px;
 
 
 
@@ -5075,7 +5164,7 @@ iframe, embed, object, video {
 
 
 
-        margin-left: 240px;
+       min-width: 240px;
 
 
 
@@ -5095,7 +5184,7 @@ iframe, embed, object, video {
 
 
 
-        width: 260px;
+        width: 275px;
 
 
 
@@ -5111,7 +5200,7 @@ iframe, embed, object, video {
 
 
 
-        margin-left: 260px;
+        margin-left: 275px;
 
 
 
@@ -5127,7 +5216,7 @@ iframe, embed, object, video {
 
 
 
-        left: 260px;
+        left: 0;
 
 
 
@@ -5411,7 +5500,7 @@ iframe, embed, object, video {
 
 
 
-        width: 260px;
+        width: 275px;
 
 
 
@@ -5427,7 +5516,7 @@ iframe, embed, object, video {
 
 
 
-        margin-left: 260px;
+       
 
 
 
@@ -5447,7 +5536,7 @@ iframe, embed, object, video {
 
 
 
-        width: 260px;
+        width: 275px;
 
 
 
@@ -5463,7 +5552,7 @@ iframe, embed, object, video {
 
 
 
-        margin-left: 260px;
+        margin-left: 275px;
 
 
 
@@ -5479,7 +5568,7 @@ iframe, embed, object, video {
 
 
 
-        left: 260px;
+        left: 0;
 
 
 
@@ -5947,15 +6036,15 @@ iframe, embed, object, video {
 
 
 
-    .form-select {
+    .form-select,
+
+
+
+    .hero-section {
 
 
 
         min-height: 44px;
-
-
-
-    }
 
 
 
@@ -6375,7 +6464,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.9rem;
+        font-size: 12px;
 
 
 
@@ -6591,7 +6680,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.85rem;
+        font-size: 12px;
 
 
 
@@ -7095,7 +7184,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.9rem;
+        font-size: 12px;
 
 
 
@@ -7135,7 +7224,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.9rem;
+        font-size: 12px;
 
 
 
@@ -7356,6 +7445,7 @@ iframe, embed, object, video {
 
 
         padding: 0.75rem 1rem;
+        font-size: 16px;
 
 
 
@@ -7467,7 +7557,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.9rem;
+        font-size: 16px;
 
 
 
@@ -7491,7 +7581,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.9rem;
+        font-size: 12px;
 
 
 
@@ -7587,7 +7677,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.9rem;
+        font-size: 12px;
 
 
 
@@ -7619,7 +7709,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.85rem;
+        font-size: 16px;
 
 
 
@@ -7643,7 +7733,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.85rem;
+        font-size: 12px;
 
 
 
@@ -7741,6 +7831,24 @@ iframe, embed, object, video {
 
     }
 
+    .footer-logo-container {
+
+
+
+        justify-content: center;
+
+
+
+        text-decoration: none;
+
+
+
+        color: white;
+
+
+
+    }
+
 
 
 
@@ -7756,6 +7864,10 @@ iframe, embed, object, video {
 
 
         margin: 0 auto;
+
+
+
+        line-height: 1.4;
 
 
 
@@ -7845,6 +7957,24 @@ iframe, embed, object, video {
 
     }
 
+    .footer-logo-container {
+
+
+
+        justify-content: center;
+
+
+
+        text-decoration: none;
+
+
+
+        color: white;
+
+
+
+    }
+
 
 
 
@@ -7861,6 +7991,48 @@ iframe, embed, object, video {
 
     }
 
+    .footer-brand-tagline {
+
+
+
+        font-size: 0.55rem;
+
+
+
+        letter-spacing: 0.4px;
+
+
+
+    }
+
+    .footer-logo-container {
+
+
+
+        flex-direction: column;
+
+
+
+        text-align: center;
+
+
+
+        gap: 8px;
+
+
+
+    }
+
+    .footer-logo-img {
+
+
+
+        height: 40px;
+
+
+
+    }
+
 
 
 
@@ -7871,11 +8043,15 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.9rem;
+        font-size: 12px;
 
 
 
         max-width: 100%;
+
+
+
+        line-height: 1.4;
 
 
 
@@ -7919,7 +8095,7 @@ iframe, embed, object, video {
 
 
 
-        gap: 0.5rem 1rem;
+        gap: 0.75rem 1rem;
 
 
 
@@ -7935,7 +8111,11 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.9rem;
+        font-size: 12px;
+
+
+
+        line-height: 1.4;
 
 
 
@@ -7979,6 +8159,10 @@ iframe, embed, object, video {
 
 
 
+        line-height: 1;
+
+
+
     }
 
 
@@ -8004,6 +8188,10 @@ iframe, embed, object, video {
 
 
         padding-top: 1.5rem;
+
+
+
+        align-items: center;
 
 
 
@@ -8043,7 +8231,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.85rem;
+        font-size: 12px;
 
 
 
@@ -8089,6 +8277,48 @@ iframe, embed, object, video {
 
     }
 
+    .footer-brand-tagline {
+
+
+
+        font-size: 0.6rem;
+
+
+
+        letter-spacing: 0.4px;
+
+
+
+    }
+
+    .footer-logo-container {
+
+
+
+        flex-direction: column;
+
+
+
+        text-align: center;
+
+
+
+        gap: 8px;
+
+
+
+    }
+
+    .footer-logo-img {
+
+
+
+        height: 40px;
+
+
+
+    }
+
 
 
 
@@ -8099,11 +8329,11 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.85rem;
+        font-size: 12px;
 
 
 
-        line-height: 1.5;
+        line-height: 1.4;
 
 
 
@@ -8119,7 +8349,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 1rem;
+        font-size: 1.3rem;
 
 
 
@@ -8135,7 +8365,11 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.85rem;
+        font-size: 12px;
+
+
+
+        line-height: 1.4;
 
 
 
@@ -8159,7 +8393,11 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.9rem;
+        font-size: 12px;
+
+
+
+        line-height: 1;
 
 
 
@@ -8319,7 +8557,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.85rem;
+        font-size: 12px;
 
 
 
@@ -8343,7 +8581,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.9rem;
+        font-size: 12px;
 
 
 
@@ -8391,7 +8629,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.85rem;
+        font-size: 12px;
 
 
 
@@ -8415,7 +8653,7 @@ iframe, embed, object, video {
 
 
 
-   CUSTOMER DASHBOARD SIDEBAR STYLES
+   CUSTOMER DASHBOARD LAYOUT
 
 
 
@@ -8425,311 +8663,25 @@ iframe, embed, object, video {
 
 
 
-
-
 .app-container {
-
-
-
     display: flex;
-
-
-
     min-height: 100vh;
-
-
-
     width: 100%;
-
-
-
     overflow: hidden;
-
-
-
+    background-color: #f0f0f0;
 }
 
-
-
-
-
-
-
-.customer-dashboard .sidebar {
-
-
-
-    background: #004526;
-
-
-
-    height: 100vh;
-
-
-
-    color: white;
-
-
-
-    position: fixed;
-
-
-
-    top: 0;
-
-
-
-    left: 0;
-
-
-
-    z-index: 1000;
-
-
-
-    width: 280px;
-
-
-
-    overflow-y: auto;
-
-
-
-    overflow-x: hidden;
-
-
-
-    -webkit-overflow-scrolling: touch;
-
-
-
-    transform: translateX(0);
-
-
-
-    transition: transform 0.3s ease;
-
-
-
-    flex-shrink: 0;
-
-
-
-    display: flex;
-
-
-
-    flex-direction: column;
-
-
-
-    backdrop-filter: blur(12px);
-
-
-
-    -webkit-backdrop-filter: blur(12px);
-
-
-
-}
-
-
-
-
-
-
-
-.customer-dashboard .sidebar::after {
-
-
-
-    content: "";
-
-
-
-    position: absolute;
-
-
-
-    inset: 0;
-
-
-
-    background: radial-gradient(900px circle at 10% 10%, rgba(16, 185, 129, 0.35), transparent 55%),
-
-
-
-                radial-gradient(900px circle at 90% 40%, rgba(59, 130, 246, 0.25), transparent 60%);
-
-
-
-    pointer-events: none;
-
-
-
-    z-index: 0;
-
-
-
-}
-
-
-
-
-
-
-
-.customer-dashboard .sidebar > * {
-
-
-
-    position: relative;
-
-
-
-    z-index: 1;
-
-
-
-}
-
-
-
-
-
-
-
-.customer-dashboard .sidebar .nav-link {
-
-
-
-    color: rgba(255, 255, 255, 0.82);
-
-
-
-    border-radius: 14px;
-
-
-
-    margin: 2px 0;
-
-
-
-    transition: all 0.25s ease;
-
-
-
-    padding: 12px 18px;
-
-
-
-    display: flex;
-
-
-
-    align-items: center;
-
-
-
-    gap: 10px;
-
-
-
-}
-
-
-
-
-
-
-
-.customer-dashboard .sidebar .nav-link:hover {
-
-
-
-    background-color: rgba(255, 255, 255, 0.12);
-
-
-
-    color: white;
-
-
-
-    transform: translateY(-1px);
-
-
-
-}
-
-
-
-
-
-
-
-.customer-dashboard .sidebar .nav-link.active {
-
-
-
-    color: white;
-
-
-
-    background: rgba(255, 255, 255, 0.14);
-
-
-
-    box-shadow: 0 10px 30px rgba(0,0,0,0.18);
-
-
-
-    border: 1px solid rgba(255, 255, 255, 0.18);
-
-
-
-}
-
-
-
-
-
-
+/* Customer dashboard navigation styles moved to customer.css */
 
 .customer-dashboard .main-content {
-
-
-
     margin-left: 280px;
-
-
-
     min-height: 100vh;
-
-
-
     width: calc(100% - 280px);
-
-
-
     overflow-x: hidden;
-
-
-
     overflow-y: auto;
-
-
-
     display: flex;
-
-
-
     flex-direction: column;
-
-
-
 }
-
-
 
 
 
@@ -9371,7 +9323,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.85rem;
+        font-size: 12px;
 
 
 
@@ -9391,7 +9343,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.9rem;
+        font-size: 12px;
 
 
 
@@ -9543,7 +9495,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.85rem;
+        font-size: 12px;
 
 
 
@@ -9567,7 +9519,7 @@ iframe, embed, object, video {
 
 
 
-        font-size: 0.9rem;
+        font-size: 12px;
 
 
 
@@ -9631,191 +9583,264 @@ iframe, embed, object, video {
 
 
 
-@media (max-width: 768px) {
-
-
-
-    .admin-dashboard .sidebar {
-
-
-
-        transform: translateX(-100%);
-
-
-
-        width: 100%;
-
-
-
-        max-width: 280px;
-
-
-
-        height: 100vh;
-
-
-
-        overflow-y: auto;
-
-
-
-        overflow-x: hidden;
-
-
-
-        -webkit-overflow-scrolling: touch;
-
-
-
-    }
-
-
-
-
-
-
-
-    .admin-dashboard .sidebar.show {
-
-
-
-        transform: translateX(0);
-
-
-
-    }
-
-
-
-
-
-
-
-    .admin-dashboard .main-content {
-
-
-
-        margin-left: 0;
-
-
-
-    }
-
-
-
-
-
-
-
+/* ---- Large Desktop (1201px–1400px) ---- */
+@media (min-width: 1201px) and (max-width: 1400px) {
     .admin-dashboard .main-content-wrapper {
-
-
-
-        padding: 16px;
-
-
-
+        padding: 20px;
     }
-
-
-
-
-
-
-
-    .admin-dashboard .page-header {
-
-
-
-        padding: 16px;
-
-
-
-        margin-bottom: 16px;
-
-
-
-    }
-
-
-
-
-
-
 
     .admin-dashboard .page-title {
+        font-size: 1.6rem;
+    }
+}
 
-
-
-        font-size: 1.5rem;
-
-
-
+/* ---- Laptops (993px–1200px) ---- */
+@media (min-width: 993px) and (max-width: 1200px) {
+    .admin-dashboard .sidebar {
+        width: 240px;
     }
 
+    .admin-dashboard .main-content {
+        margin-left: 240px;
+    }
 
+    .admin-dashboard .main-content-wrapper {
+        padding: 68px 47px;
+    }
 
+    .admin-dashboard .page-header {
+        padding: 18px;
+        margin-bottom: 18px;
+    }
 
-
-
+    .admin-dashboard .page-title {
+        font-size: 1.5rem;
+    }
 
     .admin-dashboard .table {
-
-
-
-        font-size: 0.8rem;
-
-
-
-        min-width: 500px;
-
-
-
+        font-size: 12px;
     }
-
-
-
-
-
-
 
     .admin-dashboard .card-body {
-
-
-
-        padding: 16px;
-
-
-
+        padding: 18px;
     }
-
-
-
-
-
-
 
     .admin-dashboard .stat-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1rem;
+    }
+}
 
-
-
-        width: 48px;
-
-
-
-        height: 48px;
-
-
-
-        font-size: 1.25rem;
-
-
-
+/* ---- Tablets (769px–992px) — sidebar collapses to overlay ---- */
+@media (min-width: 769px) and (max-width: 992px) {
+    .admin-dashboard .sidebar {
+        transform: translateX(-100%);
+        width: 260px;
     }
 
+    .admin-dashboard .sidebar.show {
+        transform: translateX(0);
+    }
 
+    .admin-dashboard .main-content {
+        margin-left: 0;
+    }
 
+    .admin-dashboard .main-content-wrapper {
+        padding: 68px 14px 20px;
+    }
+
+    .admin-dashboard .page-header {
+        padding: 18px;
+        margin-bottom: 18px;
+    }
+
+    .admin-dashboard .page-title {
+        font-size: 1.5rem;
+    }
+
+    .admin-dashboard .table {
+        font-size: 12px;
+        min-width: 600px;
+    }
+
+    .admin-dashboard .card-body {
+        padding: 18px;
+    }
+
+    .admin-dashboard .stat-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1rem;
+    }
 }
+
+/* ---- Small tablets / large phones (577px–768px) ---- */
+@media (max-width: 768px) {
+    .admin-dashboard .sidebar {
+        transform: translateX(-100%);
+        width: 100%;
+        max-width: 280px;
+        height: 100vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .admin-dashboard .sidebar.show {
+        transform: translateX(0);
+    }
+
+    .admin-dashboard .main-content {
+        margin-left: 0;
+    }
+
+    .admin-dashboard .main-content-wrapper {
+        padding: 16px;
+    }
+
+    .admin-dashboard .page-header {
+        padding: 16px;
+        margin-bottom: 16px;
+    }
+
+    .admin-dashboard .page-title {
+        font-size: 1.5rem;
+    }
+
+    .admin-dashboard .table {
+        font-size: 0.8rem;
+        min-width: 500px;
+    }
+
+    .admin-dashboard .card-body {
+        padding: 16px;
+    }
+
+    .admin-dashboard .stat-icon {
+        width: 48px;
+        height: 48px;
+        font-size: 1.25rem;
+    }
+}
+
+/* ---- Mobile (≤576px) ---- */
+@media (max-width: 576px) {
+    .admin-dashboard .sidebar {
+        max-width: 260px;
+    }
+
+    .admin-dashboard .main-content-wrapper {
+        padding: 12px;
+    }
+
+    .admin-dashboard .page-header {
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+
+    .admin-dashboard .page-title {
+        font-size: 1.25rem;
+    }
+
+    .admin-dashboard .table {
+        font-size: 0.75rem;
+        min-width: 400px;
+    }
+
+    .admin-dashboard .card-body {
+        padding: 12px;
+    }
+
+    .admin-dashboard .stat-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+    }
+}
+
+/* ---- Extra-small phones (≤400px) ---- */
+@media (max-width: 400px) {
+    .admin-dashboard .sidebar {
+        max-width: 240px;
+    }
+
+    .admin-dashboard .main-content-wrapper {
+        padding: 10px;
+    }
+
+    .admin-dashboard .page-header {
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    .admin-dashboard .page-title {
+        font-size: 1.1rem;
+    }
+
+    .admin-dashboard .table {
+        font-size: 0.7rem;
+        min-width: 340px;
+    }
+
+    .admin-dashboard .card-body {
+        padding: 10px;
+    }
+
+    .admin-dashboard .stat-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+    }
+}
+
+/* ---- Ultra-narrow / foldables (≤340px) ---- */
+@media (max-width: 340px) {
+    .admin-dashboard .sidebar {
+        max-width: 220px;
+    }
+
+    .admin-dashboard .page-title {
+        font-size: 1rem;
+    }
+
+    .admin-dashboard .table {
+        min-width: 300px;
+    }
+}
+
+/* ---- Large desktop / ultra-wide (≥1920px) ---- */
+@media (min-width: 1920px) {
+    .admin-dashboard .sidebar {
+        width: 320px;
+    }
+
+    .admin-dashboard .main-content {
+        margin-left: 320px;
+    }
+
+    .admin-dashboard .main-content-wrapper {
+        padding: 32px;
+    }
+
+    .admin-dashboard .page-title {
+        font-size: 2rem;
+    }
+}
+
+/* ---- Short-height landscape (phones rotated) ---- */
+@media (max-height: 500px) and (orientation: landscape) {
+    .admin-dashboard .sidebar {
+        overflow-y: auto;
+    }
+
+    .admin-dashboard .page-header {
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+}
+
 
 
 
@@ -9917,5 +9942,227 @@ iframe, embed, object, video {
 
 }
 
+/* ===== SITE FOOTER CANONICAL OVERRIDES ===== */
+/* Keep footer brand layout identical to navbar: logo | name + tagline */
 
+footer.footer.site-footer,
+.footer.site-footer {
+    padding: 40px 0 0 !important;
+}
 
+.footer.site-footer .footer-container {
+    display: grid !important;
+    grid-template-columns: minmax(220px, 1.35fr) repeat(2, minmax(140px, 1fr)) !important;
+    gap: 32px 48px !important;
+    align-items: start !important;
+    flex-direction: unset !important;
+    flex-wrap: unset !important;
+    max-width: var(--max-width, 1280px) !important;
+    margin: 0 auto !important;
+    padding: 0 5% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.footer.site-footer .footer-brand,
+.footer.site-footer .footer-column {
+    flex: unset !important;
+    width: auto !important;
+    min-width: 0 !important;
+    text-align: left !important;
+    align-items: flex-start !important;
+}
+
+.footer.site-footer .footer-logo-container {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    text-align: left !important;
+    gap: 0.5rem !important;
+}
+
+.footer.site-footer .footer-logo-img {
+    height: 48px !important;
+    width: auto !important;
+    max-width: none !important;
+    object-fit: contain !important;
+    display: block !important;
+    flex-shrink: 0 !important;
+}
+
+.footer.site-footer .footer-logo-text {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    gap: 0 !important;
+}
+
+.footer.site-footer .footer-brand-logo {
+    font-family: 'Playfair Display', serif !important;
+    font-size: 1.25rem !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    line-height: 1 !important;
+    margin: 0 !important;
+}
+
+.footer.site-footer .footer-brand-tagline {
+    font-size: 0.65rem !important;
+    letter-spacing: 0.5px !important;
+    color: #40916C !important;
+    line-height: 1 !important;
+    margin: 0.25rem 0 0 !important;
+    font-weight: 600 !important;
+    text-transform: none !important;
+}
+
+.footer.site-footer .footer-brand-description {
+    max-width: 280px !important;
+    margin: 0 !important;
+    font-size: 0.9rem !important;
+    text-align: left !important;
+    color: rgba(255, 255, 255, 0.65) !important;
+}
+
+.footer.site-footer .footer-social {
+    justify-content: flex-start !important;
+    margin-top: 2px !important;
+}
+
+.footer.site-footer .footer-links {
+    display: flex !important;
+    flex-direction: column !important;
+    flex-wrap: nowrap !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    gap: 8px !important;
+    width: 100% !important;
+}
+
+.footer.site-footer .footer-links li {
+    margin: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+.footer.site-footer .footer-column h4 {
+    font-size: 0.8rem !important;
+    margin-bottom: 14px !important;
+    text-align: left !important;
+    color: rgba(255, 255, 255, 0.45) !important;
+}
+
+.footer.site-footer .footer-link {
+    font-size: 0.9rem !important;
+    text-align: left !important;
+    display: inline-block !important;
+}
+
+.footer.site-footer .footer-bottom {
+    margin: 32px 0 0 !important;
+    padding: 16px 5% !important;
+    max-width: none !important;
+    width: 100% !important;
+}
+
+@media (max-width: 1024px) {
+    .footer.site-footer .footer-container {
+        grid-template-columns: minmax(200px, 1.2fr) repeat(2, minmax(120px, 1fr)) !important;
+        gap: 28px 32px !important;
+        padding: 0 4% !important;
+    }
+
+    .footer.site-footer {
+        padding-left: 4% !important;
+        padding-right: 4% !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .footer.site-footer {
+        padding: 32px 0 0 !important;
+    }
+
+    .footer.site-footer .footer-container {
+        grid-template-columns: 1fr !important;
+        gap: 28px !important;
+        padding: 0 5% !important;
+    }
+
+    .footer.site-footer .footer-brand,
+    .footer.site-footer .footer-column {
+        text-align: left !important;
+        align-items: flex-start !important;
+    }
+
+    .footer.site-footer .footer-logo-container {
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+    }
+
+    .footer.site-footer .footer-social {
+        justify-content: flex-start !important;
+    }
+
+    .footer.site-footer .footer-links {
+        justify-content: flex-start !important;
+        flex-wrap: nowrap !important;
+    }
+
+    .footer.site-footer .footer-logo-img {
+        height: 48px !important;
+    }
+
+    .footer.site-footer .footer-bottom {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        text-align: left !important;
+        gap: 12px !important;
+        padding: 14px 5% !important;
+    }
+
+    .footer.site-footer .footer-bottom-links {
+        justify-content: flex-start !important;
+        flex-wrap: wrap !important;
+        gap: 8px 16px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .footer.site-footer {
+        padding: 28px 0 0 !important;
+    }
+
+    .footer.site-footer .footer-container {
+        gap: 24px !important;
+        padding: 0 4.5% !important;
+    }
+
+    .footer.site-footer .footer-logo-container {
+        flex-direction: row !important;
+        align-items: center !important;
+    }
+
+    .footer.site-footer .footer-logo-img {
+        height: 44px !important;
+    }
+
+    .footer.site-footer .footer-brand-logo {
+        font-size: 1.15rem !important;
+    }
+
+    .footer.site-footer .footer-brand-tagline {
+        font-size: 0.6rem !important;
+    }
+
+    .footer.site-footer .footer-bottom {
+        padding: 12px 4.5% !important;
+    }
+
+    .footer.site-footer .footer-bottom-link {
+        font-size: 0.75rem !important;
+    }
+}
+}

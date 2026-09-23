@@ -15,7 +15,7 @@ WEBSITE_CONFIG = {
             "message"
         ],
         "email_template": "emails/heyday_contact.html",
-        "company_name": "HeyDay Realty",
+        "company_name": "HHectare",
         "smtp_settings": {
             "host": "smtp.gmail.com",
             "port": 587,

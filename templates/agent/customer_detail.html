@@ -1,15 +1,12 @@
 {% extends "agent/agent_base.html" %}
 {% load static %}
 
-{% block title %}Customer Details | HeyDay Realty{% endblock %}
+{% block title %}Customer Details | HHectare{% endblock %}
 
 {% block breadcrumb_items %}
 <span>Customer Details</span>
 {% endblock %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/agent/customer_detail.css' %}">
-{% endblock %}
 
 {% block content %}
 <div class="customer-detail-container">
@@ -39,12 +36,12 @@
             <div class="row">
                 <div class="col-md-4">
                     {% if inquiry.related_property.featured_image %}
-                        <img id="mainImage-{{ inquiry.id }}" src="{{ inquiry.related_property.featured_image.url }}" class="img-fluid rounded mb-2" style="width: 100%; object-fit: cover; aspect-ratio: 16/9;">
+                        <img id="mainImage-{{ inquiry.id }}" src="{{ inquiry.related_property.featured_image.url }}" class="img-fluid rounded mb-2 customer-main-image">
                     {% endif %}
                     {% if inquiry.related_property.images.all %}
-                        <div style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px;">
+                        <div class="customer-thumbnail-gallery">
                             {% for img in inquiry.related_property.images.all %}
-                                <img src="{{ img.image.url }}" class="rounded" style="width: 80px; height: 80px; min-width: 80px; object-fit: cover; cursor: pointer;" onclick="document.getElementById('mainImage-{{ inquiry.id }}').src=this.src;">
+                                <img src="{{ img.image.url }}" class="rounded customer-thumbnail" onclick="document.getElementById('mainImage-{{ inquiry.id }}').src=this.src;">
                             {% endfor %}
                         </div>
                     {% endif %}

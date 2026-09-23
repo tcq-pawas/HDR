@@ -2,9 +2,11 @@ from django import forms
 from django.contrib.auth.models import User
 from Apps.PublicPage.models import Property, LocationData
 from .models import (
-    AgentProfile, Lead, LeadFollowUp, SiteVisit, Booking, 
-    Installment, Commission, Document, Communication, MessageTemplate
+    AgentProfile, Lead, LeadFollowUp, SiteVisit, Booking,
+    Installment, Commission, Document, VerificationDocument,
+    Communication, MessageTemplate
 )
+from .validators import validate_image_file, validate_document_file, validate_video_file
 
 
 class MultipleFileInput(forms.ClearableFileInput):
@@ -34,7 +36,6 @@ class PropertyForm(forms.ModelForm):
         self.fields['price'].required = True
         self.fields['location'].required = True
         self.fields['state'].required = True
-        self.fields['district'].required = True
         self.fields['city'].required = True
         self.fields['pincode'].required = True
         self.fields['full_address'].required = True
@@ -144,7 +145,7 @@ class PropertyForm(forms.ModelForm):
             'registry_copy', 'sale_deed', 'mutation', 'building_approval',
             'completion_certificate', 'noc', 'layout_plan', 'property_brochure',
             # Location Management
-            'state', 'district', 'city', 'locality', 'landmark', 'full_address', 'pincode',
+            'state', 'city', 'locality', 'landmark', 'full_address', 'pincode',
             # Investment Details
             'investment_opportunity', 'expected_roi', 'minimum_investment',
             # Analytics & CRM
@@ -230,7 +231,6 @@ class PropertyForm(forms.ModelForm):
             'property_brochure': forms.FileInput(attrs={'class': 'form-control', 'accept': 'application/pdf'}),
             # Location Management
             'state': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'State'}),
-            'district': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'District'}),
             'city': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'City'}),
             'locality': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Locality'}),
             'landmark': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Landmark'}),
@@ -249,6 +249,78 @@ class PropertyForm(forms.ModelForm):
             'requires_authentication': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'allowed_roles': forms.Select(attrs={'class': 'form-select'}),
         }
+
+    def clean_featured_image(self):
+        f = self.cleaned_data.get('featured_image')
+        if f:
+            validate_image_file(f)
+        return f
+
+    def clean_floor_plan(self):
+        f = self.cleaned_data.get('floor_plan')
+        if f:
+            validate_image_file(f)
+        return f
+
+    def clean_property_video(self):
+        f = self.cleaned_data.get('property_video')
+        if f:
+            validate_video_file(f)
+        return f
+
+    def clean_drone_video(self):
+        f = self.cleaned_data.get('drone_video')
+        if f:
+            validate_video_file(f)
+        return f
+
+    def clean_registry_copy(self):
+        f = self.cleaned_data.get('registry_copy')
+        if f:
+            validate_document_file(f)
+        return f
+
+    def clean_sale_deed(self):
+        f = self.cleaned_data.get('sale_deed')
+        if f:
+            validate_document_file(f)
+        return f
+
+    def clean_mutation(self):
+        f = self.cleaned_data.get('mutation')
+        if f:
+            validate_document_file(f)
+        return f
+
+    def clean_building_approval(self):
+        f = self.cleaned_data.get('building_approval')
+        if f:
+            validate_document_file(f)
+        return f
+
+    def clean_completion_certificate(self):
+        f = self.cleaned_data.get('completion_certificate')
+        if f:
+            validate_document_file(f)
+        return f
+
+    def clean_noc(self):
+        f = self.cleaned_data.get('noc')
+        if f:
+            validate_document_file(f)
+        return f
+
+    def clean_layout_plan(self):
+        f = self.cleaned_data.get('layout_plan')
+        if f:
+            validate_document_file(f)
+        return f
+
+    def clean_property_brochure(self):
+        f = self.cleaned_data.get('property_brochure')
+        if f:
+            validate_document_file(f)
+        return f
 
 
 class AgriculturalLandForm(forms.ModelForm):
@@ -274,6 +346,10 @@ class AgriculturalLandForm(forms.ModelForm):
             self.fields['featured_image'].required = True
         else:
             self.fields['featured_image'].required = False
+        
+        # Set area unit choices to agricultural land specific choices
+        from Apps.PublicPage.models import Property
+        self.fields['area_unit'].choices = Property.AGRI_AREA_UNIT_CHOICES
             
         # Populate state choices dynamically
         state_choices = [('', 'Select State')]
@@ -426,8 +502,8 @@ class AgriculturalLandForm(forms.ModelForm):
             'latitude': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Latitude', 'step': '0.000001'}),
             'longitude': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Longitude', 'step': '0.000001'}),
             # Investment Information
-            'price': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Total Price (₹)', 'step': '0.01'}),
-            'price_per_acre': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Price Per Acre (₹)', 'step': '0.01'}),
+            'price': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Total Price (₹)', 'step': '0.01', 'id': 'total_price_input'}),
+            'price_per_acre': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Price Per Acre (₹)', 'step': '0.01', 'readonly': 'readonly'}),
             'total_land_price': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Total Land Price (₹)', 'step': '0.01'}),
             'negotiable': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'expected_roi': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Expected ROI %', 'step': '0.01'}),
@@ -473,6 +549,48 @@ class AgriculturalLandForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
+
+    def clean_featured_image(self):
+        f = self.cleaned_data.get('featured_image')
+        if f:
+            validate_image_file(f)
+        return f
+
+    def clean_property_video(self):
+        f = self.cleaned_data.get('property_video')
+        if f:
+            validate_video_file(f)
+        return f
+
+    def clean_drone_video(self):
+        f = self.cleaned_data.get('drone_video')
+        if f:
+            validate_video_file(f)
+        return f
+
+    def clean_registry_copy(self):
+        f = self.cleaned_data.get('registry_copy')
+        if f:
+            validate_document_file(f)
+        return f
+
+    def clean_sale_deed(self):
+        f = self.cleaned_data.get('sale_deed')
+        if f:
+            validate_document_file(f)
+        return f
+
+    def clean_layout_plan(self):
+        f = self.cleaned_data.get('layout_plan')
+        if f:
+            validate_document_file(f)
+        return f
+
+    def clean_property_brochure(self):
+        f = self.cleaned_data.get('property_brochure')
+        if f:
+            validate_document_file(f)
+        return f
 
 
 class AgentProfileForm(forms.ModelForm):
@@ -569,10 +687,32 @@ class AgentProfileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
+        self.user = user
         if user:
             self.fields['first_name'].initial = user.first_name
             self.fields['last_name'].initial = user.last_name
             self.fields['email'].initial = user.email
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+
+        # Update User model fields
+        if self.user:
+            self.user.first_name = self.cleaned_data.get('first_name')
+            self.user.last_name = self.cleaned_data.get('last_name')
+            self.user.email = self.cleaned_data.get('email')
+            if commit:
+                self.user.save()
+
+        if commit:
+            instance.save()
+        return instance
+
+    def clean_profile_image(self):
+        f = self.cleaned_data.get('profile_image')
+        if f:
+            validate_image_file(f)
+        return f
 
 
 class LeadForm(forms.ModelForm):
@@ -698,10 +838,95 @@ class DocumentForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Description'}),
             'is_public': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
-        
-        
-        
-        
+
+    def clean_file(self):
+        f = self.cleaned_data.get('file')
+        if f:
+            validate_document_file(f)
+        return f
+
+
+class VerificationDocumentForm(forms.ModelForm):
+    """Form for agent KYC document submission (front + back)."""
+
+    no_back_side = forms.BooleanField(
+        required=False,
+        label='This document has no back side',
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input', 'id': 'id_no_back_side'}),
+    )
+
+    class Meta:
+        model = VerificationDocument
+        fields = ['document_type', 'document_name', 'front_file', 'back_file']
+        widgets = {
+            'document_type': forms.Select(attrs={
+                'class': 'form-select',
+                'id': 'id_document_type',
+            }),
+            'document_name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter document name',
+                'id': 'id_document_name',
+            }),
+            'front_file': forms.FileInput(attrs={
+                'class': 'form-control',
+                'accept': '.jpg,.jpeg,.png,.pdf',
+                'id': 'id_front_file',
+            }),
+            'back_file': forms.FileInput(attrs={
+                'class': 'form-control',
+                'accept': '.jpg,.jpeg,.png,.pdf',
+                'id': 'id_back_file',
+            }),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['document_type'].choices = [
+            ('', 'Select Document Type')
+        ] + list(VerificationDocument.DOCUMENT_TYPE_CHOICES)
+        self.fields['document_type'].required = True
+        self.fields['front_file'].required = True
+        self.fields['back_file'].required = False
+        self.fields['document_name'].required = False
+
+    def clean_front_file(self):
+        f = self.cleaned_data.get('front_file')
+        if f:
+            validate_document_file(f)
+        return f
+
+    def clean_back_file(self):
+        f = self.cleaned_data.get('back_file')
+        if f:
+            validate_document_file(f)
+        return f
+
+    def clean(self):
+        cleaned = super().clean()
+        document_type = cleaned.get('document_type')
+        document_name = (cleaned.get('document_name') or '').strip()
+        no_back_side = cleaned.get('no_back_side')
+        back_file = cleaned.get('back_file')
+        front_file = cleaned.get('front_file')
+
+        if not document_type:
+            self.add_error('document_type', 'Please select a document type.')
+
+        if document_type == 'other' and not document_name:
+            self.add_error('document_name', 'Please enter a document name for Other.')
+
+        if not front_file:
+            self.add_error('front_file', 'Please upload the front side of your document.')
+
+        if not no_back_side and not back_file:
+            self.add_error('back_file', 'Please upload the back side of your document.')
+
+        cleaned['has_back_side'] = not bool(no_back_side)
+        if no_back_side:
+            cleaned['back_file'] = None
+
+        return cleaned
 
 
 class CommunicationForm(forms.ModelForm):

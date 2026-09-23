@@ -1,0 +1,1421 @@
+/* =========================================================
+   INVESTOR CSS
+   Main stylesheet for Investor Portal
+   ========================================================= */
+
+/* Import global typography system */
+@import url('../css/typography.css');
+
+/* =========================================================
+   1. INVESTOR VARIABLES
+   ========================================================= */
+
+:root {
+    --investor-primary: #005427;
+    --investor-secondary: #6AAE48;
+    --investor-success: #198754;
+    --investor-info: #0dcaf0;
+    --investor-warning: #ffc107;
+    --investor-danger: #dc3545;
+    --investor-dark: #1e293b;
+    --investor-light: #f8f9fa;
+    --investor-border: #e2e8f0;
+}
+
+/* =========================================================
+   2. BASE / LAYOUT
+   ========================================================= */
+
+body {
+    background-color: #f8f9fa;
+    
+    font-size: var(--font-body-size);
+    line-height: var(--line-height-body);
+}
+
+.investor-dashboard {
+    overflow-x: hidden;
+}
+
+.main-content-wrapper {
+    padding: 32px !important;
+    max-width: 100%;
+}
+
+.app-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 280px;
+    background: linear-gradient(180deg, #005427 0%, #003d1c 100%);
+    min-height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    transition: transform 0.3s ease;
+}
+
+.main-content {
+    flex: 1;
+    margin-left: 280px;
+    min-height: 100vh;
+}
+
+/* =========================================================
+   3. SIDEBAR
+   ========================================================= */
+
+.sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.8);
+    padding: 12px 16px;
+    margin-bottom: 4px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+    background: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+}
+
+.sidebar .nav-link i {
+    width: 20px;
+    text-align: center;
+}
+
+.mobile-menu-toggle {
+    display: none;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1001;
+    background: #005427;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+    
+    .sidebar.show {
+        transform: translateX(0);
+    }
+    
+    .main-content {
+        margin-left: 0;
+    }
+    
+    .mobile-menu-toggle {
+        display: block;
+    }
+}
+
+/* =========================================================
+   4. HEADER / NAVBAR
+   ========================================================= */
+
+.page-header {
+    background: #ffffff;
+    padding: 24px 32px;
+    margin-bottom: 28px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.page-title {
+    color: #1e293b;
+    font-weight: var(--font-weight-bold);
+    font-size: 28px;
+    margin-bottom: 4px;
+    font-family: var(--font-heading);
+}
+
+.page-subtitle {
+    color: #64748b;
+    font-size: var(--font-body-size);
+    margin-bottom: 0;
+}
+
+/* =========================================================
+   5. DASHBOARD (from dashboard.html inline styles)
+   ========================================================= */
+
+body.investor-dashboard {
+    background: #f4f6f9;
+    
+    overflow-x: hidden;
+}
+
+.dashboard-content {
+    width: 100%;
+    max-width: 100%;
+}
+
+.card-shadow {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.dashboard-card {
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1px solid #edf0f3;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.07);
+}
+
+/* KPI Cards */
+.kpi-card {
+    position: relative;
+    height: 100%;
+    min-height: 155px;
+    padding: 22px !important;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kpi-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.10);
+}
+
+.kpi-card h5 {
+    margin: 0;
+    font-size: var(--font-small);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-body);
+}
+
+.kpi-card h2 {
+    margin-top: 10px !important;
+    margin-bottom: 0;
+    font-size: 1.9rem !important;
+    line-height: 1.2;
+    font-weight: 700;
+}
+
+.kpi-card p {
+    margin-top: 12px !important;
+    margin-bottom: 0;
+    font-size: var(--font-small);
+    opacity: 0.9;
+}
+
+.kpi-icon {
+    position: absolute;
+    right: 18px;
+    bottom: 16px;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    font-size: var(--font-button);
+}
+
+/* Section Headings */
+.dashboard-section-title {
+    margin: 0;
+    color: #1e293b;
+    font-size: var(--font-h4);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-heading);
+}
+
+/* Analytics Cards */
+.analytics-card {
+    min-height: 390px;
+    padding: 24px !important;
+}
+
+.analytics-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.analytics-select {
+    width: auto;
+    min-width: 145px;
+    border-radius: 8px;
+    border-color: #dee2e6;
+    font-size: var(--font-small);
+    padding: 8px 32px 8px 12px;
+    box-shadow: none !important;
+}
+
+.chart-placeholder {
+    width: 100%;
+    min-height: 290px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+    border: 1px dashed #d8dee6;
+    color: #94a3b8;
+    font-size: var(--font-body-size);
+}
+
+/* ROI Card */
+.roi-card {
+    min-height: 140px;
+    padding: 24px !important;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s;
+}
+
+.roi-card:hover {
+    transform: translateY(-2px);
+}
+
+.roi-circle {
+    width: 176px;
+    height: 176px;
+    margin: 25px auto 0;
+    border-radius: 50%;
+    border: 14px solid #198754;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    box-shadow: inset 0 0 0 8px #f8fafc, 0 5px 20px rgba(25, 135, 84, 0.08);
+}
+
+.roi-circle h2 {
+    margin: 0;
+    color: #1e293b;
+    font-size: 1.8rem !important;
+    font-weight: 700;
+}
+
+.roi-circle p {
+    margin: 4px 0 0;
+    color: #64748b;
+    font-size: var(--font-small);
+}
+
+/* Investments Card */
+.investments-card {
+    padding: 24px !important;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.view-all-btn {
+    white-space: nowrap;
+    border-radius: 8px;
+    font-size: var(--font-small);
+    font-weight: var(--font-weight-medium);
+    padding: 7px 14px;
+}
+
+/* Table */
+.investments-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 8px;
+}
+
+.investments-table {
+    width: 100%;
+    min-width: 650px;
+    margin-bottom: 0;
+    vertical-align: middle;
+}
+
+.investments-table thead th {
+    color: #64748b;
+    font-size: var(--font-small);
+    font-weight: var(--font-weight-semibold);
+    white-space: nowrap;
+    border-bottom: 1px solid #e9ecef;
+    padding: 12px 10px;
+}
+
+.investments-table tbody td {
+    color: #475569;
+    font-size: var(--font-small);
+    padding: 15px 10px;
+    white-space: nowrap;
+    border-bottom: 1px solid #f1f3f5;
+}
+
+.investments-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.property-name {
+    color: #1e293b;
+    font-weight: var(--font-weight-semibold);
+}
+
+/* Notifications */
+.notifications-card {
+    padding: 24px !important;
+}
+
+.notification-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.notification-item {
+    position: relative;
+    padding: 13px 14px !important;
+    background: #f8fafc;
+    border: 1px solid #eef1f4;
+    border-radius: 10px;
+    color: #475569;
+    font-size: var(--font-small);
+    line-height: var(--line-height-body);
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.notification-item:hover {
+    background: #f1f5f9;
+    transform: translateX(2px);
+}
+
+.notification-icon {
+    width: 30px;
+    min-width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 8px;
+    border-radius: 50%;
+    background: #e8f5ee;
+    color: #198754;
+    font-size: var(--font-small);
+}
+
+/* =========================================================
+   6. DOCUMENTS
+   ========================================================= */
+
+.document-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s;
+}
+
+.document-card:hover {
+    transform: translateY(-2px);
+}
+
+.file-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-h3);
+}
+
+.file-pdf {
+    background-color: #dc3545;
+    color: white;
+}
+
+.file-excel {
+    background-color: #28a745;
+    color: white;
+}
+
+.file-word {
+    background-color: #007bff;
+    color: white;
+}
+
+.file-image {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.file-default {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* =========================================================
+   7. INVESTMENTS
+   ========================================================= */
+
+.investment-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s;
+}
+
+.investment-card:hover {
+    transform: translateY(-2px);
+}
+
+
+.col-md-3{
+    text-wrap: nowrap;
+}
+/* =========================================================
+   8. ROI DATA
+   ========================================================= */
+
+.roi-data-page {
+    width: 100%;
+    min-width: 0;
+}
+
+.roi-data-page .row {
+    min-width: 0;
+}
+
+.roi-data-page .card {
+    min-width: 0;
+    overflow: hidden;
+}
+
+.roi-data-page .card-body {
+    min-width: 0;
+}
+
+.roi-data-page .roi-summary-cards {
+    row-gap: 18px;
+}
+
+.roi-data-page .roi-summary-cards .col-md-3 {
+    min-width: 0;
+    text-wrap: normal;
+}
+
+.roi-data-page .roi-card {
+    height: 100%;
+}
+
+.roi-data-page .roi-card .card-body {
+    padding: 1.25rem !important;
+}
+
+.roi-data-page .roi-card .d-flex {
+    gap: 0.875rem;
+    min-width: 0;
+}
+
+.roi-data-page .roi-card .card-title {
+    margin-bottom: 0.35rem;
+    font-size: 28px;
+    line-height: var(--line-height-heading);
+    overflow-wrap: anywhere;
+}
+
+.roi-data-page .roi-card .card-text {
+    margin-bottom: 0;
+    font-size: 18px;
+    line-height: var(--line-height-body);
+}
+
+.roi-data-page .roi-card i {
+    flex: 0 0 auto;
+}
+
+.roi-data-page .table-responsive {
+    border-radius: 8px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.roi-data-page .table {
+    min-width: 680px;
+    margin-bottom: 0;
+    vertical-align: middle;
+}
+
+.roi-data-page .table th,
+.roi-data-page .table td {
+    white-space: nowrap;
+}
+
+.roi-data-page .table .btn-group {
+    display: inline-flex;
+    gap: 0.35rem;
+}
+
+.roi-data-page .table .btn-group .btn {
+    width: 34px;
+    min-width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px !important;
+}
+
+.roi-data-page .row.mt-4 .d-flex.justify-content-between {
+    gap: 1rem;
+    min-width: 0;
+}
+
+.roi-data-page .row.mt-4 .fw-bold,
+.roi-data-page .row.mt-4 small {
+    overflow-wrap: anywhere;
+}
+
+/* ROI Summary Cards - 2x2 grid at medium widths */
+@media (max-width: 1250px) {
+    .roi-data-page .roi-summary-cards {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+    
+    .roi-data-page .roi-summary-cards .col-md-3 {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+    }
+}
+
+/* Stack chart and detail columns before the fixed sidebar makes them cramped */
+@media (max-width: 1100px) {
+    .roi-data-page > .row:not(.roi-summary-cards) {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 1.5rem;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .roi-data-page > .row:not(.roi-summary-cards) > [class*="col-md-"] {
+        width: 100%;
+        max-width: 100%;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .roi-data-page .chart-container {
+        height: 280px;
+    }
+}
+
+@media (max-width: 768px) {
+    .roi-data-page .card-header {
+        padding: 0.875rem 1rem;
+    }
+
+    .roi-data-page .card-body {
+        padding: 1rem;
+    }
+
+    .roi-data-page .roi-summary-cards {
+        gap: 14px;
+        margin-bottom: 1.25rem !important;
+    }
+
+    .roi-data-page .roi-card .card-body {
+        padding: 1rem !important;
+    }
+
+    .roi-data-page .chart-container {
+        height: 250px;
+    }
+}
+
+/* ROI Summary Cards - single column at mobile */
+@media (max-width: 600px) {
+    .roi-data-page .roi-summary-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .roi-data-page .chart-container {
+        height: 230px;
+    }
+
+    .roi-data-page .row.mt-4 .d-flex.justify-content-between {
+        align-items: flex-start !important;
+    }
+}
+
+/* =========================================================
+   9. MY INVESTMENTS
+   ========================================================= */
+
+.investments-page {
+    width: 100%;
+    min-width: 0;
+}
+
+.investments-page .investment-card {
+    overflow: hidden;
+}
+
+.investments-page .investment-card .card-body {
+    min-width: 0;
+}
+
+.investments-page .investment-card .d-flex.align-items-start {
+    min-width: 0;
+}
+
+.investments-page .investment-card .rounded-circle {
+    flex: 0 0 auto;
+}
+
+.investments-page .investment-card .flex-grow-1 {
+    min-width: 0;
+}
+
+.investments-page .investment-card .card-title,
+.investments-page .investment-card .card-text,
+.investments-page .investment-card .small {
+    overflow-wrap: anywhere;
+}
+
+.investments-page .investment-card .card-text,
+.investments-page .investment-card .d-flex.align-items-center.text-muted.small {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem 1rem;
+}
+
+.investments-page .investment-card .card-text .ms-3,
+.investments-page .investment-card .d-flex.align-items-center.text-muted.small .ms-3,
+.investments-page .investment-card .d-flex.align-items-center.text-muted.small .me-3 {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+.investments-page .investment-card .badge {
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
+.investments-page .investment-card .btn-group {
+    max-width: 100%;
+}
+
+.investments-page .investment-card .btn-group .btn {
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+/* Stack investment card columns before the sidebar makes the content area tight */
+@media (max-width: 1100px) {
+    .investments-page .investment-card .row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 1rem;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    
+    .investments-page .investment-card .col-md-8,
+    .investments-page .investment-card .col-md-4 {
+        flex: 0 0 100%;
+        max-width: 100%;
+        width: 100%;
+        padding-left: 0;
+        padding-right: 0;
+    }
+    
+    .investments-page .investment-card .col-md-4 {
+        text-align: left;
+    }
+    
+    .investments-page .investment-card .btn-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .investments-page .investment-card .btn-group .btn {
+        flex: 1;
+        min-width: 120px;
+    }
+}
+
+/* Keep the card balanced through the 768px to 670px range */
+@media (max-width: 768px) {
+    .investments-page .card > .card-body {
+        padding: 0.875rem;
+    }
+
+    .investments-page .investment-card .card-body {
+        padding: 1rem;
+    }
+}
+
+/* Fix metadata row wrapping, badge overflow, and action alignment on compact phones */
+@media (max-width: 670px) {
+    .investments-page .investment-card .d-flex.align-items-start {
+        gap: 0.75rem;
+    }
+
+    .investments-page .investment-card .rounded-circle {
+        width: 38px !important;
+        height: 38px !important;
+        font-size: 0.85rem;
+        margin-right: 0 !important;
+    }
+
+    .investments-page .investment-card .card-title {
+        font-size: 0.92rem;
+        line-height: 1.35;
+    }
+
+    .investments-page .investment-card .card-text,
+    .investments-page .investment-card .small {
+        font-size: 0.82rem;
+        line-height: 1.45;
+    }
+    
+    .investments-page .investment-card .badge {
+        max-width: 100%;
+        white-space: normal;
+        text-align: center;
+    }
+    
+    .investments-page .investment-card .btn-group {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        width: 100%;
+        gap: 0.5rem;
+    }
+
+    .investments-page .investment-card .btn-group .btn {
+        width: 100%;
+        min-width: 0;
+        border-radius: 4px !important;
+    }
+}
+
+@media (max-width: 420px) {
+    .investments-page .card > .card-body {
+        padding: 0.625rem;
+    }
+
+    .investments-page .investment-card .card-body {
+        padding: 0.875rem;
+    }
+}
+
+/* =========================================================
+   10. INVESTMENT DETAIL
+   ========================================================= */
+
+/* investment-card styles already defined in Investments section */
+
+/* Investment Details Page - Responsive Layout */
+.investment-detail-page {
+    width: 100%;
+    min-width: 0;
+}
+
+/* Stack columns when content area becomes too narrow (sidebar consumes space) */
+@media (max-width: 1150px) {
+    .investment-detail-page .row {
+        flex-direction: column !important;
+    }
+    
+    .investment-detail-page .col-md-6 {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+}
+
+/* Mobile adjustments below 600px */
+@media (max-width: 600px) {
+    .investment-detail-page .card {
+        width: 100%;
+        min-width: 0;
+    }
+    
+    .investment-detail-page .card-body {
+        padding: 1rem;
+    }
+    
+    .investment-detail-page .card-header {
+        padding: 1rem;
+    }
+    
+    .investment-detail-page p {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+    
+    .investment-detail-page .status-badge {
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+    
+    .investment-detail-page .list-group-item {
+        padding: 0.75rem 1rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .investment-detail-page .list-group-item i {
+        margin-right: 0.5rem;
+    }
+    
+    .investment-detail-page .btn-lg {
+        width: 100%;
+        padding: 0.75rem 1.5rem;
+    }
+}
+
+/* =========================================================
+   9. ROI
+   ========================================================= */
+
+.roi-positive {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.roi-negative {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.roi-neutral {
+    color: #6c757d;
+    font-weight: bold;
+}
+
+/* ROI Data page specific chart-container */
+.roi-data-page .chart-container {
+    position: relative;
+    height: 300px;
+}
+
+@media (max-width: 1100px) {
+    .roi-data-page .chart-container {
+        height: 280px;
+    }
+}
+
+@media (max-width: 768px) {
+    .roi-data-page .chart-container {
+        height: 250px;
+    }
+}
+
+@media (max-width: 600px) {
+    .roi-data-page .chart-container {
+        height: 230px;
+    }
+}
+
+/* =========================================================
+   10. PROFILE
+   ========================================================= */
+
+.premium-hero {
+    background: linear-gradient(135deg, #005427 0%, #003d1c 100%);
+    border-radius: 16px;
+    padding: 2rem;
+    color: white;
+}
+
+.avatar-premium {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6AAE48 0%, #005427 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    flex-shrink: 0;
+}
+
+.badge-premium {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.badge-emerald {
+    background: #10b981;
+    color: white;
+}
+
+.badge-gold {
+    background: #f59e0b;
+    color: white;
+}
+
+.badge-blue {
+    background: #3b82f6;
+    color: white;
+}
+
+.badge-purple {
+    background: #8b5cf6;
+    color: white;
+}
+
+/* Profile KPI cards */
+.kpi-card.gradient-1 {
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+}
+
+.kpi-card.gradient-2 {
+    background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+}
+
+.kpi-card.gradient-3 {
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+}
+
+.kpi-card.gradient-4 {
+    background: linear-gradient(135deg, #ede9fe, #ddd6fe);
+}
+
+.action-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.kpi-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+/* Profile chart wrapper - CRITICAL for responsive fix */
+.portfolio-chart-wrapper {
+    position: relative;
+    width: 100%;
+    height: 320px;
+}
+
+.portfolio-chart-wrapper canvas {
+    display: block;
+    max-width: 100%;
+}
+
+/* Profile info cards */
+.info-card {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.info-label {
+    color: #64748b;
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
+}
+
+.info-value {
+    color: #1e293b;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+/* Profile insight card */
+.insight-card {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+}
+
+/* =========================================================
+   11. SHARED UTILITIES
+   ========================================================= */
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.status-badge {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.75rem;
+}
+
+.text-white-50 {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* =========================================================
+   12. RESPONSIVE - BASE
+   ========================================================= */
+
+@media (max-width: 768px) {
+    .main-content-wrapper {
+        padding: 16px !important;
+    }
+    
+    .page-header {
+        padding: 18px 20px;
+        margin-bottom: 20px;
+        margin-top: 70px !important;
+    }
+}
+
+/* =========================================================
+   13. RESPONSIVE - DASHBOARD
+   ========================================================= */
+
+/* Tablet */
+@media (max-width: 1500px) {
+    .kpi-card {
+        min-height: 145px;
+    }
+    
+    .kpi-card h2 {
+        font-size: 1.7rem !important;
+    }
+    
+    .analytics-card{
+         min-height: 360px;
+    }
+    
+    .chart-placeholder {
+        min-height: 260px;
+    }
+    
+    .roi-circle {
+        width: 160px;
+        height: 160px;
+        border-width: 12px;
+    }
+    
+    .roi-circle h2 {
+        font-size: 1.65rem !important;
+    }
+}
+
+/* Mobile */
+@media (max-width: 767.98px) {
+    /* KPI */
+    .kpi-card {
+        min-height: 140px;
+        padding: 19px !important;
+        border-radius: 12px;
+    }
+    
+    /* Cards */
+    .analytics-card,
+    .roi-card,
+    .investments-card,
+    .notifications-card {
+        padding: 19px !important;
+        border-radius: 12px;
+    }
+    
+    /* Section header */
+    .analytics-header,
+    .section-header {
+        align-items: flex-start;
+    }
+    
+    .analytics-select {
+        min-width: 135px;
+    }
+    
+    /* Chart */
+    .chart-placeholder {
+        min-height: 220px;
+    }
+    
+    /* ROI */
+    .roi-card {
+        min-height: auto;
+    }
+    
+    .roi-circle {
+        width: 155px;
+        height: 155px;
+        margin-top: 15px;
+        border-width: 11px;
+    }
+    
+    /* Table */
+    .investments-table-wrapper {
+        margin-left: -2px;
+        width: calc(100% + 4px);
+    }
+    
+    .investments-table {
+        min-width: 620px;
+    }
+    
+    /* Notifications */
+    .notification-item {
+        padding: 12px !important;
+    }
+}
+
+/* Small Mobile */
+@media (max-width: 575.98px) {
+    /* KPI becomes one column */
+    .kpi-row {
+        row-gap: 12px !important;
+    }
+    
+    .kpi-card {
+        min-height: 130px;
+    }
+    
+    .kpi-icon {
+        right: 15px;
+        bottom: 14px;
+        width: 38px;
+        height: 38px;
+    }
+    
+    /* Headers */
+    .analytics-header,
+    .section-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+    
+    .analytics-select {
+        width: 100%;
+        min-width: 0;
+    }
+    
+    .view-all-btn {
+        width: 100%;
+    }
+    
+    /* Chart */
+    .chart-placeholder {
+        min-height: 190px;
+    }
+    
+    /* ROI */
+    .roi-circle {
+        width: 145px;
+        height: 145px;
+        border-width: 10px;
+    }
+    
+    /* Spacing */
+    .dashboard-card {
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.045);
+    }
+}
+
+/* Very Small Mobile */
+@media (max-width: 380px) {
+    .kpi-card {
+        padding: 17px !important;
+    }
+    
+    .analytics-card,
+    .roi-card,
+    .investments-card,
+    .notifications-card {
+        padding: 16px !important;
+    }
+    
+    .chart-placeholder {
+        min-height: 175px;
+    }
+    
+    .roi-circle {
+        width: 135px;
+        height: 135px;
+    }
+}
+
+/* Extra Small Devices */
+@media (max-width: 320px) {
+    .kpi-card h2 {
+        font-size: 1.35rem !important;
+    }
+    
+    .kpi-card h5 {
+        font-size: 0.78rem;
+    }
+    
+    .kpi-card p {
+        font-size: 0.68rem;
+    }
+    
+    .chart-placeholder {
+        min-height: 160px;
+    }
+    
+    .roi-circle {
+        width: 125px;
+        height: 125px;
+        border-width: 9px;
+    }
+    
+    .roi-circle h2 {
+        font-size: 1.3rem !important;
+    }
+}
+
+/* =========================================================
+   14. RESPONSIVE - PROFILE PAGE SPECIFIC
+   ========================================================= */
+
+/* Profile page chart container - scoped to prevent conflict with ROI Data */
+.profile-page .portfolio-chart-wrapper {
+    height: 320px;
+}
+
+/* Tablet - Profile chart */
+@media (max-width: 992px) {
+    .profile-page .portfolio-chart-wrapper {
+        height: 280px;
+    }
+}
+
+/* Mobile - Profile chart */
+@media (max-width: 768px) {
+    .profile-page .portfolio-chart-wrapper {
+        height: 250px;
+    }
+    
+    .premium-hero {
+        padding: 1.5rem;
+    }
+    
+    .avatar-premium {
+        width: 70px;
+        height: 70px;
+        font-size: 1.75rem;
+    }
+    
+    .action-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Small Mobile - Profile chart */
+@media (max-width: 576px) {
+    .profile-page .portfolio-chart-wrapper {
+        height: 220px;
+    }
+    
+    .kpi-number {
+        font-size: 1.25rem;
+    }
+}
+
+/* Very Small Mobile - Profile chart */
+@media (max-width: 400px) {
+    .profile-page .portfolio-chart-wrapper {
+        height: 180px;
+    }
+    
+    .avatar-premium {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+}
+
+/* Extra Small Mobile - Profile chart */
+@media (max-width: 360px) {
+    .profile-page .portfolio-chart-wrapper {
+        height: 160px;
+    }
+}
+
+/* Ensure chart section has proper bottom spacing */
+.profile-page .chart-container {
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+    .profile-page .chart-container {
+        margin-bottom: 1.5rem;
+        min-height: 380px;
+    }
+}
+
+/* Fix for chart/Recent Investments overlap at 580px and below */
+@media (max-width: 580px) {
+    .profile-page .chart-container {
+        margin-bottom: 2rem;
+        min-height: 400px;
+    }
+    
+    .profile-page .portfolio-chart-wrapper {
+        height: 250px;
+    }
+}
+
+/* Small Mobile - Profile chart */
+@media (max-width: 576px) {
+    .profile-page .chart-container {
+        margin-bottom: 2rem;
+        min-height: 380px;
+    }
+    
+    .profile-page .portfolio-chart-wrapper {
+        height: 230px;
+    }
+    
+    .kpi-number {
+        font-size: 1.25rem;
+    }
+}

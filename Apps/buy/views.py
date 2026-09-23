@@ -75,7 +75,7 @@ def property_search(request):
         properties = properties.order_by(sort_options[sort_by])
     
     # Pagination
-    paginator = Paginator(properties, 12)
+    paginator = Paginator(properties, 6)
     page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
     
@@ -91,7 +91,7 @@ def property_search(request):
             ('₹1 Cr - ₹10 Cr', '1cr_10cr'),
             ('Above ₹10 Cr', 'above_10cr'),
         ],
-        'area_units': ['Acre', 'Bigha', 'Hectare', 'Sq Ft', 'Sq Yard'],
+        'area_units': ['Acre', 'Bigha', 'Hectare', 'Guntha', 'Kattha', 'Biswa', 'Kanal', 'Marla', 'Cent', 'Ground', 'Ankana', 'Dam', 'Sq Ft', 'Sq Yard'],
         'filters': {
             'q': query,
             'location': location,

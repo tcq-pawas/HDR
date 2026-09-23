@@ -4,7 +4,55 @@ from Apps.Agent.models import AgentProfile
 from Apps.Investor.models import InvestorProfile, Investment, InvestmentListing
 from Apps.PublicPage.models import Property
 from django.core.validators import RegexValidator
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+
+
+class CustomAuthenticationForm(AuthenticationForm):
+    """Login form that accepts username, email, or mobile number."""
+
+    error_messages = {
+        **AuthenticationForm.error_messages,
+        'invalid_login': (
+            "Please enter a correct email, phone number, or username and password. "
+            "Note that both fields may be case-sensitive."
+        ),
+    }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].label = 'Email, Phone Number, or Username'
+        self.fields['username'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Email, phone number, or username',
+            'autocomplete': 'username',
+            'autofocus': True,
+        })
+        self.fields['password'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Password',
+            'autocomplete': 'current-password',
+        })
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        return username.strip() if isinstance(username, str) else username
+
+    def clean(self):
+        """Authenticate via custom backend using stripped email/phone/username."""
+        from django.contrib.auth import authenticate
+
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+
+        if username is not None and password:
+            self.user_cache = authenticate(
+                self.request, username=username, password=password
+            )
+            if self.user_cache is None:
+                raise self.get_invalid_login_error()
+            self.confirm_login_allowed(self.user_cache)
+
+        return self.cleaned_data
 
 class PartnerRegistrationForm(UserCreationForm):
     ROLE_CHOICES = [
@@ -49,13 +97,19 @@ class PartnerRegistrationForm(UserCreationForm):
         phone = self.cleaned_data.get('phone')
         username = self.cleaned_data.get('username')
         
-        # If no username is provided, phone will be used as username
-        if not username and phone and User.objects.filter(username=phone).exists():
-            raise forms.ValidationError("An account with this phone number already exists.")
-            
-        # Also check profiles for existing phone
-        if phone and (AgentProfile.objects.filter(phone=phone).exists() or InvestorProfile.objects.filter(phone=phone).exists()):
-            raise forms.ValidationError("This phone number is already registered to another account.")
+        if phone:
+            from Apps.Administration.models import UserVerification
+            # Global uniqueness check across the entire platform
+            if UserVerification.objects.filter(phone_number=phone).exists():
+                raise forms.ValidationError("This phone number is already registered across the platform.")
+                
+            # If no username is provided, phone will be used as username
+            if not username and User.objects.filter(username=phone).exists():
+                raise forms.ValidationError("An account with this phone number already exists.")
+                
+            # Legacy check for existing phone in old profiles (just to be absolutely safe)
+            if AgentProfile.objects.filter(phone=phone).exists() or InvestorProfile.objects.filter(phone=phone).exists():
+                raise forms.ValidationError("This phone number is already registered to another account.")
             
         return phone
 
@@ -87,6 +141,10 @@ class PartnerRegistrationForm(UserCreationForm):
                 
             from Apps.Administration.auth_utils import assign_user_group
             assign_user_group(user, role)
+            
+            # Create the UserVerification record for global authentication/OTP
+            from Apps.Administration.models import UserVerification
+            UserVerification.objects.create(user=user, phone_number=phone if phone else None)
                 
         return user
 

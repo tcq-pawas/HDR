@@ -12,6 +12,16 @@ urlpatterns = [
     path("<int:organization_id>/members/", views.organization_members, name="members"),
     path("<int:organization_id>/members/add/", views.add_agent, name="add-agent"),
     path(
+        "<int:organization_id>/members/<int:mapping_id>/resend/",
+        views.resend_invitation,
+        name="resend-invitation",
+    ),
+    path(
+        "<int:organization_id>/members/<int:mapping_id>/deactivate/",
+        views.deactivate_agent,
+        name="deactivate-agent",
+    ),
+    path(
         "<int:organization_id>/members/<int:mapping_id>/remove/",
         views.remove_agent,
         name="remove-agent",

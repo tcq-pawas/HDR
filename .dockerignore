@@ -66,6 +66,7 @@ docker/nginx/ssl/
 *.xlsx
 *.json
 !package.json
+!staticfiles/**/*.json
 
 # Temporary files
 *.tmp
@@ -77,8 +78,7 @@ docker/nginx/ssl/
 logs/
 *.log
 
-# Static files (will be collected during build)
-staticfiles/
+# collectstatic output only — keep staticfiles/ (source assets) in the image
 static/
 
 # Node modules (if any)

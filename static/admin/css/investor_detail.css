@@ -1,0 +1,436 @@
+/* Investor Detail Page Styles */
+.investor-detail-page {
+    width: 100%;
+}
+
+.investor-detail-card {
+    border: 1px solid #e8edf2;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+}
+
+.investor-detail-card .card-header {
+    background: #fff;
+    padding: 18px 20px;
+    border-bottom: 1px solid #edf1f5;
+}
+
+.investor-detail-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.investor-detail-btn {
+    white-space: nowrap;
+    font-size: 0.85rem;
+    padding: 8px 16px;
+}
+
+.investor-detail-btn.danger {
+    background: #fee2e2;
+    border-color: #fecaca;
+    color: #dc2626;
+}
+
+.investor-detail-btn.danger:hover {
+    background: #fecaca;
+}
+
+.investor-detail-btn.success {
+    background: #006b45;
+    border-color: #006b45;
+    color: white;
+}
+
+.investor-detail-btn.success:hover {
+    background: #005538;
+    border-color: #005538;
+}
+
+.investor-detail-card .card-body {
+    padding: 18px 20px;
+}
+
+/* Profile Summary Card */
+.profile-summary-card {
+    border-radius: 12px;
+    border: 1px solid #e8edf2;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.profile-summary-card .card-body {
+    text-align: center;
+    padding: 24px;
+}
+
+.profile-avatar-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #d1fae5;
+    color: #059669;
+    margin: 0 auto 16px;
+    font-size: 2rem;
+}
+
+.profile-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 4px;
+}
+
+.profile-company {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-bottom: 12px;
+}
+
+.profile-status-badge {
+    font-size: 0.8rem;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.profile-status-badge.active {
+    background: #d1fae5;
+    color: #059669;
+}
+
+.profile-status-badge.inactive {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.profile-divider {
+    border-color: #f1f5f9;
+    margin: 16px 0;
+}
+
+.profile-info-row {
+    margin-bottom: 12px;
+}
+
+.profile-info-icon {
+    width: 20px;
+    color: #059669;
+    text-align: center;
+}
+
+.profile-info-text {
+    font-size: 0.85rem;
+    color: #334155;
+    font-weight: 500;
+}
+
+/* Investment Summary Cards */
+.investment-summary-cards {
+    margin-bottom: 20px;
+}
+
+.investment-summary-card {
+    min-width: 160px;
+    background: #f7f9fb;
+    border-radius: 10px;
+    padding: 18px;
+    border: 1px solid #e5eaf0;
+}
+
+.investment-summary-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    font-size: 1.1rem;
+}
+
+.investment-summary-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 4px;
+}
+
+.investment-summary-label {
+    font-size: 0.8rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* Investments Table */
+.investments-table-card {
+    border-radius: 12px;
+    border: 1px solid #e8edf2;
+    overflow: hidden;
+}
+
+.investments-table-card .card-header {
+    background: #fff;
+    padding: 16px 18px;
+    border-bottom: 1px solid #edf1f5;
+}
+
+.investments-table-card .card-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #0f172a;
+    margin: 0;
+}
+
+.investments-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+}
+
+.investments-table {
+    min-width: 700px;
+    margin-bottom: 0;
+}
+
+.investments-table thead th {
+    background: #f7f9fb;
+    color: #64748b;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 11px 12px;
+    border-bottom: 1px solid #e5eaf0;
+    white-space: nowrap;
+}
+
+.investments-table tbody td {
+    font-size: 0.78rem;
+    color: #334155;
+    padding: 13px 12px;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.investment-project-name {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.investment-status-badge {
+    font-size: 0.68rem;
+    padding: 4px 8px;
+    border-radius: 5px;
+}
+
+/* Modal */
+.delete-modal .modal-dialog {
+    max-width: 480px;
+}
+
+.delete-modal .modal-header {
+    background: #059669;
+    color: white;
+    border: none;
+}
+
+.delete-modal .modal-title {
+    color: white;
+}
+
+.delete-modal .btn-close {
+    color: white;
+}
+
+.delete-modal .modal-body {
+    padding: 20px;
+}
+
+.delete-modal .modal-footer {
+    border: none;
+    background: #f8fafc;
+    padding: 14px 20px;
+}
+
+/* Tablet */
+@media (max-width: 992px) {
+    .investment-summary-card {
+        min-width: 140px;
+        padding: 15px;
+    }
+
+    .investment-summary-value {
+        font-size: 1.4rem;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .investor-detail-page {
+        width: 100%;
+        padding: 0;
+    }
+
+    .investor-detail-card {
+        border-radius: 12px;
+        margin: 0;
+    }
+
+    .investor-detail-card .card-header {
+        padding: 14px 12px;
+    }
+
+    .investor-detail-title {
+        font-size: 0.82rem;
+        line-height: 1.2;
+        margin-bottom: 10px !important;
+    }
+
+    .investor-detail-actions {
+        width: 100%;
+    }
+
+    .investor-detail-btn {
+        width: 100%;
+        font-size: 0.85rem;
+        padding: 10px 16px;
+    }
+
+    .investor-detail-card .card-body {
+        padding: 10px 8px;
+    }
+
+    .profile-summary-card {
+        border-radius: 10px;
+    }
+
+    .profile-summary-card .card-body {
+        padding: 18px;
+    }
+
+    .profile-avatar-icon {
+        width: 64px;
+        height: 64px;
+        font-size: 1.6rem;
+        margin-bottom: 12px;
+    }
+
+    .profile-name {
+        font-size: 1rem;
+    }
+
+    .profile-company {
+        font-size: 0.8rem;
+    }
+
+    .profile-status-badge {
+        font-size: 0.75rem;
+        padding: 5px 12px;
+    }
+
+    .profile-info-row {
+        margin-bottom: 10px;
+    }
+
+    .profile-info-text {
+        font-size: 0.8rem;
+    }
+
+    .investment-summary-card {
+        min-width: 100px;
+        padding: 12px;
+    }
+
+    .investment-summary-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+
+    .investment-summary-value {
+        font-size: 1.2rem;
+    }
+
+    .investment-summary-label {
+        font-size: 0.75rem;
+    }
+
+    .investments-table-card {
+        border-radius: 10px;
+    }
+
+    .investments-table-card .card-header {
+        padding: 12px 14px;
+    }
+
+    .investments-table-card .card-title {
+        font-size: 0.9rem;
+    }
+
+    .investments-table-wrapper {
+        border-radius: 9px;
+        overflow-x: auto;
+    }
+
+    .investments-table {
+        min-width: 650px;
+    }
+
+    .investments-table thead th {
+        font-size: 0.62rem;
+        padding: 9px 10px;
+    }
+
+    .investments-table tbody td {
+        font-size: 0.65rem;
+        padding: 11px 10px;
+    }
+
+    .investment-status-badge {
+        font-size: 0.58rem;
+        padding: 3px 6px;
+    }
+
+    .delete-modal .modal-dialog {
+        max-width: calc(100% - 24px);
+        margin: 12px auto;
+    }
+
+    .delete-modal .modal-header {
+        padding: 14px 16px;
+    }
+
+    .delete-modal .modal-body {
+        padding: 16px;
+    }
+
+    .delete-modal .modal-footer {
+        padding: 12px 16px;
+    }
+}
+
+/* Very Small Mobile */
+@media (max-width: 400px) {
+    .investor-detail-card .card-header {
+        padding: 12px 9px;
+    }
+
+    .investor-detail-title {
+        font-size: 0.78rem;
+    }
+
+    .investment-summary-card {
+        min-width: 90px;
+        padding: 10px;
+    }
+
+    .investment-summary-value {
+        font-size: 1.1rem;
+    }
+
+    .investments-table {
+        min-width: 620px;
+    }
+}

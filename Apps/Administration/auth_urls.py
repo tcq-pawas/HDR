@@ -1,6 +1,10 @@
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
-from .auth_views import CustomLoginView, CustomLogoutView, unauthorized_access, CustomerRegistrationView, PartnerRegistrationView
+from .auth_views import (
+    CustomLoginView, CustomLogoutView, unauthorized_access, 
+    CustomerRegistrationView, PartnerRegistrationView,
+    RequestOTPView, VerifyOTPView
+)
 
 app_name = 'auth'
 
@@ -10,6 +14,11 @@ urlpatterns = [
     path('register/partner/', PartnerRegistrationView.as_view(), name='register_partner'),
     path('logout/', CustomLogoutView.as_view(), name='logout'),
     path('unauthorized/', unauthorized_access, name='unauthorized'),
+    
+    # OTP Verification Endpoints
+    path('request-otp/', RequestOTPView.as_view(), name='request_otp'),
+    path('verify-otp/', VerifyOTPView.as_view(), name='verify_otp'),
+    
     # Password Reset Workflows
     path('password_reset/', 
          auth_views.PasswordResetView.as_view(

@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'Apps.sell',
     'Apps.Subscriptions',
     'Apps.Organization',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -205,8 +206,8 @@ REST_FRAMEWORK = {
 
 # drf-spectacular settings
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'HeyDay Realty API',
-    'DESCRIPTION': 'Comprehensive API for HeyDay Realty platform including Administration, Customer, Investor, Agent, and Property management',
+    'TITLE': 'HHectare API',
+    'DESCRIPTION': 'Comprehensive API for HHectare platform including Administration, Customer, Investor, Agent, and Property management',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
     'COMPONENT_SPLIT_REQUEST': True,
@@ -253,6 +254,16 @@ LOGOUT_REDIRECT_URL = '/auth/login/'
 EMAIL_BACKEND = 'Apps.Administration.email_backend.SystemSettingsEmailBackend'
 DEFAULT_FROM_EMAIL = 'noreply@heydayrealty.com'
 
+# Site branding / display metadata
+SITE_NAME = 'HHectare'
+SITE_SLOGAN = 'Invest Green. Grow Strong.'
+SITE_DESCRIPTION = 'HHectare — Invest Green. Grow Strong. Premium real estate platform offering residential, commercial, luxury, and agricultural properties with verified listings across India.'
+
+# Upload limits (aligned with nginx client_max_body_size 50M)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 50 * 1024 * 1024  # 50 MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10 MB before spilling to disk
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
+
 # Contact API Keys for external website submissions
 CONTACT_API_KEY_HEYDAY = os.getenv('CONTACT_API_KEY_HEYDAY')
 CONTACT_API_KEY_CODIQ = os.getenv('CONTACT_API_KEY_CODIQ')
@@ -291,4 +302,41 @@ CORS_ALLOW_METHODS = [
 # InsightCMS Integration Settings
 INSIGHT_CMS_BASE_URL = 'http://127.0.0.1:8000'
 INSIGHT_CMS_COMPANY_SLUG = 'hd-reality'
+
+# Storj.io (S3 Compatible) Storage Configuration
+# Make sure to add these to your .env file
+
+# CRITICAL FIX: boto3 >= 1.36 uses streaming trailer checksums by default,
+# which Storj and other S3-compatible gateways don't support.
+# This must be set BEFORE boto3 is imported/used.
+os.environ.setdefault('AWS_REQUEST_CHECKSUM_CALCULATION', 'when_required')
+os.environ.setdefault('AWS_RESPONSE_CHECKSUM_VALIDATION', 'when_required')
+
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_S3_ENDPOINT_URL = os.getenv('AWS_S3_ENDPOINT_URL', 'https://gateway.storjshare.io')
+AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME', 'us-east-1') # Usually ignored by Storj, but required by boto3
+AWS_DEFAULT_ACL = None # Storj usually manages access via grants/policies
+AWS_S3_FILE_OVERWRITE = False
+
+# Role-based Bucket Names
+AWS_AGENT_BUCKET_NAME = os.getenv('AWS_AGENT_BUCKET_NAME', 'heyday-agent')
+AWS_CUSTOMER_BUCKET_NAME = os.getenv('AWS_CUSTOMER_BUCKET_NAME', 'heyday-customer')
+AWS_ADMIN_BUCKET_NAME = os.getenv('AWS_ADMIN_BUCKET_NAME', 'heyday-admin')
+AWS_PROPERTY_BUCKET_NAME = os.getenv('AWS_PROPERTY_BUCKET_NAME', 'heyday-property')
+# Fallback bucket
+AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME', AWS_ADMIN_BUCKET_NAME)
+
+# Authentication Backends
+AUTHENTICATION_BACKENDS = [
+    'Apps.Administration.backends.EmailOrUsernameModelBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+# MSG91 Configurations
+MSG91_AUTH_KEY = os.getenv('MSG91_AUTH_KEY', '')
+MSG91_TEMPLATE_ID = os.getenv('MSG91_TEMPLATE_ID', '')
+
+# Set default storage to General for everything else not explicitly set
+DEFAULT_FILE_STORAGE = 'HeyDayRealty.storage_backends.GeneralMediaStorage'
 

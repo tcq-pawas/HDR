@@ -217,13 +217,18 @@ def checkout_free_plan(request, plan_id):
 
     plan = get_object_or_404(SubscriptionPlan, pk=plan_id)
     
-    # Check if there is a 0 price pricing for this plan (e.g. Seed is 0)
-    pricing = PlanPricing.objects.filter(plan=plan, price=0).first()
-    
-    if not pricing:
-        # This is a paid plan — do NOT activate for free.
-        messages.error(request, f"The '{plan.name}' plan requires payment. Redirecting to checkout.")
-        return redirect('subscriptions:checkout-paid', plan_id=plan.id)
+    # Security Check: Paid plans (where any price > 0 exists) MUST NOT be activated for free.
+    is_paid_plan = plan.pricing_options.filter(price__gt=0).exists()
+    if is_paid_plan or plan.slug != 'seed':
+        pricing_paid = plan.pricing_options.filter(price__gt=0).first()
+        if pricing_paid:
+            messages.error(request, f"The '{plan.name}' plan requires payment. Redirecting to checkout.")
+            return redirect('subscriptions:checkout-paid', plan_id=plan.id)
+        else:
+            messages.error(request, f"Invalid request. '{plan.name}' is not a free plan.")
+            return redirect('agent:subscription_plans')
+
+    pricing = plan.pricing_options.filter(price=0).first()
 
     # Create or update UserSubscription
     end_date = timezone.now() + timedelta(days=365)
@@ -344,41 +349,49 @@ def checkout_paid_plan(request, plan_id):
 
 
 def _create_ledger_entries_for_subscription(user, transaction):
-    """Helper to create double-entry ledger logs"""
+    """Helper to create double-entry ledger logs (idempotent)."""
     from .models import LedgerEntry
+    from django.db import transaction as db_transaction
     
-    # Get last balance
-    last_entry = LedgerEntry.objects.filter(user=user).order_by('-created_at', '-id').first()
-    current_balance = last_entry.balance_after_transaction if last_entry else 0
-    
-    # 1. Credit Entry (Money In from Payment)
-    credit_balance = current_balance + transaction.amount
-    LedgerEntry.objects.create(
-        user=user,
-        payment_transaction=transaction,
-        transaction_type='CREDIT',
-        amount=transaction.amount,
-        balance_after_transaction=credit_balance,
-        description=f"Payment received (Order #{transaction.order_id})"
-    )
-    
-    # 2. Debit Entry (Money Out for Subscription)
-    debit_balance = credit_balance - transaction.amount
-    plan_name = transaction.subscription.plan.name if transaction.subscription and transaction.subscription.plan else "Subscription"
-    LedgerEntry.objects.create(
-        user=user,
-        payment_transaction=transaction,
-        transaction_type='DEBIT',
-        amount=transaction.amount,
-        balance_after_transaction=debit_balance,
-        description=f"Subscription Purchase - {plan_name}"
-    )
+    with db_transaction.atomic():
+        # IDEMPOTENCY CHECK: Prevent duplicate ledger entries for the same payment transaction
+        if LedgerEntry.objects.filter(payment_transaction=transaction).exists():
+            return
+        
+        # Get last balance with row-level lock
+        last_entry = LedgerEntry.objects.filter(user=user).select_for_update().order_by('-created_at', '-id').first()
+        current_balance = last_entry.balance_after_transaction if last_entry else 0
+        
+        # 1. Credit Entry (Money In from Payment)
+        credit_balance = current_balance + transaction.amount
+        LedgerEntry.objects.create(
+            user=user,
+            payment_transaction=transaction,
+            transaction_type='CREDIT',
+            amount=transaction.amount,
+            balance_after_transaction=credit_balance,
+            description=f"Payment received (Order #{transaction.order_id})"
+        )
+        
+        # 2. Debit Entry (Money Out for Subscription)
+        debit_balance = credit_balance - transaction.amount
+        plan_name = transaction.subscription.plan.name if transaction.subscription and transaction.subscription.plan else "Subscription"
+        LedgerEntry.objects.create(
+            user=user,
+            payment_transaction=transaction,
+            transaction_type='DEBIT',
+            amount=transaction.amount,
+            balance_after_transaction=debit_balance,
+            description=f"Subscription Purchase - {plan_name}"
+        )
 
 @login_required
 def cashfree_callback(request):
-    """Handles the redirect from Cashfree after payment attempt"""
+    """Handles the redirect from Cashfree after payment attempt (Idempotent)"""
     from django.conf import settings
     from cashfree_pg.api_client import Cashfree
+    from django.db import transaction as db_transaction
+    from .models import PaymentTransaction, LedgerEntry
     
     order_id = request.GET.get('order_id')
     if order_id:
@@ -395,58 +408,57 @@ def cashfree_callback(request):
     )
     
     try:
-        # Fetch the order status
+        # Fetch the order status from Cashfree
         api_response = cashfree.PGFetchOrder(order_id=order_id)
         
-        from .models import PaymentTransaction
-        transaction = PaymentTransaction.objects.filter(order_id=order_id).first()
-        if transaction:
-            transaction.raw_response = str(api_response.data)
+        with db_transaction.atomic():
+            tx_obj = PaymentTransaction.objects.filter(order_id=order_id).select_for_update().first()
+            if tx_obj:
+                tx_obj.raw_response = str(api_response.data)
+                if hasattr(api_response.data, 'cf_order_id') and api_response.data.cf_order_id:
+                    tx_obj.cashfree_payment_id = str(api_response.data.cf_order_id)
+                tx_obj.save()
             
-            # Save the cashfree_payment_id if available (using cf_order_id or fetching payment)
-            if hasattr(api_response.data, 'cf_order_id') and api_response.data.cf_order_id:
-                transaction.cashfree_payment_id = str(api_response.data.cf_order_id)
-                
-            transaction.save()
-        
-        if api_response.data.order_status == "PAID":
-            if transaction:
-                transaction.status = 'SUCCESS'
-                transaction.save()
-                
-            # Update subscription to active if verified, else pending
-            user_sub = UserSubscription.objects.filter(user=request.user).first()
-            if user_sub:
-                agent_profile = getattr(request.user, 'agent_profile', None)
-                if agent_profile and agent_profile.verification_status == 'approved':
-                    user_sub.status = 'active'
-                    user_sub.start_date = timezone.now()
-                    
-                    # Calculate end date based on billing cycle
-                    cycle_mapping = {'1M': 30, '3M': 90, '6M': 180, '12M': 365}
-                    days = cycle_mapping.get(user_sub.pricing.billing_cycle, 30) if user_sub.pricing else 30
-                    user_sub.end_date = timezone.now() + timedelta(days=days)
-                else:
-                    user_sub.status = 'pending'
-                    
-                user_sub.save()
-                
-                if transaction:
-                    transaction.subscription = user_sub
-                    transaction.save()
-                    _create_ledger_entries_for_subscription(request.user, transaction)
-                    
-                messages.success(request, f"Payment Successful! You are now subscribed to the {user_sub.plan.name} plan.")
+            if api_response.data.order_status == "PAID":
+                user_sub = UserSubscription.objects.filter(user=request.user).select_for_update().first()
+
+                # IDEMPOTENCY CHECK: If already marked SUCCESS and ledger entries exist, do not duplicate
+                already_processed = (
+                    tx_obj and tx_obj.status == 'SUCCESS' and
+                    LedgerEntry.objects.filter(payment_transaction=tx_obj).exists()
+                )
+
+                if not already_processed:
+                    if tx_obj:
+                        tx_obj.status = 'SUCCESS'
+                        tx_obj.save()
+                        
+                    if user_sub:
+                        agent_profile = getattr(request.user, 'agent_profile', None)
+                        if agent_profile and agent_profile.verification_status == 'approved':
+                            user_sub.status = 'active'
+                            user_sub.start_date = timezone.now()
+                            cycle_mapping = {'1M': 30, '3M': 90, '6M': 180, '12M': 365}
+                            days = cycle_mapping.get(user_sub.pricing.billing_cycle, 30) if user_sub.pricing else 30
+                            user_sub.end_date = timezone.now() + timedelta(days=days)
+                        else:
+                            user_sub.status = 'pending'
+                        user_sub.save()
+
+                        if tx_obj:
+                            tx_obj.subscription = user_sub
+                            tx_obj.save()
+                            _create_ledger_entries_for_subscription(request.user, tx_obj)
+
+                plan_name = user_sub.plan.name if (user_sub and user_sub.plan) else "Subscription"
+                messages.success(request, f"Payment Successful! You are now subscribed to the {plan_name} plan.")
                 return redirect('agent:property_type_select')
             else:
-                messages.error(request, f"Subscription record not found. DB order: {order_id} User: {request.user.id}")
+                if tx_obj:
+                    tx_obj.status = 'FAILED'
+                    tx_obj.save()
+                messages.error(request, f"Payment failed or pending (Status: {api_response.data.order_status}).")
                 return redirect('public:subscription_plans')
-        else:
-            if transaction:
-                transaction.status = 'FAILED'
-                transaction.save()
-            messages.error(request, f"Payment failed or pending (Status: {api_response.data.order_status}).")
-            return redirect('public:subscription_plans')
             
     except Exception as e:
         messages.error(request, f"Error verifying payment: {str(e)}")
@@ -458,13 +470,14 @@ import json
 
 @csrf_exempt
 def cashfree_webhook(request):
-    """Secure Cashfree Webhook endpoint to capture dropped payments"""
+    """Secure Cashfree Webhook endpoint to capture dropped payments (Idempotent)"""
     if request.method != "POST":
         return HttpResponse("Method not allowed", status=405)
         
     from django.conf import settings
     from cashfree_pg.api_client import Cashfree
-    from .models import PaymentTransaction, UserSubscription
+    from django.db import transaction as db_transaction
+    from .models import PaymentTransaction, UserSubscription, LedgerEntry
     
     cashfree_env = Cashfree.SANDBOX if settings.CASHFREE_ENVIRONMENT == "SANDBOX" else Cashfree.PRODUCTION
     cashfree = Cashfree(
@@ -495,41 +508,44 @@ def cashfree_webhook(request):
         if not order_id:
             return HttpResponse("No order_id found", status=400)
             
-        transaction = PaymentTransaction.objects.filter(order_id=order_id).first()
-        if not transaction:
-            return HttpResponse("Transaction not found", status=404)
-            
-        if cf_payment_id:
-            transaction.cashfree_payment_id = str(cf_payment_id)
-            transaction.save()
-            
-        if event_type == "PAYMENT_SUCCESS_WEBHOOK":
-            if transaction.status != 'SUCCESS':
-                transaction.status = 'SUCCESS'
-                # Activate subscription if verified, else pending
-                user_sub = UserSubscription.objects.filter(user=transaction.user).first()
-                if user_sub and user_sub.status != 'active':
-                    agent_profile = getattr(transaction.user, 'agent_profile', None)
-                    if agent_profile and agent_profile.verification_status == 'approved':
-                        user_sub.status = 'active'
-                        user_sub.start_date = timezone.now()
-                        cycle_mapping = {'1M': 30, '3M': 90, '6M': 180, '12M': 365}
-                        days = cycle_mapping.get(user_sub.pricing.billing_cycle, 30) if user_sub.pricing else 30
-                        user_sub.end_date = timezone.now() + timedelta(days=days)
-                    else:
-                        user_sub.status = 'pending'
-                    user_sub.save()
-                    transaction.subscription = user_sub
-                    
-                _create_ledger_entries_for_subscription(transaction.user, transaction)
+        with db_transaction.atomic():
+            tx_obj = PaymentTransaction.objects.filter(order_id=order_id).select_for_update().first()
+            if not tx_obj:
+                return HttpResponse("Transaction not found", status=404)
                 
-        elif event_type == "PAYMENT_FAILED_WEBHOOK":
-            transaction.status = 'FAILED'
-        elif event_type == "PAYMENT_USER_DROPPED_WEBHOOK":
-            transaction.status = 'USER_DROPPED'
-            
-        transaction.raw_response = payload
-        transaction.save()
+            if cf_payment_id:
+                tx_obj.cashfree_payment_id = str(cf_payment_id)
+                
+            if event_type == "PAYMENT_SUCCESS_WEBHOOK":
+                already_processed = (
+                    tx_obj.status == 'SUCCESS' and
+                    LedgerEntry.objects.filter(payment_transaction=tx_obj).exists()
+                )
+                if not already_processed:
+                    tx_obj.status = 'SUCCESS'
+                    user_sub = UserSubscription.objects.filter(user=tx_obj.user).select_for_update().first()
+                    if user_sub and user_sub.status != 'active':
+                        agent_profile = getattr(tx_obj.user, 'agent_profile', None)
+                        if agent_profile and agent_profile.verification_status == 'approved':
+                            user_sub.status = 'active'
+                            user_sub.start_date = timezone.now()
+                            cycle_mapping = {'1M': 30, '3M': 90, '6M': 180, '12M': 365}
+                            days = cycle_mapping.get(user_sub.pricing.billing_cycle, 30) if user_sub.pricing else 30
+                            user_sub.end_date = timezone.now() + timedelta(days=days)
+                        else:
+                            user_sub.status = 'pending'
+                        user_sub.save()
+                        tx_obj.subscription = user_sub
+                        
+                    _create_ledger_entries_for_subscription(tx_obj.user, tx_obj)
+                    
+            elif event_type == "PAYMENT_FAILED_WEBHOOK":
+                tx_obj.status = 'FAILED'
+            elif event_type == "PAYMENT_USER_DROPPED_WEBHOOK":
+                tx_obj.status = 'USER_DROPPED'
+                
+            tx_obj.raw_response = payload
+            tx_obj.save()
         
         return HttpResponse("OK")
     except Exception as e:

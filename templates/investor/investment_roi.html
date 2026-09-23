@@ -1,24 +1,10 @@
 {% extends "investor/investor_base.html" %}
+{% load static %}
 {% load humanize %}
 
-{% block title %}ROI Data - {{ investment.listing.title }} - HeyDay Realty{% endblock %}
+{% block title %}ROI Data - {{ investment.listing.title }} - HHectare{% endblock %}
 
 {% block extra_css %}
-<style>
-.investment-card {
-    border: none;
-    border-radius: 12px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-}
-.roi-positive {
-    color: #28a745;
-    font-weight: bold;
-}
-.roi-negative {
-    color: #dc3545;
-    font-weight: bold;
-}
-</style>
 {% endblock %}
 
 {% block page_title %}ROI Performance Data{% endblock %}

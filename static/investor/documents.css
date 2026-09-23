@@ -1,0 +1,23 @@
+.document-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s;
+}
+.document-card:hover {
+    transform: translateY(-2px);
+}
+.file-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+.file-pdf { background-color: #dc3545; color: white; }
+.file-excel { background-color: #28a745; color: white; }
+.file-word { background-color: #007bff; color: white; }
+.file-image { background-color: #17a2b8; color: white; }
+.file-default { background-color: #6c757d; color: white; }
