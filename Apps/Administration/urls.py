@@ -12,7 +12,7 @@ from . import communication_views
 from . import contact_views
 contact_docs_view = contact_views.ContactAPIDocumentationView()
 from Apps.Agent import views as agent_views
-from Apps.Agent.views import property_type_select
+from Apps.Agent.views import property_type_select, property_add
 from .views import AdminPropertyDetailAPIView, AdminPropertyListAPIView
 from drf_spectacular.views import (
     SpectacularAPIView,
@@ -61,6 +61,7 @@ urlpatterns = [
     # Admin-managed property list
     path('admin-properties/', AdminPropertyListView.as_view(), name='admin-property-list'),
     path('property/add/', property_type_select, name='property_type_select'),
+    path('property/add/<str:property_type>/', property_add, name='property_add'),
     
     # API endpoints (admin-only access)
     path('api/profile/', views.AdminProfileView.as_view(), name='profile'),
