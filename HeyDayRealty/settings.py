@@ -287,3 +287,8 @@ CORS_ALLOW_METHODS = [
     'POST',
     'PUT',
 ]
+
+# InsightCMS Integration Settings
+INSIGHT_CMS_BASE_URL = 'http://127.0.0.1:8000'
+INSIGHT_CMS_COMPANY_SLUG = 'hd-reality'
+
