@@ -6,6 +6,16 @@
 {% block og_title %}HHectare | Premium Real Estate & Property Platform{% endblock %}
 {% block twitter_title %}HHectare | Premium Real Estate & Property Platform{% endblock %}
 
+{% block extra_css %}
+<style>
+    .share-btn:hover {
+        border-color: #0F6A3C;
+        color: #0F6A3C;
+        background: #f0f9f4;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <!-- Hero Section -->
 <section class="hero-section">
@@ -205,6 +215,7 @@
             </div>
             <a href="{% url 'buy:property_search' %}" class="view-all-link">View All Listings →</a>
         </div>
+
         <div class="carousel-viewport" data-carousel>
             <div class="carousel-track">
                 {% for property in verified_properties %}
@@ -411,6 +422,9 @@
     </div>
 </section>
 
+{% endblock %}
+
+{% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Mobile testimonial slider functionality
@@ -660,5 +674,4 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('[data-carousel]').forEach(initCarousel);
 });
 </script>
-
 {% endblock %}

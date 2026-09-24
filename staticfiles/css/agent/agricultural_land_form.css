@@ -385,7 +385,6 @@
     }
 }
 
-/* Spinner animation */
 .spin {
     animation: spin 1s linear infinite;
 }
@@ -395,7 +394,6 @@
     to { transform: rotate(360deg); }
 }
 
-/* Location button styling */
 .location-btn {
     padding: 12px 15px;
     white-space: nowrap;

@@ -25,9 +25,13 @@
 
 .form-section {
     margin-bottom: 2rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 1.5rem;
 }
 
 .form-section h3 {
+    grid-column: 1 / -1;
     font-size: 1.1rem;
     color: #1e293b;
     margin-bottom: 1.5rem;
@@ -38,14 +42,21 @@
 
 .form-row {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1.5rem;
     margin-bottom: 1.5rem;
+    grid-column: 1 / -1;
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
+}
+
+.form-section > .form-group:has(textarea),
+.form-section > .checkbox-group,
+.form-section > .form-actions {
+    grid-column: 1 / -1;
 }
 
 .form-group label {
@@ -107,6 +118,23 @@
     border-top: 1px solid #e2e8f0;
 }
 
+.submit-btn,
+.cancel-btn {
+    min-height: 44px;
+    padding: 0.75rem 1.5rem;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
 .submit-btn, .cancel-btn {
     padding: 0.75rem 2rem;
     border: none;
@@ -126,6 +154,12 @@
 
 .submit-btn:hover {
     background: #155a9e;
+}
+
+.submit-btn:focus-visible,
+.cancel-btn:focus-visible {
+    outline: 3px solid rgba(30, 115, 190, 0.3);
+    outline-offset: 2px;
 }
 
 .cancel-btn {
@@ -163,6 +197,10 @@
 @media (max-width: 768px) {
     .form-card {
         padding: 1.5rem;
+    }
+
+    .form-section {
+        grid-template-columns: 1fr;
     }
 
     .form-row {

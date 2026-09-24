@@ -1,12 +1,63 @@
-{% extends "agent/agent_base.html" %}
+{% extends base_template|default:"agent/agent_base.html" %}
 {% load static %}
 {% block title %}Add Property | HHectare{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/agent/property_type_select.css' %}">
+<style>
+    .property-type-card {
+        text-decoration: none !important;
+        border: 1px solid #e2e8f0;
+        transition: all 0.25s ease-in-out;
+    }
+    .property-type-card:hover {
+        border-color: #006b45;
+        transform: translateY(-4px);
+        box-shadow: 0 12px 28px rgba(0, 107, 69, 0.12);
+    }
+    .property-type-card h3 {
+        color: #1e293b;
+        font-weight: 600;
+        font-size: 1.3rem;
+        margin-top: 15px;
+        margin-bottom: 8px;
+    }
+    .property-type-card p {
+        color: #64748b;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin-bottom: 20px;
+    }
+    .property-type-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 14px;
+        background: #e8f5e9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #006b45;
+        font-size: 1.5rem;
+    }
+    .property-type-header {
+        border-radius: 16px;
+        margin-bottom: 25px;
+    }
+    .property-type-header h1 {
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: #0f172a;
+    }
+    .property-type-header p {
+        font-size: 0.88rem;
+        color: #64748b;
+    }
+</style>
+{% endblock %}
 
 {% block breadcrumb_items %}
 <span>Add Property</span>
 {% endblock %}
-
-
 
 {% block content %}
 

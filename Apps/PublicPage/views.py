@@ -567,3 +567,196 @@ def import_location_data_view(request):
     result = import_location_data()
     status = 200 if result['success'] else 400
     return JsonResponse(result, status=status)
+
+
+def blogs_page(request):
+    """
+    Renders the Blogs page.
+    RESTRICTED: Only fetches from the configured company's RSS feed in settings.py.
+    """
+    import xml.etree.ElementTree as ET
+    import urllib.request
+    from urllib.parse import urlparse
+    from django.conf import settings
+
+    cms_base = getattr(settings, 'INSIGHT_CMS_BASE_URL', 'http://127.0.0.1:8000').rstrip('/')
+    company_slug = getattr(settings, 'INSIGHT_CMS_COMPANY_SLUG', 'hd-reality')
+    company_rss_url = f"{cms_base}/company/{company_slug}/rss/"
+
+    # Allowed domains whitelist
+    ALLOWED_RSS_DOMAINS = [
+        '127.0.0.1',
+        'localhost',
+        'heydayrealty.com',
+        'www.heydayrealty.com',
+    ]
+
+    rss_url = company_rss_url
+    blogs = []
+    feed_title = "Blogs & News"
+    error_message = None
+
+    parsed = urlparse(rss_url)
+    hostname = parsed.hostname or ''
+    if hostname not in ALLOWED_RSS_DOMAINS:
+        error_message = "Access denied: Only authorized company blogs are allowed."
+    else:
+        try:
+            req = urllib.request.Request(
+                rss_url,
+                headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
+            )
+            with urllib.request.urlopen(req, timeout=5) as response:
+                xml_data = response.read()
+                root = ET.fromstring(xml_data)
+
+                channel = root.find('channel')
+                if channel is not None:
+                    title_elem = channel.find('title')
+                    if title_elem is not None and title_elem.text:
+                        feed_title = title_elem.text
+
+                    for item in channel.findall('item'):
+                        title = item.findtext('title', 'No Title')
+                        link = item.findtext('link', '#')
+                        pub_date = item.findtext('pubDate', '')
+                        description = item.findtext('description', '')
+
+                        image_url = ''
+                        enclosure = item.find('enclosure')
+                        if enclosure is not None and enclosure.get('type', '').startswith('image'):
+                            image_url = enclosure.get('url', '')
+
+                        blogs.append({
+                            'title': title,
+                            'link': link,
+                            'pub_date': pub_date,
+                            'description': description,
+                            'image_url': image_url or 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80'
+                        })
+        except Exception as e:
+            error_message = f"Could not load blogs: {str(e)}"
+
+    return render(request, 'public/blogs.html', {
+        'blogs': blogs,
+        'feed_title': feed_title,
+        'rss_url': rss_url,
+        'company_slug': company_slug,
+        'cms_base_url': cms_base,
+        'error_message': error_message
+    })
+
+
+def blog_detail_page(request, slug):
+    """
+    Renders individual Blog details on HeyDay Realty (Port 8001)
+    dynamically loaded from InsightCMS using settings configuration.
+    """
+    import xml.etree.ElementTree as ET
+    import urllib.request
+    import re
+    from django.conf import settings
+
+    cms_base = getattr(settings, 'INSIGHT_CMS_BASE_URL', 'http://127.0.0.1:8000').rstrip('/')
+    company_slug = getattr(settings, 'INSIGHT_CMS_COMPANY_SLUG', 'hd-reality')
+    cms_blog_url = f"{cms_base}/blog/{slug}/"
+    rss_url = f"{cms_base}/company/{company_slug}/rss/"
+
+    blog = {
+        'title': slug.replace('-', ' ').title(),
+        'slug': slug,
+        'author': 'Sham Sr',
+        'pub_date': '',
+        'description': '',
+        'image_url': '',
+        'body_html': '',
+    }
+
+    # 1. Fetch live full rich HTML body from the CMS page
+    try:
+        req = urllib.request.Request(
+            cms_blog_url,
+            headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
+        )
+        with urllib.request.urlopen(req, timeout=4) as response:
+            html = response.read().decode('utf-8')
+
+            title_m = re.search(r'<h1[^>]*>([\s\S]*?)</h1>', html)
+            if title_m:
+                blog['title'] = title_m.group(1).strip()
+
+            desc_m = re.search(r'<p class="text-secondary mb-0 border-start[^>]*>([\s\S]*?)</p>', html)
+            if desc_m:
+                blog['description'] = desc_m.group(1).strip()
+
+            img_m = re.search(r'<div class="bp-detail-image-box[^\"]*">(?:[\s\S]*?)<img[^>]+src=[\"\']([^\"\']+)[\"\']', html)
+            if img_m:
+                img_url = img_m.group(1)
+                if img_url.startswith('/'):
+                    img_url = cms_base + img_url
+                blog['image_url'] = img_url
+
+            author_m = re.search(r'By <strong>([\s\S]*?)</strong>', html)
+            if author_m:
+                blog['author'] = author_m.group(1).strip()
+
+            date_m = re.search(r'Published on\s*([A-Za-z0-9, ]+)', html)
+            if date_m:
+                blog['pub_date'] = date_m.group(1).strip()
+
+            body_start = html.find('class="blog-content')
+            if body_start != -1:
+                content_open = html.find('>', body_start) + 1
+                content_close = html.find('<!-- Tags', content_open)
+                if content_close == -1:
+                    content_close = html.find('</main>', content_open)
+
+                body_chunk = html[content_open:content_close].strip()
+                if body_chunk.endswith('</div>'):
+                    body_chunk = body_chunk[:-6].strip()
+
+                # Fix relative media and static URLs
+                body_chunk = body_chunk.replace('src="/media/', f'src="{cms_base}/media/')
+                body_chunk = body_chunk.replace('src="/static/', f'src="{cms_base}/static/')
+                blog['body_html'] = body_chunk
+
+    except Exception as e:
+        print(f"Direct CMS fetch fallback to RSS: {e}")
+
+    # 2. Fallback to RSS metadata if needed
+    if not blog['body_html'] or not blog['image_url']:
+        try:
+            req_rss = urllib.request.Request(
+                rss_url,
+                headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
+            )
+            with urllib.request.urlopen(req_rss, timeout=4) as response:
+                xml_data = response.read()
+                root = ET.fromstring(xml_data)
+                channel = root.find('channel')
+                if channel is not None:
+                    for item in channel.findall('item'):
+                        link = item.findtext('link', '')
+                        item_slug = link.strip('/').split('/')[-1] if link else ''
+                        if item_slug == slug or slug in link:
+                            if not blog['title'] or blog['title'] == slug.replace('-', ' ').title():
+                                blog['title'] = item.findtext('title', blog['title'])
+                            if not blog['pub_date']:
+                                blog['pub_date'] = item.findtext('pubDate', '')
+                            if not blog['description']:
+                                blog['description'] = item.findtext('description', '')
+                            if not blog['image_url']:
+                                enclosure = item.find('enclosure')
+                                if enclosure is not None:
+                                    blog['image_url'] = enclosure.get('url', '')
+                            break
+        except Exception as e:
+            print(f"RSS fallback error: {e}")
+
+    return render(request, 'public/blog_detail.html', {'blog': blog})
+
+
+
+
+
+
