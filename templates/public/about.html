@@ -391,36 +391,22 @@
 </section>
 
 <!-- CTA Section -->
-<div class="cta-banner" style="padding: clamp(28px, 6vw, 48px) clamp(20px, 5vw, 48px) clamp(48px, 10vw, 88px); background: var(--cloud-white);">
-    <div class="cta-inner" style="max-width: 1440px; margin: 0 auto; background: linear-gradient(135deg, #0F6A3C 0%, #0A4D2C 100%); border-radius: 24px; padding: clamp(32px, 8vw, 56px) clamp(24px, 5vw, 48px); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: space-between; gap: 48px; box-shadow: 0 16px 48px rgba(15, 106, 60, 0.2);">
-        <div style="flex: 1; position: relative; z-index: 2;">
-            <div class="cta-label" style="display: inline-block; background: rgba(244, 180, 0, 0.2); color: #ffffff; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; padding: 8px 20px; border-radius: 50px; margin-bottom: 20px;">Premium Farmland Investment</div>
-            <h2 class="cta-title" style="font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700; color: #ffffff; margin-bottom: 16px;">Ready to Own Premium Farmland?</h2>
-            <p class="cta-sub" style="font-size: 16px !important; color: rgba(255, 255, 255, 0.85); margin-bottom: 24px; line-height: 1.6;">Explore verified farmland opportunities and build long-term wealth through land ownership.</p>
-            <div style="display: flex; gap: clamp(16px, 4vw, 32px); flex-wrap: wrap;">
-                <div style="display: flex; align-items: center; gap: 8px; color: #ffffff; font-size: 11px; font-weight: 500;">
-                    <i class="bi bi-check2" style="color: #F4B400; font-size: 0.9rem;"></i>
-                    <span>High Appreciation</span>
-                </div>
-                <div style="display: flex; align-items: center; gap: 8px; color: #ffffff; font-size: 11px; font-weight: 500;">
-                    <i class="bi bi-check2" style="color: #F4B400; font-size: 0.9rem;"></i>
-                    <span>Secure Ownership</span>
-                </div>
-                <div style="display: flex; align-items: center; gap: 8px; color: #ffffff; font-size: 11px; font-weight: 500;">
-                    <i class="bi bi-check2" style="color: #F4B400; font-size: 0.9rem;"></i>
-                    <span>Expert Support</span>
-                </div>
+<section class="cta-banner-section">
+    <div class="cta-banner">
+        <div class="leaf-decoration leaf-decoration-left">🌿</div>
+        <div class="leaf-decoration leaf-decoration-right">🌿</div>
+        <div class="cta-banner-content">
+            <div>
+                
+                <h2 class="cta-banner-title">Ready to Own Premium Farmland?</h2>
+                <p class="cta-banner-description">Explore verified farmland opportunities and build long-term wealth through land ownership.</p>
+            </div>
+            <div class="cta-banner-buttons">
+                <a href="{% url 'buy:property_search' %}" class="btn-cta-yellow">Explore Investment Opportunities</a>
+                
             </div>
         </div>
-        <div class="cta-btns" style="position: relative; z-index: 2;">
-            <a href="{% url 'buy:property_search' %}" class="btn-cta-primary" style="display: inline-block; background: linear-gradient(135deg, #F4B400 0%, #E6A328 100%); color: #ffffff; font-size: 12px; font-weight: 600; padding: 9px 25px; border-radius: 12px; text-decoration: none; transition: transform 0.3s ease, box-shadow 0.3s ease; box-shadow: 0 4px 16px rgba(244, 180, 0, 0.3);">Explore Investment Opportunities</a>
-        </div>
-        <div class="cta-decor" style="position: absolute; right: 40px; top: 50%; transform: translateY(-50%); display: flex; gap: 16px; opacity: 0.15; z-index: 1;">
-            <span style="font-size: 3rem;">🌿</span>
-            <span style="font-size: 3rem;">🍃</span>
-            <span style="font-size: 3rem;">🌿</span>
-        </div>
     </div>
-</div>
+</section>
 
 {% endblock %}
