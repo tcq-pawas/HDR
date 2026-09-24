@@ -299,6 +299,10 @@ CORS_ALLOW_METHODS = [
     'PUT',
 ]
 
+# InsightCMS Integration Settings
+INSIGHT_CMS_BASE_URL = 'http://127.0.0.1:8000'
+INSIGHT_CMS_COMPANY_SLUG = 'hd-reality'
+
 # Storj.io (S3 Compatible) Storage Configuration
 # Make sure to add these to your .env file
 
@@ -335,3 +339,4 @@ MSG91_TEMPLATE_ID = os.getenv('MSG91_TEMPLATE_ID', '')
 
 # Set default storage to General for everything else not explicitly set
 DEFAULT_FILE_STORAGE = 'HeyDayRealty.storage_backends.GeneralMediaStorage'
+
