@@ -411,6 +411,12 @@
         margin-bottom: 16px;
         font-size: 0.85rem;
     }
+
+    /* Reset min-height for info cards on mobile */
+    .user-info-cards-row .info-card {
+        min-height: 0 !important;
+        height: auto !important;
+    }
 }
 
 @media (max-width: 576px) {

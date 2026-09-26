@@ -7598,6 +7598,71 @@ h1, h2, h3, h4, h5, h6,
     margin-bottom: 24px;
 }
 
+/* Equal height for User Profile information cards */
+.user-info-cards-row {
+    display: flex;
+    align-items: stretch;
+}
+
+.user-info-cards-row > .col-lg-4 {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-info-cards-row > .col-lg-4 > .info-card {
+    width: 100%;
+    flex: 1 1 auto;
+}
+
+/* User Profile info cards - 2-column layout for 992px-1399.98px */
+@media (min-width: 992px) and (max-width: 1399.98px) {
+    .user-info-cards-row {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+    }
+
+    .user-info-cards-row > .col-lg-4 {
+        width: auto;
+        max-width: none;
+        padding-left: 0;
+        padding-right: 0;
+        margin-bottom: 0 !important;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .user-info-cards-row > .col-lg-4:last-child {
+        grid-column: 1 / -1;
+    }
+
+    .user-info-cards-row > .col-lg-4 > .info-card {
+        width: 100%;
+        flex: 1 1 auto;
+    }
+}
+
+/* User Profile info cards - 3-column layout for 1400px+ */
+@media (min-width: 1400px) {
+    .user-info-cards-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+    }
+
+    .user-info-cards-row > .col-lg-4 {
+        width: 33.333333%;
+        max-width: 33.333333%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .user-info-cards-row > .col-lg-4 > .info-card {
+        width: 100%;
+        flex: 1 1 auto;
+    }
+}
+
 .info-card h5 {
     font-weight: 600;
     color: #0F172A;
@@ -7881,6 +7946,26 @@ h1, h2, h3, h4, h5, h6,
         padding: 8px 12px;
         margin-bottom: 16px;
         font-size: 0.85rem;
+    }
+}
+
+/* Reset equal-height layout for User Profile info cards on mobile/tablet */
+@media (max-width: 991.98px) {
+    .user-info-cards-row {
+        display: block;
+    }
+
+    .user-info-cards-row > .col-lg-4 {
+        width: 100%;
+        max-width: 100%;
+        display: block;
+        padding-left: var(--bs-gutter-x, 0.75rem);
+        padding-right: var(--bs-gutter-x, 0.75rem);
+    }
+
+    .user-info-cards-row > .col-lg-4 > .info-card {
+        width: 100%;
+        flex: none;
     }
 }
 
@@ -8928,5 +9013,184 @@ h1, h2, h3, h4, h5, h6,
 
     .info-value {
         font-size: 0.82rem;
+    }
+}
+
+/* ============================================================
+   KYC STATUS SUMMARY — BOOTSTRAP RESPONSIVE OVERRIDE
+   ============================================================ */
+
+/*
+   Keep the existing Bootstrap row/flex behavior.
+
+   Required behavior:
+   >= 1082px  → 4 cards in one row
+   <= 1081px  → 2 cards per row
+*/
+
+.kyc-status-summary {
+    width: 100%;
+}
+
+/* ------------------------------------------------------------
+   1082px AND ABOVE
+   4 × 1
+   ------------------------------------------------------------ */
+@media (min-width: 1082px) {
+
+    .kyc-status-summary > .col-6.col-lg-3 {
+        flex: 0 0 25% !important;
+        width: 25% !important;
+        max-width: 25% !important;
+    }
+
+    .kyc-status-summary .kyc-status-card {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+
+/* ------------------------------------------------------------
+   BELOW 1082px
+   2 × 2
+   ------------------------------------------------------------ */
+@media (min-width: 768px) and (max-width: 1081.98px) {
+
+    .kyc-status-summary {
+        display: flex !important;
+        flex-wrap: wrap !important;
+    }
+
+    .kyc-status-summary > .col-6.col-lg-3 {
+        flex: 0 0 50% !important;
+        width: 50% !important;
+        max-width: 50% !important;
+        min-width: 0 !important;
+    }
+
+    .kyc-status-summary .kyc-status-card {
+        display: flex !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+}
+
+
+/* ------------------------------------------------------------
+   MOBILE
+   Keep Bootstrap's existing col-6 behavior
+   2 × 2
+   ------------------------------------------------------------ */
+@media (max-width: 767.98px) {
+
+    .kyc-status-summary {
+        display: flex !important;
+        flex-wrap: wrap !important;
+    }
+
+    .kyc-status-summary > .col-6.col-lg-3 {
+        flex: 0 0 50% !important;
+        width: 50% !important;
+        max-width: 50% !important;
+        min-width: 0 !important;
+    }
+
+    .kyc-status-summary .kyc-status-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+}
+
+
+/* ------------------------------------------------------------
+   VERY SMALL SCREENS
+   Keep the same 2 × 2 layout unless existing mobile CSS
+   intentionally changes it.
+   ------------------------------------------------------------ */
+@media (max-width: 400px) {
+
+    .kyc-status-summary > .col-6.col-lg-3 {
+        flex: 0 0 50% !important;
+        width: 50% !important;
+        max-width: 50% !important;
+    }
+}
+
+/* ============================================================
+   USER PROFILE - TOP KPI GRID
+   Bootstrap grid replacement
+   ============================================================ */
+
+.kpi-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.kpi-cards-grid-item {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.kpi-cards-grid-item .kpi-card {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+@media (max-width: 1849.98px) {
+    .kpi-cards-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 449.98px) {
+    .kpi-cards-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* ============================================================
+   ADMIN PROFILE — INFORMATION GRID
+   Bootstrap columns replaced with CSS Grid
+   ============================================================ */
+
+.info-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    min-width: 0;
+}
+
+.info-grid-item {
+    min-width: 0;
+    min-height: 125px;
+    padding: 24px 28px;
+    border-bottom: 1px solid #e2e8f0;
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.info-grid-item:nth-child(odd) {
+    border-right: 1px solid #e2e8f0;
+}
+
+@media (max-width: 767.98px) {
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .info-grid-item {
+        width: 100%;
+        border-right: 0 !important;
     }
 }

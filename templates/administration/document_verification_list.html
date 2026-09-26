@@ -5,31 +5,35 @@
 {% block page_title %}KYC Verifications{% endblock %}
 {% block page_subtitle %}Review and manage agent document verification submissions{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'admin/css/document_verification_list.css' %}">
+{% endblock %}
+
 {% block content %}
 
 <div class="card border rounded-3 shadow-sm p-3">
     <!-- Status summary -->
-    <div class="row g-2" role="tablist" aria-label="Document status filters">
-        <div class="col-6 col-lg-3">
-            <button type="button" class="kyc-status-card active w-100 d-flex flex-column" data-filter="pending" role="tab" aria-selected="true">
+    <div class="kyc-status-grid" role="tablist" aria-label="Document status filters">
+        <div class="kyc-status-grid-item">
+            <button type="button" class="kyc-status-card active d-flex flex-column" data-filter="pending" role="tab" aria-selected="true">
                 <span class="status-top d-flex align-items-center gap-1"><span class="status-dot"></span> Pending Review</span>
                 <span class="status-count">{{ pending_count }}</span>
             </button>
         </div>
-        <div class="col-6 col-lg-3">
-            <button type="button" class="kyc-status-card w-100 d-flex flex-column" data-filter="verified" role="tab" aria-selected="false">
+        <div class="kyc-status-grid-item">
+            <button type="button" class="kyc-status-card d-flex flex-column" data-filter="verified" role="tab" aria-selected="false">
                 <span class="status-top d-flex align-items-center gap-1"><span class="status-dot"></span> Verified</span>
                 <span class="status-count">{{ verified_count }}</span>
             </button>
         </div>
-        <div class="col-6 col-lg-3">
-            <button type="button" class="kyc-status-card w-100 d-flex flex-column" data-filter="reupload" role="tab" aria-selected="false">
+        <div class="kyc-status-grid-item">
+            <button type="button" class="kyc-status-card d-flex flex-column" data-filter="reupload" role="tab" aria-selected="false">
                 <span class="status-top d-flex align-items-center gap-1"><span class="status-dot"></span> Re-upload Required</span>
                 <span class="status-count">{{ rejected_count }}</span>
             </button>
         </div>
-        <div class="col-6 col-lg-3">
-            <button type="button" class="kyc-status-card w-100 d-flex flex-column" data-filter="submitted" role="tab" aria-selected="false">
+        <div class="kyc-status-grid-item">
+            <button type="button" class="kyc-status-card d-flex flex-column" data-filter="submitted" role="tab" aria-selected="false">
                 <span class="status-top d-flex align-items-center gap-1"><span class="status-dot"></span> Submitted by Agent</span>
                 <span class="status-count">{{ submitted_count }}</span>
             </button>
