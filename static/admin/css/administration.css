@@ -9002,3 +9002,31 @@ h1, h2, h3, h4, h5, h6,
         border-right: 0 !important;
     }
 }
+
+/* ============================================================
+   INVESTMENT MANAGEMENT — STATISTICS CARDS GRID
+   Bootstrap columns replaced with CSS Grid
+   ============================================================ */
+
+.investment-page .investment-statistics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.investment-page .investment-statistics-grid > .col-md-3 {
+    width: auto;
+    max-width: none;
+    flex: none;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+@media (max-width: 767.98px) {
+    .investment-page .investment-statistics-grid {
+        grid-template-columns: 1fr;
+        gap: 0.6rem;
+        margin-bottom: 0.6rem;
+    }
+}
