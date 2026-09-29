@@ -409,6 +409,66 @@
         height: 42px;
         min-width: 42px;
     }
+
+    .property-actions {
+        display: flex !important;
+        align-items: center;
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+        gap: 4px;
+        width: max-content;
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    .property-view-btn {
+        width: 32px !important;
+        min-width: 32px !important;
+        max-width: 32px !important;
+        height: 32px !important;
+        min-height: 32px !important;
+        max-height: 32px !important;
+        flex: 0 0 32px !important;
+        padding: 0 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 0 !important;
+        white-space: nowrap !important;
+        box-sizing: border-box;
+    }
+
+    .property-view-btn i {
+        margin: 0 !important;
+        font-size: .68rem !important;
+        line-height: 1;
+    }
+
+    .property-action-text {
+        display: none !important;
+    }
+
+    .properties-table .property-actions .btn:not(.property-view-btn) {
+        width: 32px !important;
+        min-width: 32px !important;
+        max-width: 32px !important;
+        height: 32px !important;
+        min-height: 32px !important;
+        max-height: 32px !important;
+        flex: 0 0 32px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-sizing: border-box;
+    }
+
+    .properties-table .property-actions .btn i {
+        margin: 0 !important;
+        font-size: .68rem !important;
+        line-height: 1;
+    }
 }
 
 /* =========================================================
@@ -541,26 +601,62 @@
 
     .property-actions {
         gap: 4px;
+        display: flex !important;
+        align-items: center;
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+        width: max-content;
+        max-width: 100%;
+        min-width: 0;
     }
 
     .property-view-btn {
-        width: 30px;
-        height: 30px;
+        width: 30px !important;
+        min-width: 30px !important;
+        max-width: 30px !important;
+        height: 30px !important;
+        min-height: 30px !important;
+        max-height: 30px !important;
+        flex: 0 0 30px !important;
         padding: 0 !important;
         display: inline-flex !important;
-        align-items: center;
-        justify-content: center;
+        align-items: center !important;
+        justify-content: center !important;
         font-size: 0 !important;
+        white-space: nowrap !important;
+        box-sizing: border-box;
     }
 
     .property-view-btn i {
         margin: 0 !important;
-        font-size: .62rem;
+        font-size: .62rem !important;
+        line-height: 1;
+    }
+
+    .property-action-text {
+        display: none !important;
     }
 
     .properties-table .property-actions .btn:not(.property-view-btn) {
-        width: 30px;
-        height: 30px;
+        width: 30px !important;
+        min-width: 30px !important;
+        max-width: 30px !important;
+        height: 30px !important;
+        min-height: 30px !important;
+        max-height: 30px !important;
+        flex: 0 0 30px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-sizing: border-box;
+    }
+
+    .properties-table .property-actions .btn i {
+        margin: 0 !important;
+        font-size: .62rem !important;
+        line-height: 1;
     }
 
     .properties-empty-icon {
@@ -643,11 +739,28 @@
     .property-actions .btn,
     .property-actions .property-view-btn {
         width: 27px !important;
+        min-width: 27px !important;
+        max-width: 27px !important;
         height: 27px !important;
+        min-height: 27px !important;
+        max-height: 27px !important;
+        flex: 0 0 27px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-sizing: border-box;
     }
 
     .property-actions .btn i {
         font-size: .56rem !important;
+        margin: 0 !important;
+        line-height: 1;
+    }
+
+    .property-action-text {
+        display: none !important;
     }
 }
 
