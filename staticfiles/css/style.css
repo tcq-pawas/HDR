@@ -4619,7 +4619,7 @@ footer:not(.site-footer) {
 
 .trust-strip-container {
     width: 100%;
-    padding: 6% 10%;
+    padding: 0 10%;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 32px;
@@ -4711,6 +4711,7 @@ footer:not(.site-footer) {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 24px;
+    margin-bottom: 50px;
 }
 
 .why-invest-card {
@@ -5998,7 +5999,7 @@ footer.footer.site-footer,
    ============================================ */
 
 .testimonials-premium-section {
-    padding: 90px 0;
+    margin-top: 60px;
     background: var(--card-white);
 }
 

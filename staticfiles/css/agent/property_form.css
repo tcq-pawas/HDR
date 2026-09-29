@@ -5,6 +5,14 @@
     align-items: start;
 }
 
+.conditional-section {
+    display: none;
+}
+
+.conditional-section.active {
+    display: grid;
+}
+
 .form-section h3,
 .form-section > .row,
 .form-section > .form-row,

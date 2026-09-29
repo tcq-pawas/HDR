@@ -32,16 +32,20 @@
                 </div>
             </div>
 
-            <!-- Row 2: Email | Phone -->
+            <!-- Row 2: Email -->
             <div class="row">
-                <div class="col-md-6 mb-3">
+                <div class="col-12 mb-3">
                     <label class="form-label fw-semibold">Email <span class="text-danger">*</span></label>
                     <input type="email" name="email" class="form-control" value="{{ data.email|default:'' }}" placeholder="e.g. info@company.com">
                     {% if errors.email %}
                         <div class="text-danger small mt-1">{{ errors.email }}</div>
                     {% endif %}
                 </div>
-                <div class="col-md-6 mb-3">
+            </div>
+
+            <!-- Row 3: Phone -->
+            <div class="row">
+                <div class="col-12 mb-3">
                     <label class="form-label fw-semibold">Phone <span class="text-danger">*</span></label>
                     <input type="text" name="phone" class="form-control" value="{{ data.phone|default:'' }}" placeholder="e.g. +91 98765 43210">
                     {% if errors.phone %}
@@ -50,43 +54,55 @@
                 </div>
             </div>
 
-            <!-- Row 3: Address | Website -->
+            <!-- Row 4: Address -->
             <div class="row">
-                <div class="col-md-6 mb-3">
+                <div class="col-12 mb-3">
                     <label class="form-label fw-semibold">Address</label>
                     <input type="text" name="address" class="form-control" value="{{ data.address|default:'' }}" placeholder="Street address">
                 </div>
-                <div class="col-md-6 mb-3">
+            </div>
+
+            <!-- Row 5: Website -->
+            <div class="row">
+                <div class="col-12 mb-3">
                     <label class="form-label fw-semibold">Website</label>
                     <input type="url" name="website" class="form-control" value="{{ data.website|default:'' }}" placeholder="https://example.com">
                 </div>
             </div>
 
-            <!-- Row 4: City | State -->
+            <!-- Row 6: City -->
             <div class="row">
-                <div class="col-md-6 mb-3">
+                <div class="col-12 mb-3">
                     <label class="form-label fw-semibold">City</label>
                     <input type="text" name="city" class="form-control" value="{{ data.city|default:'' }}" placeholder="City">
                 </div>
-                <div class="col-md-6 mb-3">
+            </div>
+
+            <!-- Row 7: State -->
+            <div class="row">
+                <div class="col-12 mb-3">
                     <label class="form-label fw-semibold">State</label>
                     <input type="text" name="state" class="form-control" value="{{ data.state|default:'' }}" placeholder="State / Province">
                 </div>
             </div>
 
-            <!-- Row 5: Country | Zip Code -->
+            <!-- Row 8: Country -->
             <div class="row">
-                <div class="col-md-6 mb-3">
+                <div class="col-12 mb-3">
                     <label class="form-label fw-semibold">Country</label>
                     <input type="text" name="country" class="form-control" value="{{ data.country|default:'' }}" placeholder="Country">
                 </div>
-                <div class="col-md-6 mb-3">
+            </div>
+
+            <!-- Row 9: Zip Code -->
+            <div class="row">
+                <div class="col-12 mb-3">
                     <label class="form-label fw-semibold">Zip Code</label>
                     <input type="text" name="zip_code" class="form-control" value="{{ data.zip_code|default:'' }}" placeholder="Zip / Postal code">
                 </div>
             </div>
 
-            <!-- Row 6: Logo (full width) -->
+            <!-- Row 10: Logo (full width) -->
             <div class="row">
                 <div class="col-12 mb-4">
                     <label class="form-label fw-semibold">Logo</label>
