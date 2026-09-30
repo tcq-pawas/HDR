@@ -76,12 +76,21 @@ nav.sidebar {
     max-width: 275px !important;
     flex-shrink: 0 !important;
     overflow-x: visible !important;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
 }
 
 nav.sidebar .p-3 {
     width: 100% !important;
     box-sizing: border-box !important;
     overflow-x: visible !important;
+}
+
+nav.sidebar > .p-3.flex-grow-1 {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: visible;
 }
 
 nav.sidebar .nav {

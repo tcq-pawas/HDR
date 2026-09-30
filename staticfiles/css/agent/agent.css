@@ -5891,7 +5891,7 @@ flex-shrink: 0;
     padding: 3px 12px;
     font-weight: 500;
     color: white;
-    background: linear-gradient(135deg, #005427 0%, #003d1c 100%);
+    background: linear-gradient(135deg, #2d7a4f, #3da668);
 }
 
 .text-muted.small-text {
@@ -6360,13 +6360,16 @@ flex-shrink: 0;
 }
 
 .btn-add-document {
-    background: #005427;
-    color: white;
-    border: none;
-    padding: 0.7rem 1.15rem;
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    border: 1.5px solid rgba(255, 255, 255, 0.35);
     border-radius: 10px;
+    padding: 8px 20px;
+    font-size: 14px;
     font-weight: 600;
-    font-size: 0.9rem;
+    text-decoration: none;
+    align-items: center;
+    backdrop-filter: blur(6px);
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -11695,7 +11698,7 @@ tbody tr:hover {
 
 /* Premium Header */
 .premium-header {
-    background: linear-gradient(135deg, #005427 0%, #003d1c 100%);
+    background: linear-gradient(135deg, #1a4a2e 0%, #2d7a4f 60%, #3da668 100%);
     border-radius: 16px;
     padding: 2rem;
     margin-bottom: 2rem;
@@ -12018,6 +12021,8 @@ tbody tr:hover {
 
 .premium-empty-state .premium-btn {
     margin: 0 auto;
+    color: white;
+    background: linear-gradient(135deg, #2d7a4f, #3da668);
 }
 
 /* Premium Pagination */
@@ -12093,7 +12098,7 @@ tbody tr:hover {
 }
 
 .billing-toggle-btn.active {
-    background: #005427;
+    background: linear-gradient(135deg, #2d7a4f, #3da668);
     color: white;
     box-shadow: 0 2px 8px rgba(0, 84, 39, 0.2);
 }
@@ -12148,7 +12153,7 @@ tbody tr:hover {
     top: -12px;
     left: 50%;
     transform: translateX(-50%);
-    background: linear-gradient(135deg, #005427, #003d1c);
+    background: linear-gradient(135deg, #2d7a4f, #3da668);
     color: white;
     padding: 6px 20px;
     border-radius: 20px;
@@ -12269,7 +12274,7 @@ tbody tr:hover {
 }
 
 .pricing-card-btn.btn-primary {
-    background: linear-gradient(135deg, #005427, #003d1c);
+    background: linear-gradient(135deg, #2d7a4f, #3da668);
     color: white;
 }
 
@@ -12305,7 +12310,7 @@ tbody tr:hover {
     padding: 12px 32px;
     font-size: 1rem;
     border-radius: 8px;
-    background: linear-gradient(135deg, #005427 0%, #003d1c 100%);
+    background: linear-gradient(135deg, #2d7a4f, #3da668);
     border: none;
 }
 

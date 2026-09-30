@@ -1,195 +1,584 @@
 {% extends 'administration/admin_base.html' %}
+
 {% load static %}
+
 {% load humanize %}
+
+
 
 {% block title %}Investor Details - {{ profile.user.get_full_name|default:profile.user.username }}{% endblock %}
 
+
+
 {% block page_title %}Investor Profile{% endblock %}
+
 {% block page_subtitle %}{{ profile.user.get_full_name|default:profile.user.username }}'s Investment Portfolio{% endblock %}
 
+
+
 {% block content %}
+
+<style>
+    /* ===== Investor detail: responsive layout (styling only) ===== */
+    .inv-page {
+        container-type: inline-size;
+        container-name: inv;
+        width: 100%;
+    }
+
+    /* ---------- Top action bar ---------- */
+    .inv-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+    .inv-actions .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+    }
+    .inv-btn-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    /* ---------- Main layout ---------- */
+    .inv-layout {
+        display: grid;
+        grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
+        gap: 1.5rem;
+        align-items: start;
+    }
+    .inv-side,
+    .inv-main {
+        min-width: 0;
+    }
+    .inv-side .card {
+        height: auto;
+    }
+
+    /* ---------- Profile card ---------- */
+    .inv-profile-body {
+        display: block;
+    }
+    .inv-contact-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.9rem;
+        min-width: 0;
+    }
+    .inv-contact-item i {
+        width: 20px;
+        text-align: center;
+        margin-top: 0.2rem;
+        flex-shrink: 0;
+    }
+    .inv-contact-item a,
+    .inv-contact-item span {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        min-width: 0;
+    }
+
+    /* ---------- Stat cards ---------- */
+    .inv-stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    .inv-stat-card {
+        padding: 1.1rem 1.25rem;
+    }
+    .inv-stat-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+    }
+    .inv-stat-text {
+        min-width: 0;
+        flex: 1 1 auto;
+    }
+    .inv-stat-label {
+        font-size: 0.72rem;
+        letter-spacing: 0.04em;
+        line-height: 1.3;
+        word-break: normal;
+        overflow-wrap: normal;
+        hyphens: none;
+    }
+    .inv-stat-value {
+        font-size: clamp(1.15rem, 1.6vw, 1.5rem);
+        overflow-wrap: anywhere;
+    }
+    .inv-stat-icon {
+        width: 48px;
+        height: 48px;
+        flex: 0 0 48px;
+    }
+
+    /* ---------- Table ---------- */
+    .inv-table {
+        min-width: 620px;
+    }
+    .inv-table th,
+    .inv-table td {
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+    .inv-table td.inv-project {
+        white-space: normal;
+        min-width: 180px;
+    }
+
+    /* ===== Content narrower than ~1100px: stack profile on top ===== */
+    @container inv (max-width: 1100px) {
+        .inv-layout {
+            grid-template-columns: minmax(0, 1fr);
+        }
+        .inv-profile-body {
+            display: grid;
+            grid-template-columns: minmax(200px, 280px) minmax(0, 1fr);
+            align-items: center;
+            gap: 1.5rem 2rem;
+            text-align: left;
+        }
+        .inv-profile-body .inv-profile-top {
+            text-align: center;
+        }
+        .inv-profile-body hr {
+            display: none;
+        }
+        .inv-profile-body .inv-contact {
+            margin-top: 0 !important;
+            padding-left: 2rem;
+            border-left: 1px solid #f1f5f9;
+        }
+    }
+
+    /* ===== Content narrower than ~720px ===== */
+    @container inv (max-width: 720px) {
+        .inv-stats {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .inv-stats > :last-child:nth-child(odd) {
+            grid-column: 1 / -1;
+        }
+    }
+
+    /* ===== Small / mobile content width ===== */
+    @container inv (max-width: 640px) {
+        .inv-profile-body {
+            display: block;
+        }
+        .inv-profile-body hr {
+            display: block;
+        }
+        .inv-profile-body .inv-contact {
+            padding-left: 0;
+            border-left: 0;
+            margin-top: 1rem !important;
+        }
+        .inv-actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .inv-actions > .btn {
+            width: 100%;
+        }
+        .inv-btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+        .inv-actions .btn {
+            padding-left: 0.75rem !important;
+            padding-right: 0.75rem !important;
+        }
+    }
+
+    @container inv (max-width: 420px) {
+        .inv-stats {
+            grid-template-columns: minmax(0, 1fr);
+        }
+        .inv-btn-group {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+
+    /* ===== Smooth scroll hint for table on small screens ===== */
+    .inv-table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+</style>
+
+<div class="inv-page">
+
 <div class="row mb-4">
-    <div class="col-12 d-flex justify-content-between align-items-center flex-wrap gap-2">
+
+    <div class="col-12 inv-actions">
+
         <a href="{% url 'admin_dash:investor-list' %}" class="btn btn-light fw-semibold rounded-pill px-4 text-secondary">
+
             <i class="fas fa-arrow-left me-2"></i>Back to Investors
+
         </a>
-        <div class="d-flex gap-2">
+
+        <div class="inv-btn-group">
+
             <button type="button" class="btn btn-outline-danger fw-semibold rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#deleteModal{{ profile.pk }}">
+
                 <i class="fas fa-trash me-2"></i>Delete Investor
+
             </button>
+
             <a href="{% url 'admin_dash:investor-update' profile.pk %}" class="btn btn-success fw-semibold rounded-pill px-4">
+
                 <i class="fas fa-edit me-2"></i>Edit Profile
+
             </a>
+
         </div>
+
+
 
         <!-- Delete Confirmation Modal -->
+
         <div class="modal fade" id="deleteModal{{ profile.pk }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ profile.pk }}" aria-hidden="true">
+
             <div class="modal-dialog modal-dialog-centered" style="max-width: 480px;">
+
                 <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+
                     <div class="modal-header border-0 bg-success text-white p-4">
+
                         <div class="d-flex align-items-center gap-3">
+
                             <div class="rounded-circle bg-white shadow-sm d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; min-width: 44px;">
+
                                 <i class="fas fa-check text-success fs-4"></i>
+
                             </div>
+
                             <div>
+
                                 <h5 class="modal-title fw-bold mb-0" id="deleteModalLabel{{ profile.pk }}">Confirm Delete</h5>
+
                                 <small class="text-white-50">Confirm investor account deletion</small>
+
                             </div>
+
                         </div>
+
                         <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+
                     </div>
+
                     <div class="modal-body p-4 text-center">
+
                         <div class="mb-3">
+
                             <i class="fas fa-user-shield text-success mb-2" style="font-size: 3rem; opacity: 0.85;"></i>
+
                             <h6 class="fw-bold text-dark mb-1">{{ profile.user.get_full_name|default:profile.user.username }}</h6>
+
                             <p class="text-muted small mb-0">{{ profile.user.email }}</p>
+
                         </div>
+
                         <p class="text-secondary mb-0" style="font-size: 0.95rem;">
+
                             Are you sure you want to delete the investor account for <strong>{{ profile.user.get_full_name|default:profile.user.username }}</strong>?
+
                         </p>
+
                         <div class="alert alert-success bg-success bg-opacity-10 border-0 text-success mt-3 mb-0 text-start small">
+
                             <i class="fas fa-exclamation-triangle me-2"></i>This action cannot be undone and will permanently remove their access.
+
                         </div>
+
                     </div>
+
                     <div class="modal-footer border-0 bg-light p-3 d-flex justify-content-end gap-2">
+
                         <button type="button" class="btn btn-light fw-semibold rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+
                         <form action="{% url 'admin_dash:investor-delete' profile.pk %}" method="post" class="d-inline">
+
                             {% csrf_token %}
+
                             <button type="submit" class="btn btn-success fw-semibold rounded-pill px-4">
+
                                 <i class="fas fa-check me-2"></i>Yes, Delete
+
                             </button>
+
                         </form>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
+
 </div>
 
-<div class="row">
-    <div class="col-md-4 mb-4">
+
+
+<div class="inv-layout">
+
+    <div class="inv-side">
+
         <!-- Profile Summary Card -->
-        <div class="card border-0 shadow-sm rounded-4 h-100">
-            <div class="card-body text-center p-4">
-                <div class="rounded-circle bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
-                    <i class="fas fa-user-tie fa-2x"></i>
+
+        <div class="card border-0 shadow-sm rounded-4">
+
+            <div class="card-body p-4 inv-profile-body">
+
+                <div class="inv-profile-top text-center">
+
+                    <div class="rounded-circle bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
+
+                        <i class="fas fa-user-tie fa-2x"></i>
+
+                    </div>
+
+                    <h4 class="fw-bold text-dark mb-1">{{ profile.user.get_full_name|default:profile.user.username }}</h4>
+
+                    <p class="text-muted mb-3">{{ profile.company_name|default:"Individual Investor" }}</p>
+
+                    
+
+                    <div class="mb-0">
+
+                        {% if profile.user.is_active %}
+
+                            <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2 fw-semibold">Active Account</span>
+
+                        {% else %}
+
+                            <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill px-3 py-2 fw-semibold">Inactive Account</span>
+
+                        {% endif %}
+
+                    </div>
+
                 </div>
-                <h4 class="fw-bold text-dark mb-1">{{ profile.user.get_full_name|default:profile.user.username }}</h4>
-                <p class="text-muted mb-3">{{ profile.company_name|default:"Individual Investor" }}</p>
+
                 
-                <div class="mb-3">
-                    {% if profile.user.is_active %}
-                        <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2 fw-semibold">Active Account</span>
-                    {% else %}
-                        <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill px-3 py-2 fw-semibold">Inactive Account</span>
-                    {% endif %}
-                </div>
-                
+
                 <hr class="my-4" style="border-color: #f1f5f9;">
+
                 
-                <div class="text-start mt-3">
-                    <div class="mb-3 d-flex align-items-center">
-                        <i class="fas fa-envelope text-success me-3" style="width: 20px;"></i> 
+
+                <div class="inv-contact text-start mt-3">
+
+                    <div class="mb-3 inv-contact-item">
+
+                        <i class="fas fa-envelope text-success"></i> 
+
                         <a href="mailto:{{ profile.user.email }}" class="text-decoration-none text-dark fw-medium">{{ profile.user.email }}</a>
+
                     </div>
-                    <div class="mb-3 d-flex align-items-center">
-                        <i class="fas fa-phone text-success me-3" style="width: 20px;"></i> 
+
+                    <div class="mb-3 inv-contact-item">
+
+                        <i class="fas fa-phone text-success"></i> 
+
                         <span class="text-secondary fw-medium">{{ profile.phone|default:"Not provided" }}</span>
+
                     </div>
-                    <div class="mb-2 d-flex align-items-center">
-                        <i class="fas fa-calendar-alt text-success me-3" style="width: 20px;"></i> 
+
+                    <div class="mb-0 inv-contact-item">
+
+                        <i class="fas fa-calendar-alt text-success"></i> 
+
                         <span class="text-secondary fw-medium">Joined {{ profile.created_at|date:"M d, Y" }}</span>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
+
     
-    <div class="col-md-8 mb-4">
+
+    <div class="inv-main">
+
         <!-- Investment Summary -->
-        <div class="row">
-            <div class="col-sm-6 col-md-4 mb-4">
-                <div class="card border-0 shadow-sm rounded-4 p-3 h-100">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <p class="text-muted small text-uppercase mb-1 fw-semibold">Total Investments</p>
-                            <h4 class="fw-bold mb-0 text-dark">{{ investments|length }}</h4>
-                        </div>
-                        <div class="rounded-3 bg-info bg-opacity-10 text-info d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
-                            <i class="fas fa-chart-pie fa-lg"></i>
-                        </div>
+
+        <div class="inv-stats">
+
+            <div class="card border-0 shadow-sm rounded-4 inv-stat-card">
+
+                <div class="inv-stat-inner">
+
+                    <div class="inv-stat-text">
+
+                        <p class="text-muted text-uppercase mb-1 fw-semibold inv-stat-label">Total Investments</p>
+
+                        <h4 class="fw-bold mb-0 text-dark inv-stat-value">{{ investments|length }}</h4>
+
                     </div>
-                </div>
-            </div>
-            <div class="col-sm-6 col-md-4 mb-4">
-                <div class="card border-0 shadow-sm rounded-4 p-3 h-100">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <p class="text-muted small text-uppercase mb-1 fw-semibold">Portfolio Value</p>
-                            <h4 class="fw-bold mb-0 text-dark">₹{{ total_portfolio_value|default:"0"|intcomma }}</h4>
-                        </div>
-                        <div class="rounded-3 bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
-                            <i class="fas fa-indian-rupee-sign fa-lg"></i>
-                        </div>
+
+                    <div class="rounded-3 bg-info bg-opacity-10 text-info d-flex align-items-center justify-content-center inv-stat-icon">
+
+                        <i class="fas fa-chart-pie fa-lg"></i>
+
                     </div>
+
                 </div>
+
             </div>
-            <div class="col-sm-6 col-md-4 mb-4">
-                <div class="card border-0 shadow-sm rounded-4 p-3 h-100">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <p class="text-muted small text-uppercase mb-1 fw-semibold">Total Returns</p>
-                            <h4 class="fw-bold mb-0 text-dark">₹{{ total_returns|default:"0"|intcomma }}</h4>
-                        </div>
-                        <div class="rounded-3 bg-warning bg-opacity-10 text-warning d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
-                            <i class="fas fa-chart-line fa-lg"></i>
-                        </div>
+
+            <div class="card border-0 shadow-sm rounded-4 inv-stat-card">
+
+                <div class="inv-stat-inner">
+
+                    <div class="inv-stat-text">
+
+                        <p class="text-muted text-uppercase mb-1 fw-semibold inv-stat-label">Portfolio Value</p>
+
+                        <h4 class="fw-bold mb-0 text-dark inv-stat-value">₹{{ total_portfolio_value|default:"0"|intcomma }}</h4>
+
                     </div>
+
+                    <div class="rounded-3 bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center inv-stat-icon">
+
+                        <i class="fas fa-indian-rupee-sign fa-lg"></i>
+
+                    </div>
+
                 </div>
+
             </div>
+
+            <div class="card border-0 shadow-sm rounded-4 inv-stat-card">
+
+                <div class="inv-stat-inner">
+
+                    <div class="inv-stat-text">
+
+                        <p class="text-muted text-uppercase mb-1 fw-semibold inv-stat-label">Total Returns</p>
+
+                        <h4 class="fw-bold mb-0 text-dark inv-stat-value">₹{{ total_returns|default:"0"|intcomma }}</h4>
+
+                    </div>
+
+                    <div class="rounded-3 bg-warning bg-opacity-10 text-warning d-flex align-items-center justify-content-center inv-stat-icon">
+
+                        <i class="fas fa-chart-line fa-lg"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
         </div>
+
         
+
         <!-- Investments List -->
+
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+
             <div class="card-header bg-white p-4 border-0">
+
                 <h5 class="fw-bold mb-0 text-dark">Investments Portfolio</h5>
+
             </div>
+
             <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
+
+                <div class="table-responsive inv-table-wrap">
+
+                    <table class="table table-hover align-middle mb-0 inv-table">
+
                         <thead class="bg-light">
+
                             <tr>
-                                <th class="py-3 px-4 text-secondary fw-semibold">Project Name</th>
-                                <th class="py-3 text-secondary fw-semibold">Amount</th>
-                                <th class="py-3 text-secondary fw-semibold">Date</th>
-                                <th class="py-3 px-4 text-secondary fw-semibold">Status</th>
+
+                                <th class="py-3 ps-4 pe-3 text-secondary fw-semibold">Project Name</th>
+
+                                <th class="py-3 px-3 text-secondary fw-semibold">Amount</th>
+
+                                <th class="py-3 px-3 text-secondary fw-semibold">Date</th>
+
+                                <th class="py-3 ps-3 pe-4 text-secondary fw-semibold">Status</th>
+
                             </tr>
+
                         </thead>
+
                         <tbody>
+
                             {% for investment in investments %}
+
                             <tr>
-                                <td class="py-3 px-4 fw-semibold text-dark">{{ investment.listing.title }}</td>
-                                <td class="fw-semibold">₹{{ investment.amount|intcomma }}</td>
-                                <td class="text-secondary">{{ investment.investment_date|date:"M d, Y" }}</td>
-                                <td class="px-4">
+
+                                <td class="py-3 ps-4 pe-3 fw-semibold text-dark inv-project">{{ investment.listing.title }}</td>
+
+                                <td class="px-3 fw-semibold">₹{{ investment.amount|intcomma }}</td>
+
+                                <td class="px-3 text-secondary">{{ investment.investment_date|date:"M d, Y" }}</td>
+
+                                <td class="ps-3 pe-4">
+
                                     <span class="badge bg-{{ investment.status|yesno:'success,warning' }} bg-opacity-10 text-{{ investment.status|yesno:'success,warning' }} rounded-pill px-3 py-2 fw-semibold">
+
                                         {{ investment.get_status_display }}
+
                                     </span>
+
                                 </td>
+
                             </tr>
+
                             {% empty %}
+
                             <tr>
+
                                 <td colspan="4" class="text-center py-5 text-muted">
+
                                     <i class="fas fa-inbox fa-2x mb-2 d-block opacity-50"></i>
+
                                     No investments recorded yet.
+
                                 </td>
+
                             </tr>
+
                             {% endfor %}
+
                         </tbody>
+
                     </table>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
+
 </div>
+
+</div>
+
 {% endblock %}
