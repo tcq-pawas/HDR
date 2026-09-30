@@ -103,281 +103,9 @@
     </div>
 </div>
 
-<!-- KPI Cards Row -->
-<div class="kpi-cards-grid">
-    <div class="kpi-cards-grid-item">
-        <div class="kpi-card">
-            <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #E0E7FF; color: #4338CA;">
-                <i class="fas fa-sign-in-alt"></i>
-            </div>
-            <div class="kpi-value fs-5">{{ viewed_user.login_count|default:"0" }}</div>
-            <div class="kpi-label">Total Logins</div>
-        </div>
-    </div>
-    <div class="kpi-cards-grid-item">
-        <div class="kpi-card">
-            <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #D1FAE5; color: #059669;">
-                <i class="fas fa-clock"></i>
-            </div>
-            <div class="kpi-value fs-5">{{ viewed_user.date_joined|timesince }}</div>
-            <div class="kpi-label">Account Age</div>
-        </div>
-    </div>
-    {% if viewed_user.role == 'customer' %}
-        <div class="kpi-cards-grid-item">
-            <div class="kpi-card">
-                <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #FEF3C7; color: #D97706;">
-                    <i class="fas fa-home"></i>
-                </div>
-                <div class="kpi-value fs-5">{{ customer_data.purchased_properties|default:"0" }}</div>
-                <div class="kpi-label">Properties</div>
-            </div>
-        </div>
-        <div class="kpi-cards-grid-item">
-            <div class="kpi-card">
-                <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #FEE2E2; color: #DC2626;">
-                    <i class="fas fa-heart"></i>
-                </div>
-                <div class="kpi-value fs-5">{{ customer_data.saved_properties|default:"0" }}</div>
-                <div class="kpi-label">Saved</div>
-            </div>
-        </div>
-        <div class="kpi-cards-grid-item">
-            <div class="kpi-card">
-                <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #E0F2FE; color: #0284C7;">
-                    <i class="fas fa-envelope"></i>
-                </div>
-                <div class="kpi-value fs-5">{{ customer_data.inquiries|default:"0" }}</div>
-                <div class="kpi-label">Inquiries</div>
-            </div>
-        </div>
-        <div class="kpi-cards-grid-item">
-            <div class="kpi-card">
-                <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #F3E8FF; color: #7C3AED;">
-                    <i class="fas fa-file"></i>
-                </div>
-                <div class="kpi-value fs-5">{{ customer_data.documents|default:"0" }}</div>
-                <div class="kpi-label">Documents</div>
-            </div>
-        </div>
-    {% elif viewed_user.role == 'investor' %}
-        <div class="kpi-cards-grid-item">
-            <div class="kpi-card">
-                <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #D1FAE5; color: #059669;">
-                    <i class="fas fa-dollar-sign"></i>
-                </div>
-                <div class="kpi-value fs-5">${{ investor_data.total_investments|default:0|intcomma }}</div>
-                <div class="kpi-label">Investments</div>
-            </div>
-        </div>
-        <div class="kpi-cards-grid-item">
-            <div class="kpi-card">
-                <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #FEF3C7; color: #D97706;">
-                    <i class="fas fa-chart-line"></i>
-                </div>
-                <div class="kpi-value fs-5">{{ investor_data.roi|default:"0" }}%</div>
-                <div class="kpi-label">ROI</div>
-            </div>
-        </div>
-        <div class="kpi-cards-grid-item">
-            <div class="kpi-card">
-                <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #E0E7FF; color: #4338CA;">
-                    <i class="fas fa-coins"></i>
-                </div>
-                <div class="kpi-value fs-5">{{ investor_data.investment_count|default:"0" }}</div>
-                <div class="kpi-label">Count</div>
-            </div>
-        </div>
-        <div class="kpi-cards-grid-item">
-            <div class="kpi-card">
-                <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #F3E8FF; color: #7C3AED;">
-                    <i class="fas fa-file"></i>
-                </div>
-                <div class="kpi-value fs-5">{{ investor_data.documents|default:"0" }}</div>
-                <div class="kpi-label">Documents</div>
-            </div>
-        </div>
-    {% elif viewed_user.role == 'agent' or viewed_user.role == 'owner' %}
-        <div class="kpi-cards-grid-item">
-            <div class="kpi-card">
-                <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #E0E7FF; color: #4338CA;">
-                    <i class="fas fa-building"></i>
-                </div>
-                <div class="kpi-value fs-5">{{ agent_data.assigned_properties|default:"0" }}</div>
-                <div class="kpi-label">Properties</div>
-            </div>
-        </div>
-        <div class="kpi-cards-grid-item">
-            <div class="kpi-card">
-                <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #D1FAE5; color: #059669;">
-                    <i class="fas fa-users"></i>
-                </div>
-                <div class="kpi-value fs-5">{{ agent_data.leads|default:"0" }}</div>
-                <div class="kpi-label">Leads</div>
-            </div>
-        </div>
-        <div class="kpi-cards-grid-item">
-            <div class="kpi-card">
-                <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #FEF3C7; color: #D97706;">
-                    <i class="fas fa-user-friends"></i>
-                </div>
-                <div class="kpi-value fs-5">{{ agent_data.customers|default:"0" }}</div>
-                <div class="kpi-label">Customers</div>
-            </div>
-        </div>
-        <div class="kpi-cards-grid-item">
-            <div class="kpi-card">
-                <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #FEE2E2; color: #DC2626;">
-                    <i class="fas fa-dollar-sign"></i>
-                </div>
-                <div class="kpi-value fs-5">${{ agent_data.commission|default:0|intcomma }}</div>
-                <div class="kpi-label">Commission</div>
-            </div>
-        </div>
-    {% else %}
-        <div class="kpi-cards-grid-item">
-            <div class="kpi-card">
-                <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #E0E7FF; color: #4338CA;">
-                    <i class="fas fa-users"></i>
-                </div>
-                <div class="kpi-value fs-5">-</div>
-                <div class="kpi-label">Managed</div>
-            </div>
-        </div>
-        <div class="kpi-cards-grid-item">
-            <div class="kpi-card">
-                <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #D1FAE5; color: #059669;">
-                    <i class="fas fa-history"></i>
-                </div>
-                <div class="kpi-value fs-5">{{ admin_data.activity_logs|length|default:"0" }}</div>
-                <div class="kpi-label">Activities</div>
-            </div>
-        </div>
-        <div class="kpi-cards-grid-item">
-            <div class="kpi-card">
-                <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #FEF3C7; color: #D97706;">
-                    <i class="fas fa-key"></i>
-                </div>
-                <div class="kpi-value fs-5">{{ admin_data.permissions|length|default:"0" }}</div>
-                <div class="kpi-label">Permissions</div>
-            </div>
-        </div>
-        <div class="kpi-cards-grid-item">
-            <div class="kpi-card">
-                <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #F3E8FF; color: #7C3AED;">
-                    <i class="fas fa-shield-alt"></i>
-                </div>
-                <div class="kpi-value fs-5">Full</div>
-                <div class="kpi-label">Access</div>
-            </div>
-        </div>
-    {% endif %}
-</div>
-
-<div class="row user-info-cards-row">
-    <!-- Basic Information -->
-    <div class="col-lg-4 mb-4">
-        <div class="info-card">
-            <h5 class="d-flex align-items-center gap-2"><i class="fas fa-user"></i> Basic Information</h5>
-            <div class="info-row d-flex justify-content-between">
-                <div class="info-label">Full Name</div>
-                <div class="info-value">{{ viewed_user.get_full_name|default:"Not provided" }}</div>
-            </div>
-            <div class="info-row d-flex justify-content-between">
-                <div class="info-label">Username</div>
-                <div class="info-value">@{{ viewed_user.username }}</div>
-            </div>
-            <div class="info-row d-flex justify-content-between">
-                <div class="info-label">Email</div>
-                <div class="info-value">{{ viewed_user.email }}</div>
-            </div>
-            <div class="info-row d-flex justify-content-between">
-                <div class="info-label">Phone Number</div>
-                <div class="info-value">
-                    {% if viewed_user.customer_profile.phone %}
-                        {{ viewed_user.customer_profile.phone }}
-                    {% elif viewed_user.investor_profile.phone %}
-                        {{ viewed_user.investor_profile.phone }}
-                    {% elif viewed_user.agent_profile.phone %}
-                        {{ viewed_user.agent_profile.phone }}
-                    {% else %}
-                        Not provided
-                    {% endif %}
-                </div>
-            </div>
-            <div class="info-row d-flex justify-content-between">
-                <div class="info-label">Role</div>
-                <div class="info-value">{{ viewed_user.role|title|default:"Unassigned" }}</div>
-            </div>
-            <div class="info-row d-flex justify-content-between">
-                <div class="info-label">Status</div>
-                <div class="info-value">
-                    {% if viewed_user.is_active %}
-                        <span class="status-badge active d-inline-flex align-items-center gap-1">Active</span>
-                    {% else %}
-                        <span class="status-badge inactive d-inline-flex align-items-center gap-1">Inactive</span>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Account Information -->
-    <div class="col-lg-4 mb-4">
-        <div class="info-card">
-            <h5 class="d-flex align-items-center gap-2"><i class="fas fa-cog"></i> Account Information</h5>
-            <div class="info-row d-flex justify-content-between">
-                <div class="info-label">User ID</div>
-                <div class="info-value">#{{ viewed_user.id }}</div>
-            </div>
-            <div class="info-row d-flex justify-content-between">
-                <div class="info-label">Created Date</div>
-                <div class="info-value">{{ viewed_user.date_joined|date:"F d, Y" }}</div>
-            </div>
-            <div class="info-row d-flex justify-content-between">
-                <div class="info-label">Updated Date</div>
-                <div class="info-value">{{ viewed_user.updated_at|date:"F d, Y"|default:"Not available" }}</div>
-            </div>
-            <div class="info-row d-flex justify-content-between">
-                <div class="info-label">Email Verified</div>
-                <div class="info-value">
-                    {% if viewed_user.email_verified %}
-                        <span class="status-badge active d-inline-flex align-items-center gap-1">Verified</span>
-                    {% else %}
-                        <span class="status-badge inactive d-inline-flex align-items-center gap-1">Not Verified</span>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Activity Information -->
-    <div class="col-lg-4 mb-4">
-        <div class="info-card">
-            <h5 class="d-flex align-items-center gap-2"><i class="fas fa-history"></i> Activity Information</h5>
-            <div class="info-row d-flex justify-content-between">
-                <div class="info-label">Last Login</div>
-                <div class="info-value">{{ viewed_user.last_login|date:"F d, Y, H:i"|default:"Never" }}</div>
-            </div>
-            <div class="info-row d-flex justify-content-between">
-                <div class="info-label">Last Active</div>
-                <div class="info-value">{{ viewed_user.last_login|timesince|default:"Never" }} ago</div>
-            </div>
-            <div class="info-row d-flex justify-content-between">
-                <div class="info-label">Total Logins</div>
-                <div class="info-value">{{ viewed_user.login_count|default:"0" }}</div>
-            </div>
-            <div class="info-row d-flex justify-content-between">
-                <div class="info-label">Account Age</div>
-                <div class="info-value">{{ viewed_user.date_joined|timesince }}</div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- Role-Specific Information -->
 {% if viewed_user.role == 'customer' %}
-<div class="row mb-4">
+<div class="row mb-4 role-specific-information">
     <div class="col-12">
         <div class="info-card">
             <h5 class="d-flex align-items-center gap-2"><i class="fas fa-shopping-cart"></i> Customer Details</h5>
@@ -423,7 +151,7 @@
     </div>
 </div>
 {% elif viewed_user.role == 'investor' %}
-<div class="row mb-4">
+<div class="row mb-4 role-specific-information">
     <div class="col-12">
         <div class="info-card">
             <h5 class="d-flex align-items-center gap-2"><i class="fas fa-chart-line"></i> Investor Details</h5>
@@ -469,7 +197,7 @@
     </div>
 </div>
 {% elif viewed_user.role == 'agent' or viewed_user.role == 'owner' %}
-<div class="row mb-4">
+<div class="row mb-4 role-specific-information">
     <div class="col-12">
         <div class="info-card">
             <h5 class="d-flex align-items-center gap-2"><i class="fas fa-user-tie"></i> {% if viewed_user.role == 'owner' %}Owner{% else %}Agent{% endif %} Details</h5>
@@ -573,6 +301,109 @@
 </div>
 
 {% endif %}
+
+<div class="row user-info-cards-row">
+    <!-- Basic Information -->
+    <div class="col-lg-4 mb-4">
+        <div class="info-card">
+            <h5 class="d-flex align-items-center gap-2"><i class="fas fa-user"></i> Basic Information</h5>
+            <div class="info-row d-flex justify-content-between">
+                <div class="info-label">Full Name</div>
+                <div class="info-value">{{ viewed_user.get_full_name|default:"Not provided" }}</div>
+            </div>
+            <div class="info-row d-flex justify-content-between">
+                <div class="info-label">Username</div>
+                <div class="info-value">@{{ viewed_user.username }}</div>
+            </div>
+            <div class="info-row d-flex justify-content-between">
+                <div class="info-label">Email</div>
+                <div class="info-value">{{ viewed_user.email }}</div>
+            </div>
+            <div class="info-row d-flex justify-content-between">
+                <div class="info-label">Phone Number</div>
+                <div class="info-value">
+                    {% if viewed_user.customer_profile.phone %}
+                        {{ viewed_user.customer_profile.phone }}
+                    {% elif viewed_user.investor_profile.phone %}
+                        {{ viewed_user.investor_profile.phone }}
+                    {% elif viewed_user.agent_profile.phone %}
+                        {{ viewed_user.agent_profile.phone }}
+                    {% else %}
+                        Not provided
+                    {% endif %}
+                </div>
+            </div>
+            <div class="info-row d-flex justify-content-between">
+                <div class="info-label">Role</div>
+                <div class="info-value">{{ viewed_user.role|title|default:"Unassigned" }}</div>
+            </div>
+            <div class="info-row d-flex justify-content-between">
+                <div class="info-label">Status</div>
+                <div class="info-value">
+                    {% if viewed_user.is_active %}
+                        <span class="status-badge active d-inline-flex align-items-center gap-1">Active</span>
+                    {% else %}
+                        <span class="status-badge inactive d-inline-flex align-items-center gap-1">Inactive</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Account Information -->
+    <div class="col-lg-4 mb-4">
+        <div class="info-card">
+            <h5 class="d-flex align-items-center gap-2"><i class="fas fa-cog"></i> Account Information</h5>
+            <div class="info-row d-flex justify-content-between">
+                <div class="info-label">User ID</div>
+                <div class="info-value">#{{ viewed_user.id }}</div>
+            </div>
+            <div class="info-row d-flex justify-content-between">
+                <div class="info-label">Created Date</div>
+                <div class="info-value">{{ viewed_user.date_joined|date:"F d, Y" }}</div>
+            </div>
+            <div class="info-row d-flex justify-content-between">
+                <div class="info-label">Updated Date</div>
+                <div class="info-value">{{ viewed_user.updated_at|date:"F d, Y"|default:"Not available" }}</div>
+            </div>
+            <div class="info-row d-flex justify-content-between">
+                <div class="info-label">Email Verified</div>
+                <div class="info-value">
+                    {% if viewed_user.email_verified %}
+                        <span class="status-badge active d-inline-flex align-items-center gap-1">Verified</span>
+                    {% else %}
+                        <span class="status-badge inactive d-inline-flex align-items-center gap-1">Not Verified</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Activity Information -->
+    <div class="col-lg-4 mb-4">
+        <div class="info-card">
+            <h5 class="d-flex align-items-center gap-2"><i class="fas fa-history"></i> Activity Information</h5>
+            <div class="info-row d-flex justify-content-between">
+                <div class="info-label">Last Login</div>
+                <div class="info-value">{{ viewed_user.last_login|date:"F d, Y, H:i"|default:"Never" }}</div>
+            </div>
+            <div class="info-row d-flex justify-content-between">
+                <div class="info-label">Last Active</div>
+                <div class="info-value">{{ viewed_user.last_login|timesince|default:"Never" }} ago</div>
+            </div>
+            <div class="info-row d-flex justify-content-between">
+                <div class="info-label">Total Logins</div>
+                <div class="info-value">{{ viewed_user.login_count|default:"0" }}</div>
+            </div>
+            <div class="info-row d-flex justify-content-between">
+                <div class="info-label">Account Age</div>
+                <div class="info-value">{{ viewed_user.date_joined|timesince }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 <!-- Subscription Information -->
 {% if subscription %}

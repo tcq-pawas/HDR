@@ -12495,6 +12495,25 @@ tbody tr:hover {
     }
 
     .profile-info-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .profile-information-sidebar {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1.5rem;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .profile-information-sidebar > .info-card {
+        min-width: 0;
+        width: 100%;
+    }
+}
+
+@media (max-width: 1400px) {
+    .profile-info-cards-grid{
         grid-template-columns: 1fr;
     }
 }
@@ -12506,6 +12525,175 @@ tbody tr:hover {
 
     .profile-info-cards-grid {
         grid-template-columns: 1fr;
+    }
+
+    .profile-information-sidebar {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Personal Information Card - Guaranteed Horizontal Slider Below 750px */
+@media (max-width: 749.98px) {
+    .personal-info-card .personal-info-scroll {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+
+    .personal-info-card .personal-info-scroll::-webkit-scrollbar {
+        height: 8px !important;
+        display: block !important;
+    }
+
+    .personal-info-card .personal-info-scroll::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 8px;
+    }
+
+    .personal-info-card .personal-info-scroll::-webkit-scrollbar-thumb {
+        background: #94a3b8;
+        border-radius: 8px;
+    }
+
+    .personal-info-card .personal-info-scroll-content {
+        display: block !important;
+        width: 700px !important;
+        min-width: 700px !important;
+        max-width: none !important;
+    }
+
+    /* Override global * { max-width: 100% !important; } for all descendants */
+    .personal-info-card .personal-info-scroll-content * {
+        max-width: none !important;
+    }
+
+    .personal-info-card .personal-info-scroll-content .info-row {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        width: 700px !important;
+        min-width: 700px !important;
+        max-width: none !important;
+        white-space: nowrap !important;
+    }
+
+    .personal-info-card .personal-info-scroll-content .info-label {
+        flex: 0 0 140px !important;
+        width: 140px !important;
+        min-width: 140px !important;
+        max-width: none !important;
+        white-space: nowrap !important;
+    }
+
+    .personal-info-card .personal-info-scroll-content .info-value {
+        flex: 0 0 auto !important;
+        width: max-content !important;
+        min-width: max-content !important;
+        max-width: none !important;
+        white-space: nowrap !important;
+        overflow-wrap: normal !important;
+        word-break: normal !important;
+    }
+
+    .personal-info-card .personal-info-scroll-content .info-value p {
+        width: max-content !important;
+        min-width: max-content !important;
+        max-width: none !important;
+        margin: 0 !important;
+        white-space: nowrap !important;
+    }
+}
+
+/* Profile Hero Section - Mobile Responsiveness Below 768px */
+@media (max-width: 767.98px) {
+    .profile-hero {
+        padding: 28px 18px;
+        margin-bottom: 24px;
+    }
+
+    .profile-hero > .row {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 20px;
+    }
+
+    .profile-hero .col-md-8,
+    .profile-hero .col-md-4 {
+        width: 100%;
+        max-width: 100%;
+        flex: 0 0 100%;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .profile-hero .col-md-4 {
+        margin-top: 0 !important;
+        text-align: left !important;
+    }
+
+    .profile-hero .col-md-8 > .d-flex {
+        display: flex;
+        align-items: center;
+        gap: 16px !important;
+        width: 100%;
+    }
+
+    .profile-avatar-large {
+        width: 90px;
+        height: 90px;
+        min-width: 90px;
+        max-width: 90px;
+        flex: 0 0 90px;
+        border-width: 3px;
+    }
+
+    .profile-avatar-large img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .profile-hero .text-white {
+        min-width: 0;
+        flex: 1 1 auto;
+    }
+
+    .profile-hero h1 {
+        font-size: 22px;
+        line-height: 1.2;
+        margin-bottom: 6px !important;
+        white-space: normal;
+    }
+
+    .profile-hero p {
+        font-size: 13px;
+        line-height: 1.4;
+        margin-bottom: 8px !important;
+    }
+
+    .profile-hero .d-flex.gap-2 {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px !important;
+    }
+
+    .profile-hero .verified-badge,
+    .profile-hero .unverified-badge,
+    .profile-hero .badge {
+        white-space: nowrap;
+        font-size: 11px;
+    }
+
+    .profile-hero .col-md-4 a.btn {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 !important;
     }
 }
 

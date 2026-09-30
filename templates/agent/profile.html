@@ -91,48 +91,52 @@
         <div class="profile-information-main">
             <div class="profile-info-cards-grid">
                 <!-- Personal Information Card -->
-                <div class="info-card">
+                <div class="info-card personal-info-card">
                     <div class="info-card-header">
                         <h5><i class="bi bi-person me-2 text-success"></i>Personal Information</h5>
                     </div>
-                    <div class="info-row">
-                        <div class="info-label">Full Name</div>
-                        <div class="info-value">{{ user.first_name }} {{ user.last_name }}</div>
-                    </div>
-                    <div class="info-row">
-                        <div class="info-label">Email Address</div>
-                        <div class="info-value d-flex justify-content-between align-items-center w-100">
-                            <span>{{ user.email }}</span>
-                            {% if user.verification.is_email_verified %}
-                                <span class="badge bg-success rounded-pill"><i class="bi bi-check-circle me-1"></i> Verified</span>
-                            {% elif user.email %}
-                                <button class="btn btn-sm btn-outline-warning rounded-pill" onclick="requestOTP('email', '{{ user.email }}')">Verify Now</button>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="info-row">
-                        <div class="info-label">Phone Number</div>
-                        <div class="info-value d-flex justify-content-between align-items-center w-100">
-                            <span>{{ agent_profile.phone|default:user.verification.phone_number|default:"Not provided" }}</span>
-                            {% if user.verification.is_mobile_verified %}
-                                <span class="badge bg-success rounded-pill"><i class="bi bi-check-circle me-1"></i> Verified</span>
-                            {% elif agent_profile.phone or user.verification.phone_number %}
-                                <button class="btn btn-sm btn-outline-warning rounded-pill" onclick="requestOTP('mobile', '{{ agent_profile.phone|default:user.verification.phone_number }}')">Verify Now</button>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="info-row">
-                        <div class="info-label">Company Name</div>
-                        <div class="info-value">{{ agent_profile.company_name|default:"Independent" }}</div>
-                    </div>
-                    <div class="info-row">
-                        <div class="info-label">Bio</div>
-                        <div class="info-value">
-                            {% if agent_profile.bio %}
-                                {{ agent_profile.bio|linebreaks }}
-                            {% else %}
-                                <span class="text-muted fst-italic">No bio provided yet.</span>
-                            {% endif %}
+                    <div class="personal-info-scroll">
+                        <div class="personal-info-scroll-content">
+                            <div class="info-row">
+                                <div class="info-label">Full Name</div>
+                                <div class="info-value">{{ user.first_name }} {{ user.last_name }}</div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">Email Address</div>
+                                <div class="info-value d-flex justify-content-between align-items-center w-100">
+                                    <span>{{ user.email }}</span>
+                                    {% if user.verification.is_email_verified %}
+                                        <span class="badge bg-success rounded-pill"><i class="bi bi-check-circle me-1"></i> Verified</span>
+                                    {% elif user.email %}
+                                        <button class="btn btn-sm btn-outline-warning rounded-pill" onclick="requestOTP('email', '{{ user.email }}')">Verify Now</button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">Phone Number</div>
+                                <div class="info-value d-flex justify-content-between align-items-center w-100">
+                                    <span>{{ agent_profile.phone|default:user.verification.phone_number|default:"Not provided" }}</span>
+                                    {% if user.verification.is_mobile_verified %}
+                                        <span class="badge bg-success rounded-pill"><i class="bi bi-check-circle me-1"></i> Verified</span>
+                                    {% elif agent_profile.phone or user.verification.phone_number %}
+                                        <button class="btn btn-sm btn-outline-warning rounded-pill" onclick="requestOTP('mobile', '{{ agent_profile.phone|default:user.verification.phone_number }}')">Verify Now</button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">Company Name</div>
+                                <div class="info-value">{{ agent_profile.company_name|default:"Independent" }}</div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">Bio</div>
+                                <div class="info-value">
+                                    {% if agent_profile.bio %}
+                                        {{ agent_profile.bio|linebreaks }}
+                                    {% else %}
+                                        <span class="text-muted fst-italic">No bio provided yet.</span>
+                                    {% endif %}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

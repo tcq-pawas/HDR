@@ -493,7 +493,7 @@ a:active {
     border: 1px solid rgba(2, 6, 23, 0.06);
     padding: 1.25rem;
     margin-bottom: 2.25rem;
-    height: 100%;
+
 }
 
 .edit-card {
@@ -3208,6 +3208,200 @@ select.form-input {
     }
 }
 
+/* Customer Profile Banner - Two-Row Layout for 991px-1199px */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .profile-banner {
+        padding: 1.35rem;
+    }
+
+    .profile-banner > .row {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+    }
+
+    .profile-banner > .row > .col-lg-7,
+    .profile-banner > .row > .col-lg-5 {
+        width: 100% !important;
+        max-width: none !important;
+        min-width: 0 !important;
+    }
+
+    .profile-banner > .row > .col-lg-5 {
+        display: block !important;
+    }
+
+    .profile-banner .profile-identity {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        min-width: 0;
+        gap: 1rem;
+    }
+
+    .profile-banner .banner-actions {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-top: 0;
+    }
+
+    .profile-banner .edit-profile-btn {
+        align-self: flex-end;
+        width: auto;
+    }
+
+    .profile-banner .banner-stats {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 0.75rem !important;
+    }
+
+    .profile-banner .banner-stats .glass {
+        min-width: 0 !important;
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+        box-sizing: border-box;
+        padding: 0.8rem 0.9rem;
+    }
+
+    .profile-banner .banner-stats .glass > .d-flex {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+    }
+
+    .profile-banner .banner-stats .glass > .d-flex > div:first-child {
+        min-width: 0;
+        max-width: calc(100% - 36px);
+        flex: 1 1 auto;
+        overflow: hidden;
+    }
+
+    .profile-banner .banner-stats .stat-label,
+    .profile-banner .banner-stats .stat-value {
+        min-width: 0;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .profile-banner .stat-icon {
+        flex: 0 0 28px;
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+        max-width: 28px;
+    }
+}
+
+/* Customer Profile Banner - Desktop Horizontal Layout >=1200px */
+@media (min-width: 1200px) {
+    .profile-banner > .row {
+        display: grid;
+        grid-template-columns: minmax(0, 1.15fr) minmax(430px, 0.85fr);
+        align-items: start;
+        gap: 1.5rem;
+    }
+
+    .profile-banner > .row > .col-lg-7,
+    .profile-banner > .row > .col-lg-5 {
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+    }
+
+    .profile-banner .profile-identity {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        min-width: 0;
+    }
+
+    .profile-banner .contact-chips {
+        min-width: 0;
+    }
+
+    .profile-banner .banner-actions {
+        width: 100%;
+        gap: 0.75rem;
+    }
+
+    .profile-banner .edit-profile-btn {
+        align-self: flex-end;
+    }
+
+    .profile-banner .banner-stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(130px, 1fr));
+        gap: 0.7rem;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+
+    .profile-banner .banner-stats .glass {
+        min-width: 0;
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+        box-sizing: border-box;
+    }
+
+    .profile-banner .banner-stats .glass > .d-flex {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+    }
+
+    .profile-banner .banner-stats .glass > .d-flex > div:first-child {
+        min-width: 0;
+        max-width: calc(100% - 36px);
+        flex: 1 1 auto;
+        overflow: hidden;
+    }
+
+    .profile-banner .stat-icon {
+        flex: 0 0 28px;
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+        max-width: 28px;
+    }
+
+    .profile-banner .stat-label,
+    .profile-banner .stat-value {
+        min-width: 0;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+/* Customer Profile Banner - Override Global Banner Stats Rule for 1200px-1700px */
+@media (min-width: 1200px) and (max-width: 1700px) {
+    .profile-banner .banner-stats {
+        grid-template-columns: repeat(3, minmax(130px, 1fr)) !important;
+    }
+}
+
 /* Tablet Portrait */
 @media (max-width: 991.98px) {
     .main-content-wrapper {
@@ -3764,5 +3958,63 @@ select.form-input {
 
     .hero-eyebrow {
         font-size: .75rem;
+    }
+}
+
+/* Customer Profile - 3-Column Layout Above 1850px */
+@media (min-width: 1850.01px) {
+    .profile-wrap > .row.g-3 {
+        display: grid;
+        grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr);
+        gap: 1rem;
+        width: 100%;
+        align-items: start;
+    }
+
+    .profile-wrap > .row.g-3 > .col-lg-7 {
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+        grid-column: auto;
+    }
+
+    .profile-wrap > .row.g-3 > .col-lg-5 {
+        display: contents;
+    }
+
+    .profile-wrap > .row.g-3 > .col-lg-5 > .section-card,
+    .profile-wrap > .row.g-3 > .col-lg-5 > .widget {
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+        grid-column: auto;
+    }
+}
+
+/* Customer Profile - Single Column Layout Below 1175px */
+@media (max-width: 1174.98px) {
+    .profile-wrap > .row.g-3 {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        width: 100%;
+        align-items: start;
+    }
+
+    .profile-wrap > .row.g-3 > .col-lg-7 {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    .profile-wrap > .row.g-3 > .col-lg-5 {
+        display: contents;
+    }
+
+    .profile-wrap > .row.g-3 > .col-lg-5 > .section-card,
+    .profile-wrap > .row.g-3 > .col-lg-5 > .widget {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
     }
 }

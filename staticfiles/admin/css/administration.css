@@ -9224,3 +9224,45 @@ h1, h2, h3, h4, h5, h6,
         margin-bottom: 0.6rem;
     }
 }
+
+/* ============================================================
+   ADMIN USER PROFILE — ROLE-SPECIFIC INFORMATION FULL WIDTH
+   Fix for card width below 1500px
+   ============================================================ */
+@media (max-width: 1500px) {
+    .role-specific-information {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        box-sizing: border-box !important;
+    }
+
+    .role-specific-information > .col-12 {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .role-specific-information > .col-12 > .info-card {
+        width: 100% !important;
+        max-width: none !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+    }
+}
+
+/* ============================================================
+   ADMIN USER PROFILE — ROLE-SPECIFIC KPI CARDS 1-PER-ROW
+   Fix for KPI cards below 500px
+   ============================================================ */
+@media (max-width: 499.98px) {
+    .role-specific-information > .col-12 > .info-card > .row > .col-6 {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+    }
+}
