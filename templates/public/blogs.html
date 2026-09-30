@@ -1,0 +1,144 @@
+{% extends 'public/base.html' %}
+{% load static %}
+
+{% block inner_hero %}
+<section class="inner-hero"
+    style="background-image: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80'); height: 260px;">
+    <div class="inner-hero-content" style="text-align: left; padding-left: 48px;">
+        <!-- Dynamic Feed Title -->
+        <h1 id="hero-feed-title" class="inner-hero-title" style="font-size: 2.5rem;">Blogs & News</h1>
+        <p class="inner-hero-quote" style="font-style: normal; font-size: 1.1rem;">
+            Latest Articles, News.
+        </p>
+        <div style="display: flex; align-items: center; gap: 12px; margin-top: 16px;">
+            <div style="width: 60px; height: 3px; background: #F4B400;"></div>
+            <span style="font-size: 1.5rem;">📰</span>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<section style="padding: 60px 48px; background: var(--cloud-white, #F9FAFB);">
+    <div class="container" style="max-width: 1200px; margin: 0 auto;">
+        
+        <!-- Equal Height Grid Container -->
+        <div id="rss-blogs-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 30px; align-items: stretch;">
+            <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px;">
+                <p style="font-size: 1.1rem; color: #6B7280;">Loading published blogs from InsightCMS...</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- Automatic Dynamic URL RSS Loader Script -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const requestedCompany = urlParams.get('company');
+    const container = document.getElementById('rss-blogs-container');
+    const activeCompany = "{{ company_slug|default:'hd-reality' }}";
+    const cmsBaseUrl = "{{ cms_base_url|default:'http://127.0.0.1:8000' }}";
+
+    // Restriction
+    if (requestedCompany && requestedCompany.toLowerCase() !== activeCompany.toLowerCase()) {
+        const titleElem = document.getElementById('hero-feed-title');
+        if (titleElem) titleElem.textContent = 'Access Restricted';
+        container.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; background: #FEF2F2; border: 1px solid #F87171; border-radius: 16px; margin: 20px 0;">
+                <div style="font-size: 2.5rem; margin-bottom: 12px;">🚫</div>
+                <h3 style="color: #991B1B; font-weight: 700; font-size: 1.3rem; margin-bottom: 8px;">Access Denied</h3>
+                <p style="color: #B91C1C; font-size: 1rem; margin-bottom: 16px;">
+                    Aap dusri company (<strong>${requestedCompany}</strong>) ke blogs access nahi kar sakte. Yahan sirf <strong>HeyDay Realty</strong> ke blogs dekhne ki permission hai.
+                </p>
+                <a href="/blogs/" style="display: inline-block; background: #0F6A3C; color: white; padding: 8px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem;">
+                    Go to HeyDay Realty Blogs
+                </a>
+            </div>
+        `;
+        return;
+    }
+
+    const rssFeedUrl = `${cmsBaseUrl}/company/${activeCompany}/rss/`;
+
+    fetch(rssFeedUrl)
+        .then(response => {
+            if (!response.ok) throw new Error("HTTP error " + response.status);
+            return response.text();
+        })
+        .then(xmlText => {
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+            
+            // Channel Title Set 
+            const feedTitle = xmlDoc.querySelector("channel > title")?.textContent;
+            if (feedTitle) {
+                document.getElementById('hero-feed-title').textContent = feedTitle;
+            }
+
+            const items = xmlDoc.querySelectorAll("item");
+
+            if (!items || items.length === 0) {
+                container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px;">
+                    <p style="font-size: 1.1rem; color: #6B7280;">No published blogs available at the moment.</p>
+                </div>`;
+                return;
+            }
+
+            let html = "";
+            items.forEach(item => {
+                const title = item.querySelector("title")?.textContent || "No Title";
+                let link = item.querySelector("link")?.textContent || "#";
+                const description = item.querySelector("description")?.textContent || "";
+                const pubDate = item.querySelector("pubDate")?.textContent || "";
+                
+                // Extract slug from RSS link (e.g. http://localhost:8000/blog/my-slug/ -> my-slug)
+                const slug = link.replace(/\/+$/, '').split('/').pop();
+                const detailUrl = (slug && slug !== 'blog' && slug !== '#') ? `/blogs/${slug}/` : link;
+
+                // Extract uploaded image from enclosure tag
+                const enclosure = item.querySelector("enclosure");
+                const imageUrl = enclosure ? enclosure.getAttribute("url") : "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80";
+
+                html += `
+                <div style="background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #E5E7EB; display: flex; flex-direction: column; height: 100%; transition: transform 0.2s, box-shadow 0.2s;" class="blog-card shadow-sm">
+                    <div style="height: 220px; width: 100%; overflow: hidden; position: relative; flex-shrink: 0;">
+                        <img src="${imageUrl}" alt="${title}" style="width: 100%; height: 100%; object-fit: cover; object-position: center;">
+                        <span style="position: absolute; top: 12px; right: 12px; background: rgba(15, 106, 60, 0.9); color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">
+                            Blog / Article
+                        </span>
+                    </div>
+                    <div style="padding: 24px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between;">
+                        <div>
+                            ${pubDate ? `<div style="font-size: 0.85rem; color: #6B7280; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                                <i class="bi bi-calendar3"></i> ${pubDate}
+                            </div>` : ''}
+                            <h3 style="font-size: 1.25rem; font-weight: 700; color: #111827; margin-bottom: 12px; line-height: 1.4;">
+                                ${title}
+                            </h3>
+                            <p style="color: #4B5563; font-size: 0.95rem; line-height: 1.6; margin-bottom: 20px;">
+                                ${description}
+                            </p>
+                        </div>
+                        <div style="margin-top: auto; padding-top: 15px; border-top: 1px solid #F3F4F6;">
+                            <a href="${detailUrl}" 
+                               style="display: inline-flex; align-items: center; gap: 6px; color: #0F6A3C; font-weight: 600; text-decoration: none; font-size: 0.95rem;">
+                                Read Full Article <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>`;
+            });
+
+            container.innerHTML = html;
+        })
+        .catch(err => {
+            console.error("RSS Fetch Error:", err);
+            container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px;">
+                <p style="font-size: 1.1rem; color: #EF4444;">Could not load blogs. Make sure InsightCMS is running on port 8000.</p>
+            </div>`;
+        });
+});
+</script>
+{% endblock %}

@@ -57,8 +57,8 @@
     </div>
 
     <!-- Statistics Section -->
-    <div class="row mb-4">
-        <div class="col-md-4 mb-3">
+    <div class="statistics-grid">
+        <div class="statistics-grid-item">
             <div class="profile-stat-card">
                 <div class="profile-stat-icon" style="background: linear-gradient(135deg, #e6f6f0 0%, #d4efdf 100%); color: #005427;">
                     <i class="bi bi-building"></i>
@@ -67,7 +67,7 @@
                 <div class="profile-stat-label">Total Properties</div>
             </div>
         </div>
-        <div class="col-md-4 mb-3">
+        <div class="statistics-grid-item">
             <div class="profile-stat-card">
                 <div class="profile-stat-icon" style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); color: #2563eb;">
                     <i class="bi bi-people"></i>
@@ -76,7 +76,7 @@
                 <div class="profile-stat-label">Total Leads</div>
             </div>
         </div>
-        <div class="col-md-4 mb-3">
+        <div class="statistics-grid-item">
             <div class="profile-stat-card">
                 <div class="profile-stat-icon" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); color: #d97706;">
                     <i class="bi bi-calendar-check"></i>
@@ -87,80 +87,82 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-lg-8">
-            <!-- Personal Information Card -->
-            <div class="info-card mb-4">
-                <div class="info-card-header">
-                    <h5><i class="bi bi-person me-2 text-success"></i>Personal Information</h5>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">Full Name</div>
-                    <div class="info-value">{{ user.first_name }} {{ user.last_name }}</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">Email Address</div>
-                    <div class="info-value d-flex justify-content-between align-items-center w-100">
-                        <span>{{ user.email }}</span>
-                        {% if user.verification.is_email_verified %}
-                            <span class="badge bg-success rounded-pill"><i class="bi bi-check-circle me-1"></i> Verified</span>
-                        {% elif user.email %}
-                            <button class="btn btn-sm btn-outline-warning rounded-pill" onclick="requestOTP('email', '{{ user.email }}')">Verify Now</button>
-                        {% endif %}
+    <div class="profile-information-layout">
+        <div class="profile-information-main">
+            <div class="profile-info-cards-grid">
+                <!-- Personal Information Card -->
+                <div class="info-card">
+                    <div class="info-card-header">
+                        <h5><i class="bi bi-person me-2 text-success"></i>Personal Information</h5>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Full Name</div>
+                        <div class="info-value">{{ user.first_name }} {{ user.last_name }}</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Email Address</div>
+                        <div class="info-value d-flex justify-content-between align-items-center w-100">
+                            <span>{{ user.email }}</span>
+                            {% if user.verification.is_email_verified %}
+                                <span class="badge bg-success rounded-pill"><i class="bi bi-check-circle me-1"></i> Verified</span>
+                            {% elif user.email %}
+                                <button class="btn btn-sm btn-outline-warning rounded-pill" onclick="requestOTP('email', '{{ user.email }}')">Verify Now</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Phone Number</div>
+                        <div class="info-value d-flex justify-content-between align-items-center w-100">
+                            <span>{{ agent_profile.phone|default:user.verification.phone_number|default:"Not provided" }}</span>
+                            {% if user.verification.is_mobile_verified %}
+                                <span class="badge bg-success rounded-pill"><i class="bi bi-check-circle me-1"></i> Verified</span>
+                            {% elif agent_profile.phone or user.verification.phone_number %}
+                                <button class="btn btn-sm btn-outline-warning rounded-pill" onclick="requestOTP('mobile', '{{ agent_profile.phone|default:user.verification.phone_number }}')">Verify Now</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Company Name</div>
+                        <div class="info-value">{{ agent_profile.company_name|default:"Independent" }}</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Bio</div>
+                        <div class="info-value">
+                            {% if agent_profile.bio %}
+                                {{ agent_profile.bio|linebreaks }}
+                            {% else %}
+                                <span class="text-muted fst-italic">No bio provided yet.</span>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
-                <div class="info-row">
-                    <div class="info-label">Phone Number</div>
-                    <div class="info-value d-flex justify-content-between align-items-center w-100">
-                        <span>{{ agent_profile.phone|default:user.verification.phone_number|default:"Not provided" }}</span>
-                        {% if user.verification.is_mobile_verified %}
-                            <span class="badge bg-success rounded-pill"><i class="bi bi-check-circle me-1"></i> Verified</span>
-                        {% elif agent_profile.phone or user.verification.phone_number %}
-                            <button class="btn btn-sm btn-outline-warning rounded-pill" onclick="requestOTP('mobile', '{{ agent_profile.phone|default:user.verification.phone_number }}')">Verify Now</button>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">Company Name</div>
-                    <div class="info-value">{{ agent_profile.company_name|default:"Independent" }}</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">Bio</div>
-                    <div class="info-value">
-                        {% if agent_profile.bio %}
-                            {{ agent_profile.bio|linebreaks }}
-                        {% else %}
-                            <span class="text-muted fst-italic">No bio provided yet.</span>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
 
-            <!-- Contact Information Card -->
-            <div class="info-card mb-4">
-                <div class="info-card-header">
-                    <h5><i class="bi bi-geo-alt me-2 text-success"></i>Contact Information</h5>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">Address</div>
-                    <div class="info-value">{{ agent_profile.address|default:"Not provided" }}</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">City</div>
-                    <div class="info-value">{{ agent_profile.city|default:"Not provided" }}</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">State</div>
-                    <div class="info-value">{{ agent_profile.state|default:"Not provided" }}</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">Pin Code</div>
-                    <div class="info-value">{{ agent_profile.pincode|default:"Not provided" }}</div>
+                <!-- Contact Information Card -->
+                <div class="info-card">
+                    <div class="info-card-header">
+                        <h5><i class="bi bi-geo-alt me-2 text-success"></i>Contact Information</h5>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Address</div>
+                        <div class="info-value">{{ agent_profile.address|default:"Not provided" }}</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">City</div>
+                        <div class="info-value">{{ agent_profile.city|default:"Not provided" }}</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">State</div>
+                        <div class="info-value">{{ agent_profile.state|default:"Not provided" }}</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Pin Code</div>
+                        <div class="info-value">{{ agent_profile.pincode|default:"Not provided" }}</div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-4">
+        <div class="profile-information-sidebar">
             <!-- Quick Actions Card -->
             <div class="info-card mb-4">
                 <div class="info-card-header">

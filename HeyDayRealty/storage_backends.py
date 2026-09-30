@@ -1,33 +1,57 @@
 from storages.backends.s3boto3 import S3Boto3Storage
+from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 import os
 
-class BaseRoleMediaStorage(S3Boto3Storage):
-    """
-    Base storage class that sets common S3 properties for Storj.
-    """
-    access_key = settings.AWS_ACCESS_KEY_ID
-    secret_key = settings.AWS_SECRET_ACCESS_KEY
-    endpoint_url = settings.AWS_S3_ENDPOINT_URL
-    region_name = settings.AWS_S3_REGION_NAME
-    default_acl = settings.AWS_DEFAULT_ACL
+# Check if AWS credentials are provided
+USE_S3 = bool(getattr(settings, 'AWS_ACCESS_KEY_ID', None) and getattr(settings, 'AWS_SECRET_ACCESS_KEY', None))
 
-class AgentMediaStorage(BaseRoleMediaStorage):
-    bucket_name = settings.AWS_AGENT_BUCKET_NAME
+if USE_S3:
+    class BaseRoleMediaStorage(S3Boto3Storage):
+        """
+        Base storage class that sets common S3 properties for Storj/S3.
+        """
+        access_key = settings.AWS_ACCESS_KEY_ID
+        secret_key = settings.AWS_SECRET_ACCESS_KEY
+        endpoint_url = settings.AWS_S3_ENDPOINT_URL
+        region_name = settings.AWS_S3_REGION_NAME
+        default_acl = settings.AWS_DEFAULT_ACL
+        querystring_auth = False
 
-class CustomerMediaStorage(BaseRoleMediaStorage):
-    bucket_name = settings.AWS_CUSTOMER_BUCKET_NAME
+    class AgentMediaStorage(BaseRoleMediaStorage):
+        bucket_name = settings.AWS_AGENT_BUCKET_NAME
 
-class AdminMediaStorage(BaseRoleMediaStorage):
-    bucket_name = settings.AWS_ADMIN_BUCKET_NAME
+    class CustomerMediaStorage(BaseRoleMediaStorage):
+        bucket_name = settings.AWS_CUSTOMER_BUCKET_NAME
 
-class PropertyMediaStorage(BaseRoleMediaStorage):
-    # Typically properties are managed by agents or admins, but we might want a central bucket
-    bucket_name = settings.AWS_PROPERTY_BUCKET_NAME
-    
-class GeneralMediaStorage(BaseRoleMediaStorage):
-    # Fallback for subscriptions, org logos, etc.
-    bucket_name = settings.AWS_STORAGE_BUCKET_NAME
+    class AdminMediaStorage(BaseRoleMediaStorage):
+        bucket_name = settings.AWS_ADMIN_BUCKET_NAME
+
+    class PropertyMediaStorage(BaseRoleMediaStorage):
+        bucket_name = settings.AWS_PROPERTY_BUCKET_NAME
+        
+    class GeneralMediaStorage(BaseRoleMediaStorage):
+        bucket_name = settings.AWS_STORAGE_BUCKET_NAME
+else:
+    # Fallback to local storage when AWS credentials are not provided in development
+    class BaseRoleMediaStorage(FileSystemStorage):
+        pass
+
+    class AgentMediaStorage(FileSystemStorage):
+        pass
+
+    class CustomerMediaStorage(FileSystemStorage):
+        pass
+
+    class AdminMediaStorage(FileSystemStorage):
+        pass
+
+    class PropertyMediaStorage(FileSystemStorage):
+        pass
+
+    class GeneralMediaStorage(FileSystemStorage):
+        pass
+
 
 
 def generate_unique_upload_path(instance, filename, folder_name="general"):

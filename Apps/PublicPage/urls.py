@@ -26,7 +26,9 @@ urlpatterns = [
     path('career/', views.career, name='career'),
     path('nri/', views.nri, name='nri'),
     path('subscription/', views.subscription_plans, name='subscription_plans'),
-
+    path('blogs/', views.blogs_page, name='blogs'),
+    path('blogs/<slug:slug>/', views.blog_detail_page, name='blog_detail'),
+    
     # API endpoints
     path('api/', include(router.urls)),
     path('admin/enquiries/', views.website_enquiry_list, name='website_enquiry_list'),

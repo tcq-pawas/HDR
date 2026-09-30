@@ -7,8 +7,6 @@
 {% block twitter_title %}Buy Farmland & Agricultural Land | HHectare{% endblock %}
 
 {% block extra_css %}
-<!-- Leaflet CSS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -108,22 +106,27 @@
     }
 
     .search-form-row {
-        display: flex;
-        flex-wrap: wrap;
+        display: grid;
         gap: 16px;
-        align-items: flex-end;
+        align-items: end;
+    }
+
+    .search-form-row:first-child {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .search-form-row:nth-child(2) {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
     }
 
     .search-form-field {
-        flex: 1;
-        min-width: 140px;
+        min-width: 0;
     }
 
     .search-form-actions {
         display: flex;
         gap: 12px;
-        flex-shrink: 0;
-        margin-left: auto;
+        align-self: end;
     }
 
     .clear-filters-btn {
@@ -196,15 +199,24 @@
         .properties-grid {
             grid-template-columns: repeat(2, 1fr) !important;
         }
-        
+
         /* Stack map and listings */
         div[style*="grid-template-columns: 38% 62%"] {
             grid-template-columns: 1fr !important;
         }
-        
+
         div[style*="position: sticky"] {
             position: relative !important;
             height: 400px !important;
+        }
+
+        /* Search form adjusts for tablet */
+        .search-form-row:first-child {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        }
+
+        .search-form-row:nth-child(2) {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) auto !important;
         }
     }
     
@@ -227,6 +239,7 @@
         }
 
         .search-form-row {
+            display: flex !important;
             flex-direction: column !important;
             gap: 12px !important;
         }
@@ -234,7 +247,6 @@
         .search-form-field {
             width: 100% !important;
             min-width: 100% !important;
-            flex: 1 1 100% !important;
         }
 
         .search-form-actions {
@@ -400,6 +412,8 @@
                             <option value="50+" {% if filters.area_range == '50+' %}selected{% endif %}>50+</option>
                         </select>
                     </div>
+                </div>
+                <div class="search-form-row">
                     <!-- Unit -->
                     <div class="search-form-field">
                         <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #6b7a7a; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Unit</label>
@@ -411,8 +425,6 @@
                             <option value="Sq Yard" {% if filters.area_unit == 'Sq Yard' %}selected{% endif %}>Sq Yard</option>
                         </select>
                     </div>
-                </div>
-                <div class="search-form-row">
                     <!-- Status -->
                     <div class="search-form-field">
                         <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #6b7a7a; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Status</label>
@@ -449,8 +461,8 @@
     <!-- Main Content: 38% Map, 62% Listings -->
     <div style="padding: 24px; display: grid; grid-template-columns: 38% 62%; gap: 24px;">
         <!-- Map Section -->
-        <div style="position: sticky; top: 24px; height: calc(100vh - 200px); min-height: 500px; border-radius: 18px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
-            <div id="propertyMap" style="width: 100%; height: 100%;"></div>
+        <div style="position: sticky; top: 24px; height: calc(100vh - 200px); min-height: 500px; border-radius: 18px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-top: 38px;">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2629.518770529693!2d83.37602480010356!3d26.798350293782747!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399145b795d2cae9%3A0x98b3202d1e49fd25!2sHeyDay%20Realty%20Private%20Limited!5e1!3m2!1sen!2sin!4v1790075653843!5m2!1sen!2sin" width="100%" height="100%" style="border:0; display:block;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
             <div style="position: absolute; right: 16px; top: 16px; display: flex; flex-direction: column; gap: 8px; z-index: 10;">
                 <button class="map-control-btn" id="mapZoomIn" title="Zoom In" style="width: 40px; height: 40px; background: white; border: 1px solid #e2e8f0; border-radius: 10px; cursor: pointer; font-size: 1.1rem; transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.1); color: #0F6A3C; display: flex; align-items: center; justify-content: center;"><i class="bi bi-plus-lg"></i></button>
                 <button class="map-control-btn" id="mapZoomOut" title="Zoom Out" style="width: 40px; height: 40px; background: white; border: 1px solid #e2e8f0; border-radius: 10px; cursor: pointer; font-size: 1.1rem; transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.1); color: #0F6A3C; display: flex; align-items: center; justify-content: center;"><i class="bi bi-dash-lg"></i></button>
@@ -587,65 +599,8 @@
 </div>
 
 <!-- JavaScript -->
-{{ properties_json|json_script:"properties-data" }}
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // ---- Map ----
-        const mapContainer = document.getElementById('propertyMap');
-        if (mapContainer) {
-            const map = L.map('propertyMap', {
-                center: [20.5937, 78.9629],
-                zoom: 5,
-                zoomControl: false
-            });
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            }).addTo(map);
-
-            // Custom controls
-            document.getElementById('mapZoomIn').addEventListener('click', (e) => { e.preventDefault(); map.zoomIn(); });
-            document.getElementById('mapZoomOut').addEventListener('click', (e) => { e.preventDefault(); map.zoomOut(); });
-            document.getElementById('mapFullscreen').addEventListener('click', (e) => {
-                e.preventDefault();
-                const el = document.getElementById('propertyMap').parentElement;
-                if (!document.fullscreenElement) el.requestFullscreen().catch(() => {});
-                else document.exitFullscreen();
-            });
-            document.getElementById('mapLayers').addEventListener('click', (e) => {
-                e.preventDefault();
-                alert('Layer switcher – you can integrate here.');
-            });
-
-            // Markers – safely parsed from json_script
-            let properties = [];
-            const dataScript = document.getElementById('properties-data');
-            if (dataScript) {
-                try {
-                    properties = JSON.parse(dataScript.textContent);
-                } catch (e) {
-                    properties = [];
-                }
-            }
-            if (properties && properties.length) {
-                const bounds = [];
-                properties.forEach(prop => {
-                    if (prop.lat && prop.lng) {
-                        L.marker([prop.lat, prop.lng])
-                            .addTo(map)
-                            .bindPopup(`<strong>${prop.title}</strong><br>₹${prop.price}`);
-                        bounds.push([prop.lat, prop.lng]);
-                    }
-                });
-                if (bounds.length) map.fitBounds(bounds, { padding: [50, 50] });
-            } else {
-                // Fallback marker
-                L.marker([20.5937, 78.9629]).addTo(map).bindPopup('Farmland location').openPopup();
-            }
-
-            setTimeout(() => map.invalidateSize(), 300);
-        }
-
         // ---- Carousel dots ----
         document.querySelectorAll('.property-card').forEach(card => {
             const dots = card.querySelectorAll('.carousel-dot');

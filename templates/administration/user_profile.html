@@ -104,8 +104,8 @@
 </div>
 
 <!-- KPI Cards Row -->
-<div class="row mb-4">
-    <div class="col-6 col-md-2 mb-3">
+<div class="kpi-cards-grid">
+    <div class="kpi-cards-grid-item">
         <div class="kpi-card">
             <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #E0E7FF; color: #4338CA;">
                 <i class="fas fa-sign-in-alt"></i>
@@ -114,7 +114,7 @@
             <div class="kpi-label">Total Logins</div>
         </div>
     </div>
-    <div class="col-6 col-md-2 mb-3">
+    <div class="kpi-cards-grid-item">
         <div class="kpi-card">
             <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #D1FAE5; color: #059669;">
                 <i class="fas fa-clock"></i>
@@ -124,7 +124,7 @@
         </div>
     </div>
     {% if viewed_user.role == 'customer' %}
-        <div class="col-6 col-md-2 mb-3">
+        <div class="kpi-cards-grid-item">
             <div class="kpi-card">
                 <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #FEF3C7; color: #D97706;">
                     <i class="fas fa-home"></i>
@@ -133,7 +133,7 @@
                 <div class="kpi-label">Properties</div>
             </div>
         </div>
-        <div class="col-6 col-md-2 mb-3">
+        <div class="kpi-cards-grid-item">
             <div class="kpi-card">
                 <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #FEE2E2; color: #DC2626;">
                     <i class="fas fa-heart"></i>
@@ -142,7 +142,7 @@
                 <div class="kpi-label">Saved</div>
             </div>
         </div>
-        <div class="col-6 col-md-2 mb-3">
+        <div class="kpi-cards-grid-item">
             <div class="kpi-card">
                 <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #E0F2FE; color: #0284C7;">
                     <i class="fas fa-envelope"></i>
@@ -151,7 +151,7 @@
                 <div class="kpi-label">Inquiries</div>
             </div>
         </div>
-        <div class="col-6 col-md-2 mb-3">
+        <div class="kpi-cards-grid-item">
             <div class="kpi-card">
                 <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #F3E8FF; color: #7C3AED;">
                     <i class="fas fa-file"></i>
@@ -161,7 +161,7 @@
             </div>
         </div>
     {% elif viewed_user.role == 'investor' %}
-        <div class="col-6 col-md-2 mb-3">
+        <div class="kpi-cards-grid-item">
             <div class="kpi-card">
                 <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #D1FAE5; color: #059669;">
                     <i class="fas fa-dollar-sign"></i>
@@ -170,7 +170,7 @@
                 <div class="kpi-label">Investments</div>
             </div>
         </div>
-        <div class="col-6 col-md-2 mb-3">
+        <div class="kpi-cards-grid-item">
             <div class="kpi-card">
                 <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #FEF3C7; color: #D97706;">
                     <i class="fas fa-chart-line"></i>
@@ -179,7 +179,7 @@
                 <div class="kpi-label">ROI</div>
             </div>
         </div>
-        <div class="col-6 col-md-2 mb-3">
+        <div class="kpi-cards-grid-item">
             <div class="kpi-card">
                 <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #E0E7FF; color: #4338CA;">
                     <i class="fas fa-coins"></i>
@@ -188,7 +188,7 @@
                 <div class="kpi-label">Count</div>
             </div>
         </div>
-        <div class="col-6 col-md-2 mb-3">
+        <div class="kpi-cards-grid-item">
             <div class="kpi-card">
                 <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #F3E8FF; color: #7C3AED;">
                     <i class="fas fa-file"></i>
@@ -198,7 +198,7 @@
             </div>
         </div>
     {% elif viewed_user.role == 'agent' or viewed_user.role == 'owner' %}
-        <div class="col-6 col-md-2 mb-3">
+        <div class="kpi-cards-grid-item">
             <div class="kpi-card">
                 <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #E0E7FF; color: #4338CA;">
                     <i class="fas fa-building"></i>
@@ -207,7 +207,7 @@
                 <div class="kpi-label">Properties</div>
             </div>
         </div>
-        <div class="col-6 col-md-2 mb-3">
+        <div class="kpi-cards-grid-item">
             <div class="kpi-card">
                 <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #D1FAE5; color: #059669;">
                     <i class="fas fa-users"></i>
@@ -216,7 +216,7 @@
                 <div class="kpi-label">Leads</div>
             </div>
         </div>
-        <div class="col-6 col-md-2 mb-3">
+        <div class="kpi-cards-grid-item">
             <div class="kpi-card">
                 <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #FEF3C7; color: #D97706;">
                     <i class="fas fa-user-friends"></i>
@@ -225,7 +225,7 @@
                 <div class="kpi-label">Customers</div>
             </div>
         </div>
-        <div class="col-6 col-md-2 mb-3">
+        <div class="kpi-cards-grid-item">
             <div class="kpi-card">
                 <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #FEE2E2; color: #DC2626;">
                     <i class="fas fa-dollar-sign"></i>
@@ -235,7 +235,7 @@
             </div>
         </div>
     {% else %}
-        <div class="col-6 col-md-2 mb-3">
+        <div class="kpi-cards-grid-item">
             <div class="kpi-card">
                 <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #E0E7FF; color: #4338CA;">
                     <i class="fas fa-users"></i>
@@ -244,7 +244,7 @@
                 <div class="kpi-label">Managed</div>
             </div>
         </div>
-        <div class="col-6 col-md-2 mb-3">
+        <div class="kpi-cards-grid-item">
             <div class="kpi-card">
                 <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #D1FAE5; color: #059669;">
                     <i class="fas fa-history"></i>
@@ -253,7 +253,7 @@
                 <div class="kpi-label">Activities</div>
             </div>
         </div>
-        <div class="col-6 col-md-2 mb-3">
+        <div class="kpi-cards-grid-item">
             <div class="kpi-card">
                 <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #FEF3C7; color: #D97706;">
                     <i class="fas fa-key"></i>
@@ -262,7 +262,7 @@
                 <div class="kpi-label">Permissions</div>
             </div>
         </div>
-        <div class="col-6 col-md-2 mb-3">
+        <div class="kpi-cards-grid-item">
             <div class="kpi-card">
                 <div class="kpi-icon d-flex align-items-center justify-content-center" style="background: #F3E8FF; color: #7C3AED;">
                     <i class="fas fa-shield-alt"></i>
@@ -274,7 +274,7 @@
     {% endif %}
 </div>
 
-<div class="row">
+<div class="row user-info-cards-row">
     <!-- Basic Information -->
     <div class="col-lg-4 mb-4">
         <div class="info-card">

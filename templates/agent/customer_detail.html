@@ -34,7 +34,7 @@
         {% for inquiry in inquiries %}
             <!-- Row 1: Image + Basic Info side-by-side -->
             <div class="row">
-                <div class="col-md-4">
+                <div class="">
                     {% if inquiry.related_property.featured_image %}
                         <img id="mainImage-{{ inquiry.id }}" src="{{ inquiry.related_property.featured_image.url }}" class="img-fluid rounded mb-2 customer-main-image">
                     {% endif %}
