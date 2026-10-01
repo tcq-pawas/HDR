@@ -196,7 +196,9 @@ HHectare{% endblock %}
 
                     <td>
                         <div class="leads-actions">
-                            <a href="{% url 'agent:property_view' property.id %}" class="btn btn-sm btn-outline-primary">View</a>
+                            <a href="{% url 'agent:property_view' property.id %}" class="btn btn-sm btn-outline-primary" title="View Property" aria-label="View Property">
+                                <i class="bi bi-eye"></i>
+                            </a>
                         </div>
                     </td>
 
@@ -282,7 +284,9 @@ HHectare{% endblock %}
                     <td>
                         <div class="leads-actions">
                             {% if inquiry.phone_number %}
-                            <a href="{% url 'agent:customer_detail' inquiry.phone_number %}" class="btn btn-sm btn-outline-primary">View Customer</a>
+                            <a href="{% url 'agent:customer_detail' inquiry.phone_number %}" class="btn btn-sm btn-outline-primary" title="View Customer" aria-label="View Customer">
+                                <i class="bi bi-person"></i>
+                            </a>
                             {% else %}
                             <span class="text-muted small-text">No details</span>
                             {% endif %}
@@ -341,7 +345,9 @@ HHectare{% endblock %}
                     <td>{{ lead.created_at|date:"M d, Y" }}</td>
                     <td>
                         <div class="leads-actions">
-                            <a href="{% url 'agent:lead_detail' lead.id %}" class="btn btn-sm btn-outline-primary">View Detail</a>
+                            <a href="{% url 'agent:lead_detail' lead.id %}" class="btn btn-sm btn-outline-primary" title="View Lead Details" aria-label="View Lead Details">
+                                <i class="bi bi-eye"></i>
+                            </a>
                         </div>
                     </td>
                 </tr>
@@ -429,7 +435,9 @@ HHectare{% endblock %}
                     <td>{{ review.created_at|date:"M d, Y" }}</td>
                     <td>
                         <div class="leads-actions">
-                            <button class="btn btn-sm btn-outline-primary" disabled>View</button>
+                            <button class="btn btn-sm btn-outline-primary"  title="View Review" aria-label="View Review">
+                                <i class="bi bi-eye"></i>
+                            </button>
                         </div>
                     </td>
                 </tr>

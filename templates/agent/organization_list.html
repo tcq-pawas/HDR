@@ -12,7 +12,7 @@
 <!-- Header Banner -->
 <div class="org-list-header d-flex align-items-center justify-content-between flex-wrap gap-3">
     <div>
-        <h3><i class="fas fa-building me-2 org-header-icon"></i>My Organizations</h3>
+        <h3>My Organizations</h3>
         <p>Manage and view all organizations you belong to.</p>
     </div>
     {% if can_create_org %}
@@ -26,13 +26,10 @@
     <!-- Empty State -->
     <div class="empty-state">
         <div class="empty-state-icon">
-            <i class="fas fa-building"></i>
+            <i class="bi bi-building-exclamation" aria-hidden="true"></i>
         </div>
         <h5>No Organizations Yet</h5>
         <p>You are not part of any organization. Create one to start building your team.</p>
-        <a href="{% url 'organization:create' %}" class="btn-create-main">
-            <i class="bi bi-plus-lg"></i> Create Organization
-        </a>
     </div>
 
 {% else %}

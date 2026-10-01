@@ -17,14 +17,14 @@
                 </ol>
             </nav>
             <h1 class="h2 text-white mb-2">{{ property.title }}</h1>
-            <p class="text-white-50 mb-0">Property ID: #{{ property.id }} | Submitted by: {{ property.seller.username|default:"Agent" }}</p>
+            <p class="text-white mb-0">Property ID: #{{ property.id }} | Submitted by: {{ property.seller.username|default:"Agent" }}</p>
         </div>
         <div class="col-md-4 text-md-end mt-3 mt-md-0">
             <div class="d-flex gap-2 justify-content-md-end">
-                <a href="{% url 'agent:property_edit' property.id %}" class="btn btn-light text-success fw-semibold">
+                <a href="{% url 'agent:property_edit' property.id %}" class="btn btn-light  fw-semibold" style="color: #000;">
                     <i class="bi bi-pencil-square me-2"></i>Edit Property
                 </a>
-                <a href="{% url 'agent:property_list' %}" class="btn btn-outline-light">
+                <a href="{% url 'agent:property_list' %}" class="btn btn-light  fw-semibold" style="color: #000;">
                     <i class="bi bi-arrow-left me-2"></i>Back to List
                 </a>
             </div>
@@ -32,7 +32,7 @@
     </div>
 </div>
 
-<div class="container-fluid py-4">
+<div class="container-fluid py-4 property-details-page">
     <!-- Status Banner -->
     {% if property.status == 'pending' %}
         <div class="alert alert-warning d-flex align-items-center mb-4" role="alert">
@@ -57,9 +57,9 @@
         </div>
     {% endif %}
 
-    <div class="row">
+    <div class="property-details-layout">
         <!-- Left Column - Property Details -->
-        <div class="col-lg-6" style="width: 100%;">
+        <div class="property-main-column">
             <!-- Featured Image Section -->
             {% if property.featured_image %}
             <div class="card border-0 shadow-sm mb-4">
@@ -107,20 +107,20 @@
                     <h5 class="mb-0">Basic Information</h5>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
+                    <div class="property-info-grid">
+                        <div class="info-item">
                             <label class="text-muted small">Property Title</label>
                             <p class="mb-0 fw-semibold">{{ property.title }}</p>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="info-item">
                             <label class="text-muted small">Property Type</label>
                             <p class="mb-0 fw-semibold">{{ property.get_property_type_display|default:property.property_type }}</p>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="info-item">
                             <label class="text-muted small">Category</label>
                             <p class="mb-0 fw-semibold">{{ property.category|default:"-" }}</p>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="info-item">
                             <label class="text-muted small">Status</label>
                             <p class="mb-0 fw-semibold">
                                 <span class="badge {% if property.status == 'approved' %}bg-success{% elif property.status == 'pending' %}bg-warning text-dark{% else %}bg-danger{% endif %}">
@@ -128,11 +128,11 @@
                                 </span>
                             </p>
                         </div>
-                        <div class="col-12 mb-3">
+                        <div class="info-item full-width">
                             <label class="text-muted small">Description</label>
                             <p class="mb-0">{{ property.description|default:"-" }}</p>
                         </div>
-                        <div class="col-12 mb-3">
+                        <div class="info-item full-width">
                             <label class="text-muted small">Public Description</label>
                             <p class="mb-0">{{ property.public_description|default:"-" }}</p>
                         </div>
@@ -146,28 +146,28 @@
                     <h5 class="mb-0">Location Information</h5>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
+                    <div class="location-info-grid">
+                        <div class="info-item full-width">
                             <label class="text-muted small">Address / Location</label>
                             <p class="mb-0 fw-semibold">{{ property.location|default:property.full_address|default:"-" }}</p>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="info-item">
                             <label class="text-muted small">City</label>
                             <p class="mb-0 fw-semibold">{{ property.city|default:"-" }}</p>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="info-item">
                             <label class="text-muted small">State</label>
                             <p class="mb-0 fw-semibold">{{ property.state|default:"-" }}</p>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="info-item">
                             <label class="text-muted small">District</label>
                             <p class="mb-0 fw-semibold">{{ property.district|default:"-" }}</p>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="info-item">
                             <label class="text-muted small">Locality</label>
                             <p class="mb-0 fw-semibold">{{ property.locality|default:"-" }}</p>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="info-item">
                             <label class="text-muted small">Pincode</label>
                             <p class="mb-0 fw-semibold">{{ property.pincode|default:"-" }}</p>
                         </div>
@@ -181,8 +181,8 @@
                     <h5 class="mb-0">Documents</h5>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
+                    <div class="documents-grid">
+                        <div class="info-item">
                             <label class="text-muted small">Registry Copy</label>
                             <p class="mb-0">
                                 {% if property.registry_copy %}
@@ -192,7 +192,7 @@
                                 {% endif %}
                             </p>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="info-item">
                             <label class="text-muted small">Sale Deed</label>
                             <p class="mb-0">
                                 {% if property.sale_deed %}
@@ -202,7 +202,7 @@
                                 {% endif %}
                             </p>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="info-item">
                             <label class="text-muted small">NOC</label>
                             <p class="mb-0">
                                 {% if property.noc %}
@@ -212,7 +212,7 @@
                                 {% endif %}
                             </p>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="info-item">
                             <label class="text-muted small">Layout Plan</label>
                             <p class="mb-0">
                                 {% if property.layout_plan %}
@@ -222,7 +222,7 @@
                                 {% endif %}
                             </p>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="info-item">
                             <label class="text-muted small">Building Approval</label>
                             <p class="mb-0">
                                 {% if property.building_approval %}
@@ -232,7 +232,7 @@
                                 {% endif %}
                             </p>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="info-item">
                             <label class="text-muted small">Property Brochure</label>
                             <p class="mb-0">
                                 {% if property.property_brochure %}
@@ -248,41 +248,41 @@
         </div>
 
         <!-- Right Column - Pricing & Features -->
-        <div class="">
+        <div class="property-sidebar">
             <!-- Pricing Banner -->
             <div class="card border-0 shadow-sm mb-4" style="background: #005427;">
                 <div class="card-body text-white">
                     <h5 class="mb-3">Pricing Details</h5>
-                    <div class="row">
-                        <div class="col-6 mb-3">
+                    <div class="pricing-grid">
+                        <div class="pricing-item">
                             <label class="text-white-50 small">Property Price</label>
                             <p class="mb-0 fw-bold fs-4">₹{{ property.price|floatformat:0 }}</p>
                         </div>
-                        <div class="col-6 mb-3">
+                        <div class="pricing-item">
                             <label class="text-white-50 small">Price per Sq.ft</label>
                             <p class="mb-0 fw-semibold">
                                 {% if property.price_per_sqft %}₹{{ property.price_per_sqft|floatformat:0 }}{% else %}-{% endif %}
                             </p>
                         </div>
-                        <div class="col-6 mb-3">
+                        <div class="pricing-item">
                             <label class="text-white-50 small">Area</label>
                             <p class="mb-0 fw-semibold">
                                 {% if property.area_sqft %}{{ property.area_sqft }} sq.ft{% elif property.total_area %}{{ property.total_area }} {{ property.area_unit|default:"" }}{% else %}-{% endif %}
                             </p>
                         </div>
-                        <div class="col-6 mb-3">
+                        <div class="pricing-item">
                             <label class="text-white-50 small">Negotiable</label>
                             <p class="mb-0 fw-semibold">
                                 {% if property.negotiable %}<i class="bi bi-check-circle-fill"></i> Yes{% else %}<i class="bi bi-x-circle"></i> No{% endif %}
                             </p>
                         </div>
-                        <div class="col-6 mb-3">
+                        <div class="pricing-item">
                             <label class="text-white-50 small">Booking Amount</label>
                             <p class="mb-0 fw-semibold">
                                 {% if property.booking_amount %}₹{{ property.booking_amount|floatformat:0 }}{% else %}-{% endif %}
                             </p>
                         </div>
-                        <div class="col-6 mb-3">
+                        <div class="pricing-item">
                             <label class="text-white-50 small">Property Type</label>
                             <p class="mb-0 fw-semibold">{{ property.get_property_type_display|default:property.property_type }}</p>
                         </div>
@@ -354,28 +354,28 @@
                     <h5 class="mb-0">Farmland Details</h5>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
+                    <div class="property-info-grid">
+                        <div class="info-item">
                             <label class="text-muted small">Project Size</label>
                             <p class="mb-0 fw-semibold">{{ property.project_size_acre|default:"-" }}</p>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="info-item">
                             <label class="text-muted small">Plot Sizes</label>
                             <p class="mb-0 fw-semibold">{{ property.plot_sizes|default:"-" }}</p>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="info-item">
                             <label class="text-muted small">Water Source</label>
                             <p class="mb-0 fw-semibold">{{ property.water_source|default:"-" }}</p>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="info-item">
                             <label class="text-muted small">Road Access</label>
                             <p class="mb-0 fw-semibold">{{ property.road_access|default:"-" }}</p>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="info-item">
                             <label class="text-muted small">Soil Type</label>
                             <p class="mb-0 fw-semibold">{{ property.soil_type|default:"-" }}</p>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="info-item">
                             <label class="text-muted small">Plantation Type</label>
                             <p class="mb-0 fw-semibold">{{ property.plantation_type|default:"-" }}</p>
                         </div>

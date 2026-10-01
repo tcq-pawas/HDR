@@ -187,6 +187,42 @@
         background: #F4B400;
     }
     
+    /* View More Button */
+    .view-more-properties-wrapper {
+        display: flex;
+        justify-content: center;
+        margin-top: 28px;
+    }
+
+    .view-more-properties-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 11px 24px;
+        border: 1px solid #0F6A3C;
+        border-radius: 999px;
+        background: #0F6A3C;
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 12px rgba(15, 106, 60, 0.15);
+    }
+
+    .view-more-properties-btn:hover {
+        background: #0d5a32;
+        border-color: #0d5a32;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(15, 106, 60, 0.2);
+    }
+
+    /* Hidden state for property cards */
+    .property-listing-card.is-hidden {
+        display: none !important;
+    }
+
     /* Responsive Design */
     @media (max-width: 1200px) {
         .properties-grid {
@@ -510,7 +546,7 @@
             {% if properties %}
                 <div class="properties-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
                     {% for property in properties %}
-                        <div class="property-card" data-property-id="{{ property.id }}" style="background: white; border-radius: 18px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); transition: all 0.3s; display: flex; flex-direction: column;">
+                        <div class="property-card property-listing-card" data-property-id="{{ property.id }}" style="background: white; border-radius: 18px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); transition: all 0.3s; display: flex; flex-direction: column;">
                             <!-- Image Slider -->
                             <div style="position: relative; height: 200px; overflow: hidden; background: #e2e8f0; display: flex; align-items: center; justify-content: center;">
                                 {% if property.featured_image %}
@@ -564,6 +600,14 @@
                             </div>
                         </div>
                     {% endfor %}
+                </div>
+
+                <!-- View More Button -->
+                <div class="view-more-properties-wrapper">
+                    <button type="button" class="view-more-properties-btn" aria-expanded="false" aria-label="Show more properties">
+                        <span>View More</span>
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
                 </div>
 
                 <!-- Pagination -->
@@ -735,6 +779,53 @@
                 }
             });
         });
+
+        // ---- View More Properties ----
+        const cards = document.querySelectorAll('.property-listing-card');
+        const viewMoreWrapper = document.querySelector('.view-more-properties-wrapper');
+        const viewMoreBtn = document.querySelector('.view-more-properties-btn');
+
+        if (cards.length <= 3) {
+            if (viewMoreWrapper) {
+                viewMoreWrapper.style.display = 'none';
+            }
+        } else {
+            cards.forEach((card, index) => {
+                if (index >= 3) {
+                    card.classList.add('is-hidden');
+                }
+            });
+
+            if (viewMoreBtn) {
+                viewMoreBtn.addEventListener('click', function() {
+                    const isExpanded = this.getAttribute('aria-expanded') === 'true';
+                    const btnText = this.querySelector('span');
+                    const btnIcon = this.querySelector('i');
+
+                    if (isExpanded) {
+                        // Collapse - show only first 3
+                        cards.forEach((card, index) => {
+                            if (index >= 3) {
+                                card.classList.add('is-hidden');
+                            }
+                        });
+                        btnText.textContent = 'View More';
+                        btnIcon.className = 'bi bi-chevron-down';
+                        this.setAttribute('aria-expanded', 'false');
+                        this.setAttribute('aria-label', 'Show more properties');
+                    } else {
+                        // Expand - show all
+                        cards.forEach(card => {
+                            card.classList.remove('is-hidden');
+                        });
+                        btnText.textContent = 'View Less';
+                        btnIcon.className = 'bi bi-chevron-up';
+                        this.setAttribute('aria-expanded', 'true');
+                        this.setAttribute('aria-label', 'Show fewer properties');
+                    }
+                });
+            }
+        }
     });
 </script>
 {% endblock %}

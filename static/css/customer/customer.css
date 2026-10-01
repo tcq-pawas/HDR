@@ -2356,7 +2356,7 @@ select.form-input {
     padding: .45rem .75rem;
     font-size: 12.5px;
     border: 1px solid rgba(15,118,110,0.15);
-    background: rgba(255,255,255,0.90);
+    
     color: var(--primary);
     transition: transform .16s ease, box-shadow .16s ease;
     display: inline-flex;

@@ -5890,8 +5890,8 @@ flex-shrink: 0;
     border-radius: 6px;
     padding: 3px 12px;
     font-weight: 500;
-    color: white;
-    background: linear-gradient(135deg, #2d7a4f, #3da668);
+    color: #000;
+    background: #c0f4d9 ;
 }
 
 .text-muted.small-text {
@@ -7983,7 +7983,7 @@ flex-shrink: 0;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
-.badge-new        { background: linear-gradient(135deg, #e8f4fd 0%, #dbeafe 100%); color: #2980b9; }
+.badge-new        { color: #000; background: #c0f4d9 ; }
 .badge-contacted  { background: linear-gradient(135deg, #fef3cd 0%, #fde68a 100%); color: #d68910; }
 .badge-qualified  { background: linear-gradient(135deg, #e8f8f5 0%, #d1fae5 100%); color: #1abc9c; }
 .badge-proposal   { background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%); color: #8e44ad; }
@@ -8000,9 +8000,10 @@ flex-shrink: 0;
     width: 36px; height: 36px;
     border-radius: 8px;
     border: 2px solid #e2e8f0;
-    background: #fff;
+    color: #000;
+    background: #c0f4d9 ;
     display: flex; align-items: center; justify-content: center;
-    color: #3b82f6;
+  
     text-decoration: none;
     transition: all 0.2s;
 }
@@ -11157,23 +11158,23 @@ tbody tr:hover {
     color: #1e293b;
     margin-bottom: 1.5rem;
     padding-bottom: 1rem;
-    border-bottom: 3px solid #1E73BE;
+    border-bottom: 3px solid #005427;
     letter-spacing: -0.3px;
 }
 
 .section-subtitle {
     font-size: 1rem;
     font-weight: 600;
-    color: #1E73BE;
+    color: #000;
     margin: 1.5rem 0 1rem 0;
     padding: 0.5rem 0;
-    border-left: 4px solid #1E73BE;
+    border-left: 4px solid #005427;
     padding-left: 1rem;
 }
 
 .contact-section-divider {
     height: 2px;
-    background: linear-gradient(90deg, transparent, #1E73BE, transparent);
+    background: linear-gradient(90deg, transparent, #005427, transparent);
     margin: 2rem 0;
 }
 
@@ -11257,7 +11258,7 @@ tbody tr:hover {
 
 .settings-btn {
     padding: 0.75rem 1.5rem;
-    background: linear-gradient(135deg, #1E73BE 0%, #155a9e 100%);
+    background: linear-gradient(135deg, #005427 0%, #005427 100%);
     color: white;
     border: none;
     border-radius: 10px;
@@ -11278,8 +11279,9 @@ tbody tr:hover {
 }
 
 .settings-btn.secondary {
-    background: white;
-    color: #64748b;
+    text-decoration: none;
+    background: #005427;
+    color: white;
     border: 2px solid #e2e8f0;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
@@ -11323,6 +11325,7 @@ tbody tr:hover {
 
 .settings-btn.danger {
     background: #ef4444;
+    text-decoration: none;
 }
 
 .settings-btn.danger:hover {
@@ -11640,6 +11643,8 @@ tbody tr:hover {
 }
 
 .btn {
+    color: #000;
+    background: #c0f4d9 ;
     padding: 0.6rem 1.25rem;
     border-radius: 6px;
     font-size: 0.85rem;
@@ -11948,8 +11953,8 @@ tbody tr:hover {
 }
 
 .view-btn {
-    color: #3b82f6;
-    border-color: #3b82f6;
+    color: #000;
+    background: #c0f4d9 ;
 }
 
 .view-btn:hover {
@@ -12098,7 +12103,7 @@ tbody tr:hover {
 }
 
 .billing-toggle-btn.active {
-    background: linear-gradient(135deg, #2d7a4f, #3da668);
+    background-color: #005427 !important;
     color: white;
     box-shadow: 0 2px 8px rgba(0, 84, 39, 0.2);
 }
@@ -12153,7 +12158,7 @@ tbody tr:hover {
     top: -12px;
     left: 50%;
     transform: translateX(-50%);
-    background: linear-gradient(135deg, #2d7a4f, #3da668);
+    background-color: #005427 !important;
     color: white;
     padding: 6px 20px;
     border-radius: 20px;
@@ -12274,7 +12279,7 @@ tbody tr:hover {
 }
 
 .pricing-card-btn.btn-primary {
-    background: linear-gradient(135deg, #2d7a4f, #3da668);
+    background-color: #005427 !important;
     color: white;
 }
 
@@ -12310,7 +12315,7 @@ tbody tr:hover {
     padding: 12px 32px;
     font-size: 1rem;
     border-radius: 8px;
-    background: linear-gradient(135deg, #2d7a4f, #3da668);
+    background-color: #005427 !important;
     border: none;
 }
 
@@ -12699,6 +12704,172 @@ tbody tr:hover {
         align-items: center;
         justify-content: center;
         margin: 0 !important;
+    }
+}
+
+/* ============================================================
+   PROPERTY DETAILS PAGE - RESPONSIVE CSS GRID LAYOUT
+   ============================================================ */
+
+.property-details-page {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.property-details-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.65fr) minmax(300px, 0.75fr);
+    gap: 24px;
+    align-items: start;
+}
+
+.property-main-column,
+.property-sidebar {
+    width: 100%;
+    min-width: 0;
+}
+
+/* Info Grid - for Basic Information, Location, Farmland Details */
+.property-info-grid,
+.location-info-grid,
+.documents-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-item.full-width {
+    grid-column: 1 / -1;
+}
+
+/* Location Info Grid - 3 columns on larger screens */
+.location-info-grid {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.location-info-grid .info-item.full-width {
+    grid-column: 1 / -1;
+}
+
+/* Documents Grid - 3 columns */
+.documents-grid {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+/* Pricing Grid - 2 columns */
+.pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.pricing-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* Gallery Images */
+.gallery-main-image img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.gallery-thumbnails {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.gallery-thumbnail {
+    position: relative;
+    cursor: pointer;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.gallery-thumbnail img {
+    width: 100%;
+    height: 80px;
+    object-fit: cover;
+}
+
+.category-badge {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    background: rgba(0, 84, 39, 0.9);
+    color: white;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+/* Tablet Responsive */
+@media (max-width: 1199px) {
+    .property-details-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .property-sidebar {
+        order: -1;
+    }
+
+    .location-info-grid,
+    .documents-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Mobile Responsive */
+@media (max-width: 767px) {
+    .property-details-page {
+        padding: 0 16px;
+    }
+
+    .property-details-layout {
+        gap: 16px;
+    }
+
+    .property-info-grid,
+    .location-info-grid,
+    .documents-grid,
+    .pricing-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .gallery-thumbnails {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        gap: 8px;
+    }
+
+    .gallery-thumbnail img {
+        height: 60px;
+    }
+}
+
+/* Very Small Mobile */
+@media (max-width: 480px) {
+    .property-details-page {
+        padding: 0 12px;
+    }
+
+    .property-info-grid,
+    .location-info-grid,
+    .documents-grid,
+    .pricing-grid {
+        gap: 10px;
     }
 }
 
