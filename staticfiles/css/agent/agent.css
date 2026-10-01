@@ -8933,8 +8933,8 @@ tbody tr:hover {
 }
 
 .btn-create-org {
-    background: rgba(255,255,255,0.15);
-    color: #fff;
+    background: #ffffff;
+    color: #005427;
     border: 1.5px solid rgba(255,255,255,0.35);
     border-radius: 10px;
     padding: 8px 20px;

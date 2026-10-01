@@ -2795,19 +2795,48 @@
 
             navLinks.forEach(link => {
 
+                const href = link.getAttribute('href');
 
+                if (!href || href === '#') {
+                    return;
+                }
 
-                if (link.getAttribute('href') === currentPath) {
+                /*
+                 * Normalize URLs so trailing slashes do not cause
+                 * active-state problems.
+                 */
+                const linkPath = new URL(href, window.location.origin).pathname;
 
-
+                if (linkPath === currentPath) {
 
                     link.classList.add('active');
 
+                    /*
+                     * Check whether this active link belongs to
+                     * a dropdown/collapse.
+                     */
+                    const parentCollapse = link.closest('.collapse');
 
+                    if (parentCollapse) {
+
+                        /*
+                         * Keep the parent dropdown OPEN.
+                         */
+                        parentCollapse.classList.add('show');
+
+                        /*
+                         * Find the dropdown trigger.
+                         */
+                        const trigger = document.querySelector(
+                            `[data-bs-target="#${parentCollapse.id}"]`
+                        );
+
+                        if (trigger) {
+                            trigger.setAttribute('aria-expanded', 'true');
+                        }
+                    }
 
                 }
-
-
 
             });
 

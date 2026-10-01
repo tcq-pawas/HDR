@@ -64,21 +64,25 @@ h1, h2, h3, h4, h5, h6 {
 .main-content-wrapper {
     padding: 32px;
     max-width: 100%;
-    margin-left: 275px;
-    width: calc(100% - 275px);
     min-width: 0;
 }
 
 /* Sidebar width fixes */
 nav.sidebar {
-    width: 275px !important;
-    min-width: 275px !important;
-    max-width: 275px !important;
+    width: 270px !important;
+    min-width: 270px !important;
+    max-width: 270px !important;
     flex-shrink: 0 !important;
     overflow-x: visible !important;
     display: flex;
     flex-direction: column;
     height: 100vh;
+}
+
+.main-content {
+    flex: 1 1 auto;
+    min-width: 0;
+    width: 100%;
 }
 
 nav.sidebar .p-3 {
@@ -410,14 +414,8 @@ body,
     max-width: 100%;
 }
 
-.main-content {
-    flex: 1 1 auto;
-    min-width: 0;
-    width: 100%;
-}
 
 .main-content-wrapper {
-    width: 100%;
     margin: 0 auto;
 }
 
@@ -601,10 +599,6 @@ h1, h2, h3, h4, h5, h6,
    TABLET / SMALL LAPTOP — 768px to 991px
    ============================================================ */
 @media (min-width: 768px) and (max-width: 991.98px) {
-    .main-content-wrapper {
-        padding: 22px;
-    }
-
     .page-header {
         padding: 20px 22px;
         margin-bottom: 20px;
@@ -1089,6 +1083,93 @@ h1, h2, h3, h4, h5, h6,
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: rgba(255,255,255,.20) transparent;
+}
+
+/* ============================================================
+   DESKTOP SIDEBAR — FIXED POSITION
+   ============================================================ */
+@media (min-width: 992px) {
+    nav.sidebar {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        height: 100vh !important;
+        z-index: 1100 !important;
+        box-sizing: border-box !important;
+    }
+
+    .main-content {
+        margin-left: 270px !important;
+        width: calc(100% - 270px) !important;
+        max-width: none !important;
+        box-sizing: border-box !important;
+    }
+
+    .main-content-wrapper {
+        width: 100% !important;
+        max-width: none !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    .mobile-menu-toggle {
+        display: none !important;
+    }
+}
+
+/* ============================================================
+   TABLET — OVERLAY SIDEBAR (768px to 991.98px)
+   ============================================================ */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    nav.sidebar {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: min(290px, 86vw) !important;
+        min-width: min(290px, 86vw) !important;
+        max-width: 290px !important;
+        height: 100vh !important;
+        z-index: 1100 !important;
+        transform: translateX(-105%) !important;
+        transition: transform .28s ease, box-shadow .28s ease;
+        box-sizing: border-box !important;
+    }
+
+    nav.sidebar.show {
+        transform: translateX(0) !important;
+        box-shadow: 12px 0 32px rgba(0, 0, 0, .18) !important;
+    }
+
+    .main-content {
+        width: 100% !important;
+        margin-left: 0 !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .main-content-wrapper {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding: 68px 22px 22px !important;
+        box-sizing: border-box !important;
+    }
+
+    .mobile-menu-toggle {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        top: 14px;
+        left: 14px;
+        border-radius: 12px;
+        font-size: 1rem;
+        z-index: 1200;
+    }
 }
 
 .sidebar::-webkit-scrollbar {
