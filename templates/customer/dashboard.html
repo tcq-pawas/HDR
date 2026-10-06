@@ -157,8 +157,8 @@
                             <td>₹{{ saved.property.price|floatformat:0|default:"N/A" }}</td>
                             <td>
                                 <div class="leads-actions">
-                                    <button class="btn btn-sm btn-outline-primary" 
-                                        style="border-radius: 6px; padding: 3px 12px; font-weight: 500;"
+                                    <button class="btn btn-sm " 
+                                        style="border-radius: 6px; padding: 3px 12px; font-weight: 500; background-color: #E6F8EE; border: 1px solid #10B981; color: #000"
                                         onclick="window.location.href='{% url 'customer:property-detail-page' saved.property.id %}'">
                                         View
                                     </button>
