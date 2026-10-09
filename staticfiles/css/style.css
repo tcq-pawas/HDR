@@ -5507,7 +5507,7 @@ footer:not(.site-footer) {
     color: var(--text-dark);
     border: none;
     border-radius: var(--button-radius);
-    padding: 14px 32px;
+    padding: 14px 32px !important;
     font-weight: 600;
     transition: var(--transition);
 }
@@ -5522,7 +5522,7 @@ footer:not(.site-footer) {
     color: white;
     border: 2px solid white;
     border-radius: var(--button-radius);
-    padding: 14px 32px;
+    padding: 14px 32px !important;
     font-weight: 600;
     transition: var(--transition);
 }
