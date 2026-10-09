@@ -7496,7 +7496,6 @@ iframe, embed, object, video {
 
 
 
-
 @media (max-width: 768px) {
 
 
@@ -7536,12 +7535,11 @@ iframe, embed, object, video {
     .navbar-collapse {
 
 
-
         padding: 1rem;
 
 
 
-        margin-top: 0.5rem;
+        margin-top: 1.14rem !important;
 
 
 
@@ -7695,7 +7693,7 @@ iframe, embed, object, video {
 
         padding: 0.75rem;
 
-
+        margin-top: 0.8rem !important;
 
     }
 
