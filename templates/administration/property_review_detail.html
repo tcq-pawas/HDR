@@ -5,6 +5,19 @@
 {% block title %}Review Property - {{ property.title }}{% endblock %}
 
 {% block content %}
+<style>
+.lower-property-sections {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+@media (max-width: 1199.98px) {
+    .lower-property-sections {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
 <div class="container-fluid py-4">
     <!-- Page Header with Action Buttons -->
     <div class="row mb-4">
@@ -125,235 +138,6 @@
                         <div class="col-12 mb-3">
                             <label class="text-muted small">Public Description</label>
                             <p class="mb-0">{{ property.public_description }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Pricing Information -->
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-header bg-white border-0 py-3">
-                    <h5 class="mb-0">Pricing Information</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="text-muted small">Property Price</label>
-                            <p class="mb-0 fw-semibold fs-5">₹{{ property.price|intcomma }}</p>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="text-muted small">Price per Sq.ft</label>
-                            <p class="mb-0 fw-semibold">
-                                {% if property.price_per_sqft %}₹{{ property.price_per_sqft|intcomma }}{% else %}-{% endif %}
-                            </p>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="text-muted small">Area</label>
-                            <p class="mb-0 fw-semibold">
-                                {% if property.area_sqft %}{{ property.area_sqft|intcomma }} sq.ft{% elif property.total_area %}{{ property.total_area|intcomma }} {{ property.get_area_unit_display }}{% else %}-{% endif %}
-                            </p>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="text-muted small">Area Unit</label>
-                            <p class="mb-0 fw-semibold">{{ property.get_area_unit_display|default:"-" }}</p>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="text-muted small">Negotiable</label>
-                            <p class="mb-0 fw-semibold">
-                                {% if property.negotiable %}<i class="fas fa-check text-success"></i> Yes{% else %}<i class="fas fa-times text-danger"></i> No{% endif %}
-                            </p>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="text-muted small">Booking Amount</label>
-                            <p class="mb-0 fw-semibold">
-                                {% if property.booking_amount %}₹{{ property.booking_amount|intcomma }}{% else %}-{% endif %}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Location Information -->
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-header bg-white border-0 py-3">
-                    <h5 class="mb-0">Location Information</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="text-muted small">Address</label>
-                            <p class="mb-0 fw-semibold">{{ property.full_address|default:property.location }}</p>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="text-muted small">City</label>
-                            <p class="mb-0 fw-semibold">{{ property.city|default:"-" }}</p>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="text-muted small">State</label>
-                            <p class="mb-0 fw-semibold">{{ property.state|default:"-" }}</p>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="text-muted small">District</label>
-                            <p class="mb-0 fw-semibold">{{ property.district|default:"-" }}</p>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="text-muted small">Locality</label>
-                            <p class="mb-0 fw-semibold">{{ property.locality|default:"-" }}</p>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="text-muted small">Pincode</label>
-                            <p class="mb-0 fw-semibold">{{ property.pincode|default:"-" }}</p>
-                        </div>
-                        {% if property.google_map_location %}
-                        <div class="col-12 mb-3">
-                            <label class="text-muted small">Google Map Location</label>
-                            <p class="mb-0">
-                                <a href="{{ property.google_map_location }}" target="_blank" class="text-primary">
-                                    <i class="fas fa-map-marker-alt me-1"></i>View on Map
-                                </a>
-                            </p>
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-
-            <!-- Media Gallery -->
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-header bg-white border-0 py-3">
-                    <h5 class="mb-0">Media Gallery</h5>
-                </div>
-                <div class="card-body">
-                    <!-- Property Images -->
-                    {% if property_images %}
-                        <h6 class="mb-3">Property Images</h6>
-                        <div class="row g-3 mb-4">
-                            {% for image in property_images %}
-                                <div class="col-md-4 col-sm-6">
-                                    <div class="position-relative">
-                                        <img src="{{ image.image.url }}" alt="Property Image" class="img-fluid rounded" style="height: 200px; width: 100%; object-fit: cover;">
-                                        <span class="position-absolute top-0 end-0 badge bg-dark m-2">{{ image.get_category_display }}</span>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <p class="text-muted mb-3">No additional images uploaded</p>
-                    {% endif %}
-
-                    <!-- Videos -->
-                    <h6 class="mb-3">Videos</h6>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="text-muted small">Property Video</label>
-                            {% if property.property_video %}
-                                <video controls class="w-100 rounded" style="max-height: 200px;">
-                                    <source src="{{ property.property_video.url }}" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
-                            {% else %}
-                                <p class="text-muted">No video uploaded</p>
-                            {% endif %}
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="text-muted small">Drone Video</label>
-                            {% if property.drone_video %}
-                                <video controls class="w-100 rounded" style="max-height: 200px;">
-                                    <source src="{{ property.drone_video.url }}" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
-                            {% else %}
-                                <p class="text-muted">No drone video uploaded</p>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <!-- Floor Plan -->
-                    {% if property.floor_plan %}
-                        <h6 class="mb-3 mt-4">Floor Plan</h6>
-                        <img src="{{ property.floor_plan.url }}" alt="Floor Plan" class="img-fluid rounded w-100">
-                    {% endif %}
-                </div>
-            </div>
-
-            <!-- Documents -->
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-header bg-white border-0 py-3">
-                    <h5 class="mb-0">Documents</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="text-muted small">Registry Copy</label>
-                            <p class="mb-0">
-                                {% if property.registry_copy %}
-                                    <a href="{{ property.registry_copy.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
-                                        <i class="fas fa-file-pdf me-1"></i>View Document
-                                    </a>
-                                {% else %}
-                                    <span class="text-muted">Not uploaded</span>
-                                {% endif %}
-                            </p>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="text-muted small">Sale Deed</label>
-                            <p class="mb-0">
-                                {% if property.sale_deed %}
-                                    <a href="{{ property.sale_deed.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
-                                        <i class="fas fa-file-pdf me-1"></i>View Document
-                                    </a>
-                                {% else %}
-                                    <span class="text-muted">Not uploaded</span>
-                                {% endif %}
-                            </p>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="text-muted small">NOC</label>
-                            <p class="mb-0">
-                                {% if property.noc %}
-                                    <a href="{{ property.noc.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
-                                        <i class="fas fa-file-pdf me-1"></i>View Document
-                                    </a>
-                                {% else %}
-                                    <span class="text-muted">Not uploaded</span>
-                                {% endif %}
-                            </p>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="text-muted small">Layout Plan</label>
-                            <p class="mb-0">
-                                {% if property.layout_plan %}
-                                    <a href="{{ property.layout_plan.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
-                                        <i class="fas fa-file-pdf me-1"></i>View Document
-                                    </a>
-                                {% else %}
-                                    <span class="text-muted">Not uploaded</span>
-                                {% endif %}
-                            </p>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="text-muted small">Building Approval</label>
-                            <p class="mb-0">
-                                {% if property.building_approval %}
-                                    <a href="{{ property.building_approval.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
-                                        <i class="fas fa-file-pdf me-1"></i>View Document
-                                    </a>
-                                {% else %}
-                                    <span class="text-muted">Not uploaded</span>
-                                {% endif %}
-                            </p>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="text-muted small">Property Brochure</label>
-                            <p class="mb-0">
-                                {% if property.property_brochure %}
-                                    <a href="{{ property.property_brochure.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
-                                        <i class="fas fa-file-pdf me-1"></i>View Document
-                                    </a>
-                                {% else %}
-                                    <span class="text-muted">Not uploaded</span>
-                                {% endif %}
-                            </p>
                         </div>
                     </div>
                 </div>
@@ -483,6 +267,242 @@
                             <span class="fw-semibold">{{ property.property_age }} years</span>
                         </div>
                     {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lower Property Sections Grid -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="lower-property-sections">
+                <!-- Pricing Information -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0 py-3">
+                        <h5 class="mb-0">Pricing Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">Property Price</label>
+                                <p class="mb-0 fw-semibold fs-5">₹{{ property.price|intcomma }}</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">Price per Sq.ft</label>
+                                <p class="mb-0 fw-semibold">
+                                    {% if property.price_per_sqft %}₹{{ property.price_per_sqft|intcomma }}{% else %}-{% endif %}
+                                </p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">Area</label>
+                                <p class="mb-0 fw-semibold">
+                                    {% if property.area_sqft %}{{ property.area_sqft|intcomma }} sq.ft{% elif property.total_area %}{{ property.total_area|intcomma }} {{ property.get_area_unit_display }}{% else %}-{% endif %}
+                                </p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">Area Unit</label>
+                                <p class="mb-0 fw-semibold">{{ property.get_area_unit_display|default:"-" }}</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">Negotiable</label>
+                                <p class="mb-0 fw-semibold">
+                                    {% if property.negotiable %}<i class="fas fa-check text-success"></i> Yes{% else %}<i class="fas fa-times text-danger"></i> No{% endif %}
+                                </p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">Booking Amount</label>
+                                <p class="mb-0 fw-semibold">
+                                    {% if property.booking_amount %}₹{{ property.booking_amount|intcomma }}{% else %}-{% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Location Information -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0 py-3">
+                        <h5 class="mb-0">Location Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">Address</label>
+                                <p class="mb-0 fw-semibold">{{ property.full_address|default:property.location }}</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">City</label>
+                                <p class="mb-0 fw-semibold">{{ property.city|default:"-" }}</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">State</label>
+                                <p class="mb-0 fw-semibold">{{ property.state|default:"-" }}</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">District</label>
+                                <p class="mb-0 fw-semibold">{{ property.district|default:"-" }}</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">Locality</label>
+                                <p class="mb-0 fw-semibold">{{ property.locality|default:"-" }}</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">Pincode</label>
+                                <p class="mb-0 fw-semibold">{{ property.pincode|default:"-" }}</p>
+                            </div>
+                            {% if property.google_map_location %}
+                            <div class="col-12 mb-3">
+                                <label class="text-muted small">Google Map Location</label>
+                                <p class="mb-0">
+                                    <a href="{{ property.google_map_location }}" target="_blank" class="text-primary">
+                                        <i class="fas fa-map-marker-alt me-1"></i>View on Map
+                                    </a>
+                                </p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Media Gallery -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0 py-3">
+                        <h5 class="mb-0">Media Gallery</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Property Images -->
+                        {% if property_images %}
+                            <h6 class="mb-3">Property Images</h6>
+                            <div class="row g-3 mb-4">
+                                {% for image in property_images %}
+                                    <div class="col-md-4 col-sm-6">
+                                        <div class="position-relative">
+                                            <img src="{{ image.image.url }}" alt="Property Image" class="img-fluid rounded" style="height: 200px; width: 100%; object-fit: cover;">
+                                            <span class="position-absolute top-0 end-0 badge bg-dark m-2">{{ image.get_category_display }}</span>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p class="text-muted mb-3">No additional images uploaded</p>
+                        {% endif %}
+
+                        <!-- Videos -->
+                        <h6 class="mb-3">Videos</h6>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">Property Video</label>
+                                {% if property.property_video %}
+                                    <video controls class="w-100 rounded" style="max-height: 200px;">
+                                        <source src="{{ property.property_video.url }}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                {% else %}
+                                    <p class="text-muted">No video uploaded</p>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">Drone Video</label>
+                                {% if property.drone_video %}
+                                    <video controls class="w-100 rounded" style="max-height: 200px;">
+                                        <source src="{{ property.drone_video.url }}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                {% else %}
+                                    <p class="text-muted">No drone video uploaded</p>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Floor Plan -->
+                        {% if property.floor_plan %}
+                            <h6 class="mb-3 mt-4">Floor Plan</h6>
+                            <img src="{{ property.floor_plan.url }}" alt="Floor Plan" class="img-fluid rounded w-100">
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Documents -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0 py-3">
+                        <h5 class="mb-0">Documents</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">Registry Copy</label>
+                                <p class="mb-0">
+                                    {% if property.registry_copy %}
+                                        <a href="{{ property.registry_copy.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-file-pdf me-1"></i>View Document
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted">Not uploaded</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">Sale Deed</label>
+                                <p class="mb-0">
+                                    {% if property.sale_deed %}
+                                        <a href="{{ property.sale_deed.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-file-pdf me-1"></i>View Document
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted">Not uploaded</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">NOC</label>
+                                <p class="mb-0">
+                                    {% if property.noc %}
+                                        <a href="{{ property.noc.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-file-pdf me-1"></i>View Document
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted">Not uploaded</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">Layout Plan</label>
+                                <p class="mb-0">
+                                    {% if property.layout_plan %}
+                                        <a href="{{ property.layout_plan.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-file-pdf me-1"></i>View Document
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted">Not uploaded</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">Building Approval</label>
+                                <p class="mb-0">
+                                    {% if property.building_approval %}
+                                        <a href="{{ property.building_approval.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-file-pdf me-1"></i>View Document
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted">Not uploaded</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="text-muted small">Property Brochure</label>
+                                <p class="mb-0">
+                                    {% if property.property_brochure %}
+                                        <a href="{{ property.property_brochure.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-file-pdf me-1"></i>View Document
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted">Not uploaded</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
