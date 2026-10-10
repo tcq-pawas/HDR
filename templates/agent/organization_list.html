@@ -10,9 +10,10 @@
 {% block content %}
 
 <!-- Header Banner -->
-<div class="org-list-header d-flex align-items-center justify-content-between flex-wrap gap-3">
-    <div>
-        <h3>My Organizations</h3>
+ <div class="premium-container">
+<div class="premium-header d-flex align-items-center justify-content-between flex-wrap ">
+    <div class="text-white">
+        <h4>My Organizations</h4>
         <p>Manage and view all organizations you belong to.</p>
     </div>
     {% if can_create_org %}
@@ -97,6 +98,7 @@
             </div>
         </div>
         {% endfor %}
+    </div>
     </div>
 {% endif %}
 

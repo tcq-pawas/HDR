@@ -7,206 +7,334 @@
 <span>Customer Details</span>
 {% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/agent/customer-details.css' %}">
+{% endblock %}
 
 {% block content %}
 <div class="customer-detail-container">
     <!-- Header -->
-    <div class="page-header">
-        <h3>Property & Customer Details</h3>
-        <div class="action-buttons">
-            <a href="tel:{{ phone }}" class="btn btn-success">
+    <div class="customer-detail-header">
+        <h3 class="customer-detail-title">Property & Customer Details</h3>
+        <div class="customer-detail-actions">
+            <a href="tel:{{ phone }}" class="customer-action-btn customer-action-btn--call">
                 <i class="bi bi-telephone"></i> Call
             </a>
-            <a href="https://wa.me/{{ phone }}" target="_blank" class="btn btn-success">
+            <a href="https://wa.me/{{ phone }}" target="_blank" class="customer-action-btn customer-action-btn--whatsapp">
                 <i class="bi bi-whatsapp"></i> WhatsApp
             </a>
-            <a href="{% url 'agent:communication_send' %}?recipient={{ phone }}" class="btn btn-primary">
+            <a href="{% url 'agent:communication_send' %}?recipient={{ phone }}" class="customer-action-btn customer-action-btn--message">
                 <i class="bi bi-chat-dots"></i> Send Message
             </a>
         </div>
     </div>
 
-   
     {% if inquiries %}
-    <div class="card mb-4 property-inquiry-card">
-        <!-- <h3>Property &amp; Customer Details</h3> -->
+    {% for inquiry in inquiries %}
+    <div class="customer-overview-card">
+        <!-- Property Summary Row -->
+        <div class="customer-overview-summary">
+            <!-- Property Image -->
+            <div>
+                {% if inquiry.related_property.featured_image %}
+                    <img src="{{ inquiry.related_property.featured_image.url }}" class="customer-overview-image" alt="{{ inquiry.related_property.title }}">
+                {% else %}
+                    <div class="customer-overview-image customer-overview-image--fallback">
+                        <i class="bi bi-image"></i>
+                    </div>
+                {% endif %}
+            </div>
 
-        {% for inquiry in inquiries %}
-            <!-- Row 1: Image + Basic Info side-by-side -->
-            <div class="row">
-                <div class="">
-                    {% if inquiry.related_property.featured_image %}
-                        <img id="mainImage-{{ inquiry.id }}" src="{{ inquiry.related_property.featured_image.url }}" class="img-fluid rounded mb-2 customer-main-image">
-                    {% endif %}
-                    {% if inquiry.related_property.images.all %}
-                        <div class="customer-thumbnail-gallery">
-                            {% for img in inquiry.related_property.images.all %}
-                                <img src="{{ img.image.url }}" class="rounded customer-thumbnail" onclick="document.getElementById('mainImage-{{ inquiry.id }}').src=this.src;">
-                            {% endfor %}
-                        </div>
-                    {% endif %}
+            <!-- Property Info -->
+            <div class="customer-overview-info">
+                <h4 class="customer-overview-title">{{ inquiry.related_property.title }}</h4>
+                <div class="customer-overview-location">
+                    <i class="bi bi-geo-alt"></i> {{ inquiry.related_property.location }}
                 </div>
 
-                <div class="col-md-8">
-                    <h5 class="property-title-large">{{ inquiry.related_property.title }}</h5>
-                    <div class="property-location-row">
-                        <i class="bi bi-geo-alt"></i> {{ inquiry.related_property.location }}
-                    </div>
-
-                    <div class="property-mini-grid">
-                        <div class="mini-box">
-                            <div class="mini-label">Property Type</div>
-                            <div class="mini-value">{{ inquiry.related_property.category|default:"N/A" }}</div>
+                <div class="customer-overview-tiles">
+                    <div class="customer-overview-tile">
+                        <div class="customer-overview-tile-icon">
+                            <i class="bi bi-building"></i>
                         </div>
-                        <div class="mini-box">
-                            <div class="mini-label">Area</div>
-                            <div class="mini-value">{% if inquiry.related_property.total_area %}{{ inquiry.related_property.total_area }} {{ inquiry.related_property.area_unit|default:"" }}{% elif inquiry.related_property.project_size_acre %}{{ inquiry.related_property.project_size_acre }}{% else %}N/A{% endif %}</div>
+                        <div>
+                            <div class="customer-overview-tile-label">Property Type</div>
+                            <div class="customer-overview-tile-value">{{ inquiry.related_property.category|default:"N/A" }}</div>
                         </div>
                     </div>
-
-                    <div class="price-large">₹{{ inquiry.related_property.price|floatformat:0 }}</div>
-                    <div class="price-sub">Total Price: ₹{{ inquiry.related_property.price|floatformat:0 }}</div>
+                    <div class="customer-overview-tile">
+                        <div class="customer-overview-tile-icon">
+                            <i class="bi bi-rulers"></i>
+                        </div>
+                        <div>
+                            <div class="customer-overview-tile-label">Area</div>
+                            <div class="customer-overview-tile-value">{% if inquiry.related_property.total_area %}{{ inquiry.related_property.total_area }} {{ inquiry.related_property.area_unit|default:"" }}{% elif inquiry.related_property.project_size_acre %}{{ inquiry.related_property.project_size_acre }}{% else %}N/A{% endif %}</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Row 2: Property Details table — FULL WIDTH, neeche -->
-            <div class="full-width-section">
-                <h5 class="section-label">Property Details</h5>
-                <table class="property-details-table">
+            <!-- Price Tile -->
+            <div class="customer-overview-price">
+                <div class="customer-overview-price-value">₹{{ inquiry.related_property.price|floatformat:0 }}</div>
+                <div class="customer-overview-price-label">Total Price</div>
+            </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="customer-overview-divider"></div>
+
+        <!-- Two Column Layout -->
+        <div class="customer-detail-columns">
+            <!-- Property Details -->
+            <div class="customer-property-section">
+                <div class="customer-section-header">
+                    <div class="customer-section-icon">
+                        <i class="bi bi-file-earmark-text"></i>
+                    </div>
+                    <div>
+                        <h4 class="customer-section-title">Property Details</h4>
+                        <p class="customer-section-subtitle">Detailed information about this property</p>
+                    </div>
+                </div>
+
+                <table class="customer-property-table">
                     <tr>
-                        <td class="pd-label">Property ID</td>
-                        <td class="pd-value">{{ inquiry.related_property.id }}</td>
+                        <td class="customer-property-label">Property ID</td>
+                        <td class="customer-property-value">{{ inquiry.related_property.id }}</td>
                     </tr>
                     <tr>
-                        <td class="pd-label">Type</td>
-                        <td class="pd-value">{{ inquiry.related_property.category|default:"N/A" }}</td>
+                        <td class="customer-property-label">Type</td>
+                        <td class="customer-property-value">{{ inquiry.related_property.category|default:"N/A" }}</td>
                     </tr>
                     <tr>
-                        <td class="pd-label">Area</td>
-                        <td class="pd-value">{% if inquiry.related_property.total_area %}{{ inquiry.related_property.total_area }} {{ inquiry.related_property.area_unit|default:"" }}{% elif inquiry.related_property.project_size_acre %}{{ inquiry.related_property.project_size_acre }}{% else %}N/A{% endif %}</td>
+                        <td class="customer-property-label">Area</td>
+                        <td class="customer-property-value">{% if inquiry.related_property.total_area %}{{ inquiry.related_property.total_area }} {{ inquiry.related_property.area_unit|default:"" }}{% elif inquiry.related_property.project_size_acre %}{{ inquiry.related_property.project_size_acre }}{% else %}N/A{% endif %}</td>
                     </tr>
                     <tr>
-                        <td class="pd-label">Ownership</td>
-                        <td class="pd-value">{{ inquiry.related_property.ownership_type|default:"N/A" }}</td>
+                        <td class="customer-property-label">Ownership</td>
+                        <td class="customer-property-value">{{ inquiry.related_property.ownership_type|default:"N/A" }}</td>
                     </tr>
                     <tr>
-                        <td class="pd-label">Possession</td>
-                        <td class="pd-value">{{ inquiry.related_property.possession_status|default:"Ready to Move" }}</td>
+                        <td class="customer-property-label">Possession</td>
+                        <td class="customer-property-value">{{ inquiry.related_property.possession_status|default:"Ready to Move" }}</td>
                     </tr>
                     <tr>
-                        <td class="pd-label">Road Access</td>
-                        <td class="pd-value">{{ inquiry.related_property.road_access|default:"N/A" }}</td>
+                        <td class="customer-property-label">Road Access</td>
+                        <td class="customer-property-value">{{ inquiry.related_property.road_access|default:"N/A" }}</td>
                     </tr>
                     <tr>
-                        <td class="pd-label">Water Source</td>
-                        <td class="pd-value">{{ inquiry.related_property.water_source|default:"N/A" }}</td>
+                        <td class="customer-property-label">Water Source</td>
+                        <td class="customer-property-value">{{ inquiry.related_property.water_source|default:"N/A" }}</td>
                     </tr>
                     <tr>
-                        <td class="pd-label">Soil Type</td>
-                        <td class="pd-value">{{ inquiry.related_property.soil_type|default:"N/A" }}</td>
+                        <td class="customer-property-label">Soil Type</td>
+                        <td class="customer-property-value">{{ inquiry.related_property.soil_type|default:"N/A" }}</td>
                     </tr>
                     <tr>
-                        <td class="pd-label">Best For</td>
-                        <td class="pd-value">Agriculture, Investment</td>
+                        <td class="customer-property-label">Best For</td>
+                        <td class="customer-property-value">Agriculture, Investment</td>
                     </tr>
                 </table>
             </div>
 
-            <!-- Row 3: Customer Details — FULL WIDTH -->
-            <div class="full-width-section">
-                <hr>
-                <h5 class="section-label">Customer Details</h5>
-                <p><strong>Name:</strong> {{ inquiry.name }}</p>
-                <p><strong>Phone:</strong> {{ inquiry.phone_number }}</p>
-                <p><strong>Email:</strong> {{ inquiry.email }}</p>
-                <p><strong>Message:</strong> {{ inquiry.message }}</p>
-                <p><strong>Status:</strong> {{ inquiry.get_status_display }}</p>
-            </div>
+            <!-- Customer Details -->
+            <div class="customer-info-section">
+                <div class="customer-section-header">
+                    <div class="customer-section-icon">
+                        <i class="bi bi-person"></i>
+                    </div>
+                    <div>
+                        <h4 class="customer-section-title">Customer Details</h4>
+                        <p class="customer-section-subtitle">Information about the customer</p>
+                    </div>
+                </div>
 
-            {% if not forloop.last %}<hr class="inquiry-separator">{% endif %}
-        {% endfor %}
+                <div class="customer-info-row">
+                    <div class="customer-info-row-icon">
+                        <i class="bi bi-person"></i>
+                    </div>
+                    <div class="customer-info-row-content">
+                        <div class="customer-info-row-label">Name</div>
+                        <div class="customer-info-row-value">{{ inquiry.name }}</div>
+                    </div>
+                </div>
+
+                <div class="customer-info-row">
+                    <div class="customer-info-row-icon">
+                        <i class="bi bi-telephone"></i>
+                    </div>
+                    <div class="customer-info-row-content">
+                        <div class="customer-info-row-label">Phone</div>
+                        <div class="customer-info-row-value">{{ inquiry.phone_number }}</div>
+                    </div>
+                </div>
+
+                <div class="customer-info-row">
+                    <div class="customer-info-row-icon">
+                        <i class="bi bi-envelope"></i>
+                    </div>
+                    <div class="customer-info-row-content">
+                        <div class="customer-info-row-label">Email</div>
+                        <div class="customer-info-row-value">{{ inquiry.email|default:"N/A" }}</div>
+                    </div>
+                </div>
+
+                <div class="customer-info-row">
+                    <div class="customer-info-row-icon">
+                        <i class="bi bi-chat-text"></i>
+                    </div>
+                    <div class="customer-info-row-content">
+                        <div class="customer-info-row-label">Message</div>
+                        <div class="customer-info-row-value">{{ inquiry.message|default:"N/A" }}</div>
+                    </div>
+                </div>
+
+                <div class="customer-info-row">
+                    <div class="customer-info-row-icon">
+                        <i class="bi bi-info-circle"></i>
+                    </div>
+                    <div class="customer-info-row-content">
+                        <div class="customer-info-row-label">Status</div>
+                        <div class="customer-info-row-value">
+                            <span class="customer-status-badge">{{ inquiry.get_status_display }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    {% if not forloop.last %}<div style="margin: 1.5rem 0;"></div>{% endif %}
+    {% endfor %}
     {% endif %}
 
     <!-- Detail Grid -->
-    <div class="detail-grid">
+    <div class="customer-detail-grid">
         <!-- Leads -->
-        <div class="card">
-            <h3>Leads ({{ leads|length }})</h3>
+        <div class="customer-detail-card">
+            <div class="customer-detail-card-header">
+                <div class="customer-detail-card-icon">
+                    <i class="bi bi-people"></i>
+                </div>
+                <h4 class="customer-detail-card-title">Leads</h4>
+                <span class="customer-detail-card-count">({{ leads|length }})</span>
+            </div>
+            <p class="customer-detail-card-subtitle">All leads from this customer</p>
             {% if leads %}
                 {% for lead in leads %}
-                    <div class="list-item">
-                        <div class="list-item-header">
-                            <span class="list-item-title">{{ lead.name }}</span>
-                            <span class="list-item-date">{{ lead.created_at|date:"M d, Y" }}</span>
+                    <div class="customer-detail-list-item">
+                        <div class="customer-detail-list-header">
+                            <span class="customer-detail-list-title">{{ lead.name }}</span>
+                            <span class="customer-detail-list-date">{{ lead.created_at|date:"M d, Y" }}</span>
                         </div>
-                        <div style="color: #64748b; font-size: 0.85rem;">
+                        <div class="customer-detail-list-meta">
                             Property: {{ lead.property.title|truncatewords:3|default:"N/A" }} | Status: {{ lead.get_status_display }}
                         </div>
                     </div>
                 {% endfor %}
             {% else %}
-                <p style="color: #64748b; text-align: center; padding: 1rem;">No leads found.</p>
+                <div class="customer-empty-state">
+                    <div class="customer-empty-state-icon">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <div class="customer-empty-state-text">No leads found</div>
+                </div>
             {% endif %}
         </div>
 
         <!-- Bookings -->
-        <div class="card">
-            <h3>Bookings ({{ bookings|length }})</h3>
+        <div class="customer-detail-card">
+            <div class="customer-detail-card-header">
+                <div class="customer-detail-card-icon">
+                    <i class="bi bi-calendar-check"></i>
+                </div>
+                <h4 class="customer-detail-card-title">Bookings</h4>
+                <span class="customer-detail-card-count">({{ bookings|length }})</span>
+            </div>
+            <p class="customer-detail-card-subtitle">All bookings for this customer</p>
             {% if bookings %}
                 {% for booking in bookings %}
-                    <div class="list-item">
-                        <div class="list-item-header">
-                            <span class="list-item-title">{{ booking.customer_name }}</span>
-                            <span class="list-item-date">{{ booking.booking_date|date:"M d, Y" }}</span>
+                    <div class="customer-detail-list-item">
+                        <div class="customer-detail-list-header">
+                            <span class="customer-detail-list-title">{{ booking.customer_name }}</span>
+                            <span class="customer-detail-list-date">{{ booking.booking_date|date:"M d, Y" }}</span>
                         </div>
-                        <div style="color: #64748b; font-size: 0.85rem;">
+                        <div class="customer-detail-list-meta">
                             Property: {{ booking.property.title|truncatewords:3 }} | Amount: ₹{{ booking.total_amount|floatformat:0 }}
                         </div>
                     </div>
                 {% endfor %}
             {% else %}
-                <p style="color: #64748b; text-align: center; padding: 1rem;">No bookings found.</p>
+                <div class="customer-empty-state">
+                    <div class="customer-empty-state-icon">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+                    <div class="customer-empty-state-text">No bookings found</div>
+                </div>
             {% endif %}
         </div>
 
         <!-- Site Visits -->
-        <div class="card">
-            <h3>Site Visits ({{ visits|length }})</h3>
+        <div class="customer-detail-card">
+            <div class="customer-detail-card-header">
+                <div class="customer-detail-card-icon">
+                    <i class="bi bi-geo-alt"></i>
+                </div>
+                <h4 class="customer-detail-card-title">Site Visits</h4>
+                <span class="customer-detail-card-count">({{ visits|length }})</span>
+            </div>
+            <p class="customer-detail-card-subtitle">All site visits for this customer</p>
             {% if visits %}
                 {% for visit in visits %}
-                    <div class="list-item">
-                        <div class="list-item-header">
-                            <span class="list-item-title">{{ visit.customer_name }}</span>
-                            <span class="list-item-date">{{ visit.scheduled_date|date:"M d, Y" }}</span>
+                    <div class="customer-detail-list-item">
+                        <div class="customer-detail-list-header">
+                            <span class="customer-detail-list-title">{{ visit.customer_name }}</span>
+                            <span class="customer-detail-list-date">{{ visit.scheduled_date|date:"M d, Y" }}</span>
                         </div>
-                        <div style="color: #64748b; font-size: 0.85rem;">
+                        <div class="customer-detail-list-meta">
                             Property: {{ visit.property.title|truncatewords:3 }} | Status: {{ visit.get_status_display }}
                         </div>
                     </div>
                 {% endfor %}
             {% else %}
-                <p style="color: #64748b; text-align: center; padding: 1rem;">No site visits found.</p>
+                <div class="customer-empty-state">
+                    <div class="customer-empty-state-icon">
+                        <i class="bi bi-geo-alt"></i>
+                    </div>
+                    <div class="customer-empty-state-text">No site visits found</div>
+                </div>
             {% endif %}
         </div>
 
         <!-- Communications -->
-        <div class="card">
-            <h3>Communications ({{ communications|length }})</h3>
+        <div class="customer-detail-card">
+            <div class="customer-detail-card-header">
+                <div class="customer-detail-card-icon">
+                    <i class="bi bi-chat-dots"></i>
+                </div>
+                <h4 class="customer-detail-card-title">Communications</h4>
+                <span class="customer-detail-card-count">({{ communications|length }})</span>
+            </div>
+            <p class="customer-detail-card-subtitle">All communications with this customer</p>
             {% if communications %}
                 {% for comm in communications %}
-                    <div class="list-item">
-                        <div class="list-item-header">
-                            <span class="list-item-title">{{ comm.get_communication_type_display }}</span>
-                            <span class="list-item-date">{{ comm.sent_at|date:"M d, Y H:i" }}</span>
+                    <div class="customer-detail-list-item">
+                        <div class="customer-detail-list-header">
+                            <span class="customer-detail-list-title">{{ comm.get_communication_type_display }}</span>
+                            <span class="customer-detail-list-date">{{ comm.sent_at|date:"M d, Y H:i" }}</span>
                         </div>
-                        <div style="color: #64748b; font-size: 0.85rem;">
+                        <div class="customer-detail-list-meta">
                             {{ comm.message|truncatewords:10 }}
                         </div>
                     </div>
                 {% endfor %}
             {% else %}
-                <p style="color: #64748b; text-align: center; padding: 1rem;">No communications found.</p>
+                <div class="customer-empty-state">
+                    <div class="customer-empty-state-icon">
+                        <i class="bi bi-chat-dots"></i>
+                    </div>
+                    <div class="customer-empty-state-text">No communications found</div>
+                </div>
             {% endif %}
         </div>
     </div>
