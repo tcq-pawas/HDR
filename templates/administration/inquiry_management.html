@@ -103,9 +103,9 @@
                     
                         <form method="GET" style="margin-bottom: 0;">
 
-                            <div class="row g-2 align-items-center">
+                            <div class="inquiry-filter-row d-flex align-items-center gap-2 flex-wrap">
 
-                                <div class="col-12 col-md-3 col-lg-3">
+                                <div class="search-control flex-grow-1" style="min-width: 220px;">
 
                                     <div class="input-group">
 
@@ -117,7 +117,7 @@
 
                                 </div>
 
-                                <div class="col-6 col-md-2 col-lg-2">
+                                <div class="filter-control" style="min-width: 130px;">
 
                                     <div class="custom-filter-dropdown">
                                         <input type="hidden" name="budget" value="{{ selected_budget|default:'' }}">
@@ -135,7 +135,7 @@
 
                                 </div>
 
-                                <div class="col-6 col-md-2 col-lg-2">
+                                <div class="filter-control" style="min-width: 130px;">
 
                                     <div class="custom-filter-dropdown">
                                         <input type="hidden" name="date_filter" value="{{ selected_date_filter|default:'' }}">
@@ -153,7 +153,7 @@
 
                                 </div>
 
-                                <div class="col-6 col-md-2 col-lg-2">
+                                <div class="filter-control" style="min-width: 130px;">
 
                                     <div class="custom-filter-dropdown">
                                         <input type="hidden" name="status" value="{{ selected_status|default:'' }}">
@@ -171,22 +171,18 @@
 
                                 </div>
 
-                            </div>
-
-                            <!-- Actions on second row -->
-                            <div class="inquiry-filter-actions-row">
-                                <div class="inquiry-filter-actions d-flex align-items-center gap-2">
-                                    <button type="submit" class="btn btn-brand" style="border-radius:10px; height:42px; color:var(--primary) ; border: 2px solid var(--primary);">
-                                        <i class="fas fa-search"></i> Search
+                                <div class="inquiry-filter-actions d-flex align-items-center gap-2 flex-shrink-0">
+                                    <button type="submit" class="btn btn-brand" style="border-radius:10px; height:42px; color:var(--primary) ; border: 2px solid var(--primary); width: auto; flex: 0 0 auto;">
+                                        <i class="fas fa-search"></i> 
                                     </button>
-                                    <a href="{% url 'admin_dash:inquiry-management-page' %}" class="btn btn-outline-secondary d-flex align-items-center justify-content-center" style="height:42px; border-radius:10px; color:var(--primary) ; border: 2px solid var(--primary);">
-                                        <i class="fas fa-rotate-left"></i> Reset
+                                    <a href="{% url 'admin_dash:inquiry-management-page' %}" class="btn btn-outline-secondary d-flex align-items-center justify-content-center" style="height:42px; border-radius:10px; color:var(--primary) ; border: 2px solid var(--primary); width: auto; flex: 0 0 auto;">
+                                        <i class="fas fa-rotate-left"></i> 
                                     </a>
                                     <div class="dropdown">
                                         <button class="btn btn-outline-secondary dropdown-toggle" id="exportDropdownBtn" type="button"
                                                 data-bs-toggle="dropdown" data-bs-boundary="viewport" aria-expanded="false"
-                                                style="border-radius:10px; height:42px; white-space: nowrap; color:var(--primary) ; border: 2px solid var(--primary);">
-                                            <i class="fas fa-download"></i> Export
+                                                style="border-radius:10px; height:42px; white-space: nowrap; color:var(--primary) ; border: 2px solid var(--primary); width: auto; flex: 0 0 auto;">
+                                            <i class="fas fa-download"></i> 
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="exportDropdownBtn">
                                             <li><a class="dropdown-item" href="#" onclick="exportInquiries('csv'); return false;">Export as CSV</a></li>
@@ -194,6 +190,7 @@
                                         </ul>
                                     </div>
                                 </div>
+
                             </div>
 
                         </form>
@@ -862,32 +859,64 @@
 </script>
 
 <style>
-    /* Scoped CSS for inquiry filter actions responsive layout */
-    .inquiry-filter-actions-row {
+    /* Responsive filter controls layout */
+    
+    /* Base flex behavior for all screens */
+    .inquiry-filter-row {
         display: flex;
-        justify-content: flex-start;
-        width: 100%;
-        margin-top: 8px;
-    }
-
-    .inquiry-filter-actions {
-        display: inline-flex;
         align-items: center;
         gap: 8px;
-        width: fit-content;
-        max-width: 100%;
         flex-wrap: wrap;
     }
-
-    .inquiry-filter-actions > .btn,
-    .inquiry-filter-actions > .dropdown {
+    
+    .search-control {
+        flex: 1 1 240px;
+        min-width: 220px;
+    }
+    
+    .filter-control {
+        flex: 0 1 150px;
+        min-width: 130px;
+    }
+    
+    .inquiry-filter-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex: 0 0 auto;
+        width: auto;
+    }
+    
+    .inquiry-filter-actions .btn,
+    .inquiry-filter-actions .dropdown {
         width: auto;
         flex: 0 0 auto;
-    }
-
-    .inquiry-filter-actions .dropdown > .btn {
-        width: auto;
         white-space: nowrap;
+    }
+    
+    /* Mobile (< 768px): Compact layout */
+    @media (max-width: 767.98px) {
+        .search-control {
+            flex: 1 1 100%;
+            min-width: 100%;
+        }
+        
+        .filter-control {
+            flex: 0 1 calc(50% - 4px);
+            min-width: calc(50% - 4px);
+        }
+        
+        /* Make the third filter (Status) full width on mobile */
+        .filter-control:nth-child(4) {
+            flex: 1 1 100%;
+            min-width: 100%;
+        }
+        
+        /* Keep action buttons compact on mobile */
+        .inquiry-filter-actions {
+            flex: 0 0 auto;
+            width: auto;
+        }
     }
 </style>
 

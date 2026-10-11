@@ -32,8 +32,7 @@
 .sell-page-body h1,
 .sell-page-body h2,
 .sell-section-heading,
-.support-section-title,
-.cta-text h2 {
+.support-section-title {
     font-size: 1.5rem !important;
 }
 
@@ -52,8 +51,7 @@
 .get-started-content p,
 .security-text,
 .support-content p,
-.faq-body,
-.cta-text p {
+.faq-body {
     font-size: 12px !important;
 }
 
@@ -403,22 +401,6 @@
     align-self: flex-end;
 }
 
-.leaf-decoration {
-    position: absolute;
-    font-size: 3rem;
-    opacity: 0.3;
-}
-
-.leaf-left {
-    bottom: -20px;
-    left: -30px;
-}
-
-.leaf-right {
-    top: -20px;
-    right: -30px;
-}
-
 /* FAQ Section */
 .faq-container {
     max-width: 900px;
@@ -485,91 +467,19 @@
     line-height: 1.6;
 }
 
-/* Bottom CTA */
-.cta-banner {
-    background: linear-gradient(90deg, #063B27 0%, #08452E 45%, #063B27 100%);
-    border-radius: 22px;
-    padding: 28px 36px;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-    max-width: 2000px;
-    margin: 0 auto;
-    min-height: 220px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+/* Bottom CTA: .cta-banner ki main styling style.css se aati hai.
+   Yahan sirf wahi rakha hai jo style.css me nahi hai. */
+.cta-banner .btn-cta-yellow,
+.cta-banner .btn-cta-outline {
+    display: inline-flex;
     align-items: center;
-    gap: 24px;
+    gap: 6px;
+    font-size: 12px;
+    text-decoration: none;
 }
 
-.cta-banner::before,
-.cta-banner::after {
-    content: '🌿';
-    position: absolute;
-    font-size: 1.5rem;
-    opacity: 0.18;
-}
-
-.cta-banner::before {
-    top: 10px;
-    left: 20px;
-}
-
-.cta-banner::after {
-    bottom: 10px;
-    right: 20px;
-}
-
-.cta-left {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-}
-
-.cta-right {
-    display: flex;
-    align-items: center;
-}
-
-.cta-buttons {
-    display: flex;
-    gap: 16px;
-}
-
-.cta-icon {
-    width: 100px;
-    height: 100px;
-    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3rem;
-    color: white;
-    box-shadow: 0 4px 15px rgba(255,255,255,0.1);
-    flex-shrink: 0;
-}
-
-.cta-text h2 {
-    font-family: 'Playfair Display', serif;
-    font-weight: 700;
-    color: #FFFFFF;
-    margin-bottom: 0.25rem;
-    line-height: 1.2;
-}
-
-.cta-text p {
-    font-family: 'Inter', sans-serif;
-    color: #D7E7DD;
-    line-height: 1.4;
-    max-width: 420px;
-}
-
-.cta-buttons {
-    display: flex;
-    gap: 12px;
-    flex-shrink: 0;
+.sell-page-body .cta-banner-description {
+    font-size: 1.1rem !important;
 }
 
 /* Responsive */
@@ -591,24 +501,6 @@
         height: 360px;
     }
 
-    .cta-banner {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .cta-left {
-        flex-direction: column;
-    }
-
-    .cta-buttons {
-        flex-direction: column;
-        width: 100%;
-    }
-
-    .cta-buttons a {
-        width: 100%;
-    }
-
     .sell-section {
         padding: 56px 0;
     }
@@ -626,33 +518,6 @@
 
     .faq-body {
         padding: 0 20px 20px 20px;
-    }
-
-    .cta-banner {
-        padding: 24px 28px;
-        min-height: auto;
-    }
-
-    .cta-left {
-        gap: 16px;
-    }
-
-    .cta-icon {
-        width: 56px;
-        height: 56px;
-        font-size: 1.5rem;
-    }
-
-    .cta-text p {
-        max-width: 300px;
-    }
-
-    .cta-buttons {
-        gap: 10px;
-    }
-
-    .cta-buttons a {
-        padding: 0 20px;
     }
 
     .sell-section {
@@ -851,30 +716,26 @@
 </section>
 
 <!-- ========== BOTTOM CTA SECTION ========== -->
-<section class="sell-section">
-    <div class="container" style="max-width: 2000px; margin: auto;">
+<section class="cta-banner-section">
         <div class="cta-banner">
-            <div class="cta-left">
-                <div class="cta-icon">
-                    <i class="fa fa-sprout"></i>
+            <span class="leaf-decoration leaf-decoration-left">🌿</span>
+            <span class="leaf-decoration leaf-decoration-right">🌿</span>
+            <div class="cta-banner-content">
+                <div>
+                    <div class="cta-banner-icon">🌱</div>
+                    <h2 class="cta-banner-title">Ready to sell your farmland?</h2>
+                    <p class="cta-banner-description">List your property today and connect with genuine buyers and investors.</p>
                 </div>
-                <div class="cta-text">
-                    <h2 >Ready to sell your farmland?</h2>
-                    <p style="font-size: 14px !important;">List your property today and connect with genuine buyers and investors.</p>
-                </div>
-            </div>
-            <div class="cta-right">
-                <div class="cta-buttons">
-                    <a href="/agent/dashboard/" class="btn-sell-primary" style="font-size: 12px !important;">
+                <div class="cta-banner-buttons">
+                    <a href="/agent/dashboard/" class="btn-cta-yellow">
                         <i class="bi bi-list-check"></i> List Your Property
                     </a>
-                    <a href="/contact/" class="btn-sell-secondary" style="font-size: 12px !important;">
+                    <a href="/contact/" class="btn-cta-outline">
                         <i class="bi bi-person-lines-fill"></i> Talk to Advisor
                     </a>
                 </div>
             </div>
         </div>
-    </div>
 </section>
 
 </div>

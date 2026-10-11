@@ -6260,7 +6260,7 @@ h1, h2, h3, h4, h5, h6,
 .property-actions .btn-icon {
     width: 34px;
     height: 34px;
-    padding: 0;
+   
     display: inline-flex;
     align-items: center;
     justify-content: center;

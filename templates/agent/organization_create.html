@@ -8,109 +8,361 @@
 <span>Create Organization</span>
 {% endblock %}
 
+{% block extra_css %}
+<style>
+/* Create Organization Form Styles */
+.org-create-form {
+    padding: 0;
+}
+
+.org-create-form__header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.org-create-form__icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #e9fbf0 0%, #d1fae5 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.org-create-form__icon i {
+    font-size: 1.5rem;
+    color: #005427;
+}
+
+.org-create-form__title {
+    flex: 1;
+}
+
+.org-create-form__title h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 0.25rem 0;
+}
+
+.org-create-form__title p {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin: 0;
+}
+
+.org-create-form__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.org-create-form__field--full {
+    grid-column: 1 / -1;
+}
+
+.org-create-form__field--third {
+    grid-column: span 1;
+}
+
+.org-create-form__label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #334155;
+    margin-bottom: 0.5rem;
+}
+
+.org-create-form__input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    color: #1e293b;
+    background: #ffffff;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.org-create-form__input:focus {
+    outline: none;
+    border-color: #005427;
+    box-shadow: 0 0 0 3px rgba(0, 84, 39, 0.1);
+}
+
+.org-create-form__input::placeholder {
+    color: #94a3b8;
+}
+
+.org-create-form__error {
+    color: #dc2626;
+    font-size: 0.8rem;
+    margin-top: 0.375rem;
+}
+
+.org-create-form__upload {
+    grid-column: 1 / -1;
+    border: 2px dashed #6AAE48;
+    border-radius: 12px;
+    padding: 2rem;
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.org-create-form__upload:hover {
+    border-color: #005427;
+    background: linear-gradient(135deg, #e9fbf0 0%, #d1fae5 100%);
+}
+
+.org-create-form__upload-icon {
+    width: 64px;
+    height: 64px;
+    background: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    box-shadow: 0 4px 12px rgba(0, 84, 39, 0.1);
+}
+
+.org-create-form__upload-icon i {
+    font-size: 1.75rem;
+    color: #005427;
+}
+
+.org-create-form__upload-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.org-create-form__upload-subtitle {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin-bottom: 1rem;
+}
+
+.org-create-form__upload-input {
+    display: none;
+}
+
+.org-create-form__upload-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.5rem;
+    background: #005427;
+    color: #ffffff;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.org-create-form__upload-label:hover {
+    background: #00401e;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 84, 39, 0.2);
+}
+
+.org-create-form__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1.5rem;
+    margin-top: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.org-create-form__note {
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.org-create-form__submit {
+    padding: 0.75rem 2rem;
+    background: linear-gradient(135deg, #005427 0%, #003d1c 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 84, 39, 0.2);
+}
+
+.org-create-form__submit:hover {
+    background: linear-gradient(135deg, #006b33 0%, #005427 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 84, 39, 0.3);
+}
+
+/* Mobile Responsive */
+@media (max-width: 767px) {
+    .org-create-form__grid {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+
+    .org-create-form__field--third {
+        grid-column: 1 / -1;
+    }
+
+    .org-create-form__header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .org-create-form__footer {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+
+    .org-create-form__submit {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .org-create-form__upload {
+        padding: 1.5rem;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    .org-create-form__grid {
+        gap: 1.25rem;
+    }
+}
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h3>Create Organization</h3>
-    <a href="{% url 'organization:my-organizations' %}" class="btn btn-outline-secondary btn-sm" style="background-color: #005427; color: #fff;">Back</a>
+<div class="premium-header org-page-header text-white">
+    <h3 class="org-page-title">Create Organization</h3>
+    <a href="{% url 'organization:my-organizations' %}" class="btn btn-sm org-header-back-btn">Back</a>
 </div>
 
 <div class="card card-stat shadow-sm">
     <div class="card-body">
-        <form method="post" enctype="multipart/form-data" novalidate>
+        <form method="post" enctype="multipart/form-data" novalidate class="org-create-form">
             {% csrf_token %}
 
-            <!-- Row 1: Organization Name (full width) -->
-            <div class="row">
-                <div class="col-12 mb-3">
-                    <label class="form-label fw-semibold">Organization Name <span class="text-danger">*</span></label>
-                    <input type="text" name="organization_name" class="form-control"
+            <!-- Form Card Header -->
+            <div class="org-create-form__header">
+                <div class="org-create-form__icon">
+                    <i class="bi bi-buildings"></i>
+                </div>
+                <div class="org-create-form__title">
+                    <h3>Organization Details</h3>
+                    <p>Add your organization information</p>
+                </div>
+            </div>
+
+            <!-- Form Grid -->
+            <div class="org-create-form__grid">
+                <!-- Organization Name (full width) -->
+                <div class="org-create-form__field--full">
+                    <label class="org-create-form__label">Organization Name <span style="color: #dc2626;">*</span></label>
+                    <input type="text" name="organization_name" class="org-create-form__input"
                            value="{{ data.organization_name|default:'' }}" placeholder="e.g. ABC Reality">
                     {% if errors.organization_name %}
-                        <div class="text-danger small mt-1">{{ errors.organization_name }}</div>
+                        <div class="org-create-form__error">{{ errors.organization_name }}</div>
                     {% endif %}
                 </div>
-            </div>
 
-            <!-- Row 2: Email -->
-            <div class="row">
-                <div class="col-12 mb-3">
-                    <label class="form-label fw-semibold">Email <span class="text-danger">*</span></label>
-                    <input type="email" name="email" class="form-control" value="{{ data.email|default:'' }}" placeholder="e.g. info@company.com">
+                <!-- Email -->
+                <div>
+                    <label class="org-create-form__label">Email <span style="color: #dc2626;">*</span></label>
+                    <input type="email" name="email" class="org-create-form__input" value="{{ data.email|default:'' }}" placeholder="e.g. info@company.com">
                     {% if errors.email %}
-                        <div class="text-danger small mt-1">{{ errors.email }}</div>
+                        <div class="org-create-form__error">{{ errors.email }}</div>
                     {% endif %}
                 </div>
-            </div>
 
-            <!-- Row 3: Phone -->
-            <div class="row">
-                <div class="col-12 mb-3">
-                    <label class="form-label fw-semibold">Phone <span class="text-danger">*</span></label>
-                    <input type="text" name="phone" class="form-control" value="{{ data.phone|default:'' }}" placeholder="e.g. +91 98765 43210">
+                <!-- Phone -->
+                <div>
+                    <label class="org-create-form__label">Phone <span style="color: #dc2626;">*</span></label>
+                    <input type="text" name="phone" class="org-create-form__input" value="{{ data.phone|default:'' }}" placeholder="e.g. +91 98765 43210">
                     {% if errors.phone %}
-                        <div class="text-danger small mt-1">{{ errors.phone }}</div>
+                        <div class="org-create-form__error">{{ errors.phone }}</div>
                     {% endif %}
                 </div>
-            </div>
 
-            <!-- Row 4: Address -->
-            <div class="row">
-                <div class="col-12 mb-3">
-                    <label class="form-label fw-semibold">Address</label>
-                    <input type="text" name="address" class="form-control" value="{{ data.address|default:'' }}" placeholder="Street address">
+                <!-- Address (full width) -->
+                <div class="org-create-form__field--full">
+                    <label class="org-create-form__label">Address</label>
+                    <input type="text" name="address" class="org-create-form__input" value="{{ data.address|default:'' }}" placeholder="Street address">
+                </div>
+
+                <!-- Website -->
+                <div>
+                    <label class="org-create-form__label">Website</label>
+                    <input type="url" name="website" class="org-create-form__input" value="{{ data.website|default:'' }}" placeholder="https://example.com">
+                </div>
+
+                <!-- City -->
+                <div>
+                    <label class="org-create-form__label">City</label>
+                    <input type="text" name="city" class="org-create-form__input" value="{{ data.city|default:'' }}" placeholder="City">
+                </div>
+
+                <!-- State -->
+                <div class="org-create-form__field--third">
+                    <label class="org-create-form__label">State</label>
+                    <input type="text" name="state" class="org-create-form__input" value="{{ data.state|default:'' }}" placeholder="State / Province">
+                </div>
+
+                <!-- Country -->
+                <div class="org-create-form__field--third">
+                    <label class="org-create-form__label">Country</label>
+                    <input type="text" name="country" class="org-create-form__input" value="{{ data.country|default:'' }}" placeholder="Country">
+                </div>
+
+                <!-- Zip Code -->
+                <div class="org-create-form__field--third">
+                    <label class="org-create-form__label">Zip Code</label>
+                    <input type="text" name="zip_code" class="org-create-form__input" value="{{ data.zip_code|default:'' }}" placeholder="Zip / Postal code">
+                </div>
+
+                <!-- Logo Upload (full width) -->
+                <div class="org-create-form__upload">
+                    <div class="org-create-form__upload-icon">
+                        <i class="bi bi-cloud-upload"></i>
+                    </div>
+                    <div class="org-create-form__upload-title">Upload organization logo</div>
+                    <div class="org-create-form__upload-subtitle">PNG, JPG or SVG (Max 5MB)</div>
+                    <input type="file" name="logo" id="logo-input" class="org-create-form__upload-input">
+                    <label for="logo-input" class="org-create-form__upload-label">
+                        <i class="bi bi-folder2-open"></i> Choose File
+                    </label>
                 </div>
             </div>
 
-            <!-- Row 5: Website -->
-            <div class="row">
-                <div class="col-12 mb-3">
-                    <label class="form-label fw-semibold">Website</label>
-                    <input type="url" name="website" class="form-control" value="{{ data.website|default:'' }}" placeholder="https://example.com">
-                </div>
+            <!-- Form Footer -->
+            <div class="org-create-form__footer">
+                <span class="org-create-form__note">Required fields are marked with an asterisk</span>
+                <button type="submit" class="org-create-form__submit">
+                    <i class="bi bi-plus-lg"></i> Create Organization
+                </button>
             </div>
-
-            <!-- Row 6: City -->
-            <div class="row">
-                <div class="col-12 mb-3">
-                    <label class="form-label fw-semibold">City</label>
-                    <input type="text" name="city" class="form-control" value="{{ data.city|default:'' }}" placeholder="City">
-                </div>
-            </div>
-
-            <!-- Row 7: State -->
-            <div class="row">
-                <div class="col-12 mb-3">
-                    <label class="form-label fw-semibold">State</label>
-                    <input type="text" name="state" class="form-control" value="{{ data.state|default:'' }}" placeholder="State / Province">
-                </div>
-            </div>
-
-            <!-- Row 8: Country -->
-            <div class="row">
-                <div class="col-12 mb-3">
-                    <label class="form-label fw-semibold">Country</label>
-                    <input type="text" name="country" class="form-control" value="{{ data.country|default:'' }}" placeholder="Country">
-                </div>
-            </div>
-
-            <!-- Row 9: Zip Code -->
-            <div class="row">
-                <div class="col-12 mb-3">
-                    <label class="form-label fw-semibold">Zip Code</label>
-                    <input type="text" name="zip_code" class="form-control" value="{{ data.zip_code|default:'' }}" placeholder="Zip / Postal code">
-                </div>
-            </div>
-
-            <!-- Row 10: Logo (full width) -->
-            <div class="row">
-                <div class="col-12 mb-4">
-                    <label class="form-label fw-semibold">Logo</label>
-                    <input type="file" name="logo" class="form-control">
-                </div>
-            </div>
-
-            <button type="submit" class="btn  px-4" style="background-color: #005427; color: #fff;">Create Organization</button>
         </form>
     </div>
 </div>

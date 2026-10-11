@@ -1,101 +1,425 @@
-.form-section {
+/* Property Edit Page - Namespaced to avoid conflicts with shared styles */
+
+/* Page Container */
+.property-edit-page {
+    width: 100%;
+    min-width: 0;
+}
+
+/* Premium Header */
+.property-edit-page .premium-header {
+    padding: 1.25rem 1.5rem;
+    background: linear-gradient(135deg, #005427 0%, #003d1c 100%);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 84, 39, 0.18);
+    margin-bottom: 1.5rem;
+}
+
+.property-edit-page .premium-header h4 {
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0 0 0.25rem 0;
+    letter-spacing: -0.2px;
+}
+
+.property-edit-page .premium-header p {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0;
+}
+
+/* Main Form Layout Grid */
+.property-edit-page .wizard-form {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: 1.5rem;
-    align-items: start;
+    gap: 1rem;
+    align-items: stretch;
 }
 
-.conditional-section {
-    display: none;
+/* Section Cards */
+.property-edit-page .form-section {
+    min-width: 0;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 14px;
+    display: block;
 }
 
-.conditional-section.active {
-    display: grid;
-}
-
-.form-section h3,
-.form-section > .row,
-.form-section > .form-row,
-.form-section > .form-actions,
-.form-section > .checkbox-group,
-.form-section > .form-group:has(textarea) {
+/* Full-width sections */
+.property-edit-page .section-media {
     grid-column: 1 / -1;
 }
 
-.form-section > .form-group {
-    margin-bottom: 1.5rem;
+/* Section Headers */
+.property-edit-page .form-section h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 1rem 0;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(135deg, #e9fbf0 0%, #d1fae5 100%);
+    border-radius: 8px;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-.form-row {
+.property-edit-page .form-section h3 i {
+    color: #005427;
+    font-size: 1.1rem;
+}
+
+/* Form Row Grid */
+.property-edit-page .form-row {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
+    gap: 12px;
+    margin-bottom: 1rem;
 }
 
-.form-section > .row {
-    width: 100%;
+.property-edit-page .form-row:last-child {
+    margin-bottom: 0;
 }
 
-.form-actions {
+/* Three-column variant */
+.property-edit-page .form-row--three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* Full-width row */
+.property-edit-page .form-row--full {
+    grid-column: 1 / -1;
+}
+
+/* Form Group */
+.property-edit-page .form-group {
     display: flex;
-    gap: 1rem;
-    margin-top: 2rem;
-    padding-top: 2rem;
-    border-top: 1px solid #e2e8f0;
+    flex-direction: column;
+    min-width: 0;
 }
 
-.submit-btn,
-.cancel-btn {
-    min-height: 44px;
-    padding: 0.75rem 1.5rem;
-    border: 1px solid transparent;
+.property-edit-page .form-group label {
+    font-weight: 500;
+    color: #475569;
+    margin-bottom: 0.4rem;
+    font-size: 0.8rem;
+}
+
+.property-edit-page .form-group input,
+.property-edit-page .form-group select,
+.property-edit-page .form-group textarea {
+    padding: 0.6rem 0.75rem;
+    border: 1px solid #e2e8f0;
     border-radius: 6px;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
+    transition: all 0.15s ease;
+    background: white;
+    color: #475569;
+    min-height: 38px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.property-edit-page .form-group input:focus,
+.property-edit-page .form-group select:focus,
+.property-edit-page .form-group textarea:focus {
+    outline: none;
+    border-color: #005427;
+    box-shadow: 0 0 0 3px rgba(0, 84, 39, 0.1);
+}
+
+.property-edit-page .form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* Helper text */
+.property-edit-page small {
+    color: #64748b;
+    font-size: 0.75rem;
+    margin-bottom: 0.4rem;
+    display: block;
+}
+
+/* Checkbox Group */
+.property-edit-page .checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0;
+}
+
+.property-edit-page .checkbox-group input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #005427;
+    flex-shrink: 0;
+}
+
+.property-edit-page .checkbox-group label {
+    margin: 0;
+    cursor: pointer;
+    color: #475569;
+    font-weight: 500;
+    font-size: 0.85rem;
+}
+
+/* Error Message */
+.property-edit-page .error-message {
+    color: #ef4444;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+/* Required Field Indicator */
+.property-edit-page .field-required::after {
+    content: " *";
+    color: #ef4444;
+}
+
+/* Media Subsection */
+.property-edit-page .media-subsection {
+    background: #f8fafc;
+    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    border: 1px solid #e2e8f0;
+}
+
+.property-edit-page .media-subsection h4 {
+    margin: 0 0 0.25rem 0;
+    color: #1e293b;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.property-edit-page .media-subsection > p {
+    color: #64748b;
+    font-size: 0.8rem;
+    margin-bottom: 0.75rem;
+}
+
+/* Preview Elements */
+.property-edit-page .preview-container {
+    margin-top: 1rem;
+}
+
+.property-edit-page .preview-label {
+    color: #64748b;
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.property-edit-page .preview-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.property-edit-page .preview-wrapper img {
+    width: 120px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+}
+
+.property-edit-page .preview-remove {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    line-height: 1;
+}
+
+.property-edit-page .existing-preview {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #cbd5e1;
+}
+
+.property-edit-page .existing-preview img {
+    width: 120px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+}
+
+/* Gallery Preview */
+.property-edit-page .gallery-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.625rem;
+    margin-top: 0.9375rem;
+}
+
+.property-edit-page .existing-gallery {
+    margin-top: 0.9375rem;
+    padding-top: 0.9375rem;
+    border-top: 1px solid #cbd5e1;
+}
+
+.property-edit-page .gallery-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.625rem;
+}
+
+.property-edit-page .gallery-item img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+}
+
+/* Form Actions */
+.property-edit-page .wizard-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    padding: 1.25rem 1.5rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    grid-column: 1 / -1;
+}
+
+.property-edit-page .wizard-actions .btn {
+    padding: 0.6rem 1.25rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
-    justify-content: center;
     gap: 0.5rem;
-    transition: background-color 0.2s ease, border-color 0.2s ease;
+    transition: all 0.15s ease;
 }
 
-.submit-btn {
-    background: #1E73BE;
+.property-edit-page .wizard-actions .btn-primary {
+    background: #005427;
     color: white;
 }
 
-.submit-btn:hover {
-    background: #155a9e;
+.property-edit-page .wizard-actions .btn-primary:hover {
+    background: #003d1c;
 }
 
-.cancel-btn {
+.property-edit-page .wizard-actions .btn-secondary {
     background: #f1f5f9;
-    color: #475569;
-    border-color: #cbd5e1;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
 }
 
-.cancel-btn:hover {
+.property-edit-page .wizard-actions .btn-secondary:hover {
     background: #e2e8f0;
 }
 
-@media (max-width: 768px) {
-    .form-section {
-        grid-template-columns: 1fr;
-    }
+/* Conditional Sections */
+.property-edit-page .conditional-section {
+    display: none;
+}
 
-    .form-row {
-        grid-template-columns: 1fr;
-    }
+.property-edit-page .conditional-section.active {
+    display: block;
+}
 
-    .form-actions {
-        flex-direction: column;
-    }
+/* Margin utility */
+.property-edit-page .mb-1-5 {
+    margin-bottom: 1.5rem;
+}
 
-    .submit-btn,
-    .cancel-btn {
-        width: 100%;
+/* Width utility */
+.property-edit-page .w-100 {
+    width: 100%;
+}
+
+/* Hidden utility */
+.property-edit-page .hidden {
+    display: none;
+}
+
+/* Responsive - Desktop 1200px+ */
+@media (min-width: 1200px) {
+    .property-edit-page .wizard-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
     }
 }
+
+/* Responsive - Tablet 768px to 1199px */
+@media (max-width: 1199px) {
+    .property-edit-page .wizard-form {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .property-edit-page .section-media {
+        grid-column: 1;
+    }
+
+    .property-edit-page .form-row--three {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* Responsive - Mobile below 768px */
+@media (max-width: 767px) {
+    .property-edit-page .premium-header {
+        padding: 1rem 1.25rem;
+    }
+
+    .property-edit-page .premium-header h4 {
+        font-size: 1.15rem;
+    }
+
+    .property-edit-page .form-section {
+        padding: 1.25rem;
+    }
+
+    .property-edit-page .form-row,
+    .property-edit-page .form-row--three {
+        grid-template-columns: 1fr;
+    }
+
+    .property-edit-page .wizard-actions {
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 1.25rem;
+    }
+
+    .property-edit-page .wizard-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Responsive - Mobile below 480px */
+@media (max-width: 480px) {
+    .property-edit-page .form-section {
+        padding: 1rem;
+    }
+
+    .property-edit-page .form-row {
+        gap: 0.75rem;
+    }
+}
+
