@@ -91,7 +91,6 @@
     z-index: 1;
     color: white;
     max-width: 800px;
-    padding: 0 20px;
 }
 
 .sell-hero-title {
@@ -207,7 +206,7 @@
 .get-started-card {
     max-width: 600px;
     margin: 0 auto;
-    padding: 50px;
+    padding: 30px 50px;
     display: flex;
     align-items: center;
     gap: 30px;
@@ -241,6 +240,7 @@
 .security-text {
     text-align: center;
     margin-top: 1.5rem;
+    padding: 0px 10px;
     color: var(--primary-green);
     display: flex;
     align-items: center;
@@ -299,6 +299,7 @@
     color: white;
     border: none;
     border-radius: 999px;
+    font-size: 14px !important;
     height: 48px;
     padding: 0 32px;
     font-weight: 600;
@@ -323,7 +324,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
+    flex-wrap: nowrap;
     gap: 40px;
     min-height: 420px;
     border: 1px solid #ECECEC;
@@ -506,6 +508,12 @@
     }
 }
 
+@media (min-width: 769px) {
+    .support-card {
+        margin: 0 40px;
+    }
+}
+
 @media (max-width: 767px) {
     .sell-hero {
         min-height: 420px;
@@ -528,6 +536,16 @@
 @media (max-width: 480px) {
     .sell-hero {
         min-height: 380px;
+    }
+
+    .get-started-card{
+        padding:30px 20px;
+    }
+}
+
+@media (max-width: 320px) {
+    .btn-whatsapp {
+        font-size: 12px !important;
     }
 }
 </style>
@@ -597,7 +615,7 @@
                 <h3 style="font-size: 1.5rem !important;">Quick Chat Support</h3>
                 <p style="font-size: 16px !important;">Have questions about selling your property? Our experts are available on WhatsApp to help you 24/7.</p>
                 <p style="font-size: 16px !important;">We'll guide you through every step of the process and help you get the best deal for your land.</p>
-                <a href="https://wa.me/919506688688" target="_blank" class="btn-whatsapp" style="font-size: 14px !important;">
+                <a href="https://wa.me/919506688688" target="_blank" class="btn-whatsapp">
                     <i class="bi bi-whatsapp"></i> Chat With Us on WhatsApp
                 </a>
             </div>

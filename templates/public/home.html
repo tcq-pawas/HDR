@@ -13,6 +13,58 @@
         color: #0F6A3C;
         background: #f0f9f4;
     }
+
+    #why-invest-container{
+        padding:0 10%;
+    } 
+    
+    .why-invest-cards{
+        padding: 5px 0;
+    }
+
+    .why-invest-section .why-invest-cards .why-invest-card{
+        height: 255px;
+    }
+
+   @media (min-width: 1024px) and (max-width: 1439px) {
+        .why-choose-card{
+            width: 100%;
+            max-width: 397px;
+            height: 233px;
+        }
+    }
+
+    @media (min-width: 425px) and (max-width: 768px) {
+       .btn-cta-yellow {
+           padding:14px 32px !important;
+        }
+        #why-invest-container .why-invest-cards{
+            width: 100%;
+            max-width: 614px;
+        }
+
+        .why-invest-section .why-invest-cards .why-invest-card{
+           width: 100%;
+           max-width: 614px; 
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .why-invest-container .why-invest-cards .why-invest-card {
+           padding:35px 16px;
+        }
+
+        .why-invest-section .why-invest-cards .why-invest-card{
+           padding:35px 16px 
+        }
+    }
+
+    @media (max-width: 480px) {
+       #why-invest-container{
+          padding: 40px 0;
+       }
+    }
+
 </style>
 {% endblock %}
 
@@ -119,7 +171,7 @@
 </section>
 
 <!-- Why Invest Section -->
-<section class="why-invest-section">
+<section class="why-invest-section"  style="padding:30px 0;">
     <div class="why-invest-container">
         <div class="section-badge">Farmland Investment</div>
         <h2 class="section-heading">Why Invest in Income-Generating Farmland?</h2>
@@ -262,27 +314,27 @@
 
 <!-- Why Choose HHectare Section -->
 <section class="why-invest-section">
-    <div class="why-invest-container" style="padding-top: 2%;">
+    <div class="why-invest-container" id="why-invest-container">
         <div class="section-badge">WHY CHOOSE HHECTARE</div>
         <h2 class="section-heading">Your Trusted Farmland Partner</h2>
         <p class="section-subtitle">Experience the difference with our comprehensive farmland investment services designed for your success.</p>
         <div class="why-invest-cards">
-            <div class="why-invest-card">
+            <div class="why-invest-card why-choose-card">
                 <div class="why-invest-card-icon"><i class="fa fa-handshake"></i></div>
                 <div class="why-invest-card-title">End-to-End Support</div>
                 <div class="why-invest-card-description">Complete assistance from discovery to registry</div>
             </div>
-            <div class="why-invest-card">
+            <div class="why-invest-card why-choose-card">
                 <div class="why-invest-card-icon"><i class="fa fa-ban"></i></div>
                 <div class="why-invest-card-title">No Middlemen</div>
                 <div class="why-invest-card-description">Direct dealings for transparency and savings</div>
             </div>
-            <div class="why-invest-card">
+            <div class="why-invest-card why-choose-card">
                 <div class="why-invest-card-icon"><i class="fa fa-eye"></i></div>
                 <div class="why-invest-card-title">100% Transparency</div>
                 <div class="why-invest-card-description">Clear documentation in all transactions</div>
             </div>
-            <div class="why-invest-card">
+            <div class="why-invest-card why-choose-card">
                 <div class="why-invest-card-icon"><i class="fa fa-headset"></i></div>
                 <div class="why-invest-card-title">After Sales Assistance</div>
                 <div class="why-invest-card-description">Ongoing support for property management</div>
