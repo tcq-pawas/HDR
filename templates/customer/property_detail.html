@@ -11,73 +11,80 @@
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid py-4">
+<div class="pd-page">
 
-    <!-- Page Header -->
-    <div class="page-header">
-        <div class="page-title">
-            <h1>Property Details</h1>
-            <p>Property ID: #{{ property.id }} • Added on {{ property.created_at|date:"M d, Y H:i"|default:"recently" }}</p>
+    <!-- ===== Page Hero (same light-mint style as the other customer pages) ===== -->
+    <div class="pd-hero">
+        <div class="pd-hero-text">
+            <span class="pd-eyebrow"><i class="fas fa-hashtag"></i> Property ID {{ property.id }}</span>
+            <h1 class="pd-title">Property Details</h1>
+            <p class="pd-subtitle">Added on {{ property.created_at|date:"M d, Y H:i"|default:"recently" }}</p>
         </div>
-        <div>
-            <a href="javascript:history.back()" class="btn btn-outline-secondary btn-sm" style="font-weight: 500; padding: 0.4rem 1rem;">
-                Back to Properties
-            </a>
-        </div>
+        <a href="javascript:history.back()" class="pd-back">
+            <i class="fas fa-arrow-left"></i> Back to Properties
+        </a>
     </div>
 
-    <!-- Main Content Layout -->
-    <div class="row">
-        <!-- Left Column: Main Information -->
+    <div class="row g-4">
+
+        <!-- ===== Left Column ===== -->
         <div class="col-lg-8">
-            
-            <!-- Property Images Card -->
-            <div class="info-card">
-                <div class="info-card-header">
-                    <h4 class="info-card-title">Property Overview</h4>
-                </div>
-                <div class="info-card-body">
+
+            <!-- Overview card: image + headline + quick facts -->
+            <div class="pd-card">
+
+                <div class="pd-media">
                     {% if property.featured_image %}
-                        <img src="{{ property.featured_image.url }}" class="property-img" alt="{{ property.title }}">
+                        <img id="pdMainImg" src="{{ property.featured_image.url }}" alt="{{ property.title }}">
                     {% elif property.images.first %}
-                        <img src="{{ property.images.first.image.url }}" class="property-img" alt="{{ property.title }}">
+                        <img id="pdMainImg" src="{{ property.images.first.image.url }}" alt="{{ property.title }}">
                     {% else %}
-                        <div class="property-img" style="background: #f1f5f9; display: flex; align-items: center; justify-content: center; height: 250px;">
-                            <i class="fas fa-image" style="font-size: 4rem; color: #cbd5e1;"></i>
-                        </div>
+                        <div class="pd-media-empty"><i class="fas fa-image"></i></div>
                     {% endif %}
 
-                    <div class="row">
-                        <div class="col-md-6 field-group">
-                            <div class="field-label">Property Title</div>
-                            <div class="field-value">{{ property.title }}</div>
-                        </div>
-                        <div class="col-md-6 field-group">
-                            <div class="field-label">Status</div>
-                            <div class="field-value">
-                                <span class="status-badge {% if property.status == 'available' %}available{% elif property.status == 'sold' %}sold{% endif %}">
-                                    {{ property.get_status_display|default:property.status|capfirst }}
-                                </span>
-                            </div>
+                    <span class="status-badge pd-status {% if property.status == 'available' %}s-available{% elif property.status == 'sold' %}s-sold{% elif property.status == 'reserved' %}s-reserved{% else %}s-pending{% endif %}">
+                        <i class="fas fa-circle" style="font-size:7px; margin-right:6px;"></i>
+                        {{ property.get_status_display|default:property.status|capfirst }}
+                    </span>
+                </div>
+
+                {% with gallery=property.images.all %}
+                    {% if gallery|length > 1 or property.featured_image and gallery|length > 0 %}
+                    <div class="pd-thumbs">
+                        {% if property.featured_image %}
+                            <button type="button" class="pd-thumb active" data-src="{{ property.featured_image.url }}" aria-label="View image">
+                                <img src="{{ property.featured_image.url }}" alt="">
+                            </button>
+                        {% endif %}
+                        {% for img in gallery %}
+                            <button type="button" class="pd-thumb {% if forloop.first and not property.featured_image %}active{% endif %}" data-src="{{ img.image.url }}" aria-label="View image">
+                                <img src="{{ img.image.url }}" alt="">
+                            </button>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                {% endwith %}
+
+                <div class="pd-headline">
+                    <div class="pd-headline-text">
+                        <h2 class="pd-prop-title">{{ property.title }}</h2>
+                        <div class="pd-loc">
+                            <i class="fas fa-location-dot"></i>
+                            <span>{{ property.location|default:property.city|default:"N/A" }}</span>
                         </div>
                     </div>
+                    <div class="pd-price-tag">
+                        <small>Price</small>
+                        <strong>₹{{ property.price|intcomma }}</strong>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Property Details Card -->
-            <div class="info-card">
-                <div class="info-card-header">
-                    <h4 class="info-card-title">Property Details</h4>
-                </div>
-                <div class="info-card-body">
-                    <div class="row">
-                        <div class="col-md-6 field-group">
-                            <div class="field-label">Price</div>
-                            <div class="field-value">₹{{ property.price|intcomma }}</div>
-                        </div>
-                        <div class="col-md-6 field-group">
-                            <div class="field-label">Property Type</div>
-                            <div class="field-value">
+                <div class="pd-facts">
+                    <div class="pd-fact">
+                        <div class="pd-fact-icon"><i class="fas fa-house"></i></div>
+                        <div>
+                            <div class="pd-fact-label">Property Type</div>
+                            <div class="pd-fact-value">
                                 {% if property.get_property_type_display %}
                                     {{ property.get_property_type_display|capfirst }}
                                 {% elif property.property_type %}
@@ -87,22 +94,29 @@
                                 {% endif %}
                             </div>
                         </div>
-                        <div class="col-md-6 field-group">
-                            <div class="field-label">Area</div>
-                            <div class="field-value">
+                    </div>
+
+                    <div class="pd-fact">
+                        <div class="pd-fact-icon"><i class="fas fa-ruler-combined"></i></div>
+                        <div>
+                            <div class="pd-fact-label">Area</div>
+                            <div class="pd-fact-value">
                                 {% if property.area_sqft %}
-                                    {{ property.area_sqft|intcomma }}
+                                    {{ property.area_sqft|intcomma }} sq.ft
                                 {% elif property.total_area %}
-                                    {{ property.total_area|intcomma }}
+                                    {{ property.total_area|intcomma }} sq.ft
                                 {% else %}
                                     N/A
-                                {% endif %} 
-                                sq.ft
+                                {% endif %}
                             </div>
                         </div>
-                        <div class="col-md-6 field-group">
-                            <div class="field-label">Category</div>
-                            <div class="field-value">
+                    </div>
+
+                    <div class="pd-fact">
+                        <div class="pd-fact-icon"><i class="fas fa-tag"></i></div>
+                        <div>
+                            <div class="pd-fact-label">Category</div>
+                            <div class="pd-fact-value">
                                 {% if property.get_category_display %}
                                     {{ property.get_category_display|capfirst }}
                                 {% elif property.category %}
@@ -112,58 +126,94 @@
                                 {% endif %}
                             </div>
                         </div>
-                        <div class="col-md-6 field-group">
-                            <div class="field-label">Location / City</div>
-                            <div class="field-value">{{ property.location|default:property.city|default:"N/A" }}</div>
-                        </div>
                     </div>
 
-                    <div class="field-group mb-0 mt-2">
-                        <div class="field-label">Description</div>
-                        <div class="field-value" style="font-weight: 400; font-size: 0.9rem; line-height: 1.6; color: #475569;">
-                            {{ property.description|linebreaksbr|default:"No description provided." }}
+                    <div class="pd-fact">
+                        <div class="pd-fact-icon"><i class="fas fa-map-location-dot"></i></div>
+                        <div>
+                            <div class="pd-fact-label">Location / City</div>
+                            <div class="pd-fact-value">{{ property.location|default:property.city|default:"N/A" }}</div>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Description card -->
+            <div class="pd-card">
+                <div class="pd-card-head">
+                    <i class="fas fa-align-left"></i>
+                    <h3>Description</h3>
+                </div>
+                <div class="pd-card-body">
+                    <p class="pd-desc">{{ property.description|linebreaksbr|default:"No description provided." }}</p>
                 </div>
             </div>
 
         </div>
 
-        <!-- Right Column: Sidebar -->
+        <!-- ===== Right Column ===== -->
         <div class="col-lg-4">
-            
-            <!-- Agent Information Card -->
-            <div class="info-card">
-                <div class="info-card-header">
-                    <h4 class="info-card-title">Agent Information</h4>
-                </div>
-                <div class="info-card-body">
-                    {% if agent %}
-                        <div class="field-group">
-                            <div class="field-label">Agent Name</div>
-                            <div class="field-value">{{ agent.get_full_name|default:agent.username }}</div>
-                        </div>
-                        {% if agent.email %}
-                        <div class="field-group">
-                            <div class="field-label">Email Address</div>
-                            <div class="field-value">{{ agent.email }}</div>
-                        </div>
+            <div class="pd-sticky">
+
+                <!-- Agent card -->
+                <div class="pd-card">
+                    <div class="pd-card-head">
+                        <i class="fas fa-user-tie"></i>
+                        <h3>Agent Information</h3>
+                    </div>
+                    <div class="pd-card-body">
+                        {% if agent %}
+                            <div class="pd-agent">
+                                <div class="pd-avatar">{{ agent.get_full_name|default:agent.username|first|upper }}</div>
+                                <div>
+                                    <div class="pd-agent-name">{{ agent.get_full_name|default:agent.username }}</div>
+                                    <div class="pd-agent-role">Your Property Advisor</div>
+                                </div>
+                            </div>
+
+                            {% if agent.email %}
+                            <a href="mailto:{{ agent.email }}" class="pd-contact">
+                                <i class="fas fa-envelope"></i>
+                                <span>{{ agent.email }}</span>
+                            </a>
+                            {% endif %}
+
+                            {% if agent.profile.phone or agent.phone %}
+                            <a href="tel:{{ agent.profile.phone|default:agent.phone }}" class="pd-contact">
+                                <i class="fas fa-phone"></i>
+                                <span>{{ agent.profile.phone|default:agent.phone }}</span>
+                            </a>
+                            {% endif %}
+                        {% else %}
+                            <div class="pd-empty-agent">
+                                <i class="fas fa-user-slash"></i>
+                                <span>No Agent Assigned</span>
+                            </div>
                         {% endif %}
-                        {% if agent.profile.phone or agent.phone %}
-                        <div class="field-group mb-0">
-                            <div class="field-label">Phone Number</div>
-                            <div class="field-value">{{ agent.profile.phone|default:agent.phone }}</div>
-                        </div>
-                        {% endif %}
-                    {% else %}
-                        <div class="text-muted" style="font-size: 0.9rem;">No Agent Assigned</div>
-                    {% endif %}
+
+                        <a href="{% url 'customer:create_inquiry' %}" class="pd-btn">
+                            <i class="fas fa-paper-plane"></i> Send Inquiry
+                        </a>
+                    </div>
                 </div>
+
             </div>
-
-
-
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Click a thumbnail to swap the main property image
+    document.querySelectorAll('.pd-thumb').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var main = document.getElementById('pdMainImg');
+            if (!main) { return; }
+            main.src = btn.dataset.src;
+            document.querySelectorAll('.pd-thumb').forEach(function (b) { b.classList.remove('active'); });
+            btn.classList.add('active');
+        });
+    });
+</script>
 {% endblock %}
