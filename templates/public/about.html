@@ -193,8 +193,30 @@
         display: block;
     }
 
+    .section-label.section-label--light {
+         font-size: 1rem;
+     }
+
+    .why-invest-section{
+        border-radius: 5px;
+        margin:0px 38px;
+    }  
+
     /* ---- CTA banner: stack on mobile instead of squeezing into a row ---- */
     @media (max-width: 768px) {
+        
+        .premium-formland-invest{
+            text-align: center;
+            
+        }
+
+        .premium-formland-invest .cta-label{
+            font-size: 8px !important;
+        }
+
+        .section-label.section-label--light{
+            font-size: 0.7rem;
+        } 
 
         .cta-inner {
             flex-direction: column !important;
@@ -211,10 +233,22 @@
             display: block !important;
             width: 100%;
             text-align: center;
-        }
-
+        }    
         .cta-decor {
             display: none !important;
+        }
+
+        .about-us-section{
+            text-align: center;
+            padding: 20px 24px !important;
+        }
+
+        .about-us-section .section-label{
+            margin-bottom: 26px;
+        }
+
+        .why .row {
+            --bs-gutter-x: 0.1rem;
         }
     }
 
@@ -222,7 +256,18 @@
         .cta-btns {
             flex-direction: column;
         }
+
+        .why-invest-section{
+            margin:0px 20px;
+        }  
     }
+
+    @media (max-width: 320px) {
+       .cta-btns .btn-cta-primary {
+           padding: 9px 5px !important;
+        }
+    }
+
 </style>
 {% endblock %}
 
@@ -254,7 +299,7 @@
                      alt="Premium Farmland Investment - HHectare"
                      title="Agricultural Land | HHectare">
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-6 about-us-section">
                 <div class="section-label">About Us</div>
                 <h2 class="section-title" style="font-size: 1.7rem;">Building Wealth Through Farmland Investments</h2>
                 <p style="color: var(--text-muted); line-height: 1.8; margin-bottom: 1.5rem; font-size: 16px;">
@@ -272,7 +317,7 @@
 </section>
 
 <!-- Statistics Section -->
-<section style="background: #ffffff; padding: clamp(28px, 6vw, 48px) 0; border-bottom: 1px solid #E5E7EB;">
+<section class="why-invest-section" style="background: #ffffff; padding: clamp(28px, 6vw, 48px) 0; border-bottom: 1px solid #E5E7EB; margin-bottom: 40px;">
     <div class="container" style="max-width: 1440px;">
         <div class="row align-items-center stats-row">
             <div class="col-6 col-md-3 text-center stat-col">
@@ -316,10 +361,10 @@
 </section>
 
 <!-- Why Invest Section -->
-<section class="why" style="background: linear-gradient(135deg, #0F6A3C 0%, #0A4D2C 100%); padding: clamp(40px, 8vw, 72px) clamp(20px, 5vw, 48px); position: relative;">
+<section class="why why-invest-section" style="background: linear-gradient(135deg, #0F6A3C 0%, #0A4D2C 100%); padding: clamp(40px, 8vw, 72px) clamp(20px, 5vw, 48px); position: relative;">
     <div class="section-inner">
         <div class="why-header text-center">
-            <div class="section-label" style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); color: #ffffff;">Why Invest With Us</div>
+            <div class="section-label section-label--light" style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); color: #ffffff;">Why Invest With Us</div>
             <h2 style="color: #ffffff !important; font-size:1.9rem !important; font-family: var(--font-body); font-weight: 700; line-height: 1.2; margin-bottom: 14px;">A trusted approach to farmland ownership</h2>
             <p style="max-width: 700px; color: rgba(255, 255, 255, 0.95) !important; font-size: 15px !important; line-height: 1.7; text-align: center; margin: 0 auto;">From verification to long-term value creation, we ensure every step is secure and transparent.</p>
         </div>
@@ -393,7 +438,7 @@
 <!-- CTA Section -->
 <div class="cta-banner" style="padding: clamp(28px, 6vw, 48px) clamp(20px, 5vw, 48px) clamp(48px, 10vw, 88px); background: var(--cloud-white);">
     <div class="cta-inner" style="max-width: 1440px; margin: 0 auto; background: linear-gradient(135deg, #0F6A3C 0%, #0A4D2C 100%); border-radius: 24px; padding: clamp(32px, 8vw, 56px) clamp(24px, 5vw, 48px); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: space-between; gap: 48px; box-shadow: 0 16px 48px rgba(15, 106, 60, 0.2);">
-        <div style="flex: 1; position: relative; z-index: 2;">
+        <div style="flex: 1; position: relative; z-index: 2;" class="premium-formland-invest">
             <div class="cta-label" style="display: inline-block; background: rgba(244, 180, 0, 0.2); color: #ffffff; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; padding: 8px 20px; border-radius: 50px; margin-bottom: 20px;">Premium Farmland Investment</div>
             <h2 class="cta-title" style="font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700; color: #ffffff; margin-bottom: 16px;">Ready to Own Premium Farmland?</h2>
             <p class="cta-sub" style="font-size: 16px !important; color: rgba(255, 255, 255, 0.85); margin-bottom: 24px; line-height: 1.6;">Explore verified farmland opportunities and build long-term wealth through land ownership.</p>

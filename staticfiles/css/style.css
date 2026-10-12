@@ -1560,7 +1560,7 @@ a:focus {
 
 /* SEARCH BAR
 
-.property-search-section {
+.property- {
     position: relative;
     margin-top: -70px;
     z-index: 100;
@@ -4607,6 +4607,7 @@ footer:not(.site-footer) {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 32px;
+    padding-top: 50px;
     padding-bottom: 50px;
 }
 
@@ -5507,7 +5508,7 @@ footer:not(.site-footer) {
     color: var(--text-dark);
     border: none;
     border-radius: var(--button-radius);
-    padding: 14px 32px !important;
+    padding: 14px 32px;
     font-weight: 600;
     transition: var(--transition);
 }
@@ -5928,6 +5929,7 @@ footer.footer.site-footer,
     }
 
     .cta-banner-buttons {
+        flex-direction: column;
         justify-content: center;
     }
 
