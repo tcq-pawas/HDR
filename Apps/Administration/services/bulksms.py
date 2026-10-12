@@ -19,7 +19,7 @@ BULKSMS_API_URL = "https://api.bulksms.com/v1/messages"
 
 OTP_MESSAGE_TEMPLATE = (
     "Your Hhectare login OTP is {otp}. Valid for 10 minutes. "
-    "Do not share this OTP. - The Codiq Global Private Limited"
+    "Do not share this OTP. - Hhectare"
 )
 
 
