@@ -300,15 +300,24 @@ html {
   justify-content: space-around;
   text-align: center;
   padding: 0 40px;
+  height: 330px;
 }
-.coming-soon .banner-box-1 {
+/* .coming-soon .banner-box-1 {
   width: 600px;
   max-width: 100%;
   padding-top: 20px;
+} */
+.coming-soon .banner-box-1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  min-height: 300px;
 }
 .coming-soon .banner-img-box {
   width: 600px;
-  height: 100px;
+  height: 100%;
   max-width: 100%;
   overflow: hidden;
 }
@@ -325,6 +334,7 @@ html {
   margin-top: 8px;
   font-size: 14px;
   color: var(--crumb);
+  width: 100%;
 }
 .coming-soon .prop-management-breadcrumbs a {
   color: var(--crumb);
@@ -396,6 +406,25 @@ html {
   }
   .coming-soon .benefits {
     gap: 30px;
+  }
+  .coming-soon .banner-box-1 {
+    min-height: 0px !important;
+    width: 100%;
+    height: 120px;
+  }
+  .coming-soon .prop-management-breadcrumbs {
+    justify-content: center;
+  }
+  .coming-soon .banner-box {
+    flex-direction: column-reverse;
+  }
+  .coming-soon .banner-img-box {
+    height: 200px;
+    width: 100%;
+  }
+  .coming-soon .prop-management-title {
+    width: 100%;
+    text-align: center;
   }
 }
 @media (max-width: 620px) {
