@@ -1,0 +1,219 @@
+{% extends "public/base.html" %} {% load static %} {% block title %}Property
+Management{% endblock %} {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/property_management.css' %}" />
+{% endblock %} {% block content %}
+<!-- Page Banner -->
+<div
+  class="coming-soon is-soon"
+>
+  <div
+    id="prop-management-subscription-banner"
+    class="prop-management-subscription-banner banner-box"
+  >
+    <div class="prop-management-content banner-box-1">
+      <h1 class="prop-management-title">Property Management</h1>
+
+      <div class="prop-management-breadcrumbs">
+        <a href="/">Home</a>
+        <span>&gt;</span>
+        <span>Property Management</span>
+      </div>
+    </div>
+
+    <div class="banner-img-box">
+      <img
+        src="{% static 'images/land_plot_banner_2.png' %}"
+        alt="Agricultural land and property"
+        class="property-image"
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+  </div>
+
+  <!-- Coming Soon Ribbon -->
+  <div
+    id="agent-subscription-ribbon"
+    class="agent-subscription-ribbon soon-only"
+  >
+    <span class="agent-ribbon-icon" aria-hidden="true">🏆</span>
+    <p>Professional Property Management. Coming Soon!</p>
+  </div>
+
+  <section class="hero">
+    <div class="wrap">
+      <div class="prop-description-box-1">
+        <span class="tag">FOR PROPERTY OWNERS</span>
+        <h2 class="big">Let Us Take Care <span>of Your Property</span></h2>
+        <p class="lead">
+          Managing a property can take time and effort. Our Property Management
+          service is designed to help property owners manage their properties
+          more conveniently. Submit a request with your property details, and
+          our team will review your requirements and determine the applicable
+          management fee.
+        </p>
+        <div class="chips">
+          <div class="chip">
+            <i class="fa-solid fa-house"></i>
+            Convenient<br />Service
+          </div>
+          <div class="chip">
+            <i class="fa-solid fa-sliders"></i>
+            Tailored<br />Solutions
+          </div>
+          <div class="chip">
+            <i class="fa-solid fa-shield-halved"></i>
+            Expert<br />Assistance
+          </div>
+          <div class="chip">
+            <i class="fa-solid fa-users"></i>
+            Management<br />as per Your Needs
+          </div>
+        </div>
+      </div>
+
+      <div class="visual prop-description-box-1" aria-hidden="true">
+        <svg viewBox="0 0 520 430" preserveAspectRatio="xMidYMid meet">
+          <ellipse cx="270" cy="210" rx="215" ry="190" fill="var(--green-l)" />
+          <ellipse
+            cx="270"
+            cy="395"
+            rx="190"
+            ry="22"
+            fill="#2f8f3e"
+            opacity=".35"
+          />
+          <circle cx="105" cy="300" r="42" fill="#2f8f3e" />
+          <circle cx="440" cy="290" r="48" fill="#3a9a49" />
+          <circle cx="85" cy="260" r="30" fill="#3a9a49" />
+          <circle cx="455" cy="250" r="32" fill="#2f8f3e" />
+          <rect x="150" y="215" width="130" height="175" fill="#f1f1ee" />
+          <rect x="270" y="170" width="120" height="220" fill="#d9d6d0" />
+          <rect x="150" y="215" width="130" height="14" fill="#6b4a2f" />
+          <polygon
+            points="150,215 270,160 390,185 390,170 270,150 140,205"
+            fill="#4a3a2c"
+          />
+          <rect x="175" y="245" width="80" height="120" fill="#7a5a3a" />
+          <rect
+            x="165"
+            y="245"
+            width="100"
+            height="120"
+            fill="none"
+            stroke="#fff"
+            stroke-width="3"
+          />
+          <rect
+            x="295"
+            y="215"
+            width="85"
+            height="150"
+            fill="#7a5a3a"
+            opacity=".9"
+          />
+          <g fill="#cfe6ee" stroke="#fff" stroke-width="3">
+            <rect x="180" y="255" width="32" height="100" />
+            <rect x="216" y="255" width="32" height="100" />
+            <rect x="302" y="225" width="32" height="130" />
+            <rect x="340" y="225" width="32" height="130" />
+          </g>
+          <rect x="150" y="310" width="130" height="5" fill="#fff" />
+          <path
+            d="M118 112 Q200 85 300 120"
+            stroke="#46b66f"
+            stroke-width="3"
+            fill="none"
+          />
+          <circle cx="118" cy="112" r="6" fill="var(--green)" />
+        </svg>
+        <div class="fchip f1">
+          <i class="fa-solid fa-house-user"></i>
+          Rent Management
+        </div>
+        <div class="fchip f2">
+          <i class="fa-solid fa-shield-halved"></i> Tenant Support
+        </div>
+        <div class="fchip f3">
+          <i class="fa-solid fa-screwdriver-wrench"></i>
+          Property Maintenance
+        </div>
+        <div class="fchip f4">
+          <i class="fa-solid fa-file-lines"></i>
+          Regular Updates
+        </div>
+        <div class="soon-card" id="soonCard">
+          <span class="mega">📣</span>
+          <h3 class="soon-only">Coming Soon</h3>
+          <h3 class="live-only">Share Your Property Details</h3>
+          <p class="soon-only">
+            Our Property Management service is currently under development.
+            We'll be launching soon to help you manage your property with ease.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec alt" id="how">
+    <div class="wrap">
+      <h2>How it works</h2>
+      <p class="sub">
+        From your first request to the start of management, in six clear steps.
+      </p>
+      <ol class="steps">
+        <li>
+          <p>The property owner submits a property management request.</p>
+        </li>
+        <li>
+          <p>The owner provides the property details and required services.</p>
+        </li>
+        <li><p>The team reviews the request and assesses the property.</p></li>
+        <li>
+          <p>
+            A suitable management fee is determined based on the property and
+            service requirements.
+          </p>
+        </li>
+        <li>
+          <p>The fee and service terms are shared with the property owner.</p>
+        </li>
+        <li>
+          <p>Property management begins after the terms are agreed upon.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <h2>Key benefits</h2>
+      <p class="sub">
+        No fixed price list. Every fee is based on your property and the
+        services you need.
+      </p>
+      <div class="benefits">
+        <div class="ben">
+          <h3>Convenient requests</h3>
+          <p>Submit a property management request online in a few minutes.</p>
+        </div>
+        <div class="ben">
+          <h3>Based on your property</h3>
+          <p>
+            Management services are matched to individual property requirements.
+          </p>
+        </div>
+        <div class="ben">
+          <h3>Fair, assessed fees</h3>
+          <p>Fees are assessed from property details and services required.</p>
+        </div>
+        <div class="ben">
+          <h3>Team assistance</h3>
+          <p>Get support from the property management team throughout.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+{% endblock %} 

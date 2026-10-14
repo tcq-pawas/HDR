@@ -410,6 +410,9 @@ def subscription_plans(request):
         'billing_matrix': billing_matrix,
     })
 
+def property_management(request):
+    return render(request, 'public/subscription/property_management.html')
+
 def agent_profile(request, agent_id=None):
     """
     Public agent profile page with detailed information,

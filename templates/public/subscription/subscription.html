@@ -237,6 +237,9 @@
 {% endblock %}
 
 {% block content %}
+
+{% if subscriptions_live %}
+
 {% if messages %}
 <div class="container mt-4 mb-0" style="position: relative; z-index: 1000;">
     {% for message in messages %}
@@ -485,8 +488,14 @@
         </div>
     </div>
 </section>
+
+{% else %}
+{% include 'public/subscription/subscription_coming_soon.html' %}
+{% endif %}
 {% endblock %}
 
 {% block extra_js %}
+{% if subscriptions_live %}
 <script src="{% static 'public/js/subscription.js' %}"></script>
+{% endif %} 
 {% endblock %}
