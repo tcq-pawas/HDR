@@ -335,13 +335,14 @@ html {
   font-size: 14px;
   color: var(--crumb);
   width: 100%;
+  justify-content: center;
 }
 .coming-soon .prop-management-breadcrumbs a {
   color: var(--crumb);
 }
 .coming-soon .prop-management-title {
   color: #fff;
-  text-align: left;
+  text-align: center;
 }
 
 /* ribbon */
