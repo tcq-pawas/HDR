@@ -1,0 +1,961 @@
+{% load static %}
+<style>
+  /* Main Page*/
+  #agent-subscription-page {
+    --agent-navy: #16193b;
+    --agent-gold: #e9a50b;
+    --agent-cream: #f7f8f4;
+    --agent-text: #2b2b2b;
+    --agent-muted: #5a5a5a;
+    --agent-mint: #e3efe5;
+    --button-radius: 999px;
+    --green: #0f6a3c;
+    --background: #fafaf7;
+    --bg-2: rgba(15, 106, 60, 0.1);
+    width: 100%;
+    overflow: hidden;
+    background: var(--agent-cream);
+    color: var(--agent-text);
+    font-family: inherit;
+  }
+
+  #agent-subscription-page * {
+    box-sizing: border-box;
+  }
+
+  #agent-subscription-page a {
+    text-decoration: none;
+  }
+
+  /* Banner */
+  .agent-subscription-banner {
+    position: relative;
+    min-height: 100px;
+    padding: 22px 7%;
+    background: var(--agent-navy);
+    color: #fff;
+    border: 2px solid gold;
+  }
+
+  .agent-banner-title {
+    margin: 0;
+    font-size: 35px;
+    font-weight: 700;
+    color: #fff;
+    text-align: left;
+  }
+
+  .agent-breadcrumbs {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+    font-size: 14px;
+    color: #f3d36b;
+  }
+
+  .agent-breadcrumbs a {
+    color: #f3d36b;
+  }
+
+  /* Ribbon */
+  .agent-subscription-ribbon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    min-height: 52px;
+    padding: 12px 20px;
+    background: #f4b400;
+    color: #fff;
+    text-align: center;
+    font-weight: 600;
+  }
+
+  .agent-subscription-ribbon p {
+    margin: 0;
+  }
+
+  .agent-ribbon-icon {
+    font-size: 22px;
+  }
+
+  /* Main Layout */
+  .agent-subscription-main {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
+    align-items: center;
+    gap: 55px;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 70px 6%;
+  }
+
+  .agent-subscription-content {
+    min-width: 0;
+  }
+
+  .agent-subscription-pill {
+    display: inline-block;
+    padding: 9px 18px;
+    border-radius: 30px;
+    background: #fbeaa8;
+    color: var(--green);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  /* Heading */
+  .agent-subscription-heading {
+    margin: 25px 0 0;
+    font-size: clamp(20px, 3.4vw, 50px);
+    line-height: 1.12;
+    letter-spacing: -1.2px;
+    font-weight: 800;
+  }
+
+  .agent-heading-green,
+  .agent-heading-dark {
+    display: block;
+  }
+
+  .agent-heading-green {
+    color: var(--green);
+  }
+
+  .agent-heading-dark {
+    color: #17192e;
+  }
+
+  .agent-subscription-description {
+    max-width: 700px;
+    margin: 22px 0 0;
+    color: var(--agent-muted);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* Features */
+  .agent-subscription-features {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 22px;
+    margin-top: 32px;
+  }
+
+  .agent-feature-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .agent-feature-icon {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--agent-mint);
+    color: var(--green);
+    font-size: 24px;
+    font-weight: 700;
+  }
+
+  /* Buttons */
+  .agent-subscription-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 35px;
+  }
+
+  .agent-subscription-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 54px;
+    padding: 13px 22px;
+    border-radius: 7px;
+    font: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    transition:
+      background 0.2s,
+      box-shadow 0.2s;
+  }
+
+  .agent-button-primary {
+    border: 1px solid var(--green);
+    background: var(--background);
+    color: var(--green);
+    font-size: 14px;
+    border-radius: var(--button-radius);
+  }
+
+  .agent-button-primary:hover {
+    background: var(--bg-2);
+  }
+
+  .agent-subscription-button:focus-visible {
+    outline: 3px solid var(--agent-gold);
+    outline-offset: 3px;
+  }
+
+  .agent-subscription-note {
+    margin: 16px 0 0;
+    color: #666;
+    font-size: 12px;
+  }
+
+  /* Coming Soon Card */
+  .agent-coming-soon-card {
+    position: relative;
+    min-width: 0;
+    padding: 50px 28px 35px;
+    border-radius: 24px;
+    background: #fbfcfa;
+    box-shadow: 0 10px 40px rgb(20 60 30 / 8%);
+    text-align: center;
+  }
+
+  .agent-card-tag {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 9px 18px;
+    border-radius: 30px;
+    background: var(--green);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  /* Illustration */
+  .agent-card-illustration {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    height: 280px;
+    margin: 0 auto;
+  }
+
+  .agent-illustration-circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 90%;
+    height: 85%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(ellipse, #e0efe0, #eef6ec 70%, transparent 72%);
+  }
+
+  .agent-illustration-document {
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    width: 170px;
+    height: 240px;
+    transform: translateX(-50%) rotate(3deg);
+    padding: 75px 20px 0 48px;
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 14px 30px rgb(60 80 70 / 20%);
+  }
+
+  .agent-illustration-house {
+    position: absolute;
+    top: 18px;
+    left: 23px;
+    width: 65px;
+    height: 52px;
+    border: 3px solid #fff0c4;
+    border-radius: 7px;
+    background: #fbd57a;
+  }
+
+  .agent-illustration-house::before {
+    position: absolute;
+    top: -23px;
+    left: -10px;
+    width: 78px;
+    height: 30px;
+    background: var(--green);
+    clip-path: polygon(50% 0, 100% 100%, 0 100%);
+    content: "";
+  }
+
+  .agent-document-lines {
+    display: grid;
+    gap: 22px;
+  }
+
+  .agent-document-lines span {
+    position: relative;
+    display: block;
+    height: 7px;
+    border-radius: 4px;
+    background: #b8bdd0;
+  }
+
+  .agent-document-lines span::before {
+    content: "";
+    position: absolute;
+    left: -28px;
+    top: -5px;
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    background: var(--green, #3fae6a);
+  }
+
+  .agent-document-lines span::after {
+    content: "";
+    position: absolute;
+    left: -22px;
+    top: -1px;
+    width: 4px;
+    height: 8px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg) scale(0.9);
+  }
+
+  .agent-illustration-person {
+    position: absolute;
+    right: 0;
+    bottom: 20px;
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 8px 20px rgb(0 80 40 / 20%);
+  }
+
+  .agent-illustration-person span {
+    position: absolute;
+    top: 17px;
+    left: 32px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #fff;
+  }
+
+  .agent-illustration-person::after {
+    position: absolute;
+    bottom: 12px;
+    left: 20px;
+    width: 48px;
+    height: 32px;
+    border-radius: 24px 24px 0 0;
+    background: #fff;
+    content: "";
+  }
+
+  .agent-illustration-bars {
+    position: absolute;
+    top: 20px;
+    right: 5px;
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+  }
+
+  .agent-illustration-bars span {
+    display: block;
+    width: 17px;
+    border-radius: 5px 5px 0 0;
+    background: #cfe3d0;
+  }
+
+  .agent-illustration-bars span:nth-child(1) {
+    height: 30px;
+  }
+
+  .agent-illustration-bars span:nth-child(2) {
+    height: 45px;
+  }
+
+  .agent-illustration-bars span:nth-child(3) {
+    height: 65px;
+  }
+
+  /* Coming Soon Heading */
+  .agent-coming-soon-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 10px;
+  }
+
+  .agent-coming-soon-title h3 {
+    margin: 0;
+    color: var(--green);
+    font-size: clamp(28px, 2vw, 42px);
+    font-weight: 800;
+    letter-spacing: -0.8px;
+  }
+
+  .agent-title-decoration {
+    color: var(--agent-gold);
+    font-size: 17px;
+  }
+
+  .agent-coming-soon-description {
+    max-width: 420px;
+    margin: 15px auto 0;
+    color: #555;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* Disabled / gold buttons */
+  .agent-button-disabled {
+    border: 1px solid #dde3da;
+    background: #e6eae3;
+    color: #7a807a;
+    cursor: not-allowed;
+    pointer-events: none;
+    font-size: 14px;
+    border-radius: var(--button-radius);
+  }
+
+  /* Common block */
+  .agent-info-block {
+    padding: 70px 6%;
+    border-top: 1px solid #e1e6dc;
+  }
+
+  .agent-info-block-white {
+    background: #fff;
+  }
+
+  .agent-info-inner {
+    max-width: 1240px;
+    margin: 0 auto;
+  }
+
+  .agent-info-head {
+    max-width: 720px;
+    margin-bottom: 38px;
+  }
+
+  .agent-info-head h2 {
+    margin: 0 0 12px;
+    color: #17192e;
+    font-size: clamp(26px, 3vw, 38px);
+    line-height: 1.15;
+    letter-spacing: -0.8px;
+    font-weight: 800;
+  }
+
+  .agent-info-head p {
+    margin: 0;
+    color: var(--agent-muted);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  /* How it works */
+  .agent-steps {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 18px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: agent-step;
+  }
+
+  .agent-steps li {
+    position: relative;
+    padding: 24px 20px;
+    border: 1px solid #e1e6dc;
+    border-radius: 16px;
+    background: var(--bg-2);
+    counter-increment: agent-step;
+  }
+
+  .agent-steps li::before {
+    content: counter(agent-step);
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    margin-bottom: 16px;
+    border-radius: 50%;
+    background: var(--green);
+    color: #fff;
+    font-size: 17px;
+    font-weight: 800;
+  }
+
+  .agent-steps li:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 44px;
+    left: 68px;
+    right: -18px;
+    height: 2px;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--agent-gold) 0 6px,
+      transparent 6px 12px
+    );
+  }
+
+  .agent-steps h3 {
+    margin: 0 0 8px;
+    font-size: 17px;
+    line-height: 1.3;
+  }
+
+  .agent-steps p {
+    margin: 0;
+    color: var(--agent-muted);
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  /* Responsive */
+  @media (max-width: 1100px) {
+    .agent-steps {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .agent-steps li::after {
+      display: none;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .agent-info-block {
+      padding: 48px 20px;
+    }
+
+    .agent-steps {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .banner-box {
+    border: 2px solid blanchedalmond;
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+    padding: 0px 40px;
+  }
+
+  .banner-box-1 {
+    width: 600px;
+    max-width: 100%;
+    padding-top: 20px;
+  }
+
+  .banner-img-box {
+    width: 600px;
+    height: 100px;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .banner-img-box .property-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  @media (max-width: 1024px) {
+    .agent-subscription-main {
+      gap: 70px;
+      padding: 50px 5%;
+    }
+
+    .agent-coming-soon-card {
+      width: 100%;
+      max-width: 600px;
+      justify-self: center;
+    }
+
+    .agent-subscription-features {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .agent-subscription-content .agent-subscription-actions {
+      flex-wrap: nowrap;
+      font-size: 12px;
+      padding-top: 20px;
+      justify-content: space-around;
+    }
+
+    .agent-subscription-pill {
+      display: table;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .agent-subscription-heading {
+      text-align: center;
+    }
+
+    .agent-subscription-description {
+      text-align: center;
+      max-width: 100%;
+    }
+  }
+
+  @media (min-width: 767px) and (max-width: 1024px) {
+    .agent-subscription-features {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 768px) {
+    .agent-subscription-actions {
+      flex-direction: column;
+      justify-content: space-around;
+    }
+
+    .agent-subscription-page {
+      padding: 0px;
+    }
+
+    .agent-subscription-main {
+      grid-template-columns: 1fr;
+    }
+
+    #agent-how-it-works .agent-info-head {
+      text-align: center;
+    }
+
+    .agent-banner-title {
+      font-size: 22px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .agent-subscription-banner {
+      padding: 22px 20px;
+    }
+
+    .agent-banner-title {
+      font-size: 22px;
+    }
+
+    .agent-subscription-main {
+      gap: 55px;
+      padding: 38px 20px;
+      grid-template-columns: 1fr;
+    }
+
+    .agent-subscription-heading {
+      font-size: 30px;
+      letter-spacing: -0.8px;
+    }
+
+    .agent-subscription-description {
+      font-size: 15px;
+    }
+
+    .agent-subscription-features {
+      gap: 18px 12px;
+    }
+
+    .agent-feature-item {
+      gap: 9px;
+      font-size: 13px;
+    }
+
+    .agent-feature-icon {
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+    }
+
+    .agent-subscription-actions {
+      flex-direction: column;
+    }
+
+    .agent-subscription-button {
+      width: 100%;
+    }
+
+    .agent-coming-soon-card {
+      padding: 42px 18px 28px;
+    }
+
+    .agent-card-illustration {
+      height: 240px;
+      max-width: 320px;
+    }
+
+    .agent-illustration-document {
+      width: 155px;
+      height: 215px;
+    }
+
+    .agent-illustration-person {
+      right: 0;
+      bottom: 20px;
+      width: 70px;
+      height: 70px;
+    }
+
+    .agent-illustration-person span {
+      top: 12px;
+      left: 25px;
+      width: 20px;
+      height: 20px;
+    }
+
+    .agent-illustration-person::after {
+      bottom: 8px;
+      left: 15px;
+      width: 40px;
+      height: 27px;
+    }
+
+    .agent-coming-soon-title h3 {
+      font-size: 29px;
+    }
+
+    .agent-title-decoration {
+      font-size: 17px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .banner-box {
+      flex-direction: column-reverse;
+    }
+
+    .agent-banner-title {
+      text-align: center;
+    }
+
+    section {
+      padding: 0 16px;
+    }
+
+    .agent-subscription-ribbon {
+      gap: 5px;
+    }
+
+    .agent-subscription-features {
+      gap: 30px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #agent-subscription-page *,
+    #agent-subscription-page *::before,
+    #agent-subscription-page *::after {
+      transition: none !important;
+    }
+  }
+</style>
+<section id="agent-subscription-page" class="agent-subscription-page">
+  <!-- Page Banner -->
+  <div
+    id="agent-subscription-banner"
+    class="agent-subscription-banner banner-box"
+  >
+    <div class="agent-banner-content banner-box-1">
+      <h1 class="agent-banner-title">Subscription for Property Agents</h1>
+
+      <div class="agent-breadcrumbs">
+        <a href="/">Home</a>
+        <span>&gt;</span>
+        <span>Subscription</span>
+      </div>
+    </div>
+    <div class="banner-img-box">
+      <img
+        src="{% static 'images/land_plot_banner_2.png' %}"
+        alt="Agricultural land and property"
+        class="property-image"
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+  </div>
+
+  <!-- Coming Soon Ribbon -->
+  <div id="agent-subscription-ribbon" class="agent-subscription-ribbon">
+    <span class="agent-ribbon-icon" aria-hidden="true">🏆</span>
+    <p>More Listings. More Opportunities. Coming Soon!</p>
+  </div>
+
+  <!-- Main Content -->
+  <div id="agent-subscription-main" class="agent-subscription-main">
+    <!-- Left Content -->
+    <div class="agent-subscription-content">
+      <span class="agent-subscription-pill"> For Property Agents </span>
+
+      <h2 class="agent-subscription-heading">
+        <span class="agent-heading-green"> Grow Your Property </span>
+        <span class="agent-heading-dark"> Listings with a Subscription </span>
+      </h2>
+
+      <p class="agent-subscription-description">
+        Our subscription plans are designed for property agents who want to
+        showcase more projects and properties on our platform. Complete the
+        required KYC verification, activate your subscription, and unlock higher
+        property posting limits according to your selected plan.
+      </p>
+
+      <!-- Features -->
+      <div id="agent-subscription-features" class="agent-subscription-features">
+        <div class="agent-feature-item">
+          <span class="agent-feature-icon">▥</span>
+          <span>Higher<br />Posting Limits</span>
+        </div>
+
+        <div class="agent-feature-item">
+          <span class="agent-feature-icon">◉</span>
+          <span>More<br />Visibility</span>
+        </div>
+
+        <div class="agent-feature-item">
+          <span class="agent-feature-icon">✓</span>
+          <span>Verified Agent<br />Onboarding</span>
+        </div>
+
+        <div class="agent-feature-item">
+          <span class="agent-feature-icon">▦</span>
+          <span>Plans as per<br />Your Needs</span>
+        </div>
+      </div>
+
+      <div id="agent-subscription-actions" class="agent-subscription-actions">
+        <!-- View Subscription Plans Button -->
+        <a
+          class="agent-subscription-button agent-button-primary agent-button-disabled"
+          href="#"
+          aria-disabled="true"
+        >
+          View Subscription Plans
+        </a>
+
+        <!-- Get Started Disabled Button -->
+        <a
+          href="#"
+          class="agent-subscription-button agent-button-disabled"
+          aria-disabled="true"
+          title="Available when subscriptions launch"
+        >
+          Get Started (Unavailable)
+        </a>
+      </div>
+      <!-- Subscription Availability Note -->
+      <p class="agent-subscription-note">
+        Get Started opens once subscription plans go live.
+      </p>
+    </div>
+
+    <!-- Right Coming Soon Card -->
+    <aside
+      id="agent-coming-soon-card"
+      class="agent-coming-soon-card"
+      aria-label="Subscription service coming soon"
+    >
+      <span class="agent-card-tag"> Subscription Service </span>
+
+      <div class="agent-card-illustration" aria-hidden="true">
+        <div class="agent-illustration-circle"></div>
+
+        <div class="agent-illustration-document">
+          <div class="agent-illustration-house"></div>
+
+          <div class="agent-document-lines">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+
+        <div class="agent-illustration-person">
+          <span></span>
+        </div>
+
+        <div class="agent-illustration-bars">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+
+      <div class="agent-coming-soon-title">
+        <span class="agent-title-decoration">✦</span>
+        <h3>Coming Soon</h3>
+        <span class="agent-title-decoration">✦</span>
+      </div>
+
+      <p class="agent-coming-soon-description">
+        Our subscription plans for property agents are currently under
+        development. We'll be launching soon with exciting features to help you
+        grow your listings.
+      </p>
+    </aside>
+  </div>
+
+  <!-- How It Works -->
+  <div id="agent-how-it-works" class="agent-info-block agent-info-block-white">
+    <div class="agent-info-inner">
+      <div class="agent-info-head">
+        <h2>How it works</h2>
+        <p>
+          Five steps take you from choosing a plan to posting more properties.
+        </p>
+      </div>
+
+      <ol class="agent-steps">
+        <li>
+          <h3>Select a plan</h3>
+          <p>
+            Pick the subscription plan that suits the number of properties you
+            want to list.
+          </p>
+        </li>
+        <li>
+          <h3>Submit your KYC</h3>
+          <p>
+            Upload the required identity and business documents for
+            verification.
+          </p>
+        </li>
+        <li>
+          <h3>KYC approval</h3>
+          <p>
+            Our team reviews your documents and confirms your verified agent
+            status.
+          </p>
+        </li>
+        <li>
+          <h3>Payment and activation</h3>
+          <p>
+            Once KYC is approved and payment is complete, your subscription is
+            activated.
+          </p>
+        </li>
+        <li>
+          <h3>Post more properties</h3>
+          <p>Add properties up to the posting limit of your active plan.</p>
+        </li>
+      </ol>
+    </div>
+  </div>
+</section>
