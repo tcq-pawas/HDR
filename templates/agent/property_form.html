@@ -46,19 +46,53 @@
 
     </div>
 
-
+    <!-- Progress Indicator -->
+    <div class="progress-container">
+        <div class="progress">
+            <div class="progress-bar wizard-progress-bar" id="progressBar"></div>
+        </div>
+        <div class="step-indicators">
+            <div class="step-indicator active" data-step="1">
+                <div class="step-number">1</div>
+                <span>Basic Info</span>
+            </div>
+            <div class="step-indicator" data-step="2">
+                <div class="step-number">2</div>
+                <span>Details</span>
+            </div>
+            <div class="step-indicator" data-step="3">
+                <div class="step-number">3</div>
+                <span>Pricing</span>
+            </div>
+            <div class="step-indicator" data-step="4">
+                <div class="step-number">4</div>
+                <span>Location</span>
+            </div>
+            <div class="step-indicator" data-step="5">
+                <div class="step-number">5</div>
+                <span>Media</span>
+            </div>
+            <div class="step-indicator" data-step="6">
+                <div class="step-number">6</div>
+                <span>Description</span>
+            </div>
+            <div class="step-indicator" data-step="7">
+                <div class="step-number">7</div>
+                <span>Visibility</span>
+            </div>
+        </div>
+    </div>
 
     <!-- Form -->
 
-    <form method="post" class="wizard-form" enctype="multipart/form-data">
+    <form method="post" class="wizard-form" enctype="multipart/form-data" id="propertyForm" novalidate>
 
         {% csrf_token %}
 
+        <!-- Step 1: Basic Information -->
 
-
-        <!-- Basic Information -->
-
-        <div class="form-section section-basic">
+        <div class="wizard-step active" data-step="1">
+            <div class="form-section section-basic">
 
             <h3><i class="bi bi-file-earmark-text"></i> Basic Information</h3>
 
@@ -115,8 +149,10 @@
             </div>
 
         </div>
+        </div>
 
-
+        <!-- Step 2: Property Details -->
+        <div class="wizard-step" data-step="2">
 
         <!-- Land-Specific Fields -->
 
@@ -632,7 +668,10 @@
 
         </div>
 
+        </div>
 
+        <!-- Step 3: Pricing Details -->
+        <div class="wizard-step" data-step="3">
 
         <!-- Pricing Management -->
 
@@ -726,7 +765,10 @@
 
         </div>
 
+        </div>
 
+        <!-- Step 4: Location Details -->
+        <div class="wizard-step" data-step="4">
 
         <!-- Location Management -->
 
@@ -810,7 +852,10 @@
 
         </div>
 
+        </div>
 
+        <!-- Step 5: Media & Documents -->
+        <div class="wizard-step" data-step="5">
 
         <!-- Media Management -->
 
@@ -1020,7 +1065,10 @@
 
         </div>
 
+        </div>
 
+        <!-- Step 6: Descriptions -->
+        <div class="wizard-step" data-step="6">
 
         <!-- Descriptions -->
 
@@ -1058,16 +1106,10 @@
 
         </div>
 
+        </div>
 
-
-      
-
-
-
-
-
-
-        <!-- Visibility Settings -->
+        <!-- Step 7: Visibility Settings -->
+        <div class="wizard-step" data-step="7">
 
         <div class="form-section section-vis">
 
@@ -1117,24 +1159,22 @@
 
         </div>
 
+        </div>
 
-
-        <!-- Form Actions -->
-
+        <!-- Wizard Actions -->
         <div class="wizard-actions">
-
-            <a href="{% url 'agent:property_list' %}" class="btn btn-secondary">
-
-                <i class="bi bi-x-circle"></i> Cancel
-
-            </a>
-
-            <button type="submit" class="btn btn-primary">
-
-                <i class="bi bi-check-circle"></i> {% if title|stringformat:'s'|slice:':3' == 'Add' %}Create Property{% else %}Update Property{% endif %}
-
+            <button type="button" class="btn btn-secondary" id="prevBtn" style="display: none;">
+                <i class="bi bi-arrow-left"></i> Previous
             </button>
-
+            <a href="{% url 'agent:property_list' %}" class="btn btn-secondary">
+                <i class="bi bi-x-circle"></i> Cancel
+            </a>
+            <button type="button" class="btn btn-primary" id="nextBtn">
+                Next <i class="bi bi-arrow-right"></i>
+            </button>
+            <button type="submit" class="btn btn-success" id="submitBtn" style="display: none;">
+                <i class="bi bi-check-circle"></i> {% if title|stringformat:'s'|slice:':3' == 'Add' %}Create Property{% else %}Update Property{% endif %}
+            </button>
         </div>
 
     </form>
@@ -1144,6 +1184,130 @@
 
 
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const steps = document.querySelectorAll('.wizard-step');
+    const stepIndicators = document.querySelectorAll('.step-indicator');
+    const progressBar = document.getElementById('progressBar');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    let currentStep = 1;
+    const totalSteps = steps.length;
+
+    // Step navigation
+    function showStep(step) {
+        steps.forEach(s => s.classList.remove('active'));
+        stepIndicators.forEach(si => {
+            si.classList.remove('active', 'completed');
+            const stepNum = parseInt(si.dataset.step);
+            if (stepNum < step) {
+                si.classList.add('completed');
+            } else if (stepNum === step) {
+                si.classList.add('active');
+            }
+        });
+
+        document.querySelector(`.wizard-step[data-step="${step}"]`).classList.add('active');
+        
+        // Update progress bar
+        const progress = (step / totalSteps) * 100;
+        progressBar.style.width = progress + '%';
+
+        // Update buttons
+        prevBtn.style.display = step === 1 ? 'none' : 'inline-flex';
+        nextBtn.style.display = step === totalSteps ? 'none' : 'inline-flex';
+        submitBtn.style.display = step === totalSteps ? 'inline-flex' : 'none';
+
+        currentStep = step;
+    }
+
+    prevBtn.addEventListener('click', () => {
+        if (currentStep > 1) {
+            showStep(currentStep - 1);
+        }
+    });
+
+    function validateCurrentStep() {
+        const currentStepEl = document.querySelector(`.wizard-step[data-step="${currentStep}"]`);
+        const inputs = currentStepEl.querySelectorAll('input, select, textarea');
+        let isValid = true;
+
+        for (let i = 0; i < inputs.length; i++) {
+            if (!inputs[i].checkValidity()) {
+                inputs[i].reportValidity();
+                isValid = false;
+                break;
+            }
+        }
+        return isValid;
+    }
+
+    nextBtn.addEventListener('click', () => {
+        if (validateCurrentStep()) {
+            if (currentStep < totalSteps) {
+                showStep(currentStep + 1);
+            }
+        }
+    });
+
+    // Step indicator click
+    stepIndicators.forEach(indicator => {
+        indicator.addEventListener('click', () => {
+            const step = parseInt(indicator.dataset.step);
+            if (step < currentStep || validateCurrentStep()) {
+                showStep(step);
+            }
+        });
+    });
+
+    // Form Submission Validation
+    const form = document.getElementById('propertyForm');
+    form.addEventListener('submit', function(e) {
+        let isValid = true;
+        let firstInvalidStep = null;
+        
+        const allInputs = form.querySelectorAll('input, select, textarea');
+        for (let i = 0; i < allInputs.length; i++) {
+            if (!allInputs[i].checkValidity()) {
+                isValid = false;
+                const stepEl = allInputs[i].closest('.wizard-step');
+                if (stepEl && firstInvalidStep === null) {
+                    firstInvalidStep = parseInt(stepEl.dataset.step);
+                }
+            }
+        }
+
+        if (!isValid && firstInvalidStep) {
+            e.preventDefault(); 
+            showStep(firstInvalidStep);
+            // After showing the step, report validity on the first invalid field in that step
+            setTimeout(() => {
+                const stepEl = document.querySelector(`.wizard-step[data-step="${firstInvalidStep}"]`);
+                const invalidFields = stepEl.querySelectorAll('input, select, textarea');
+                for (let j = 0; j < invalidFields.length; j++) {
+                    if (!invalidFields[j].checkValidity()) {
+                        invalidFields[j].reportValidity();
+                        invalidFields[j].focus();
+                        break;
+                    }
+                }
+            }, 100);
+        }
+    });
+
+    // Initialize: Check if there are any backend errors and show that step first
+    const firstError = document.querySelector('.error-message');
+    if (firstError) {
+        const errorStep = firstError.closest('.wizard-step');
+        if (errorStep) {
+            showStep(parseInt(errorStep.dataset.step));
+        } else {
+            showStep(1);
+        }
+    } else {
+        showStep(1);
+    }
 
     // Toggle investment fields
 
@@ -1155,13 +1319,17 @@
 
     function toggleInvestmentFields() {
 
-        if (investmentCheckbox.checked) {
+        if (investmentCheckbox && investmentFields) {
 
-            investmentFields.style.display = 'grid';
+            if (investmentCheckbox.checked) {
 
-        } else {
+                investmentFields.style.display = 'grid';
 
-            investmentFields.style.display = 'none';
+            } else {
+
+                investmentFields.style.display = 'none';
+
+            }
 
         }
 
@@ -1169,13 +1337,17 @@
 
 
 
-    investmentCheckbox.addEventListener('change', toggleInvestmentFields);
+    if (investmentCheckbox) {
 
-    
+        investmentCheckbox.addEventListener('change', toggleInvestmentFields);
+
+    }
+
+
 
     // Initialize on page load
 
-    if (investmentCheckbox) {
+    if (investmentCheckbox && investmentFields) {
 
         toggleInvestmentFields();
 
@@ -1296,14 +1468,23 @@
     // The city value saved in the database (for edit mode pre-selection)
     const savedCityValue = '{{ form.instance.city|default:"" }}';
 
+    console.log('State select element:', stateSelect);
+    console.log('City select element:', citySelect);
+    console.log('Saved city value:', savedCityValue);
+
 
 
     function loadCitiesForState(state, selectCityValue) {
 
-        if (!state) {
+        console.log('Loading cities for state:', state);
 
-            citySelect.innerHTML = '<option value="">Select City</option>';
+        if (!state || !citySelect) {
 
+            console.log('State or citySelect is missing');
+
+            if (citySelect) {
+                citySelect.innerHTML = '<option value="">Select City</option>';
+            }
             return;
 
         }
@@ -1316,29 +1497,33 @@
 
             .then(data => {
 
+                console.log('Cities response:', data);
+
                 citySelect.innerHTML = '<option value="">Select City</option>';
 
                 let cityFound = false;
 
-                data.cities.forEach(city => {
+                if (data.cities && Array.isArray(data.cities)) {
+                    data.cities.forEach(city => {
 
-                    const option = document.createElement('option');
+                        const option = document.createElement('option');
 
-                    option.value = city;
+                        option.value = city;
 
-                    option.textContent = city;
+                        option.textContent = city;
 
-                    if (selectCityValue && city === selectCityValue) {
+                        if (selectCityValue && city === selectCityValue) {
 
-                        option.selected = true;
+                            option.selected = true;
 
-                        cityFound = true;
+                            cityFound = true;
 
-                    }
+                        }
 
-                    citySelect.appendChild(option);
+                        citySelect.appendChild(option);
 
-                });
+                    });
+                }
 
                 // If city wasn't in list but we have a saved value, add it as an option
 
@@ -1362,8 +1547,9 @@
 
                 console.error('Error fetching cities:', error);
 
-                citySelect.innerHTML = '<option value="">Error loading cities</option>';
-
+                if (citySelect) {
+                    citySelect.innerHTML = '<option value="">Error loading cities</option>';
+                }
             });
 
     }
@@ -1372,9 +1558,13 @@
 
     if (stateSelect && citySelect) {
 
+        console.log('Attaching state change listener');
+
         // On state change: reload cities without pre-selection
 
         stateSelect.addEventListener('change', function() {
+
+            console.log('State changed to:', this.value);
 
             loadCitiesForState(this.value, null);
 
@@ -1386,12 +1576,15 @@
 
         const initialState = stateSelect.value;
 
+        console.log('Initial state:', initialState);
+
         if (initialState && savedCityValue) {
 
             loadCitiesForState(initialState, savedCityValue);
 
         }
-
+    } else {
+        console.error('State select or city select not found in DOM');
     }
 
 
@@ -1509,6 +1702,7 @@
             galleryInput.value = '';
         });
     }
+});
 </script>
 
 {% endblock %}
