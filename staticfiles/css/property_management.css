@@ -2,7 +2,6 @@
   --green: #0f6a3c;
   --green-d: #08502c;
   --green-l: #e4f2e8;
-  --agent-navy: #16193b;
   --gold: #f4b400;
   --gold-l: #fbefc9;
   --bg: #f9faf7;
@@ -10,10 +9,9 @@
   --text: #1d2433;
   --muted: #5b6475;
   --agent-muted: #5b6475;
-  --crumb: #f3d36b;
   --line: #dfe5df;
   --head: #0b6b3a;
-  --head2: #141c3a;
+  --head2: #1a2e2a;
   --background: #fafaf7;
   --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.08);
   --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.12);
@@ -21,6 +19,19 @@
 }
 html {
   scroll-behavior: smooth;
+}
+
+/* property_management.css */
+.coming-soon {
+  --font-body: "Inter", system-ui, -apple-system, sans-serif;
+  --font-heading: var(var(--font-body)) font-family: var(--font-body);
+}
+
+.coming-soon .prop-management-title,
+.coming-soon h2.big,
+.coming-soon .sec h2,
+.coming-soon .soon-card h3 {
+  font-family: var(--font-heading);
 }
 
 .coming-soon :focus-visible {
@@ -93,6 +104,31 @@ html {
   font-size: 15px;
   line-height: 1.7;
   font-weight: 300;
+}
+.coming-soon .prop-management-quote {
+  margin-bottom: 16px;
+  font-size: 1.1rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.95);
+  text-align: center;
+}
+
+.coming-soon .prop-management-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.coming-soon .divider-line {
+  display: block;
+  width: 60px;
+  height: 3px;
+  background: var(--gold);
+}
+
+.coming-soon .divider-icon {
+  font-size: 1.5rem;
 }
 .coming-soon .chips {
   display: grid;
@@ -208,7 +244,7 @@ html {
   padding: 72px 0;
 }
 .coming-soon section.alt {
-  background: var(--card);
+  background: var(--background);
   border-block: 1px solid var(--line);
 }
 .coming-soon .sec h2 {
@@ -234,7 +270,7 @@ html {
 }
 .coming-soon .steps li {
   counter-increment: s;
-  background-color: var(--background);
+  background-color: var(--card);
   border: 1px solid var(--line);
   border-radius: 14px;
   padding: 24px 22px 22px;
@@ -281,26 +317,37 @@ html {
   color: var(--muted);
 }
 
-/* form */
-
-.coming-soon .full {
-  grid-column: 1/-1;
-}
-
 /* banner */
 .coming-soon .prop-management-subscription-banner {
   position: relative;
   min-height: 100px;
   padding: 22px 7%;
-  background: var(--agent-navy);
-  color: #fff;
+  color: white;
 }
+/* .agent-subscription-banner::before */
+.coming-soon .prop-management-subscription-banner::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.42) 0%,
+    rgba(0, 0, 0, 0.18) 35%,
+    rgba(0, 0, 0, 0.08) 55%,
+    rgba(0, 0, 0, 0.38) 100%
+  );
+}
+
 .coming-soon .banner-box {
   display: flex;
   justify-content: space-around;
   text-align: center;
   padding: 0 40px;
-  height: 330px;
+  min-height: 400px;
 }
 /* .coming-soon .banner-box-1 {
   width: 600px;
@@ -314,35 +361,13 @@ html {
   justify-content: center;
   max-width: 100%;
   min-height: 300px;
+  z-index: 1;
 }
-.coming-soon .banner-img-box {
-  width: 600px;
-  height: 100%;
-  max-width: 100%;
-  overflow: hidden;
-}
-.coming-soon .banner-img-box .property-image {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-}
-.coming-soon .prop-management-breadcrumbs {
-  display: flex;
-  gap: 10px;
-  margin-top: 8px;
-  font-size: 14px;
-  color: var(--crumb);
-  width: 100%;
-  justify-content: center;
-}
-.coming-soon .prop-management-breadcrumbs a {
-  color: var(--crumb);
-}
+
 .coming-soon .prop-management-title {
   color: #fff;
   text-align: center;
+  margin-bottom: 16px;
 }
 
 /* ribbon */
@@ -390,7 +415,6 @@ html {
 }
 @media (max-width: 768px) {
   .coming-soon .prop-management-title {
-    text-align: left;
     font-size: 22px;
   }
   .coming-soon .prop-description-box-1 {
@@ -413,9 +437,7 @@ html {
     width: 100%;
     height: 120px;
   }
-  .coming-soon .prop-management-breadcrumbs {
-    justify-content: center;
-  }
+
   .coming-soon .banner-box {
     flex-direction: column-reverse;
   }
@@ -474,6 +496,9 @@ html {
   }
   .coming-soon .prop-management-subscription-banner {
     padding: 22px 20px;
+  }
+  .coming-soon .steps {
+    grid-template-columns: repeat(1, 1fr);
   }
 }
 @media (max-width: 480px) {

@@ -1,14 +1,22 @@
 {% load static %}
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+  rel="stylesheet"
+/>
+
 <style>
   /* Main Page*/
   #agent-subscription-page {
-    --agent-navy: #16193b;
     --agent-gold: #e9a50b;
     --agent-cream: #f7f8f4;
     --agent-text: #2b2b2b;
     --agent-muted: #5a5a5a;
     --agent-mint: #e3efe5;
     --button-radius: 999px;
+    --card: #fff;
     --green: #0f6a3c;
     --background: #fafaf7;
     --bg-2: rgba(15, 106, 60, 0.1);
@@ -22,40 +30,50 @@
   #agent-subscription-page * {
     box-sizing: border-box;
   }
+  #agent-subscription-page {
+    --font-body: "Inter", system-ui, -apple-system, sans-serif;
+    --font-heading: (var(--font-body)) font-family: var(--font-body);
+  }
 
+  .agent-banner-title,
+  .agent-subscription-heading,
+  .agent-info-head h2,
+  .agent-coming-soon-title h3 {
+    font-family: var(--font-heading);
+  }
   #agent-subscription-page a {
     text-decoration: none;
   }
 
   /* Banner */
   .agent-subscription-banner {
-    position: relative;
-    min-height: 100px;
+    /* position: relative; */
+    /* min-height: 100px; */
     padding: 22px 7%;
-    background: var(--agent-navy);
-    color: #fff;
-    border: 2px solid gold;
+    color: white;
   }
-
+  .agent-subscription-banner::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.42) 0%,
+      rgba(0, 0, 0, 0.18) 35%,
+      rgba(0, 0, 0, 0.08) 55%,
+      rgba(0, 0, 0, 0.38) 100%
+    );
+  }
   .agent-banner-title {
-    margin: 0;
+    margin-bottom: 16px;
     font-size: 35px;
     font-weight: 700;
     color: #fff;
     text-align: left;
-  }
-
-  .agent-breadcrumbs {
-    display: flex;
-    gap: 10px;
-    margin-top: 8px;
-    font-size: 14px;
-    color: #f3d36b;
-    text-align: left;
-  }
-
-  .agent-breadcrumbs a {
-    color: #f3d36b;
   }
 
   /* Ribbon */
@@ -280,7 +298,7 @@
     height: 52px;
     border: 3px solid #fff0c4;
     border-radius: 7px;
-    background: #fbd57a;
+    background: #fbeaa8;
   }
 
   .agent-illustration-house::before {
@@ -438,7 +456,7 @@
   }
 
   .agent-info-block-white {
-    background: #fff;
+    background: var(--background);
   }
 
   .agent-info-inner {
@@ -483,7 +501,7 @@
     padding: 24px 20px;
     border: 1px solid #e1e6dc;
     border-radius: 16px;
-    background: var(--bg-2);
+    background: var(--card);
     counter-increment: agent-step;
   }
 
@@ -495,8 +513,8 @@
     height: 40px;
     margin-bottom: 16px;
     border-radius: 50%;
-    background: var(--green);
-    color: #fff;
+    background: var(--bg-2);
+    color: var(--green);
     font-size: 17px;
     font-weight: 800;
   }
@@ -528,6 +546,31 @@
     line-height: 1.55;
   }
 
+  .agent-banner-quote {
+    margin-bottom: 16px;
+    font-size: clamp(16px, 2vw, 20px);
+    color: #fff;
+    text-align: center;
+  }
+
+  .agent-banner-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .agent-divider-line {
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: #f4b400;
+  }
+
+  .agent-divider-icon {
+    font-size: 1.5rem;
+  }
+
   /* Responsive */
   @media (max-width: 1100px) {
     .agent-steps {
@@ -550,35 +593,18 @@
   }
 
   .banner-box {
-    border: 2px solid blanchedalmond;
-    display: flex;
-    justify-content: space-around;
     text-align: center;
-    padding: 0px 40px;
-    height: 330px;
+    min-height: 400px;
   }
 
   .banner-box-1 {
-  display: flex;
-  flex-direction: column;
-  align-items: center;      
-  justify-content: center; 
-  max-width: 100%;
-  min-height: 300px; 
-  }
-
-  .banner-img-box {
-    width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     max-width: 100%;
-    overflow: hidden;
-  }
-
-  .banner-img-box .property-image {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
+    min-height: 300px;
+    z-index: 1;
   }
 
   @media (max-width: 1024px) {
@@ -648,19 +674,12 @@
       font-size: 22px;
     }
 
-    .banner-box-1{
+    .banner-box-1 {
       min-height: 0px;
       width: 100%;
       height: 120px;
     }
-     .banner-box{
-      flex-direction: column-reverse;
-    }
-    .banner-img-box{
-      height: 200px;
-      width: 100%;
-    }
-    .agent-subscription-banner{
+    .agent-subscription-banner {
       width: 100%;
     }
   }
@@ -669,15 +688,9 @@
     .agent-subscription-banner {
       padding: 22px 20px;
     }
-
-    .agent-banner-title {
-      font-size: 22px;
-    }
-
     .agent-subscription-main {
       gap: 55px;
       padding: 38px 20px;
-      grid-template-columns: 1fr;
     }
 
     .agent-subscription-heading {
@@ -702,10 +715,6 @@
       width: 40px;
       height: 40px;
       font-size: 20px;
-    }
-
-    .agent-subscription-actions {
-      flex-direction: column;
     }
 
     .agent-subscription-button {
@@ -757,10 +766,6 @@
   }
 
   @media (max-width: 480px) {
-    .banner-box {
-      flex-direction: column-reverse;
-    }
-
     .agent-banner-title {
       text-align: center;
     }
@@ -792,24 +797,26 @@
   <div
     id="agent-subscription-banner"
     class="agent-subscription-banner banner-box"
+    style="
+      background: url(&quot;{% static 'images/hero-img-all.png' %}&quot;)
+        center/cover no-repeat;
+      height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    "
   >
+    <!-- <div class="agent-banner-content banner-box-1">
+      <h1 class="agent-banner-title">Subscription for Property Agents</h1>
+    </div> -->
     <div class="agent-banner-content banner-box-1">
       <h1 class="agent-banner-title">Subscription for Property Agents</h1>
-
-      <div class="agent-breadcrumbs">
-        <a href="/">Home</a>
-        <span>&gt;</span>
-        <span>Subscription</span>
+      <p class="agent-banner-quote">Subscription Plans for Growing Agents</p>
+      <div class="agent-banner-divider">
+        <span class="agent-divider-line"></span>
+        <span class="agent-divider-icon" aria-hidden="true">🔑</span>
       </div>
-    </div>
-    <div class="banner-img-box">
-      <img
-        src="{% static 'images/land_plot_banner_2.png' %}"
-        alt="Agricultural land and property"
-        class="property-image"
-        loading="lazy"
-        decoding="async"
-      />
     </div>
   </div>
 
