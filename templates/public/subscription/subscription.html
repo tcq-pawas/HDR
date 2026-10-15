@@ -238,7 +238,7 @@
 
 {% block content %}
 
-{% if subscriptions_live %}
+{% if plans %}
 
 {% if messages %}
 <div class="container mt-4 mb-0" style="position: relative; z-index: 1000;">
@@ -495,7 +495,7 @@
 {% endblock %}
 
 {% block extra_js %}
-{% if subscriptions_live %}
+{% if plans %}
 <script src="{% static 'public/js/subscription.js' %}"></script>
 {% endif %} 
 {% endblock %}
