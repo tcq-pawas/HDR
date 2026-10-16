@@ -193,8 +193,30 @@
         display: block;
     }
 
+    .section-label.section-label--light {
+         font-size: 1rem;
+     }
+
+    .why-invest-section{
+        border-radius: 5px;
+        margin:0px 38px;
+    }  
+
     /* ---- CTA banner: stack on mobile instead of squeezing into a row ---- */
     @media (max-width: 768px) {
+        
+        .premium-formland-invest{
+            text-align: center;
+            
+        }
+
+        .premium-formland-invest .cta-label{
+            font-size: 8px !important;
+        }
+
+        .section-label.section-label--light{
+            font-size: 0.7rem;
+        } 
 
         .cta-inner {
             flex-direction: column !important;
@@ -211,10 +233,22 @@
             display: block !important;
             width: 100%;
             text-align: center;
-        }
-
+        }    
         .cta-decor {
             display: none !important;
+        }
+
+        .about-us-section{
+            text-align: center;
+            padding: 20px 24px !important;
+        }
+
+        .about-us-section .section-label{
+            margin-bottom: 26px;
+        }
+
+        .why .row {
+            --bs-gutter-x: 0.1rem;
         }
     }
 
@@ -222,20 +256,136 @@
         .cta-btns {
             flex-direction: column;
         }
+
+        .why-invest-section{
+            margin:0px 20px;
+        }  
     }
-</style>
+
+    @media (max-width: 320px) {
+       .cta-btns .btn-cta-primary {
+           padding: 9px 5px !important;
+        }
+    }
+
+    /* ---- Bottom CTA banner: alignment + responsive (shared styles live in style.css) ---- */
+    .cta-banner-section .btn-cta-yellow,
+    .cta-banner-section .btn-cta-outline {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        font-size: 14px;
+        line-height: 1.2;
+        text-align: center;
+        text-decoration: none;
+    }
+
+    @media (max-width: 991px) {
+        .cta-banner-section .cta-banner-content {
+            gap: 32px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .cta-banner-section {
+            padding: 48px 20px;
+        }
+
+        .cta-banner-section .cta-banner {
+            padding: 36px 24px;
+        }
+
+        .cta-banner-section .cta-banner-content {
+            grid-template-columns: 1fr;
+            gap: 24px;
+            text-align: center;
+        }
+
+        .cta-banner-section .cta-banner-description {
+            max-width: 520px;
+            margin: 0 auto;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .cta-banner-section .cta-banner-buttons {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .cta-banner-section {
+            padding: 36px 16px;
+        }
+
+        .cta-banner-section .cta-banner {
+            padding: 28px 18px;
+        }
+
+        .cta-banner-section .cta-banner-title {
+            font-size: 1.35rem;
+        }
+
+        .cta-banner-section .cta-banner-buttons {
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .cta-banner-section .btn-cta-yellow,
+        .cta-banner-section .btn-cta-outline {
+            width: 100%;
+        }
+    }
+
+
+    /* Shared page typography: keep headings and supporting copy consistent. */
+    body.site-public :is(h1, h2, h3, h4) {
+        font-family: var(--font-heading, Inter, Arial, sans-serif) !important;
+        line-height: 1.2 !important;
+        letter-spacing: -0.02em;
+    }
+    body.site-public h1 {
+        font-size: clamp(30px, 2.3vw, 38px) !important;
+        font-weight: 700 !important;
+    }
+    body.site-public h2 {
+        font-size: clamp(24px, 1.8vw, 29px) !important;
+        font-weight: 700 !important;
+    }
+    body.site-public h3 {
+        font-size: clamp(18px, 1.3vw, 21px) !important;
+        font-weight: 600 !important;
+    }
+    body.site-public h4 {
+        font-size: 17px !important;
+        font-weight: 600 !important;
+    }
+    body.site-public p {
+        font-size: 15px !important;
+        line-height: 1.6 !important;
+    }
+    body.site-public :is(.ih__sub, .hero-subtitle, .section-subtitle) {
+        font-size: 16px !important;
+        font-weight: 400 !important;
+    }
+    @media (max-width: 767.98px) {
+        body.site-public h1 { font-size: clamp(28px, 7vw, 34px) !important; }
+        body.site-public h2 { font-size: clamp(23px, 5.5vw, 27px) !important; }
+        body.site-public p { font-size: 14px !important; }
+        body.site-public :is(.ih__sub, .hero-subtitle, .section-subtitle) { font-size: 15px !important; }
+    }</style>
 {% endblock %}
 
 {% block inner_hero %}
-<section class="inner-hero">
-    <div class="inner-hero-content">
-        <h1 class="inner-hero-title">About HHectare</h1>
-        <p class="inner-hero-quote">
-            Invest in Income Generating Farmland
-        </p>
-        <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 16px;">
-            <div style="width: 60px; height: 3px; background: #F4B400;"></div>
-            <span style="font-size: 1.5rem;">🌿</span>
+<section class="ih" style="--ih-bg: url('{% static 'images/hero-img-all.png' %}')">
+    <div class="ih__content">
+        <h1 class="ih__title">About HHectare</h1>
+        <p class="ih__sub">Invest in Income Generating Farmland</p>
+        <div class="ih__divider">
+            <span class="ih__divider-line"></span>
+            <span class="ih__divider-icon" aria-hidden="true">🌿</span>
         </div>
     </div>
 </section>
@@ -254,16 +404,16 @@
                      alt="Premium Farmland Investment - HHectare"
                      title="Agricultural Land | HHectare">
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-6 about-us-section">
                 <div class="section-label">About Us</div>
-                <h2 class="section-title" style="font-size: 1.7rem;">Building Wealth Through Farmland Investments</h2>
-                <p style="color: var(--text-muted); line-height: 1.8; margin-bottom: 1.5rem; font-size: 16px;">
+                <h2 class="section-title">Building Wealth Through Farmland Investments</h2>
+                <p style="color: var(--text-muted); line-height: 1.8; margin-bottom: 1.5rem">
                     HHectare helps investors access professionally managed farmland opportunities designed for long-term appreciation and passive agricultural income.
                 </p>
-                <p style="color: var(--text-muted); line-height: 1.8; margin-bottom: 1.5rem; font-size: 16px;">
+                <p style="color: var(--text-muted); line-height: 1.8; margin-bottom: 1.5rem">
                     We focus on carefully selected farmland projects that combine ownership, security, sustainability, and future growth potential. Our mission is to simplify farmland investing through transparent processes, verified documentation, and guided support.
                 </p>
-                <p style="color: var(--text-muted); line-height: 1.8; font-size: 16px;">
+                <p style="color: var(--text-muted); line-height: 1.8">
                     Whether you are a first-time investor or looking to diversify your portfolio with real assets, HHectare provides access to farmland opportunities backed by professional project planning and long-term vision.
                 </p>
             </div>
@@ -272,7 +422,7 @@
 </section>
 
 <!-- Statistics Section -->
-<section style="background: #ffffff; padding: clamp(28px, 6vw, 48px) 0; border-bottom: 1px solid #E5E7EB;">
+<section class="why-invest-section" style="background: #ffffff; padding: clamp(28px, 6vw, 48px) 0; border-bottom: 1px solid #E5E7EB; margin-bottom: 40px;">
     <div class="container" style="max-width: 1440px;">
         <div class="row align-items-center stats-row">
             <div class="col-6 col-md-3 text-center stat-col">
@@ -316,12 +466,12 @@
 </section>
 
 <!-- Why Invest Section -->
-<section class="why" style="background: linear-gradient(135deg, #0F6A3C 0%, #0A4D2C 100%); padding: clamp(40px, 8vw, 72px) clamp(20px, 5vw, 48px); position: relative;">
+<section class="why why-invest-section" style="background: linear-gradient(135deg, #0F6A3C 0%, #0A4D2C 100%); padding: clamp(40px, 8vw, 72px) clamp(20px, 5vw, 48px); position: relative;">
     <div class="section-inner">
         <div class="why-header text-center">
-            <div class="section-label" style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); color: #ffffff;">Why Invest With Us</div>
-            <h2 style="color: #ffffff !important; font-size:1.9rem !important; font-family: var(--font-body); font-weight: 700; line-height: 1.2; margin-bottom: 14px;">A trusted approach to farmland ownership</h2>
-            <p style="max-width: 700px; color: rgba(255, 255, 255, 0.95) !important; font-size: 15px !important; line-height: 1.7; text-align: center; margin: 0 auto;">From verification to long-term value creation, we ensure every step is secure and transparent.</p>
+            <div class="section-label section-label--light" style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); color: white;">Why Invest With Us</div>
+            <h2 style="color: white; font-family: var(--font-body); line-height: 1.2; margin-bottom: 14px">A trusted approach to farmland ownership</h2>
+            <p style="max-width: 700px; color: white; line-height: 1.7; text-align: center; margin: 0 auto">From verification to long-term value creation, we ensure every step is secure and transparent.</p>
         </div>
         <div class="row g-4 mt-4">
             <div class="col-lg-3 col-md-6">
@@ -329,8 +479,8 @@
                     <div style="width: 45px; height: 45px; margin: 0 auto 20px; background: linear-gradient(135deg, #0F6A3C 0%, #0A4D2C 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                         <i class="bi bi-check-circle" style="font-size: 24px; color: #ffffff;"></i>
                     </div>
-                    <h3 style="font-family: var(--font-heading); font-size: 1.4rem; font-weight: 700; color: #ffffff; margin-bottom: 12px;">Verified Farmland</h3>
-                    <p style="font-size: 15px; line-height: 1.6; color: #ffffff;">Clear title verification and legal documentation for every project.</p>
+                    <h3 style="font-family: var(--font-heading) font-weight: 700; color: #ffffff; margin-bottom: 12px">Verified Farmland</h3>
+                    <p style="line-height: 1.6; color: #ffffff">Clear title verification and legal documentation for every project.</p>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6">
@@ -338,8 +488,8 @@
                     <div style="width: 45px; height: 45px; margin: 0 auto 20px; background: linear-gradient(135deg, #0F6A3C 0%, #0A4D2C 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                         <i class="bi bi-tree" style="font-size: 24px; color: #ffffff;"></i>
                     </div>
-                    <h3 style="font-family: var(--font-heading); font-size: 1.4rem; font-weight: 700; color: #ffffff; margin-bottom: 12px;">Managed Projects</h3>
-                    <p style="font-size: 15px; line-height: 1.6; color: #ffffff;">Plantation and maintenance support designed for long-term growth.</p>
+                    <h3 style="font-family: var(--font-heading) font-weight: 700; color: #ffffff; margin-bottom: 12px">Managed Projects</h3>
+                    <p style="line-height: 1.6; color: #ffffff">Plantation and maintenance support designed for long-term growth.</p>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6">
@@ -347,8 +497,8 @@
                     <div style="width: 45px; height: 45px; margin: 0 auto 20px; background: linear-gradient(135deg, #0F6A3C 0%, #0A4D2C 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                         <i class="bi bi-geo-alt" style="font-size: 24px; color: #ffffff;"></i>
                     </div>
-                    <h3 style="font-family: var(--font-heading); font-size: 1.4rem; font-weight: 700; color: #ffffff; margin-bottom: 12px;">Site Visit Assistance</h3>
-                    <p style="font-size: 15px; line-height: 1.6; color: #ffffff;">Visit projects before investing and make informed decisions.</p>
+                    <h3 style="font-family: var(--font-heading) font-weight: 700; color: #ffffff; margin-bottom: 12px">Site Visit Assistance</h3>
+                    <p style="line-height: 1.6; color: #ffffff">Visit projects before investing and make informed decisions.</p>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6">
@@ -356,8 +506,8 @@
                     <div style="width: 45px; height: 45px; margin: 0 auto 20px; background: linear-gradient(135deg, #0F6A3C 0%, #0A4D2C 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                         <i class="bi bi-graph-up-arrow" style="font-size: 24px; color: #ffffff;"></i>
                     </div>
-                    <h3 style="font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700; color: #ffffff; margin-bottom: 15px;">Long-Term Value</h3>
-                    <p style="font-size: 12px; line-height: 1.6; color: #ffffff;">Benefit from land appreciation and agricultural potential.</p>
+                    <h3 style="font-family: var(--font-heading) font-weight: 700; color: #ffffff; margin-bottom: 15px">Long-Term Value</h3>
+                    <p style="line-height: 1.6; color: #ffffff">Benefit from land appreciation and agricultural potential.</p>
                 </div>
             </div>
         </div>
@@ -373,8 +523,8 @@
                     <div style="width: 45px; height: 45px; margin: 0 auto 24px; background: linear-gradient(135deg, #F4B400 0%, #E6A328 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                         <i class="bi bi-bullseye" style="font-size: 24px; color: #ffffff;"></i>
                     </div>
-                    <h3 style="font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700; color: #0F6A3C; margin-bottom: 16px;">Our Mission</h3>
-                    <p style="font-size: 17px; line-height: 1.7; color: #6B7280;">To make farmland ownership accessible, transparent, and rewarding for modern investors seeking long-term wealth creation through real assets.</p>
+                    <h3 style="font-family: var(--font-heading) font-weight: 700; color: #0F6A3C; margin-bottom: 16px">Our Mission</h3>
+                    <p style="line-height: 1.7; color: #6B7280">To make farmland ownership accessible, transparent, and rewarding for modern investors seeking long-term wealth creation through real assets.</p>
                 </div>
             </div>
             <div class="col-lg-6">
@@ -382,8 +532,8 @@
                     <div style="width:45px; height: 45px; margin: 0 auto 24px; background: linear-gradient(135deg, #F4B400 0%, #E6A328 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                         <i class="bi bi-eye" style="font-size: 24px; color: #ffffff;"></i>
                     </div>
-                    <h3 style="font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700; color: #0F6A3C; margin-bottom: 16px;">Our Vision</h3>
-                    <p style="font-size: 17px; line-height: 1.7; color: #6B7280;">To become a trusted platform for farmland investments by connecting investors with professionally managed agricultural opportunities across India.</p>
+                    <h3 style="font-family: var(--font-heading) font-weight: 700; color: #0F6A3C; margin-bottom: 16px">Our Vision</h3>
+                    <p style="line-height: 1.7; color: #6B7280">To become a trusted platform for farmland investments by connecting investors with professionally managed agricultural opportunities across India.</p>
                 </div>
             </div>
         </div>
@@ -397,13 +547,13 @@
         <div class="leaf-decoration leaf-decoration-right">🌿</div>
         <div class="cta-banner-content">
             <div>
-                
+                <div class="cta-banner-icon">🌱</div>
                 <h2 class="cta-banner-title">Ready to Own Premium Farmland?</h2>
                 <p class="cta-banner-description">Explore verified farmland opportunities and build long-term wealth through land ownership.</p>
             </div>
             <div class="cta-banner-buttons">
                 <a href="{% url 'buy:property_search' %}" class="btn-cta-yellow">Explore Investment Opportunities</a>
-                
+                <a href="{% url 'public:contact' %}" class="btn-cta-outline">Talk to Advisor</a>
             </div>
         </div>
     </div>

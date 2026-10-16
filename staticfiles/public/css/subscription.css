@@ -37,6 +37,19 @@
     display: flex;
     align-items: center;
 }
+.subscription-hero-text {
+    background: var(--subscription-primary);  
+    padding: 32px 0;
+    text-align: center;
+    color: white;
+}
+
+.subscription-hero-text .subscription-hero-features {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 24px;
+}
 
 .subscription-hero-overlay {
     position: absolute;
@@ -76,7 +89,6 @@
 .subscription-hero-description {
     font-size: var(--font-body-size);
     line-height: var(--line-height-body);
-    margin-bottom: 30px;
     color: rgba(255, 255, 255, 0.9);
 }
 

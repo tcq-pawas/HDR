@@ -186,7 +186,20 @@
     .carousel-dot:hover {
         background: #F4B400;
     }
+
+    .properties-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 1468px) {
+  .properties-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
     
+<<<<<<< HEAD
     /* View More Button */
     .view-more-properties-wrapper {
         display: flex;
@@ -224,6 +237,31 @@
     }
 
     /* Responsive Design */
+=======
+    #area-price-filter-container{
+        margin-left: 80px;
+    }
+
+    @media (min-width: 1024px) and (max-width: 1439px) {
+        .form-agri-land-for-sale {
+            width: 100%;
+            max-width: 710px;
+        }
+    }
+
+    @media (min-width: 1440px) and (max-width: 2558px) {
+        .form-agri-land-for-sale {
+            max-width: 830px;
+        }
+    }
+
+    @media (min-width: 2559px) and (max-width: 2560px) {
+        .form-agri-land-for-sale {
+            max-width: 1520px;
+        }
+    }    
+
+>>>>>>> c6f51b16d7d1359e33209f5f2da0fdb5f09677e3
     @media (max-width: 1200px) {
         .properties-grid {
             grid-template-columns: repeat(2, 1fr) !important;
@@ -257,6 +295,10 @@
     }
     
     @media (max-width: 768px) {
+        #property-filter-box {
+           margin-top: 37px;
+        }
+
         /* Single column on mobile */
         .properties-grid {
             grid-template-columns: 1fr !important;
@@ -386,15 +428,59 @@
             font-size: 0.9rem !important;
             max-width: 280px !important;
         }
+        
+        #area-price-filter-container{
+        margin-left: 0;
+        }
+        .form-agri-land-headline{
+            padding:50px 30px;
+            text-align: center;
+        }
     }
-</style>
+
+    /* Shared page typography: keep headings and supporting copy consistent. */
+    body.site-public :is(h1, h2, h3, h4) {
+        font-family: var(--font-heading, Inter, Arial, sans-serif) !important;
+        line-height: 1.2 !important;
+        letter-spacing: -0.02em;
+    }
+    body.site-public h1 {
+        font-size: clamp(30px, 2.3vw, 38px) !important;
+        font-weight: 700 !important;
+    }
+    body.site-public h2 {
+        font-size: clamp(24px, 1.8vw, 29px) !important;
+        font-weight: 700 !important;
+    }
+    body.site-public h3 {
+        font-size: clamp(18px, 1.3vw, 21px) !important;
+        font-weight: 600 !important;
+    }
+    body.site-public h4 {
+        font-size: 17px !important;
+        font-weight: 600 !important;
+    }
+    body.site-public p {
+        font-size: 15px !important;
+        line-height: 1.6 !important;
+    }
+    body.site-public :is(.ih__sub, .hero-subtitle, .section-subtitle) {
+        font-size: 16px !important;
+        font-weight: 400 !important;
+    }
+    @media (max-width: 767.98px) {
+        body.site-public h1 { font-size: clamp(28px, 7vw, 34px) !important; }
+        body.site-public h2 { font-size: clamp(23px, 5.5vw, 27px) !important; }
+        body.site-public p { font-size: 14px !important; }
+        body.site-public :is(.ih__sub, .hero-subtitle, .section-subtitle) { font-size: 15px !important; }
+    }</style>
 {% endblock %}
 
 {% block inner_hero %}
-<section class="hero-banner" style="background: url('{% static 'images/hero-img-all.png' %}') center/cover no-repeat; height: 400px; display: flex; align-items: center; justify-content: center; position: relative;">
-    <div class="hero-content text-center" style="color: white; z-index: 2;">
-        <h1 style=" font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; text-shadow: 0 2px 8px rgba(0,0,0,0.3); color: white;">Buy Farmland & Agricultural Land</h1>
-        <p style="font-family: 'Inter', sans-serif; font-size: 1.1rem;">Invest in your future with the perfect property 🌿</p>
+<section class="ih" style="--ih-bg: url('{% static 'images/hero-img-all.png' %}')">
+    <div class="ih__content">
+        <h1 class="ih__title">Buy Farmland &amp; Agricultural Land</h1>
+        <p class="ih__sub">Invest in your future with the perfect property 🌿</p>
     </div>
 </section>
 {% endblock %}
@@ -403,19 +489,19 @@
 <div style="background: #FAFAF7; min-height: 100vh;">
     <!-- Floating Search Panel -->
     <div style="padding: 0 24px; position: relative; margin-top: -60px; z-index: 10;">
-        <div style="background: white; border-radius: 18px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+        <div style="background: white; border-radius: 18px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);" id="property-filter-box">
             <form method="get" class="search-form">
                 <div class="search-form-row">
                     <!-- Location -->
                     <div class="search-form-field location-autocomplete-wrap">
                         <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #6b7a7a; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Location</label>
-                        <input type="text" id="location-search" name="location" placeholder="Search locations..." value="{{ filters.location }}" autocomplete="off" style="width: 100%; height: 52px; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0 16px; font-size: 0.95rem; font-weight: 500; background: #f8fafc; transition: 0.2s;">
+                        <input type="text" id="location-search" name="location" placeholder="Search locations..." value="{{ filters.location }}" autocomplete="off" style="width: 100%; height: 52px; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0 16px; font-size: 0.95rem; font-weight: 500; background: #f8fafc; transition: 0.2s;" >
                         <div id="location-suggestions" class="location-suggestions" role="listbox"></div>
                     </div>
                     <!-- Price -->
                     <div class="search-form-field">
                         <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #6b7a7a; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Price</label>
-                        <select name="price_range" style="width: 100%; height: 52px; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0 16px; font-size: 0.95rem; font-weight: 500; background: #f8fafc; transition: 0.2s;">
+                        <select id="price-select-box" name="price_range" style="width: 100%; height: 52px; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0 16px; font-size: 0.95rem; font-weight: 500; background: #f8fafc; transition: 0.2s;">
                             <option value="">All Prices</option>
                             <option value="under_10_lac" {% if filters.price_range == 'under_10_lac' %}selected{% endif %}>Under ₹10 Lac</option>
                             <option value="10_50_lac" {% if filters.price_range == '10_50_lac' %}selected{% endif %}>₹10 Lac - ₹50 Lac</option>
@@ -495,7 +581,7 @@
     </div>
 
     <!-- Main Content: 38% Map, 62% Listings -->
-    <div style="padding: 24px; display: grid; grid-template-columns: 38% 62%; gap: 24px;">
+    <div style="padding:54px 24px; display: grid; grid-template-columns: 38% 62%; gap: 24px;">
         <!-- Map Section -->
         <div style="position: sticky; top: 24px; height: calc(100vh - 200px); min-height: 500px; border-radius: 18px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-top: 38px;">
             <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2629.518770529693!2d83.37602480010356!3d26.798350293782747!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399145b795d2cae9%3A0x98b3202d1e49fd25!2sHeyDay%20Realty%20Private%20Limited!5e1!3m2!1sen!2sin!4v1790075653843!5m2!1sen!2sin" width="100%" height="100%" style="border:0; display:block;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
@@ -514,16 +600,16 @@
         </div>
 
         <!-- Listing Section -->
-        <div>
+        <div class="form-agri-land-for-sale">
             <!-- Listings Header -->
             <div style="margin-bottom: 24px;">
-                <h1 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: #1a2e2a; margin-bottom: 8px; padding-top: 30px;">Farmland and Agriculture Land for Sale</h1>
-                <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
+                <h1 class="form-agri-land-headline" style="font-family: 'Playfair Display', serif padding-bottom:20px color: #1a2e2a; margin-bottom: 8px; padding-top: 40px">Farmland and Agriculture Land for Sale</h1>
+                <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding:10px 20px">
                     <div style="font-size: 12px; color: #6b7a7a;">
                         <a href="{% url 'public:home' %}" style="color: #0F6A3C; text-decoration: none; font-size: 17px; font-weight: 500;">Home</a> &gt; <span style="color: #6b7a7a; font-size: 17px;">Map</span>
                     </div>
                     <div style="background: #0F6A3C; color: white; padding: 10px 16px; border-radius: 20px; font-size: 12px; font-weight: 600;">{{ total_results }} Results</div>
-                    <div style="margin-left: 80px;">
+                    <div id="area-price-filter-container">
                         <form method="get" style="display: inline;">
                             {% for key, value in filters.items %}
                                 {% if key != 'sort_by' %}
@@ -544,7 +630,7 @@
 
             <!-- Properties Grid -->
             {% if properties %}
-                <div class="properties-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
+                <div class="properties-grid" style="">
                     {% for property in properties %}
                         <div class="property-card property-listing-card" data-property-id="{{ property.id }}" style="background: white; border-radius: 18px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); transition: all 0.3s; display: flex; flex-direction: column;">
                             <!-- Image Slider -->
@@ -587,7 +673,7 @@
                                 <div style="flex-grow: 1;">
                                     <div style="font-size: 12px; color: #6b7a7a; margin-bottom: 4px;">{{ property.location }}</div>
                                     <div style="font-size: 12px; color: #0F6A3C; font-weight: 600; margin-bottom: 8px;">{{ property.get_property_type_display }}</div>
-                                    <h3 style="font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 600; color: #1a2e2a; margin-bottom: 8px; line-height: 1.4;">{{ property.title }}</h3>
+                                    <h3 style="font-family: 'Playfair Display', serif font-weight: 600; color: #1a2e2a; margin-bottom: 8px; line-height: 1.4">{{ property.title }}</h3>
                                     <div style="font-size: 14px; color: #6b7a7a; margin-bottom: 12px;">{{ property.area_sqft }} sqft</div>
                                     <div style="font-size: 18px; font-weight: 700; color: #0F6A3C; margin-bottom: 16px;">₹{{ property.price }}</div>
                                 </div>
@@ -603,7 +689,7 @@
                 </div>
 
                 <!-- View More Button -->
-                <div class="view-more-properties-wrapper">
+                <div class="view-more-properties-wrapper" style="margin-top: 7px;">
                     <button type="button" class="view-more-properties-btn" aria-expanded="false" aria-label="Show more properties">
                         <span>View More</span>
                         <i class="bi bi-chevron-down"></i>
@@ -632,8 +718,8 @@
                 {% endif %}
             {% else %}
                 <div style="text-align: center; padding: 60px 20px; background: white; border-radius: 18px;">
-                    <h3 style="font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: #1a2e2a; margin-bottom: 12px;">No Properties Found</h3>
-                    <p style="color: #6b7a7a; margin-bottom: 24px; font-size: 17px;">Try adjusting your filters or search terms to find properties.</p>
+                    <h3 style="font-family: 'Playfair Display', serif font-weight: 700; color: #1a2e2a; margin-bottom: 12px">No Properties Found</h3>
+                    <p style="color: #6b7a7a; margin-bottom: 24px">Try adjusting your filters or search terms to find properties.</p>
                     <a href="{% url 'buy:property_search' %}" style="display: inline-block; padding: 12px 32px; background: #F4B400; color: white; border: none; border-radius: 12px; font-weight: 600; text-decoration: none; transition: 0.2s;">Clear All Filters</a>
                 </div>
             {% endif %}

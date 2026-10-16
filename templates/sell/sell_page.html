@@ -91,7 +91,6 @@
     z-index: 1;
     color: white;
     max-width: 800px;
-    padding: 0 20px;
 }
 
 .sell-hero-title {
@@ -207,7 +206,7 @@
 .get-started-card {
     max-width: 600px;
     margin: 0 auto;
-    padding: 50px;
+    padding: 30px 50px;
     display: flex;
     align-items: center;
     gap: 30px;
@@ -241,6 +240,7 @@
 .security-text {
     text-align: center;
     margin-top: 1.5rem;
+    padding: 0px 10px;
     color: var(--primary-green);
     display: flex;
     align-items: center;
@@ -299,6 +299,7 @@
     color: white;
     border: none;
     border-radius: 999px;
+    font-size: 14px !important;
     height: 48px;
     padding: 0 32px;
     font-weight: 600;
@@ -323,7 +324,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
+    flex-wrap: nowrap;
     gap: 40px;
     min-height: 420px;
     border: 1px solid #ECECEC;
@@ -506,6 +508,12 @@
     }
 }
 
+@media (min-width: 769px) {
+    .support-card {
+        margin: 0 40px;
+    }
+}
+
 @media (max-width: 767px) {
     .sell-hero {
         min-height: 420px;
@@ -529,19 +537,64 @@
     .sell-hero {
         min-height: 380px;
     }
+
+    .get-started-card{
+        padding:30px 20px;
+    }
 }
-</style>
+
+@media (max-width: 320px) {
+    .btn-whatsapp {
+        font-size: 12px !important;
+    }
+}
+
+    /* Shared page typography: keep headings and supporting copy consistent. */
+    body.site-public :is(h1, h2, h3, h4) {
+        font-family: var(--font-heading, Inter, Arial, sans-serif) !important;
+        line-height: 1.2 !important;
+        letter-spacing: -0.02em;
+    }
+    body.site-public h1 {
+        font-size: clamp(30px, 2.3vw, 38px) !important;
+        font-weight: 700 !important;
+    }
+    body.site-public h2 {
+        font-size: clamp(24px, 1.8vw, 29px) !important;
+        font-weight: 700 !important;
+    }
+    body.site-public h3 {
+        font-size: clamp(18px, 1.3vw, 21px) !important;
+        font-weight: 600 !important;
+    }
+    body.site-public h4 {
+        font-size: 17px !important;
+        font-weight: 600 !important;
+    }
+    body.site-public p {
+        font-size: 15px !important;
+        line-height: 1.6 !important;
+    }
+    body.site-public :is(.ih__sub, .hero-subtitle, .section-subtitle) {
+        font-size: 16px !important;
+        font-weight: 400 !important;
+    }
+    @media (max-width: 767.98px) {
+        body.site-public h1 { font-size: clamp(28px, 7vw, 34px) !important; }
+        body.site-public h2 { font-size: clamp(23px, 5.5vw, 27px) !important; }
+        body.site-public p { font-size: 14px !important; }
+        body.site-public :is(.ih__sub, .hero-subtitle, .section-subtitle) { font-size: 15px !important; }
+    }</style>
 {% endblock %}
 
 {% block inner_hero %}
-<section class="sell-hero">
-    <div class="sell-hero-content">
-        <h1 class="sell-hero-title" style="font-size: 2.5rem;">Sell Your Farmland</h1>
-        <p class="sell-hero-subtitle" style="font-size: 20px !important;">Connect with serious buyers and investors looking for verified agricultural land opportunities.</p>
-        <div class="sell-hero-divider">
-            <span>🌿</span>
-            <span>✦</span>
-            <span>🌿</span>
+<section class="ih" style="--ih-bg: url('{% static 'images/hero-img-all.png' %}')">
+    <div class="ih__content">
+        <h1 class="ih__title">Sell Your Farmland</h1>
+        <p class="ih__sub">Connect with serious buyers and investors looking for verified agricultural land opportunities.</p>
+        <div class="ih__divider">
+            <span class="ih__divider-line"></span>
+            <span class="ih__divider-icon" aria-hidden="true">🌿</span>
         </div>
     </div>
 </section>
@@ -553,7 +606,7 @@
 <section class="sell-section">
     <div class="container" style="max-width: 2500px; margin: auto;">
         <h2 class="sell-section-heading">LET'S GET YOU STARTED</h2>
-        <p class="sell-section-subtitle" style="font-size: 18px !important;">Choose the best way to get started with listing your farmland.</p>
+        <p class="sell-section-subtitle">Choose the best way to get started with listing your farmland.</p>
         
         <div class="sell-card get-started-card">
             <div class="get-started-icon">
@@ -561,14 +614,14 @@
             </div>
             <div class="get-started-content">
                 {% if user.is_authenticated %}
-                    <h3 style="font-size: 1.3rem !important;">Welcome back, {{ user.first_name|default:user.username }}!</h3>
-                    <p style="font-size: 15px !important;">Access your agent dashboard to manage your property listings.</p>
+                    <h3>Welcome back, {{ user.first_name|default:user.username }}!</h3>
+                    <p>Access your agent dashboard to manage your property listings.</p>
                     <a href="{% url 'agent:dashboard' %}" class="btn-sell-primary" style="font-size: 12px !important;">
                         <i class="bi bi-speedometer2"></i> Go To Dashboard
                     </a>
                 {% else %}
-                    <h3 style="font-size: 1.3rem !important;">Login to Start Selling</h3>
-                    <p style="font-size: 12px !important;">Sign in with your account to create and manage property listings.</p>
+                    <h3>Login to Start Selling</h3>
+                    <p>Sign in with your account to create and manage property listings.</p>
                     <a href="{% url 'auth:login' %}" class="btn-sell-primary" style="font-size: 12px !important;">
                         <i class="bi bi-box-arrow-in-right"></i> Login Now
                     </a>
@@ -594,10 +647,10 @@
                 <i class="bi bi-whatsapp"></i>
             </div>
             <div class="support-content">
-                <h3 style="font-size: 1.5rem !important;">Quick Chat Support</h3>
-                <p style="font-size: 16px !important;">Have questions about selling your property? Our experts are available on WhatsApp to help you 24/7.</p>
-                <p style="font-size: 16px !important;">We'll guide you through every step of the process and help you get the best deal for your land.</p>
-                <a href="https://wa.me/919506688688" target="_blank" class="btn-whatsapp" style="font-size: 14px !important;">
+                <h3>Quick Chat Support</h3>
+                <p>Have questions about selling your property? Our experts are available on WhatsApp to help you 24/7.</p>
+                <p>We'll guide you through every step of the process and help you get the best deal for your land.</p>
+                <a href="https://wa.me/919506688688" target="_blank" class="btn-whatsapp">
                     <i class="bi bi-whatsapp"></i> Chat With Us on WhatsApp
                 </a>
             </div>
