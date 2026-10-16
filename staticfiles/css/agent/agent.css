@@ -13027,6 +13027,106 @@ tbody tr:hover {
 }
 
 /* ==========================================================================
+   Desktop sidebar - menu items clip hone se bachane ke liye
+   Pehle nav (aur uske andar nav-list) apna alag hidden scroll banata tha,
+   isliye profile card ke baad sirf 3-4 items dikhte the aur baaki chhup jate
+   the (Leads aadha kata dikhta tha). Ab poora sidebar ek saath scroll hota hai:
+   bade screen pe Logout neeche pinned, chhote screen pe sab kuch scroll.
+   ========================================================================== */
+.agent-sidebar .sidebar-content {
+    height: auto;
+    min-height: 100%;
+}
+
+.agent-sidebar .sidebar-nav {
+    flex: 0 0 auto;
+    overflow-y: visible;
+}
+
+.agent-sidebar .sidebar-nav .nav-list {
+    max-height: none;
+    overflow-y: visible;
+}
+
+.agent-sidebar .sidebar-nav .nav-item {
+    margin-bottom: 6px;
+}
+
+.agent-sidebar .sidebar-footer {
+    margin-top: auto;
+    flex-shrink: 0;
+}
+
+/* ==========================================================================
+   Lead Details page - Quick Actions + detail grid
+   Sirf .lead-detail-container ke andar lagega.
+   ========================================================================== */
+.lead-detail-container .detail-grid {
+    align-items: start;
+}
+
+.lead-detail-container .lead-quick-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.lead-detail-container .lead-quick-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.7rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    line-height: 1.2;
+    text-decoration: none;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.lead-detail-container .lead-quick-btn--primary {
+    color: #ffffff;
+    background-color: #005427;
+    border-color: #005427;
+}
+
+.lead-detail-container .lead-quick-btn--primary:hover,
+.lead-detail-container .lead-quick-btn--primary:focus {
+    color: #ffffff;
+    background-color: #003d1c;
+    border-color: #003d1c;
+}
+
+.lead-detail-container .lead-quick-btn--success {
+    color: #ffffff;
+    background-color: #1fa855;
+    border-color: #1fa855;
+}
+
+.lead-detail-container .lead-quick-btn--success:hover,
+.lead-detail-container .lead-quick-btn--success:focus {
+    color: #ffffff;
+    background-color: #178f47;
+    border-color: #178f47;
+}
+
+.lead-detail-container .lead-quick-btn--outline {
+    color: #005427;
+    background-color: #ffffff;
+    border-color: #005427;
+}
+
+.lead-detail-container .lead-quick-btn--outline:hover,
+.lead-detail-container .lead-quick-btn--outline:focus {
+    color: #005427;
+    background-color: #e8f5ee;
+    border-color: #005427;
+}
+
+/* ==========================================================================
    Agent Settings page (settings.html) - sirf .settings-page ke andar lagega
    Global `.row { gap: 32px }` / `.col-md-4 { 45% }` ki wajah se Bootstrap grid
    toot raha tha, isliye yahan apna CSS grid use kiya hai (global rules untouched).
