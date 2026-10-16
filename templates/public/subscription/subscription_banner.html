@@ -1,0 +1,86 @@
+{% load static %}
+<style>
+  .agent-subscription-banner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 400px;
+    padding: 22px 7%;
+    color: #fff;
+    text-align: center;
+    background: url("{% static 'images/hero-img-all.png' %}") center/cover no-repeat;
+  }
+
+  .agent-subscription-banner::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.42) 0%,
+      rgba(0, 0, 0, 0.18) 35%,
+      rgba(0, 0, 0, 0.08) 55%,
+      rgba(0, 0, 0, 0.38) 100%
+    );
+  }
+
+  .agent-banner-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .agent-banner-title {
+    margin: 0 0 16px;
+    font-size: 35px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .agent-banner-quote {
+    margin: 0 0 16px;
+    font-size: clamp(16px, 2vw, 20px);
+    color: #fff;
+  }
+
+  .agent-banner-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .agent-divider-line {
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: #f4b400;
+  }
+
+  .agent-divider-icon {
+    font-size: 1.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .agent-subscription-banner {
+      height: 240px;
+    }
+    .agent-banner-title {
+      font-size: 22px;
+    }
+  }
+</style>
+
+<div id="agent-subscription-banner" class="agent-subscription-banner">
+  <div class="agent-banner-content">
+    <h1 class="agent-banner-title">Subscription for Property Agents</h1>
+    <p class="agent-banner-quote">Subscription Plans for Growing Agents</p>
+    <div class="agent-banner-divider">
+      <span class="agent-divider-line"></span>
+      <span class="agent-divider-icon" aria-hidden="true">🔑</span>
+    </div>
+  </div>
+</div>
