@@ -15,56 +15,40 @@
 
 <div class="roi-data-page">
     <!-- ROI Summary Cards -->
-    <div class="row mb-4 roi-summary-cards">
-        <div class="col-md-3">
-            <div class="card roi-card bg-success text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h4 class="card-title">${{ roi_analysis.total_returns|intcomma }}</h4>
-                            <p class="card-text">Total Returns</p>
-                        </div>
-                        <i class="fas fa-dollar-sign fa-2x opacity-75"></i>
-                    </div>
+    <div class="row g-4 mb-4 kpi-row roi-summary-cards">
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="bg-success text-white kpi-card">
+                <h5>Total Returns</h5>
+                <h2 class="fw-bold fs-2">${{ roi_analysis.total_returns|intcomma }}</h2>
+                <div class="kpi-icon">
+                    <i class="fas fa-dollar-sign"></i>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card roi-card bg-primary text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h4 class="card-title">{{ roi_analysis.total_roi_percentage|floatformat:2 }}%</h4>
-                            <p class="card-text">Average ROI</p>
-                        </div>
-                        <i class="fas fa-percentage fa-2x opacity-75"></i>
-                    </div>
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="bg-primary text-white kpi-card">
+                <h5>Average ROI</h5>
+                <h2 class="fw-bold fs-2">{{ roi_analysis.total_roi_percentage|floatformat:2 }}%</h2>
+                <div class="kpi-icon">
+                    <i class="fas fa-percentage"></i>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card roi-card bg-info text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h4 class="card-title">{{ roi_analysis.active_roi_records }}</h4>
-                            <p class="card-text">Active Records</p>
-                        </div>
-                        <i class="fas fa-chart-line fa-2x opacity-75"></i>
-                    </div>
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="bg-info text-white kpi-card">
+                <h5>Active Records</h5>
+                <h2 class="fw-bold fs-2">{{ roi_analysis.active_roi_records }}</h2>
+                <div class="kpi-icon">
+                    <i class="fas fa-chart-line"></i>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card roi-card bg-warning text-white">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <h4 class="card-title">{{ roi_analysis.monthly_returns|length }}</h4>
-                            <p class="card-text">Months Tracked</p>
-                        </div>
-                        <i class="fas fa-calendar-alt fa-2x opacity-75"></i>
-                    </div>
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="bg-warning text-white kpi-card">
+                <h5>Months Tracked</h5>
+                <h2 class="fw-bold fs-2">{{ roi_analysis.monthly_returns|length }}</h2>
+                <div class="kpi-icon">
+                    <i class="fas fa-calendar-alt"></i>
                 </div>
             </div>
         </div>

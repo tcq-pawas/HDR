@@ -259,7 +259,7 @@ footer a:hover,
 
 .btn-outline-primary:hover {
     background: var(--gradient-brand);
-    border-color: var(--primary-blue);
+ 
     color: #fff;
     box-shadow: 0 4px 15px rgba(4, 34, 214, 0.3);
     transform: translateY(-2px);

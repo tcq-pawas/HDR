@@ -92,6 +92,15 @@
     display: none;
 }
 
+/* ---------- Wizard step visibility ---------- */
+.wizard-step {
+    display: none;
+}
+
+.wizard-step.active {
+    display: block;
+}
+
 /* ---------- Form sections ---------- */
 .add-land-page .form-section {
     background: #fff;
@@ -729,12 +738,14 @@
 }
 
 .property-form-v2 .btn-primary {
-    background: #1E73BE;
+   
     color: white;
 }
 
+
+
 .property-form-v2 .btn-primary:hover {
-    background: #155a9e;
+    background: linear-gradient(135deg, var(--primary) 0%, #012314 100%);
     transform: translateY(-2px);
 }
 

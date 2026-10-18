@@ -8,25 +8,24 @@
 
 {% block content %}
 <!-- Hero Section -->
-<section class="agents-hero">
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-        <h1 class="hero-title">Find Trusted Real Estate Agents</h1>
-        <p class="hero-subtitle">Connect with verified and experienced agents near you.</p>
-        <div class="hero-features">
-            <div class="hero-feature">
+<section class="ih" style="--ih-bg: url('{% static 'images/hero-img-all.png' %}')">
+    <div class="ih__content">
+        <h1 class="ih__title">Find Trusted Real Estate Agents</h1>
+        <p class="ih__sub">Connect with verified and experienced agents near you.</p>
+        <div class="ih__strip">
+            <div class="ih__item">
                 <i class="fas fa-check-circle"></i>
                 <span>Verified Agents</span>
             </div>
-            <div class="hero-feature">
+            <div class="ih__item">
                 <i class="fas fa-user-tie"></i>
                 <span>Experienced Professionals</span>
             </div>
-            <div class="hero-feature">
+            <div class="ih__item">
                 <i class="fas fa-map-marker-alt"></i>
                 <span>Local Expertise</span>
             </div>
-            <div class="hero-feature">
+            <div class="ih__item">
                 <i class="fas fa-star"></i>
                 <span>Top Rated</span>
             </div>
@@ -157,8 +156,8 @@
         {% else %}
             <div class="empty-state">
                 <i class="fas fa-user-tie"></i>
-                <h3 style="font-size: 1.3rem !important;">No Agents Found</h3>
-                <p style="font-size: 12px !important;">Try adjusting your search filters or check back later.</p>
+                <h3>No Agents Found</h3>
+                <p>Try adjusting your search filters or check back later.</p>
             </div>
         {% endif %}
     </div>
@@ -1034,7 +1033,43 @@
         margin:0 10px;
     }
 }
-</style>
+
+    /* Shared page typography: keep headings and supporting copy consistent. */
+    body.site-public :is(h1, h2, h3, h4) {
+        font-family: var(--font-heading, Inter, Arial, sans-serif) !important;
+        line-height: 1.2 !important;
+        letter-spacing: -0.02em;
+    }
+    body.site-public h1 {
+        font-size: clamp(30px, 2.3vw, 38px) !important;
+        font-weight: 700 !important;
+    }
+    body.site-public h2 {
+        font-size: clamp(24px, 1.8vw, 29px) !important;
+        font-weight: 700 !important;
+    }
+    body.site-public h3 {
+        font-size: clamp(18px, 1.3vw, 21px) !important;
+        font-weight: 600 !important;
+    }
+    body.site-public h4 {
+        font-size: 17px !important;
+        font-weight: 600 !important;
+    }
+    body.site-public p {
+        font-size: 15px !important;
+        line-height: 1.6 !important;
+    }
+    body.site-public :is(.ih__sub, .hero-subtitle, .section-subtitle) {
+        font-size: 16px !important;
+        font-weight: 400 !important;
+    }
+    @media (max-width: 767.98px) {
+        body.site-public h1 { font-size: clamp(28px, 7vw, 34px) !important; }
+        body.site-public h2 { font-size: clamp(23px, 5.5vw, 27px) !important; }
+        body.site-public p { font-size: 14px !important; }
+        body.site-public :is(.ih__sub, .hero-subtitle, .section-subtitle) { font-size: 15px !important; }
+    }</style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

@@ -746,22 +746,54 @@
             flex-direction: column;
         }
     }
-</style>
+
+    /* Shared page typography: keep headings and supporting copy consistent. */
+    body.site-public :is(h1, h2, h3, h4) {
+        font-family: var(--font-heading, Inter, Arial, sans-serif) !important;
+        line-height: 1.2 !important;
+        letter-spacing: -0.02em;
+    }
+    body.site-public h1 {
+        font-size: clamp(30px, 2.3vw, 38px) !important;
+        font-weight: 700 !important;
+    }
+    body.site-public h2 {
+        font-size: clamp(24px, 1.8vw, 29px) !important;
+        font-weight: 700 !important;
+    }
+    body.site-public h3 {
+        font-size: clamp(18px, 1.3vw, 21px) !important;
+        font-weight: 600 !important;
+    }
+    body.site-public h4 {
+        font-size: 17px !important;
+        font-weight: 600 !important;
+    }
+    body.site-public p {
+        font-size: 15px !important;
+        line-height: 1.6 !important;
+    }
+    body.site-public :is(.ih__sub, .hero-subtitle, .section-subtitle) {
+        font-size: 16px !important;
+        font-weight: 400 !important;
+    }
+    @media (max-width: 767.98px) {
+        body.site-public h1 { font-size: clamp(28px, 7vw, 34px) !important; }
+        body.site-public h2 { font-size: clamp(23px, 5.5vw, 27px) !important; }
+        body.site-public p { font-size: 14px !important; }
+        body.site-public :is(.ih__sub, .hero-subtitle, .section-subtitle) { font-size: 15px !important; }
+    }</style>
 {% endblock %}
 
 {% block inner_hero %}
 
-<section class="contact-hero"
-    style="background-size: cover; background-position: center; height: 400px !important; display: flex; align-items: center; position: relative; text-align: center;">
-    <div class="container">
-        <div class="contact-hero-content">
-            <h1 class="contact-hero-title">Contact HHectare</h1>
-            <p class="contact-hero-subtitle">
-                Let's discuss your farmland investment goals
-            </p>
-            <div class="hero-divider">
-                <i class="bi bi-flower1"></i>
-            </div>
+<section class="ih" style="--ih-bg: url('{% static 'images/hero-img-all.png' %}')">
+    <div class="ih__content">
+        <h1 class="ih__title">Contact HHectare</h1>
+        <p class="ih__sub">Let's discuss your farmland investment goals</p>
+        <div class="ih__divider">
+            <span class="ih__divider-line"></span>
+            <i class="bi bi-flower1 ih__divider-icon" aria-hidden="true"></i>
         </div>
     </div>
 </section>
@@ -776,8 +808,8 @@
         <!-- Header -->
         <div class="text-center mb-5">
             <span class="contact-badge">GET IN TOUCH</span>
-            <h2 class="contact-heading" style="font-size: 1.5rem;">Let's discuss your farmland investment goals</h2>
-            <p class="contact-subtitle" style="font-size: 15px;">
+            <h2 class="contact-heading">Let's discuss your farmland investment goals</h2>
+            <p class="contact-subtitle">
                 Our team is here to help you explore verified farmland investment opportunities.
             </p>
         </div>
@@ -834,28 +866,28 @@
         <div class="why-header">
             <div class="section-label">Get In Touch</div>
             <h2 class="section-title">Let's discuss your farmland investment goals</h2>
-            <p class="section-sub" style="max-width: 700px;">Our team is here to help you explore verified farmland investment opportunities.</p>
+            <p class="section-sub" style="max-width: 700px">Our team is here to help you explore verified farmland investment opportunities.</p>
         </div>
         <div class="invest-grid" style="grid-template-columns: repeat(4, 1fr);">
             <div class="invest-card" style="text-align: center;">
                 <div class="invest-icon" style="margin: 0 auto 16px; background: var(--mint);">📞</div>
                 <h3>Phone</h3>
-                <p style="color: var(--text-mid);">+91 9506 688 688</p>
+                <p style="color: var(--text-mid)">+91 9506 688 688</p>
             </div>
             <div class="invest-card" style="text-align: center;">
                 <div class="invest-icon" style="margin: 0 auto 16px; background: var(--mint);">✉</div>
                 <h3>Email</h3>
-                <p style="color: var(--text-mid);">info@hhectare.com</p>
+                <p style="color: var(--text-mid)">info@hhectare.com</p>
             </div>
             <div class="invest-card" style="text-align: center;">
                 <div class="invest-icon" style="margin: 0 auto 16px; background: var(--mint);">🕐</div>
                 <h3>Office Hours</h3>
-                <p style="color: var(--text-mid);">Mon - Sat<br>9:00 AM – 7:00 PM</p>
+                <p style="color: var(--text-mid)">Mon - Sat<br>9:00 AM – 7:00 PM</p>
             </div>
             <div class="invest-card" style="text-align: center;">
                 <div class="invest-icon" style="margin: 0 auto 16px; background: var(--mint);">📍</div>
                 <h3>Office Location</h3>
-                <p style="color: var(--text-mid);">123 Real Estate Blvd.<br>City, Country</p>
+                <p style="color: var(--text-mid)">123 Real Estate Blvd.<br>City, Country</p>
             </div>
         </div>
     </div>
@@ -869,8 +901,8 @@
             <!-- Left Panel (40%) -->
             <div class="contact-form-left">
                 <span class="contact-form-badge" style="color:#ffffff; text-align: center;">REQUEST A CALL BACK</span>
-                <h2 class="contact-form-heading" style="color:#ffffff; font-size: 1.8rem;">Tell us about your investment requirements</h2>
-                <p class="contact-form-description" style="font-size: 15px;">
+                <h2 class="contact-form-heading" style="color:#ffffff">Tell us about your investment requirements</h2>
+                <p class="contact-form-description">
                     Our team of farmland investment experts is ready to help you find the perfect opportunity that matches your goals and budget.
                 </p>
                 
@@ -959,7 +991,7 @@
             <div class="location-left" style="padding: 0 20px;">
                 <span class="location-badge" style="text-align: center;">VISIT OUR OFFICE</span>
                 <h2 class="location-heading">Schedule a meeting or site visit</h2>
-                <p class="location-description" style="font-size: 14px;">
+                <p class="location-description">
                     Visit our office to discuss your farmland investment goals in person or schedule a site visit to explore available properties.
                 </p>
                 

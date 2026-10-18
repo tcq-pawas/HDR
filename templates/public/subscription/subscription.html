@@ -239,6 +239,8 @@
 {% block content %}
 
 {% if plans %}
+{% include 'public/subscription/subscription_banner.html' %}
+
 
 {% if messages %}
 <div class="container mt-4 mb-0" style="position: relative; z-index: 1000;">
@@ -255,38 +257,30 @@
 {% endif %}
 
 <!-- Hero Banner -->
-<section class="subscription-hero">
-    <div class="subscription-hero-overlay"></div>
+<section class="subscription-hero-text">
     <div class="container">
-        <div class="subscription-hero-content">
-            <div class="subscription-hero-left">
-                <h1 class="subscription-hero-title">Agent Subscription Plans</h1>
-                <p class="subscription-hero-description" style="font-size: 1rem;">Power up your property business with the right plan. List more. Get more leads. Grow more.</p>
-                <div class="subscription-hero-features">
-                    <div class="subscription-hero-feature">
-                        <i class="fa fa-shield"></i>
-                        <span>Secure Payments</span>
-                    </div>
-                    <div class="subscription-hero-feature">
-                        <i class="fa fa-users"></i>
-                        <span>Trusted by Landowners</span>
-                    </div>
-                    <div class="subscription-hero-feature">
-                        <i class="fa fa-user-tie"></i>
-                        <span>10,000+ Active Agents</span>
-                    </div>
-                    <div class="subscription-hero-feature">
-                        <i class="fa fa-headset"></i>
-                        <span>24/7 Priority Support</span>
-                    </div>
-                </div>
+        <p class="subscription-hero-description" style="font-size: 1rem;">Power up your property business with the right plan. List more. Get more leads. Grow more.</p>
+        <div class="subscription-hero-features">
+            <div class="subscription-hero-feature">
+                <i class="fa fa-shield"></i>
+                <span>Secure Payments</span>
             </div>
-            <div class="subscription-hero-right">
-                <img src="{% static 'images/hero.png' %}" alt="Premium Farmhouse" class="subscription-hero-image">
+            <div class="subscription-hero-feature">
+                <i class="fa fa-users"></i>
+                <span>Trusted by Landowners</span>
+            </div>
+            <div class="subscription-hero-feature">
+                <i class="fa fa-user-tie"></i>
+                <span>10,000+ Active Agents</span>
+            </div>
+            <div class="subscription-hero-feature">
+                <i class="fa fa-headset"></i>
+                <span>24/7 Priority Support</span>
             </div>
         </div>
     </div>
 </section>
+            
 
 <!-- Annual Billing Banner -->
 <section class="annual-billing-banner">

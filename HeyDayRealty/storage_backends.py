@@ -3,8 +3,13 @@ from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 import os
 
-# Check if AWS credentials are provided
-USE_S3 = bool(getattr(settings, 'AWS_ACCESS_KEY_ID', None) and getattr(settings, 'AWS_SECRET_ACCESS_KEY', None))
+# Explicit storage mode control: USE_S3_STORAGE=True for S3/Storj, False for local filesystem
+# If not set, defaults to checking for AWS credentials (backward compatibility)
+USE_S3_STORAGE = os.getenv('USE_S3_STORAGE', '').lower() in ('true', '1', 'yes')
+USE_S3_CREDENTIALS = bool(getattr(settings, 'AWS_ACCESS_KEY_ID', None) and getattr(settings, 'AWS_SECRET_ACCESS_KEY', None))
+
+# Use explicit setting if provided, otherwise fall back to credential check
+USE_S3 = USE_S3_STORAGE if os.getenv('USE_S3_STORAGE') else USE_S3_CREDENTIALS
 
 if USE_S3:
     class BaseRoleMediaStorage(S3Boto3Storage):
