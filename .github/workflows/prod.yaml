@@ -104,12 +104,24 @@ jobs:
 
           PROJECT_DIR="/home/ubuntu/HDR"
           BRANCH="Production"
-          DEPLOYMENT_URL="https://x-realtors.in"
+          COMPOSE_FILE="docker-compose.prod.yml"
+          DEPLOYMENT_URL="https://hhectare.com"
 
           cd "$PROJECT_DIR"
 
           echo "🚀 Starting deployment to Production EC2..."
           echo ""
+
+          # Validate production Compose file
+          if [ ! -f "$COMPOSE_FILE" ]; then
+            echo "ERROR: $COMPOSE_FILE not found in $PROJECT_DIR"
+            exit 1
+          fi
+
+          # Use the production Compose file for every operation
+          dc() {
+            docker compose -f "$COMPOSE_FILE" "$@"
+          }
 
           # Git operations
           echo "::group::📥 Pulling latest code"
@@ -179,7 +191,7 @@ jobs:
 
           # Check services
           echo "::group::🔍 Service health check"
-          
+
           # PostgreSQL
           if docker compose exec -T postgres pg_isready -U postgres 2>/dev/null; then
             echo "✓ PostgreSQL: Healthy"
@@ -217,6 +229,7 @@ jobs:
           echo "✓ Gunicorn: Running"
           echo "✓ Nginx: Running"
           echo "✓ Health check: Passed"
+          echo "Compose file: $COMPOSE_FILE"
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
           echo "🌐 Deployment URL: $DEPLOYMENT_URL"
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
