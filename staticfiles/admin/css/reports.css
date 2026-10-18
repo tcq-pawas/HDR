@@ -1,0 +1,282 @@
+/* Reports Page Styles */
+.reports-page {
+    width: 100%;
+}
+
+.reports-card {
+    border: 1px solid #e8edf2;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+}
+
+.reports-card .card-header {
+    background: #fff;
+    padding: 18px 20px;
+    border-bottom: 1px solid #edf1f5;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.reports-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.reports-create-btn {
+    white-space: nowrap;
+    background: #006b45;
+    border-color: #006b45;
+}
+
+.reports-create-btn:hover {
+    background: #005538;
+    border-color: #005538;
+}
+
+.reports-card .card-body {
+    padding: 18px 20px;
+}
+
+/* Report Type Buttons */
+.report-type-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.report-type-btn {
+    padding: 10px 18px;
+    border: 1px solid #e5eaf0;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #334155;
+    transition: all 0.2s;
+}
+
+.report-type-btn:hover {
+    background: #f7f9fb;
+    border-color: #cbd5e1;
+}
+
+.report-type-btn.active {
+    background: #006b45;
+    border-color: #006b45;
+    color: white;
+}
+
+/* Table */
+.reports-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+}
+
+.reports-table {
+    min-width: 800px;
+    margin-bottom: 0;
+}
+
+.reports-table thead th {
+    background: #f7f9fb;
+    color: #64748b;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 11px 12px;
+    border-bottom: 1px solid #e5eaf0;
+    white-space: nowrap;
+}
+
+.reports-table tbody td {
+    color: #334155;
+    font-size: 0.78rem;
+    padding: 14px 12px;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.report-name {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.report-status-badge {
+    font-size: 0.68rem;
+    padding: 4px 8px;
+    border-radius: 5px;
+}
+
+.report-action-btn {
+    font-size: 0.72rem;
+    padding: 5px 10px;
+    white-space: nowrap;
+}
+
+/* Modal */
+.create-report-modal .modal-dialog {
+    max-width: 550px;
+}
+
+.create-report-modal .modal-header {
+    background: #006b45;
+    color: white;
+    border: none;
+}
+
+.create-report-modal .modal-title {
+    color: white;
+}
+
+.create-report-modal .btn-close {
+    color: white;
+}
+
+.create-report-modal .form-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #334155;
+}
+
+.create-report-modal .form-control,
+.create-report-modal .form-select {
+    font-size: 0.9rem;
+    padding: 10px 12px;
+}
+
+/* Tablet */
+@media (max-width: 992px) {
+    .report-type-buttons {
+        gap: 8px;
+    }
+
+    .report-type-btn {
+        padding: 8px 14px;
+        font-size: 0.82rem;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .reports-page {
+        width: 100%;
+        padding: 0;
+    }
+
+    .reports-card {
+        border-radius: 12px;
+        margin: 0;
+    }
+
+    .reports-card .card-header {
+        display: block !important;
+        padding: 14px 12px;
+    }
+
+    .reports-title {
+        font-size: 0.82rem;
+        line-height: 1.2;
+        margin-bottom: 10px !important;
+    }
+
+    .reports-create-btn {
+        width: 100%;
+        font-size: 0.85rem;
+        padding: 10px 16px;
+    }
+
+    .reports-card .card-body {
+        padding: 10px 8px;
+    }
+
+    .report-type-buttons {
+        gap: 6px;
+    }
+
+    .report-type-btn {
+        flex: 1;
+        min-width: 100px;
+        padding: 8px 12px;
+        font-size: 0.78rem;
+    }
+
+    .reports-table-wrapper {
+        border-radius: 9px;
+        overflow-x: auto;
+    }
+
+    .reports-table {
+        min-width: 750px;
+    }
+
+    .reports-table thead th {
+        font-size: 0.62rem;
+        padding: 9px 10px;
+    }
+
+    .reports-table tbody td {
+        font-size: 0.65rem;
+        padding: 11px 10px;
+    }
+
+    .report-status-badge {
+        font-size: 0.58rem;
+        padding: 3px 6px;
+    }
+
+    .report-action-btn {
+        font-size: 0.62rem;
+        padding: 4px 8px;
+    }
+
+    .create-report-modal .modal-dialog {
+        max-width: calc(100% - 24px);
+        margin: 12px auto;
+    }
+
+    .create-report-modal .modal-header {
+        padding: 14px 16px;
+    }
+
+    .create-report-modal .modal-body {
+        padding: 16px;
+    }
+
+    .create-report-modal .modal-footer {
+        padding: 12px 16px;
+    }
+}
+
+/* Very Small Mobile */
+@media (max-width: 400px) {
+    .reports-card .card-header {
+        padding: 12px 9px;
+    }
+
+    .reports-title {
+        font-size: 0.78rem;
+    }
+
+    .report-type-btn {
+        min-width: 90px;
+        padding: 7px 10px;
+        font-size: 0.75rem;
+    }
+
+    .reports-card .card-body {
+        padding: 8px 6px;
+    }
+
+    .reports-table {
+        min-width: 720px;
+    }
+}

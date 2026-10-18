@@ -32,8 +32,7 @@
 .sell-page-body h1,
 .sell-page-body h2,
 .sell-section-heading,
-.support-section-title,
-.cta-text h2 {
+.support-section-title {
     font-size: 1.5rem !important;
 }
 
@@ -52,8 +51,7 @@
 .get-started-content p,
 .security-text,
 .support-content p,
-.faq-body,
-.cta-text p {
+.faq-body {
     font-size: 12px !important;
 }
 
@@ -93,12 +91,11 @@
     z-index: 1;
     color: white;
     max-width: 800px;
-    padding: 0 20px;
 }
 
 .sell-hero-title {
     font-family: 'Playfair Display', serif;
-    font-weight: 600;
+    font-weight: 900;
     margin-bottom: 1rem;
     color: white;
 }
@@ -209,7 +206,7 @@
 .get-started-card {
     max-width: 600px;
     margin: 0 auto;
-    padding: 50px;
+    padding: 30px 50px;
     display: flex;
     align-items: center;
     gap: 30px;
@@ -243,6 +240,7 @@
 .security-text {
     text-align: center;
     margin-top: 1.5rem;
+    padding: 0px 10px;
     color: var(--primary-green);
     display: flex;
     align-items: center;
@@ -301,6 +299,7 @@
     color: white;
     border: none;
     border-radius: 999px;
+    font-size: 14px !important;
     height: 48px;
     padding: 0 32px;
     font-weight: 600;
@@ -325,7 +324,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
+    flex-wrap: nowrap;
     gap: 40px;
     min-height: 420px;
     border: 1px solid #ECECEC;
@@ -403,22 +403,6 @@
     align-self: flex-end;
 }
 
-.leaf-decoration {
-    position: absolute;
-    font-size: 3rem;
-    opacity: 0.3;
-}
-
-.leaf-left {
-    bottom: -20px;
-    left: -30px;
-}
-
-.leaf-right {
-    top: -20px;
-    right: -30px;
-}
-
 /* FAQ Section */
 .faq-container {
     max-width: 900px;
@@ -485,91 +469,19 @@
     line-height: 1.6;
 }
 
-/* Bottom CTA */
-.cta-banner {
-    background: linear-gradient(90deg, #063B27 0%, #08452E 45%, #063B27 100%);
-    border-radius: 22px;
-    padding: 28px 36px;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-    max-width: 2000px;
-    margin: 0 auto;
-    min-height: 220px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+/* Bottom CTA: .cta-banner ki main styling style.css se aati hai.
+   Yahan sirf wahi rakha hai jo style.css me nahi hai. */
+.cta-banner .btn-cta-yellow,
+.cta-banner .btn-cta-outline {
+    display: inline-flex;
     align-items: center;
-    gap: 24px;
+    gap: 6px;
+    font-size: 12px;
+    text-decoration: none;
 }
 
-.cta-banner::before,
-.cta-banner::after {
-    content: '🌿';
-    position: absolute;
-    font-size: 1.5rem;
-    opacity: 0.18;
-}
-
-.cta-banner::before {
-    top: 10px;
-    left: 20px;
-}
-
-.cta-banner::after {
-    bottom: 10px;
-    right: 20px;
-}
-
-.cta-left {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-}
-
-.cta-right {
-    display: flex;
-    align-items: center;
-}
-
-.cta-buttons {
-    display: flex;
-    gap: 16px;
-}
-
-.cta-icon {
-    width: 100px;
-    height: 100px;
-    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3rem;
-    color: white;
-    box-shadow: 0 4px 15px rgba(255,255,255,0.1);
-    flex-shrink: 0;
-}
-
-.cta-text h2 {
-    font-family: 'Playfair Display', serif;
-    font-weight: 700;
-    color: #FFFFFF;
-    margin-bottom: 0.25rem;
-    line-height: 1.2;
-}
-
-.cta-text p {
-    font-family: 'Inter', sans-serif;
-    color: #D7E7DD;
-    line-height: 1.4;
-    max-width: 420px;
-}
-
-.cta-buttons {
-    display: flex;
-    gap: 12px;
-    flex-shrink: 0;
+.sell-page-body .cta-banner-description {
+    font-size: 1.1rem !important;
 }
 
 /* Responsive */
@@ -591,26 +503,14 @@
         height: 360px;
     }
 
-    .cta-banner {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .cta-left {
-        flex-direction: column;
-    }
-
-    .cta-buttons {
-        flex-direction: column;
-        width: 100%;
-    }
-
-    .cta-buttons a {
-        width: 100%;
-    }
-
     .sell-section {
         padding: 56px 0;
+    }
+}
+
+@media (min-width: 769px) {
+    .support-card {
+        margin: 0 40px;
     }
 }
 
@@ -628,33 +528,6 @@
         padding: 0 20px 20px 20px;
     }
 
-    .cta-banner {
-        padding: 24px 28px;
-        min-height: auto;
-    }
-
-    .cta-left {
-        gap: 16px;
-    }
-
-    .cta-icon {
-        width: 56px;
-        height: 56px;
-        font-size: 1.5rem;
-    }
-
-    .cta-text p {
-        max-width: 300px;
-    }
-
-    .cta-buttons {
-        gap: 10px;
-    }
-
-    .cta-buttons a {
-        padding: 0 20px;
-    }
-
     .sell-section {
         padding: 48px 0;
     }
@@ -664,6 +537,16 @@
     .sell-hero {
         min-height: 380px;
     }
+
+    .get-started-card{
+        padding:30px 20px;
+    }
+}
+
+@media (max-width: 320px) {
+    .btn-whatsapp {
+        font-size: 12px !important;
+    }
 }
 </style>
 {% endblock %}
@@ -672,7 +555,7 @@
 <section class="sell-hero">
     <div class="sell-hero-content">
         <h1 class="sell-hero-title" style="font-size: 2.2rem;">Sell Your Farmland</h1>
-        <p class="sell-hero-subtitle" style="font-size: 1.1rem !important;">Connect with serious buyers and investors looking for verified agricultural land opportunities.</p>
+        <p class="sell-hero-subtitle" style="font-size: 20px !important;">Connect with serious buyers and investors looking for verified agricultural land opportunities.</p>
         <div class="sell-hero-divider">
             <span>🌿</span>
             <span>✦</span>
@@ -687,8 +570,8 @@
 <!-- ========== GET STARTED SECTION ========== -->
 <section class="sell-section">
     <div class="container" style="max-width: 2500px; margin: auto;">
-        <h2 class="sell-section-heading" style="font-size: 1.3rem !important;">LET'S GET YOU STARTED</h2>
-        <p class="sell-section-subtitle" style="font-size: 12px !important;">Choose the best way to get started with listing your farmland.</p>
+        <h2 class="sell-section-heading">LET'S GET YOU STARTED</h2>
+        <p class="sell-section-subtitle" style="font-size: 18px !important;">Choose the best way to get started with listing your farmland.</p>
         
         <div class="sell-card get-started-card">
             <div class="get-started-icon">
@@ -697,7 +580,7 @@
             <div class="get-started-content">
                 {% if user.is_authenticated %}
                     <h3 style="font-size: 1.3rem !important;">Welcome back, {{ user.first_name|default:user.username }}!</h3>
-                    <p style="font-size: 12px !important;">Access your agent dashboard to manage your property listings.</p>
+                    <p style="font-size: 15px !important;">Access your agent dashboard to manage your property listings.</p>
                     <a href="{% url 'agent:dashboard' %}" class="btn-sell-primary" style="font-size: 12px !important;">
                         <i class="bi bi-speedometer2"></i> Go To Dashboard
                     </a>
@@ -711,7 +594,7 @@
             </div>
         </div>
         
-        <div class="security-text" style="font-size: 12px !important;">
+        <div class="security-text" style="font-size: 15px !important;">
             <i class="bi bi-shield-check"></i>
             Your information is secure and protected
         </div>
@@ -721,7 +604,7 @@
 <!-- ========== WHATSAPP SUPPORT SECTION ========== -->
 <section class="sell-section">
     <div class="container" style="max-width: 1750px; margin: auto;">
-        <h2 class="sell-section-heading support-section-title" style="font-size: 1.3rem !important;">Need Help Listing Your Farmland?</h2>
+        <h2 class="sell-section-heading support-section-title" ">Need Help Listing Your Farmland?</h2>
         <div class="support-underline"></div>
         
         <div class="sell-card support-card">
@@ -729,10 +612,10 @@
                 <i class="bi bi-whatsapp"></i>
             </div>
             <div class="support-content">
-                <h3 style="font-size: 1.3rem !important;">Quick Chat Support</h3>
-                <p style="font-size: 12px !important;">Have questions about selling your property? Our experts are available on WhatsApp to help you 24/7.</p>
-                <p style="font-size: 12px !important;">We'll guide you through every step of the process and help you get the best deal for your land.</p>
-                <a href="https://wa.me/919506688688" target="_blank" class="btn-whatsapp" style="font-size: 12px !important;">
+                <h3 style="font-size: 1.5rem !important;">Quick Chat Support</h3>
+                <p style="font-size: 16px !important;">Have questions about selling your property? Our experts are available on WhatsApp to help you 24/7.</p>
+                <p style="font-size: 16px !important;">We'll guide you through every step of the process and help you get the best deal for your land.</p>
+                <a href="https://wa.me/919506688688" target="_blank" class="btn-whatsapp">
                     <i class="bi bi-whatsapp"></i> Chat With Us on WhatsApp
                 </a>
             </div>
@@ -748,7 +631,7 @@
 <!-- ========== FAQ SECTION ========== -->
 <section class="sell-section">
     <div class="container" style="max-width: 2500px; margin: auto;">
-        <h2 class="sell-section-heading" style="font-size: 1.3rem !important;">FREQUENTLY ASKED QUESTIONS</h2>
+        <h2 class="sell-section-heading">FREQUENTLY ASKED QUESTIONS</h2>
         
         <div class="faq-container">
             <!-- FAQ 1 -->
@@ -761,7 +644,7 @@
                     <i class="bi bi-chevron-down faq-chevron"></i>
                 </button>
                 <div id="faq1" class="collapse show" data-bs-parent=".faq-container">
-                    <div class="faq-body" style="font-size: 12px !important;">
+                    <div class="faq-body" style="font-size: 14px !important;">
                         Simply log in to your account and click "Add Property" from your agent dashboard. Fill in the property details, upload images, and submit. Your listing will be reviewed by our admin team and published once approved.
                     </div>
                 </div>
@@ -777,7 +660,7 @@
                     <i class="bi bi-chevron-down faq-chevron"></i>
                 </button>
                 <div id="faq2" class="collapse" data-bs-parent=".faq-container">
-                    <div class="faq-body" style="font-size: 12px !important;">
+                    <div class="faq-body" style="font-size: 14px !important;">
                         You'll need the property deed, proof of ownership, recent survey map, and any relevant documents. Our team will guide you through the exact requirements when you're ready to finalize the sale.
                     </div>
                 </div>
@@ -793,7 +676,7 @@
                     <i class="bi bi-chevron-down faq-chevron"></i>
                 </button>
                 <div id="faq3" class="collapse" data-bs-parent=".faq-container">
-                    <div class="faq-body" style="font-size: 12px !important;">
+                    <div class="faq-body" style="font-size: 14px !important;">
                         The time varies depending on property location, price, and market conditions. On average, most properties sell within 2-6 months. Our expert marketing strategies help speed up the process.
                     </div>
                 </div>
@@ -809,7 +692,7 @@
                     <i class="bi bi-chevron-down faq-chevron"></i>
                 </button>
                 <div id="faq4" class="collapse" data-bs-parent=".faq-container">
-                    <div class="faq-body" style="font-size: 12px !important;">
+                    <div class="faq-body" style="font-size: 14px !important;">
                         We offer competitive commission rates that vary based on property type and location. Contact our team directly for a customized quote. We aim to provide the best value for your sale.
                     </div>
                 </div>
@@ -825,7 +708,7 @@
                     <i class="bi bi-chevron-down faq-chevron"></i>
                 </button>
                 <div id="faq5" class="collapse" data-bs-parent=".faq-container">
-                    <div class="faq-body" style="font-size: 12px !important;">
+                    <div class="faq-body" style="font-size: 14px !important;">
                         Yes! You can edit your property details, upload new images, update pricing, and modify any information from your agent dashboard anytime. Changes will be reflected immediately on the platform.
                     </div>
                 </div>
@@ -841,7 +724,7 @@
                     <i class="bi bi-chevron-down faq-chevron"></i>
                 </button>
                 <div id="faq6" class="collapse" data-bs-parent=".faq-container">
-                    <div class="faq-body" style="font-size: 12px !important;">
+                    <div class="faq-body" style="font-size: 14px !important;">
                         All buyer inquiries will be sent to your agent dashboard. You'll also receive email notifications, and interested buyers may contact you directly via the information you provide in your listing.
                     </div>
                 </div>
@@ -851,30 +734,26 @@
 </section>
 
 <!-- ========== BOTTOM CTA SECTION ========== -->
-<section class="sell-section">
-    <div class="container" style="max-width: 2000px; margin: auto;">
+<section class="cta-banner-section">
         <div class="cta-banner">
-            <div class="cta-left">
-                <div class="cta-icon">
-                    <i class="fa fa-sprout"></i>
+            <span class="leaf-decoration leaf-decoration-left">🌿</span>
+            <span class="leaf-decoration leaf-decoration-right">🌿</span>
+            <div class="cta-banner-content">
+                <div>
+                    <div class="cta-banner-icon">🌱</div>
+                    <h2 class="cta-banner-title">Ready to sell your farmland?</h2>
+                    <p class="cta-banner-description">List your property today and connect with genuine buyers and investors.</p>
                 </div>
-                <div class="cta-text">
-                    <h2 style="font-size: 1.3rem !important;">Ready to sell your farmland?</h2>
-                    <p style="font-size: 12px !important;">List your property today and connect with genuine buyers and investors.</p>
-                </div>
-            </div>
-            <div class="cta-right">
-                <div class="cta-buttons">
-                    <a href="/agent/dashboard/" class="btn-sell-primary" style="font-size: 12px !important;">
+                <div class="cta-banner-buttons">
+                    <a href="/agent/dashboard/" class="btn-cta-yellow">
                         <i class="bi bi-list-check"></i> List Your Property
                     </a>
-                    <a href="/contact/" class="btn-sell-secondary" style="font-size: 12px !important;">
+                    <a href="/contact/" class="btn-cta-outline">
                         <i class="bi bi-person-lines-fill"></i> Talk to Advisor
                     </a>
                 </div>
             </div>
         </div>
-    </div>
 </section>
 
 </div>

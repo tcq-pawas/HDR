@@ -3,9 +3,6 @@
 
 {% block title %}{{ title }} | HHectare{% endblock %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/agent/communication_form.css' %}">
-{% endblock %}
 
 {% block content %}
 <div class="communication-form-container">
@@ -15,12 +12,23 @@
     </div>
 
     <!-- Form -->
-    <div class="card">
+    <div class="card communication-form-card">
         <form method="post">
             {% csrf_token %}
             
+            <!-- Introduction Section -->
+            <div class="communication-form-intro">
+                <div class="intro-icon-wrapper">
+                    <i class="bi bi-envelope"></i>
+                </div>
+                <div class="intro-content">
+                    <h3>Communication Details</h3>
+                    <p>Fill in the information below to send your message</p>
+                </div>
+            </div>
+            
             <div class="form-group mb-3">
-                <label for="{{ form.communication_type.id_for_label }}">Communication Type *</label>
+                <label for="{{ form.communication_type.id_for_label }}">Communication Type <span class="text-danger">*</span></label>
                 {{ form.communication_type }}
                 {% if form.communication_type.errors %}
                     <div class="error-message">{{ form.communication_type.errors }}</div>
@@ -28,7 +36,7 @@
             </div>
 
             <div class="form-group mb-3">
-                <label for="{{ form.recipient.id_for_label }}">Recipient Email Address *</label>
+                <label for="{{ form.recipient.id_for_label }}">Recipient Email Address <span class="text-danger">*</span></label>
                 {{ form.recipient }}
                 {% if form.recipient.errors %}
                     <div class="error-message">{{ form.recipient.errors }}</div>
@@ -44,7 +52,7 @@
             </div>
 
             <div class="form-group">
-                <label for="{{ form.message.id_for_label }}">Message *</label>
+                <label for="{{ form.message.id_for_label }}">Message <span class="text-danger">*</span></label>
                 {{ form.message }}
                 {% if form.message.errors %}
                     <div class="error-message">{{ form.message.errors }}</div>

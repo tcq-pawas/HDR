@@ -1,0 +1,211 @@
+/* =========================================================
+   GLOBAL TYPOGRAPHY SYSTEM
+   Single Source of Truth for All Pages
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap');
+
+:root {
+    /* Font Families - Dual Font System */
+   
+    
+
+    /* Typography Scale - Fluid with clamp() */
+    --font-h1: clamp(32px, 4.2vw, 58px);
+    --font-h2: clamp(26px, 3vw, 42px);
+    --font-h3: clamp(19px, 1.7vw, 28px);
+    --font-h4: clamp(17px, 1.3vw, 22px);
+
+    --font-body-size: clamp(15px, 1vw, 17px);
+    --font-small: clamp(12px, 0.85vw, 13px);
+    --font-button: clamp(14px, 0.95vw, 15px);
+    --font-nav: clamp(14px, 0.95vw, 15px);
+
+    /* Special Typography for KPI and Pricing */
+    --font-kpi: clamp(24px, 3vw, 40px);
+    --font-price: clamp(28px, 3.5vw, 46px);
+
+    /* Line Heights */
+    --line-height-heading: 1.15;
+    --line-height-body: 1.6;
+    --line-height-button: 1.2;
+    --line-height-small: 1.5;
+
+    /* Font Weights */
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+}
+
+/* =========================================================
+   SEMANTIC TYPOGRAPHY CLASSES
+   ========================================================= */
+
+.typo-h1 {
+    font-family: var(--font-heading);
+    font-size: var(--font-h1);
+    line-height: var(--line-height-heading);
+    font-weight: var(--font-weight-bold);
+}
+
+.typo-h2 {
+    font-family: var(--font-heading);
+    font-size: var(--font-h2);
+    line-height: var(--line-height-heading);
+    font-weight: var(--font-weight-bold);
+}
+
+.typo-h3 {
+    font-family: var(--font-heading);
+    font-size: var(--font-h3);
+    line-height: var(--line-height-heading);
+    font-weight: var(--font-weight-semibold);
+}
+
+.typo-h4 {
+    font-family: var(--font-heading);
+    font-size: var(--font-h4);
+    line-height: var(--line-height-heading);
+    font-weight: var(--font-weight-semibold);
+}
+
+.typo-body {
+    font-family: var(--font-body);
+    font-size: var(--font-body-size);
+    line-height: var(--line-height-body);
+    font-weight: var(--font-weight-regular);
+}
+
+.typo-small {
+    font-family: var(--font-body);
+    font-size: var(--font-small);
+    line-height: var(--line-height-small);
+}
+
+.typo-button {
+    font-family: var(--font-body);
+    font-size: var(--font-button);
+    line-height: var(--line-height-button);
+    font-weight: var(--font-weight-medium);
+}
+
+.typo-nav {
+    font-family: var(--font-body);
+    font-size: var(--font-nav);
+    line-height: 1.2;
+    font-weight: var(--font-weight-medium);
+}
+
+.typo-kpi {
+    font-family: var(--font-body);
+    font-size: var(--font-kpi);
+    line-height: 1.1;
+    font-weight: var(--font-weight-bold);
+}
+
+.typo-price {
+    font-family: var(--font-body);
+    font-size: var(--font-price);
+    line-height: 1.1;
+    font-weight: var(--font-weight-bold);
+}
+
+/* =========================================================
+   GLOBAL HTML ELEMENT BASELINE
+   ========================================================= */
+
+body {
+    
+    font-size: var(--font-body-size);
+    line-height: var(--line-height-body);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    line-height: var(--line-height-heading);
+}
+
+h1 {
+    font-size: 37px;
+    font-weight: var(--font-weight-bold);
+}
+
+h2 {
+    font-size: 30px;
+    font-weight: var(--font-weight-bold);
+}
+
+h3 {
+    font-size: var(--font-h3);
+    font-weight: var(--font-weight-semibold);
+}
+
+h4 {
+    font-size: var(--font-h4);
+    font-weight: var(--font-weight-semibold);
+}
+
+h5 {
+    font-size: var(--font-body-size);
+    font-weight: var(--font-weight-medium);
+}
+
+h6 {
+    font-size: var(--font-small);
+    font-weight: var(--font-weight-medium);
+}
+
+p {
+    font-family: var(--font-body);
+    font-size: var(--font-body-size);
+    line-height: var(--line-height-body);
+}
+
+/* =========================================================
+   BUTTON TYPOGRAPHY BASELINE
+   ========================================================= */
+
+button,
+.btn,
+input[type="submit"],
+input[type="button"] {
+    font-family: var(--font-body);
+    font-size: var(--font-button);
+    line-height: var(--line-height-button);
+    font-weight: var(--font-weight-medium);
+}
+
+/* =========================================================
+   NAVIGATION TYPOGRAPHY BASELINE
+   ========================================================= */
+
+nav,
+.navbar,
+.nav-link,
+.menu-link {
+    font-family: var(--font-body);
+    font-size: var(--font-nav);
+    font-weight: var(--font-weight-medium);
+}
+
+/* =========================================================
+   FORM TYPOGRAPHY BASELINE
+   ========================================================= */
+
+input,
+textarea,
+select,
+.form-control,
+.form-select {
+    font-family: var(--font-body);
+    font-size: var(--font-body-size);
+    line-height: var(--line-height-body);
+}
+
+label,
+.form-label {
+    font-family: var(--font-body);
+    font-size: var(--font-small);
+    font-weight: var(--font-weight-medium);
+}

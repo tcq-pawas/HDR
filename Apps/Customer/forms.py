@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.core.validators import RegexValidator
 from .models import CustomerProfile
 from Apps.Administration.auth_utils import assign_user_group
+from Apps.Administration.models import UserVerification
 
 class CustomerRegistrationForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}))
@@ -42,14 +43,17 @@ class CustomerRegistrationForm(UserCreationForm):
     def clean_phone(self):
         phone = self.cleaned_data.get('phone')
         username = self.cleaned_data.get('username')
-        email = self.cleaned_data.get('email')
         
         if phone:
-            # If no username is provided and phone is used, ensure it's not taken
+            # Global uniqueness check against UserVerification
+            if UserVerification.objects.filter(phone_number=phone).exists():
+                raise forms.ValidationError("This phone number is already registered across the platform.")
+                
+            # If no username is provided and phone is used, ensure it's not taken as a username
             if not username and User.objects.filter(username=phone).exists():
                 raise forms.ValidationError("An account with this phone number already exists.")
             
-            # Also check profiles
+            # Legacy check for CustomerProfile (just to be absolutely safe)
             if CustomerProfile.objects.filter(phone=phone).exists():
                 raise forms.ValidationError("This phone number is already registered.")
                 
@@ -79,6 +83,12 @@ class CustomerRegistrationForm(UserCreationForm):
             CustomerProfile.objects.create(
                 user=user,
                 phone=phone if phone else ''
+            )
+            
+            # Create the UserVerification record for global authentication/OTP
+            UserVerification.objects.create(
+                user=user,
+                phone_number=phone if phone else None
             )
         return user
 

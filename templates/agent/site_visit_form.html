@@ -7,25 +7,34 @@
 <span>{{ title }}</span>
 {% endblock %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/agent/site_visit_form.css' %}">
-{% endblock %}
 
 {% block content %}
 <div class="visit-form-container">
     <!-- Header -->
     <div class="page-header">
         <h1>{{ title }}</h1>
+        <p class="visit-form-subtitle">Schedule and manage property site visits with customers</p>
     </div>
 
     <!-- Form -->
     <div class="card">
         <form method="post">
             {% csrf_token %}
-            
+
+            <!-- Visit Details Introduction -->
+            <div class="visit-form-intro">
+                <div class="visit-intro-icon">
+                    <i class="bi bi-calendar-check"></i>
+                </div>
+                <div class="visit-intro-content">
+                    <h3>Visit Details</h3>
+                    <p>Fill in the information below to schedule a site visit</p>
+                </div>
+            </div>
+
             <div class="form-row">
                 <div class="form-group">
-                    <label for="{{ form.property.id_for_label }}">Property *</label>
+                    <label for="{{ form.property.id_for_label }}">Property <span class="text-danger">*</span></label>
                     {{ form.property }}
                     {% if form.property.errors %}
                         <div class="error-message">{{ form.property.errors }}</div>
@@ -43,7 +52,7 @@
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="{{ form.customer_name.id_for_label }}">Customer Name *</label>
+                    <label for="{{ form.customer_name.id_for_label }}">Customer Name <span class="text-danger">*</span></label>
                     {{ form.customer_name }}
                     {% if form.customer_name.errors %}
                         <div class="error-message">{{ form.customer_name.errors }}</div>
@@ -51,7 +60,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="{{ form.customer_phone.id_for_label }}">Customer Phone *</label>
+                    <label for="{{ form.customer_phone.id_for_label }}">Customer Phone <span class="text-danger">*</span></label>
                     {{ form.customer_phone }}
                     {% if form.customer_phone.errors %}
                         <div class="error-message">{{ form.customer_phone.errors }}</div>
@@ -69,7 +78,7 @@
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="{{ form.scheduled_date.id_for_label }}">Scheduled Date & Time *</label>
+                    <label for="{{ form.scheduled_date.id_for_label }}">Scheduled Date & Time <span class="text-danger">*</span></label>
                     {{ form.scheduled_date }}
                     {% if form.scheduled_date.errors %}
                         <div class="error-message">{{ form.scheduled_date.errors }}</div>
@@ -77,7 +86,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="{{ form.status.id_for_label }}">Status *</label>
+                    <label for="{{ form.status.id_for_label }}">Status <span class="text-danger">*</span></label>
                     {{ form.status }}
                     {% if form.status.errors %}
                         <div class="error-message">{{ form.status.errors }}</div>

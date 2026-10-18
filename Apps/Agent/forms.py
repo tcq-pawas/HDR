@@ -687,10 +687,26 @@ class AgentProfileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
+        self.user = user
         if user:
             self.fields['first_name'].initial = user.first_name
             self.fields['last_name'].initial = user.last_name
             self.fields['email'].initial = user.email
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+
+        # Update User model fields
+        if self.user:
+            self.user.first_name = self.cleaned_data.get('first_name')
+            self.user.last_name = self.cleaned_data.get('last_name')
+            self.user.email = self.cleaned_data.get('email')
+            if commit:
+                self.user.save()
+
+        if commit:
+            instance.save()
+        return instance
 
     def clean_profile_image(self):
         f = self.cleaned_data.get('profile_image')

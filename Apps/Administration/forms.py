@@ -97,13 +97,19 @@ class PartnerRegistrationForm(UserCreationForm):
         phone = self.cleaned_data.get('phone')
         username = self.cleaned_data.get('username')
         
-        # If no username is provided, phone will be used as username
-        if not username and phone and User.objects.filter(username=phone).exists():
-            raise forms.ValidationError("An account with this phone number already exists.")
-            
-        # Also check profiles for existing phone
-        if phone and (AgentProfile.objects.filter(phone=phone).exists() or InvestorProfile.objects.filter(phone=phone).exists()):
-            raise forms.ValidationError("This phone number is already registered to another account.")
+        if phone:
+            from Apps.Administration.models import UserVerification
+            # Global uniqueness check across the entire platform
+            if UserVerification.objects.filter(phone_number=phone).exists():
+                raise forms.ValidationError("This phone number is already registered across the platform.")
+                
+            # If no username is provided, phone will be used as username
+            if not username and User.objects.filter(username=phone).exists():
+                raise forms.ValidationError("An account with this phone number already exists.")
+                
+            # Legacy check for existing phone in old profiles (just to be absolutely safe)
+            if AgentProfile.objects.filter(phone=phone).exists() or InvestorProfile.objects.filter(phone=phone).exists():
+                raise forms.ValidationError("This phone number is already registered to another account.")
             
         return phone
 
@@ -135,6 +141,10 @@ class PartnerRegistrationForm(UserCreationForm):
                 
             from Apps.Administration.auth_utils import assign_user_group
             assign_user_group(user, role)
+            
+            # Create the UserVerification record for global authentication/OTP
+            from Apps.Administration.models import UserVerification
+            UserVerification.objects.create(user=user, phone_number=phone if phone else None)
                 
         return user
 

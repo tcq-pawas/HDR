@@ -894,7 +894,7 @@
         display: flex;
         align-items: center;
         gap: 10px;
-        font-size: 14px;
+        font-size: 16px;
         color: #1F1F1F;
     }
 
@@ -1405,8 +1405,19 @@
         background: #0a4d2b;
     }
 
+    @media (min-width: 481px) and (max-width: 768px) {
+        .profile-right {
+            flex-direction: row;
+        }
+    }
+
     /* Responsive Design for Reviews */
     @media (max-width: 768px) {
+        .submit-review-btn {
+            font-size: 14px;
+            display: block;
+            margin: 0 auto;
+        }
         .review-top-card {
             flex-direction: column;
             padding: 24px;
@@ -1610,6 +1621,10 @@
     }
 
     @media (max-width: 768px) {
+        .profile-card-section {
+           margin-top: 0;
+           padding:60px 0;
+        }
         .agent-hero {
             height: 240px;
         }

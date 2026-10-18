@@ -15,7 +15,7 @@ services:
     container_name: "hdr-postgres"
     hostname: "hdr-postgres"
     healthcheck:
-      test: [ "CMD", "pg_isready", "-U", "${POSTGRES_USER:-postgres}" ]
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER:-postgres}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -49,6 +49,8 @@ services:
     build:
       context: ./docker/nginx
       dockerfile: Dockerfile
+      args:
+        NGINX_CONFIG: default.staging.conf.tpl
     container_name: "hdr-nginx"
     restart: always
     ports:
@@ -58,7 +60,7 @@ services:
       - static_volume:/app/static
       - media_volume:/app/media
       - /etc/letsencrypt:/etc/letsencrypt:ro
-      
+
     depends_on:
       - web
 

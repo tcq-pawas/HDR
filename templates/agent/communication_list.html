@@ -9,9 +9,6 @@
 
 {% block header_title %}{% endblock %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/agent/communication_list.css' %}">
-{% endblock %}
 
 {% block content %}
 <div class="premium-container">
@@ -227,10 +224,6 @@
                             </div>
                             <h2>No Emails Found</h2>
                             <p>There are no email communications matching your filters.</p>
-                            <a href="{% url 'agent:communication_send' %}" class="premium-btn">
-                                <i class="bi bi-plus-lg"></i>
-                                <span>Send Your First Message</span>
-                            </a>
                         </div>
                     </td>
                 </tr>

@@ -7,9 +7,6 @@
 <span>Site Visit Details</span>
 {% endblock %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/agent/site_visit_detail.css' %}">
-{% endblock %}
 
 {% block content %}
 <div class="visit-detail-container">
@@ -71,10 +68,10 @@
         <!-- Quick Actions -->
         <div class="card">
             <h3>Quick Actions</h3>
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                <form method="post" style="margin-bottom: 1rem;">
+            <div class="visit-actions-container">
+                <form method="post" class="visit-status-form">
                     {% csrf_token %}
-                    <select name="status" class="form-select" style="padding: 0.5rem; border-radius: 6px; border: 1px solid #e2e8f0;">
+                    <select name="status" class="form-select visit-status-select">
                         <option value="scheduled" {% if visit.status == 'scheduled' %}selected{% endif %}>Scheduled</option>
                         <option value="confirmed" {% if visit.status == 'confirmed' %}selected{% endif %}>Confirmed</option>
                         <option value="completed" {% if visit.status == 'completed' %}selected{% endif %}>Completed</option>
@@ -82,7 +79,7 @@
                         <option value="no_show" {% if visit.status == 'no_show' %}selected{% endif %}>No Show</option>
                         <option value="rescheduled" {% if visit.status == 'rescheduled' %}selected{% endif %}>Rescheduled</option>
                     </select>
-                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">
+                    <button type="submit" class="btn btn-primary visit-update-btn">
                         <i class="bi bi-check-lg"></i> Update Status
                     </button>
                 </form>
@@ -98,7 +95,7 @@
             <div class="feedback-section">
                 <textarea name="feedback" placeholder="Enter visit feedback...">{{ visit.feedback|default:"" }}</textarea>
             </div>
-            <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">
+            <button type="submit" class="btn btn-primary save-feedback-btn">
                 <i class="bi bi-save"></i> Save Feedback
             </button>
         </form>

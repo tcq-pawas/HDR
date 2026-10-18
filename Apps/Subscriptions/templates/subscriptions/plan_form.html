@@ -7,6 +7,25 @@
 {% block content %}
 
 <style>
+    .subscription-form-container {
+        width: 100%;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    
+    @media (max-width: 1100px) {
+        .subscription-form-container {
+            max-width: calc(100% - 32px);
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .subscription-form-container {
+            max-width: 100%;
+            width: 100%;
+        }
+    }
+    
     input.avail-checkbox{
         appearance: none !important;
         -webkit-appearance: none !important;
@@ -133,6 +152,7 @@
 </div>
 {% endif %}
 
+<div class="subscription-form-container">
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
 
@@ -320,6 +340,7 @@
         <a href="{% url 'subscriptions:manage-subscriptions' %}" class="btn btn-outline-secondary px-4">Cancel</a>
     </div>
 </form>
+</div>
 
 <!-- Hidden template row used to clone new empty pricing forms -->
 <table style="display:none;">

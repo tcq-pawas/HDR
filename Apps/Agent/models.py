@@ -1,6 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import User
 from Apps.PublicPage.models import Property
+from HeyDayRealty.storage_backends import (
+    AgentMediaStorage,
+    get_agent_profile_path,
+    get_agent_id_proof_path,
+    get_agent_address_proof_path,
+    get_agent_document_path,
+    get_agent_verification_front_path,
+    get_agent_verification_back_path
+)
 
 class AgentProfile(models.Model):
     """Extended profile for agents/sellers"""
@@ -18,7 +27,7 @@ class AgentProfile(models.Model):
     alternate_phone = models.CharField(max_length=20, blank=True, help_text="Alternate contact number")
     company_name = models.CharField(max_length=200, blank=True)
     bio = models.TextField(blank=True)
-    profile_image = models.ImageField(upload_to='agent_profiles/', null=True, blank=True)
+    profile_image = models.ImageField(upload_to=get_agent_profile_path, storage=AgentMediaStorage(), null=True, blank=True)
     is_verified = models.BooleanField(default=False)
     employee_id = models.CharField(max_length=50, blank=True)
     territory = models.CharField(max_length=200, blank=True, help_text="Assigned territory/region")
@@ -29,8 +38,8 @@ class AgentProfile(models.Model):
     notification_whatsapp = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    id_proof_document = models.FileField(upload_to='agent_verification/id_proof/', blank=True, null=True)
-    address_proof_document = models.FileField(upload_to='agent_verification/address_proof/', blank=True, null=True)
+    id_proof_document = models.FileField(upload_to=get_agent_id_proof_path, storage=AgentMediaStorage(), blank=True, null=True)
+    address_proof_document = models.FileField(upload_to=get_agent_address_proof_path, storage=AgentMediaStorage(), blank=True, null=True)
     verification_status = models.CharField(max_length=20, choices=VERIFICATION_STATUS_CHOICES, default='not_started')
     verification_remarks = models.TextField(blank=True, null=True)
     # Contact Information
@@ -320,7 +329,7 @@ class Document(models.Model):
     document_type = models.CharField(max_length=20, choices=DOCUMENT_TYPE_CHOICES)
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='other')
     title = models.CharField(max_length=200)
-    file = models.FileField(upload_to='documents/')
+    file = models.FileField(upload_to=get_agent_document_path, storage=AgentMediaStorage())
     file_size = models.BigIntegerField(null=True, blank=True)
     description = models.TextField(blank=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
@@ -369,8 +378,8 @@ class VerificationDocument(models.Model):
         max_length=200, blank=True,
         help_text="Custom name when document type is Other"
     )
-    front_file = models.FileField(upload_to='agent_verification/front/')
-    back_file = models.FileField(upload_to='agent_verification/back/', blank=True, null=True)
+    front_file = models.FileField(upload_to=get_agent_verification_front_path, storage=AgentMediaStorage())
+    back_file = models.FileField(upload_to=get_agent_verification_back_path, storage=AgentMediaStorage(), blank=True, null=True)
     has_back_side = models.BooleanField(default=True)
     status = models.CharField(
         max_length=20, choices=STATUS_CHOICES, default='pending_review'

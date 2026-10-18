@@ -1,0 +1,489 @@
+/* Agent Base Styles */
+
+/* Hide scrollbars in sidebar while maintaining scroll functionality */
+.agent-sidebar,
+.agent-sidebar .sidebar-nav {
+    scrollbar-width: none !important; /* Firefox */
+    -ms-overflow-style: none !important; /* IE and Edge */
+}
+
+.agent-sidebar::-webkit-scrollbar,
+.agent-sidebar .sidebar-nav::-webkit-scrollbar {
+    display: none !important; /* Chrome, Safari, Opera */
+    width: 0 !important;
+    height: 0 !important;
+}
+
+/* Ensure menu items don't get clipped */
+.agent-sidebar {
+    overflow-x: visible !important;
+    width: 275px !important;
+    min-width: 275px !important;
+    max-width: 275px !important;
+}
+
+.agent-sidebar .sidebar-nav {
+    overflow-x: visible !important;
+}
+
+.agent-sidebar .sidebar-content {
+    overflow-x: visible !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.agent-sidebar .sidebar-nav .nav-link {
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.agent-sidebar .sidebar-nav .nav-list {
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.agent-header {
+    background: #FFFFFF !important;
+}
+
+.logout-btn {
+    border-radius: 8px !important;
+    transition: background-color 0.3s ease,
+    color 0.3s ease, transform 0.3s ease !important;
+}
+
+.logout-btn:hover {
+    background-color: #6AAE48 !important;
+    color: #005427 !important;
+    transform: translateX(6px) !important;
+    box-shadow: 0 4px 12px rgba(106, 174, 72, 0.25) !important;
+}
+
+.logout-btn:hover i,
+.logout-btn:hover span {
+    color: #005427 !important;
+}
+
+.btn-primary {
+    background-color: #005427 !important;
+    border-color: #005427 !important;
+    color: #FFFFFF !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+    background-color: #6AAE48 !important;
+    border-color: #6AAE48 !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 4px 12px rgba(106, 174, 72, 0.3) !important;
+}
+
+.sidebar-nav .nav-link {
+    padding: 14px 18px !important;
+    font-size: 14px !important;
+    gap: 16px !important;
+    border-radius: 8px !important;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.sidebar-nav .nav-link i {
+    font-size: 18px !important;
+    transition: color 0.3s ease, transform 0.3s ease !important;
+}
+
+.sidebar-nav .nav-link span {
+    transition: color 0.3s ease !important;
+}
+
+.sidebar-nav .nav-link:hover,
+.sidebar-nav .nav-link.active {
+    background-color: #6AAE48 !important;
+    color: #005427 !important;
+    transform: translateX(6px) !important;
+    box-shadow: 0 4px 12px rgba(106, 174, 72, 0.25) !important;
+}
+
+.sidebar-nav .nav-link:hover i,
+.sidebar-nav .nav-link.active i {
+    color: #005427 !important;
+    transform: scale(1.15) !important;
+}
+
+.sidebar-nav .nav-link:hover span {
+    color: #005427 !important;
+}
+
+/* Status Badge Colors Global Override */
+.status-badge {
+    padding: 4px 12px !important;
+    border-radius: 20px !important;
+    font-size: 12px !important;
+    display: inline-block !important;
+    text-transform: capitalize !important;
+}
+
+/* Pending status badge color (Light Orange background + Dark Orange text) */
+.status-badge.status-pending,
+span.status-pending {
+    text-wrap: nowrap;
+    background-color: #FFEDD5 !important;
+    color: #C2410C !important;
+    font-weight: 600 !important;
+}
+
+/* Approved / Active status badge color (Light Green background + Dark Green text) */
+.status-badge.status-approved,
+.status-badge.status-active,
+.status-badge.status-new,
+span.status-approved,
+span.status-active {
+    background-color: #c0f4d9 !important;
+    color: #0b4230 !important;
+    font-weight: 600 !important;
+}
+
+/* Rejected status badge color (Light Red background + Red text) */
+.status-badge.status-rejected,
+span.status-rejected {
+    background-color: #FEE2E2 !important;
+    color: #DC2626 !important;
+    font-weight: 600 !important;
+}
+
+@media (min-width: 993px) {
+    .agent-sidebar {
+        width: 275px !important;
+        min-width: 275px !important;
+        max-width: 275px !important;
+        flex-shrink: 0 !important;
+    }
+
+    .agent-main {
+        margin-left: 275px !important;
+        width: calc(100% - 275px) !important;
+        min-width: 0 !important;
+    }
+
+    .agent-header {
+        left: 275px !important;
+        width: calc(100% - 275px) !important;
+        max-width: none !important;
+    }
+
+    .agent-sidebar .sidebar-content {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        overflow-x: visible !important;
+    }
+
+    .agent-sidebar .sidebar-nav {
+        overflow-x: visible !important;
+    }
+}
+
+/* Critical Mobile Fixes - Inline to ensure they load */
+@media (max-width: 992px) {
+    .agent-mobile-toggle {
+        display: block;
+    }
+
+    /* Hide hamburger when sidebar has hidden class */
+    .agent-mobile-toggle.hidden {
+        display: none !important;
+    }
+
+    /* Fix offcanvas active state for tablet */
+    .agent-sidebar-offcanvas .nav-link.active {
+        background: #FFFFFF !important;
+        color: #005427 !important;
+        font-weight: 600 !important;
+    }
+
+    .agent-sidebar-offcanvas .nav-link.active i {
+        color: #005427 !important;
+    }
+}
+
+@media (min-width: 993px) {
+    .agent-mobile-toggle {
+        display: none !important;
+    }
+}
+
+@media (max-width: 767px) {
+    .agent-header {
+        left: 0 !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        height: auto !important;
+        min-height: 60px !important;
+    }
+
+    .header-content {
+        padding: 10px 15px 10px 0px !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        min-height: 60px !important;
+        height: auto !important;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 12px !important;
+        text-align: center !important;
+    }
+
+    .header-left {
+        padding: 0 0 23px 58px !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: flex-start !important;
+        min-height: 60px !important;
+        height: auto !important;
+    }
+
+    .header-left .page-title {
+        margin: 0 !important;
+        padding: 0 !important;
+        line-height: 1.2 !important;
+    }
+
+    .header-left .welcome-message {
+        display: block !important;
+        margin: 2px 0 0 0 !important;
+        font-size: 0.65rem !important;
+        line-height: 1.2 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    .agent-sidebar {
+        display: none !important;
+    }
+
+    .agent-main {
+        margin-left: 0 !important;
+        padding: 15px !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+    }
+
+    .agent-layout {
+        margin-top: 10px !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+    }
+
+    .header-center {
+        display: none !important;
+    }
+
+    .kpi-cards-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.5rem !important;
+    }
+
+    /* Ensure mobile toggle button is visible */
+    .agent-mobile-toggle {
+        display: block;
+        position: fixed !important;
+        top: 12px !important;
+        left: 12px !important;
+        z-index: 9999 !important;
+        background: #005427 !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 8px !important;
+        padding: 10px 15px !important;
+        cursor: pointer !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2) !important;
+        font-size: 1.25rem !important;
+    }
+
+    /* Hide hamburger when sidebar is open - overrides inline styles */
+    .agent-mobile-toggle.hidden {
+        display: none !important;
+    }
+
+    /* Ensure offcanvas is visible */
+    .agent-sidebar-offcanvas {
+        display: block !important;
+        background: #005427 !important;
+        width: 280px !important;
+    }
+
+    .agent-sidebar-offcanvas .nav-link {
+        color: white !important;
+        padding: 12px 20px !important;
+        display: block !important;
+        text-decoration: none !important;
+    }
+
+    .agent-sidebar-offcanvas .nav-link i {
+        margin-right: 10px !important;
+    }
+
+    .agent-sidebar-offcanvas .nav-link.active {
+        background: #005427 !important;
+        color: #FFFFFF !important;
+        font-weight: 600 !important;
+    }
+
+    .agent-sidebar-offcanvas .nav-link.active i {
+        color: #FFFFFF !important;
+    }
+
+    .agent-sidebar-offcanvas .brand-logo {
+        color: white !important;
+        font-size: 1.2rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .kpi-cards-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .agent-main {
+        padding: 10px !important;
+    }
+
+    .agent-mobile-toggle {
+        padding: 8px 12px !important;
+        font-size: 1.1rem !important;
+    }
+}
+
+html,
+body {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+}
+
+* {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* Sidebar Profile Card */
+.sidebar-profile-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 10px;
+    margin-bottom: 24px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    position: relative;
+}
+
+.profile-image-wrapper {
+    width: 70px;
+    height: 70px;
+    margin-bottom: 12px;
+}
+
+.profile-circle-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+.profile-circle-placeholder {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6AAE48 0%, #005427 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: 700;
+    color: white;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+.profile-name-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: #FFFFFF;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.profile-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 12px;
+}
+
+.profile-group-name {
+    font-size: 11px;
+    font-weight: 600;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 4px 10px;
+    border-radius: 12px;
+}
+
+.profile-verification-status {
+    position: static;
+}
+
+.verified-badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.2);
+    padding: 4px 8px;
+    border-radius: 12px;
+}
+
+.not-verified-badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #f59e0b;
+    background: rgba(245, 158, 11, 0.2);
+    padding: 4px 8px;
+    border-radius: 12px;
+}
+
+.view-profile-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    padding: 6px 16px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.view-profile-link:hover {
+    background: rgba(255, 255, 255, 0.25);
+    color: #FFFFFF;
+    transform: translateY(-1px);
+}

@@ -1,28 +1,10 @@
 {% extends "investor/investor_base.html" %}
+{% load static %}
 {% load humanize %}
 
 {% block title %}Investment Details - {{ investment.listing.title }} - HHectare{% endblock %}
 
 {% block extra_css %}
-<style>
-.investment-card {
-    border: none;
-    border-radius: 12px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-}
-.status-badge {
-    font-size: 0.8rem;
-    padding: 0.25rem 0.75rem;
-}
-.roi-positive {
-    color: #28a745;
-    font-weight: bold;
-}
-.roi-negative {
-    color: #dc3545;
-    font-weight: bold;
-}
-</style>
 {% endblock %}
 
 {% block page_title %}Investment Details{% endblock %}
@@ -30,6 +12,7 @@
 
 
 {% block content %}
+<div class="investment-detail-page">
 <div class="row">
     <div class="col-md-6">
         <div class="card investment-card mb-4">
@@ -135,4 +118,5 @@
     </a>
 </div>
 {% endif %}
+</div>
 {% endblock %}

@@ -6,25 +6,43 @@
 
 {% block title %}{{ title }} | HHectare{% endblock %}
 
-
-
 {% block extra_css %}
-
-<link rel="stylesheet" href="{% static 'css/agent/property_form.css' %}">
-
+<link rel="stylesheet" href="{% static 'css/agent/agricultural_land_form.css' %}">
+<style>
+/* 2 fields -> 2 columns, 3 fields -> 3 columns */
+.wizard-form .form-row {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+/* Land / House section show-hide (JS adds .active) */
+.conditional-section {
+    display: none;
+}
+.conditional-section.active {
+    display: block;
+}
+</style>
 {% endblock %}
+
+{% block breadcrumb_items %}
+<span>{{ title }}</span>
+{% endblock %}
+
+
+
 
 
 
 {% block content %}
 
-<div class="form-container">
+<div class="wizard-container property-form-v2">
 
     <!-- Header -->
 
-    <div class="page-header">
+    <div class="premium-header property-form-header text-white">
 
-        <h1>{{ title }}</h1>
+        <h4>{{ title }}</h4>
+
+        <p class="">Property Management System</p>
 
     </div>
 
@@ -32,7 +50,7 @@
 
     <!-- Form -->
 
-    <form method="post" class="form-card" enctype="multipart/form-data">
+    <form method="post" class="wizard-form" enctype="multipart/form-data">
 
         {% csrf_token %}
 
@@ -40,17 +58,17 @@
 
         <!-- Basic Information -->
 
-        <div class="form-section">
+        <div class="form-section section-basic">
 
-            <h3>Basic Information</h3>
+            <h3><i class="bi bi-file-earmark-text"></i> Basic Information</h3>
 
 
 
-            <div class="row">
+            <div class="form-row">
 
-                <div class="col-md-6 mb-3">
+                <div class="form-group">
 
-                    <label for="{{ form.title.id_for_label }}" class="form-label">Title <span class="text-danger">*</span></label>
+                    <label for="{{ form.title.id_for_label }}" class="field-required">Title</label>
 
                     {{ form.title }}
 
@@ -58,9 +76,9 @@
 
                 </div>
 
-                <div class="col-md-6 mb-3">
+                <div class="form-group">
 
-                    <label for="{{ form.property_type.id_for_label }}" class="form-label">Property Type <span class="text-danger">*</span></label>
+                    <label for="{{ form.property_type.id_for_label }}" class="field-required">Property Type</label>
 
                     {{ form.property_type }}
 
@@ -72,11 +90,11 @@
 
 
 
-            <div class="row">
+            <div class="form-row">
 
-                <div class="col-md-6 mb-3">
+                <div class="form-group">
 
-                    <label for="{{ form.category.id_for_label }}" class="form-label">Category <span class="text-danger">*</span></label>
+                    <label for="{{ form.category.id_for_label }}" class="field-required">Category</label>
 
                     {{ form.category }}
 
@@ -84,9 +102,9 @@
 
                 </div>
 
-                <div class="col-md-6 mb-3">
+                <div class="form-group">
 
-                    <label for="{{ form.location.id_for_label }}" class="form-label">Location <span class="text-danger">*</span></label>
+                    <label for="{{ form.location.id_for_label }}" class="field-required">Location</label>
 
                     {{ form.location }}
 
@@ -102,9 +120,9 @@
 
         <!-- Land-Specific Fields -->
 
-        <div class="form-section conditional-section" id="land-section">
+        <div class="form-section conditional-section section-detail" id="land-section">
 
-            <h3>Land Details</h3>
+            <h3><i class="bi bi-tree"></i> Land Details</h3>
 
 
 
@@ -354,9 +372,9 @@
 
         <!-- House/Villa-Specific Fields -->
 
-        <div class="form-section conditional-section" id="house-section">
+        <div class="form-section conditional-section section-detail" id="house-section">
 
-            <h3>House/Villa Details</h3>
+            <h3><i class="bi bi-house-door"></i> House/Villa Details</h3>
 
 
 
@@ -618,9 +636,9 @@
 
         <!-- Pricing Management -->
 
-        <div class="form-section">
+        <div class="form-section section-pricing">
 
-            <h3>Pricing Details</h3>
+            <h3><i class="bi bi-currency-rupee"></i> Pricing Details</h3>
 
 
 
@@ -712,9 +730,9 @@
 
         <!-- Location Management -->
 
-        <div class="form-section">
+        <div class="form-section section-location">
 
-            <h3>Location Details</h3>
+            <h3><i class="bi bi-geo-alt"></i> Location Details</h3>
 
 
 
@@ -796,9 +814,9 @@
 
         <!-- Media Management -->
 
-        <div class="form-section">
+        <div class="form-section section-media">
 
-            <h3>Media & Documents</h3>
+            <h3><i class="bi bi-images"></i> Media & Documents</h3>
             <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e2e8f0;">
                 <h4 style="margin-top: 0; color: #1e293b; font-size: 1rem; margin-bottom: 5px;">Cover Photo (Featured Image)</h4>
                 <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 15px;">Upload 1 main cover photo. This will be the primary image shown in search results and saved directly to the property record.</p>
@@ -1006,9 +1024,9 @@
 
         <!-- Descriptions -->
 
-        <div class="form-section">
+        <div class="form-section section-desc">
 
-            <h3>Descriptions</h3>
+            <h3><i class="bi bi-card-text"></i> Descriptions</h3>
 
 
 
@@ -1042,93 +1060,18 @@
 
 
 
-        <!-- Investment Opportunity -->
-
-        <div class="form-section">
-
-            <h3>Investment Opportunity</h3>
+      
 
 
 
-            <div class="checkbox-group">
-
-                {{ form.investment_opportunity }}
-
-                <label for="{{ form.investment_opportunity.id_for_label }}">This is an investment opportunity</label>
-
-            </div>
-
-
-
-            <div class="form-row" id="investment-fields" style="display: none;">
-
-                <div class="form-group">
-
-                    <label for="{{ form.expected_roi.id_for_label }}">Expected ROI (%)</label>
-
-                    {{ form.expected_roi }}
-
-                    {% if form.expected_roi.errors %}<div class="error-message">{{ form.expected_roi.errors }}</div>{% endif %}
-
-                </div>
-
-                <div class="form-group">
-
-                    <label for="{{ form.minimum_investment.id_for_label }}">Minimum Investment (₹)</label>
-
-                    {{ form.minimum_investment }}
-
-                    {% if form.minimum_investment.errors %}<div class="error-message">{{ form.minimum_investment.errors }}</div>{% endif %}
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- Analytics & CRM -->
-
-        <div class="form-section">
-
-            <h3>Analytics & CRM</h3>
-
-
-
-            <div class="form-row">
-
-                <div class="form-group">
-
-                    <label for="{{ form.property_owner.id_for_label }}">Property Owner Name</label>
-
-                    {{ form.property_owner }}
-
-                    {% if form.property_owner.errors %}<div class="error-message">{{ form.property_owner.errors }}</div>{% endif %}
-
-                </div>
-
-                <div class="form-group">
-
-                    <label for="{{ form.source_tracking.id_for_label }}">Source Tracking</label>
-
-                    {{ form.source_tracking }}
-
-                    {% if form.source_tracking.errors %}<div class="error-message">{{ form.source_tracking.errors }}</div>{% endif %}
-
-                </div>
-
-            </div>
-
-        </div>
 
 
 
         <!-- Visibility Settings -->
 
-        <div class="form-section">
+        <div class="form-section section-vis">
 
-            <h3>Visibility Settings</h3>
+            <h3><i class="bi bi-eye"></i> Visibility Settings</h3>
 
 
 
@@ -1178,19 +1121,19 @@
 
         <!-- Form Actions -->
 
-        <div class="form-actions">
+        <div class="wizard-actions">
 
-            <button type="submit" class="submit-btn">
-
-                <i class="bi bi-check-circle"></i> {% if title|stringformat:'s'|slice:':3' == 'Add' %}Create Property{% else %}Update Property{% endif %}
-
-            </button>
-
-            <a href="{% url 'agent:property_list' %}" class="cancel-btn">
+            <a href="{% url 'agent:property_list' %}" class="btn btn-secondary">
 
                 <i class="bi bi-x-circle"></i> Cancel
 
             </a>
+
+            <button type="submit" class="btn btn-primary">
+
+                <i class="bi bi-check-circle"></i> {% if title|stringformat:'s'|slice:':3' == 'Add' %}Create Property{% else %}Update Property{% endif %}
+
+            </button>
 
         </div>
 
