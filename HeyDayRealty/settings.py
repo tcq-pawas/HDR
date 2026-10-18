@@ -333,9 +333,10 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-# MSG91 Configurations
-MSG91_AUTH_KEY = os.getenv('MSG91_AUTH_KEY', '')
-MSG91_TEMPLATE_ID = os.getenv('MSG91_TEMPLATE_ID', '')
+# BulkSMS Configurations (exclusive OTP SMS provider)
+BULKSMS_TOKEN_ID = os.getenv('BULKSMS_TOKEN_ID', '')
+BULKSMS_TOKEN_SECRET = os.getenv('BULKSMS_TOKEN_SECRET', '')
+BULKSMS_SENDER = os.getenv('BULKSMS_SENDER', 'HECTRE')
 
 # Set default storage to General for everything else not explicitly set
 DEFAULT_FILE_STORAGE = 'HeyDayRealty.storage_backends.GeneralMediaStorage'
