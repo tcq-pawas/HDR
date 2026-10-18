@@ -36,7 +36,26 @@
     <link rel="manifest" href="{% static 'manifest.json' %}">
     <meta name="theme-color" content="#1B4332">
     <meta name="application-name" content="Real Estate Platform">
-
+    <style>
+        #login-btn{
+          min-height: 0;
+          padding-bottom: 10px !important;
+        }
+        
+        @media (max-width: 768px) {
+            .footer-brand p{
+              padding-left: 0 !important;
+            }
+        }
+        
+        /*Touch devices par navbar */
+        @media (hover: none) and (pointer: coarse) and (max-width: 768px) {
+            .navbar-collapse {
+               padding: 2rem !important;
+            }
+        }
+        
+    </style>
     <!-- Schema.org Organization + WebSite -->
     {% block schema_jsonld %}
     <script type="application/ld+json">
@@ -136,6 +155,9 @@
         <li class="nav-item">
           <a class="nav-link" href="{% url 'public:subscription_plans' %}">Subscription</a>
         </li>
+         <li class="nav-item">
+          <a class="nav-link" href="{% url 'public:property_management' %}">Property Management</a>
+        </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'public:about' %}">About Us</a>
         </li>
@@ -164,7 +186,7 @@
           </div>
         </div>
       {% else %}
-        <a href="{% url 'auth:login' %}" class="btn btn-success fw-bold px-4 py-2 rounded-pill shadow-sm mt-2 mt-lg-0 ms-lg-2">
+        <a href="{% url 'auth:login' %}" id="login-btn" class="btn btn-success fw-bold px-4 py-2 rounded-pill shadow-sm mt-2 mt-lg-0 ms-lg-2">
           Login
         </a>
       {% endif %}

@@ -551,3 +551,319 @@
         animation: none;
     }
 }
+
+/* ==========================================================
+   Property Form (Add House/Villa) - Scoped to match Add Land
+   Uses .property-form-v2 as namespace to avoid conflicts
+   ========================================================== */
+
+.property-form-v2,
+.property-form-v2 * {
+    box-sizing: border-box;
+}
+
+.property-form-v2 .wizard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Form sections - match Add Land styling */
+.property-form-v2 .form-section {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    margin-bottom: 1.5rem;
+    border: 1px solid #e2e8f0;
+}
+
+/* Section headers with mint-green background and black icons */
+.property-form-v2 .form-section h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 1.5rem 0;
+    padding: 0.875rem 1rem;
+    background: linear-gradient(135deg, #e9fbf0 0%, #d1fae5 100%);
+    border-radius: 10px;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* Icons stay black/dark, no background styling */
+.property-form-v2 .form-section h3 i {
+    flex: none;
+    color: #1e293b;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+/* Form rows - two columns on desktop */
+.property-form-v2 .form-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+/* Override inline style for auto-fit grid */
+.property-form-v2 .wizard-form .form-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+.property-form-v2 .form-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.property-form-v2 .form-group label {
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.property-form-v2 .form-group input,
+.property-form-v2 .form-group select,
+.property-form-v2 .form-group textarea {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    background: white;
+    color: #334155;
+}
+
+.property-form-v2 .form-group input::placeholder,
+.property-form-v2 .form-group textarea::placeholder {
+    color: #8593a3;
+}
+
+.property-form-v2 .form-group input[type="file"] {
+    padding: 8px;
+    font-size: 0.9rem;
+}
+
+.property-form-v2 .form-group input:disabled,
+.property-form-v2 .form-group input[readonly] {
+    background: #f8fafc;
+}
+
+.property-form-v2 .form-group input:focus,
+.property-form-v2 .form-group select:focus,
+.property-form-v2 .form-group textarea:focus {
+    outline: none;
+    border-color: #1E73BE;
+    box-shadow: 0 0 0 3px rgba(30, 115, 190, 0.15);
+}
+
+.property-form-v2 .form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Checkboxes */
+.property-form-v2 .checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    margin-bottom: 15px;
+}
+
+.property-form-v2 .checkbox-group input[type="checkbox"] {
+    flex: none;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #1E73BE;
+}
+
+.property-form-v2 .checkbox-group label {
+    margin: 0;
+    cursor: pointer;
+    color: #475569;
+    font-weight: 500;
+}
+
+/* Wizard actions */
+.property-form-v2 .wizard-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-top: 30px;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.property-form-v2 .btn {
+    padding: 12px 30px;
+    min-height: 44px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.property-form-v2 .btn:focus-visible {
+    outline: 3px solid rgba(30, 115, 190, 0.45);
+    outline-offset: 2px;
+}
+
+.property-form-v2 .btn-primary {
+    background: #1E73BE;
+    color: white;
+}
+
+.property-form-v2 .btn-primary:hover {
+    background: #155a9e;
+    transform: translateY(-2px);
+}
+
+.property-form-v2 .btn-secondary {
+    background: #f1f5f9;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+}
+
+.property-form-v2 .btn-secondary:hover {
+    background: #e2e8f0;
+}
+
+/* Error messages */
+.property-form-v2 .error-message {
+    color: #ef4444;
+    font-size: 0.85rem;
+    margin-top: 5px;
+}
+
+.property-form-v2 .field-required::after {
+    content: " *";
+    color: #ef4444;
+}
+
+/* Media section styling improvements */
+.property-form-v2 .section-media > div[style*="background: #f8fafc"] {
+    background: #f8fafc !important;
+    padding: 16px !important;
+    border-radius: 8px !important;
+    margin-bottom: 16px !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+.property-form-v2 .section-media h4 {
+    margin-top: 0 !important;
+    color: #1e293b !important;
+    font-size: 1rem !important;
+    margin-bottom: 5px !important;
+}
+
+.property-form-v2 .section-media p {
+    color: #64748b !important;
+    font-size: 0.85rem !important;
+    margin-bottom: 12px !important;
+}
+
+/* ==========================================================
+   Property Form Responsive Breakpoints
+   ========================================================== */
+
+/* Large screens */
+@media (min-width: 1600px) {
+    .property-form-v2 .wizard-container {
+        max-width: 1400px;
+    }
+}
+
+/* Laptop / tablet landscape */
+@media (max-width: 1024px) {
+    .property-form-v2 .wizard-container {
+        padding: 16px;
+    }
+
+    .property-form-v2 .form-section {
+        padding: 1.25rem;
+    }
+}
+
+/* Tablet portrait + phones: single column form */
+@media (max-width: 768px) {
+    .property-form-v2 .wizard-container {
+        padding: 10px;
+    }
+
+    .property-form-v2 .form-section {
+        padding: 16px;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+    }
+
+    .property-form-v2 .form-section h3 {
+        font-size: 1rem;
+        margin-bottom: 1.1rem;
+        padding: 0.75rem 0.875rem;
+    }
+
+    .property-form-v2 .form-row {
+        grid-template-columns: 1fr !important;
+        gap: 16px;
+        margin-bottom: 16px;
+    }
+
+    /* 16px stops iOS from zooming into fields */
+    .property-form-v2 .form-group input,
+    .property-form-v2 .form-group select,
+    .property-form-v2 .form-group textarea {
+        font-size: 16px;
+    }
+
+    .property-form-v2 .wizard-actions {
+        position: sticky;
+        bottom: 0;
+        z-index: 20;
+        flex-wrap: wrap;
+        margin-top: 16px;
+        padding: 12px 14px calc(12px + env(safe-area-inset-bottom, 0px));
+        border-radius: 12px 12px 0 0;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .property-form-v2 .wizard-actions .btn {
+        flex: 1 1 0;
+        padding: 12px 16px;
+    }
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+    .property-form-v2 .wizard-container {
+        padding: 8px;
+    }
+
+    .property-form-v2 .form-section {
+        padding: 14px;
+    }
+
+    .property-form-v2 .form-section h3 {
+        font-size: 0.95rem;
+        padding: 0.65rem 0.75rem;
+    }
+}

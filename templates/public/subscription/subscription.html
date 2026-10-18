@@ -51,7 +51,7 @@
             padding: 32px 0;
         }
 
-        .subscription-hero-title {
+        .subscription-hero-title{
             font-size: 1.75rem !important;
             line-height: 1.25;
         }
@@ -109,7 +109,7 @@
 
         .billing-toggle-btn {
             flex: 1 1 auto;
-            min-width: 45%;
+            min-width: 45% !important;
             font-size: 13px;
             padding: 8px 10px;
         }
@@ -121,7 +121,7 @@
         }
 
         .save-badge {
-            display: block;
+            display: none;
             margin-top: 2px;
         }
     }
@@ -237,6 +237,9 @@
 {% endblock %}
 
 {% block content %}
+
+{% if plans %}
+
 {% if messages %}
 <div class="container mt-4 mb-0" style="position: relative; z-index: 1000;">
     {% for message in messages %}
@@ -485,8 +488,14 @@
         </div>
     </div>
 </section>
+
+{% else %}
+{% include 'public/subscription/subscription_coming_soon.html' %}
+{% endif %}
 {% endblock %}
 
 {% block extra_js %}
+{% if plans %}
 <script src="{% static 'public/js/subscription.js' %}"></script>
+{% endif %} 
 {% endblock %}

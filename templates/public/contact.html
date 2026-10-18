@@ -71,6 +71,18 @@
         font-size: 1.5rem;
         color: #F4B400;
     }
+ 
+    @media (max-width:1440px){
+        .location-wrapper .location-left .location-badge{
+          padding:10px 20px;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .contact-badge {
+           font-size: 17px;
+        }
+    }
 
     /* Hero Responsive */
     @media (max-width: 1024px) {
@@ -84,9 +96,34 @@
         .contact-hero-title {
             font-size: 1.6rem;
         }
+        .contact-form-wrapper{
+            gap:52px;
+        } 
+        .location-wrapper{
+            gap:52px;
+        }
+
+        .location-wrapper .location-left .location-badge {
+           width: 400px;
+           margin: 0 auto 10px;
+           gap:40px;
+           text-align: center;
+        }
     }
 
     @media (max-width: 768px) {
+
+        .location-wrapper .location-left .location-heading {
+           text-align: center;
+           padding: 20px 0;
+        }
+
+        .location-wrapper .location-left .location-badge {
+           width: 200px;
+           margin: 0 auto 10px;
+           text-align: center;
+        }
+
         .contact-hero {
             min-height: 300px;
         }
@@ -323,6 +360,62 @@
         margin-top: 42px;
     }
 
+    .contact-form-right{
+        width: 100%;
+        max-width: 650px;
+    }
+
+    .office-location-section{
+        width: 100% ;
+        gap:38px;
+        max-width: 1100px !important;
+    }
+
+    @media (min-width:1441px){
+        .location-wrapper{
+            gap:10px;
+        }
+    }
+
+    @media (min-width: 1440px) {
+        .office-location-section{
+            width: 100% ;
+            gap:8px;
+            max-width: 1200px !important;
+        }
+    }     
+ 
+    @media (min-width: 1439px) {
+        .office-location-section {
+            grid-template-columns: 4fr 5fr;
+        }
+    }
+
+    @media (min-width: 1024px) and (max-width: 1439px) {
+        .contact-section-padding .contact-cards-grid{
+            width: 100%;
+            max-width: 980px;
+            margin: 0 auto;
+        }
+    }
+    
+    @media (min-width: 768px) and (max-width: 1024px) {
+        .contact-form-wrapper .contact-form-right {
+           width: 100%;
+           max-width: 961px;
+        }
+        .contact-form-card-1 {
+            width: 100% ;
+            max-width: 961px;
+        }
+
+        .office-location-section{
+            gap:30px;
+            width: 100% ;
+            max-width: 700px;
+        }
+    }
+
     /* Responsive */
     @media (max-width: 991px) {
         .office-stats-row,
@@ -373,8 +466,39 @@
             display: none;
         }
     }
+    
+    @media (min-width: 480px) and (max-width: 768px) {
+    .contact-section-1 .container .contact-cards-grid {
+        width: 100%;
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    .contact-form-card-1 {
+        width: 100% ;
+        max-width: 734px;
+    }
+    }
 
     @media (max-width: 480px) {
+        .location-section .office-location-section {
+           gap: 30px;
+        }
+
+        .contact-section-padding {
+            padding:30px 0 !important;
+        } 
+
+        .contact-section-1 .container .contact-cards-grid {
+            width: 100%;
+            max-width: 496px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .contact-section-1 .container .contact-cards-grid .contact-card {
+           padding: 32px 50px !important;
+           box-sizing: border-box;
+        }
         .office-stats-row,
         .office-why-grid {
             grid-template-columns: 1fr;
@@ -646,7 +770,7 @@
 {% block content %}
 
 <!-- Section 1 -->
-<section class="contact-section-1" style="background-color: #FAFAF7; padding: 80px 0;">
+<section class="contact-section-1 contact-section-padding" style=" background-color: #FAFAF7; padding: 80px 0;">
     <div class="container" style="max-width: 1800px;">
 
         <!-- Header -->
@@ -738,7 +862,7 @@
 </section> -->
 
 <!-- Contact Form Section -->
-<section class="contact-form-section" style="background-color: #FAFAF7; padding: 80px 0;">
+<section class="contact-form-section" style="width: 100%; margin:0 auto; max-width:1200px; background-color: #FAFAF7; padding: 80px 0;">
     <div class="container" style="max-width: 1800px;">
         <div class="contact-form-wrapper">
             
@@ -776,7 +900,7 @@
             
             <!-- Right Panel (60%) -->
             <div class="contact-form-right">
-                <div class="contact-form-card">
+                <div class="contact-form-card contact-form-card-1">
                     {% if messages %}
                         {% for message in messages %}
                             <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show mb-4" role="alert" style="border-radius: 12px;">
@@ -828,11 +952,11 @@
 
 <!-- Location Section -->
 <section class="location-section" style="background-color: #FAFAF7; padding: 80px 0;">
-    <div class="container" style="max-width: 1800px;">
-        <div class="location-wrapper">
+    <div class="container" style="max-width: 1800px; ">
+        <div class="location-wrapper office-location-section">
             
             <!-- Left Panel -->
-            <div class="location-left">
+            <div class="location-left" style="padding: 0 20px;">
                 <span class="location-badge" style="text-align: center;">VISIT OUR OFFICE</span>
                 <h2 class="location-heading">Schedule a meeting or site visit</h2>
                 <p class="location-description" style="font-size: 14px;">
@@ -883,7 +1007,7 @@
             </div>
             
             <!-- Right Panel -->
-            <div class="location-right">
+            <div class="location-right office-location-right-panel">
                 <div class="office-info-panel">
 
                     <!-- Stats Row -->
