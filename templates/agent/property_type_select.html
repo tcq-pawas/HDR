@@ -44,6 +44,15 @@
         transform: translateY(-4px);
         box-shadow: 0 12px 28px rgba(0, 107, 69, 0.12);
     }
+    .property-type-card-disabled,
+    .property-type-card-disabled:hover {
+        pointer-events: none;
+        cursor: not-allowed;
+        border-color: #e2e8f0;
+        transform: none;
+        box-shadow: none;
+        text-decoration: none !important;
+    }
     .property-type-card .card-body {
         flex: 1 1 auto;
         display: flex;
@@ -313,27 +322,65 @@
         </div>
 
 
-        <!-- House / Building -->
+        <!-- Plots & Small Land -->
 
         <div class="property-type-col">
 
             {% if request.resolver_match.namespace == 'admin_dash' %}
 
                 <a
-                    href="{% url 'admin_dash:property_add' 'house' %}"
+                    href="{% url 'admin_dash:property_add' 'plot' %}"
                     class="card property-type-card"
-                    aria-label="Add House or Building"
+                    aria-label="Add Plots and Small Land"
                 >
 
             {% else %}
 
                 <a
-                    href="{% url 'agent:property_add' 'house' %}"
+                    href="{% url 'agent:property_add' 'plot' %}"
                     class="card property-type-card"
-                    aria-label="Add House or Building"
+                    aria-label="Add Plots and Small Land"
                 >
 
             {% endif %}
+
+                    <div class="card-body">
+
+                        <div class="property-type-icon" style="background: #e8f5e9; color: #006b45;">
+                            <i class="bi bi-bounding-box"></i>
+                        </div>
+
+                        <h3>
+                            Plots &amp; Small Land
+                        </h3>
+
+                        <p>
+                            Add residential plots, small land parcels,
+                            and plot listings.
+                        </p>
+
+                        <span class="btn btn-primary mt-2">
+                            <i class="bi bi-arrow-right me-1"></i>
+                            Select Plot
+                        </span>
+
+                    </div>
+
+                </a>
+
+        </div>
+
+
+        <!-- House / Building -->
+
+        <div class="property-type-col">
+
+            <div
+                class="card property-type-card"
+                style="pointer-events: none; cursor: not-allowed;"
+                aria-disabled="true"
+                aria-label="House or Building coming soon"
+            >
 
                     <div class="card-body">
 
@@ -351,13 +398,12 @@
                         </p>
 
                         <span class="btn btn-primary mt-2">
-                            <i class="bi bi-arrow-right me-1"></i>
-                            Select House
+                            Coming Soon
                         </span>
 
                     </div>
 
-                </a>
+            </div>
 
         </div>
 
