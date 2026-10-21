@@ -3645,6 +3645,10 @@ select.form-input {
   height: auto;
 }
 
+.choose-property-box{
+  margin-left: 0;
+}
+
 @media (min-width: 992px) {
   .profile-wrap .profile-box-2 .section-card {
     height: 100%;

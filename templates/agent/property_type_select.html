@@ -5,6 +5,9 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/agent/property_type_select.css' %}">
 <style>
+    .property-type-eyebrow{
+        padding-bottom: 10px;
+    }
     .property-type-card {
         text-decoration: none !important;
         border: 1px solid #e2e8f0;
@@ -40,6 +43,8 @@
         font-size: 1.5rem;
     }
     .property-type-header {
+        padding: 0 10px;
+        line-height: normal;
         border-radius: 16px;
         margin-bottom: 25px;
     }
@@ -51,6 +56,25 @@
     .property-type-header p {
         font-size: 0.88rem;
         color: #64748b;
+    }
+
+    .property-types-box{
+        margin-left: 0 ;
+    }
+
+    @media (max-width:768px){
+      .property-type-header h1 {
+        font-size: 1.2rem;
+      }
+      .property-type-header p {
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (max-width:500px){
+      .property-type-header h1 {
+        font-size: 1rem;
+        }
     }
 </style>
 {% endblock %}
@@ -88,7 +112,7 @@
 
     <!-- ================= PROPERTY TYPES ================= -->
 
-    <div class="row g-3 property-type-grid">
+    <div class="row g-3 property-type-grid property-types-box">
 
         <!-- Agricultural Land -->
 

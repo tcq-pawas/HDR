@@ -14,6 +14,10 @@
     box-shadow: var(--shadow-sm);
 }
 
+#kyc-status-filters{
+    margin-left: 0;
+}
+
 .kyc-status-card .status-top {
     font-size: 0.8rem;
     font-weight: 600;
@@ -279,6 +283,13 @@
 
 .kyc-pane { display: none; }
 .kyc-pane.active { display: block; }
+
+@media (width: 1024px) {
+    #kyc-status-filters .kyc-status-card {
+        height: 65.33px !important;
+        min-height: 85.33px !important;
+    }
+}
 
 /* Mobile responsive adjustments */
 @media (max-width: 768px) {

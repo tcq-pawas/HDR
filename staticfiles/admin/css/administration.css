@@ -304,7 +304,6 @@ nav.sidebar .nav-item {
     border-radius: var(--radius);
     box-shadow: var(--shadow-sm);
 }
-
 .page-title {
     color: #ffffff;
     font-weight: 700;
@@ -534,10 +533,20 @@ h1, h2, h3, h4, h5, h6,
     max-width: 100%;
 }
 
+.card-body #propertyFilterForm{
+  margin-left: 0;
+}
+
 /* ============================================================
    LARGE DESKTOP — 1400px+
    ============================================================ */
 @media (min-width: 1400px) {
+
+    .modal .modal-footer {
+      margin-top: 30px !important;
+      gap: 20px !important;
+    }
+
     .main-content-wrapper {
         padding-left: 40px;
         padding-right: 40px;
@@ -592,6 +601,12 @@ h1, h2, h3, h4, h5, h6,
    TABLET / SMALL LAPTOP — 768px to 991px
    ============================================================ */
 @media (min-width: 768px) and (max-width: 991.98px) {
+    
+    .modal .modal-footer {
+    margin-top: 30px !important;
+    gap: 20px !important;
+   }
+    
     .main-content-wrapper {
         padding: 22px;
     }
@@ -649,6 +664,12 @@ h1, h2, h3, h4, h5, h6,
    MOBILE — up to 767px
    ============================================================ */
 @media (max-width: 767.98px) {
+
+    .modal .modal-footer {
+    margin-top: 30px !important;
+    gap: 20px !important;
+}
+
     body {
         font-size: 14px;
         line-height: 1.5;
@@ -1636,7 +1657,7 @@ h1, h2, h3, h4, h5, h6,
 
 .properties-page-header > .col-12 > .d-flex {
     width: 100%;
-    min-width: 0;
+    max-width: 912px; 
     gap: 18px;
 }
 
@@ -1842,7 +1863,6 @@ h1, h2, h3, h4, h5, h6,
 .properties-empty-text {
     font-size: .78rem;
 }
-
 /* Property List Responsive Breakpoints */
 @media (min-width: 1400px) {
     .properties-page-header > .col-12 > .d-flex {
@@ -1912,7 +1932,8 @@ h1, h2, h3, h4, h5, h6,
     }
 
     .properties-page-header > .col-12 > .d-flex {
-        flex-direction: column;
+        /* flex-direction: column; */
+        flex-direction: row;
         align-items: stretch !important;
         gap: 11px;
     }
@@ -1991,6 +2012,30 @@ h1, h2, h3, h4, h5, h6,
     }
 }
 
+@media (max-width:600px){
+    .modal-footer {
+        justify-content: space-around;
+    }
+
+   .all-inquiries-box h5{
+       text-align: center;
+   }
+
+    .property-table-header h5 {
+       text-align: center;
+    }
+
+    .properties-page-header > .col-12 > .d-flex{
+        flex-direction: column !important;
+        gap:20px;
+    }
+
+    .properties-page-header .properties-add-btn{
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
 @media (max-width: 480px) {
     .my-properties-page {
         padding-top: 12px !important;
@@ -2006,7 +2051,7 @@ h1, h2, h3, h4, h5, h6,
     .properties-page-header > .col-12 > .d-flex {
         flex-direction: column;
         align-items: stretch !important;
-        gap: 9px;
+        gap: 22px;
     }
 
     .properties-page-title {
@@ -2359,6 +2404,9 @@ h1, h2, h3, h4, h5, h6,
 }
 
 @media (max-width: 768px) {
+     .row.properties-page-header {
+        margin-left: 0;
+    }
     .properties-sort-dropdown {
         width: 100%;
         flex: 1 1 auto;
@@ -2507,6 +2555,15 @@ h1, h2, h3, h4, h5, h6,
     border-top: 1px solid #edf1f5;
     font-size: 0.8rem;
     color: #334155;
+}
+@media (max-width:1024px){
+    .main-content .main-content-wrapper .page-header{
+       margin-bottom: 20px;
+    }
+
+    .properties-page-header > .col-12 > .d-flex {
+        max-width: 660px; 
+    }
 }
 
 /* Agent List Responsive Breakpoints */
@@ -4119,6 +4176,13 @@ h1, h2, h3, h4, h5, h6,
     max-width: 100%;
 }
 
+.investments-table-box,
+.action-btn-box,
+.statistics-card-box,
+.inquiry-table-box {
+    margin-left: 0 !important;
+}
+
 @media (min-width: 992px) and (max-width: 1600px) {
     .inquiry-page-wrapper .card-body {
         padding: 12px 20px !important;
@@ -4171,6 +4235,14 @@ h1, h2, h3, h4, h5, h6,
     min-width: 190px;
 }
 
+.compose-title-msg p{
+    padding-top: 8px;
+}
+
+.report-action-box{
+    padding-top: 20px;
+}
+
 @media (max-width: 991.98px) {
     .stat-card-modern {
         padding: 16px;
@@ -4205,6 +4277,7 @@ h1, h2, h3, h4, h5, h6,
 }
 
 @media (max-width: 767.98px) {
+
     html,
     body {
         max-width: 100%;
@@ -4451,6 +4524,26 @@ h1, h2, h3, h4, h5, h6,
     #responseModal textarea {
         min-height: 120px;
     }
+}
+
+@media (max-width:600px){
+
+    .plan-feature-title{
+      text-align: center;
+    } 
+
+  .communication-history-title{
+   text-align: center;
+   }
+   .compose-title-msg{
+    /* text-align: center; */
+   }
+   .compose-title-msg h1{
+      font-size: 15px;
+   }
+   .compose-title-msg p{
+    font-size:13px ;
+   }
 }
 
 @media (max-width: 420px) {
@@ -6069,6 +6162,7 @@ h1, h2, h3, h4, h5, h6,
 
 /* Property Table */
 .property-table-card {
+    margin-top: 40px;
     border-radius: 12px;
     overflow: hidden;
 }
@@ -6300,6 +6394,10 @@ h1, h2, h3, h4, h5, h6,
     white-space: nowrap;
 }
 
+.property-review-page .property-review-center-box{
+    margin-left: 0 !important;
+}
+
 /* Property Review Responsive */
 @media (max-width: 991.98px) {
     .property-review-page {
@@ -6330,7 +6428,17 @@ h1, h2, h3, h4, h5, h6,
     }
 }
 
+@media (max-width: 768px) {
+    .row.mb-4.property-summary-row.property-summary-row-box {
+        --bs-gutter-x: 0 !important;
+    }
+}
+
 @media (max-width: 767.98px) {
+    .row.mb-4.property-summary-row.property-summary-row-box {
+       margin-left: 0 ;
+       margin-right: 0;
+    }
     .property-review-page {
         padding-top: 1rem !important;
         padding-bottom: 1rem !important;
@@ -7642,6 +7750,18 @@ h1, h2, h3, h4, h5, h6,
     transition: all 0.3s;
 }
 
+.kpi-card-row-box,
+.basic-info-box, 
+.role-specific-info-box, 
+.viewed-user-box, 
+.viewed-user-agent-box, 
+.activity-timeline-box,
+.subscription-info-box,
+.financial-ledger-box,
+.login-history-box{
+    margin-left: 0;
+}
+
 .kpi-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
@@ -7741,6 +7861,15 @@ h1, h2, h3, h4, h5, h6,
 .back-link:hover {
     background: #F8FAFC;
     color: #0F172A;
+}
+
+@media (width:1024px){
+    .info-card-flex{
+        flex-direction: column ;
+    }
+    .kpi-card-width{
+        width: 150px;
+    }
 }
 
 /* User Profile Responsive */
@@ -7897,6 +8026,10 @@ h1, h2, h3, h4, h5, h6,
 
     .kpi-card {
         padding: 12px;
+    }
+
+    .kpi-card-padding{
+        padding:25px 14px;
     }
 
     /* Reset Password / Change Role modals */
@@ -8304,6 +8437,34 @@ h1, h2, h3, h4, h5, h6,
 
     .info-details p {
         font-size: 0.82rem;
+    }
+}
+
+@media (max-width:768px){
+    .agent-list-min-width{
+        min-width: 100% !important;
+    }
+    .properties-add-btn {
+        max-width: 200px;
+    }
+    
+   .customers-filter-form .customers-status-box{
+      min-width: 100% !important;
+   }
+
+    .compose-title-msg {
+       padding: 10px 8px 0;
+    }
+    .profile-header-content > .d-flex{
+        flex-direction: column !important;
+        text-align: center !important;
+    }
+    .profile-header-content .align-self-start{
+     margin:auto;
+    }
+
+    .contact-email-btn{
+        width: 90px;
     }
 }
 
