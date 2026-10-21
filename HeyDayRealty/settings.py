@@ -101,8 +101,6 @@ WSGI_APPLICATION = 'HeyDayRealty.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
 DB_ENGINE = os.getenv('DB_ENGINE', 'django.db.backends.postgresql')
 
 if DB_ENGINE == 'django.db.backends.sqlite3':
