@@ -32,7 +32,7 @@ DEBUG = os.getenv('DEBUG') == 'True'
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost, x-realtors.in', 'hhectare.com').split(',')
 
 # CSRF trusted origins for HTTPS
-CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', 'https://x-realtors.in', 'https.hhectare.com').split(',')
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', 'https://x-realtors.in', 'https://hhectare.com').split(',')
 
 
 # Application definition
