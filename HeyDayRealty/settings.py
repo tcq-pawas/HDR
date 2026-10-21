@@ -33,7 +33,11 @@ ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
 
 # CSRF trusted origins for HTTPS
 csrf_origins = os.getenv('CSRF_TRUSTED_ORIGINS', '')
-CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in csrf_origins.split(',') if origin.strip()]
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip() 
+    for origin in csrf_origins.split(',') 
+    if origin.strip() and origin.strip().startswith(('http://', 'https://'))
+]
 
 # Application definition
 
@@ -101,8 +105,6 @@ WSGI_APPLICATION = 'HeyDayRealty.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
 DB_ENGINE = os.getenv('DB_ENGINE', 'django.db.backends.postgresql')
 
 if DB_ENGINE == 'django.db.backends.sqlite3':
