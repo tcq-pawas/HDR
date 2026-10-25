@@ -387,12 +387,41 @@ def _enforce_agent_property_listing(request, user_role, subscription=SUBSCRIPTIO
     return _agent_listing_limit_response(request, check)
 
 
+def _require_mobile_verified(request, user_role):
+    """
+    For agents only: redirect to Settings page if their mobile number
+    has not been OTP-verified yet.
+    Returns an HttpResponse when blocked; otherwise None.
+    """
+    if user_role not in ('agent', 'owner'):
+        return None
+    try:
+        from Apps.Administration.models import UserVerification
+        verification = request.user.verification
+        if verification.is_mobile_verified:
+            return None
+    except Exception:
+        # No UserVerification record means not verified
+        pass
+    messages.warning(
+        request,
+        "Please verify your mobile number before adding a property. "
+        "Go to Settings and complete OTP verification."
+    )
+    return redirect('agent:settings')
+
+
 @login_required
 def property_type_select(request):
     """Select property type before adding"""
     user_role = get_user_role(request.user)
     if user_role not in ['agent', 'owner', 'admin'] and not request.user.is_superuser and not request.user.is_staff:
         raise PermissionDenied("Access denied. This page is only accessible to agents, owners, or admins.")
+
+    # Mobile verification gate — agents must verify their number first
+    mobile_block = _require_mobile_verified(request, user_role)
+    if mobile_block is not None:
+        return mobile_block
 
     blocked = _enforce_agent_property_listing(request, user_role)
     if blocked is not None:
@@ -408,6 +437,11 @@ def property_add(request, property_type):
     user_role = get_user_role(request.user)
     if user_role not in ['agent', 'owner', 'admin'] and not request.user.is_superuser and not request.user.is_staff:
         raise PermissionDenied("Access denied. This page is only accessible to agents, owners, or admins.")
+
+    # Mobile verification gate — agents must verify their number first
+    mobile_block = _require_mobile_verified(request, user_role)
+    if mobile_block is not None:
+        return mobile_block
 
     # Gate form access for agents (inactive/expired/at-limit) before they fill the form
     blocked = _enforce_agent_property_listing(request, user_role)
@@ -708,11 +742,20 @@ def settings(request):
     else:
         form = AgentProfileForm(instance=agent_profile, user=request.user)
     
+    # Fetch mobile verification status so the template can render the OTP widget
+    from Apps.Administration.models import UserVerification
+    verification, _ = UserVerification.objects.get_or_create(user=request.user)
+    is_mobile_verified = verification.is_mobile_verified
+    # Prefer the number stored in UserVerification; fall back to agent profile phone
+    phone_for_otp = verification.phone_number or agent_profile.phone or ''
+
     context = {
         'form': form,
         'agent_profile': agent_profile,
+        'is_mobile_verified': is_mobile_verified,
+        'phone_for_otp': phone_for_otp,
     }
-    
+
     return render(request, 'agent/settings.html', context)
 
 

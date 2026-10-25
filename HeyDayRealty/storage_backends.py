@@ -2,6 +2,9 @@ from storages.backends.s3boto3 import S3Boto3Storage
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 import os
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Check if AWS credentials are provided
 USE_S3 = bool(getattr(settings, 'AWS_ACCESS_KEY_ID', None) and getattr(settings, 'AWS_SECRET_ACCESS_KEY', None))
@@ -29,7 +32,23 @@ if USE_S3:
 
     class PropertyMediaStorage(BaseRoleMediaStorage):
         bucket_name = settings.AWS_PROPERTY_BUCKET_NAME
-        
+
+        def _save(self, name, content):
+            """Override to catch SSL/network errors and fall back to local storage."""
+            try:
+                return super()._save(name, content)
+            except Exception as exc:
+                # botocore/urllib3 SSL errors surface as various exception types;
+                # catching broadly here so a transient Storj issue doesn't break
+                # the entire property submission in development.
+                logger.error(
+                    "PropertyMediaStorage: failed to upload '%s' to Storj (%s: %s). "
+                    "Falling back to local FileSystemStorage.",
+                    name, type(exc).__name__, exc,
+                )
+                local = FileSystemStorage()
+                return local._save(name, content)
+
     class GeneralMediaStorage(BaseRoleMediaStorage):
         bucket_name = settings.AWS_STORAGE_BUCKET_NAME
 else:
@@ -108,6 +127,27 @@ def get_agent_document_path(instance, filename):
     return generate_unique_upload_path(user_obj, filename, "documents")
 
 def get_property_image_path(instance, filename):
-    # Properties might be tied to an agent
-    user_identifier = f"agent_{instance.agent.id}" if hasattr(instance, 'agent') and instance.agent else "system"
-    return f"properties/{user_identifier}/{instance.id}/{filename}"
+    """
+    Build the storage path for property-related media.
+
+    The Property model uses a `seller` FK (not `agent`), so we read that.
+    PropertyImage rows link back to the property via `instance.property`.
+    We also guard against the object not yet having a PK (pre-save) by using
+    'new' as the folder name in that edge-case.
+    """
+    # --- resolve the owning user ---
+    # Direct seller FK on Property
+    if hasattr(instance, 'seller') and instance.seller_id:
+        user_identifier = f"seller_{instance.seller_id}"
+    # PropertyImage has a FK called `property` which has a `seller`
+    elif hasattr(instance, 'property') and instance.property and instance.property.seller_id:
+        user_identifier = f"seller_{instance.property.seller_id}"
+    # Fallback: agent FK (other models that reuse this helper)
+    elif hasattr(instance, 'agent') and instance.agent:
+        user_identifier = f"agent_{instance.agent.id}"
+    else:
+        user_identifier = "system"
+
+    # Use PK if already saved, else 'new' to avoid 'None' in the path
+    obj_id = instance.pk if instance.pk else "new"
+    return f"properties/{user_identifier}/{obj_id}/{filename}"
