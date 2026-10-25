@@ -409,6 +409,44 @@
     font-size: 0.8rem;
 }
 
+@media (max-width: 768px) {
+    .wizard-container {
+        padding: 10px;
+    }
+
+    .form-section {
+        padding: 20px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .step-indicators {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .wizard-actions {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media(max-width:600px){
+   .wizard-header h1 {
+      font-size: 1.1rem;
+    }
+
+    .wizard-header p{
+        font-size: 14px;
+    }
+}
 .spin {
     animation: spin 1s linear infinite;
 }

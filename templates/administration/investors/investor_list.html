@@ -1,7 +1,9 @@
 {% extends 'administration/admin_base.html' %}
 {% load static %}
 {% load humanize %}
-
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'admin/css/investor_list.css' %}">
+{% endblock %}
 {% block title %}Manage Investors - HHectare{% endblock %}
 
 {% block page_title %}Manage Investors{% endblock %}
@@ -13,7 +15,7 @@
 
 {% block content %}
 
-<div class="row mb-4 investors-page">
+<div class="row mb-4 investors-page" id="invester-page-padding" >
 
     
 
@@ -139,6 +141,7 @@
                 <div
                     class="alert alert-{{ message.tags }} alert-dismissible fade show"
                     role="alert"
+                    style="border:2px solid black"
                 >
                     {{ message }}
 
@@ -258,7 +261,7 @@
                         <!-- ACTIONS -->
 
                         <td>
-
+ 
                             <div class="investor-actions">
 
                                 <!-- View -->

@@ -111,7 +111,18 @@
     display: flex;
     align-items: center;
     gap: 10px;
-}
+   }
+
+   .plan-details-header-title h6{
+    padding-top: 10px;
+    font-size: 1rem;
+   }
+
+   @media (min-width: 1440px) {
+    .plan-details-header-title h6{
+        font-size: 1.4rem;
+    }
+   }
 </style>
 
 <!-- {% if messages %}
@@ -158,7 +169,7 @@
 
     <!-- PLAN DETAILS -->
     <div class="card shadow-sm border-0 rounded-4 mb-4">
-        <div class="card-header bg-white border-0 pt-3">
+        <div class="card-header bg-white border-0 pt-3 plan-details-header-title">
             <h6 class="fw-bold mb-0">Plan Details</h6>
         </div>
         <div class="card-body">
@@ -215,7 +226,7 @@
 
     <!-- PRICING OPTIONS -->
     <div class="card shadow-sm border-0 rounded-4 mb-4">
-        <div class="card-header bg-white border-0 pt-3">
+        <div class="card-header bg-white border-0 pt-3 plan-details-header-title">
             <h6 class="fw-bold mb-0">Pricing Options</h6>
         </div>
         <div class="card-body">
@@ -270,8 +281,8 @@
 
     <!-- FEATURES (fixed rows = master feature list, no add/remove) -->
     <div class="card shadow-sm border-0 rounded-4 mb-4">
-        <div class="card-header bg-white border-0 pt-3">
-            <h6 class="fw-bold mb-0">Plan Features</h6>
+        <div class="card-header bg-white border-0 pt-3 plan-details-header-title">
+            <h6 class="fw-bold mb-0 plan-feature-title">Plan Features</h6>
             <p class="text-muted small mb-0 mt-1">Every master feature is listed automatically. Just set the value and mark availability.</p>
         </div>
         <div class="card-body">

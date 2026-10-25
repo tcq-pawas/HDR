@@ -91,7 +91,6 @@
     height: 40px;
     min-width: 40px;
 }
-
 /* Action Buttons */
 .investor-actions {
     white-space: nowrap;
@@ -110,6 +109,10 @@
 
 .custom-modal .modal-content {
     width: 100%;
+}
+
+#invester-page-padding {
+    margin-left: 0 !important;
 }
 
 /* Tablet */

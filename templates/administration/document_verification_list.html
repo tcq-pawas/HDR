@@ -1,6 +1,10 @@
 {% extends "administration/admin_base.html" %}
 {% load static %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'admin/css/document_verification_list.css' %}">
+{% endblock %}
+
 {% block title %}KYC Verifications - Admin Dashboard{% endblock %}
 {% block page_title %}KYC Verifications{% endblock %}
 {% block page_subtitle %}Review and manage agent document verification submissions{% endblock %}
@@ -13,9 +17,9 @@
 
 <div class="card border rounded-3 shadow-sm p-3">
     <!-- Status summary -->
-    <div class="kyc-status-grid" role="tablist" aria-label="Document status filters">
-        <div class="kyc-status-grid-item">
-            <button type="button" class="kyc-status-card active d-flex flex-column" data-filter="pending" role="tab" aria-selected="true">
+    <div id="kyc-status-filters" class="row g-2" role="tablist" aria-label="Document status filters">
+        <div class="col-6 col-lg-3">
+            <button type="button" class="kyc-status-card active w-100 d-flex flex-column" data-filter="pending" role="tab" aria-selected="true">
                 <span class="status-top d-flex align-items-center gap-1"><span class="status-dot"></span> Pending Review</span>
                 <span class="status-count">{{ pending_count }}</span>
             </button>

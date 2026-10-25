@@ -1,9 +1,25 @@
-/* Property Edit Page - Namespaced to avoid conflicts with shared styles */
+.form-container #main-header {
+    margin-bottom: 40px;
+    background: transparent !important;
+    box-shadow: none !important;
+    border-bottom: none;
+}
 
-/* Page Container */
-.property-edit-page {
-    width: 100%;
-    min-width: 0;
+.form-container #main-header h1 {
+    color: black;
+    text-align: center;
+    font-size: 1.5rem !important;
+}
+
+.form-container-box{
+    padding: 15px;
+}
+
+.form-section {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 1.5rem;
+    align-items: start;
 }
 
 /* Premium Header */
@@ -365,61 +381,8 @@
     }
 }
 
-/* Responsive - Tablet 768px to 1199px */
-@media (max-width: 1199px) {
-    .property-edit-page .wizard-form {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-
-    .property-edit-page .section-media {
-        grid-column: 1;
-    }
-
-    .property-edit-page .form-row--three {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+@media (max-width:600px){
+    .form-container #main-header h1{
+        font-size: 17px !important;
     }
 }
-
-/* Responsive - Mobile below 768px */
-@media (max-width: 767px) {
-    .property-edit-page .premium-header {
-        padding: 1rem 1.25rem;
-    }
-
-    .property-edit-page .premium-header h4 {
-        font-size: 1.15rem;
-    }
-
-    .property-edit-page .form-section {
-        padding: 1.25rem;
-    }
-
-    .property-edit-page .form-row,
-    .property-edit-page .form-row--three {
-        grid-template-columns: 1fr;
-    }
-
-    .property-edit-page .wizard-actions {
-        flex-direction: column;
-        gap: 0.75rem;
-        padding: 1.25rem;
-    }
-
-    .property-edit-page .wizard-actions .btn {
-        width: 100%;
-        justify-content: center;
-    }
-}
-
-/* Responsive - Mobile below 480px */
-@media (max-width: 480px) {
-    .property-edit-page .form-section {
-        padding: 1rem;
-    }
-
-    .property-edit-page .form-row {
-        gap: 0.75rem;
-    }
-}
-

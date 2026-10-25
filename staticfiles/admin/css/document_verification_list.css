@@ -14,6 +14,10 @@
     box-shadow: var(--shadow-sm);
 }
 
+#kyc-status-filters{
+    margin-left: 0;
+}
+
 .kyc-status-card .status-top {
     font-size: 0.8rem;
     font-weight: 600;
@@ -280,35 +284,22 @@
 .kyc-pane { display: none; }
 .kyc-pane.active { display: block; }
 
-/* ============================================================
-   KYC STATUS GRID — CSS GRID LAYOUT
-   ============================================================ */
-
-.kyc-status-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 0.5rem;
-    width: 100%;
+@media (width: 1024px) {
+    #kyc-status-filters .kyc-status-card {
+        height: 65.33px !important;
+        min-height: 85.33px !important;
+    }
 }
 
-.kyc-status-grid-item {
-    min-width: 0;
-    width: 100%;
-}
-
-.kyc-status-grid-item .kyc-status-card {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-}
-
-/* ------------------------------------------------------------
-   BELOW 1082px — 2 cards per row
-   ------------------------------------------------------------ */
-@media (max-width: 1081.98px) {
-    .kyc-status-grid {
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+    .kyc-doc-card {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .kyc-doc-actions {
+        width: 100%;
+        display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
