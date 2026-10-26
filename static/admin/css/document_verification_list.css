@@ -280,71 +280,53 @@
 .kyc-pane { display: none; }
 .kyc-pane.active { display: block; }
 
-/* Mobile responsive adjustments */
-@media (max-width: 768px) {
-    .kyc-doc-card {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    .kyc-doc-actions {
-        width: 100%;
-        display: grid;
+/* ============================================================
+   KYC STATUS GRID — CSS GRID LAYOUT
+   ============================================================ */
+
+.kyc-status-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.kyc-status-grid-item {
+    min-width: 0;
+    width: 100%;
+}
+
+.kyc-status-grid-item .kyc-status-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* ------------------------------------------------------------
+   BELOW 1082px — 2 cards per row
+   ------------------------------------------------------------ */
+@media (max-width: 1081.98px) {
+    .kyc-status-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 0.45rem;
-    }
-    .kyc-doc-actions .btn,
-    .kyc-doc-actions form,
-    .kyc-doc-actions form .btn {
-        width: 100%;
-        min-width: 0;
-    }
-    .kyc-doc-actions .btn {
-        min-height: 38px;
-        font-size: 0.7rem;
-        padding: 0.45rem 0.55rem;
-    }
-    .kyc-thumb {
-        width: 52px;
-        height: 52px;
-        font-size: 1.15rem;
-    }
-    .kyc-preview-img {
-        max-height: 300px;
-    }
-    .kyc-preview-pdf {
-        height: 300px;
     }
 }
 
-@media (max-width: 576px) {
-    .kyc-doc-actions {
-        grid-template-columns: 1fr;
-    }
-    .kyc-doc-actions .btn {
-        min-height: 40px;
-    }
-    .kyc-meta-grid {
-        grid-template-columns: 1fr;
-    }
-    .kyc-preview-img {
-        max-height: 240px;
-    }
-    .kyc-preview-pdf {
-        height: 260px;
-    }
-    /* Mobile modal */
-    #docPreviewModal .modal-dialog,
-    #rejectModal .modal-dialog,
-    #rejectDocModal .modal-dialog {
-        width: auto;
-        max-width: calc(100% - 16px);
-        margin: 8px auto;
+/* ------------------------------------------------------------
+   1082px AND ABOVE — 4 cards per row
+   ------------------------------------------------------------ */
+@media (min-width: 1082px) {
+    .kyc-status-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 }
 
-@media (max-width: 400px) {
-    .kyc-thumb {
-        width: 48px;
-        height: 48px;
+/* ------------------------------------------------------------
+   BELOW 413px — 1 card per row
+   ------------------------------------------------------------ */
+@media (max-width: 412.98px) {
+    .kyc-status-grid {
+        grid-template-columns: 1fr;
     }
 }

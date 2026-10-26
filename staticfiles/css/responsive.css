@@ -53,7 +53,7 @@ html, body {
 
 
 
-    max-width: 100%;
+   
 
 
 
@@ -5996,7 +5996,7 @@ iframe, embed, object, video {
 
 
 
-        min-height: 44px;
+        min-height: 34px;
 
 
 
@@ -9834,7 +9834,7 @@ iframe, embed, object, video {
     }
 
     .admin-dashboard .page-header {
-        padding: 10px;
+        padding:23px 27px;
         margin-bottom: 10px;
     }
 }
@@ -9890,7 +9890,7 @@ iframe, embed, object, video {
 
 
 
-        min-width: 400px;
+       
 
 
 

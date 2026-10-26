@@ -3,14 +3,43 @@
 {% block title %}Add Property | HHectare{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/agent/property_type_select.css' %}">
 <style>
+    .property-type-page,
+    .property-type-header,
+    .property-type-card,
+    .property-type-card .card-body,
+    .property-limit-content {
+        box-sizing: border-box;
+    }
+
+    .property-type-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        align-items: stretch;
+    }
+
+    .property-type-col {
+        display: flex;
+        align-items: stretch;
+        min-width: 0;
+    }
+
     .property-type-eyebrow{
         padding-bottom: 10px;
     }
     .property-type-card {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        min-height: 320px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
         text-decoration: none !important;
         border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        background: #ffffff;
         transition: all 0.25s ease-in-out;
     }
     .property-type-card:hover {
@@ -18,18 +47,36 @@
         transform: translateY(-4px);
         box-shadow: 0 12px 28px rgba(0, 107, 69, 0.12);
     }
+    .property-type-card-disabled,
+    .property-type-card-disabled:hover {
+        pointer-events: none;
+        cursor: not-allowed;
+        border-color: #e2e8f0;
+        transform: none;
+        box-shadow: none;
+        text-decoration: none !important;
+    }
+    .property-type-card .card-body {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 32px 24px;
+    }
     .property-type-card h3 {
         color: #1e293b;
         font-weight: 600;
         font-size: 1.3rem;
-        margin-top: 15px;
+        margin-top: 0;
         margin-bottom: 8px;
+        text-align: center;
     }
     .property-type-card p {
         color: #64748b;
         font-size: 0.9rem;
         line-height: 1.5;
         margin-bottom: 20px;
+        text-align: center;
     }
     .property-type-icon {
         width: 56px;
@@ -41,21 +88,174 @@
         justify-content: center;
         color: #006b45;
         font-size: 1.5rem;
+        margin: 0 auto 16px;
     }
     .property-type-header {
-        padding: 0 10px;
-        line-height: normal;
+        background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        border: 1px solid #bbf7d0;
         border-radius: 16px;
-        margin-bottom: 25px;
+        padding: 32px 28px;
+        margin-bottom: 32px;
+    }
+    .property-type-header-content {
+        max-width: 800px;
+    }
+    .property-type-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #006b45;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 12px;
     }
     .property-type-header h1 {
         font-weight: 700;
-        font-size: 1.5rem;
+        font-size: 1.75rem;
         color: #0f172a;
+        margin: 0 0 12px 0;
     }
     .property-type-header p {
-        font-size: 0.88rem;
+        font-size: 0.95rem;
         color: #64748b;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    @media (min-width: 1400px) {
+        .property-type-card {
+            min-height: 350px;
+        }
+        .property-type-card .card-body {
+            padding: 36px 28px;
+        }
+        .property-type-card h3 {
+            font-size: 1.4rem;
+        }
+        .property-type-header h1 {
+            font-size: 1.9rem;
+        }
+    }
+
+    @media (min-width: 992px) and (max-width: 1399.98px) {
+        .property-type-card {
+            min-height: 300px;
+        }
+        .property-type-card .card-body {
+            padding: 30px 26px;
+        }
+        .property-type-card h3 {
+            font-size: 1.3rem;
+        }
+        .property-type-header h1 {
+            font-size: 1.75rem;
+        }
+    }
+
+    @media (min-width: 768px) and (max-width: 991.98px) {
+        .property-type-card {
+            min-height: 275px;
+        }
+        .property-type-card .card-body {
+            padding: 26px 22px;
+        }
+        .property-type-card h3 {
+            font-size: 1.25rem;
+        }
+        .property-type-icon {
+            width: 52px;
+            height: 52px;
+            font-size: 1.4rem;
+        }
+        .property-type-header {
+            padding: 26px 24px;
+        }
+        .property-type-header h1 {
+            font-size: 1.6rem;
+        }
+    }
+
+    @media (max-width: 767.98px) {
+        .property-type-card {
+            min-height: 0;
+        }
+        .property-type-card .card-body {
+            padding: 24px 20px;
+        }
+        .property-type-card h3 {
+            font-size: 1.2rem;
+        }
+        .property-type-card p {
+            font-size: 0.88rem;
+        }
+        .property-type-icon {
+            width: 48px;
+            height: 48px;
+            font-size: 1.3rem;
+        }
+        .property-type-header {
+            padding: 22px 20px;
+            margin-bottom: 24px;
+        }
+        .property-type-header h1 {
+            font-size: 1.45rem;
+        }
+        .property-type-header p {
+            font-size: 0.88rem;
+        }
+        .property-type-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 767.98px) and (orientation: landscape) {
+        .property-type-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+        .property-type-col {
+            display: block;
+        }
+        .property-type-card {
+            min-height: 260px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .property-type-card .card-body {
+            padding: 20px 18px;
+        }
+        .property-type-card h3 {
+            font-size: 1.15rem;
+        }
+        .property-type-card p {
+            font-size: 0.85rem;
+        }
+        .property-type-header h1 {
+            font-size: 1.35rem;
+        }
+    }
+    
+    /* .property-types-box{
+        margin-left: 0 ;
+    }
+
+    @media (max-width:768px){
+      .property-type-header h1 {
+        font-size: 1.2rem;
+      }
+      .property-type-header p {
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (max-width:500px){
+      .property-type-header h1 {
+        font-size: 1rem;
+        }
     }
 
     .property-types-box{
@@ -75,7 +275,7 @@
       .property-type-header h1 {
         font-size: 1rem;
         }
-    }
+    } */
 </style>
 {% endblock %}
 
@@ -112,11 +312,11 @@
 
     <!-- ================= PROPERTY TYPES ================= -->
 
-    <div class="row g-3 property-type-grid property-types-box">
+    <div class="property-type-grid">
 
         <!-- Agricultural Land -->
 
-        <div class="col-md-6 property-type-col">
+        <div class="property-type-col">
 
             {% if request.resolver_match.namespace == 'admin_dash' %}
 
@@ -163,27 +363,65 @@
         </div>
 
 
-        <!-- House / Building -->
+        <!-- Plots & Small Land -->
 
-        <div class="col-md-6 property-type-col">
+        <div class="property-type-col">
 
             {% if request.resolver_match.namespace == 'admin_dash' %}
 
                 <a
-                    href="{% url 'admin_dash:property_add' 'house' %}"
+                    href="{% url 'admin_dash:property_add' 'plot' %}"
                     class="card property-type-card"
-                    aria-label="Add House or Building"
+                    aria-label="Add Plots and Small Land"
                 >
 
             {% else %}
 
                 <a
-                    href="{% url 'agent:property_add' 'house' %}"
+                    href="{% url 'agent:property_add' 'plot' %}"
                     class="card property-type-card"
-                    aria-label="Add House or Building"
+                    aria-label="Add Plots and Small Land"
                 >
 
             {% endif %}
+
+                    <div class="card-body">
+
+                        <div class="property-type-icon" style="background: #e8f5e9; color: #006b45;">
+                            <i class="bi bi-bounding-box"></i>
+                        </div>
+
+                        <h3>
+                            Plots &amp; Small Land
+                        </h3>
+
+                        <p>
+                            Add residential plots, small land parcels,
+                            and plot listings.
+                        </p>
+
+                        <span class="btn btn-primary mt-2">
+                            <i class="bi bi-arrow-right me-1"></i>
+                            Select Plot
+                        </span>
+
+                    </div>
+
+                </a>
+
+        </div>
+
+
+        <!-- House / Building -->
+
+        <div class="property-type-col">
+
+            <div
+                class="card property-type-card"
+                style="pointer-events: none; cursor: not-allowed;"
+                aria-disabled="true"
+                aria-label="House or Building coming soon"
+            >
 
                     <div class="card-body">
 
@@ -201,13 +439,12 @@
                         </p>
 
                         <span class="btn btn-primary mt-2">
-                            <i class="bi bi-arrow-right me-1"></i>
-                            Select House
+                            Coming Soon
                         </span>
 
                     </div>
 
-                </a>
+            </div>
 
         </div>
 

@@ -104,12 +104,24 @@ jobs:
 
           PROJECT_DIR="/home/ubuntu/HDR"
           BRANCH="Production"
-          DEPLOYMENT_URL="https://x-realtors.in"
+          COMPOSE_FILE="docker-compose.prod.yml"
+          DEPLOYMENT_URL="https://hhectare.com"
 
           cd "$PROJECT_DIR"
 
           echo "🚀 Starting deployment to Production EC2..."
           echo ""
+
+          # Validate production Compose file
+          if [ ! -f "$COMPOSE_FILE" ]; then
+            echo "ERROR: $COMPOSE_FILE not found in $PROJECT_DIR"
+            exit 1
+          fi
+
+          # Use the production Compose file for every operation
+          dc() {
+            docker compose -f "$COMPOSE_FILE" "$@"
+          }
 
           # Git operations
           echo "::group::📥 Pulling latest code"
@@ -130,7 +142,7 @@ jobs:
 
           # Cleanup
           echo "::group::🧹 Cleaning up resources"
-          if docker compose down --remove-orphans 2>/dev/null && \
+          if dc down --remove-orphans 2>/dev/null && \
              docker system prune -af --volumes 2>/dev/null && \
              sudo rm -rf /tmp/* /var/tmp/* 2>/dev/null; then
             echo "✓ Cleanup completed"
@@ -142,7 +154,7 @@ jobs:
 
           # Build
           echo "::group::🔨 Building Docker image"
-          if DOCKER_BUILDKIT=1 docker compose build --progress=auto 2>&1 | tee /tmp/build.log; then
+          if DOCKER_BUILDKIT=1 dc build --progress=auto 2>&1 | tee /tmp/build.log; then
             echo "✓ Docker image built successfully"
           else
             echo "✗ Docker build failed"
@@ -154,7 +166,7 @@ jobs:
 
           # Start containers
           echo "::group::▶️  Starting containers"
-          if docker compose up -d --force-recreate 2>&1 | tee /tmp/start.log; then
+          if dc up -d --force-recreate 2>&1 | tee /tmp/start.log; then
             echo "✓ Containers started"
           else
             echo "✗ Failed to start containers"
@@ -173,35 +185,35 @@ jobs:
 
           # Check container status
           echo "::group::📊 Container status"
-          docker compose ps --format "table {{.Name}}\t{{.Status}}\t{{.Ports}}"
+          dc ps --format "table {{.Name}}\t{{.Status}}\t{{.Ports}}"
           echo "::endgroup::"
           echo ""
 
           # Check services
           echo "::group::🔍 Service health check"
-          
+
           # PostgreSQL
-          if docker compose exec -T postgres pg_isready -U postgres 2>/dev/null; then
+          if dc exec -T postgres pg_isready -U postgres 2>/dev/null; then
             echo "✓ PostgreSQL: Healthy"
           else
             echo "✗ PostgreSQL: Unhealthy"
-            docker compose logs postgres --tail=20
+            dc logs postgres --tail=20
           fi
 
           # Django/Gunicorn
-          if docker compose exec -T web pgrep -f gunicorn 2>/dev/null; then
+          if dc exec -T web pgrep -f gunicorn 2>/dev/null; then
             echo "✓ Gunicorn: Running"
           else
             echo "✗ Gunicorn: Not running"
-            docker compose logs web --tail=30
+            dc logs web --tail=30
           fi
 
           # Nginx
-          if docker compose exec -T nginx pgrep -f nginx 2>/dev/null; then
+          if dc exec -T nginx pgrep -f nginx 2>/dev/null; then
             echo "✓ Nginx: Running"
           else
             echo "✗ Nginx: Not running"
-            docker compose logs nginx --tail=20
+            dc logs nginx --tail=20
           fi
           echo "::endgroup::"
           echo ""
@@ -217,6 +229,7 @@ jobs:
           echo "✓ Gunicorn: Running"
           echo "✓ Nginx: Running"
           echo "✓ Health check: Passed"
+          echo "Compose file: $COMPOSE_FILE"
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
           echo "🌐 Deployment URL: $DEPLOYMENT_URL"
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

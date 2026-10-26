@@ -7,8 +7,6 @@
 {% block twitter_title %}Buy Farmland & Agricultural Land | HHectare{% endblock %}
 
 {% block extra_css %}
-<!-- Leaflet CSS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -108,22 +106,27 @@
     }
 
     .search-form-row {
-        display: flex;
-        flex-wrap: wrap;
+        display: grid;
         gap: 16px;
-        align-items: flex-end;
+        align-items: end;
+    }
+
+    .search-form-row:first-child {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .search-form-row:nth-child(2) {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 
     .search-form-field {
-        flex: 1;
-        min-width: 140px;
+        min-width: 0;
     }
 
     .search-form-actions {
         display: flex;
         gap: 12px;
-        flex-shrink: 0;
-        margin-left: auto;
+        align-self: end;
     }
 
     .clear-filters-btn {
@@ -184,29 +187,43 @@
         background: #F4B400;
     }
     
-    #area-price-filter-container{
-        margin-left: 80px;
+    /* View More Button */
+    .view-more-properties-wrapper {
+        display: flex;
+        justify-content: center;
+        margin-top: 28px;
     }
 
-    @media (min-width: 1024px) and (max-width: 1439px) {
-        .form-agri-land-for-sale {
-            width: 100%;
-            max-width: 710px;
-        }
+    .view-more-properties-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 11px 24px;
+        border: 1px solid #0F6A3C;
+        border-radius: 999px;
+        background: #0F6A3C;
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 12px rgba(15, 106, 60, 0.15);
     }
 
-    @media (min-width: 1440px) and (max-width: 2558px) {
-        .form-agri-land-for-sale {
-            max-width: 830px;
-        }
+    .view-more-properties-btn:hover {
+        background: #0d5a32;
+        border-color: #0d5a32;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(15, 106, 60, 0.2);
     }
 
-    @media (min-width: 2559px) and (max-width: 2560px) {
-        .form-agri-land-for-sale {
-            max-width: 1520px;
-        }
-    }    
+    /* Hidden state for property cards */
+    .property-listing-card.is-hidden {
+        display: none !important;
+    }
 
+    /* Responsive Design */
     @media (max-width: 1200px) {
         .properties-grid {
             grid-template-columns: repeat(2, 1fr) !important;
@@ -218,15 +235,24 @@
         .properties-grid {
             grid-template-columns: repeat(2, 1fr) !important;
         }
-        
+
         /* Stack map and listings */
         div[style*="grid-template-columns: 38% 62%"] {
             grid-template-columns: 1fr !important;
         }
-        
+
         div[style*="position: sticky"] {
             position: relative !important;
             height: 400px !important;
+        }
+
+        /* Search form adjusts for tablet */
+        .search-form-row:first-child {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        }
+
+        .search-form-row:nth-child(2) {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
         }
     }
     
@@ -253,6 +279,7 @@
         }
 
         .search-form-row {
+            display: flex !important;
             flex-direction: column !important;
             gap: 12px !important;
         }
@@ -260,7 +287,6 @@
         .search-form-field {
             width: 100% !important;
             min-width: 100% !important;
-            flex: 1 1 100% !important;
         }
 
         .search-form-actions {
@@ -434,6 +460,8 @@
                             <option value="50+" {% if filters.area_range == '50+' %}selected{% endif %}>50+</option>
                         </select>
                     </div>
+                </div>
+                <div class="search-form-row">
                     <!-- Unit -->
                     <div class="search-form-field">
                         <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #6b7a7a; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Unit</label>
@@ -445,8 +473,6 @@
                             <option value="Sq Yard" {% if filters.area_unit == 'Sq Yard' %}selected{% endif %}>Sq Yard</option>
                         </select>
                     </div>
-                </div>
-                <div class="search-form-row">
                     <!-- Status -->
                     <div class="search-form-field">
                         <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #6b7a7a; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Status</label>
@@ -483,8 +509,8 @@
     <!-- Main Content: 38% Map, 62% Listings -->
     <div style="padding:54px 24px; display: grid; grid-template-columns: 38% 62%; gap: 24px;">
         <!-- Map Section -->
-        <div style="position: sticky; top: 24px; height: calc(100vh - 200px); min-height: 500px; border-radius: 18px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
-            <div id="propertyMap" style="width: 100%; height: 100%;"></div>
+        <div style="position: sticky; top: 24px; height: calc(100vh - 200px); min-height: 500px; border-radius: 18px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-top: 38px;">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2629.518770529693!2d83.37602480010356!3d26.798350293782747!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399145b795d2cae9%3A0x98b3202d1e49fd25!2sHeyDay%20Realty%20Private%20Limited!5e1!3m2!1sen!2sin!4v1790075653843!5m2!1sen!2sin" width="100%" height="100%" style="border:0; display:block;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
             <div style="position: absolute; right: 16px; top: 16px; display: flex; flex-direction: column; gap: 8px; z-index: 10;">
                 <button class="map-control-btn" id="mapZoomIn" title="Zoom In" style="width: 40px; height: 40px; background: white; border: 1px solid #e2e8f0; border-radius: 10px; cursor: pointer; font-size: 1.1rem; transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.1); color: #0F6A3C; display: flex; align-items: center; justify-content: center;"><i class="bi bi-plus-lg"></i></button>
                 <button class="map-control-btn" id="mapZoomOut" title="Zoom Out" style="width: 40px; height: 40px; background: white; border: 1px solid #e2e8f0; border-radius: 10px; cursor: pointer; font-size: 1.1rem; transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.1); color: #0F6A3C; display: flex; align-items: center; justify-content: center;"><i class="bi bi-dash-lg"></i></button>
@@ -532,7 +558,7 @@
             {% if properties %}
                 <div class="properties-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
                     {% for property in properties %}
-                        <div class="property-card" data-property-id="{{ property.id }}" style="background: white; border-radius: 18px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); transition: all 0.3s; display: flex; flex-direction: column;">
+                        <div class="property-card property-listing-card" data-property-id="{{ property.id }}" style="background: white; border-radius: 18px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); transition: all 0.3s; display: flex; flex-direction: column;">
                             <!-- Image Slider -->
                             <div style="position: relative; height: 200px; overflow: hidden; background: #e2e8f0; display: flex; align-items: center; justify-content: center;">
                                 {% if property.featured_image %}
@@ -588,6 +614,14 @@
                     {% endfor %}
                 </div>
 
+                <!-- View More Button -->
+                <div class="view-more-properties-wrapper">
+                    <button type="button" class="view-more-properties-btn" aria-expanded="false" aria-label="Show more properties">
+                        <span>View More</span>
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+                </div>
+
                 <!-- Pagination -->
                 {% if page_obj.has_other_pages %}
                     <div style="display: flex; justify-content: center; gap: 8px; margin-top: 32px; padding: 24px 0;">
@@ -621,65 +655,8 @@
 </div>
 
 <!-- JavaScript -->
-{{ properties_json|json_script:"properties-data" }}
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // ---- Map ----
-        const mapContainer = document.getElementById('propertyMap');
-        if (mapContainer) {
-            const map = L.map('propertyMap', {
-                center: [20.5937, 78.9629],
-                zoom: 5,
-                zoomControl: false
-            });
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            }).addTo(map);
-
-            // Custom controls
-            document.getElementById('mapZoomIn').addEventListener('click', (e) => { e.preventDefault(); map.zoomIn(); });
-            document.getElementById('mapZoomOut').addEventListener('click', (e) => { e.preventDefault(); map.zoomOut(); });
-            document.getElementById('mapFullscreen').addEventListener('click', (e) => {
-                e.preventDefault();
-                const el = document.getElementById('propertyMap').parentElement;
-                if (!document.fullscreenElement) el.requestFullscreen().catch(() => {});
-                else document.exitFullscreen();
-            });
-            document.getElementById('mapLayers').addEventListener('click', (e) => {
-                e.preventDefault();
-                alert('Layer switcher – you can integrate here.');
-            });
-
-            // Markers – safely parsed from json_script
-            let properties = [];
-            const dataScript = document.getElementById('properties-data');
-            if (dataScript) {
-                try {
-                    properties = JSON.parse(dataScript.textContent);
-                } catch (e) {
-                    properties = [];
-                }
-            }
-            if (properties && properties.length) {
-                const bounds = [];
-                properties.forEach(prop => {
-                    if (prop.lat && prop.lng) {
-                        L.marker([prop.lat, prop.lng])
-                            .addTo(map)
-                            .bindPopup(`<strong>${prop.title}</strong><br>₹${prop.price}`);
-                        bounds.push([prop.lat, prop.lng]);
-                    }
-                });
-                if (bounds.length) map.fitBounds(bounds, { padding: [50, 50] });
-            } else {
-                // Fallback marker
-                L.marker([20.5937, 78.9629]).addTo(map).bindPopup('Farmland location').openPopup();
-            }
-
-            setTimeout(() => map.invalidateSize(), 300);
-        }
-
         // ---- Carousel dots ----
         document.querySelectorAll('.property-card').forEach(card => {
             const dots = card.querySelectorAll('.carousel-dot');
@@ -814,6 +791,53 @@
                 }
             });
         });
+
+        // ---- View More Properties ----
+        const cards = document.querySelectorAll('.property-listing-card');
+        const viewMoreWrapper = document.querySelector('.view-more-properties-wrapper');
+        const viewMoreBtn = document.querySelector('.view-more-properties-btn');
+
+        if (cards.length <= 3) {
+            if (viewMoreWrapper) {
+                viewMoreWrapper.style.display = 'none';
+            }
+        } else {
+            cards.forEach((card, index) => {
+                if (index >= 3) {
+                    card.classList.add('is-hidden');
+                }
+            });
+
+            if (viewMoreBtn) {
+                viewMoreBtn.addEventListener('click', function() {
+                    const isExpanded = this.getAttribute('aria-expanded') === 'true';
+                    const btnText = this.querySelector('span');
+                    const btnIcon = this.querySelector('i');
+
+                    if (isExpanded) {
+                        // Collapse - show only first 3
+                        cards.forEach((card, index) => {
+                            if (index >= 3) {
+                                card.classList.add('is-hidden');
+                            }
+                        });
+                        btnText.textContent = 'View More';
+                        btnIcon.className = 'bi bi-chevron-down';
+                        this.setAttribute('aria-expanded', 'false');
+                        this.setAttribute('aria-label', 'Show more properties');
+                    } else {
+                        // Expand - show all
+                        cards.forEach(card => {
+                            card.classList.remove('is-hidden');
+                        });
+                        btnText.textContent = 'View Less';
+                        btnIcon.className = 'bi bi-chevron-up';
+                        this.setAttribute('aria-expanded', 'true');
+                        this.setAttribute('aria-label', 'Show fewer properties');
+                    }
+                });
+            }
+        }
     });
 </script>
 {% endblock %}

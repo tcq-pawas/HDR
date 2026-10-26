@@ -4,6 +4,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
 <head>
 
     <meta charset="UTF-8">
@@ -31,16 +32,15 @@
 
     <!-- Basic Body Styling -->
     <style>
-
         body {
             background-color: #f8f9fa;
         }
+
         .text-danger {
             color: #dc3545 !important;
             font-weight: bold;
         }
     </style>
-
 
     <!-- Global Responsive CSS -->
     <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
@@ -51,184 +51,10 @@
     <!-- Customer Dashboard CSS -->
     <link rel="stylesheet" href="{% static 'css/customer/customer.css' %}">
 
+    <!-- Customer Base CSS -->
+    <link rel="stylesheet" href="{% static 'customer/customer_base.css' %}">
+
     {% block extra_css %}{% endblock %}
-
-
-    <!-- Customer Dashboard Specific Styling -->
-    <style>
-
-        /* =========================================================
-           CUSTOMER DASHBOARD THEME
-           ========================================================= */
-
-        .customer-dashboard {
-            --customer-menu: #004526;
-
-            --customer-menu-glow:
-                radial-gradient(
-                    900px circle at 10% 10%,
-                    rgba(16, 185, 129, 0.35),
-                    transparent 55%
-                ),
-                radial-gradient(
-                    900px circle at 90% 40%,
-                    rgba(59, 130, 246, 0.25),
-                    transparent 60%
-                );
-        }
-
-
-        /* =========================================================
-           CUSTOMER DASHBOARD HERO SECTIONS
-           ========================================================= */
-
-        .customer-dashboard .dashboard-hero,
-        .customer-dashboard .hero-banner,
-        .customer-dashboard .premium-hero,
-        .customer-dashboard .sp-hero,
-        .customer-dashboard .inquiry-hero,
-        .customer-dashboard .edit-hero,
-        .customer-dashboard .inquiry-detail-hero {
-
-            background: var(--customer-menu) !important;
-
-            position: relative;
-
-            overflow: hidden;
-
-            border-color: rgba(0, 69, 38, 0.35) !important;
-
-            box-shadow:
-                0 4px 15px rgba(0, 69, 38, 0.18) !important;
-        }
-
-
-        /* =========================================================
-           HERO GLOW
-           ========================================================= */
-
-        .customer-dashboard .dashboard-hero::before,
-        .customer-dashboard .hero-banner::before,
-        .customer-dashboard .premium-hero::before,
-        .customer-dashboard .sp-hero::before,
-        .customer-dashboard .inquiry-hero::before,
-        .customer-dashboard .edit-hero::before,
-        .customer-dashboard .inquiry-detail-hero::before {
-
-            content: "" !important;
-
-            position: absolute !important;
-
-            inset: 0 !important;
-
-            right: auto !important;
-
-            top: auto !important;
-
-            width: auto !important;
-
-            height: auto !important;
-
-            border-radius: 0 !important;
-
-            opacity: 1 !important;
-
-            transform: none !important;
-
-            filter: none !important;
-
-            background-image: none !important;
-
-            background: var(--customer-menu-glow) !important;
-
-            pointer-events: none !important;
-
-            z-index: 0 !important;
-        }
-
-
-        /* =========================================================
-           REMOVE EXISTING HERO AFTER EFFECT
-           ========================================================= */
-
-        .customer-dashboard .dashboard-hero::after,
-        .customer-dashboard .hero-banner::after,
-        .customer-dashboard .premium-hero::after,
-        .customer-dashboard .sp-hero::after,
-        .customer-dashboard .inquiry-hero::after,
-        .customer-dashboard .edit-hero::after,
-        .customer-dashboard .inquiry-detail-hero::after {
-
-            display: none !important;
-        }
-
-
-        /* =========================================================
-           HERO CONTENT ABOVE GLOW
-           ========================================================= */
-
-        .customer-dashboard .dashboard-hero > *,
-        .customer-dashboard .hero-banner > *,
-        .customer-dashboard .inquiry-hero > *,
-        .customer-dashboard .edit-hero > *,
-        .customer-dashboard .inquiry-detail-hero > *,
-        .customer-dashboard .premium-hero > *,
-        .customer-dashboard .sp-hero > * {
-
-            position: relative;
-
-            z-index: 1;
-        }
-
-
-        /* =========================================================
-           MOBILE MENU TOGGLE
-           ========================================================= */
-
-        /*
-         * responsive.css makes .mobile-menu-toggle visible
-         * below 768px.
-         *
-         * These customer-specific rules override it without
-         * modifying the global responsive.css file.
-         */
-
-        @media (max-width: 768px) {
-
-            .customer-dashboard .mobile-menu-toggle {
-
-                display: block;
-
-                position: fixed;
-
-                z-index: 1001;
-            }
-
-
-            /*
-             * Hide hamburger while sidebar is open.
-             */
-            .customer-dashboard .mobile-menu-toggle.hide {
-
-                display: none !important;
-            }
-
-        }
-
-
-        /*
-         * Keep hamburger hidden on desktop.
-         */
-        @media (min-width: 769px) {
-
-            .customer-dashboard .mobile-menu-toggle {
-
-                display: none !important;
-            }
-
-        }
-
-    </style>
 
 
     {% block extra_head %}{% endblock %}

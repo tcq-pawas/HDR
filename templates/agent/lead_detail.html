@@ -11,19 +11,19 @@
 {% block content %}
 <div class="lead-detail-container">
     <!-- Header -->
-    <div class="page-header">
-        <h1>Lead Details - {{ lead.name }}</h1>
-        <div class="action-buttons">
-            <a href="{% url 'agent:lead_edit' lead.id %}" class="btn btn-secondary">
+    <div class="lead-detail-header">
+        <h1 class="lead-detail-title">Lead Details - {{ lead.name }}</h1>
+        <div class="lead-detail-actions">
+            <a href="{% url 'agent:lead_edit' lead.id %}" class="btn lead-action-btn lead-action-btn--edit">
                 <i class="bi bi-pencil"></i> Edit Lead
             </a>
-            <a href="{% url 'agent:lead_add_followup' lead.id %}" class="btn btn-primary">
+            <a href="{% url 'agent:lead_add_followup' lead.id %}" class="btn lead-action-btn lead-action-btn--followup">
                 <i class="bi bi-plus-lg"></i> Add Follow-up
             </a>
-            <a href="tel:{{ lead.phone }}" class="btn btn-success">
+            <a href="tel:{{ lead.phone }}" class="btn lead-action-btn lead-action-btn--call">
                 <i class="bi bi-telephone"></i> Call
             </a>
-            <a href="https://wa.me/{{ lead.phone }}" target="_blank" class="btn btn-success">
+            <a href="https://wa.me/{{ lead.phone }}" target="_blank" rel="noopener" class="btn lead-action-btn lead-action-btn--whatsapp">
                 <i class="bi bi-whatsapp"></i> WhatsApp
             </a>
         </div>

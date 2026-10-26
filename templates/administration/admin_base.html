@@ -2311,6 +2311,13 @@
 
 
 
+    <!-- Admin Typography (revert: delete this one link) -->
+    <link rel="stylesheet" href="{% static 'css/admin_typography.css' %}">
+
+    <!-- Admin UI polish (revert: delete these 3 lines + static/admin/css/admin_polish.css) -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap">
+    <link rel="stylesheet" href="{% static 'admin/css/admin_polish.css' %}">
+
 </head>
 
 
@@ -2426,7 +2433,7 @@
 
 
                             <div class="small text-white-50">Administrator</div>
-                            <a href="{% url 'admin_dash:view_profile' %}" class="btn btn-xs mt-2 w-100 d-flex align-items-center justify-content-center text-center text-white" style="font-size: 0.75rem; padding: 0.15rem 0.4rem; background: rgba(255, 255, 255, 0.15); border: none; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);">
+                            <a href="{% url 'admin_dash:view_profile' %}" class="btn btn-xs mt-2 w-100 d-flex align-items-center justify-content-center text-center text-white" style="font-size: 0.75rem; padding: 5px 13px; background: rgba(255, 255, 255, 0.15); border: none; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);">
                                 View Profile
                             </a>
                         </div>
@@ -2795,19 +2802,48 @@
 
             navLinks.forEach(link => {
 
+                const href = link.getAttribute('href');
 
+                if (!href || href === '#') {
+                    return;
+                }
 
-                if (link.getAttribute('href') === currentPath) {
+                /*
+                 * Normalize URLs so trailing slashes do not cause
+                 * active-state problems.
+                 */
+                const linkPath = new URL(href, window.location.origin).pathname;
 
-
+                if (linkPath === currentPath) {
 
                     link.classList.add('active');
 
+                    /*
+                     * Check whether this active link belongs to
+                     * a dropdown/collapse.
+                     */
+                    const parentCollapse = link.closest('.collapse');
 
+                    if (parentCollapse) {
+
+                        /*
+                         * Keep the parent dropdown OPEN.
+                         */
+                        parentCollapse.classList.add('show');
+
+                        /*
+                         * Find the dropdown trigger.
+                         */
+                        const trigger = document.querySelector(
+                            `[data-bs-target="#${parentCollapse.id}"]`
+                        );
+
+                        if (trigger) {
+                            trigger.setAttribute('aria-expanded', 'true');
+                        }
+                    }
 
                 }
-
-
 
             });
 
