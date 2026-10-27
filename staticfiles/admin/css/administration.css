@@ -2960,8 +2960,7 @@ h1, h2, h3, h4, h5, h6,
     }
 
     /* Page Header */
-    .communication-page .communication-page-header {
-        
+    .communication-page .communication-page-header { 
         align-items: stretch;
         gap: 8px;
         margin-bottom: 16px !important;
@@ -6358,7 +6357,6 @@ h1, h2, h3, h4, h5, h6,
 .property-actions .btn-icon {
     width: 34px;
     height: 34px;
-   
     display: inline-flex;
     align-items: center;
     justify-content: center;

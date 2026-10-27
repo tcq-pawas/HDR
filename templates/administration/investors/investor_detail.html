@@ -4,18 +4,6 @@
 
 {% load humanize %}
 
-{% block extra_css %}
-<style>
-    .investor-details-box {
-        margin-left: 0;
-    }
-    @media (min-width:1440px){
-      .investor-btn-box{
-        margin-top: 15px;
-      }
-    }
-</style>
-{% endblock %}
 
 {% block title %}Investor Details - {{ profile.user.get_full_name|default:profile.user.username }}{% endblock %}
 
@@ -28,8 +16,212 @@
 
 
 {% block content %}
-<div class="row mb-4 investor-details-box">
-    <div class="col-12 d-flex justify-content-between align-items-center flex-wrap gap-2 investor-btn-box">
+
+<style>
+    /* ===== Investor detail: responsive layout (styling only) ===== */
+    .inv-page {
+        container-type: inline-size;
+        container-name: inv;
+        width: 100%;
+    }
+
+    /* ---------- Top action bar ---------- */
+    .inv-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+    .inv-actions .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+    }
+    .inv-btn-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    /* ---------- Main layout ---------- */
+    .inv-layout {
+        display: grid;
+        grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
+        gap: 1.5rem;
+        align-items: start;
+    }
+    .inv-side,
+    .inv-main {
+        min-width: 0;
+    }
+    .inv-side .card {
+        height: auto;
+    }
+
+    /* ---------- Profile card ---------- */
+    .inv-profile-body {
+        display: block;
+    }
+    .inv-contact-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.9rem;
+        min-width: 0;
+    }
+    .inv-contact-item i {
+        width: 20px;
+        text-align: center;
+        margin-top: 0.2rem;
+        flex-shrink: 0;
+    }
+    .inv-contact-item a,
+    .inv-contact-item span {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        min-width: 0;
+    }
+
+    /* ---------- Stat cards ---------- */
+    .inv-stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    .inv-stat-card {
+        padding: 1.1rem 1.25rem;
+    }
+    .inv-stat-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+    }
+    .inv-stat-text {
+        min-width: 0;
+        flex: 1 1 auto;
+    }
+    .inv-stat-label {
+        font-size: 0.72rem;
+        letter-spacing: 0.04em;
+        line-height: 1.3;
+        word-break: normal;
+        overflow-wrap: normal;
+        hyphens: none;
+    }
+    .inv-stat-value {
+        font-size: clamp(1.15rem, 1.6vw, 1.5rem);
+        overflow-wrap: anywhere;
+    }
+    .inv-stat-icon {
+        width: 48px;
+        height: 48px;
+        flex: 0 0 48px;
+    }
+
+    /* ---------- Table ---------- */
+    .inv-table {
+        min-width: 620px;
+    }
+    .inv-table th,
+    .inv-table td {
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+    .inv-table td.inv-project {
+        white-space: normal;
+        min-width: 180px;
+    }
+
+    /* ===== Content narrower than ~1100px: stack profile on top ===== */
+    @container inv (max-width: 1100px) {
+        .inv-layout {
+            grid-template-columns: minmax(0, 1fr);
+        }
+        .inv-profile-body {
+            display: grid;
+            grid-template-columns: minmax(200px, 280px) minmax(0, 1fr);
+            align-items: center;
+            gap: 1.5rem 2rem;
+            text-align: left;
+        }
+        .inv-profile-body .inv-profile-top {
+            text-align: center;
+        }
+        .inv-profile-body hr {
+            display: none;
+        }
+        .inv-profile-body .inv-contact {
+            margin-top: 0 !important;
+            padding-left: 2rem;
+            border-left: 1px solid #f1f5f9;
+        }
+    }
+
+    /* ===== Content narrower than ~720px ===== */
+    @container inv (max-width: 720px) {
+        .inv-stats {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .inv-stats > :last-child:nth-child(odd) {
+            grid-column: 1 / -1;
+        }
+    }
+
+    /* ===== Small / mobile content width ===== */
+    @container inv (max-width: 640px) {
+        .inv-profile-body {
+            display: block;
+        }
+        .inv-profile-body hr {
+            display: block;
+        }
+        .inv-profile-body .inv-contact {
+            padding-left: 0;
+            border-left: 0;
+            margin-top: 1rem !important;
+        }
+        .inv-actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .inv-actions > .btn {
+            width: 100%;
+        }
+        .inv-btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+        .inv-actions .btn {
+            padding-left: 0.75rem !important;
+            padding-right: 0.75rem !important;
+        }
+    }
+
+    @container inv (max-width: 420px) {
+        .inv-stats {
+            grid-template-columns: minmax(0, 1fr);
+        }
+        .inv-btn-group {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+
+    /* ===== Smooth scroll hint for table on small screens ===== */
+    .inv-table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+</style>
+
+<div class="inv-page">
+
+<div class="row mb-4">
+
+    <div class="col-12 inv-actions">
+
         <a href="{% url 'admin_dash:investor-list' %}" class="btn btn-light fw-semibold rounded-pill px-4 text-secondary">
 
             <i class="fas fa-arrow-left me-2"></i>Back to Investors
@@ -140,8 +332,12 @@
 
 </div>
 
-<div class="row investor-details-box">
-    <div class="col-md-4 mb-4">
+
+
+<div class="inv-layout">
+
+    <div class="inv-side">
+
         <!-- Profile Summary Card -->
 
         <div class="card border-0 shadow-sm rounded-4">
@@ -223,17 +419,19 @@
     <div class="inv-main">
 
         <!-- Investment Summary -->
-        <div class="row investor-details-box">
-            <div class="col-sm-6 col-md-4 mb-4">
-                <div class="card border-0 shadow-sm rounded-4 p-3 h-100">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <p class="text-muted small text-uppercase mb-1 fw-semibold">Total Investments</p>
-                            <h4 class="fw-bold mb-0 text-dark">{{ investments|length }}</h4>
-                        </div>
-                        <div class="rounded-3 bg-info bg-opacity-10 text-info d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
-                            <i class="fas fa-chart-pie fa-lg"></i>
-                        </div>
+
+        <div class="inv-stats">
+
+            <div class="card border-0 shadow-sm rounded-4 inv-stat-card">
+
+                <div class="inv-stat-inner">
+
+                    <div class="inv-stat-text">
+
+                        <p class="text-muted text-uppercase mb-1 fw-semibold inv-stat-label">Total Investments</p>
+
+                        <h4 class="fw-bold mb-0 text-dark inv-stat-value">{{ investments|length }}</h4>
+
                     </div>
 
                     <div class="rounded-3 bg-info bg-opacity-10 text-info d-flex align-items-center justify-content-center inv-stat-icon">

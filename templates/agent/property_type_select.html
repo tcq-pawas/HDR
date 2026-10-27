@@ -4,6 +4,27 @@
 
 {% block extra_css %}
 <style>
+    .property-type-page,
+    .property-type-header,
+    .property-type-card,
+    .property-type-card .card-body,
+    .property-limit-content {
+        box-sizing: border-box;
+    }
+
+    .property-type-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        align-items: stretch;
+    }
+
+    .property-type-col {
+        display: flex;
+        align-items: stretch;
+        min-width: 0;
+    }
+
     .property-type-eyebrow{
         padding-bottom: 10px;
     }
@@ -70,8 +91,8 @@
         margin: 0 auto 16px;
     }
     .property-type-header {
-        padding: 0 10px;
-        line-height: normal;
+        background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        border: 1px solid #bbf7d0;
         border-radius: 16px;
         padding: 32px 28px;
         margin-bottom: 32px;
@@ -217,6 +238,25 @@
             font-size: 1.35rem;
         }
     }
+    
+    /* .property-types-box{
+        margin-left: 0 ;
+    }
+
+    @media (max-width:768px){
+      .property-type-header h1 {
+        font-size: 1.2rem;
+      }
+      .property-type-header p {
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (max-width:500px){
+      .property-type-header h1 {
+        font-size: 1rem;
+        }
+    }
 
     .property-types-box{
         margin-left: 0 ;
@@ -235,7 +275,7 @@
       .property-type-header h1 {
         font-size: 1rem;
         }
-    }
+    } */
 </style>
 {% endblock %}
 
@@ -272,7 +312,7 @@
 
     <!-- ================= PROPERTY TYPES ================= -->
 
-    <div class="row g-3 property-type-grid property-types-box">
+    <div class="property-type-grid">
 
         <!-- Agricultural Land -->
 
