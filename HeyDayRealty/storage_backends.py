@@ -19,7 +19,12 @@ if USE_S3:
         endpoint_url = settings.AWS_S3_ENDPOINT_URL
         region_name = settings.AWS_S3_REGION_NAME
         default_acl = settings.AWS_DEFAULT_ACL
-        querystring_auth = False
+        # Storj buckets are private by default, so unsigned URLs return 403.
+        # Generate pre-signed URLs so browsers can actually load the images.
+        querystring_auth = getattr(settings, 'AWS_QUERYSTRING_AUTH', True)
+        querystring_expire = getattr(settings, 'AWS_QUERYSTRING_EXPIRE', 3600 * 24 * 7)
+        signature_version = 's3v4'
+        addressing_style = 'path'
 
     class AgentMediaStorage(BaseRoleMediaStorage):
         bucket_name = settings.AWS_AGENT_BUCKET_NAME
