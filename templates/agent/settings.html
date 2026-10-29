@@ -115,8 +115,67 @@
             </form>
         </div>
 
-        <!-- Account Settings -->
+        <!-- Account + Mobile Verification Settings -->
         <aside class="settings-side">
+
+            <!-- Mobile Verification Card -->
+            <div class="settings-card" id="mobile-verify-card" style="margin-bottom:1.25rem;">
+                <h3 style="display:flex;align-items:center;gap:.5rem;">
+                    📱 Mobile Verification
+                    {% if is_mobile_verified %}
+                        <span style="margin-left:auto;font-size:.72rem;font-weight:700;padding:.2rem .55rem;border-radius:20px;background:#d1fae5;color:#065f46;">✓ Verified</span>
+                    {% else %}
+                        <span style="margin-left:auto;font-size:.72rem;font-weight:700;padding:.2rem .55rem;border-radius:20px;background:#fee2e2;color:#991b1b;">✗ Not Verified</span>
+                    {% endif %}
+                </h3>
+
+                {% if is_mobile_verified %}
+                    <p style="font-size:.85rem;color:#6b7280;margin:0;">
+                        Your mobile number <strong>{{ phone_for_otp }}</strong> is verified. You can add properties.
+                    </p>
+                {% else %}
+                    <p style="font-size:.85rem;color:#b45309;margin:0 0 .9rem;padding:.6rem .75rem;background:#fffbeb;border-radius:8px;border-left:3px solid #f59e0b;">
+                        ⚠️ Verify your mobile number to unlock property listing.
+                    </p>
+
+                    <!-- Step 1: Enter phone -->
+                    <div id="otp-step-phone">
+                        <label class="form-label" style="font-size:.82rem;">Mobile Number</label>
+                        <input id="otp-phone-input" type="tel" class="form-control"
+                               placeholder="e.g. 9876543210"
+                               value="{{ phone_for_otp }}"
+                               style="margin-bottom:.65rem;font-size:.9rem;">
+                        <button id="otp-send-btn" type="button"
+                                onclick="sendMobileOTP()"
+                                class="settings-btn"
+                                style="width:100%;justify-content:center;">
+                            Send OTP
+                        </button>
+                        <p id="otp-send-msg" style="font-size:.8rem;margin:.45rem 0 0;min-height:1rem;"></p>
+                    </div>
+
+                    <!-- Step 2: Enter OTP (hidden until sent) -->
+                    <div id="otp-step-verify" style="display:none;margin-top:.75rem;">
+                        <label class="form-label" style="font-size:.82rem;">Enter OTP</label>
+                        <input id="otp-code-input" type="text" class="form-control"
+                               maxlength="6" placeholder="6-digit OTP"
+                               style="margin-bottom:.65rem;font-size:.9rem;letter-spacing:.2rem;text-align:center;">
+                        <button id="otp-verify-btn" type="button"
+                                onclick="verifyMobileOTP()"
+                                class="settings-btn"
+                                style="width:100%;justify-content:center;background:#16a34a;">
+                            Verify OTP
+                        </button>
+                        <button type="button" onclick="resetOTPFlow()"
+                                style="width:100%;margin-top:.4rem;background:none;border:none;font-size:.8rem;color:#6b7280;cursor:pointer;text-decoration:underline;">
+                            Change number / Resend
+                        </button>
+                        <p id="otp-verify-msg" style="font-size:.8rem;margin:.45rem 0 0;min-height:1rem;"></p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Account Card -->
             <div class="settings-card">
                 <h3>Account</h3>
                 <div class="settings-item">
@@ -137,4 +196,99 @@
         </aside>
     </div>
 </div>
+
+{% if not is_mobile_verified %}
+<script>
+function getCsrfToken() {
+    const cookie = document.cookie.split(';').find(c => c.trim().startsWith('csrftoken='));
+    return cookie ? cookie.trim().split('=')[1] : '';
+}
+
+function setMsg(id, text, color) {
+    const el = document.getElementById(id);
+    if (el) { el.textContent = text; el.style.color = color || '#374151'; }
+}
+
+function sendMobileOTP() {
+    const phone = document.getElementById('otp-phone-input').value.trim();
+    if (!phone) { setMsg('otp-send-msg', 'Please enter your mobile number.', '#dc2626'); return; }
+    const btn = document.getElementById('otp-send-btn');
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    setMsg('otp-send-msg', '', '');
+
+    fetch("{% url 'auth:request_otp' %}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': getCsrfToken(),
+            'X-Requested-With': 'XMLHttpRequest',
+        },
+        body: `type=mobile&phone=${encodeURIComponent(phone)}`
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            setMsg('otp-send-msg', '✓ OTP sent! Check your SMS.', '#16a34a');
+            document.getElementById('otp-step-verify').style.display = 'block';
+            document.getElementById('otp-code-input').focus();
+        } else {
+            setMsg('otp-send-msg', data.message || 'Failed to send OTP.', '#dc2626');
+            btn.disabled = false;
+            btn.textContent = 'Send OTP';
+        }
+    })
+    .catch(() => {
+        setMsg('otp-send-msg', 'Network error. Please try again.', '#dc2626');
+        btn.disabled = false;
+        btn.textContent = 'Send OTP';
+    });
+}
+
+function verifyMobileOTP() {
+    const otp = document.getElementById('otp-code-input').value.trim();
+    if (!otp || otp.length < 4) { setMsg('otp-verify-msg', 'Enter the OTP sent to your number.', '#dc2626'); return; }
+    const btn = document.getElementById('otp-verify-btn');
+    btn.disabled = true;
+    btn.textContent = 'Verifying…';
+    setMsg('otp-verify-msg', '', '');
+
+    fetch("{% url 'auth:verify_otp' %}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': getCsrfToken(),
+            'X-Requested-With': 'XMLHttpRequest',
+        },
+        body: `type=mobile&otp=${encodeURIComponent(otp)}`
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            setMsg('otp-verify-msg', '✓ Mobile verified!', '#16a34a');
+            // Reload after short delay so the card flips to verified state
+            setTimeout(() => location.reload(), 1200);
+        } else {
+            setMsg('otp-verify-msg', data.message || 'Invalid OTP. Try again.', '#dc2626');
+            btn.disabled = false;
+            btn.textContent = 'Verify OTP';
+        }
+    })
+    .catch(() => {
+        setMsg('otp-verify-msg', 'Network error. Please try again.', '#dc2626');
+        btn.disabled = false;
+        btn.textContent = 'Verify OTP';
+    });
+}
+
+function resetOTPFlow() {
+    document.getElementById('otp-step-verify').style.display = 'none';
+    document.getElementById('otp-send-btn').disabled = false;
+    document.getElementById('otp-send-btn').textContent = 'Send OTP';
+    setMsg('otp-send-msg', '', '');
+    setMsg('otp-verify-msg', '', '');
+    document.getElementById('otp-code-input').value = '';
+}
+</script>
+{% endif %}
 {% endblock %}

@@ -340,6 +340,15 @@ BULKSMS_TOKEN_ID = os.getenv('BULKSMS_TOKEN_ID', '')
 BULKSMS_TOKEN_SECRET = os.getenv('BULKSMS_TOKEN_SECRET', '')
 BULKSMS_SENDER = os.getenv('BULKSMS_SENDER', 'HECTRE')
 
+# Pre-signed URL settings (Storj buckets are private; unsigned links give 403)
+# Set AWS_QUERYSTRING_AUTH=False only if the buckets are shared publicly.
+AWS_QUERYSTRING_AUTH = os.getenv('AWS_QUERYSTRING_AUTH', 'True') == 'True'
+AWS_QUERYSTRING_EXPIRE = int(os.getenv('AWS_QUERYSTRING_EXPIRE', 3600 * 24 * 7))  # 7 days (S3v4 max)
+
 # Set default storage to General for everything else not explicitly set
-DEFAULT_FILE_STORAGE = 'HeyDayRealty.storage_backends.GeneralMediaStorage'
+# NOTE: DEFAULT_FILE_STORAGE was removed in Django 5.1 — use STORAGES instead.
+STORAGES = {
+    "default": {"BACKEND": "HeyDayRealty.storage_backends.GeneralMediaStorage"},
+    "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+}
 
