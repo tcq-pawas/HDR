@@ -94,7 +94,8 @@
       }
 
       .login-card {
-        background: var(--card-bg);
+        /* background: var(--card-bg); */
+        background-color:  #d9d9d9;
         border-radius: 24px;
         box-shadow:
           0 25px 50px -12px rgba(0, 0, 0, 0.25),
@@ -156,10 +157,11 @@
         font-family: "Playfair Display", serif;
         font-size: 2.5rem;
         font-weight: 700;
-        margin-bottom: 0.5rem;
-        /* display: flex;
-            align-items: center; */
-        text-align: center;
+        margin: auto;
+        padding-bottom: 0.5rem;
+        /* display: flex;*/
+        /* align-items: center;  */
+        /* text-align: center; */
         /* gap: 0.75rem; */
       }
 
@@ -428,10 +430,13 @@
         display: flex;
         align-items: center;
         gap: 12px;
+        /* margin:auto; */
+        padding:10px 0;
       }
 
       .horizontal-line {
         flex: 1;
+        margin:auto;
         height: 1px;
         background-color: #ccc;
       }
@@ -530,7 +535,7 @@
         display: flex;
         padding-top:12px;
         gap: 1rem;
-        margin-bottom: 2rem;
+        margin-bottom: 2.5rem;
         justify-content: space-around;
       }
 
@@ -660,7 +665,7 @@
 
         .brand-section,
         .login-section {
-          padding: 1.5rem;
+          padding: 1.8rem;
         }
 
         .brand-logo {
@@ -679,14 +684,18 @@
 
         <!-- Login Section -->
         <div class="login-section">
-          <div class="brand-logo">
+          <!-- <div class="brand-logo">
             <img
               src="{% static 'img/login_logo.png' %}"
               alt="Logo"
               title="Logo"
               style="height: 62px; width: auto"
             />
+          </div> -->
+           <div class="brand-logo">
+              <img src="{% static 'img/logo.png' %}" alt="Logo" title="Logo" style="height:72px; width:auto; display:block;">
           </div>
+
           <div class="welcome-header">
             <h2 class="welcome-title">Welcome Back</h2>
             <p class="welcome-subtitle">Sign in to your account</p>
@@ -767,21 +776,21 @@
             </div>
           </form>
 
-        <p class="subtitle signup-link">
+        <!-- <p class="subtitle signup-link">
            New to HHectare?
            <a href="{% url 'auth:register_customer' %}" style="color:#006638; font-weight:700;text-decoration:none;">Create an account</a>
         </p>
-
-            <div class="divider">
+-->
+            <!-- <div class="divider">
                 <div class="horizontal-line">
                 </div>
-            </div>
+            </div>  -->
 
           <div class="registration-tabs">
             <a href="{% url 'auth:register_customer' %}" class="reg-btn">
               <i class="fas fa-user-plus"></i> Register as Customer
             </a>
-            <div class="vertical-line"></div>
+
             <a href="{% url 'auth:register_partner' %}" class="reg-btn partner">
               <i class="fas fa-handshake"></i> Partner with us
             </a>

@@ -396,6 +396,9 @@ a:active {
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: linear-gradient(135deg, #004526 0%, #002815 60%, #00180d 100%);
   min-height: auto;
+ /* min-height: 210px;
+  width: 100%;
+  max-width: 100%; */
 }
 
 .sp-hero::before {
@@ -417,19 +420,35 @@ a:active {
 }
 
 .sp-hero-inner {
-  position: relative;
+  /* position: relative;
   z-index: 2;
-  padding: 1.75rem 2rem;
+  padding: 1.4rem 1.6rem;
   display: flex;
-  gap: 1.5rem;
-  align-items: center;
+  gap: 1.1rem;
+  align-items: flex-start;
   justify-content: space-between;
   flex-wrap: wrap;
   color: #fff;
+  min-width: 0;
+  width: 100%; */
+
+  position: relative;
+  z-index: 2;
+  padding: 1.4rem 1.6rem;
+  /* padding: 1.75rem 2rem; */
+  display: flex;
+  gap: 1.1rem;
+  /* align-items: center; */
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  color: #fff;
+  min-width: 0;
+  width:100%;
 }
 
 .sp-hero-left {
-  flex: 1 1 340px;
+  /* flex: 1 1 340px; */
   min-width: 220px;
   max-width: 100%;
 }
@@ -708,6 +727,10 @@ select.form-input {
 .btn-primary:focus {
   background-color: var(--secondary);
   border-color: var(--secondary);
+}
+
+.view-inquiry-btn{
+  padding: .5rem .5rem !important;
 }
 
 .edit-profile-btn {
@@ -1433,16 +1456,12 @@ select.form-input {
 }
 
 .hero-meta {
-    /* display: grid;
-    grid-template-columns: repeat(4,  1fr);
-    gap: .8rem;
-    min-width: 0; */
   display: grid;
-  grid-template-columns: repeat(2, minmax(210px, 1fr));
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
   gap: 0.8rem;
-  flex: 0 1 430px;
+  flex: 0 1 100%;
   align-content: start;
-  width: min(100%, 430px);
+  /* width: min(100%, 430px); */
   min-width: 0;
 }
 
@@ -2650,18 +2669,12 @@ a.pd-contact:hover {
 }
 
 .sp-meta {
-    /* display: grid; */
-    /* grid-template-columns: repeat(4, minmax(180px, 1fr)); */
-    gap: .75rem;
-    flex: 0 1 480px;
-    max-width: 100%;
-    align-content: center;
   display: grid;
-  grid-template-columns: repeat(2, minmax(180px, 1fr));
-  /* gap: 0.75rem;
-  flex: 0 1 480px;
-  max-width: 100%;
-  align-content: center; */
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  gap: 0.8rem;
+  flex: 0 1 100%;
+  align-content: start;
+  min-width: 0;
 }
 
 /* Property Grid */
@@ -5169,7 +5182,7 @@ html .customer-dashboard .inquiry-detail-hero::before {
     padding: 12px;
   }
 
-  .premium-hero {
+  .sp-hero , .premium-hero {
     border-radius: 16px;
     padding: 36px 10px;
   }
@@ -5219,20 +5232,10 @@ html .customer-dashboard .inquiry-detail-hero::before {
   .sp-subtitle {
     font-size: 0.85rem;
   }
-
-  @media (max-width: 400px) {
-    .sp-action-row {
-      flex-direction: column;
-    }
-
-    .sp-btn {
-      min-width: 100%;
-    }
-  }
 }
 
 @media (max-width: 480px) {
-  .inquiries-page {
+  .saved-properties-page, .inquiries-page {
     padding: 10px;
   }
 
@@ -5244,7 +5247,7 @@ html .customer-dashboard .inquiry-detail-hero::before {
     font-size: 1.25rem;
   }
 
-  .hero-eyebrow {
+  .sp-eyebrow, .hero-eyebrow {
     padding: 0.4rem 0.65rem;
     font-size: 0.8rem;
   }
@@ -5302,8 +5305,18 @@ html .customer-dashboard .inquiry-detail-hero::before {
   }
 }
 
+@media (max-width: 400px) {
+    .sp-action-row {
+      flex-direction: column;
+    }
+
+    .sp-btn {
+      min-width: 100%;
+    }
+}
+
 @media (max-width: 375px) {
-  .inquiries-page {
+ .saved-properties-page, .inquiries-page {
     padding: 8px;
   }
 
@@ -5327,7 +5340,7 @@ html .customer-dashboard .inquiry-detail-hero::before {
     font-size: 14px;
   }
 
-  .hero-eyebrow {
+  .sp-eyebrow,.hero-eyebrow {
     font-size: 0.75rem;
   }
 
@@ -5368,10 +5381,11 @@ html .customer-dashboard .inquiry-detail-hero::before {
 }
 
 @media (max-width: 320px) {
-  .inquiries-page {
+  .saved-properties-page ,.inquiries-page {
     padding: 6px;
   }
 
+  .sp-hero-inner,
   .premium-hero-inner {
     padding: 0.7rem;
   }
@@ -5382,10 +5396,6 @@ html .customer-dashboard .inquiry-detail-hero::before {
 
   .hero-subtitle {
     font-size: 0.8rem;
-  }
-
-  .hero-eyebrow {
-    font-size: 0.75rem;
   }
 }
 

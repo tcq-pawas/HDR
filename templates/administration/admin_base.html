@@ -2276,8 +2276,6 @@
             }
         }
 
-    
-
         /* ============================================================
            MOBILE SIDEBAR WIDTH — 80–90% OF SCREEN
            Keeps the existing sidebar design/alignment unchanged.
@@ -2305,6 +2303,26 @@
                 min-width: 88vw !important;
                 max-width: 88vw !important;
             }
+        }
+
+        .alert.alert-flex {
+           display: flex;
+           align-items:center;
+           justify-content: space-between;
+           gap: 10px;
+           padding: 10px 12px !important;
+        }
+
+        .alert.alert-flex .alert-text {
+          flex: 1 1 auto;
+          min-width: 0;
+        }
+
+        .alert.alert-flex .btn-close {
+          position: static !important;
+          flex: 0 0 auto;
+          margin: 0;
+          padding: 6px;
         }
 
 </style>
@@ -2641,13 +2659,19 @@
 
                             {% for message in messages %}
 
-                                <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+                                <!-- <div class="alert alert-padding alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
 
                                     {{ message }}
 
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    <button type="button" id="close-btn-1" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 
-                                </div>
+                                </div> -->
+
+ 
+                                <div class="alert alert-flex alert-{% if 'error' in message.tags %}danger{% else %}{{message.tags| default:'info' }}{% endif %} alert-dismissible fade  show" role="alert">
+                                    <span class="alert-text">{{ message }}</span>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
 
                             {% endfor %}
 

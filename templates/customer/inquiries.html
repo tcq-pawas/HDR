@@ -58,7 +58,7 @@
 
     <!-- Quick Actions Section -->
     <div class="toolbar-grid mb-4">
-        <div class="action-card" onclick="document.querySelector('[data-bs-target="#newInquiryModal"]').click()">
+        <div class="action-card" onclick="document.querySelector('[data-bs-target=\'#newInquiryModal\']').click()">
             <div class="action-left">
                 <div class="action-icon" style="background: linear-gradient(135deg, #004526, #006638);">
                     <i class="fas fa-plus"></i>
@@ -194,7 +194,7 @@
                                     <td class="text-end">
                                         <div class="btn-group" role="group">
                                             <a href="{% url 'customer:inquiry-detail-page' inquiry.id %}"
-                                               class="btn btn-sm "
+                                               class="btn btn-sm view-inquiry-btn"
                                                style="border-radius:8px;font-weight:500; height: 34px; background-color: #E6F8EE; border: 1px solid #10B981; color: #000">
                                                 <i class="fas fa-eye"></i> View Inquiry
                                             </a>
