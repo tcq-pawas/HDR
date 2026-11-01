@@ -246,17 +246,21 @@
     .investor-actions {
         width: 100%;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         align-items: stretch;
         gap: 5px;
         white-space: normal;
     }
 
     .investor-actions .btn {
-        width: 100% !important;
+        /* width: 100% !important;
         min-width: 100%;
         max-width: 100%;
-        height: 28px;
+        height: 28px; */
+        height: 32px;
+        width: 34px;
+        min-width: 34px;
+        max-width: 34px;
         padding: 0;
         margin: 0 !important;
         display: flex;

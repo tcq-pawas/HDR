@@ -2774,6 +2774,9 @@ h1, h2, h3, h4, h5, h6,
         margin-top: 10px !important;
         padding-top: 9px;
     }
+    .agents-filter-form{
+        gap: 10px !important;
+    }
 }
 
 @media (max-width: 400px) {
@@ -2787,7 +2790,6 @@ h1, h2, h3, h4, h5, h6,
 
     .agents-filter-form {
         grid-template-columns: minmax(0, 1fr) 92px auto;
-        gap: 4px;
     }
 
     .agents-search {
@@ -3129,7 +3131,6 @@ h1, h2, h3, h4, h5, h6,
 .customers-page {
     width: 100%;
 }
-
 .customers-card {
     border: 1px solid #e8edf2;
     border-radius: 14px;
@@ -3239,7 +3240,6 @@ h1, h2, h3, h4, h5, h6,
 @media (max-width: 600px) {
     .customers-filter-form {
         grid-template-columns: minmax(0, 1fr) 115px auto;
-        gap: 4px;
     }
 
     .customers-status {
@@ -3290,7 +3290,7 @@ h1, h2, h3, h4, h5, h6,
         width: 100%;
         display: grid;
         grid-template-columns: minmax(0, 1fr) 115px auto;
-        gap: 5px;
+        gap: 10px !important;
         align-items: center;
     }
 
@@ -3365,7 +3365,7 @@ h1, h2, h3, h4, h5, h6,
 
     .customers-filter-form {
         grid-template-columns: minmax(0, 1fr) 115px auto;
-        gap: 4px;
+        /* gap: 4px; */
     }
 
     .customers-search {
@@ -4627,9 +4627,6 @@ h1, h2, h3, h4, h5, h6,
 
   .communication-history-title{
    text-align: center;
-   }
-   .compose-title-msg{
-    /* text-align: center; */
    }
    .compose-title-msg h1{
       font-size: 15px;
@@ -6186,13 +6183,14 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .property-review-header h1 {
-    font-size: 1.2rem;
+    font-size: 1.4rem !important;
     font-weight: 700;
     margin-bottom: 6px;
 }
 
 .property-review-header p {
-    font-size: 0.9rem;
+    /* font-size: 0.76rem; */
+    line-height: 1.4;
 }
 
 .property-review-header-actions {
@@ -6486,10 +6484,13 @@ h1, h2, h3, h4, h5, h6,
     white-space: nowrap;
 }
 
+.prop-review-inner-box{
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+}
 .property-review-page .property-review-center-box{
     margin-left: 0 !important;
 }
-
 /* Property Review Responsive */
 @media (max-width: 991.98px) {
     .property-review-page {
@@ -6498,7 +6499,7 @@ h1, h2, h3, h4, h5, h6,
     }
 
     .property-review-header h1 {
-        font-size: 1.35rem;
+        font-size: 1.2rem !important;
     }
 
     .property-summary-card .card-body {
@@ -6542,16 +6543,6 @@ h1, h2, h3, h4, h5, h6,
         align-items: stretch !important;
         gap: 14px !important;
         margin-bottom: 18px !important;
-    }
-
-    .property-review-header h1 {
-        font-size: 1.2rem;
-        margin-bottom: 4px;
-    }
-
-    .property-review-header p {
-        font-size: 0.76rem;
-        line-height: 1.4;
     }
 
     .property-review-header-actions {
@@ -6677,6 +6668,15 @@ h1, h2, h3, h4, h5, h6,
 
     .mobile-empty-state p {
         font-size: 0.8rem;
+    }
+}
+
+@media (max-width:480px){
+    .property-review-header h1{
+        font-size: 1rem !important;
+    }
+     .property-review-header p{
+        font-size: 0.72rem;
     }
 }
 
@@ -7354,6 +7354,106 @@ h1, h2, h3, h4, h5, h6,
     transform: translateX(24px);
 }
 
+/* Action section */
+.row.mb-4.action-btn-box {
+    width: 100%;
+    margin: 0 0 24px;
+}
+
+.row.mb-4.action-btn-box > .col-12 {
+    flex: 0 0 100%;
+    max-width: 100%;
+    width: 100%;
+    padding: 0 15px;
+}
+
+/* Action card */
+.action-btn-box .card {
+    border-radius: 16px;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+}
+
+/* Card body */
+.action-btn-box .card-body {
+    padding: 20px 24px;
+}
+
+/* Buttons container */
+.investment-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+/* Individual buttons */
+.investment-actions .btn {
+    min-height: 44px;
+    padding: 10px 20px;
+    border-radius: 9px;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.row.mb-4 > .report-action-box {
+    flex: 0 0 100%;
+     max-width: 100%;
+     width: 100%;
+     padding: 10px;
+}
+
+/* Property review page filter's dropdown */
+.property-filter-card,
+.property-filter-card .card-body,
+#propertyFilterForm,
+#propertyFilterForm > [class*="col-"] {
+    overflow: visible !important;
+}
+
+.property-filter-card {
+    position: relative;
+    z-index: 30;
+}
+
+.property-table-card {
+    position: relative;
+    z-index: 1;
+}
+
+/*Reports page Data Range drop down  */
+.report-action-box,
+.report-action-box .card,
+.report-action-box .card-body {
+    overflow: visible;
+}
+
+.report-action-box {
+    position: relative;
+    z-index: 20;
+}
+
+@media (max-width: 768px) {
+    .action-btn-box .card-body {
+        padding: 16px;
+    }
+
+    .investment-actions {
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .investment-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .investment-actions .btn {
+        width: 100%;
+    }
+}
+
 /* System Settings Responsive */
 @media (max-width: 992px) {
     .settings-tabs {
@@ -7474,7 +7574,10 @@ h1, h2, h3, h4, h5, h6,
 }
 
 @media (min-width: 576px) and (max-width: 1500.98px) {
-    .row.mb-4 > div[class*="col-"] {
+    .row.mb-4.action-btn-box > .col-12 {
+       padding: 10px;
+    }
+    .row.mb-4 > div[class*="col-"]:not(.report-action-box) {
         flex: 0 0 50%;
         max-width: 50%;
         width: 50%;
@@ -8204,7 +8307,7 @@ h1, h2, h3, h4, h5, h6,
     }
 
     .kpi-card {
-        padding: 12px;
+        padding: 20px;
     }
 
     .kpi-card-padding{

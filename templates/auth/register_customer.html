@@ -41,13 +41,21 @@
         }
 
         .login-wrapper {
-            position: relative; z-index: 1; width: 100%; max-width: 1200px; padding: 2rem;
+            position: relative; 
+            z-index: 1; 
+            width: 100%; 
+            max-width: 700px; 
+            padding: 2rem;
         }
 
         .login-card {
-            background: var(--card-bg); border-radius: 24px;
+            /* background: var(--card-bg);  */
+            background: #d9d9d9;
+            border-radius: 24px;
             box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25), 0 0 0 1px rgba(255,255,255,0.1) inset;
-            display: flex; overflow: hidden; min-height: 700px;
+            display: flex; 
+            overflow: hidden; 
+            min-height: 700px;
         }
 
         .brand-section {
@@ -61,8 +69,26 @@
             content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
             background: linear-gradient(135deg, rgba(15, 118, 110, 0.85) 0%, rgba(17, 94, 89, 0.9) 40%, rgba(6, 78, 59, 0.95) 100%); z-index: 0;
         }
-        .brand-content { position: relative; z-index: 1; }
-        .brand-logo { font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.75rem; }
+        .brand-content { 
+            position: relative; 
+            z-index: 1; 
+        }
+        .brand-logo { 
+            font-family: 'Playfair Display', serif; 
+            font-size: 2.5rem; 
+            font-weight: 700;
+            /* margin:auto;  */
+            padding-bottom: 0.5rem; 
+            /* display: flex; 
+            align-items: center; 
+            gap: 0.75rem;  */
+        }
+        .brand-logo img {
+            height: 72px;
+            width: auto;
+            display: block;
+            margin: 0 auto;            
+        }
         .brand-logo i { color: var(--accent-gold); }
         .brand-headline { font-size: 2rem; font-weight: 600; margin-bottom: 1rem; line-height: 1.3; }
 
@@ -71,7 +97,13 @@
         }
 
         .welcome-header { text-align: center; margin-bottom: 2rem; }
-        .welcome-title { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.5rem; }
+        .welcome-title { 
+            font-family: 'Playfair Display', serif; 
+            font-size: 2rem; 
+            font-weight: 700; 
+            color:#004526;
+            margin-bottom: 0.5rem; 
+        }
         .welcome-subtitle { color: var(--text-muted); font-size: 1rem; }
 
         .form-group { margin-bottom: 1.25rem; }
@@ -109,13 +141,26 @@
             .login-card { flex-direction: column; }
             .brand-section, .login-section { padding: 2rem; }
         }
+        @media (max-width:600px){
+            .welcome-subtitle{
+                font-size: 0.8rem;
+            }
+        }
+        @media (max-width:480px){
+            .welcome-title{
+                font-size:1.8rem;
+            }
+            .login-wrapper{
+                padding:1rem
+            }
+        }
     </style>
 </head>
 <body>
     <div class="login-wrapper">
         <div class="login-card">
             <!-- Left Side - Branding Section -->
-            <div class="brand-section">
+            <!-- <div class="brand-section">
                 <div class="brand-content">
                     <div class="brand-logo">
                         <img src="{% static 'img/logo.png' %}" alt="Logo" title="Logo" style="height:72px; width:auto; display:block;">
@@ -125,10 +170,15 @@
                         Create a customer account to browse premium listings, schedule viewings, and manage your saved properties.
                     </p>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Right Side - Registration Section -->
             <div class="login-section">
+                <div class="brand-content">
+                    <div class="brand-logo">
+                        <img src="{% static 'img/logo.png' %}" alt="Logo" title="Logo">
+                    </div>
+                </div>
                 <div class="welcome-header">
                     <h2 class="welcome-title">Customer Registration</h2>
                     <p class="welcome-subtitle">Create your account to get started</p>

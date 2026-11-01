@@ -73,7 +73,7 @@
     }
     .property-type-card p {
         color: #64748b;
-        font-size: 0.9rem;
+        font-size: 0.93rem;
         line-height: 1.5;
         margin-bottom: 20px;
         text-align: center;
@@ -111,14 +111,14 @@
         letter-spacing: 0.5px;
         margin-bottom: 12px;
     }
-    .property-type-header h1 {
-        font-weight: 700;
-        font-size: 1.75rem;
+    .property-type-page .property-type-header .property-type-title  {
+        font-weight: 600;
+        font-size: 1.4rem;
         color: #0f172a;
         margin: 0 0 12px 0;
     }
-    .property-type-header p {
-        font-size: 0.95rem;
+    .property-type-page .property-type-header .property-type-subtitle {
+        font-size: 0.93rem ;
         color: #64748b;
         line-height: 1.6;
         margin: 0;
@@ -134,9 +134,6 @@
         .property-type-card h3 {
             font-size: 1.4rem;
         }
-        .property-type-header h1 {
-            font-size: 1.9rem;
-        }
     }
 
     @media (min-width: 992px) and (max-width: 1399.98px) {
@@ -148,9 +145,6 @@
         }
         .property-type-card h3 {
             font-size: 1.3rem;
-        }
-        .property-type-header h1 {
-            font-size: 1.75rem;
         }
     }
 
@@ -172,8 +166,8 @@
         .property-type-header {
             padding: 26px 24px;
         }
-        .property-type-header h1 {
-            font-size: 1.6rem;
+        .property-type-page .property-type-header .property-type-title{
+            font-size: 1.2rem;
         }
     }
 
@@ -187,9 +181,6 @@
         .property-type-card h3 {
             font-size: 1.2rem;
         }
-        .property-type-card p {
-            font-size: 0.88rem;
-        }
         .property-type-icon {
             width: 48px;
             height: 48px;
@@ -198,12 +189,6 @@
         .property-type-header {
             padding: 22px 20px;
             margin-bottom: 24px;
-        }
-        .property-type-header h1 {
-            font-size: 1.45rem;
-        }
-        .property-type-header p {
-            font-size: 0.88rem;
         }
         .property-type-grid {
             grid-template-columns: 1fr;
@@ -232,29 +217,10 @@
             font-size: 1.15rem;
         }
         .property-type-card p {
-            font-size: 0.85rem;
+            font-size: 0.72rem;
         }
-        .property-type-header h1 {
-            font-size: 1.35rem;
-        }
-    }
-    
-    /* .property-types-box{
-        margin-left: 0 ;
-    }
-
-    @media (max-width:768px){
-      .property-type-header h1 {
-        font-size: 1.2rem;
-      }
-      .property-type-header p {
-        font-size: 0.8rem;
-      }
-    }
-
-    @media (max-width:500px){
-      .property-type-header h1 {
-        font-size: 1rem;
+        .property-type-page .property-type-header .property-type-title {
+            font-size: 1rem;
         }
     }
 
@@ -262,20 +228,6 @@
         margin-left: 0 ;
     }
 
-    @media (max-width:768px){
-      .property-type-header h1 {
-        font-size: 1.2rem;
-      }
-      .property-type-header p {
-        font-size: 0.8rem;
-      }
-    }
-
-    @media (max-width:500px){
-      .property-type-header h1 {
-        font-size: 1rem;
-        }
-    } */
 </style>
 {% endblock %}
 
@@ -298,9 +250,9 @@
                 Add New Property
             </div>
 
-            <h1>Select Property Type</h1>
+            <h1 class="property-type-title">Select Property Type</h1>
 
-            <p>
+            <p class="property-type-subtitle">
                 Choose the type of property you want to add.
                 Select the option that best matches your listing.
             </p>
