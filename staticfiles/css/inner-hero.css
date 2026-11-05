@@ -1,0 +1,213 @@
+/* ==========================================================
+   Unified inner-page hero  (single source of truth)
+   Used by: Buy, Sell, Find Agents, Subscription,
+            Property Management, About Us, Contact
+   Loaded globally from public/base.html
+
+   Markup:
+   <section class="ih" style="--ih-bg: url('{% static 'images/hero-img-all.png' %}')">
+     <div class="ih__content">
+       <h1 class="ih__title">Title</h1>
+       <p class="ih__sub">Subtitle</p>
+       <div class="ih__divider">                      (optional)
+         <span class="ih__divider-line"></span>
+         <span class="ih__divider-icon" aria-hidden="true">🌿</span>
+       </div>
+       <div class="ih__strip">...</div>               (optional)
+     </div>
+   </section>
+   ========================================================== */
+
+.ih {
+    --ih-green: rgba(15, 106, 60, 0.78);
+    --ih-gold: #f4b400;
+    --ih-font: var(--font-body, "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    padding: 56px 24px;
+    background: var(--ih-bg, none) center / cover no-repeat, #35602b;
+    color: #fff;
+    text-align: center;
+    overflow: hidden;
+    box-sizing: border-box;
+    font-family: var(--ih-font);
+}
+
+.ih *,
+.ih *::before,
+.ih *::after {
+    box-sizing: border-box;
+}
+
+/* Same soft gradient overlay the pages already used */
+.ih::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.42) 0%,
+        rgba(0, 0, 0, 0.18) 35%,
+        rgba(0, 0, 0, 0.08) 55%,
+        rgba(0, 0, 0, 0.38) 100%
+    );
+}
+
+.ih__content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* Title / subtitle: !important only here so global h1 / p rules from
+   typography.css, style.css, responsive.css and page-level CSS can never
+   change the hero text size or font again. */
+.ih .ih__title {
+    margin: 0 0 12px !important;
+    font-family: var(--ih-font) !important;
+    font-size: 40px !important;
+    line-height: 1.2 !important;
+    font-weight: 700 !important;
+    letter-spacing: normal;
+    color: #fff !important;
+    text-align: center;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.ih .ih__sub {
+    max-width: 620px;
+    margin: 0 auto 24px !important;
+    font-family: var(--ih-font) !important;
+    font-size: 18px !important;
+    line-height: 1.55 !important;
+    font-weight: 400 !important;
+    color: rgba(255, 255, 255, 0.95) !important;
+    text-align: center;
+    opacity: 1;
+}
+
+.ih .ih__sub:last-child {
+    margin-bottom: 0 !important;
+}
+
+/* Gold line + icon divider */
+.ih__divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 4px;
+}
+
+.ih__divider-line {
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: var(--ih-gold);
+}
+
+.ih__divider-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--ih-gold);
+}
+
+/* Feature strip (Find Agents) */
+.ih__strip {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    max-width: 760px;
+    margin: 28px auto 0;
+    padding: 16px 12px;
+    background: var(--ih-green);
+    border-radius: 16px;
+}
+
+.ih__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    font-family: var(--ih-font);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.3;
+    color: #fff;
+    text-align: center;
+    overflow-wrap: break-word;
+}
+
+.ih__item i {
+    font-size: 22px;
+}
+
+/* Tablet */
+@media (max-width: 991.98px) {
+    .ih {
+        min-height: 360px;
+        padding: 48px 20px;
+    }
+
+    .ih .ih__title {
+        font-size: 32px !important;
+    }
+
+    .ih .ih__sub {
+        font-size: 16px !important;
+        margin-bottom: 20px !important;
+    }
+
+    .ih .ih__sub:last-child {
+        margin-bottom: 0 !important;
+    }
+
+    .ih__item {
+        font-size: 13px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 575.98px) {
+    .ih {
+        min-height: 320px;
+        padding: 40px 16px;
+    }
+
+    .ih .ih__title {
+        font-size: 26px !important;
+        line-height: 1.15 !important;
+    }
+
+    .ih .ih__sub {
+        font-size: 15px !important;
+        max-width: 320px;
+        margin-bottom: 18px !important;
+    }
+
+    .ih .ih__sub:last-child {
+        margin-bottom: 0 !important;
+    }
+
+    .ih__strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px 8px;
+        padding: 14px 10px;
+    }
+
+    .ih__item {
+        font-size: 12px;
+    }
+
+    .ih__item i {
+        font-size: 18px;
+    }
+}

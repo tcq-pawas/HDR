@@ -91,7 +91,7 @@ html {
   font-size: clamp(26px, 3.4vw, 50px);
   line-height: 1.12;
   letter-spacing: -1.2px;
-  font-weight: 800;
+  font-weight: 700;
 }
 .coming-soon h2.big span {
   color: var(--head);
