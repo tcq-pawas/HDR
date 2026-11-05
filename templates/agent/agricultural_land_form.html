@@ -5,6 +5,30 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/agent/agricultural_land_form.css' %}">
+
+<style>
+    .wizard-container .wizard-form .form-section h3 {
+        font-size: 1.1rem;
+    }   
+    @media (max-width:768px){
+        .location-btn{
+            width:50px;
+        }
+    }
+    @media (max-width:480px){
+        .add-land-page .form-group input, .add-land-page .form-group select, .add-land-page .form-group textarea {
+           font-size: 13px;
+        }
+        .location-btn{
+            margin-bottom:0;
+        }
+    }
+    @media (max-width:320px){
+        .wizard-container .wizard-form .form-section h3 {
+           font-size: 0.9rem;
+        }
+    }
+</style>
 {% endblock %}
 
 {% block breadcrumb_items %}
@@ -342,7 +366,7 @@
                     {{ form.full_address }}
                     {% if form.full_address.errors %}<div class="error-message">{{ form.full_address.errors }}</div>{% endif %}
                 </div>
-                <div class="form-row">
+                <div class="form-row" style="padding-top:20px;">
                     <div class="form-group">
                         <label for="{{ form.road_connectivity.id_for_label }}">Road Connectivity</label>
                         {{ form.road_connectivity }}
@@ -616,12 +640,12 @@
                     {{ form.seo_description }}
                     {% if form.seo_description.errors %}<div class="error-message">{{ form.seo_description.errors }}</div>{% endif %}
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="padding-top:20px;">
                     <label for="{{ form.keywords.id_for_label }}">Keywords (comma-separated)</label>
                     {{ form.keywords }}
                     {% if form.keywords.errors %}<div class="error-message">{{ form.keywords.errors }}</div>{% endif %}
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="padding-top:20px;">
                     <label for="{{ form.property_highlights.id_for_label }}">Property Highlights</label>
                     {{ form.property_highlights }}
                     {% if form.property_highlights.errors %}<div class="error-message">{{ form.property_highlights.errors }}</div>{% endif %}
@@ -691,6 +715,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const areaConversion = document.getElementById('areaConversion');
 
     function convertArea() {
+        if (!totalAreaInput || !areaUnitSelect) return;
+
         const area = parseFloat(totalAreaInput.value);
         const unit = areaUnitSelect.value;
 
@@ -786,15 +812,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Set up event listeners
-    totalAreaInput.addEventListener('input', function() {
-        convertArea();
-        calculatePricePerAcre();
-    });
+    if (totalAreaInput) {
+        totalAreaInput.addEventListener('input', function() {
+            convertArea();
+            calculatePricePerAcre();
+        });
+    }
     
-    areaUnitSelect.addEventListener('change', function() {
-        convertArea();
-        calculatePricePerAcre();
-    });
+    if (areaUnitSelect) {
+        areaUnitSelect.addEventListener('change', function() {
+            convertArea();
+            calculatePricePerAcre();
+        });
+    }
     
     if (totalPriceInput) {
         totalPriceInput.addEventListener('input', calculatePricePerAcre);
@@ -917,6 +947,7 @@ document.addEventListener('DOMContentLoaded', function() {
         submitBtn.style.display = step === totalSteps ? 'inline-flex' : 'none';
 
         currentStep = step;
+        stepIndicators[step - 1].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
     }
 
     prevBtn.addEventListener('click', () => {
@@ -952,7 +983,7 @@ document.addEventListener('DOMContentLoaded', function() {
     stepIndicators.forEach(indicator => {
         indicator.addEventListener('click', () => {
             const step = parseInt(indicator.dataset.step);
-            if (step < currentStep || validateCurrentStep()) {
+            if (step <= currentStep || validateCurrentStep()) {
                 showStep(step);
             }
         });
