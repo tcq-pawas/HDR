@@ -569,6 +569,22 @@ def property_edit(request, pk):
     else:
         property_obj = get_object_or_404(Property.objects.select_related('seller'), pk=pk, seller=request.user)
     
+    # Handle missing featured_image file (legacy data issue)
+    # Clear the field if the file doesn't exist in storage
+    if property_obj.featured_image:
+        try:
+            # Try to access the file to check if it exists
+            if property_obj.featured_image.storage.exists(property_obj.featured_image.name):
+                pass  # File exists, do nothing
+            else:
+                # File doesn't exist, clear the field
+                property_obj.featured_image = None
+                property_obj.save(update_fields=['featured_image'])
+        except Exception:
+            # If there's any error checking file existence, clear the field
+            property_obj.featured_image = None
+            property_obj.save(update_fields=['featured_image'])
+    
     # Determine property_type from category for field visibility
     property_type = _resolve_listing_type(property_obj)
     
