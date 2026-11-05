@@ -73,8 +73,22 @@
         color: rgba(255, 255, 255, 0.95);
     }
 
+    .cta-banner-section .cta-banner .cta-banner-content .cta-banner-description{
+       max-width:100%;
+    }
+
+    .cta-banner-section .cta-banner{
+       height: 322px;
+    }
+
     /* Hero Responsive */
     @media (max-width: 1024px) {
+        .cta-banner-description ,.cta-banner-title{
+            padding-right: 15px;
+        }
+        .cta-banner-section .cta-banner{
+          height: 423px;
+        }
         .inner-hero {
             min-height: 350px;
         }
@@ -106,6 +120,9 @@
     }
 
     @media (max-width: 480px) {
+        .cta-banner-section{
+            padding:96px 20px;
+        }
         .inner-hero {
             min-height: 280px;
         }
@@ -201,10 +218,30 @@
         border-radius: 5px;
         margin:0px 38px;
     }  
+    .inner-hero-title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.3em;
+        font-size: clamp(1.8rem, 5vw, 2.5rem);
+        line-height: 1.2;
+        text-align: center;
+    }
+
+    .about-hero-logo {
+        height: 1.1em;      
+        width: auto;        
+        max-width: 100%;    
+        object-fit: contain;
+        display: block;
+    }
 
     /* ---- CTA banner: stack on mobile instead of squeezing into a row ---- */
     @media (max-width: 768px) {
-        
+        .cta-banner-section .cta-banner .cta-banner-content .cta-banner-description{
+            text-align: center;
+        }
         .premium-formland-invest{
             text-align: center;
             
@@ -250,6 +287,9 @@
         .why .row {
             --bs-gutter-x: 0.1rem;
         }
+        .btn-cta-yellow{
+            padding: 14px 32px;
+        }
     }
 
     @media (max-width: 480px) {
@@ -259,7 +299,10 @@
 
         .why-invest-section{
             margin:0px 20px;
-        }  
+        } 
+        .cta-banner-section .cta-banner{
+           height: 440px;
+        } 
     }
 
     @media (max-width: 320px) {
@@ -379,13 +422,17 @@
 {% endblock %}
 
 {% block inner_hero %}
-<section class="ih" style="--ih-bg: url('{% static 'images/hero-img-all.png' %}')">
-    <div class="ih__content">
-        <h1 class="ih__title">About HHectare</h1>
-        <p class="ih__sub">Invest in Income Generating Farmland</p>
-        <div class="ih__divider">
-            <span class="ih__divider-line"></span>
-            <span class="ih__divider-icon" aria-hidden="true">🌿</span>
+<section class="inner-hero">
+    <div class="inner-hero-content">
+        <h1 class="inner-hero-title">About
+            <img src="{% static 'img/logo.png' %}" alt="HHectare" class="about-hero-logo">
+        </h1>
+        <p class="inner-hero-quote">
+            Invest in Income Generating Farmland
+        </p>
+        <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 16px;">
+            <div style="width: 60px; height: 3px; background: #F4B400;"></div>
+            <span style="font-size: 1.5rem;">🌿</span>
         </div>
     </div>
 </section>
@@ -546,18 +593,14 @@
         <div class="leaf-decoration leaf-decoration-left">🌿</div>
         <div class="leaf-decoration leaf-decoration-right">🌿</div>
         <div class="cta-banner-content">
-            <div>
+            <div>  
                 <div class="cta-banner-icon">🌱</div>
                 <h2 class="cta-banner-title">Ready to Own Premium Farmland?</h2>
                 <p class="cta-banner-description">Explore verified farmland opportunities and build long-term wealth through land ownership.</p>
             </div>
             <div class="cta-banner-buttons">
                 <a href="{% url 'buy:property_search' %}" class="btn-cta-yellow">Explore Investment Opportunities</a>
-<<<<<<< HEAD
-                <a href="{% url 'public:contact' %}" class="btn-cta-outline">Talk to Advisor</a>
-=======
                 
->>>>>>> 3d82dd5c7587ceaa1dca72813c2d53ab0544cc19
             </div>
         </div>
     </div>

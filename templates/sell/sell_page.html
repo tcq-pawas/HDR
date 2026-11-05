@@ -469,8 +469,17 @@
     line-height: 1.6;
 }
 
-/* Bottom CTA: .cta-banner ki main styling style.css se aati hai.
-   Yahan sirf wahi rakha hai jo style.css me nahi hai. */
+/* Bottom CTA: the main styling for .cta-banner comes from style.css.
+   Only what is not in style.css is kept here. */
+.cta-banner-section .cta-banner{
+    height: 358px;
+}   
+.cta-banner .cta-banner-content .cta-banner-title{
+    font-size: 2rem;
+}
+.cta-banner .btn-cta-yellow{
+    font-size: 15px;
+}
 .cta-banner .btn-cta-yellow,
 .cta-banner .btn-cta-outline {
     display: inline-flex;
@@ -482,6 +491,12 @@
 
 .sell-page-body .cta-banner-description {
     font-size: 1.1rem !important;
+    max-width:100%;
+    text-align: center;
+}
+
+.sell-page-body .cta-banner .cta-banner-content .cta-banner-title{
+    font-size: 2rem !important;
 }
 
 /* Responsive */
@@ -508,12 +523,36 @@
     }
 }
 
+@media (max-width:1024px){
+    .cta-banner-section .cta-banner{
+       height: 423px;
+    }
+}
 @media (min-width: 769px) {
     .support-card {
         margin: 0 40px;
     }
+    .cta-banner{
+       height: 407px;
+    } 
+    .cta-banner .btn-cta-yellow{
+      font-size: 13px;
+    }
+    .sell-page-body .cta-banner-description {
+      text-align: left;
+    }
 }
-
+@media (max-width:768px){
+    .sell-page-body .cta-banner .cta-banner-content .cta-banner-title{
+       font-size: 1.5rem !important;
+    }
+    .cta-banner-section .cta-banner{
+       height: 395px;
+    }
+    .sell-page-body .cta-banner-description {
+       font-size: 1rem !important;
+    }
+}
 @media (max-width: 767px) {
     .sell-hero {
         min-height: 420px;
@@ -540,6 +579,18 @@
 
     .get-started-card{
         padding:30px 20px;
+    } 
+    .cta-banner-section{
+        padding:96px 20px;
+    }
+    .cta-banner-section .cta-banner{
+       height: 435px;
+    }
+    .sell-page-body .cta-banner .cta-banner-content .cta-banner-title{
+       font-size: 1.3rem !important;
+    }
+    .sell-page-body .cta-banner-description {
+       font-size: 0.8rem !important;
     }
 }
 
