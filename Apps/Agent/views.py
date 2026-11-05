@@ -259,46 +259,6 @@ def agent_reviews(request):
 
 
 @login_required
-def settings(request):
-    """Agent settings page - update profile information"""
-    user_role = get_user_role(request.user)
-    if user_role not in ['agent', 'owner']:
-        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
-
-    try:
-        agent_profile = request.user.agent_profile
-    except AgentProfile.DoesNotExist:
-        agent_profile = AgentProfile.objects.create(user=request.user)
-
-    # Check if profile image file exists, if not clear the field
-    if agent_profile.profile_image:
-        try:
-            # Try to access the file to check if it exists
-            agent_profile.profile_image.open('rb')
-            agent_profile.profile_image.close()
-        except (FileNotFoundError, IOError):
-            # File doesn't exist, clear the field
-            agent_profile.profile_image = None
-            agent_profile.save()
-
-    if request.method == 'POST':
-        form = AgentProfileForm(request.POST, request.FILES, instance=agent_profile, user=request.user)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Profile updated successfully!")
-            return redirect('agent:settings')
-    else:
-        form = AgentProfileForm(instance=agent_profile, user=request.user)
-
-    context = {
-        'form': form,
-        'agent_profile': agent_profile,
-    }
-
-    return render(request, 'agent/settings.html', context)
-
-
-@login_required
 def profile(request):
     """View agent profile"""
     user_role = get_user_role(request.user)
@@ -729,13 +689,7 @@ def settings(request):
     if request.method == 'POST':
         form = AgentProfileForm(request.POST, request.FILES, instance=agent_profile, user=request.user)
         if form.is_valid():
-            # Update user info
-            request.user.first_name = form.cleaned_data.get('first_name', '')
-            request.user.last_name = form.cleaned_data.get('last_name', '')
-            request.user.email = form.cleaned_data.get('email', '')
-            request.user.save()
-            
-            # Save profile
+            # AgentProfileForm.save() also persists the linked user's name and email.
             form.save()
             messages.success(request, "Settings updated successfully!")
             return redirect('agent:settings')
