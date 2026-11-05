@@ -37,6 +37,30 @@
     align-items: stretch;
 }
 
+.form-container #main-header {
+    margin-bottom: 40px;
+    background: transparent !important;
+    box-shadow: none !important;
+    border-bottom: none;
+}
+
+.form-container #main-header h1 {
+    color: black;
+    text-align: center;
+    font-size: 1.5rem !important;
+}
+
+.form-container-box{
+    padding: 15px;
+}
+
+.form-section {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    align-items: stretch;
+}
+
 /* Section Cards */
 .property-edit-page .form-section {
     min-width: 0;
@@ -412,6 +436,12 @@
     }
 }
 
+@media (max-width:600px){
+    .form-container #main-header h1{
+        font-size: 17px !important;
+    }
+}
+
 /* Responsive - Mobile below 480px */
 @media (max-width: 480px) {
     .property-edit-page .form-section {
@@ -422,4 +452,3 @@
         gap: 0.75rem;
     }
 }
-

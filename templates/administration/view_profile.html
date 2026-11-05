@@ -244,7 +244,7 @@
                         {% if user.verification.is_email_verified %}
                             <span class="badge bg-success rounded-pill"><i class="fas fa-check-circle me-1"></i> Verified</span>
                         {% elif user.email %}
-                            <button class="btn btn-sm btn-outline-warning rounded-pill" onclick="requestOTP('email', '{{ user.email }}')">Verify Now</button>
+                            <button class="btn btn-sm btn-outline-warning rounded-pill contact-email-btn" onclick="requestOTP('email', '{{ user.email }}')">Verify Now</button>
                         {% endif %}
                     </div>
 

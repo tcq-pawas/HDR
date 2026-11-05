@@ -6,7 +6,7 @@
 
 /* CSS Variables */
 :root {
-<<<<<<< HEAD
+<<<<<<<<< Temporary merge branch 1
     --primary: #00A878;
     --secondary: #00875F;
     --blue: #3B82F6;
@@ -23,7 +23,7 @@
     --shadow-soft: 0 8px 20px rgba(2, 6, 23, 0.06);
     --text: #102A43;
     --muted: #52667A;
-=======
+=========
   --primary: #004526;
   --secondary: #006638;
   --blue: #3b82f6;
@@ -40,7 +40,7 @@
   --shadow-soft: 0 8px 20px rgba(2, 6, 23, 0.06);
   --text: #0b1220;
   --muted: rgba(11, 18, 32, 0.62);
->>>>>>> c6f51b16d7d1359e33209f5f2da0fdb5f09677e3
+>>>>>>>>> Temporary merge branch 2
 }
 
 /* Global Styles */
@@ -415,6 +415,9 @@ a:active {
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: linear-gradient(135deg, #004526 0%, #002815 60%, #00180d 100%);
   min-height: auto;
+ /* min-height: 210px;
+  width: 100%;
+  max-width: 100%; */
 }
 
 .sp-hero::before {
@@ -436,19 +439,35 @@ a:active {
 }
 
 .sp-hero-inner {
-  position: relative;
+  /* position: relative;
   z-index: 2;
-  padding: 1.75rem 2rem;
+  padding: 1.4rem 1.6rem;
   display: flex;
-  gap: 1.5rem;
-  align-items: center;
+  gap: 1.1rem;
+  align-items: flex-start;
   justify-content: space-between;
   flex-wrap: wrap;
   color: #fff;
+  min-width: 0;
+  width: 100%; */
+
+  position: relative;
+  z-index: 2;
+  padding: 1.4rem 1.6rem;
+  /* padding: 1.75rem 2rem; */
+  display: flex;
+  gap: 1.1rem;
+  /* align-items: center; */
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  color: #fff;
+  min-width: 0;
+  width:100%;
 }
 
 .sp-hero-left {
-  flex: 1 1 340px;
+  /* flex: 1 1 340px; */
   min-width: 220px;
   max-width: 100%;
 }
@@ -521,7 +540,7 @@ a:active {
 .edit-card,
 .custom-card,
 .info-card {
-<<<<<<< HEAD
+<<<<<<<<< Temporary merge branch 1
     background: var(--card);
     border-radius: var(--radius);
     box-shadow: var(--shadow-soft);
@@ -529,7 +548,7 @@ a:active {
     padding: 1.25rem;
     margin-bottom: 2.25rem;
 
-=======
+=========
   background: var(--card);
   border-radius: var(--radius);
   box-shadow: var(--shadow-soft);
@@ -537,7 +556,7 @@ a:active {
   padding: 1.25rem;
   margin-bottom: 2.25rem;
   height: 100%;
->>>>>>> c6f51b16d7d1359e33209f5f2da0fdb5f09677e3
+>>>>>>>>> Temporary merge branch 2
 }
 
 .edit-card {
@@ -738,6 +757,10 @@ select.form-input {
 .btn-primary:focus {
   background-color: var(--secondary);
   border-color: var(--secondary);
+}
+
+.view-inquiry-btn{
+  padding: .5rem .5rem !important;
 }
 
 .edit-profile-btn {
@@ -1463,20 +1486,20 @@ select.form-input {
 }
 
 .hero-meta {
-<<<<<<< HEAD
+<<<<<<<<< Temporary merge branch 1
     display: grid;
     grid-template-columns: repeat(4,  1fr);
     gap: .8rem;
     min-width: 0;
-=======
+=========
   display: grid;
   grid-template-columns: repeat(2, minmax(210px, 1fr));
   gap: 0.8rem;
-  flex: 0 1 430px;
+  flex: 0 1 100%;
   align-content: start;
-  width: min(100%, 430px);
+  /* width: min(100%, 430px); */
   min-width: 0;
->>>>>>> c6f51b16d7d1359e33209f5f2da0fdb5f09677e3
+>>>>>>>>> Temporary merge branch 2
 }
 
 .hero-meta .glass {
@@ -1885,15 +1908,15 @@ select.form-input {
 }
 
 .s-responded {
-<<<<<<< HEAD
+<<<<<<<<< Temporary merge branch 1
     background: #E6F8EE;
     color: #0F766E;
     border-color: #E6F8EE;
-=======
+=========
   background: rgba(59, 130, 246, 0.15);
   color: #1d4ed8;
   border-color: rgba(59, 130, 246, 0.25);
->>>>>>> c6f51b16d7d1359e33209f5f2da0fdb5f09677e3
+>>>>>>>>> Temporary merge branch 2
 }
 
 .s-site {
@@ -2689,21 +2712,21 @@ a.pd-contact:hover {
 }
 
 .sp-meta {
-<<<<<<< HEAD
+<<<<<<<<< Temporary merge branch 1
     display: grid;
     grid-template-columns: repeat(4, minmax(180px, 1fr));
     gap: .75rem;
     flex: 0 1 480px;
     max-width: 100%;
     align-content: center;
-=======
+=========
   display: grid;
   grid-template-columns: repeat(2, minmax(180px, 1fr));
   gap: 0.75rem;
   flex: 0 1 480px;
   max-width: 100%;
   align-content: center;
->>>>>>> c6f51b16d7d1359e33209f5f2da0fdb5f09677e3
+>>>>>>>>> Temporary merge branch 2
 }
 
 /* Property Grid */
@@ -2915,7 +2938,7 @@ a.pd-contact:hover {
 }
 
 .sp-btn {
-<<<<<<< HEAD
+<<<<<<<<< Temporary merge branch 1
     border-radius: 12px;
     font-weight: 500;
     padding: .45rem .75rem;
@@ -2931,7 +2954,7 @@ a.pd-contact:hover {
     flex: 1;
     min-width: 110px;
     white-space: nowrap;
-=======
+=========
   border-radius: 12px;
   font-weight: 500;
   padding: 0.45rem 0.75rem;
@@ -2949,7 +2972,7 @@ a.pd-contact:hover {
   flex: 1;
   min-width: 110px;
   white-space: nowrap;
->>>>>>> c6f51b16d7d1359e33209f5f2da0fdb5f09677e3
+>>>>>>>>> Temporary merge branch 2
 }
 
 .sp-btn:hover {
@@ -4902,28 +4925,28 @@ html .customer-dashboard .inquiry-detail-hero::before {
     min-width: 0;
   }
 
-<<<<<<< HEAD
+<<<<<<<<< Temporary merge branch 1
     
-=======
+=========
   .hero-meta {
     width: 100%;
     max-width: 100%;
     flex: 1 1 100%;
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
->>>>>>> c6f51b16d7d1359e33209f5f2da0fdb5f09677e3
+>>>>>>>>> Temporary merge branch 2
 
   .sp-hero-inner {
     padding: 1.25rem 1.25rem;
   }
 
-<<<<<<< HEAD
-=======
+<<<<<<<<< Temporary merge branch 1
+=========
   .sp-meta {
     flex: 1 1 100%;
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
->>>>>>> c6f51b16d7d1359e33209f5f2da0fdb5f09677e3
+>>>>>>>>> Temporary merge branch 2
 
   .kpi-grid,
   .sp-kpi-grid {
@@ -4990,15 +5013,15 @@ html .customer-dashboard .inquiry-detail-hero::before {
     gap: 8px 12px;
   }
 
-<<<<<<< HEAD
+<<<<<<<<< Temporary merge branch 1
     .leads-header-flex h2 {
         flex: 1 1 45px;
     }
-=======
+=========
   .leads-header-flex h2 {
     /* flex: 1 1 180px; */
   }
->>>>>>> c6f51b16d7d1359e33209f5f2da0fdb5f09677e3
+>>>>>>>>> Temporary merge branch 2
 
   .view-all-link {
     flex: 0 0 auto;
@@ -5193,6 +5216,10 @@ html .customer-dashboard .inquiry-detail-hero::before {
   height: auto;
 }
 
+.choose-property-box{
+  margin-left: 0;
+}
+
 @media (min-width: 992px) {
   .profile-wrap .profile-box-2 .section-card {
     height: 100%;
@@ -5239,7 +5266,7 @@ html .customer-dashboard .inquiry-detail-hero::before {
     padding: 12px;
   }
 
-  .premium-hero {
+  .sp-hero , .premium-hero {
     border-radius: 16px;
     padding: 36px 10px;
   }
@@ -5289,20 +5316,10 @@ html .customer-dashboard .inquiry-detail-hero::before {
   .sp-subtitle {
     font-size: 0.85rem;
   }
-
-  @media (max-width: 400px) {
-    .sp-action-row {
-      flex-direction: column;
-    }
-
-    .sp-btn {
-      min-width: 100%;
-    }
-  }
 }
 
 @media (max-width: 480px) {
-  .inquiries-page {
+  .saved-properties-page, .inquiries-page {
     padding: 10px;
   }
 
@@ -5314,7 +5331,7 @@ html .customer-dashboard .inquiry-detail-hero::before {
     font-size: 1.25rem;
   }
 
-  .hero-eyebrow {
+  .sp-eyebrow, .hero-eyebrow {
     padding: 0.4rem 0.65rem;
     font-size: 0.8rem;
   }
@@ -5372,8 +5389,18 @@ html .customer-dashboard .inquiry-detail-hero::before {
   }
 }
 
+@media (max-width: 400px) {
+    .sp-action-row {
+      flex-direction: column;
+    }
+
+    .sp-btn {
+      min-width: 100%;
+    }
+}
+
 @media (max-width: 375px) {
-  .inquiries-page {
+ .saved-properties-page, .inquiries-page {
     padding: 8px;
   }
 
@@ -5397,7 +5424,7 @@ html .customer-dashboard .inquiry-detail-hero::before {
     font-size: 14px;
   }
 
-  .hero-eyebrow {
+  .sp-eyebrow,.hero-eyebrow {
     font-size: 0.75rem;
   }
 
@@ -5438,10 +5465,11 @@ html .customer-dashboard .inquiry-detail-hero::before {
 }
 
 @media (max-width: 320px) {
-  .inquiries-page {
+  .saved-properties-page ,.inquiries-page {
     padding: 6px;
   }
 
+  .sp-hero-inner,
   .premium-hero-inner {
     padding: 0.7rem;
   }
@@ -5452,10 +5480,6 @@ html .customer-dashboard .inquiry-detail-hero::before {
 
   .hero-subtitle {
     font-size: 0.8rem;
-  }
-
-  .hero-eyebrow {
-    font-size: 0.75rem;
   }
 }
 

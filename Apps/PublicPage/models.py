@@ -31,6 +31,7 @@ class Property(models.Model):
     ('Farm Plots', 'Farm Plots'),
     ('Weekend Farm', 'Weekend Farm'),
     ('Investment Farmland', 'Investment Farmland'),
+    ('Plots & Small Land', 'Plots & Small Land'),
 )
     
     AREA_UNIT_CHOICES = (
@@ -50,6 +51,17 @@ class Property(models.Model):
         ('north_west', 'North-West'),
         ('south_east', 'South-East'),
         ('south_west', 'South-West'),
+    )
+
+    PLOT_DIMENSION_UNIT_CHOICES = (
+        ('ft', 'Feet'),
+        ('m', 'Meter'),
+        ('yard', 'Yard'),
+    )
+
+    DISCOUNT_TYPE_CHOICES = (
+        ('amount', 'Amount (₹)'),
+        ('percentage', 'Percentage (%)'),
     )
     
     LAND_CATEGORY_CHOICES = (
@@ -177,7 +189,7 @@ class Property(models.Model):
     price = models.DecimalField(max_digits=12, decimal_places=2)
     location = models.CharField(max_length=200)
     property_type = models.CharField(max_length=10, choices=PROPERTY_TYPES, default='sale')
-    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='Apartments')
+    category = models.CharField(max_length=30, choices=CATEGORY_CHOICES, default='Apartments')
     
     # Seller and Status for Approval Workflow
     seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name='seller_properties', null=True, blank=True)
@@ -248,6 +260,12 @@ class Property(models.Model):
     plot_depth = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True, help_text="Plot Depth (in feet)")
     road_width = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True, help_text="Road Width (in feet)")
     facing_direction = models.CharField(max_length=20, choices=FACING_CHOICES, null=True, blank=True, help_text="Facing Direction")
+    plot_length = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, help_text="Plot length")
+    plot_breadth = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, help_text="Plot breadth")
+    plot_dimension_unit = models.CharField(max_length=10, choices=PLOT_DIMENSION_UNIT_CHOICES, null=True, blank=True, help_text="Unit for plot length and breadth")
+    concession_available = models.BooleanField(default=False, help_text="Discount or concession available")
+    discount_type = models.CharField(max_length=20, choices=DISCOUNT_TYPE_CHOICES, null=True, blank=True, help_text="Discount as amount or percentage")
+    discount_value = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True, help_text="Discount amount or percentage value")
     corner_plot = models.BooleanField(default=False, help_text="Corner Plot")
     land_category = models.CharField(max_length=20, choices=LAND_CATEGORY_CHOICES, null=True, blank=True, help_text="Land Category")
     electricity_availability = models.BooleanField(default=False, help_text="Electricity Availability")

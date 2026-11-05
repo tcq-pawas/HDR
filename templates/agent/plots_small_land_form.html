@@ -1,0 +1,525 @@
+{% extends base_template %}
+{% load static %}
+
+{% block title %}{{ title }} | HHectare{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/agent/agricultural_land_form.css' %}">
+<style>
+.wizard-form .form-row {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+#discount-details {
+    display: none;
+}
+#discount-details.active {
+    display: block;
+}
+</style>
+{% endblock %}
+
+{% block breadcrumb_items %}
+<span>{{ title }}</span>
+{% endblock %}
+
+{% block content %}
+<div class="wizard-container add-land-page">
+    <!-- Header -->
+    <div class="premium-header text-white">
+        <h4>{{ title }}</h4>
+        <p class="">Property Management System</p>
+    </div>
+
+    <!-- Progress Indicator -->
+    <div class="progress-container">
+        <div class="progress">
+            <div class="progress-bar wizard-progress-bar" id="progressBar"></div>
+        </div>
+        <div class="step-indicators">
+            <div class="step-indicator active" data-step="1">
+                <div class="step-number">1</div>
+                <span>Basic Info</span>
+            </div>
+            <div class="step-indicator" data-step="2">
+                <div class="step-number">2</div>
+                <span>Location</span>
+            </div>
+            <div class="step-indicator" data-step="3">
+                <div class="step-number">3</div>
+                <span>Plot Details</span>
+            </div>
+            <div class="step-indicator" data-step="4">
+                <div class="step-number">4</div>
+                <span>Pricing</span>
+            </div>
+            <div class="step-indicator" data-step="5">
+                <div class="step-number">5</div>
+                <span>Description</span>
+            </div>
+            <div class="step-indicator" data-step="6">
+                <div class="step-number">6</div>
+                <span>Images</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form -->
+    <form method="post" class="wizard-form" enctype="multipart/form-data" id="plotsLandForm" novalidate>
+        {% csrf_token %}
+
+        <!-- Step 1: Basic Information -->
+        <div class="wizard-step active" data-step="1">
+            <div class="form-section">
+                <h3><i class="bi bi-file-earmark-text"></i> Basic Information</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.title.id_for_label }}" class="field-required">Property Title</label>
+                        {{ form.title }}
+                        {% if form.title.errors %}<div class="error-message">{{ form.title.errors }}</div>{% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Location Details -->
+        <div class="wizard-step" data-step="2">
+            <div class="form-section">
+                <h3><i class="bi bi-geo-alt"></i> Location Details</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.state.id_for_label }}" class="field-required">State</label>
+                        {{ form.state }}
+                        {% if form.state.errors %}<div class="error-message">{{ form.state.errors }}</div>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.city.id_for_label }}" class="field-required">City</label>
+                        {{ form.city }}
+                        {% if form.city.errors %}<div class="error-message">{{ form.city.errors }}</div>{% endif %}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.locality.id_for_label }}" class="field-required">Locality</label>
+                        {{ form.locality }}
+                        {% if form.locality.errors %}<div class="error-message">{{ form.locality.errors }}</div>{% endif %}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.full_address.id_for_label }}" class="field-required">Address</label>
+                    {{ form.full_address }}
+                    {% if form.full_address.errors %}<div class="error-message">{{ form.full_address.errors }}</div>{% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Plot Details -->
+        <div class="wizard-step" data-step="3">
+            <div class="form-section">
+                <h3><i class="bi bi-rulers"></i> Plot Details</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.total_area.id_for_label }}" class="field-required">Plot Size</label>
+                        {{ form.total_area }}
+                        {% if form.total_area.errors %}<div class="error-message">{{ form.total_area.errors }}</div>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.area_unit.id_for_label }}" class="field-required">Area Unit</label>
+                        {{ form.area_unit }}
+                        {% if form.area_unit.errors %}<div class="error-message">{{ form.area_unit.errors }}</div>{% endif %}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.plot_length.id_for_label }}" class="field-required">Plot Length</label>
+                        {{ form.plot_length }}
+                        {% if form.plot_length.errors %}<div class="error-message">{{ form.plot_length.errors }}</div>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.plot_breadth.id_for_label }}" class="field-required">Plot Breadth</label>
+                        {{ form.plot_breadth }}
+                        {% if form.plot_breadth.errors %}<div class="error-message">{{ form.plot_breadth.errors }}</div>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.plot_dimension_unit.id_for_label }}" class="field-required">Length / Breadth Unit</label>
+                        {{ form.plot_dimension_unit }}
+                        {% if form.plot_dimension_unit.errors %}<div class="error-message">{{ form.plot_dimension_unit.errors }}</div>{% endif %}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.facing_direction.id_for_label }}" class="field-required">Facing Direction</label>
+                        {{ form.facing_direction }}
+                        {% if form.facing_direction.errors %}<div class="error-message">{{ form.facing_direction.errors }}</div>{% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Pricing Details -->
+        <div class="wizard-step" data-step="4">
+            <div class="form-section">
+                <h3><i class="bi bi-currency-rupee"></i> Pricing Details</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.price.id_for_label }}" class="field-required">Total Selling Price (₹)</label>
+                        {{ form.price }}
+                        {% if form.price.errors %}<div class="error-message">{{ form.price.errors }}</div>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.negotiable.id_for_label }}" class="field-required">Price Negotiable</label>
+                        {{ form.negotiable }}
+                        {% if form.negotiable.errors %}<div class="error-message">{{ form.negotiable.errors }}</div>{% endif %}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.concession_available.id_for_label }}" class="field-required">Discount / Concession Available</label>
+                        {{ form.concession_available }}
+                        {% if form.concession_available.errors %}<div class="error-message">{{ form.concession_available.errors }}</div>{% endif %}
+                    </div>
+                </div>
+                <div id="discount-details">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="{{ form.discount_type.id_for_label }}" class="field-required">Discount Type</label>
+                            {{ form.discount_type }}
+                            {% if form.discount_type.errors %}<div class="error-message">{{ form.discount_type.errors }}</div>{% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.discount_value.id_for_label }}" class="field-required">Discount Amount / Percentage</label>
+                            {{ form.discount_value }}
+                            {% if form.discount_value.errors %}<div class="error-message">{{ form.discount_value.errors }}</div>{% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 5: Description -->
+        <div class="wizard-step" data-step="5">
+            <div class="form-section">
+                <h3><i class="bi bi-card-text"></i> Description</h3>
+                <div class="form-group">
+                    <label for="{{ form.description.id_for_label }}" class="field-required">Property Description</label>
+                    {{ form.description }}
+                    {% if form.description.errors %}<div class="error-message">{{ form.description.errors }}</div>{% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 6: Property Images -->
+        <div class="wizard-step" data-step="6">
+            <div class="form-section">
+                <h3><i class="bi bi-images"></i> Property Images</h3>
+                <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e2e8f0;">
+                    <h4 style="margin-top: 0; color: #1e293b; font-size: 1rem; margin-bottom: 5px;">Cover Photo (Featured Image)</h4>
+                    <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 15px;">Upload 1 main cover photo. This will be the primary image shown in search results and saved directly to the property record.</p>
+                    <div class="form-row">
+                        <div class="form-group" style="width: 100%;">
+                            <label for="{{ form.featured_image.id_for_label }}" class="field-required">Featured Image</label>
+                            {{ form.featured_image }}
+                            {% if form.featured_image.errors %}<div class="error-message">{{ form.featured_image.errors }}</div>{% endif %}
+                        </div>
+                    </div>
+                    <div id="featured_preview_container" style="margin-top: 15px; display: none;">
+                        <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 10px;">Selected Cover Photo:</p>
+                        <div style="position: relative; display: inline-block;">
+                            <img id="featured_preview_image" src="" alt="Cover Preview" style="width: 120px; height: 90px; object-fit: cover; border-radius: 4px; border: 1px solid #cbd5e1;">
+                            <button id="clear_featured_btn" style="position: absolute; top: -8px; right: -8px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 22px; height: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; line-height: 1;">&times;</button>
+                        </div>
+                    </div>
+                    {% if form.instance.featured_image %}
+                        <div id="existing_featured_container" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #cbd5e1;">
+                            <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 10px;">Currently Uploaded Cover Photo:</p>
+                            <img src="{{ form.instance.featured_image.url }}" alt="Current Cover" style="width: 120px; height: 90px; object-fit: cover; border-radius: 4px; border: 1px solid #cbd5e1;">
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e2e8f0;">
+                    <h4 style="margin-top: 0; color: #1e293b; font-size: 1rem; margin-bottom: 5px;">Property Gallery Images</h4>
+                    <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 15px;">Select multiple additional photos to create a gallery for this property.</p>
+                    <div class="form-row">
+                        <div class="form-group" style="width: 100%;">
+                            <label for="gallery_images_input">Select Multiple Gallery Images</label>
+                            <input type="file" id="gallery_images_input" class="form-control" multiple accept="image/*">
+                            <input type="file" name="gallery_images" id="gallery_images_final" multiple style="display: none;">
+                        </div>
+                    </div>
+                    <div id="gallery_preview_container" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px;"></div>
+
+                    {% if images %}
+                        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #cbd5e1;">
+                            <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 10px;">Currently Uploaded Gallery Images:</p>
+                            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                            {% for img in images %}
+                                <div style="position: relative;">
+                                    <img src="{{ img.image.url }}" alt="Gallery Image" style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px; border: 1px solid #cbd5e1;">
+                                </div>
+                            {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="wizard-actions">
+            <button type="button" class="btn btn-secondary" id="prevBtn" style="display: none;">
+                <i class="bi bi-arrow-left"></i> Previous
+            </button>
+            <button type="button" class="btn btn-primary" id="nextBtn">
+                Next <i class="bi bi-arrow-right"></i>
+            </button>
+            <button type="submit" class="btn btn-primary" id="submitBtn" style="display: none;">
+                <i class="bi bi-check-circle"></i> {% if title|stringformat:'s'|slice:':3' == 'Add' %}Create Property{% else %}Update Property{% endif %}
+            </button>
+            <a href="{% url 'agent:property_list' %}" class="btn btn-secondary">
+                <i class="bi bi-x-circle"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Discount toggle
+    const concessionField = document.getElementById('concession_available');
+    const discountDetails = document.getElementById('discount-details');
+
+    function toggleDiscountDetails() {
+        if (!concessionField || !discountDetails) {
+            return;
+        }
+        const show = concessionField.value === 'True' || concessionField.value === 'true';
+        if (show) {
+            discountDetails.classList.add('active');
+        } else {
+            discountDetails.classList.remove('active');
+        }
+    }
+
+    if (concessionField) {
+        concessionField.addEventListener('change', toggleDiscountDetails);
+        toggleDiscountDetails();
+    }
+
+    // City loading
+    const stateSelect = document.getElementById('state_select');
+    const citySelect = document.getElementById('city_select');
+    const savedCityValue = '{{ form.instance.city|default:"" }}';
+
+    function loadCitiesForState(state, selectCityValue) {
+        if (!state) {
+            citySelect.innerHTML = '<option value="">Select City</option>';
+            return;
+        }
+        citySelect.innerHTML = '<option value="">Loading...</option>';
+        fetch(`/agent/ajax/get-cities/?state=${encodeURIComponent(state)}`)
+            .then(response => response.json())
+            .then(data => {
+                citySelect.innerHTML = '<option value="">Select City</option>';
+                let cityFound = false;
+                data.cities.forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city;
+                    option.textContent = city;
+                    if (selectCityValue && city === selectCityValue) {
+                        option.selected = true;
+                        cityFound = true;
+                    }
+                    citySelect.appendChild(option);
+                });
+                if (selectCityValue && !cityFound) {
+                    const option = document.createElement('option');
+                    option.value = selectCityValue;
+                    option.textContent = selectCityValue;
+                    option.selected = true;
+                    citySelect.appendChild(option);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching cities:', error);
+                citySelect.innerHTML = '<option value="">Error loading cities</option>';
+            });
+    }
+
+    if (stateSelect && citySelect) {
+        stateSelect.addEventListener('change', function() {
+            loadCitiesForState(this.value, null);
+        });
+        const initialState = stateSelect.value;
+        if (initialState && savedCityValue) {
+            loadCitiesForState(initialState, savedCityValue);
+        }
+    }
+
+    // Featured image preview
+    const featuredInput = document.getElementById('{{ form.featured_image.id_for_label }}');
+    const featuredPreviewContainer = document.getElementById('featured_preview_container');
+    const featuredPreviewImage = document.getElementById('featured_preview_image');
+    const clearFeaturedBtn = document.getElementById('clear_featured_btn');
+    const existingFeaturedContainer = document.getElementById('existing_featured_container');
+
+    if (featuredInput && featuredPreviewContainer && featuredPreviewImage) {
+        featuredInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    featuredPreviewImage.src = ev.target.result;
+                    featuredPreviewContainer.style.display = 'block';
+                    if (existingFeaturedContainer) {
+                        existingFeaturedContainer.style.display = 'none';
+                    }
+                }
+                reader.readAsDataURL(file);
+            } else {
+                featuredPreviewContainer.style.display = 'none';
+                if (existingFeaturedContainer) {
+                    existingFeaturedContainer.style.display = 'block';
+                }
+            }
+        });
+
+        if (clearFeaturedBtn) {
+            clearFeaturedBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                featuredInput.value = '';
+                featuredPreviewContainer.style.display = 'none';
+                if (existingFeaturedContainer) {
+                    existingFeaturedContainer.style.display = 'block';
+                }
+            });
+        }
+    }
+
+    // Gallery images
+    const galleryInput = document.getElementById('gallery_images_input');
+    const finalInput = document.getElementById('gallery_images_final');
+    const previewContainer = document.getElementById('gallery_preview_container');
+
+    if (galleryInput && finalInput && previewContainer) {
+        let dt = new DataTransfer();
+
+        galleryInput.addEventListener('change', function(e) {
+            const files = e.target.files;
+            for (let i = 0; i < files.length; i++) {
+                dt.items.add(files[i]);
+                const fileRef = files[i];
+
+                const reader = new FileReader();
+                const previewDiv = document.createElement('div');
+                previewDiv.style.position = 'relative';
+                previewDiv.style.width = '100px';
+                previewDiv.style.height = '100px';
+
+                const img = document.createElement('img');
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'cover';
+                img.style.borderRadius = '4px';
+                img.style.border = '1px solid #cbd5e1';
+
+                const removeBtn = document.createElement('button');
+                removeBtn.innerHTML = '×';
+                removeBtn.style.position = 'absolute';
+                removeBtn.style.top = '-5px';
+                removeBtn.style.right = '-5px';
+                removeBtn.style.background = '#ef4444';
+                removeBtn.style.color = 'white';
+                removeBtn.style.border = 'none';
+                removeBtn.style.borderRadius = '50%';
+                removeBtn.style.width = '20px';
+                removeBtn.style.height = '20px';
+                removeBtn.style.cursor = 'pointer';
+                removeBtn.style.display = 'flex';
+                removeBtn.style.alignItems = 'center';
+                removeBtn.style.justifyContent = 'center';
+                removeBtn.style.fontSize = '14px';
+                removeBtn.style.lineHeight = '1';
+
+                removeBtn.addEventListener('click', function(ev) {
+                    ev.preventDefault();
+                    previewDiv.remove();
+
+                    let newDt = new DataTransfer();
+                    for(let j = 0; j < dt.files.length; j++) {
+                        if (dt.files[j] !== fileRef) {
+                            newDt.items.add(dt.files[j]);
+                        }
+                    }
+                    dt = newDt;
+                    finalInput.files = dt.files;
+                });
+
+                reader.onload = function(ev) {
+                    img.src = ev.target.result;
+                }
+                reader.readAsDataURL(fileRef);
+
+                previewDiv.appendChild(img);
+                previewDiv.appendChild(removeBtn);
+                previewContainer.appendChild(previewDiv);
+            }
+            finalInput.files = dt.files;
+        });
+    }
+
+    // Wizard navigation
+    const steps = document.querySelectorAll('.wizard-step');
+    const stepIndicators = document.querySelectorAll('.step-indicator');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const progressBar = document.getElementById('progressBar');
+    let currentStep = 1;
+    const totalSteps = steps.length;
+
+    function updateWizard() {
+        // Update steps visibility
+        steps.forEach((step, index) => {
+            if (index + 1 === currentStep) {
+                step.classList.add('active');
+            } else {
+                step.classList.remove('active');
+            }
+        });
+
+        // Update step indicators
+        stepIndicators.forEach((indicator, index) => {
+            if (index + 1 === currentStep) {
+                indicator.classList.add('active');
+            } else {
+                indicator.classList.remove('active');
+            }
+        });
+
+        // Update progress bar
+        const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
+        progressBar.style.width = progress + '%';
+
+        // Update buttons
+        prevBtn.style.display = currentStep === 1 ? 'none' : 'inline-flex';
+        nextBtn.style.display = currentStep === totalSteps ? 'none' : 'inline-flex';
+        submitBtn.style.display = currentStep === totalSteps ? 'inline-flex' : 'none';
+    }
+
+    nextBtn.addEventListener('click', function() {
+        if (currentStep < totalSteps) {
+            currentStep++;
+            updateWizard();
+        }
+    });
+
+    prevBtn.addEventListener('click', function() {
+        if (currentStep > 1) {
+            currentStep--;
+            updateWizard();
+        }
+    });
+
+    // Initialize wizard
+    updateWizard();
+</script>
+{% endblock %}

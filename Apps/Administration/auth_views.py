@@ -243,7 +243,8 @@ def unauthorized_access(request, exception=None):
 from django.views import View
 from django.utils import timezone
 from Apps.Administration.models import UserVerification
-from Apps.Administration.utils import generate_otp, send_msg91_otp, send_email_otp
+from Apps.Administration.utils import generate_otp, send_email_otp
+from Apps.Administration.services.bulksms import send_otp_sms
 
 class RequestOTPView(View):
     def post(self, request, *args, **kwargs):
@@ -277,8 +278,8 @@ class RequestOTPView(View):
             verification.mobile_otp = otp
             verification.save()
             
-            success = send_msg91_otp(phone, otp)
-            if success:
+            result = send_otp_sms(phone, otp)
+            if result.get('success'):
                 return JsonResponse({'success': True, 'message': 'OTP sent via SMS'})
             else:
                 return JsonResponse({'success': False, 'message': 'Failed to send SMS'}, status=500)
