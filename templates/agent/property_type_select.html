@@ -12,7 +12,7 @@
         box-sizing: border-box;
     }
 
-    .property-type-grid {
+    .property-type-main-container .property-type-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 16px;
@@ -122,6 +122,14 @@
         color: #64748b;
         line-height: 1.6;
         margin: 0;
+    } 
+    
+    .cards-subtitle{
+        font-size:0.93rem;
+    }
+    .property-type-main-container .property-type-card .property-type-btn{
+        padding:13px;
+        font-size:1.1rem;
     }
 
     @media (min-width: 1400px) {
@@ -190,13 +198,13 @@
             padding: 22px 20px;
             margin-bottom: 24px;
         }
-        .property-type-grid {
+        /* .property-type-main-container .property-type-grid {
             grid-template-columns: 1fr;
-        }
+        } */
     }
 
     @media (max-width: 767.98px) and (orientation: landscape) {
-        .property-type-grid {
+        .property-type-main-container .property-type-grid {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 10px;
@@ -210,11 +218,21 @@
     }
 
     @media (max-width: 480px) {
+        .property-type-main-container .property-type-card .property-type-btn{
+             padding:0.5rem;
+             font-size:0.9rem;
+        }
+        .property-type-main-container .property-type-grid {
+             grid-template-columns: minmax(0, 1fr);   
+        }
         .property-type-card .card-body {
             padding: 20px 18px;
         }
         .property-type-card h3 {
             font-size: 1.15rem;
+        }
+        .property-type-main-container .property-type-card .cards-subtitle{
+           font-size:0.93rem;
         }
         .property-type-card p {
             font-size: 0.72rem;
@@ -237,7 +255,7 @@
 
 {% block content %}
 
-<div class="property-type-page">
+<div class="property-type-page property-type-main-container">
 
     <!-- ================= HEADER ================= -->
 
@@ -298,12 +316,12 @@
                             Agricultural Land
                         </h3>
 
-                        <p>
+                        <p class="cards-subtitle">
                             Add agricultural land, farmland, plantations,
                             and agro-investment properties.
                         </p>
 
-                        <span class="btn btn-primary mt-2">
+                        <span class="btn btn-primary mt-2 property-type-btn">
                             <i class="bi bi-arrow-right me-1"></i>
                             Select Agri Land
                         </span>
@@ -347,12 +365,12 @@
                             Plots &amp; Small Land
                         </h3>
 
-                        <p>
+                        <p class="cards-subtitle">
                             Add residential plots, small land parcels,
                             and plot listings.
                         </p>
 
-                        <span class="btn btn-primary mt-2">
+                        <span class="btn btn-primary mt-2 property-type-btn">
                             <i class="bi bi-arrow-right me-1"></i>
                             Select Plot
                         </span>
@@ -385,12 +403,12 @@
                             House / Building
                         </h3>
 
-                        <p>
+                        <p class="cards-subtitle">
                             Add houses, apartments, villas,
                             or commercial buildings.
                         </p>
 
-                        <span class="btn btn-primary mt-2">
+                        <span class="btn btn-primary mt-2 property-type-btn">
                             Coming Soon
                         </span>
 

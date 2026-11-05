@@ -15,6 +15,22 @@
 #discount-details.active {
     display: block;
 }
+.wizard-container .wizard-form .form-section h3 {
+    font-size: 1.1rem;
+}
+@media (max-width:480px){
+    .add-land-page .form-group input, .add-land-page .form-group select, .add-land-page .form-group textarea{
+       font-size: 13px;
+    }
+}
+@media (max-width:320px){
+    .feature-img-box{
+        max-width:210px;
+    }
+    .wizard-container .wizard-form .form-section h3 {
+        font-size: 0.9rem;
+    }
+}
 </style>
 {% endblock %}
 
@@ -215,7 +231,7 @@
                     <h4 style="margin-top: 0; color: #1e293b; font-size: 1rem; margin-bottom: 5px;">Cover Photo (Featured Image)</h4>
                     <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 15px;">Upload 1 main cover photo. This will be the primary image shown in search results and saved directly to the property record.</p>
                     <div class="form-row">
-                        <div class="form-group" style="width: 100%;">
+                        <div class="form-group feature-img-box" style="width: 100%;">
                             <label for="{{ form.featured_image.id_for_label }}" class="field-required">Featured Image</label>
                             {{ form.featured_image }}
                             {% if form.featured_image.errors %}<div class="error-message">{{ form.featured_image.errors }}</div>{% endif %}
@@ -240,7 +256,7 @@
                     <h4 style="margin-top: 0; color: #1e293b; font-size: 1rem; margin-bottom: 5px;">Property Gallery Images</h4>
                     <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 15px;">Select multiple additional photos to create a gallery for this property.</p>
                     <div class="form-row">
-                        <div class="form-group" style="width: 100%;">
+                        <div class="form-group feature-img-box" style="width: 100%;">
                             <label for="gallery_images_input">Select Multiple Gallery Images</label>
                             <input type="file" id="gallery_images_input" class="form-control" multiple accept="image/*">
                             <input type="file" name="gallery_images" id="gallery_images_final" multiple style="display: none;">
@@ -476,50 +492,78 @@
     let currentStep = 1;
     const totalSteps = steps.length;
 
-    function updateWizard() {
-        // Update steps visibility
-        steps.forEach((step, index) => {
-            if (index + 1 === currentStep) {
-                step.classList.add('active');
-            } else {
-                step.classList.remove('active');
-            }
-        });
+    function getStepFields(stepNum) {
+        const stepElement = document.querySelector(`.wizard-step[data-step="${stepNum}"]`);
+        return Array.from(stepElement.querySelectorAll('input, select, textarea'))
+            .filter(field => !field.closest('#discount-details:not(.active)'));
+    }
 
-        // Update step indicators
+    function validateStep(stepNum) {
+        const invalidField = getStepFields(stepNum).find(field => !field.checkValidity());
+        if (invalidField) {
+            invalidField.reportValidity();
+            return false;
+        }
+        return true;
+    }
+
+    function showStep(step) {
+        currentStep = step;
+        steps.forEach((wizardStep, index) => {
+            wizardStep.classList.toggle('active', index + 1 === step);
+        });
         stepIndicators.forEach((indicator, index) => {
-            if (index + 1 === currentStep) {
-                indicator.classList.add('active');
-            } else {
-                indicator.classList.remove('active');
-            }
+            indicator.classList.toggle('active', index + 1 === step);
+            indicator.classList.toggle('completed', index + 1 < step);
         });
 
-        // Update progress bar
-        const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
+        const progress = (step / totalSteps) * 100;
         progressBar.style.width = progress + '%';
-
-        // Update buttons
-        prevBtn.style.display = currentStep === 1 ? 'none' : 'inline-flex';
-        nextBtn.style.display = currentStep === totalSteps ? 'none' : 'inline-flex';
-        submitBtn.style.display = currentStep === totalSteps ? 'inline-flex' : 'none';
+        prevBtn.style.display = step === 1 ? 'none' : 'inline-flex';
+        nextBtn.style.display = step === totalSteps ? 'none' : 'inline-flex';
+        submitBtn.style.display = step === totalSteps ? 'inline-flex' : 'none';
+        stepIndicators[step - 1].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
     }
 
     nextBtn.addEventListener('click', function() {
-        if (currentStep < totalSteps) {
-            currentStep++;
-            updateWizard();
+        if (validateStep(currentStep) && currentStep < totalSteps) {
+            showStep(currentStep + 1);
         }
     });
 
     prevBtn.addEventListener('click', function() {
         if (currentStep > 1) {
-            currentStep--;
-            updateWizard();
+            showStep(currentStep - 1);
         }
     });
 
-    // Initialize wizard
-    updateWizard();
+    stepIndicators.forEach(indicator => {
+        indicator.addEventListener('click', function() {
+            const step = parseInt(indicator.dataset.step);
+            if (step <= currentStep || validateStep(currentStep)) {
+                showStep(step);
+            }
+        });
+    });
+
+    const form = document.getElementById('plotsLandForm');
+    form.addEventListener('submit', function(e) {
+        for (let step = 1; step <= totalSteps; step++) {
+            if (getStepFields(step).some(field => !field.checkValidity())) {
+                e.preventDefault();
+                showStep(step);
+                setTimeout(() => validateStep(step), 100);
+                return;
+            }
+        }
+    });
+
+    const firstError = document.querySelector('.wizard-step .error-message');
+    if (firstError) {
+        const errorStep = firstError.closest('.wizard-step');
+        showStep(parseInt(errorStep.dataset.step));
+    } else {
+        showStep(1);
+    }
 </script>
 {% endblock %}

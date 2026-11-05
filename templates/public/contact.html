@@ -80,7 +80,7 @@
 
     @media (min-width: 1024px) {
         .contact-badge {
-           font-size: 17px;
+           font-size: 13px;
         }
     }
 
@@ -394,8 +394,9 @@
     @media (min-width: 1024px) and (max-width: 1439px) {
         .contact-section-padding .contact-cards-grid{
             width: 100%;
-            max-width: 980px;
-            margin: 0 auto;
+            /* max-width: 980px; */
+            max-width: 1150px;
+            /* margin: 0 auto; */
         }
     }
     
@@ -470,6 +471,7 @@
     @media (min-width: 480px) and (max-width: 768px) {
     .contact-section-1 .container .contact-cards-grid {
         width: 100%;
+        gap:20px;
         grid-template-columns: repeat(2, 1fr) !important;
     }
 
@@ -492,6 +494,7 @@
             width: 100%;
             max-width: 496px;
             display: flex;
+            gap:30px;
             flex-direction: column;
         }
 
@@ -642,6 +645,25 @@
         padding: clamp(20px, 4vw, 32px);
     }
 
+     .contact-hero-title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.3em;
+        font-size: clamp(1.5rem, 5vw + 0.5rem, 3rem);
+        line-height: 1.2;
+        text-align: center;
+    }
+
+    .contact-hero-logo {
+        height: 1.1em;      
+        width: auto;        
+        max-width: 100%;    
+        object-fit: contain;
+        display: block;
+    }
+
     @media (max-width: 1199px) {
         .contact-section-1 > .container,
         .contact-form-section > .container,
@@ -755,7 +777,9 @@
     style="background-size: cover; background-position: center; height: 400px !important; display: flex; align-items: center; position: relative; text-align: center;">
     <div class="container">
         <div class="contact-hero-content">
-            <h1 class="contact-hero-title">Contact HHectare</h1>
+            <h1 class="contact-hero-title">Contact 
+                 <img src="{% static 'img/logo.png' %}" alt="HHectare" class="contact-hero-logo">
+            </h1>
             <p class="contact-hero-subtitle">
                 Let's discuss your farmland investment goals
             </p>
