@@ -95,6 +95,8 @@
     align-items: center;
     justify-content: center;
     min-height: 200px;
+    width:100%;
+    max-width:310px;
 }
 
 .contact-card:hover {
@@ -105,7 +107,7 @@
 .contact-card-icon {
     width: 64px;
     height: 64px;
-    background-color: rgba(15, 106, 60, 0.1);
+    background-color: rgba(15, 106, 60, 0.10);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -419,6 +421,11 @@
 
 /* Responsive Design */
 @media (max-width: 1024px) {
+    .contact-card {
+        width:100%;
+        max-width:none;
+    }
+
     .contact-cards-grid {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -443,6 +450,12 @@
 }
 
 @media (max-width: 768px) {
+    .location-info {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+        padding:20px 0;
+    }
     .contact-cards-grid {
         grid-template-columns: 1fr;
         gap: 16px;

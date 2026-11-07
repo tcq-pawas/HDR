@@ -223,6 +223,38 @@
         display: none !important;
     }
 
+    /* Property grid container */
+    .property-grid-main-container {
+        padding:54px 24px;
+        display: grid;
+        grid-template-columns: 38% 60%;
+        gap: 24px ;
+    }   
+    
+    .properties-grid-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+    }
+
+    .formland-agr-listing-meta{
+             display: flex;
+             flex-wrap: wrap;
+             align-items: center;
+             gap: 12px;
+             padding: 10px 20px;
+    }
+
+    .result-container {
+         text-align: center;
+         background: #0F6A3C;
+         color: white;
+         padding: 10px 16px;
+         border-radius: 20px;
+         font-size: 12px;
+         font-weight: 600;
+     }
+
     /* Responsive Design */
     @media (max-width: 1200px) {
         .properties-grid {
@@ -263,7 +295,7 @@
 
         /* Single column on mobile */
         .properties-grid {
-            grid-template-columns: 1fr !important;
+            /* grid-template-columns: 1fr !important; */
             gap: 16px !important;
         }
 
@@ -372,9 +404,41 @@
         div[style*="grid-template-columns: 38% 62%"] {
             grid-template-columns: 1fr !important;
         }
-    }
+        .property-grid-main-container {
+             grid-template-columns: 1fr;
+            /* grid-template-columns: 38% 60%; */
+        }
+        .properties-grid-container {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .formland-agr-listing-meta{
+            padding: 10px 0;
+            gap: 10px;
+            justify-content: space-between;
+        }
+        .map-header-container{
+           display: flex;
+           flex-direction:column;
+           gap:6px; 
+        }
+
+    }    
     
     @media (max-width: 480px) {
+        .properties-grid {
+            grid-template-columns: 1fr !important;
+        }
+        .map-header-container{
+           flex-direction:row;
+           width: 100%;
+           justify-content: space-between;
+        }
+        .property-grid-main-container {
+            padding:54px 16px;
+        } 
+        .result-container {
+         padding: 6px 16px;
+        }
         /* Extra small adjustments */
         .hero-banner {
             height: 380px !important;
@@ -395,7 +459,7 @@
         margin-left: 0;
         }
         .form-agri-land-headline{
-            padding:50px 30px;
+            padding:50px 4px;
             text-align: center;
         }
     }
@@ -507,7 +571,7 @@
     </div>
 
     <!-- Main Content: 38% Map, 62% Listings -->
-    <div style="padding:54px 24px; display: grid; grid-template-columns: 38% 62%; gap: 24px;">
+    <div class="property-grid-main-container">
         <!-- Map Section -->
         <div style="position: sticky; top: 24px; height: calc(100vh - 200px); min-height: 500px; border-radius: 18px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-top: 38px;">
             <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2629.518770529693!2d83.37602480010356!3d26.798350293782747!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399145b795d2cae9%3A0x98b3202d1e49fd25!2sHeyDay%20Realty%20Private%20Limited!5e1!3m2!1sen!2sin!4v1790075653843!5m2!1sen!2sin" width="100%" height="100%" style="border:0; display:block;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
@@ -530,11 +594,13 @@
             <!-- Listings Header -->
             <div style="margin-bottom: 24px;">
                 <h1 class="form-agri-land-headline" style="font-family: 'Playfair Display', serif; font-size: 1.5rem; padding-bottom:20px; font-weight: 700; color: #1a2e2a; margin-bottom: 8px; padding-top: 40px;">Farmland and Agriculture Land for Sale</h1>
-                <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding:10px 20px">
-                    <div style="font-size: 12px; color: #6b7a7a;">
-                        <a href="{% url 'public:home' %}" style="color: #0F6A3C; text-decoration: none; font-size: 17px; font-weight: 500;">Home</a> &gt; <span style="color: #6b7a7a; font-size: 17px;">Map</span>
-                    </div>
-                    <div style="background: #0F6A3C; color: white; padding: 10px 16px; border-radius: 20px; font-size: 12px; font-weight: 600;">{{ total_results }} Results</div>
+                <div class="formland-agr-listing-meta">
+                    <div class="map-header-container"> 
+                        <div style="font-size: 12px; color: #6b7a7a;">
+                            <a href="{% url 'public:home' %}" style="color: #0F6A3C; text-decoration: none; font-size: 17px; font-weight: 500;">Home</a> &gt; <span style="color: #6b7a7a; font-size: 17px;">Map</span>
+                        </div>
+                         <div class="result-container">{{ total_results }} Results</div> 
+                    </div> 
                     <div id="area-price-filter-container">
                         <form method="get" style="display: inline;">
                             {% for key, value in filters.items %}
@@ -556,15 +622,15 @@
 
             <!-- Properties Grid -->
             {% if properties %}
-                <div class="properties-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
+                <div class="properties-grid properties-grid-container">
                     {% for property in properties %}
                         <div class="property-card property-listing-card" data-property-id="{{ property.id }}" style="background: white; border-radius: 18px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); transition: all 0.3s; display: flex; flex-direction: column;">
                             <!-- Image Slider -->
                             <div style="position: relative; height: 200px; overflow: hidden; background: #e2e8f0; display: flex; align-items: center; justify-content: center;">
                                 {% if property.featured_image %}
-                                    <img src="{{ property.featured_image.url }}" alt="{{ property.title }}" style="width: 100%; height: 100%; object-fit: contain; transition: transform 0.3s; display: block;">
+                                    <img src="{{ property.featured_image.url }}" alt="{{ property.title }}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; display: block;">
                                 {% elif property.images.all %}
-                                    <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}" style="width: 100%; height: 100%; object-fit: contain; transition: transform 0.3s; display: block;">
+                                    <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; display: block;">
                                     {% if property.images.count > 1 %}
                                         <div style="position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 5;">
                                             {% for image in property.images.all %}
@@ -573,7 +639,7 @@
                                         </div>
                                     {% endif %}
                                 {% else %}
-                                    <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: #f8fafc; color: #94a3b8;">
+                                    <div style="display: flex; align-items: center; justify-content: center; height: 100%; width: 100%; background: #f8fafc; color: #94a3b8;">
                                         <i class="bi bi-image" style="font-size: 2.5rem;"></i>
                                     </div>
                                 {% endif %}
@@ -643,7 +709,7 @@
                     </div>
                 {% endif %}
             {% else %}
-                <div style="text-align: center; padding: 60px 20px; background: white; border-radius: 18px;">
+                <div style="text-align: center; padding: 60px 20px; background: white; border-radius: 18px;>
                     <h3 style="font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: #1a2e2a; margin-bottom: 12px;">No Properties Found</h3>
                     <p style="color: #6b7a7a; margin-bottom: 24px; font-size: 17px;">Try adjusting your filters or search terms to find properties.</p>
                     <a href="{% url 'buy:property_search' %}" style="display: inline-block; padding: 12px 32px; background: #F4B400; color: white; border: none; border-radius: 12px; font-weight: 600; text-decoration: none; transition: 0.2s;">Clear All Filters</a>
