@@ -32,8 +32,7 @@
 .sell-page-body h1,
 .sell-page-body h2,
 .sell-section-heading,
-.support-section-title,
-.cta-text h2 {
+.support-section-title {
     font-size: 1.5rem !important;
 }
 
@@ -52,8 +51,7 @@
 .get-started-content p,
 .security-text,
 .support-content p,
-.faq-body,
-.cta-text p {
+.faq-body {
     font-size: 12px !important;
 }
 
@@ -93,12 +91,11 @@
     z-index: 1;
     color: white;
     max-width: 800px;
-    padding: 0 20px;
 }
 
 .sell-hero-title {
-    font-family: 'Playfair Display', serif;
-    font-weight: 900;
+    
+    font-weight: 700;
     margin-bottom: 1rem;
     color: white;
 }
@@ -209,7 +206,7 @@
 .get-started-card {
     max-width: 600px;
     margin: 0 auto;
-    padding: 50px;
+    padding: 30px 50px;
     display: flex;
     align-items: center;
     gap: 30px;
@@ -243,6 +240,7 @@
 .security-text {
     text-align: center;
     margin-top: 1.5rem;
+    padding: 0px 10px;
     color: var(--primary-green);
     display: flex;
     align-items: center;
@@ -301,6 +299,7 @@
     color: white;
     border: none;
     border-radius: 999px;
+    font-size: 14px !important;
     height: 48px;
     padding: 0 32px;
     font-weight: 600;
@@ -325,7 +324,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
+    flex-wrap: nowrap;
     gap: 40px;
     min-height: 420px;
     border: 1px solid #ECECEC;
@@ -403,22 +403,6 @@
     align-self: flex-end;
 }
 
-.leaf-decoration {
-    position: absolute;
-    font-size: 3rem;
-    opacity: 0.3;
-}
-
-.leaf-left {
-    bottom: -20px;
-    left: -30px;
-}
-
-.leaf-right {
-    top: -20px;
-    right: -30px;
-}
-
 /* FAQ Section */
 .faq-container {
     max-width: 900px;
@@ -485,91 +469,34 @@
     line-height: 1.6;
 }
 
-/* Bottom CTA */
-.cta-banner {
-    background: linear-gradient(90deg, #063B27 0%, #08452E 45%, #063B27 100%);
-    border-radius: 22px;
-    padding: 28px 36px;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-    max-width: 2000px;
-    margin: 0 auto;
-    min-height: 220px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+/* Bottom CTA: the main styling for .cta-banner comes from style.css.
+   Only what is not in style.css is kept here. */
+.cta-banner-section .cta-banner{
+    height: 358px;
+}   
+.cta-banner .cta-banner-content .cta-banner-title{
+    font-size: 2rem;
+}
+.cta-banner .btn-cta-yellow{
+    font-size: 15px;
+}
+.cta-banner .btn-cta-yellow,
+.cta-banner .btn-cta-outline {
+    display: inline-flex;
     align-items: center;
-    gap: 24px;
+    gap: 6px;
+    font-size: 12px;
+    text-decoration: none;
 }
 
-.cta-banner::before,
-.cta-banner::after {
-    content: '🌿';
-    position: absolute;
-    font-size: 1.5rem;
-    opacity: 0.18;
+.sell-page-body .cta-banner-description {
+    font-size: 1.1rem !important;
+    max-width:100%;
+    text-align: center;
 }
 
-.cta-banner::before {
-    top: 10px;
-    left: 20px;
-}
-
-.cta-banner::after {
-    bottom: 10px;
-    right: 20px;
-}
-
-.cta-left {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-}
-
-.cta-right {
-    display: flex;
-    align-items: center;
-}
-
-.cta-buttons {
-    display: flex;
-    gap: 16px;
-}
-
-.cta-icon {
-    width: 100px;
-    height: 100px;
-    background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3rem;
-    color: white;
-    box-shadow: 0 4px 15px rgba(255,255,255,0.1);
-    flex-shrink: 0;
-}
-
-.cta-text h2 {
-    font-family: 'Playfair Display', serif;
-    font-weight: 700;
-    color: #FFFFFF;
-    margin-bottom: 0.25rem;
-    line-height: 1.2;
-}
-
-.cta-text p {
-    font-family: 'Inter', sans-serif;
-    color: #D7E7DD;
-    line-height: 1.4;
-    max-width: 420px;
-}
-
-.cta-buttons {
-    display: flex;
-    gap: 12px;
-    flex-shrink: 0;
+.sell-page-body .cta-banner .cta-banner-content .cta-banner-title{
+    font-size: 2rem !important;
 }
 
 /* Responsive */
@@ -591,29 +518,41 @@
         height: 360px;
     }
 
-    .cta-banner {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .cta-left {
-        flex-direction: column;
-    }
-
-    .cta-buttons {
-        flex-direction: column;
-        width: 100%;
-    }
-
-    .cta-buttons a {
-        width: 100%;
-    }
-
     .sell-section {
         padding: 56px 0;
     }
 }
 
+@media (max-width:1024px){
+    .cta-banner-section .cta-banner{
+       height: 423px;
+    }
+}
+@media (min-width: 769px) {
+    .support-card {
+        margin: 0 40px;
+    }
+    .cta-banner{
+       height: 407px;
+    } 
+    .cta-banner .btn-cta-yellow{
+      font-size: 13px;
+    }
+    .sell-page-body .cta-banner-description {
+      text-align: left;
+    }
+}
+@media (max-width:768px){
+    .sell-page-body .cta-banner .cta-banner-content .cta-banner-title{
+       font-size: 1.5rem !important;
+    }
+    .cta-banner-section .cta-banner{
+       height: 395px;
+    }
+    .sell-page-body .cta-banner-description {
+       font-size: 1rem !important;
+    }
+}
 @media (max-width: 767px) {
     .sell-hero {
         min-height: 420px;
@@ -628,33 +567,6 @@
         padding: 0 20px 20px 20px;
     }
 
-    .cta-banner {
-        padding: 24px 28px;
-        min-height: auto;
-    }
-
-    .cta-left {
-        gap: 16px;
-    }
-
-    .cta-icon {
-        width: 56px;
-        height: 56px;
-        font-size: 1.5rem;
-    }
-
-    .cta-text p {
-        max-width: 300px;
-    }
-
-    .cta-buttons {
-        gap: 10px;
-    }
-
-    .cta-buttons a {
-        padding: 0 20px;
-    }
-
     .sell-section {
         padding: 48px 0;
     }
@@ -664,19 +576,76 @@
     .sell-hero {
         min-height: 380px;
     }
+
+    .get-started-card{
+        padding:30px 20px;
+    } 
+    .cta-banner-section{
+        padding:96px 20px;
+    }
+    .cta-banner-section .cta-banner{
+       height: 435px;
+    }
+    .sell-page-body .cta-banner .cta-banner-content .cta-banner-title{
+       font-size: 1.3rem !important;
+    }
+    .sell-page-body .cta-banner-description {
+       font-size: 0.8rem !important;
+    }
 }
-</style>
+
+@media (max-width: 320px) {
+    .btn-whatsapp {
+        font-size: 12px !important;
+    }
+}
+
+    /* Shared page typography: keep headings and supporting copy consistent. */
+    body.site-public :is(h1, h2, h3, h4) {
+        font-family: var(--font-heading, Inter, Arial, sans-serif) !important;
+        line-height: 1.2 !important;
+        letter-spacing: -0.02em;
+    }
+    body.site-public h1 {
+        font-size: clamp(30px, 2.3vw, 38px) !important;
+        font-weight: 700 !important;
+    }
+    body.site-public h2 {
+        font-size: clamp(24px, 1.8vw, 29px) !important;
+        font-weight: 700 !important;
+    }
+    body.site-public h3 {
+        font-size: clamp(18px, 1.3vw, 21px) !important;
+        font-weight: 600 !important;
+    }
+    body.site-public h4 {
+        font-size: 17px !important;
+        font-weight: 600 !important;
+    }
+    body.site-public p {
+        font-size: 15px !important;
+        line-height: 1.6 !important;
+    }
+    body.site-public :is(.ih__sub, .hero-subtitle, .section-subtitle) {
+        font-size: 16px !important;
+        font-weight: 400 !important;
+    }
+    @media (max-width: 767.98px) {
+        body.site-public h1 { font-size: clamp(28px, 7vw, 34px) !important; }
+        body.site-public h2 { font-size: clamp(23px, 5.5vw, 27px) !important; }
+        body.site-public p { font-size: 14px !important; }
+        body.site-public :is(.ih__sub, .hero-subtitle, .section-subtitle) { font-size: 15px !important; }
+    }</style>
 {% endblock %}
 
 {% block inner_hero %}
-<section class="sell-hero">
-    <div class="sell-hero-content">
-        <h1 class="sell-hero-title" style="font-size: 2.2rem;">Sell Your Farmland</h1>
-        <p class="sell-hero-subtitle" style="font-size: 20px !important;">Connect with serious buyers and investors looking for verified agricultural land opportunities.</p>
-        <div class="sell-hero-divider">
-            <span>🌿</span>
-            <span>✦</span>
-            <span>🌿</span>
+<section class="ih" style="--ih-bg: url('{% static 'images/hero-img-all.png' %}')">
+    <div class="ih__content">
+        <h1 class="ih__title">Sell Your Farmland</h1>
+        <p class="ih__sub">Connect with serious buyers and investors looking for verified agricultural land opportunities.</p>
+        <div class="ih__divider">
+            <span class="ih__divider-line"></span>
+            <span class="ih__divider-icon" aria-hidden="true">🌿</span>
         </div>
     </div>
 </section>
@@ -688,7 +657,7 @@
 <section class="sell-section">
     <div class="container" style="max-width: 2500px; margin: auto;">
         <h2 class="sell-section-heading">LET'S GET YOU STARTED</h2>
-        <p class="sell-section-subtitle" style="font-size: 18px !important;">Choose the best way to get started with listing your farmland.</p>
+        <p class="sell-section-subtitle">Choose the best way to get started with listing your farmland.</p>
         
         <div class="sell-card get-started-card">
             <div class="get-started-icon">
@@ -696,14 +665,14 @@
             </div>
             <div class="get-started-content">
                 {% if user.is_authenticated %}
-                    <h3 style="font-size: 1.3rem !important;">Welcome back, {{ user.first_name|default:user.username }}!</h3>
-                    <p style="font-size: 15px !important;">Access your agent dashboard to manage your property listings.</p>
+                    <h3>Welcome back, {{ user.first_name|default:user.username }}!</h3>
+                    <p>Access your agent dashboard to manage your property listings.</p>
                     <a href="{% url 'agent:dashboard' %}" class="btn-sell-primary" style="font-size: 12px !important;">
                         <i class="bi bi-speedometer2"></i> Go To Dashboard
                     </a>
                 {% else %}
-                    <h3 style="font-size: 1.3rem !important;">Login to Start Selling</h3>
-                    <p style="font-size: 12px !important;">Sign in with your account to create and manage property listings.</p>
+                    <h3>Login to Start Selling</h3>
+                    <p>Sign in with your account to create and manage property listings.</p>
                     <a href="{% url 'auth:login' %}" class="btn-sell-primary" style="font-size: 12px !important;">
                         <i class="bi bi-box-arrow-in-right"></i> Login Now
                     </a>
@@ -729,10 +698,10 @@
                 <i class="bi bi-whatsapp"></i>
             </div>
             <div class="support-content">
-                <h3 style="font-size: 1.5rem !important;">Quick Chat Support</h3>
-                <p style="font-size: 16px !important;">Have questions about selling your property? Our experts are available on WhatsApp to help you 24/7.</p>
-                <p style="font-size: 16px !important;">We'll guide you through every step of the process and help you get the best deal for your land.</p>
-                <a href="https://wa.me/919506688688" target="_blank" class="btn-whatsapp" style="font-size: 14px !important;">
+                <h3>Quick Chat Support</h3>
+                <p>Have questions about selling your property? Our experts are available on WhatsApp to help you 24/7.</p>
+                <p>We'll guide you through every step of the process and help you get the best deal for your land.</p>
+                <a href="https://wa.me/919506688688" target="_blank" class="btn-whatsapp">
                     <i class="bi bi-whatsapp"></i> Chat With Us on WhatsApp
                 </a>
             </div>
@@ -851,30 +820,26 @@
 </section>
 
 <!-- ========== BOTTOM CTA SECTION ========== -->
-<section class="sell-section">
-    <div class="container" style="max-width: 2000px; margin: auto;">
+<section class="cta-banner-section">
         <div class="cta-banner">
-            <div class="cta-left">
-                <div class="cta-icon">
-                    <i class="fa fa-sprout"></i>
+            <span class="leaf-decoration leaf-decoration-left">🌿</span>
+            <span class="leaf-decoration leaf-decoration-right">🌿</span>
+            <div class="cta-banner-content">
+                <div>
+                    <div class="cta-banner-icon">🌱</div>
+                    <h2 class="cta-banner-title">Ready to sell your farmland?</h2>
+                    <p class="cta-banner-description">List your property today and connect with genuine buyers and investors.</p>
                 </div>
-                <div class="cta-text">
-                    <h2 >Ready to sell your farmland?</h2>
-                    <p style="font-size: 14px !important;">List your property today and connect with genuine buyers and investors.</p>
-                </div>
-            </div>
-            <div class="cta-right">
-                <div class="cta-buttons">
-                    <a href="/agent/dashboard/" class="btn-sell-primary" style="font-size: 12px !important;">
+                <div class="cta-banner-buttons">
+                    <a href="/agent/dashboard/" class="btn-cta-yellow">
                         <i class="bi bi-list-check"></i> List Your Property
                     </a>
-                    <a href="/contact/" class="btn-sell-secondary" style="font-size: 12px !important;">
+                    <a href="/contact/" class="btn-cta-outline">
                         <i class="bi bi-person-lines-fill"></i> Talk to Advisor
                     </a>
                 </div>
             </div>
         </div>
-    </div>
 </section>
 
 </div>

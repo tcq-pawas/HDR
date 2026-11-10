@@ -28,11 +28,28 @@ from .models import (
 )
 from .validators import validate_image_file, validate_document_file, validate_video_file, ValidationError
 from .forms import (
-    PropertyForm, AgriculturalLandForm, AgentProfileForm, LeadForm,
+    PropertyForm, AgriculturalLandForm, PlotsSmallLandForm, AgentProfileForm, LeadForm,
     LeadFollowUpForm, SiteVisitForm, BookingForm, InstallmentForm,
     CommissionForm, DocumentForm, VerificationDocumentForm,
     CommunicationForm, MessageTemplateForm
 )
+
+PLOT_CATEGORY = 'Plots & Small Land'
+
+
+def _resolve_listing_type(property_obj):
+    """Map a saved property to the add/edit listing workflow."""
+    if property_obj.category == PLOT_CATEGORY:
+        return 'plot'
+    if property_obj.category == 'Plots' or property_obj.agri_land_category:
+        return 'land'
+    return 'house'
+
+
+def _property_add_redirect(request, is_admin):
+    if is_admin:
+        return redirect('admin_dash:property_type_select')
+    return redirect('agent:property_type_select')
 
 from datetime import datetime, timedelta
 
@@ -242,46 +259,6 @@ def agent_reviews(request):
 
 
 @login_required
-def settings(request):
-    """Agent settings page - update profile information"""
-    user_role = get_user_role(request.user)
-    if user_role not in ['agent', 'owner']:
-        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
-
-    try:
-        agent_profile = request.user.agent_profile
-    except AgentProfile.DoesNotExist:
-        agent_profile = AgentProfile.objects.create(user=request.user)
-
-    # Check if profile image file exists, if not clear the field
-    if agent_profile.profile_image:
-        try:
-            # Try to access the file to check if it exists
-            agent_profile.profile_image.open('rb')
-            agent_profile.profile_image.close()
-        except (FileNotFoundError, IOError):
-            # File doesn't exist, clear the field
-            agent_profile.profile_image = None
-            agent_profile.save()
-
-    if request.method == 'POST':
-        form = AgentProfileForm(request.POST, request.FILES, instance=agent_profile, user=request.user)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Profile updated successfully!")
-            return redirect('agent:settings')
-    else:
-        form = AgentProfileForm(instance=agent_profile, user=request.user)
-
-    context = {
-        'form': form,
-        'agent_profile': agent_profile,
-    }
-
-    return render(request, 'agent/settings.html', context)
-
-
-@login_required
 def profile(request):
     """View agent profile"""
     user_role = get_user_role(request.user)
@@ -370,12 +347,41 @@ def _enforce_agent_property_listing(request, user_role, subscription=SUBSCRIPTIO
     return _agent_listing_limit_response(request, check)
 
 
+def _require_mobile_verified(request, user_role):
+    """
+    For agents only: redirect to Settings page if their mobile number
+    has not been OTP-verified yet.
+    Returns an HttpResponse when blocked; otherwise None.
+    """
+    if user_role not in ('agent', 'owner'):
+        return None
+    try:
+        from Apps.Administration.models import UserVerification
+        verification = request.user.verification
+        if verification.is_mobile_verified:
+            return None
+    except Exception:
+        # No UserVerification record means not verified
+        pass
+    messages.warning(
+        request,
+        "Please verify your mobile number before adding a property. "
+        "Go to Settings and complete OTP verification."
+    )
+    return redirect('agent:settings')
+
+
 @login_required
 def property_type_select(request):
     """Select property type before adding"""
     user_role = get_user_role(request.user)
     if user_role not in ['agent', 'owner', 'admin'] and not request.user.is_superuser and not request.user.is_staff:
         raise PermissionDenied("Access denied. This page is only accessible to agents, owners, or admins.")
+
+    # Mobile verification gate — agents must verify their number first
+    mobile_block = _require_mobile_verified(request, user_role)
+    if mobile_block is not None:
+        return mobile_block
 
     blocked = _enforce_agent_property_listing(request, user_role)
     if blocked is not None:
@@ -392,16 +398,30 @@ def property_add(request, property_type):
     if user_role not in ['agent', 'owner', 'admin'] and not request.user.is_superuser and not request.user.is_staff:
         raise PermissionDenied("Access denied. This page is only accessible to agents, owners, or admins.")
 
+    # Mobile verification gate — agents must verify their number first
+    mobile_block = _require_mobile_verified(request, user_role)
+    if mobile_block is not None:
+        return mobile_block
+
     # Gate form access for agents (inactive/expired/at-limit) before they fill the form
     blocked = _enforce_agent_property_listing(request, user_role)
     if blocked is not None:
         return blocked
 
     is_admin = user_role == 'admin' or request.user.is_superuser or request.user.is_staff
+
+    # House / Building remains available in code and for existing records,
+    # but new listings through this option are disabled.
+    if property_type == 'house':
+        messages.info(request, "House / Building listings are coming soon.")
+        return _property_add_redirect(request, is_admin)
+
     if request.method == 'POST':
         # Use AgriculturalLandForm for land properties
         if property_type == 'land':
             form = AgriculturalLandForm(request.POST, request.FILES)
+        elif property_type == 'plot':
+            form = PlotsSmallLandForm(request.POST, request.FILES)
         else:
             form = PropertyForm(request.POST, request.FILES)
 
@@ -452,23 +472,31 @@ def property_add(request, property_type):
         # Use appropriate form based on property_type
         if property_type == 'land':
             form = AgriculturalLandForm()
+        elif property_type == 'plot':
+            form = PlotsSmallLandForm()
         else:
             initial_category = 'Apartments' if property_type == 'house' else 'Plots'
             form = PropertyForm(initial={'property_type': 'sale', 'category': initial_category})
+
+    if property_type == 'plot':
+        title = 'Add Plots & Small Land'
+    else:
+        title = f'Add {property_type.title()}'
 
     base_template = 'administration/admin_base.html' if is_admin else 'agent/agent_base.html'
     context = {
         'form': form,
         'property_type': property_type,
-        'title': f'Add {property_type.title()}',
+        'title': title,
         'base_template': base_template
     }
 
     # Use different template for agricultural land
     if property_type == 'land':
         return render(request, 'agent/agricultural_land_form.html', context)
-    else:
-        return render(request, 'agent/property_form.html', context)
+    if property_type == 'plot':
+        return render(request, 'agent/plots_small_land_form.html', context)
+    return render(request, 'agent/property_form.html', context)
 
 
 def _save_new_property(form, request, property_type, is_admin=False):
@@ -486,6 +514,9 @@ def _save_new_property(form, request, property_type, is_admin=False):
     if property_type == 'land':
         property_obj.property_type = 'sale'
         property_obj.category = 'Plots'
+    elif property_type == 'plot':
+        property_obj.property_type = 'sale'
+        property_obj.category = PLOT_CATEGORY
     elif property_type == 'house':
         property_obj.property_type = 'sale'
         property_obj.category = 'Apartments'
@@ -538,16 +569,31 @@ def property_edit(request, pk):
     else:
         property_obj = get_object_or_404(Property.objects.select_related('seller'), pk=pk, seller=request.user)
     
+    # Handle missing featured_image file (legacy data issue)
+    # Clear the field if the file doesn't exist in storage
+    if property_obj.featured_image:
+        try:
+            # Try to access the file to check if it exists
+            if property_obj.featured_image.storage.exists(property_obj.featured_image.name):
+                pass  # File exists, do nothing
+            else:
+                # File doesn't exist, clear the field
+                property_obj.featured_image = None
+                property_obj.save(update_fields=['featured_image'])
+        except Exception:
+            # If there's any error checking file existence, clear the field
+            property_obj.featured_image = None
+            property_obj.save(update_fields=['featured_image'])
+    
     # Determine property_type from category for field visibility
-    if property_obj.category == 'Plots':
-        property_type = 'land'
-    else:
-        property_type = 'house'
+    property_type = _resolve_listing_type(property_obj)
     
     if request.method == 'POST':
         # Use AgriculturalLandForm for land properties
         if property_type == 'land':
             form = AgriculturalLandForm(request.POST, request.FILES, instance=property_obj)
+        elif property_type == 'plot':
+            form = PlotsSmallLandForm(request.POST, request.FILES, instance=property_obj)
         else:
             form = PropertyForm(request.POST, request.FILES, instance=property_obj)
         
@@ -574,6 +620,8 @@ def property_edit(request, pk):
         # Use appropriate form based on property_type
         if property_type == 'land':
             form = AgriculturalLandForm(instance=property_obj)
+        elif property_type == 'plot':
+            form = PlotsSmallLandForm(instance=property_obj)
         else:
             form = PropertyForm(instance=property_obj)
     
@@ -593,8 +641,9 @@ def property_edit(request, pk):
     # Use different template for agricultural land
     if property_type == 'land':
         return render(request, 'agent/agricultural_land_form.html', context)
-    else:
-        return render(request, 'agent/property_form.html', context)
+    if property_type == 'plot':
+        return render(request, 'agent/plots_small_land_form.html', context)
+    return render(request, 'agent/property_form.html', context)
 
 
 @login_required
@@ -656,24 +705,27 @@ def settings(request):
     if request.method == 'POST':
         form = AgentProfileForm(request.POST, request.FILES, instance=agent_profile, user=request.user)
         if form.is_valid():
-            # Update user info
-            request.user.first_name = form.cleaned_data.get('first_name', '')
-            request.user.last_name = form.cleaned_data.get('last_name', '')
-            request.user.email = form.cleaned_data.get('email', '')
-            request.user.save()
-            
-            # Save profile
+            # AgentProfileForm.save() also persists the linked user's name and email.
             form.save()
             messages.success(request, "Settings updated successfully!")
             return redirect('agent:settings')
     else:
         form = AgentProfileForm(instance=agent_profile, user=request.user)
     
+    # Fetch mobile verification status so the template can render the OTP widget
+    from Apps.Administration.models import UserVerification
+    verification, _ = UserVerification.objects.get_or_create(user=request.user)
+    is_mobile_verified = verification.is_mobile_verified
+    # Prefer the number stored in UserVerification; fall back to agent profile phone
+    phone_for_otp = verification.phone_number or agent_profile.phone or ''
+
     context = {
         'form': form,
         'agent_profile': agent_profile,
+        'is_mobile_verified': is_mobile_verified,
+        'phone_for_otp': phone_for_otp,
     }
-    
+
     return render(request, 'agent/settings.html', context)
 
 

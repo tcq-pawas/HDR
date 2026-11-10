@@ -1544,7 +1544,7 @@
             }
 
             .page-subtitle {
-                font-size: .9rem;
+                /* font-size: .9rem; */
                 line-height: 1.5;
             }
 
@@ -1674,7 +1674,7 @@
             }
 
             .page-subtitle {
-                font-size: .78rem;
+                /* font-size: .78rem; */
                 line-height: 1.45;
                 margin-top: 5px;
                 text-align: left;
@@ -1881,7 +1881,7 @@
             }
 
             .page-subtitle {
-                font-size: .7rem;
+                font-size: .9rem;
             }
 
             .card-body {
@@ -1953,9 +1953,9 @@
                 font-size: 1rem;
             }
 
-            .page-subtitle {
+            /* .page-subtitle {
                 font-size: .66rem;
-            }
+            } */
 
             .card-body {
                 padding: 10px;
@@ -2037,7 +2037,7 @@
 
         .sidebar-brand {
             padding: 22px 18px 18px !important;
-            text-align: left;
+            /* text-align: left; */
             border-bottom: 1px solid rgba(255,255,255,.10);
         }
 
@@ -2050,6 +2050,8 @@
             height: 38px !important;
             max-width: 150px;
             object-fit: contain;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .sidebar > .p-3 {
@@ -2276,8 +2278,6 @@
             }
         }
 
-    
-
         /* ============================================================
            MOBILE SIDEBAR WIDTH — 80–90% OF SCREEN
            Keeps the existing sidebar design/alignment unchanged.
@@ -2307,9 +2307,36 @@
             }
         }
 
+        .alert.alert-flex {
+           display: flex;
+           align-items:center;
+           justify-content: space-between;
+           gap: 10px;
+           padding: 10px 12px !important;
+        }
+
+        .alert.alert-flex .alert-text {
+          flex: 1 1 auto;
+          min-width: 0;
+        }
+
+        .alert.alert-flex .btn-close {
+          position: static !important;
+          flex: 0 0 auto;
+          margin: 0;
+          padding: 6px;
+        }
+
 </style>
 
 
+
+    <!-- Admin Typography (revert: delete this one link) -->
+    <link rel="stylesheet" href="{% static 'css/admin_typography.css' %}">
+
+    <!-- Admin UI polish (revert: delete these 3 lines + static/admin/css/admin_polish.css) -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap">
+    <link rel="stylesheet" href="{% static 'admin/css/admin_polish.css' %}">
 
 </head>
 
@@ -2381,7 +2408,7 @@
 
 
 
-                    <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center justify-content-around">
 
 
 
@@ -2426,7 +2453,7 @@
 
 
                             <div class="small text-white-50">Administrator</div>
-                            <a href="{% url 'admin_dash:view_profile' %}" class="btn btn-xs mt-2 w-100 d-flex align-items-center justify-content-center text-center text-white" style="font-size: 0.75rem; padding: 0.15rem 0.4rem; background: rgba(255, 255, 255, 0.15); border: none; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);">
+                            <a href="{% url 'admin_dash:view_profile' %}" class="btn btn-xs mt-2 w-100 d-flex align-items-center justify-content-center text-center text-white" style="font-size: 0.75rem; padding: 5px 13px; background: rgba(255, 255, 255, 0.15); border: none; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);">
                                 View Profile
                             </a>
                         </div>
@@ -2634,13 +2661,19 @@
 
                             {% for message in messages %}
 
-                                <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+                                <!-- <div class="alert alert-padding alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
 
                                     {{ message }}
 
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    <button type="button" id="close-btn-1" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 
-                                </div>
+                                </div> -->
+
+ 
+                                <div class="alert alert-flex alert-{% if 'error' in message.tags %}danger{% else %}{{message.tags| default:'info' }}{% endif %} alert-dismissible fade  show" role="alert">
+                                    <span class="alert-text">{{ message }}</span>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
 
                             {% endfor %}
 
@@ -2795,19 +2828,48 @@
 
             navLinks.forEach(link => {
 
+                const href = link.getAttribute('href');
 
+                if (!href || href === '#') {
+                    return;
+                }
 
-                if (link.getAttribute('href') === currentPath) {
+                /*
+                 * Normalize URLs so trailing slashes do not cause
+                 * active-state problems.
+                 */
+                const linkPath = new URL(href, window.location.origin).pathname;
 
-
+                if (linkPath === currentPath) {
 
                     link.classList.add('active');
 
+                    /*
+                     * Check whether this active link belongs to
+                     * a dropdown/collapse.
+                     */
+                    const parentCollapse = link.closest('.collapse');
 
+                    if (parentCollapse) {
+
+                        /*
+                         * Keep the parent dropdown OPEN.
+                         */
+                        parentCollapse.classList.add('show');
+
+                        /*
+                         * Find the dropdown trigger.
+                         */
+                        const trigger = document.querySelector(
+                            `[data-bs-target="#${parentCollapse.id}"]`
+                        );
+
+                        if (trigger) {
+                            trigger.setAttribute('aria-expanded', 'true');
+                        }
+                    }
 
                 }
-
-
 
             });
 

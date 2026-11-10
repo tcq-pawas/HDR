@@ -190,7 +190,7 @@
 }
 
 .conditional-section.active {
-    display: block;
+    display: grid;
     opacity: 1;
 }
 

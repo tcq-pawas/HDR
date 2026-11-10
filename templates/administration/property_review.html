@@ -12,8 +12,8 @@
     <!-- =====================================================
          PAGE HEADER
          ===================================================== -->
-    <div class="row mb-4">
-        <div class="col-12">
+    <div class="row mb-4 property-review-center-box">
+        <div class="col-12 prop-review-inner-box"> 
 
             <div class="d-flex justify-content-between align-items-center gap-3 property-review-header">
 
@@ -52,7 +52,7 @@
     <!-- =====================================================
          SUMMARY CARDS
          ===================================================== -->
-    <div class="row mb-4 property-summary-row">
+    <div class="row mb-4 property-summary-row property-summary-row-box">
 
         <!-- Total Submitted -->
         <div class="col-xl-3 col-md-6 col-6 mb-4">
@@ -60,7 +60,7 @@
 
                 <div class="card-body">
 
-                    <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center flex-row-reverse">
 
                         <div class="flex-shrink-0">
                             <div class="bg-primary bg-opacity-10 text-primary property-summary-icon">
@@ -69,7 +69,7 @@
                         </div>
 
                         <div class="flex-grow-1 ms-3 min-w-0">
-                            <h6 class="text-muted mb-1">
+                            <h6 class="text-muted mb-1 summary-card-title">
                                 Total Submitted
                             </h6>
 
@@ -92,7 +92,7 @@
 
                 <div class="card-body">
 
-                    <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center flex-row-reverse">
 
                         <div class="flex-shrink-0">
                             <div class="bg-warning bg-opacity-10 text-warning property-summary-icon">
@@ -101,7 +101,7 @@
                         </div>
 
                         <div class="flex-grow-1 ms-3 min-w-0">
-                            <h6 class="text-muted mb-1">
+                            <h6 class="text-muted mb-1 summary-card-title">
                                 Pending Review
                             </h6>
 
@@ -124,7 +124,7 @@
 
                 <div class="card-body">
 
-                    <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center flex-row-reverse">
 
                         <div class="flex-shrink-0">
                             <div class="bg-success bg-opacity-10 text-success property-summary-icon">
@@ -133,7 +133,7 @@
                         </div>
 
                         <div class="flex-grow-1 ms-3 min-w-0">
-                            <h6 class="text-muted mb-1">
+                            <h6 class="text-muted mb-1 summary-card-title">
                                 Approved
                             </h6>
 
@@ -156,7 +156,7 @@
 
                 <div class="card-body">
 
-                    <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center flex-row-reverse">
 
                         <div class="flex-shrink-0">
                             <div class="bg-danger bg-opacity-10 text-danger property-summary-icon">
@@ -165,7 +165,7 @@
                         </div>
 
                         <div class="flex-grow-1 ms-3 min-w-0">
-                            <h6 class="text-muted mb-1">
+                            <h6 class="text-muted mb-1 summary-card-title">
                                 Rejected
                             </h6>
 
@@ -429,10 +429,10 @@
     <!-- =====================================================
          PROPERTY LIST
          ===================================================== -->
-    <div class="card border-0 shadow-sm property-table-card">
+    <div class="card border-0 shadow-sm property-table-card" style="text-wrap: nowrap;">
 
         <!-- Card Header -->
-        <div class="card-header bg-white border-0 py-3 px-3">
+        <div class="card-header bg-white border-0 py-3 px-3" >
 
             <div class="d-flex justify-content-between align-items-center gap-3 property-table-header">
 
@@ -452,13 +452,13 @@
         <!-- =================================================
              DESKTOP TABLE
              ================================================= -->
-        <div class="card-body p-0 desktop-property-table">
+        <div class="card-body p-0 desktop-property-table" >
 
             <div class="property-table-wrapper">
 
                 <table class="table table-hover mb-0 property-review-table">
 
-                    <thead class="bg-light">
+                    <thead>
 
                         <tr>
 
@@ -622,11 +622,11 @@
 
                                     <a
                                         href="{% url 'admin_dash:property-review-detail' property.id %}"
-                                        class="btn btn-sm btn-outline-primary btn-review"
+                                        class="btn btn-sm btn-outline-primary property-actions btn-icon"
                                         title="Review"
                                     >
                                         <i class="fas fa-eye me-1"></i>
-                                        Review
+                                        
                                     </a>
 
                                     <a

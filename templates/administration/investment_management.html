@@ -22,7 +22,7 @@
 
 <!-- Statistics Cards -->
 
-<div class="row mb-4">
+<div class="row mb-4 statistics-card-box">
 
     <div class="col-md-3">
 
@@ -34,13 +34,13 @@
 
                     <div>
 
-                        <h4 class="card-title">{{ total_investments|default:"0" }}</h4>
+                        <h4 class="card-title inv-state-title">{{ total_investments|default:"0" }}</h4>
 
-                        <p class="card-text">Total Investments</p>
+                        <p class="card-text inv-state-text">Total Investments</p>
 
                     </div>
 
-                    <i class="fas fa-coins opacity-75"></i>
+                    <i class="fas fa-coins opacity-75 inv-state-icon"></i>
 
                 </div>
 
@@ -60,13 +60,13 @@
 
                     <div>
 
-                        <h4 class="card-title">${{ total_amount|default:"0"|intcomma }}</h4>
+                        <h4 class="card-title inv-state-title">${{ total_amount|default:"0"|intcomma }}</h4>
 
-                        <p class="card-text">Total Amount</p>
+                        <p class="card-text inv-state-text">Total Amount</p>
 
                     </div>
 
-                    <i class="fas fa-dollar-sign opacity-75"></i>
+                    <i class="fas fa-dollar-sign opacity-75 inv-state-icon"></i>
 
                 </div>
 
@@ -86,13 +86,13 @@
 
                     <div>
 
-                        <h4 class="card-title">{{ pending_investments|default:"0" }}</h4>
+                        <h4 class="card-title inv-state-title">{{ pending_investments|default:"0" }}</h4>
 
-                        <p class="card-text">Pending</p>
+                        <p class="card-text inv-state-text">Pending</p>
 
                     </div>
 
-                    <i class="fas fa-clock opacity-75"></i>
+                    <i class="fas fa-clock opacity-75 inv-state-icon"></i>
 
                 </div>
 
@@ -112,13 +112,13 @@
 
                     <div>
 
-                        <h4 class="card-title">{{ approved_investments|default:"0" }}</h4>
+                        <h4 class="card-title inv-state-title">{{ approved_investments|default:"0" }}</h4>
 
-                        <p class="card-text">Approved</p>
+                        <p class="card-text inv-state-text">Approved</p>
 
                     </div>
 
-                    <i class="fas fa-check-circle opacity-75"></i>
+                    <i class="fas fa-check-circle opacity-75 inv-state-icon"></i>
 
                 </div>
 
@@ -134,7 +134,7 @@
 
 <!-- Action Buttons -->
 
-<div class="row mb-4">
+<div class="row mb-4 action-btn-box">
 
     <div class="col-12">
 
@@ -176,7 +176,7 @@
 
 <!-- Investments Table -->
 
-<div class="row">
+<div class="row investments-table-box">
 
     <div class="col-12">
 

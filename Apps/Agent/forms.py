@@ -593,6 +593,195 @@ class AgriculturalLandForm(forms.ModelForm):
         return f
 
 
+def _coerce_yes_no(value):
+    if isinstance(value, bool):
+        return value
+    return str(value).lower() in ('true', '1', 'yes', 'on')
+
+
+class PlotsSmallLandForm(forms.ModelForm):
+    """Simplified form for Plots & Small Land listings."""
+
+    negotiable = forms.TypedChoiceField(
+        choices=[(True, 'Yes'), (False, 'No')],
+        coerce=_coerce_yes_no,
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        label='Price Negotiable',
+    )
+    concession_available = forms.TypedChoiceField(
+        choices=[(True, 'Yes'), (False, 'No')],
+        coerce=_coerce_yes_no,
+        widget=forms.Select(attrs={'class': 'form-select', 'id': 'concession_available'}),
+        label='Discount / Concession Available',
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['title'].required = True
+        self.fields['state'].required = True
+        self.fields['city'].required = True
+        self.fields['locality'].required = True
+        self.fields['full_address'].required = True
+        self.fields['total_area'].required = True
+        self.fields['area_unit'].required = True
+        self.fields['price'].required = True
+        self.fields['negotiable'].required = True
+        self.fields['concession_available'].required = True
+        self.fields['facing_direction'].required = True
+        self.fields['plot_length'].required = True
+        self.fields['plot_breadth'].required = True
+        self.fields['plot_dimension_unit'].required = True
+        self.fields['description'].required = True
+        self.fields['discount_type'].required = False
+        self.fields['discount_value'].required = False
+
+        if not (self.instance and self.instance.pk and self.instance.featured_image):
+            self.fields['featured_image'].required = True
+        else:
+            self.fields['featured_image'].required = False
+
+        if self.instance and self.instance.pk:
+            self.fields['negotiable'].initial = bool(self.instance.negotiable)
+            self.fields['concession_available'].initial = bool(self.instance.concession_available)
+        else:
+            self.fields['negotiable'].initial = False
+            self.fields['concession_available'].initial = False
+
+        state_choices = [('', 'Select State')]
+        try:
+            states = LocationData.objects.values_list('state', flat=True).distinct().order_by('state')
+            state_list = [s for s in states if s]
+            if self.instance and self.instance.pk and self.instance.state and self.instance.state not in state_list:
+                state_list.append(self.instance.state)
+            state_choices += [(s, s) for s in state_list]
+        except Exception:
+            pass
+        self.fields['state'] = forms.CharField(
+            required=True,
+            widget=forms.Select(choices=state_choices, attrs={'class': 'form-select', 'id': 'state_select'})
+        )
+        if hasattr(self, 'instance') and self.instance and self.instance.pk and self.instance.state:
+            self.fields['state'].initial = self.instance.state
+
+        city_choices = [('', 'Select City')]
+        try:
+            city_list = []
+            if self.instance and self.instance.pk and self.instance.state:
+                cities = LocationData.objects.filter(state=self.instance.state).values_list('city', flat=True).distinct().order_by('city')
+                city_list = [c for c in cities if c]
+            elif self.data and self.data.get('state'):
+                cities = LocationData.objects.filter(state=self.data.get('state')).values_list('city', flat=True).distinct().order_by('city')
+                city_list = [c for c in cities if c]
+
+            if self.instance and self.instance.pk and self.instance.city and self.instance.city not in city_list:
+                city_list.append(self.instance.city)
+
+            city_choices += [(c, c) for c in city_list]
+        except Exception:
+            pass
+        self.fields['city'] = forms.CharField(
+            required=True,
+            widget=forms.Select(choices=city_choices, attrs={'class': 'form-select', 'id': 'city_select'})
+        )
+        if self.instance and self.instance.pk and self.instance.city:
+            self.fields['city'].initial = self.instance.city
+
+    class Meta:
+        model = Property
+        fields = [
+            'title',
+            'state', 'city', 'locality', 'full_address',
+            'total_area', 'area_unit',
+            'price', 'negotiable',
+            'concession_available', 'discount_type', 'discount_value',
+            'facing_direction',
+            'plot_length', 'plot_breadth', 'plot_dimension_unit',
+            'description',
+            'featured_image',
+        ]
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Property Title'}),
+            'locality': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Locality'}),
+            'full_address': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Full Address'}),
+            'total_area': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Plot Size', 'step': '0.01', 'min': '0.01'}),
+            'area_unit': forms.Select(attrs={'class': 'form-select'}),
+            'price': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Total Selling Price (₹)', 'step': '0.01', 'min': '0.01'}),
+            'discount_type': forms.Select(attrs={'class': 'form-select'}),
+            'discount_value': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Discount amount or percentage', 'step': '0.01', 'min': '0'}),
+            'facing_direction': forms.Select(attrs={'class': 'form-select'}),
+            'plot_length': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Plot Length', 'step': '0.01', 'min': '0.01'}),
+            'plot_breadth': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Plot Breadth', 'step': '0.01', 'min': '0.01'}),
+            'plot_dimension_unit': forms.Select(attrs={'class': 'form-select'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 5, 'placeholder': 'Property Description'}),
+            'featured_image': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
+        }
+
+    def clean_total_area(self):
+        value = self.cleaned_data.get('total_area')
+        if value is None or value <= 0:
+            raise forms.ValidationError('Enter a valid plot size greater than 0.')
+        return value
+
+    def clean_price(self):
+        value = self.cleaned_data.get('price')
+        if value is None or value <= 0:
+            raise forms.ValidationError('Enter a valid selling price greater than 0.')
+        return value
+
+    def clean_plot_length(self):
+        value = self.cleaned_data.get('plot_length')
+        if value is None or value <= 0:
+            raise forms.ValidationError('Enter a valid plot length greater than 0.')
+        return value
+
+    def clean_plot_breadth(self):
+        value = self.cleaned_data.get('plot_breadth')
+        if value is None or value <= 0:
+            raise forms.ValidationError('Enter a valid plot breadth greater than 0.')
+        return value
+
+    def clean_featured_image(self):
+        f = self.cleaned_data.get('featured_image')
+        if f:
+            validate_image_file(f)
+        return f
+
+    def clean(self):
+        cleaned = super().clean()
+        concession_available = cleaned.get('concession_available')
+        discount_type = cleaned.get('discount_type')
+        discount_value = cleaned.get('discount_value')
+
+        if concession_available:
+            if not discount_type:
+                self.add_error('discount_type', 'Select whether the discount is an amount or a percentage.')
+            if discount_value is None:
+                self.add_error('discount_value', 'Enter the discount amount or percentage.')
+            elif discount_value <= 0:
+                self.add_error('discount_value', 'Discount must be greater than 0.')
+            elif discount_type == 'percentage' and discount_value > 100:
+                self.add_error('discount_value', 'Percentage discount cannot exceed 100.')
+        else:
+            cleaned['discount_type'] = None
+            cleaned['discount_value'] = None
+        return cleaned
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        instance.property_type = 'sale'
+        instance.category = 'Plots & Small Land'
+        location_parts = [instance.locality, instance.city, instance.state]
+        instance.location = ', '.join(part for part in location_parts if part) or (instance.full_address or instance.title)
+        description = instance.description or ''
+        instance.public_description = description[:200]
+        if not instance.concession_available:
+            instance.discount_type = None
+            instance.discount_value = None
+        if commit:
+            instance.save()
+        return instance
+
+
 class AgentProfileForm(forms.ModelForm):
     """Form for updating agent profile"""
     

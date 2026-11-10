@@ -13,13 +13,25 @@
     <!-- Header -->
     <div class="page-header">
         <h1>{{ title }}</h1>
+        <p class="visit-form-subtitle">Schedule and manage property site visits with customers</p>
     </div>
 
     <!-- Form -->
     <div class="card">
         <form method="post">
             {% csrf_token %}
-            
+
+            <!-- Visit Details Introduction -->
+            <div class="visit-form-intro">
+                <div class="visit-intro-icon">
+                    <i class="bi bi-calendar-check"></i>
+                </div>
+                <div class="visit-intro-content">
+                    <h3>Visit Details</h3>
+                    <p>Fill in the information below to schedule a site visit</p>
+                </div>
+            </div>
+
             <div class="form-row">
                 <div class="form-group">
                     <label for="{{ form.property.id_for_label }}">Property <span class="text-danger">*</span></label>

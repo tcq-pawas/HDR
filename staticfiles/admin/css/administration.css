@@ -64,24 +64,37 @@ h1, h2, h3, h4, h5, h6 {
 .main-content-wrapper {
     padding: 32px;
     max-width: 100%;
-    margin-left: 275px;
-    width: calc(100% - 275px);
     min-width: 0;
 }
 
 /* Sidebar width fixes */
 nav.sidebar {
-    width: 275px !important;
-    min-width: 275px !important;
-    max-width: 275px !important;
+    width: 270px !important;
+    min-width: 270px !important;
+    max-width: 270px !important;
     flex-shrink: 0 !important;
     overflow-x: visible !important;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.main-content {
+    flex: 1 1 auto;
+    min-width: 0;
+    width: 100%;
 }
 
 nav.sidebar .p-3 {
     width: 100% !important;
     box-sizing: border-box !important;
     overflow-x: visible !important;
+}
+
+nav.sidebar > .p-3.flex-grow-1 {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: visible;
 }
 
 nav.sidebar .nav {
@@ -180,6 +193,10 @@ nav.sidebar .nav-item {
 .stat-icon-info {
     background: linear-gradient(135deg, var(--info) 0%, #60A5FA 100%);
 }
+
+.investment-page .stat-card .inv-state-title { font-size: 1.9rem; }
+.investment-page .stat-card .inv-state-text  { font-size: 0.8rem; }
+.investment-page .stat-card  .inv-state-icon { font-size:1.4rem;}
 
 /* ============================================================
    COMPONENTS - ACTIVITY ITEMS
@@ -304,7 +321,6 @@ nav.sidebar .nav-item {
     border-radius: var(--radius);
     box-shadow: var(--shadow-sm);
 }
-
 .page-title {
     color: #ffffff;
     font-weight: 700;
@@ -401,14 +417,8 @@ body,
     max-width: 100%;
 }
 
-.main-content {
-    flex: 1 1 auto;
-    min-width: 0;
-    width: 100%;
-}
 
 .main-content-wrapper {
-    width: 100%;
     margin: 0 auto;
 }
 
@@ -534,10 +544,20 @@ h1, h2, h3, h4, h5, h6,
     max-width: 100%;
 }
 
+.card-body #propertyFilterForm{
+  margin-left: 0;
+}
+
 /* ============================================================
    LARGE DESKTOP — 1400px+
    ============================================================ */
 @media (min-width: 1400px) {
+
+    .modal .modal-footer {
+      margin-top: 30px !important;
+      gap: 20px !important;
+    }
+
     .main-content-wrapper {
         padding-left: 40px;
         padding-right: 40px;
@@ -592,6 +612,12 @@ h1, h2, h3, h4, h5, h6,
    TABLET / SMALL LAPTOP — 768px to 991px
    ============================================================ */
 @media (min-width: 768px) and (max-width: 991.98px) {
+    
+    .modal .modal-footer {
+    margin-top: 30px !important;
+    gap: 20px !important;
+   }
+    
     .main-content-wrapper {
         padding: 22px;
     }
@@ -649,6 +675,12 @@ h1, h2, h3, h4, h5, h6,
    MOBILE — up to 767px
    ============================================================ */
 @media (max-width: 767.98px) {
+
+    .modal .modal-footer {
+    margin-top: 30px !important;
+    gap: 20px !important;
+}
+
     body {
         font-size: 14px;
         line-height: 1.5;
@@ -1080,6 +1112,93 @@ h1, h2, h3, h4, h5, h6,
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: rgba(255,255,255,.20) transparent;
+}
+
+/* ============================================================
+   DESKTOP SIDEBAR — FIXED POSITION
+   ============================================================ */
+@media (min-width: 992px) {
+    nav.sidebar {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        height: 100vh !important;
+        z-index: 1100 !important;
+        box-sizing: border-box !important;
+    }
+
+    .main-content {
+        margin-left: 270px !important;
+        width: calc(100% - 270px) !important;
+        max-width: none !important;
+        box-sizing: border-box !important;
+    }
+
+    .main-content-wrapper {
+        width: 100% !important;
+        max-width: none !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    .mobile-menu-toggle {
+        display: none !important;
+    }
+}
+
+/* ============================================================
+   TABLET — OVERLAY SIDEBAR (768px to 991.98px)
+   ============================================================ */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    nav.sidebar {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: min(290px, 86vw) !important;
+        min-width: min(290px, 86vw) !important;
+        max-width: 290px !important;
+        height: 100vh !important;
+        z-index: 1100 !important;
+        transform: translateX(-105%) !important;
+        transition: transform .28s ease, box-shadow .28s ease;
+        box-sizing: border-box !important;
+    }
+
+    nav.sidebar.show {
+        transform: translateX(0) !important;
+        box-shadow: 12px 0 32px rgba(0, 0, 0, .18) !important;
+    }
+
+    .main-content {
+        width: 100% !important;
+        margin-left: 0 !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .main-content-wrapper {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding: 68px 22px 22px !important;
+        box-sizing: border-box !important;
+    }
+
+    .mobile-menu-toggle {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        top: 14px;
+        left: 14px;
+        border-radius: 12px;
+        font-size: 1rem;
+        z-index: 1200;
+    }
 }
 
 .sidebar::-webkit-scrollbar {
@@ -1636,7 +1755,7 @@ h1, h2, h3, h4, h5, h6,
 
 .properties-page-header > .col-12 > .d-flex {
     width: 100%;
-    min-width: 0;
+    max-width: 912px; 
     gap: 18px;
 }
 
@@ -1842,7 +1961,6 @@ h1, h2, h3, h4, h5, h6,
 .properties-empty-text {
     font-size: .78rem;
 }
-
 /* Property List Responsive Breakpoints */
 @media (min-width: 1400px) {
     .properties-page-header > .col-12 > .d-flex {
@@ -1912,7 +2030,8 @@ h1, h2, h3, h4, h5, h6,
     }
 
     .properties-page-header > .col-12 > .d-flex {
-        flex-direction: column;
+        /* flex-direction: column; */
+        flex-direction: row;
         align-items: stretch !important;
         gap: 11px;
     }
@@ -1991,6 +2110,30 @@ h1, h2, h3, h4, h5, h6,
     }
 }
 
+@media (max-width:600px){
+    .modal-footer {
+        justify-content: space-around;
+    }
+
+   .all-inquiries-box h5{
+       text-align: center;
+   }
+
+    .property-table-header h5 {
+       text-align: center;
+    }
+
+    .properties-page-header > .col-12 > .d-flex{
+        flex-direction: column !important;
+        gap:20px;
+    }
+
+    .properties-page-header .properties-add-btn{
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
 @media (max-width: 480px) {
     .my-properties-page {
         padding-top: 12px !important;
@@ -2006,7 +2149,7 @@ h1, h2, h3, h4, h5, h6,
     .properties-page-header > .col-12 > .d-flex {
         flex-direction: column;
         align-items: stretch !important;
-        gap: 9px;
+        gap: 22px;
     }
 
     .properties-page-title {
@@ -2359,6 +2502,9 @@ h1, h2, h3, h4, h5, h6,
 }
 
 @media (max-width: 768px) {
+     .row.properties-page-header {
+        margin-left: 0;
+    }
     .properties-sort-dropdown {
         width: 100%;
         flex: 1 1 auto;
@@ -2508,6 +2654,15 @@ h1, h2, h3, h4, h5, h6,
     font-size: 0.8rem;
     color: #334155;
 }
+@media (max-width:1024px){
+    .main-content .main-content-wrapper .page-header{
+       margin-bottom: 20px;
+    }
+
+    .properties-page-header > .col-12 > .d-flex {
+        max-width: 660px; 
+    }
+}
 
 /* Agent List Responsive Breakpoints */
 @media (max-width: 992px) {
@@ -2623,6 +2778,9 @@ h1, h2, h3, h4, h5, h6,
         margin-top: 10px !important;
         padding-top: 9px;
     }
+    .agents-filter-form{
+        gap: 10px !important;
+    }
 }
 
 @media (max-width: 400px) {
@@ -2636,7 +2794,6 @@ h1, h2, h3, h4, h5, h6,
 
     .agents-filter-form {
         grid-template-columns: minmax(0, 1fr) 92px auto;
-        gap: 4px;
     }
 
     .agents-search {
@@ -2809,8 +2966,7 @@ h1, h2, h3, h4, h5, h6,
     }
 
     /* Page Header */
-    .communication-page .communication-page-header {
-        flex-direction: column;
+    .communication-page .communication-page-header { 
         align-items: stretch;
         gap: 8px;
         margin-bottom: 16px !important;
@@ -2979,7 +3135,6 @@ h1, h2, h3, h4, h5, h6,
 .customers-page {
     width: 100%;
 }
-
 .customers-card {
     border: 1px solid #e8edf2;
     border-radius: 14px;
@@ -3089,7 +3244,6 @@ h1, h2, h3, h4, h5, h6,
 @media (max-width: 600px) {
     .customers-filter-form {
         grid-template-columns: minmax(0, 1fr) 115px auto;
-        gap: 4px;
     }
 
     .customers-status {
@@ -3140,7 +3294,7 @@ h1, h2, h3, h4, h5, h6,
         width: 100%;
         display: grid;
         grid-template-columns: minmax(0, 1fr) 115px auto;
-        gap: 5px;
+        gap: 10px !important;
         align-items: center;
     }
 
@@ -3215,7 +3369,7 @@ h1, h2, h3, h4, h5, h6,
 
     .customers-filter-form {
         grid-template-columns: minmax(0, 1fr) 115px auto;
-        gap: 4px;
+        /* gap: 4px; */
     }
 
     .customers-search {
@@ -4119,6 +4273,13 @@ h1, h2, h3, h4, h5, h6,
     max-width: 100%;
 }
 
+.investments-table-box,
+.action-btn-box,
+.statistics-card-box,
+.inquiry-table-box {
+    margin-left: 0 !important;
+}
+
 @media (min-width: 992px) and (max-width: 1600px) {
     .inquiry-page-wrapper .card-body {
         padding: 12px 20px !important;
@@ -4171,6 +4332,14 @@ h1, h2, h3, h4, h5, h6,
     min-width: 190px;
 }
 
+.compose-title-msg p{
+    padding-top: 8px;
+}
+
+.report-action-box{
+    padding-top: 20px;
+}
+
 @media (max-width: 991.98px) {
     .stat-card-modern {
         padding: 16px;
@@ -4205,6 +4374,7 @@ h1, h2, h3, h4, h5, h6,
 }
 
 @media (max-width: 767.98px) {
+
     html,
     body {
         max-width: 100%;
@@ -4453,6 +4623,23 @@ h1, h2, h3, h4, h5, h6,
     }
 }
 
+@media (max-width:600px){
+
+    .plan-feature-title{
+      text-align: center;
+    } 
+
+  .communication-history-title{
+   text-align: center;
+   }
+   .compose-title-msg h1{
+      font-size: 15px;
+   }
+   .compose-title-msg p{
+    font-size:13px ;
+   }
+}
+
 @media (max-width: 420px) {
     .container-fluid {
         padding-left: 7px !important;
@@ -4460,7 +4647,7 @@ h1, h2, h3, h4, h5, h6,
     }
 
     .stat-card-modern {
-        padding: 11px 9px;
+        padding: 20px;
     }
 
     .stat-card-modern .stat-value {
@@ -4500,9 +4687,9 @@ h1, h2, h3, h4, h5, h6,
 }
 
 @media (max-width: 360px) {
-    .stat-card-modern .stat-label {
+    /* .stat-card-modern .stat-label {
         font-size: .58rem;
-    }
+    } */
 
     .stat-card-modern .stat-value {
         font-size: 1rem;
@@ -6000,13 +6187,14 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .property-review-header h1 {
-    font-size: 1.2rem;
+    font-size: 1.4rem !important;
     font-weight: 700;
     margin-bottom: 6px;
 }
 
 .property-review-header p {
-    font-size: 0.9rem;
+    /* font-size: 0.76rem; */
+    line-height: 1.4;
 }
 
 .property-review-header-actions {
@@ -6036,6 +6224,10 @@ h1, h2, h3, h4, h5, h6,
     align-items: center;
     justify-content: center;
     border-radius: 50%;
+}
+
+.main-content-wrapper .property-summary-card h6.summary-card-title {
+    font-size: 1rem;
 }
 
 .property-summary-card h6 {
@@ -6069,6 +6261,7 @@ h1, h2, h3, h4, h5, h6,
 
 /* Property Table */
 .property-table-card {
+    margin-top: 40px;
     border-radius: 12px;
     overflow: hidden;
 }
@@ -6170,7 +6363,6 @@ h1, h2, h3, h4, h5, h6,
 .property-actions .btn-icon {
     width: 34px;
     height: 34px;
-    padding: 0;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -6300,6 +6492,13 @@ h1, h2, h3, h4, h5, h6,
     white-space: nowrap;
 }
 
+.prop-review-inner-box{
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+}
+.property-review-page .property-review-center-box{
+    margin-left: 0 !important;
+}
 /* Property Review Responsive */
 @media (max-width: 991.98px) {
     .property-review-page {
@@ -6308,7 +6507,7 @@ h1, h2, h3, h4, h5, h6,
     }
 
     .property-review-header h1 {
-        font-size: 1.35rem;
+        font-size: 1.2rem !important;
     }
 
     .property-summary-card .card-body {
@@ -6330,7 +6529,17 @@ h1, h2, h3, h4, h5, h6,
     }
 }
 
+@media (max-width: 768px) {
+    .row.mb-4.property-summary-row.property-summary-row-box {
+        --bs-gutter-x: 0 !important;
+    }
+}
+
 @media (max-width: 767.98px) {
+    .row.mb-4.property-summary-row.property-summary-row-box {
+       margin-left: 0 ;
+       margin-right: 0;
+    }
     .property-review-page {
         padding-top: 1rem !important;
         padding-bottom: 1rem !important;
@@ -6342,16 +6551,6 @@ h1, h2, h3, h4, h5, h6,
         align-items: stretch !important;
         gap: 14px !important;
         margin-bottom: 18px !important;
-    }
-
-    .property-review-header h1 {
-        font-size: 1.2rem;
-        margin-bottom: 4px;
-    }
-
-    .property-review-header p {
-        font-size: 0.76rem;
-        line-height: 1.4;
     }
 
     .property-review-header-actions {
@@ -6477,6 +6676,31 @@ h1, h2, h3, h4, h5, h6,
 
     .mobile-empty-state p {
         font-size: 0.8rem;
+    }
+}
+.property-review-page .property-summary-card {
+    margin-bottom: 0;
+}
+@media (max-width:480px){
+    .investment-page .stat-card .inv-state-title {
+        font-size: 1.35rem;
+        line-height: 1.2;
+    }
+    .investment-page .stat-card .inv-state-text {
+        font-size: 0.72rem;
+        line-height: 1.3;
+    }
+    .investment-page .stat-card .inv-state-icon {
+        font-size: 1.15rem;
+    }
+    .main-content-wrapper .property-summary-card h6.summary-card-title {
+        font-size: 0.6rem;
+    }
+    .property-review-header h1{
+        font-size: 1rem !important;
+    }
+     .property-review-header p{
+        font-size: 0.72rem;
     }
 }
 
@@ -6625,6 +6849,20 @@ h1, h2, h3, h4, h5, h6,
     color: #0d6efd;
     font-weight: 600;
 }
+
+/* .budget-date-container {
+    border:2px solid green;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    min-width: 0;
+}
+
+@media (max-width: 767.98px) {
+    .budget-date-container {
+        grid-template-columns: minmax(0, 1fr);
+    }
+} */
 
 @media (max-width: 767.98px) {
     .property-filter-card {
@@ -7154,6 +7392,106 @@ h1, h2, h3, h4, h5, h6,
     transform: translateX(24px);
 }
 
+/* Action section */
+.row.mb-4.action-btn-box {
+    width: 100%;
+    margin: 0 0 24px;
+}
+
+.row.mb-4.action-btn-box > .col-12 {
+    flex: 0 0 100%;
+    max-width: 100%;
+    width: 100%;
+    padding: 0 15px;
+}
+
+/* Action card */
+.action-btn-box .card {
+    border-radius: 16px;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+}
+
+/* Card body */
+.action-btn-box .card-body {
+    padding: 20px 24px;
+}
+
+/* Buttons container */
+.investment-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+/* Individual buttons */
+.investment-actions .btn {
+    min-height: 44px;
+    padding: 10px 20px;
+    border-radius: 9px;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.row.mb-4 > .report-action-box {
+    flex: 0 0 100%;
+     max-width: 100%;
+     width: 100%;
+     padding: 10px;
+}
+
+/* Property review page filter's dropdown */
+.property-filter-card,
+.property-filter-card .card-body,
+#propertyFilterForm,
+#propertyFilterForm > [class*="col-"] {
+    overflow: visible !important;
+}
+
+.property-filter-card {
+    position: relative;
+    z-index: 30;
+}
+
+.property-table-card {
+    position: relative;
+    z-index: 1;
+}
+
+/*Reports page Data Range drop down  */
+.report-action-box,
+.report-action-box .card,
+.report-action-box .card-body {
+    overflow: visible;
+}
+
+.report-action-box {
+    position: relative;
+    z-index: 20;
+}
+
+@media (max-width: 768px) {
+    .action-btn-box .card-body {
+        padding: 16px;
+    }
+
+    .investment-actions {
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .investment-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .investment-actions .btn {
+        width: 100%;
+    }
+}
+
 /* System Settings Responsive */
 @media (max-width: 992px) {
     .settings-tabs {
@@ -7273,11 +7611,15 @@ h1, h2, h3, h4, h5, h6,
     }
 }
 
-@media (min-width: 576px) and (max-width: 767.98px) {
-    .row.mb-4 > div[class*="col-"] {
+@media (min-width: 576px) and (max-width: 1500.98px) {
+    .row.mb-4.action-btn-box > .col-12 {
+       padding: 10px;
+    }
+    .row.mb-4 > div[class*="col-"]:not(.report-action-box):not(.action-btn-box > .col-12) {
         flex: 0 0 50%;
         max-width: 50%;
         width: 50%;
+        padding: 10px;
     }
 }
 
@@ -7292,7 +7634,8 @@ h1, h2, h3, h4, h5, h6,
         font-size: 1.05rem;
     }
     .card-header .d-flex.gap-2 {
-        flex-direction: column;
+        display: flex;
+        justify-content: center;
         width: 100%;
     }
     .card-header .input-group {
@@ -7598,6 +7941,71 @@ h1, h2, h3, h4, h5, h6,
     margin-bottom: 24px;
 }
 
+/* Equal height for User Profile information cards */
+.user-info-cards-row {
+    display: flex;
+    align-items: stretch;
+}
+
+.user-info-cards-row > .col-lg-4 {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-info-cards-row > .col-lg-4 > .info-card {
+    width: 100%;
+    flex: 1 1 auto;
+}
+
+/* User Profile info cards - 2-column layout for 992px-1399.98px */
+@media (min-width: 992px) and (max-width: 1399.98px) {
+    .user-info-cards-row {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+    }
+
+    .user-info-cards-row > .col-lg-4 {
+        width: auto;
+        max-width: none;
+        padding-left: 0;
+        padding-right: 0;
+        margin-bottom: 0 !important;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .user-info-cards-row > .col-lg-4:last-child {
+        grid-column: 1 / -1;
+    }
+
+    .user-info-cards-row > .col-lg-4 > .info-card {
+        width: 100%;
+        flex: 1 1 auto;
+    }
+}
+
+/* User Profile info cards - 3-column layout for 1400px+ */
+@media (min-width: 1400px) {
+    .user-info-cards-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+    }
+
+    .user-info-cards-row > .col-lg-4 {
+        width: 33.333333%;
+        max-width: 33.333333%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .user-info-cards-row > .col-lg-4 > .info-card {
+        width: 100%;
+        flex: 1 1 auto;
+    }
+}
+
 .info-card h5 {
     font-weight: 600;
     color: #0F172A;
@@ -7640,6 +8048,18 @@ h1, h2, h3, h4, h5, h6,
     padding: 20px;
     text-align: center;
     transition: all 0.3s;
+}
+
+.kpi-card-row-box,
+.basic-info-box, 
+.role-specific-info-box, 
+.viewed-user-box, 
+.viewed-user-agent-box, 
+.activity-timeline-box,
+.subscription-info-box,
+.financial-ledger-box,
+.login-history-box{
+    margin-left: 0;
 }
 
 .kpi-card:hover {
@@ -7741,6 +8161,15 @@ h1, h2, h3, h4, h5, h6,
 .back-link:hover {
     background: #F8FAFC;
     color: #0F172A;
+}
+
+@media (width:1024px){
+    .info-card-flex{
+        flex-direction: column ;
+    }
+    .kpi-card-width{
+        width: 150px;
+    }
 }
 
 /* User Profile Responsive */
@@ -7884,6 +8313,26 @@ h1, h2, h3, h4, h5, h6,
     }
 }
 
+/* Reset equal-height layout for User Profile info cards on mobile/tablet */
+@media (max-width: 991.98px) {
+    .user-info-cards-row {
+        display: block;
+    }
+
+    .user-info-cards-row > .col-lg-4 {
+        width: 100%;
+        max-width: 100%;
+        display: block;
+        padding-left: var(--bs-gutter-x, 0.75rem);
+        padding-right: var(--bs-gutter-x, 0.75rem);
+    }
+
+    .user-info-cards-row > .col-lg-4 > .info-card {
+        width: 100%;
+        flex: none;
+    }
+}
+
 @media (max-width: 576px) {
     .info-row {
         flex-direction: column;
@@ -7896,7 +8345,11 @@ h1, h2, h3, h4, h5, h6,
     }
 
     .kpi-card {
-        padding: 12px;
+        padding: 20px;
+    }
+
+    .kpi-card-padding{
+        padding:25px 14px;
     }
 
     /* Reset Password / Change Role modals */
@@ -8304,6 +8757,37 @@ h1, h2, h3, h4, h5, h6,
 
     .info-details p {
         font-size: 0.82rem;
+    }
+}
+
+@media (max-width:768px){
+    .main-content-wrapper .property-summary-card h6.summary-card-title {
+        font-size: 0.9rem;
+    }
+    .agent-list-min-width{
+        min-width: 100% !important;
+    }
+    .properties-add-btn {
+        max-width: 200px;
+    }
+    
+   .customers-filter-form .customers-status-box{
+      min-width: 100% !important;
+   }
+
+    .compose-title-msg {
+       padding: 10px 8px 0;
+    }
+    .profile-header-content > .d-flex{
+        flex-direction: column !important;
+        text-align: center !important;
+    }
+    .profile-header-content .align-self-start{
+     margin:auto;
+    }
+
+    .contact-email-btn{
+        width: 90px;
     }
 }
 
@@ -8928,5 +9412,254 @@ h1, h2, h3, h4, h5, h6,
 
     .info-value {
         font-size: 0.82rem;
+    }
+}
+
+/* ============================================================
+   KYC STATUS SUMMARY — BOOTSTRAP RESPONSIVE OVERRIDE
+   ============================================================ */
+
+/*
+   Keep the existing Bootstrap row/flex behavior.
+
+   Required behavior:
+   >= 1082px  → 4 cards in one row
+   <= 1081px  → 2 cards per row
+*/
+
+.kyc-status-summary {
+    width: 100%;
+}
+
+/* ------------------------------------------------------------
+   1082px AND ABOVE
+   4 × 1
+   ------------------------------------------------------------ */
+@media (min-width: 1082px) {
+
+    .kyc-status-summary > .col-6.col-lg-3 {
+        flex: 0 0 25% !important;
+        width: 25% !important;
+        max-width: 25% !important;
+    }
+
+    .kyc-status-summary .kyc-status-card {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+
+/* ------------------------------------------------------------
+   BELOW 1082px
+   2 × 2
+   ------------------------------------------------------------ */
+@media (min-width: 768px) and (max-width: 1081.98px) {
+
+    .kyc-status-summary {
+        display: flex !important;
+        flex-wrap: wrap !important;
+    }
+
+    .kyc-status-summary > .col-6.col-lg-3 {
+        flex: 0 0 50% !important;
+        width: 50% !important;
+        max-width: 50% !important;
+        min-width: 0 !important;
+    }
+
+    .kyc-status-summary .kyc-status-card {
+        display: flex !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+}
+
+
+/* ------------------------------------------------------------
+   MOBILE
+   Keep Bootstrap's existing col-6 behavior
+   2 × 2
+   ------------------------------------------------------------ */
+@media (max-width: 767.98px) {
+
+    .kyc-status-summary {
+        display: flex !important;
+        flex-wrap: wrap !important;
+    }
+
+    .kyc-status-summary > .col-6.col-lg-3 {
+        flex: 0 0 50% !important;
+        width: 50% !important;
+        max-width: 50% !important;
+        min-width: 0 !important;
+    }
+
+    .kyc-status-summary .kyc-status-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+}
+
+
+/* ------------------------------------------------------------
+   VERY SMALL SCREENS
+   Keep the same 2 × 2 layout unless existing mobile CSS
+   intentionally changes it.
+   ------------------------------------------------------------ */
+@media (max-width: 400px) {
+
+    .kyc-status-summary > .col-6.col-lg-3 {
+        flex: 0 0 50% !important;
+        width: 50% !important;
+        max-width: 50% !important;
+    }
+}
+
+/* ============================================================
+   USER PROFILE - TOP KPI GRID
+   Bootstrap grid replacement
+   ============================================================ */
+
+.kpi-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.kpi-cards-grid-item {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.kpi-cards-grid-item .kpi-card {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+@media (max-width: 1849.98px) {
+    .kpi-cards-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 449.98px) {
+    .kpi-cards-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* ============================================================
+   ADMIN PROFILE — INFORMATION GRID
+   Bootstrap columns replaced with CSS Grid
+   ============================================================ */
+
+.info-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    min-width: 0;
+}
+
+.info-grid-item {
+    min-width: 0;
+    min-height: 125px;
+    padding: 24px 28px;
+    border-bottom: 1px solid #e2e8f0;
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.info-grid-item:nth-child(odd) {
+    border-right: 1px solid #e2e8f0;
+}
+
+@media (max-width: 767.98px) {
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .info-grid-item {
+        width: 100%;
+        border-right: 0 !important;
+    }
+}
+
+/* ============================================================
+   INVESTMENT MANAGEMENT — STATISTICS CARDS GRID
+   Bootstrap columns replaced with CSS Grid
+   ============================================================ */
+
+.investment-page .investment-statistics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.investment-page .investment-statistics-grid > .col-md-3 {
+    width: auto;
+    max-width: none;
+    flex: none;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+@media (max-width: 767.98px) {
+    .investment-page .investment-statistics-grid {
+        grid-template-columns: 1fr;
+        gap: 0.6rem;
+        margin-bottom: 0.6rem;
+    }
+}
+
+/* ============================================================
+   ADMIN USER PROFILE — ROLE-SPECIFIC INFORMATION FULL WIDTH
+   Fix for card width below 1500px
+   ============================================================ */
+@media (max-width: 1500px) {
+    .role-specific-information {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        box-sizing: border-box !important;
+    }
+
+    .role-specific-information > .col-12 {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .role-specific-information > .col-12 > .info-card {
+        width: 100% !important;
+        max-width: none !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+    }
+}
+
+/* ============================================================
+   ADMIN USER PROFILE — ROLE-SPECIFIC KPI CARDS 1-PER-ROW
+   Fix for KPI cards below 500px
+   ============================================================ */
+@media (max-width: 499.98px) {
+    .role-specific-information > .col-12 > .info-card > .row > .col-6 {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
     }
 }
