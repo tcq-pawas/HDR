@@ -651,16 +651,86 @@ def blog_detail_page(request, slug):
     """
     Renders individual Blog details on HeyDay Realty (Port 8001)
     dynamically loaded from InsightCMS using settings configuration.
+    Includes live Comment section and submission support.
     """
     import xml.etree.ElementTree as ET
     import urllib.request
+    import json
     import re
     from django.conf import settings
+    from django.contrib import messages
 
     cms_base = getattr(settings, 'INSIGHT_CMS_BASE_URL', 'http://127.0.0.1:8000').rstrip('/')
     company_slug = getattr(settings, 'INSIGHT_CMS_COMPANY_SLUG', 'hd-reality')
     cms_blog_url = f"{cms_base}/blog/{slug}/"
     rss_url = f"{cms_base}/company/{company_slug}/rss/"
+    comments_api_url = f"{cms_base}/blogs/{slug}/comments/api/"
+    comments_submit_url = f"{cms_base}/blogs/{slug}/comments/submit/"
+
+    # Handle Comment Submission / Deletion from HeyDay
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        if action == 'delete':
+            comment_id = request.POST.get('comment_id')
+            if comment_id:
+                try:
+                    payload = json.dumps({
+                        'action': 'delete',
+                        'comment_id': comment_id,
+                    }).encode('utf-8')
+                    req_del = urllib.request.Request(
+                        comments_submit_url,
+                        data=payload,
+                        headers={'Content-Type': 'application/json', 'User-Agent': 'HeyDay-Client/1.0'}
+                    )
+                    with urllib.request.urlopen(req_del, timeout=5) as resp:
+                        resp_data = json.loads(resp.read().decode('utf-8'))
+                        if resp_data.get('success'):
+                            messages.success(request, 'Comment deleted successfully.')
+                        else:
+                            messages.error(request, resp_data.get('error', 'Could not delete comment.'))
+                except Exception as e:
+                    messages.error(request, f'Failed to delete comment: {str(e)}')
+            return redirect(request.path + '#comments')
+
+        author_name = request.POST.get('author_name', '').strip()
+        author_email = request.POST.get('author_email', '').strip()
+        content = request.POST.get('content', '').strip()
+        parent_id = request.POST.get('parent_id')
+
+        # Auto-detect if user is logged in, else use form input
+        if not author_name:
+            if request.user.is_authenticated:
+                author_name = (request.user.get_full_name() or request.user.first_name or request.user.username).strip()
+                if not author_email:
+                    author_email = (request.user.email or '').strip()
+            else:
+                author_name = 'Reader'
+
+        if content:
+            try:
+                payload = json.dumps({
+                    'author_name': author_name,
+                    'author_email': author_email,
+                    'content': content,
+                    'parent_id': parent_id if parent_id else None,
+                }).encode('utf-8')
+                req_post = urllib.request.Request(
+                    comments_submit_url,
+                    data=payload,
+                    headers={'Content-Type': 'application/json', 'User-Agent': 'HeyDay-Client/1.0'}
+                )
+                with urllib.request.urlopen(req_post, timeout=5) as resp:
+                    resp_data = json.loads(resp.read().decode('utf-8'))
+                    if resp_data.get('success'):
+                        messages.success(request, resp_data.get('message', 'Your comment has been submitted and is awaiting approval.'))
+                    else:
+                        messages.error(request, resp_data.get('error', 'Could not post comment.'))
+            except Exception as e:
+                messages.error(request, f'Failed to post comment: {str(e)}')
+        else:
+            messages.error(request, 'Please fill in both Name and Comment.')
+        return redirect(request.path + '#comments')
 
     blog = {
         'title': slug.replace('-', ' ').title(),
@@ -709,6 +779,8 @@ def blog_detail_page(request, slug):
                 content_open = html.find('>', body_start) + 1
                 content_close = html.find('<!-- Tags', content_open)
                 if content_close == -1:
+                    content_close = html.find('<!-- ─── Comments', content_open)
+                if content_close == -1:
                     content_close = html.find('</main>', content_open)
 
                 body_chunk = html[content_open:content_close].strip()
@@ -753,7 +825,33 @@ def blog_detail_page(request, slug):
         except Exception as e:
             print(f"RSS fallback error: {e}")
 
-    return render(request, 'public/blog_detail.html', {'blog': blog})
+    # 3. Fetch Live Approved Comments from CMS
+    comments = []
+    comments_count = 0
+    allow_comments = True
+    try:
+        req_comments = urllib.request.Request(
+            comments_api_url,
+            headers={'User-Agent': 'HeyDay-Client/1.0'}
+        )
+        with urllib.request.urlopen(req_comments, timeout=4) as resp:
+            comments_data = json.loads(resp.read().decode('utf-8'))
+            if comments_data.get('success'):
+                allow_comments = comments_data.get('allow_comments', True)
+                comments = comments_data.get('comments', [])
+                comments_count = comments_data.get('count', 0)
+    except Exception as e:
+        print(f"Failed to fetch live comments: {e}")
+
+    blog['allow_comments'] = allow_comments
+
+    return render(request, 'public/blog_detail.html', {
+        'blog': blog,
+        'comments': comments,
+        'comments_count': comments_count,
+        'allow_comments': allow_comments,
+        'cms_base_url': cms_base,
+    })
 
 
 
