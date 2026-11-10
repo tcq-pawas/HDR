@@ -286,6 +286,49 @@ def profile(request):
 
 
 @login_required
+def upload_profile_image(request):
+    """AJAX endpoint for uploading or removing agent profile image"""
+    user_role = get_user_role(request.user)
+    if user_role not in ['agent', 'owner']:
+        return JsonResponse({'success': False, 'message': 'Permission denied.'}, status=403)
+
+    if request.method == 'POST':
+        agent_profile = get_object_or_404(AgentProfile, user=request.user)
+
+        # Check for remove photo request
+        if request.POST.get('remove_photo') == 'true':
+            if agent_profile.profile_image:
+                agent_profile.profile_image.delete(save=False)
+                agent_profile.profile_image = None
+                agent_profile.save()
+            return JsonResponse({'success': True, 'message': 'Profile picture removed successfully!'})
+
+        if 'profile_image' in request.FILES:
+            uploaded_file = request.FILES['profile_image']
+            
+            # Basic validation
+            allowed_types = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp']
+            if uploaded_file.content_type not in allowed_types:
+                return JsonResponse({'success': False, 'message': 'Please upload a valid image (JPEG, PNG, WEBP).'})
+
+            if uploaded_file.size > 5 * 1024 * 1024:
+                return JsonResponse({'success': False, 'message': 'Image file size must be less than 5MB.'})
+
+            agent_profile.profile_image = uploaded_file
+            agent_profile.save()
+            return JsonResponse({
+                'success': True, 
+                'message': 'Profile picture updated successfully!',
+                'image_url': agent_profile.profile_image.url
+            })
+        
+        return JsonResponse({'success': False, 'message': 'No image provided.'})
+
+    return JsonResponse({'success': False, 'message': 'Invalid request method.'}, status=405)
+
+
+
+@login_required
 def property_list(request):
     # Check if user is an agent
     user_role = get_user_role(request.user)

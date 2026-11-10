@@ -2328,13 +2328,20 @@
         }
 
         .modal-backdrop {
-            z-index: 1055 !important;
+            z-index: 2000 !important;
         }
 
         .modal {
-            z-index: 1060 !important;
+            z-index: 2050 !important;
+            padding-left: 0 !important;
         }
 
+        @media (min-width: 992px) {
+            .modal-dialog {
+                margin-left: calc(275px + (100% - 275px - var(--bs-modal-width, 1140px)) / 2) !important;
+                margin-right: auto !important;
+            }
+        }
 </style>
 
 
@@ -2717,11 +2724,8 @@
 
     </div>
 
-
-
-
-
-
+    {% block modals %}
+    {% endblock %}
 
     <!-- Scripts -->
 
