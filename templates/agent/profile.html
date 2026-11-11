@@ -3,6 +3,89 @@
 
 {% block title %}My Profile | HHectare{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/agent/profile.css' %}?v=2">
+<style>
+    /* Allow dropdown to overflow outside hero container */
+    .profile-hero {
+        overflow: visible !important;
+        position: relative;
+    }
+    .profile-avatar-container {
+        position: relative;
+        display: inline-block;
+    }
+    .profile-avatar-large {
+        width: 130px;
+        height: 130px;
+        min-width: 130px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 4px solid rgba(255, 255, 255, 0.4);
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 100%);
+        backdrop-filter: blur(10px);
+        position: relative;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        cursor: pointer;
+    }
+    .profile-avatar-large img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .avatar-upload-overlay {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: rgba(0, 84, 39, 0.7);
+        color: white;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        font-size: 1.5rem;
+        cursor: pointer;
+        z-index: 5;
+    }
+    .profile-avatar-large:hover .avatar-upload-overlay {
+        opacity: 1;
+    }
+    /* Always-visible camera badge button at bottom-right of avatar */
+    .avatar-camera-badge {
+        position: absolute;
+        bottom: 4px;
+        right: 4px;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #ffffff;
+        color: #005427;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+        cursor: pointer;
+        z-index: 6;
+        border: 2px solid #ffffff;
+        transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+    .avatar-camera-badge:hover {
+        transform: scale(1.1);
+        background-color: #f0fdf4;
+        color: #005427;
+    }
+    .avatar-dropdown-menu {
+        z-index: 1055 !important;
+        min-width: 180px;
+        border-radius: 10px;
+        padding: 6px;
+    }
+    .avatar-dropdown-menu .dropdown-item {
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 500;
+    }
+</style>
+{% endblock %}
+
 {% block breadcrumb_items %}
 <span>My Profile</span>
 {% endblock %}
@@ -15,17 +98,57 @@
         <div class="row align-items-center">
             <div class="col-md-8">
                 <div class="d-flex align-items-center gap-4">
-                    <div class="profile-avatar-large rounded-circle overflow-hidden">
-                        {% if agent_profile.profile_image %}
-                            <img src="{{ agent_profile.profile_image.url }}" alt="Profile Image">
-                        {% else %}
-                            <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-white bg-opacity-20 text-white fw-bold" style="font-size: 3rem;">
-                                {{ user.first_name|default:user.username|slice:":1"|upper }}
+                    <div class="dropdown profile-avatar-container" title="Change Profile Photo">
+                        <div class="profile-avatar-large d-flex align-items-center justify-content-center"
+                             id="avatarWrapper"
+                             data-bs-toggle="dropdown"
+                             aria-expanded="false">
+                            {% if agent_profile.profile_image %}
+                                <img src="{{ agent_profile.profile_image.url }}" alt="Profile Image" id="avatarPreview">
+                            {% else %}
+                                <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-success bg-opacity-50 text-white fw-bold" id="avatarPreview" style="font-size: 2.8rem; background: linear-gradient(135deg, #10b981 0%, #047857 100%) !important;">
+                                    {{ user.first_name|default:user.username|slice:":1"|upper }}
+                                </div>
+                            {% endif %}
+                            <div class="avatar-upload-overlay d-flex align-items-center justify-content-center">
+                                <i class="bi bi-camera-fill"></i>
                             </div>
-                        {% endif %}
+                        </div>
+
+                        <!-- Camera badge icon button -->
+                        <div class="avatar-camera-badge" data-bs-toggle="dropdown" aria-expanded="false" title="Upload Photo">
+                            <i class="bi bi-camera-fill" style="font-size: 1rem;"></i>
+                        </div>
+
+                        <ul class="dropdown-menu avatar-dropdown-menu shadow-lg border-0 mt-2">
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center gap-2 py-2"
+                                   href="#"
+                                   onclick="event.preventDefault(); document.getElementById('avatarInput').click();">
+                                    <i class="bi bi-camera text-success"></i>
+                                    <span>Upload New Photo</span>
+                                </a>
+                            </li>
+                            {% if agent_profile.profile_image %}
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center gap-2 py-2 text-danger"
+                                   href="#"
+                                   onclick="event.preventDefault(); removeProfilePhoto();">
+                                    <i class="bi bi-trash"></i>
+                                    <span>Remove Photo</span>
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+
+                        <input type="file"
+                               id="avatarInput"
+                               accept="image/png, image/jpeg, image/jpg, image/webp"
+                               style="display:none;"
+                               onchange="uploadAvatar(this)">
                     </div>
                     <div class="text-white">
-                        <h1 class="h3 mb-2 fw-bold">{{ user.first_name }} {{ user.last_name }}</h1>
+                        <h1 class="h3 mb-2 fw-bold">{% if user.get_full_name %}{{ user.get_full_name }}{% else %}{{ user.username }}{% endif %}</h1>
                         <p class="mb-2 text-white-80">
                             {% if 'owner' in request.user.groups.all|stringformat:"s" %}Property Owner{% else %}Real Estate Agent{% endif %}
                         </p>
@@ -383,6 +506,84 @@
         .catch(err => {
             errorMsg.innerText = "Network error occurred.";
             errorMsg.classList.remove('d-none');
+        });
+    }
+
+    function uploadAvatar(input) {
+        if (!input.files || !input.files[0]) return;
+
+        const file = input.files[0];
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+        if (!allowedTypes.includes(file.type)) {
+            alert('Please select a valid image file (JPEG, PNG, WEBP).');
+            return;
+        }
+
+        if (file.size > 5 * 1024 * 1024) {
+            alert('File size must be under 5MB.');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('profile_image', file);
+
+        const overlay = document.querySelector('#avatarWrapper .avatar-upload-overlay');
+        if (overlay) {
+            overlay.innerHTML = '<div class="spinner-border spinner-border-sm text-white" role="status"></div>';
+            overlay.style.opacity = '1';
+        }
+
+        fetch("{% url 'agent:upload_profile_image' %}", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            } else {
+                alert(data.message || 'Failed to upload profile photo.');
+                if (overlay) {
+                    overlay.innerHTML = '<i class="bi bi-camera-fill"></i>';
+                    overlay.style.opacity = '';
+                }
+            }
+        })
+        .catch(err => {
+            alert('A network error occurred while uploading.');
+            if (overlay) {
+                overlay.innerHTML = '<i class="bi bi-camera-fill"></i>';
+                overlay.style.opacity = '';
+            }
+        });
+    }
+
+    function removeProfilePhoto() {
+        if (!confirm('Are you sure you want to remove your profile photo?')) return;
+
+        const formData = new FormData();
+        formData.append('remove_photo', 'true');
+
+        fetch("{% url 'agent:upload_profile_image' %}", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            } else {
+                alert(data.message || 'Failed to remove profile photo.');
+            }
+        })
+        .catch(err => {
+            alert('A network error occurred.');
         });
     }
 </script>

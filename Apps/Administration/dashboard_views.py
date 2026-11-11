@@ -312,7 +312,7 @@ class InquiryManagementView(AdminDashboardMixin, TemplateView):
         if search:
             enquiries = enquiries.filter(
                 Q(full_name__icontains=search) |
-                Q(phone_number__icontains=search) |
+                Q(phone__icontains=search) |
                 Q(email__icontains=search) |
                 Q(enquiry_id__icontains=search)
             )
