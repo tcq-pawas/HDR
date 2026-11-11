@@ -72,17 +72,6 @@
         background-color: #f0fdf4;
         color: #005427;
     }
-    .avatar-dropdown-menu {
-        z-index: 1055 !important;
-        min-width: 180px;
-        border-radius: 10px;
-        padding: 6px;
-    }
-    .avatar-dropdown-menu .dropdown-item {
-        border-radius: 6px;
-        font-size: 13px;
-        font-weight: 500;
-    }
 </style>
 {% endblock %}
 
@@ -98,11 +87,9 @@
         <div class="row align-items-center">
             <div class="col-md-8">
                 <div class="d-flex align-items-center gap-4">
-                    <div class="dropdown profile-avatar-container" title="Change Profile Photo">
+                    <div class="profile-avatar-container" title="Click to upload profile photo" onclick="document.getElementById('avatarInput').click();">
                         <div class="profile-avatar-large d-flex align-items-center justify-content-center"
-                             id="avatarWrapper"
-                             data-bs-toggle="dropdown"
-                             aria-expanded="false">
+                             id="avatarWrapper">
                             {% if agent_profile.profile_image %}
                                 <img src="{{ agent_profile.profile_image.url }}" alt="Profile Image" id="avatarPreview">
                             {% else %}
@@ -116,35 +103,15 @@
                         </div>
 
                         <!-- Camera badge icon button -->
-                        <div class="avatar-camera-badge" data-bs-toggle="dropdown" aria-expanded="false" title="Upload Photo">
+                        <div class="avatar-camera-badge" title="Click to upload profile photo">
                             <i class="bi bi-camera-fill" style="font-size: 1rem;"></i>
                         </div>
-
-                        <ul class="dropdown-menu avatar-dropdown-menu shadow-lg border-0 mt-2">
-                            <li>
-                                <a class="dropdown-item d-flex align-items-center gap-2 py-2"
-                                   href="#"
-                                   onclick="event.preventDefault(); document.getElementById('avatarInput').click();">
-                                    <i class="bi bi-camera text-success"></i>
-                                    <span>Upload New Photo</span>
-                                </a>
-                            </li>
-                            {% if agent_profile.profile_image %}
-                            <li>
-                                <a class="dropdown-item d-flex align-items-center gap-2 py-2 text-danger"
-                                   href="#"
-                                   onclick="event.preventDefault(); removeProfilePhoto();">
-                                    <i class="bi bi-trash"></i>
-                                    <span>Remove Photo</span>
-                                </a>
-                            </li>
-                            {% endif %}
-                        </ul>
 
                         <input type="file"
                                id="avatarInput"
                                accept="image/png, image/jpeg, image/jpg, image/webp"
                                style="display:none;"
+                               onclick="event.stopPropagation();"
                                onchange="uploadAvatar(this)">
                     </div>
                     <div class="text-white">
