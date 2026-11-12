@@ -248,17 +248,11 @@
 
 
         .main-content-wrapper {
-
             padding: 32px;
-
             max-width: 100%;
-
-            margin-left: 275px;
-
-            width: calc(100% - 275px);
-
+            margin-left: 0;
+            width: 100%;
             min-width: 0;
-
         }
 
         /* Sidebar width fixes */
@@ -2341,6 +2335,8 @@
                 margin-left: calc(275px + (100% - 275px - var(--bs-modal-width, 1140px)) / 2) !important;
                 margin-right: auto !important;
             }
+        }
+
         /* Modern Header & Sidebar Styling matching Reference UI */
         .admin-header {
             background: #ffffff !important;
@@ -2582,6 +2578,26 @@
             filter: brightness(0) invert(1);
         }
 
+        /* Logo switching: show full logo by default, icon logo when collapsed */
+        .sidebar-logo-icon { display: none; }
+        body.sidebar-collapsed .sidebar-logo-full { display: none; }
+        body.sidebar-collapsed .sidebar-logo-icon {
+            display: block;
+            height: 40px;
+            width: 40px;
+            object-fit: contain;
+            filter: none;
+        }
+
+        /* Collapsed brand box: compact centered */
+        body.sidebar-collapsed nav.sidebar .sidebar-brand-box {
+            padding: 8px;
+            margin: 10px auto;
+            width: 54px;
+            justify-content: center;
+        }
+
+
 
 
         /* App container & main content offsets */
@@ -2599,6 +2615,7 @@
         }
 
         .admin-header,
+        .main-content,
         .main-content-wrapper {
             transition: left 0.3s ease, width 0.3s ease, margin-left 0.3s ease !important;
         }
@@ -2609,11 +2626,31 @@
                 width: 78px !important;
                 min-width: 78px !important;
                 max-width: 78px !important;
+                overflow: hidden !important;
                 overflow-x: hidden !important;
+                overflow-y: hidden !important;
+                scrollbar-width: none !important;
+            }
+
+            body.sidebar-collapsed nav.sidebar::-webkit-scrollbar {
+                display: none !important;
+                width: 0 !important;
+                height: 0 !important;
             }
 
             body.sidebar-collapsed nav.sidebar .p-3 {
                 padding: 16px 8px !important;
+                overflow: hidden !important;
+            }
+
+            body.sidebar-collapsed nav.sidebar .nav {
+                align-items: center !important;
+            }
+
+            body.sidebar-collapsed nav.sidebar .nav-item {
+                display: flex !important;
+                justify-content: center !important;
+                width: 100% !important;
             }
 
             body.sidebar-collapsed .admin-header {
@@ -2621,9 +2658,32 @@
                 width: calc(100% - 78px) !important;
             }
 
-            body.sidebar-collapsed .main-content-wrapper {
+            body.sidebar-collapsed .app-container {
+                display: flex !important;
+            }
+
+            body.sidebar-collapsed .main-content {
+                flex: 1 1 auto !important;
+                min-width: 0 !important;
                 margin-left: 78px !important;
                 width: calc(100% - 78px) !important;
+                max-width: calc(100% - 78px) !important;
+                overflow-x: hidden !important;
+            }
+
+            body.sidebar-collapsed .main-content-wrapper {
+                margin: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 24px 30px !important;
+                box-sizing: border-box !important;
+            }
+
+            body.sidebar-collapsed .content-container,
+            body.sidebar-collapsed .main-content-wrapper > .container-fluid,
+            body.sidebar-collapsed .page-header {
+                width: 100% !important;
+                max-width: 100% !important;
             }
 
             body.sidebar-collapsed .sidebar-brand-box {
@@ -2640,17 +2700,51 @@
             }
 
             body.sidebar-collapsed nav.sidebar .nav-link {
-                font-size: 0 !important;
-                justify-content: center !important;
-                padding: 12px 0 !important;
-                text-align: center !important;
+                width: 44px !important;
+                height: 44px !important;
+                min-width: 44px !important;
+                padding: 0 !important;
+                margin: 4px auto !important;
+                border-radius: 50% !important;
                 display: flex !important;
                 align-items: center !important;
+                justify-content: center !important;
+                text-align: center !important;
+                font-size: 0 !important;
+                gap: 0 !important;
+                transform: none !important;
+                box-sizing: border-box !important;
             }
 
-            body.sidebar-collapsed nav.sidebar .nav-link i:first-child {
+            body.sidebar-collapsed nav.sidebar .nav-link:hover {
+                transform: none !important;
+                border-radius: 50% !important;
+                background-color: rgba(255, 255, 255, 0.15) !important;
+                color: #ffffff !important;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15) !important;
+            }
+
+            body.sidebar-collapsed nav.sidebar .nav-link.active {
+                transform: none !important;
+                border-radius: 50% !important;
+                background-color: #ffffff !important;
+                color: #005427 !important;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+            }
+
+            body.sidebar-collapsed nav.sidebar .nav-link > i:first-child,
+            body.sidebar-collapsed nav.sidebar .nav-link > .bi:first-child,
+            body.sidebar-collapsed nav.sidebar .nav-link i {
                 font-size: 1.25rem !important;
                 margin: 0 !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                width: auto !important;
+                min-width: auto !important;
+                height: auto !important;
+                flex: none !important;
+                line-height: 1 !important;
             }
 
             body.sidebar-collapsed nav.sidebar .nav-link .fa-chevron-down,
@@ -2658,8 +2752,7 @@
                 display: none !important;
             }
 
-            /* Hide submenus when collapsed to keep mini bar clean */
-            body.sidebar-collapsed nav.sidebar .collapse.show,
+            /* Submenus: hidden in collapsed state; JS auto-expands sidebar when user clicks a dropdown */
             body.sidebar-collapsed nav.sidebar .collapse {
                 display: none !important;
             }
@@ -2693,6 +2786,15 @@
 
 
 <body class="admin-dashboard">
+    <script>
+        (function() {
+            try {
+                if (window.innerWidth >= 992 && localStorage.getItem('admin_sidebar_collapsed') === 'true') {
+                    document.body.classList.add('sidebar-collapsed');
+                }
+            } catch (e) {}
+        })();
+    </script>
 
     <!-- Top Header -->
     <header class="admin-header">
@@ -2716,6 +2818,12 @@
                             Investors
                         {% elif 'property' in request.resolver_match.url_name %}
                             Properties
+                        {% elif 'inquiry' in request.resolver_match.url_name %}
+                            Inquiries
+                        {% elif 'investment' in request.resolver_match.url_name %}
+                            Investments
+                        {% elif 'communication' in request.resolver_match.url_name %}
+                            Communications
                         {% elif 'subscription' in request.resolver_match.url_name %}
                             Subscriptions
                         {% elif 'report' in request.resolver_match.url_name %}
@@ -2788,7 +2896,8 @@
         <nav class="sidebar" id="sidebar">
 
             <a class="sidebar-brand-box" href="{% url 'admin_dash:dashboard' %}">
-                <img src="{% static 'img/logo.png' %}" alt="HHectare Logo" title="HHectare">
+                <img class="sidebar-logo-full" src="{% static 'img/logo.png' %}" alt="HHectare Logo" title="HHectare">
+                <img class="sidebar-logo-icon" src="{% static 'img/logo-icon.png' %}" alt="HHectare" title="HHectare">
             </a>
 
             <div class="p-3 flex-grow-1 pt-0" style="overflow-x: visible;">
@@ -2801,29 +2910,29 @@
 
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'admin_dash:dashboard' %}">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'admin_dash:dashboard' %}">
                             <i class="fas fa-tachometer-alt"></i> Dashboard
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#userManagementCollapse">
+                        <a class="nav-link {% if 'customer' in request.resolver_match.url_name or 'agent' in request.resolver_match.url_name or 'investor' in request.resolver_match.url_name %}active{% endif %}" href="#" data-bs-toggle="collapse" data-bs-target="#userManagementCollapse">
                             <i class="fas fa-users"></i> User Management
                             <i class="fas fa-chevron-down ms-auto"></i>
                         </a>
-                        <div class="collapse" id="userManagementCollapse">
+                        <div class="collapse {% if 'customer' in request.resolver_match.url_name or 'agent' in request.resolver_match.url_name or 'investor' in request.resolver_match.url_name %}show{% endif %}" id="userManagementCollapse">
                             <ul class="nav flex-column ms-3">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'admin_dash:customer-list' %}">
+                                    <a class="nav-link {% if 'customer' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_dash:customer-list' %}">
                                         <i class="fas fa-user"></i> Customers
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'admin_dash:agent-list' %}">
+                                    <a class="nav-link {% if 'agent' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_dash:agent-list' %}">
                                         <i class="fas fa-user-tag"></i> Agents
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'admin_dash:investor-list' %}">
+                                    <a class="nav-link {% if 'investor' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_dash:investor-list' %}">
                                         <i class="fas fa-user-tie"></i> Investors
                                     </a>
                                 </li>
@@ -2831,24 +2940,24 @@
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'admin_dash:document_verification_list' %}">
+                        <a class="nav-link {% if 'verification' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_dash:document_verification_list' %}">
                             <i class="fas fa-id-card"></i> KYC Verifications
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#propertyManagementCollapse">
+                        <a class="nav-link {% if 'property' in request.resolver_match.url_name %}active{% endif %}" href="#" data-bs-toggle="collapse" data-bs-target="#propertyManagementCollapse">
                             <i class="fas fa-building"></i> Property Management
                             <i class="fas fa-chevron-down ms-auto"></i>
                         </a>
-                        <div class="collapse" id="propertyManagementCollapse">
+                        <div class="collapse {% if 'property' in request.resolver_match.url_name %}show{% endif %}" id="propertyManagementCollapse">
                             <ul class="nav flex-column ms-3">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'admin_dash:admin-property-list' %}">
+                                    <a class="nav-link {% if request.resolver_match.url_name == 'admin-property-list' %}active{% endif %}" href="{% url 'admin_dash:admin-property-list' %}">
                                         <i class="bi bi-plus-circle"></i> Property
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'admin_dash:property-review' %}">
+                                    <a class="nav-link {% if request.resolver_match.url_name == 'property-review' %}active{% endif %}" href="{% url 'admin_dash:property-review' %}">
                                         <i class="fas fa-building"></i> Property Review
                                     </a>
                                 </li>
@@ -2856,7 +2965,7 @@
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center"
+                        <a class="nav-link d-flex align-items-center {% if 'inquiry' in request.resolver_match.url_name %}active{% endif %}"
                             href="{% url 'admin_dash:inquiry-management-page' %}" id="sidebar-inquiries-link">
                             <i class="fas fa-envelope"></i>
                             <span class="me-2">Inquiries</span>
@@ -2865,27 +2974,27 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'admin_dash:investment-management-page' %}">
+                        <a class="nav-link {% if 'investment' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_dash:investment-management-page' %}">
                             <i class="fas fa-chart-line"></i> Investments
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'admin_dash:communication-list' %}">
+                        <a class="nav-link {% if 'communication' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_dash:communication-list' %}">
                             <i class="fas fa-comments"></i> Communications
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'admin_dash:reports-page' %}">
+                        <a class="nav-link {% if 'report' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_dash:reports-page' %}">
                             <i class="fas fa-file-alt"></i> Reports
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'subscriptions:manage-subscriptions' %}">
+                        <a class="nav-link {% if 'manage-subscriptions' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'subscriptions:manage-subscriptions' %}">
                             <i class="fas fa-credit-card"></i> Manage Subscriptions
                         </a>
                     </li>
                      <li class="nav-item">
-                        <a class="nav-link" href="{% url 'subscriptions:manage-master-features' %}">
+                        <a class="nav-link {% if 'manage-master-features' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'subscriptions:manage-master-features' %}">
                             <i class="fas fa-list-check"></i> Manage Features
                         </a>
                     </li>
@@ -3063,10 +3172,37 @@
                 if (sidebar) sidebar.classList.toggle('show');
             } else {
                 document.body.classList.toggle('sidebar-collapsed');
+                try {
+                    localStorage.setItem('admin_sidebar_collapsed', document.body.classList.contains('sidebar-collapsed'));
+                } catch (e) {}
             }
         }
 
-
+        // Auto-expand sidebar when clicking dropdown icons in collapsed state
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('nav.sidebar [data-bs-toggle="collapse"]').forEach(function (link) {
+                link.addEventListener('click', function (e) {
+                    if (document.body.classList.contains('sidebar-collapsed') && window.innerWidth >= 992) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        // Expand sidebar first
+                        document.body.classList.remove('sidebar-collapsed');
+                        try { localStorage.setItem('admin_sidebar_collapsed', 'false'); } catch(ex) {}
+                        // Open the target collapse after sidebar transition
+                        const targetId = link.getAttribute('data-bs-target');
+                        if (targetId) {
+                            const collapseEl = document.querySelector(targetId);
+                            if (collapseEl) {
+                                setTimeout(function () {
+                                    const bsCollapse = new bootstrap.Collapse(collapseEl, { toggle: false });
+                                    bsCollapse.show();
+                                }, 50);
+                            }
+                        }
+                    }
+                });
+            });
+        });
 
         // Close sidebar when clicking outside on mobile
 
@@ -3197,8 +3333,6 @@
 
 
         });
-
-
 
     </script>
 
