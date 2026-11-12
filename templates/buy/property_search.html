@@ -258,27 +258,68 @@
 
     .formland-agr-listing-meta{
              display: flex;
-             flex-wrap: wrap;
              align-items: center;
+             justify-content: space-between;
              gap: 12px;
+             width: 100%;
+             flex-wrap: nowrap;
              padding: 10px 20px;
     }
 
     .result-container {
-         text-align: center;
+         display: inline-flex;
+         align-items: center;
          background: #0F6A3C;
          color: white;
-         padding: 10px 16px;
-         border-radius: 20px;
+         padding: 8px 16px;
+         border-radius: 999px;
          font-size: 12px;
-         font-weight: 600;
+         font-weight: 700;
+         white-space: nowrap;
      }
 
-    /* Responsive Design */
-=========
-    #area-price-filter-container{
-        margin-left: 80px;
+    .sort-form {
+        display: inline-flex;
     }
+
+    .sort-select-wrapper {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .sort-select {
+        appearance: none;
+        -webkit-appearance: none;
+        height: 40px;
+        min-width: 160px;
+        padding: 0 36px 0 16px;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        background: #fff;
+        font-size: 14px;
+        font-weight: 500;
+        color: #1a2e2a;
+        cursor: pointer;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .sort-select:hover,
+    .sort-select:focus {
+        border-color: #0F6A3C;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(15, 106, 60, 0.08);
+    }
+
+    .sort-select-icon {
+        position: absolute;
+        right: 14px;
+        color: #6b7a7a;
+        font-size: 0.75rem;
+        pointer-events: none;
+    }
+
+    /* Responsive Design */
 
     @media (min-width: 1024px) and (max-width: 1439px) {
         .form-agri-land-for-sale {
@@ -461,12 +502,9 @@
         .formland-agr-listing-meta{
             padding: 10px 0;
             gap: 10px;
-            justify-content: space-between;
         }
-        .map-header-container{
-           display: flex;
-           flex-direction:column;
-           gap:6px; 
+        .sort-select{
+           min-width: 140px;
         }
 
     }    
@@ -478,11 +516,6 @@
 
         .properties-grid {
             grid-template-columns: 1fr !important;
-        }
-        .map-header-container{
-           flex-direction:row;
-           width: 100%;
-           justify-content: space-between;
         }
         .property-grid-main-container {
             padding:54px 16px;
@@ -506,9 +539,6 @@
             max-width: 280px !important;
         }
         
-        #area-price-filter-container{
-        margin-left: 0;
-        }
         .form-agri-land-headline{
             padding:50px 4px;
             text-align: center;
@@ -682,28 +712,24 @@
             <div style="margin-bottom: 24px;">
                 <h1 class="form-agri-land-headline" style="font-family: 'Playfair Display', serif; font-size: 1.5rem; padding-bottom:20px; font-weight: 700; color: #1a2e2a; margin-bottom: 8px; padding-top: 40px;">Farmland and Agriculture Land for Sale</h1>
                 <div class="formland-agr-listing-meta">
-                    <div class="map-header-container"> 
-                        <div style="font-size: 12px; color: #6b7a7a;">
-                            <a href="{% url 'public:home' %}" style="color: #0F6A3C; text-decoration: none; font-size: 17px; font-weight: 500;">Home</a> &gt; <span style="color: #6b7a7a; font-size: 17px;">Map</span>
-                        </div>
-                         <div class="result-container">{{ total_results }} Results</div> 
-                    </div> 
-                    <div id="area-price-filter-container">
-                        <form method="get" style="display: inline;">
+                    <div class="result-container">{{ total_results }} Results</div>
+                    <form method="get" class="sort-form">
                             {% for key, value in filters.items %}
                                 {% if key != 'sort_by' %}
                                     <input type="hidden" name="{{ key }}" value="{{ value }}">
                                 {% endif %}
                             {% endfor %}
-                            <select name="sort_by" onchange="this.form.submit()" style="height: 40px; border: 1px solid #e2e8f0; border-radius: 10px; padding: 0 16px; font-size: 16px; font-weight: 500; background: white; color: #1a2e2a; cursor: pointer;">
-                                <option value="-created_at" {% if filters.sort_by == '-created_at' %}selected{% endif %}>Latest</option>
-                                <option value="price" {% if filters.sort_by == 'price' %}selected{% endif %}>Price: Low to High</option>
-                                <option value="-price" {% if filters.sort_by == '-price' %}selected{% endif %}>Price: High to Low</option>
-                                <option value="area_sqft" {% if filters.sort_by == 'area_sqft' %}selected{% endif %}>Area: Low to High</option>
-                                <option value="-area_sqft" {% if filters.sort_by == '-area_sqft' %}selected{% endif %}>Area: High to Low</option>
-                            </select>
+                            <div class="sort-select-wrapper">
+                                <select name="sort_by" class="sort-select" onchange="this.form.submit()" aria-label="Sort properties">
+                                    <option value="-created_at" {% if filters.sort_by == '-created_at' %}selected{% endif %}>Latest</option>
+                                    <option value="price" {% if filters.sort_by == 'price' %}selected{% endif %}>Price: Low to High</option>
+                                    <option value="-price" {% if filters.sort_by == '-price' %}selected{% endif %}>Price: High to Low</option>
+                                    <option value="area_sqft" {% if filters.sort_by == 'area_sqft' %}selected{% endif %}>Area: Low to High</option>
+                                    <option value="-area_sqft" {% if filters.sort_by == '-area_sqft' %}selected{% endif %}>Area: High to Low</option>
+                                </select>
+                                <i class="bi bi-chevron-down sort-select-icon"></i>
+                            </div>
                         </form>
-                    </div>
                 </div>
             </div>
 
