@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
@@ -534,27 +535,32 @@ def submit_agent_review(request, agent_id):
 def robots_txt(request):
     """
     Dynamic robots.txt for HHectare with sitemap URL and private-area exclusions.
+    Always points crawlers at the canonical HTTPS sitemap.
     """
-    # Build the sitemap URL dynamically based on the current request
-    scheme = 'https' if request.is_secure() else 'http'
-    host = request.get_host()
-    sitemap_url = f"{scheme}://{host}/sitemap.xml"
+    origin = getattr(settings, 'SITE_CANONICAL_ORIGIN', 'https://hhectare.com').rstrip('/')
+    sitemap_url = f"{origin}/sitemap.xml"
 
     robots_content = f"""# HHectare robots.txt
 User-agent: *
 Allow: /
+Allow: /static/
 
 Disallow: /admin/
+Disallow: /django-admin/
 Disallow: /accounts/
 Disallow: /dashboard/
 Disallow: /api/
+Disallow: /api-auth/
 Disallow: /auth/
 Disallow: /customer/
 Disallow: /investor/
 Disallow: /agent/
 Disallow: /admin-dashboard/
 Disallow: /subscriptions/
-Disallow: /django-admin/
+Disallow: /organization/
+Disallow: /create-account/
+Disallow: /import-location-data/
+Disallow: /health/
 
 Sitemap: {sitemap_url}
 """
