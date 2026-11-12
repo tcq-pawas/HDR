@@ -2341,6 +2341,341 @@
                 margin-left: calc(275px + (100% - 275px - var(--bs-modal-width, 1140px)) / 2) !important;
                 margin-right: auto !important;
             }
+        /* Modern Header & Sidebar Styling matching Reference UI */
+        .admin-header {
+            background: #ffffff !important;
+            border-bottom: 1px solid #e2e8f0 !important;
+            height: 70px !important;
+            padding: 0 !important;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03) !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 275px !important;
+            right: 0 !important;
+            width: calc(100% - 275px) !important;
+            z-index: 1000 !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+
+        .admin-header .header-content {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            height: 100% !important;
+            width: 100% !important;
+            padding: 0 24px 0 20px !important;
+        }
+
+        .admin-header .header-left {
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            padding-top: 0 !important;
+            gap: 16px;
+        }
+
+        .admin-header .sidebar-toggle-btn {
+            background: transparent;
+            border: none;
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #0f172a;
+            font-size: 1.4rem;
+            cursor: pointer;
+            padding: 0;
+            transition: color 0.2s ease;
+        }
+
+        .admin-header .sidebar-toggle-btn:hover {
+            color: #005427;
+        }
+
+        .admin-header .header-page-title {
+            font-size: 1.45rem !important;
+            font-weight: 800 !important;
+            color: #0f172a !important;
+            margin: 0 !important;
+            line-height: 1.2 !important;
+            letter-spacing: -0.02em !important;
+            transform: translateY(2px);
+        }
+
+        .admin-header .header-right {
+            display: flex !important;
+            align-items: center !important;
+            gap: 20px !important;
+            padding: 0 !important;
+        }
+
+        .admin-header .header-icon-btn {
+            background: transparent;
+            border: none;
+            width: 36px;
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #1e293b;
+            font-size: 1.35rem;
+            position: relative;
+            text-decoration: none;
+            padding: 0;
+            transition: color 0.2s ease;
+        }
+
+        .admin-header .header-icon-btn:hover {
+            color: #005427;
+        }
+
+        .admin-header .header-icon-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #10b981;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+            padding: 0 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1;
+        }
+
+        /* Profile Trigger */
+        .admin-header .header-profile-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .admin-header .header-profile-avatar {
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: #cbd5e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .admin-header .header-profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .admin-header .header-profile-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2px;
+            text-align: left;
+        }
+
+        .admin-header .header-profile-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #0f172a;
+            white-space: nowrap;
+        }
+
+        .admin-header .header-verified-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #047857;
+            background: #d1fae5;
+            padding: 2px 10px;
+            border-radius: 20px;
+        }
+
+        .admin-header .header-profile-chevron {
+            font-size: 13px;
+            color: #0f172a;
+            font-weight: 700;
+            margin-left: 6px;
+            transition: transform 0.2s ease;
+        }
+
+        .admin-header .dropdown.show .header-profile-chevron {
+            transform: rotate(180deg);
+        }
+
+        .admin-header .header-profile-menu {
+            min-width: 200px;
+            border-radius: 12px;
+            padding: 8px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+            margin-top: 10px !important;
+        }
+
+        .admin-header .header-profile-menu .dropdown-item {
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.15s ease;
+        }
+
+        .admin-header .header-profile-menu .dropdown-item:hover {
+            background-color: #f1f5f9;
+            color: #005427;
+        }
+
+        .admin-header .header-profile-menu .dropdown-item.text-danger:hover {
+            background-color: #fef2f2;
+            color: #dc2626 !important;
+        }
+
+        /* Sidebar Logo in Dedicated Bordered Container */
+        .sidebar-brand-box {
+            background: transparent;
+            border: 1.5px solid rgba(255, 255, 255, 0.4);
+            border-radius: 12px;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 16px;
+            margin-bottom: 20px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-brand-box:hover {
+            border-color: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar-brand-box img {
+            height: 34px;
+            width: auto;
+            max-width: 100%;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+        }
+
+
+
+        /* App container & main content offsets */
+        .app-container {
+            padding-top: 70px !important;
+        }
+
+        .main-content-wrapper {
+            margin-top: 0 !important;
+        }
+
+        /* Smooth Transitions */
+        nav.sidebar {
+            transition: width 0.3s ease, min-width 0.3s ease, max-width 0.3s ease, transform 0.3s ease !important;
+        }
+
+        .admin-header,
+        .main-content-wrapper {
+            transition: left 0.3s ease, width 0.3s ease, margin-left 0.3s ease !important;
+        }
+
+        /* Desktop Mini-Sidebar (Collapsed State) */
+        @media (min-width: 992px) {
+            body.sidebar-collapsed nav.sidebar {
+                width: 78px !important;
+                min-width: 78px !important;
+                max-width: 78px !important;
+                overflow-x: hidden !important;
+            }
+
+            body.sidebar-collapsed nav.sidebar .p-3 {
+                padding: 16px 8px !important;
+            }
+
+            body.sidebar-collapsed .admin-header {
+                left: 78px !important;
+                width: calc(100% - 78px) !important;
+            }
+
+            body.sidebar-collapsed .main-content-wrapper {
+                margin-left: 78px !important;
+                width: calc(100% - 78px) !important;
+            }
+
+            body.sidebar-collapsed .sidebar-brand-box {
+                padding: 8px 4px !important;
+                width: 54px !important;
+                height: 48px !important;
+                margin: 12px auto 20px auto !important;
+                overflow: hidden !important;
+            }
+
+            body.sidebar-collapsed .sidebar-brand-box img {
+                height: 24px !important;
+                object-position: left center !important;
+            }
+
+            body.sidebar-collapsed nav.sidebar .nav-link {
+                font-size: 0 !important;
+                justify-content: center !important;
+                padding: 12px 0 !important;
+                text-align: center !important;
+                display: flex !important;
+                align-items: center !important;
+            }
+
+            body.sidebar-collapsed nav.sidebar .nav-link i:first-child {
+                font-size: 1.25rem !important;
+                margin: 0 !important;
+            }
+
+            body.sidebar-collapsed nav.sidebar .nav-link .fa-chevron-down,
+            body.sidebar-collapsed nav.sidebar .nav-link .badge {
+                display: none !important;
+            }
+
+            /* Hide submenus when collapsed to keep mini bar clean */
+            body.sidebar-collapsed nav.sidebar .collapse.show,
+            body.sidebar-collapsed nav.sidebar .collapse {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 991px) {
+            .admin-header {
+                left: 0 !important;
+                width: 100% !important;
+            }
+            .admin-header .header-content {
+                padding: 0 16px !important;
+            }
+            .app-container {
+                padding-top: 70px !important;
+            }
         }
 </style>
 
@@ -2359,121 +2694,104 @@
 
 <body class="admin-dashboard">
 
+    <!-- Top Header -->
+    <header class="admin-header">
+        <div class="header-content">
+            <!-- Left: Sidebar toggle + Page Title -->
+            <div class="header-left">
+                <button type="button" class="sidebar-toggle-btn" onclick="toggleSidebar()" aria-label="Toggle Navigation">
+                    <i class="bi bi-list"></i>
+                </button>
+                <h1 class="header-page-title mb-0">
+                    {% block header_page_title %}
+                        {% if request.resolver_match.url_name == 'dashboard' %}
+                            Dashboard
+                        {% elif 'verification' in request.resolver_match.url_name %}
+                            KYC Verifications
+                        {% elif 'customer' in request.resolver_match.url_name %}
+                            Customers
+                        {% elif 'agent' in request.resolver_match.url_name %}
+                            Agents
+                        {% elif 'investor' in request.resolver_match.url_name %}
+                            Investors
+                        {% elif 'property' in request.resolver_match.url_name %}
+                            Properties
+                        {% elif 'subscription' in request.resolver_match.url_name %}
+                            Subscriptions
+                        {% elif 'report' in request.resolver_match.url_name %}
+                            Reports
+                        {% else %}
+                            Admin Dashboard
+                        {% endif %}
+                    {% endblock %}
+                </h1>
+            </div>
 
+            <!-- Right: Notifications & Profile Dropdown -->
+            <div class="header-right">
+                <!-- Notifications Icon -->
+                <a href="{% url 'admin_dash:document_verification_list' %}" class="header-icon-btn" title="Pending Verifications">
+                    <i class="bi bi-bell"></i>
+                    {% if pending_verifications_count %}
+                    <span class="header-icon-badge">{{ pending_verifications_count }}</span>
+                    {% endif %}
+                </a>
+
+                <!-- Profile Dropdown Section -->
+                <div class="dropdown">
+                    <div class="header-profile-btn" data-bs-toggle="dropdown" aria-expanded="false" role="button">
+                        <!-- Profile Avatar -->
+                        <div class="header-profile-avatar">
+                            {% if user.profile and user.profile.profile_picture %}
+                            <img src="{{ user.profile.profile_picture.url }}" alt="Profile">
+                            {% else %}
+                            <span>{{ user.first_name|default:user.username|slice:":1"|upper }}</span>
+                            {% endif %}
+                        </div>
+
+                        <!-- Name & Verification Badge -->
+                        <div class="header-profile-info d-none d-sm-flex">
+                            <span class="header-profile-name">{{ user.get_full_name|default:user.username }}</span>
+                            <span class="header-verified-pill">
+                                <i class="bi bi-patch-check-fill"></i> Admin Verified
+                            </span>
+                        </div>
+
+                        <!-- Dropdown Arrow -->
+                        <i class="bi bi-chevron-down header-profile-chevron ms-1"></i>
+                    </div>
+
+                    <!-- Profile Dropdown Menu -->
+                    <ul class="dropdown-menu dropdown-menu-end header-profile-menu shadow border-0">
+                        <li>
+                            <a class="dropdown-item" href="{% url 'admin_dash:view_profile' %}">
+                                <i class="bi bi-person text-success"></i>
+                                <span>View Profile</span>
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider my-1"></li>
+                        <li>
+                            <a class="dropdown-item text-danger" href="{% url 'auth:logout' %}">
+                                <i class="bi bi-box-arrow-right"></i>
+                                <span>Logout</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
 
     <div class="app-container">
 
-
-
-        <!-- Mobile Menu Toggle -->
-
-
-
-        <button class="mobile-menu-toggle" onclick="toggleSidebar()">
-
-
-
-            <i class="fas fa-bars"></i>
-
-
-
-        </button>
-
-
-
-
-
-
-
         <!-- Sidebar -->
-
-
-
         <nav class="sidebar" id="sidebar">
 
+            <a class="sidebar-brand-box" href="{% url 'admin_dash:dashboard' %}">
+                <img src="{% static 'img/logo.png' %}" alt="HHectare Logo" title="HHectare">
+            </a>
 
-
-            <div class="sidebar-brand">
-
-
-
-                <a href="{% url 'admin_dash:dashboard' %}" class="text-decoration-none d-inline-block text-reset">
-                    <img src="{% static 'img/logo.png' %}" alt="Logo" title="Logo" class="d-block mb-1" style="height:40px; width:auto;">
-                </a>
-
-
-
-            </div>
-
-
-
-
-
-
-
-            <div class="p-3 flex-grow-1" style="overflow-x: visible;">
-
-
-
-                <!-- Profile Section -->
-
-
-
-                <div class="mb-4 p-3 rounded" style="background: rgba(255, 255, 255, 0.1);">
-
-
-
-                    <div class="d-flex align-items-center justify-content-around">
-
-
-
-                        <div class="rounded-circle bg-white d-inline-flex align-items-center justify-content-center me-3"
-
-                            style="width: 48px; height: 48px;">
-
-
-
-                            {% if user.profile.profile_picture %}
-
-
-
-                            <img src="{{ user.profile.profile_picture.url }}" alt="Profile" class="rounded-circle"
-
-                                style="width: 44px; height: 44px; object-fit: cover;">
-
-
-
-                            {% else %}
-
-
-
-                            <i class="fas fa-user-shield fa-lg" style="color: var(--primary);"></i>
-
-
-
-                            {% endif %}
-
-
-
-                        </div>
-
-
-
-                        <div>
-
-
-
-                            <div class="fw-bold text-white">{{ user.get_full_name|default:user.username }}</div>
-
-
-
-                            <div class="small text-white-50">Administrator</div>
-                            <a href="{% url 'admin_dash:view_profile' %}" class="btn btn-xs mt-2 w-100 d-flex align-items-center justify-content-center text-center text-white" style="font-size: 0.75rem; padding: 5px 13px; background: rgba(255, 255, 255, 0.15); border: none; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);">
-                                View Profile
-                            </a>
-                        </div>
-                    </div>
-                </div>
+            <div class="p-3 flex-grow-1 pt-0" style="overflow-x: visible;">
 
 
 
@@ -2740,21 +3058,12 @@
 
 
         function toggleSidebar() {
-
-            const sidebar = document.getElementById('sidebar');
-            const toggle = document.querySelector('.mobile-menu-toggle');
-
-            sidebar.classList.toggle('show');
-
-            // Hide hamburger while sidebar is open.
-            // Show it again when the sidebar is closed.
-            if (toggle) {
-                toggle.classList.toggle(
-                    'sidebar-open',
-                    sidebar.classList.contains('show')
-                );
+            if (window.innerWidth < 992) {
+                const sidebar = document.getElementById('sidebar');
+                if (sidebar) sidebar.classList.toggle('show');
+            } else {
+                document.body.classList.toggle('sidebar-collapsed');
             }
-
         }
 
 
