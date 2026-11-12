@@ -96,7 +96,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                 ],
+                'Apps.PublicPage.context_processors.seo_defaults',
+            ],
         },
     },
 ]
@@ -259,7 +260,38 @@ DEFAULT_FROM_EMAIL = 'noreply@heydayrealty.com'
 # Site branding / display metadata
 SITE_NAME = 'HHectare'
 SITE_SLOGAN = 'Invest Green. Grow Strong.'
-SITE_DESCRIPTION = 'HHectare — Invest Green. Grow Strong. Premium real estate platform offering residential, commercial, luxury, and agricultural properties with verified listings across India.'
+SITE_DESCRIPTION = (
+    'HHectare helps you discover legally verified farmland, agricultural land '
+    'and premium property investment opportunities across India. Invest with '
+    'confidence and expert guidance.'
+)
+SITE_CANONICAL_HOST = os.getenv('SITE_CANONICAL_HOST', 'hhectare.com')
+SITE_CANONICAL_ORIGIN = os.getenv('SITE_CANONICAL_ORIGIN', 'https://hhectare.com')
+SITE_CONTACT_EMAIL = os.getenv('SITE_CONTACT_EMAIL', 'info@hhectare.com')
+SITE_CONTACT_PHONE = os.getenv('SITE_CONTACT_PHONE', '+919506688688')
+SITE_CONTACT_PHONE_DISPLAY = os.getenv('SITE_CONTACT_PHONE_DISPLAY', '+91 95066 88688')
+# Official social profile URLs only — leave empty until profiles are confirmed
+SITE_SAME_AS = [
+    url.strip()
+    for url in os.getenv('SITE_SAME_AS', '').split(',')
+    if url.strip()
+]
+
+# Prefer the canonical host (non-www). Nginx/production should also 301 www → apex.
+PREPEND_WWW = False
+APPEND_SLASH = True
+
+# Production HTTPS / cookie hardening (safe no-ops in DEBUG)
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = os.getenv('SECURE_SSL_REDIRECT', 'True') == 'True'
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = int(os.getenv('SECURE_HSTS_SECONDS', '31536000'))
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
 
 # Upload limits (aligned with nginx client_max_body_size 50M)
 DATA_UPLOAD_MAX_MEMORY_SIZE = 50 * 1024 * 1024  # 50 MB
