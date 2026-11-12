@@ -113,6 +113,9 @@
 
     @media (max-width: 768px) {
 
+        .location-description{
+            text-align:center;
+        }
         .location-wrapper .location-left .location-heading {
            text-align: center;
            padding: 20px 0;
@@ -252,6 +255,7 @@
 
     .office-why-item {
         padding: 0 16px;
+        text-align:center;
         position: relative;
     }
 
@@ -362,13 +366,19 @@
 
     .contact-form-right{
         width: 100%;
-        max-width: 650px;
+        /* max-width: 650px; */
     }
 
     .office-location-section{
         width: 100% ;
         gap:38px;
-        max-width: 1100px !important;
+        max-width: 1310px !important;
+        /* max-width: 1100px !important; */
+    }
+
+    .contact-cards-grid{
+        width: 100%;
+        max-width: 1310px !important;
     }
 
     @media (min-width:1441px){
@@ -381,7 +391,8 @@
         .office-location-section{
             width: 100% ;
             gap:8px;
-            max-width: 1200px !important;
+            max-width: 1310px;
+            /* max-width: 1200px !important; */
         }
     }     
  
@@ -468,6 +479,18 @@
         }
     }
     
+    @media (max-width: 768px) {
+        .office-section-title {
+            display: block;
+            text-align: center;
+        }
+
+       .office-section-title::after {
+          left: 50%;
+          transform: translateX(-50%);
+       }
+    }
+
     @media (min-width: 480px) and (max-width: 768px) {
     .contact-section-1 .container .contact-cards-grid {
         width: 100%;
@@ -682,6 +705,15 @@
         .office-why-item:nth-child(2n)::after {
             display: none;
         }
+        .office-stats-row{
+            gap:25px;
+        }
+    }
+
+    @media (max-width:1024px){
+        .office-why-grid{
+            gap:20px;
+        }
     }
 
     @media (max-width: 991px) {
@@ -699,12 +731,29 @@
         }
     }
 
+    @media (max-width:768px){
+        .office-why-grid{
+            gap:30px;
+        }
+    }
+
     @media (max-width: 767px) {
         .contact-cards-grid {
             grid-template-columns: repeat(2, 1fr);
         }
     }
-
+    
+    @media (max-width:480px){
+        .location-info-item {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .office-info-panel{
+            padding-top:20px;
+        }
+    }
     @media (max-width: 428px) {
         .contact-cards-grid {
             grid-template-columns: 1fr;
@@ -745,8 +794,10 @@
         .modal-body {
             padding: 18px !important;
         }
-
-        .office-stats-row,
+        .office-stats-row{
+            gap:20px;
+        }  
+        /* .office-stats-row, */
         .office-why-grid {
             grid-template-columns: 1fr;
         }
@@ -756,6 +807,16 @@
             display: none !important;
         }
     }
+
+    @media (max-width:480px){
+        .office-stat-icon, .location-info-item .location-info-icon {
+            width: 40px;
+            height: 40px;
+        }
+        .location-info-content h4 , .office-stat-number {
+            font-size:22px;
+        }
+    } 
 
     @media (max-width: 360px) {
         .contact-form-submit,
@@ -851,7 +912,7 @@
                     <i class="bi bi-telephone"></i>
                 </div>
                 <h5 class="contact-card-title">Phone</h5>
-                <p class="contact-card-value">+91 9161 554 321</p>
+                <p class="contact-card-value">+91-888-999-7777</p>
                 <a href="javascript:void(0)" class="contact-card-link" data-bs-toggle="modal" data-bs-target="#callModal">Call Now</a>
             </div>
 
@@ -922,7 +983,7 @@
 </section> -->
 
 <!-- Contact Form Section -->
-<section class="contact-form-section" style="width: 100%; margin:0 auto; max-width:1200px; background-color: #FAFAF7; padding: 80px 0;">
+<section class="contact-form-section" style="width: 100%; margin:0 auto; max-width:1400px; background-color: #FAFAF7; padding: 80px 0;">
     <div class="container" style="max-width: 1800px;">
         <div class="contact-form-wrapper">
             
@@ -1012,7 +1073,7 @@
 
 <!-- Location Section -->
 <section class="location-section" style="background-color: #FAFAF7; padding: 80px 0;">
-    <div class="container" style="max-width: 1800px; ">
+    <div class="container" style="max-width: 1800px;">
         <div class="location-wrapper office-location-section">
             
             <!-- Left Panel -->
@@ -1040,7 +1101,7 @@
                         </div>
                         <div class="location-info-content">
                             <h4>Phone</h4>
-                            <p>+91 9506 688 688</p>
+                            <p>+91-888-999-7777</p>
                         </div>
                     </div>
                     
@@ -1099,22 +1160,22 @@
                         <h3 class="office-section-title">Why visit our office?</h3>
                         <div class="office-why-grid">
                             <div class="office-why-item">
-                                <div class="office-why-icon"><i class="bi bi-chat-square-text"></i></div>
+                                <div class="office-why-icon office-stat-icon"><i class="bi bi-chat-square-text"></i></div>
                                 <h4 class="office-why-title">Personalized Consultation</h4>
                                 <p class="office-why-desc">Get expert advice tailored to your investment goals.</p>
                             </div>
                             <div class="office-why-item">
-                                <div class="office-why-icon"><i class="bi bi-file-earmark-check"></i></div>
+                                <div class="office-why-icon office-stat-icon"><i class="bi bi-file-earmark-check"></i></div>
                                 <h4 class="office-why-title">Verified Documentation</h4>
                                 <p class="office-why-desc">Review property documents with complete transparency.</p>
                             </div>
                             <div class="office-why-item">
-                                <div class="office-why-icon"><i class="bi bi-geo-alt"></i></div>
+                                <div class="office-why-icon office-stat-icon"><i class="bi bi-geo-alt"></i></div>
                                 <h4 class="office-why-title">Site Visit Assistance</h4>
                                 <p class="office-why-desc">We help you visit and evaluate the right land.</p>
                             </div>
                             <div class="office-why-item">
-                                <div class="office-why-icon"><i class="bi bi-graph-up-arrow"></i></div>
+                                <div class="office-why-icon office-stat-icon"><i class="bi bi-graph-up-arrow"></i></div>
                                 <h4 class="office-why-title">Investment Guidance</h4>
                                 <p class="office-why-desc">Make informed decisions with future growth insights.</p>
                             </div>
@@ -1138,7 +1199,7 @@
                     </div>
                     <div class="text-start">
                         <h5 class="modal-title fw-bold mb-0" id="callModalLabel">Call HeyDay Realty</h5>
-                        <small class="text-white-50">+91 9506 688 688</small>
+                        <small class="text-white-50">+91-888-999-7777</small>
                     </div>
                 </div>
                 <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -1147,7 +1208,7 @@
                 <p class="text-secondary mb-4">Choose how you would like to connect with our investment advisory team:</p>
                 <div class="d-grid gap-3">
                     <a href="tel:+919506688688" class="btn btn-success fw-semibold rounded-pill py-2">
-                        <i class="bi bi-telephone-fill me-2"></i> Call Directly (+91 9506 688 688)
+                        <i class="bi bi-telephone-fill me-2"></i> Call Directly (+91-888-999-7777)
                     </a>
                     <a href="https://wa.me/919506688688?text=Hi%2C%20I%20am%20interested%20in%20HeyDay%20Realty%20farmland%20investments." target="_blank" rel="noopener" class="btn btn-outline-success fw-semibold rounded-pill py-2">
                         <i class="bi bi-whatsapp me-2"></i> Chat on WhatsApp

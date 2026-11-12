@@ -8,6 +8,59 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/customer/customer.css' %}">
+<style>
+    .profile-avatar-container {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+    }
+    .profile-avatar-container .avatar-shell {
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+    }
+    .profile-avatar-container .avatar-upload-overlay {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: rgba(0, 84, 39, 0.7);
+        color: white;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        font-size: 1.5rem;
+        cursor: pointer;
+        z-index: 5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .profile-avatar-container:hover .avatar-upload-overlay {
+        opacity: 1;
+    }
+    .avatar-camera-badge {
+        position: absolute;
+        bottom: 2px;
+        right: 2px;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: #ffffff;
+        color: #004526;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+        cursor: pointer;
+        z-index: 6;
+        border: 2px solid #ffffff;
+        transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+    .avatar-camera-badge:hover {
+        transform: scale(1.1);
+        background-color: #f0fdf4;
+        color: #004526;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -23,14 +76,31 @@
         <div class="row align-items-start g-3 profile-box">
             <div class="col-lg-7">
                 <div class="profile-identity">
-                    <div class="avatar-shell">
-                        {% if profile.profile_picture %}
-                            <img src="{{ profile.profile_picture.url }}" alt="{{ user.get_full_name|default:user.username }}">
-                        {% else %}
-                            <div class="avatar-fallback">
-                                {{ user.first_name.0|default:user.username.0|upper }}
+                    <div class="profile-avatar-container" title="Click to upload profile photo" onclick="document.getElementById('avatarInput').click();">
+                        <div class="avatar-shell" id="avatarWrapper">
+                            {% if profile.profile_picture %}
+                                <img src="{{ profile.profile_picture.url }}" alt="{{ user.get_full_name|default:user.username }}" id="avatarPreview">
+                            {% else %}
+                                <div class="avatar-fallback" id="avatarPreview">
+                                    {{ user.first_name.0|default:user.username.0|upper }}
+                                </div>
+                            {% endif %}
+                            <div class="avatar-upload-overlay">
+                                <i class="fas fa-camera"></i>
                             </div>
-                        {% endif %}
+                        </div>
+
+                        <!-- Camera badge icon button -->
+                        <div class="avatar-camera-badge" title="Click to upload profile photo">
+                            <i class="fas fa-camera" style="font-size: 0.9rem;"></i>
+                        </div>
+
+                        <input type="file"
+                               id="avatarInput"
+                               accept="image/png, image/jpeg, image/jpg, image/webp"
+                               style="display:none;"
+                               onclick="event.stopPropagation();"
+                               onchange="uploadAvatar(this)">
                     </div>
 
                     <div style="min-width:0;">
@@ -390,6 +460,52 @@
             btn.innerHTML = originalHTML;
             btn.disabled = false;
             alert('Network error occurred.');
+        });
+    }
+
+    function uploadAvatar(input) {
+        if (!input.files || !input.files[0]) return;
+        const file = input.files[0];
+
+        if (file.size > 5 * 1024 * 1024) {
+            alert('File size must be under 5MB.');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('profile_picture', file);
+
+        const overlay = document.querySelector('#avatarWrapper .avatar-upload-overlay');
+        if (overlay) {
+            overlay.innerHTML = '<div class="spinner-border spinner-border-sm text-white" role="status"></div>';
+            overlay.style.opacity = '1';
+        }
+
+        fetch("{% url 'customer:update-profile' %}", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            } else {
+                alert(data.message || data.error || 'Failed to upload profile photo.');
+                if (overlay) {
+                    overlay.innerHTML = '<i class="fas fa-camera"></i>';
+                    overlay.style.opacity = '';
+                }
+            }
+        })
+        .catch(err => {
+            alert('A network error occurred while uploading.');
+            if (overlay) {
+                overlay.innerHTML = '<i class="fas fa-camera"></i>';
+                overlay.style.opacity = '';
+            }
         });
     }
 
