@@ -142,15 +142,98 @@
         background: var(--cloud-white);
         border-radius: 28px 28px 0 0;
         overflow: hidden;
+        height: 480px;
     }
 
     .main-image {
         width: 100%;
-        aspect-ratio: 16 / 9;
-        max-height: 600px;
-        object-fit: contain;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
         background: #f5f5f5;
         display: block;
+        cursor: zoom-in;
+    }
+
+    .zoom-hint {
+        position: absolute;
+        bottom: 16px;
+        right: 16px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.92);
+        color: #0F6A3C;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        z-index: 5;
+        pointer-events: none;
+    }
+
+    /* Image lightbox */
+    .lightbox-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.85);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.25s ease, visibility 0.25s ease;
+        padding: 24px;
+    }
+
+    .lightbox-overlay.open {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .lightbox-image-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        max-width: 100%;
+        max-height: 100%;
+    }
+
+    .lightbox-image-wrap img {
+        max-width: 90vw;
+        max-height: 85vh;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        border-radius: 8px;
+        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .lightbox-close {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.15);
+        border: none;
+        color: white;
+        font-size: 1.1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+        z-index: 1;
+    }
+
+    .lightbox-close:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.05);
     }
 
     .posted-badge {
@@ -879,6 +962,10 @@
         .amenities-grid {
             grid-template-columns: repeat(2, 1fr);
         }
+
+        .main-image-container {
+            height: 420px;
+        }
     }
 
     @media (max-width: 768px) {
@@ -896,8 +983,8 @@
             margin-bottom: 16px;
         }
 
-        .main-image {
-            height: 300px;
+        .main-image-container {
+            height: 320px;
         }
 
         .features-strip {
@@ -964,11 +1051,12 @@
                         {% endif %}
                         {% else %}
                         <div
-                            style="width:100%; height:450px; background:#f5f5f5; display:flex; align-items:center; justify-content:center; color:#999;">
+                            style="width:100%; height:100%; background:#f5f5f5; display:flex; align-items:center; justify-content:center; color:#999;">
                             <i class="bi bi-image" style="font-size:4rem;"></i>
                         </div>
                         {% endif %}
 
+                        <div class="zoom-hint"><i class="bi bi-zoom-in"></i></div>
                         <div class="posted-badge">Posted 1 day ago</div>
 
                         <!-- Wishlist Button -->
@@ -1367,8 +1455,49 @@
     </div>
 </div>
 
+<!-- Image Lightbox -->
+<div class="lightbox-overlay" id="imageLightbox" role="dialog" aria-modal="true" aria-label="Property image viewer">
+    <button type="button" class="lightbox-close" onclick="closeLightbox()" aria-label="Close image viewer">
+        <i class="bi bi-x-lg"></i>
+    </button>
+    <div class="lightbox-image-wrap">
+        <img src="" alt="{{ property.title }}" id="lightboxImage">
+    </div>
+</div>
+
 <script>
     let currentImageIndex = 0;
+
+    const lightbox = document.getElementById('imageLightbox');
+    const lightboxImage = document.getElementById('lightboxImage');
+
+    function openLightbox(src) {
+        if (!lightbox || !lightboxImage || !src) return;
+        lightboxImage.src = src;
+        lightbox.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+        if (!lightbox) return;
+        lightbox.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    if (lightbox) {
+        lightbox.addEventListener('click', function(e) {
+            if (e.target === lightbox) closeLightbox();
+        });
+    }
+
+    const mainImageContainer = document.querySelector('.main-image-container');
+    if (mainImageContainer) {
+        mainImageContainer.addEventListener('click', function(e) {
+            if (e.target.closest('button, a, form')) return;
+            const mainImage = document.getElementById('mainImage');
+            if (mainImage && mainImage.src) openLightbox(mainImage.src);
+        });
+    }
 
     function getThumbnails() {
         return document.querySelectorAll('img.thumbnail');
@@ -1379,6 +1508,9 @@
         const idx = parseInt(index);
         if (mainImage) {
             mainImage.src = src;
+            if (lightbox && lightbox.classList.contains('open')) {
+                lightboxImage.src = src;
+            }
             currentImageIndex = idx;
             document.querySelectorAll('.thumbnail').forEach((thumb, i) => {
                 thumb.classList.toggle('active', i === idx);
@@ -1405,6 +1537,7 @@
     document.addEventListener('keydown', (e) => {
         if (e.key === 'ArrowRight') nextImage();
         if (e.key === 'ArrowLeft') prevImage();
+        if (e.key === 'Escape') closeLightbox();
     });
 
     function shareProperty(title, url) {
