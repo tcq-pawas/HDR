@@ -312,11 +312,78 @@
             margin-top: 70px !important;
         }
 
-        .agent-main {
-            padding: 24px 32px !important;
+        /* Smooth Transitions */
+        .agent-sidebar {
+            transition: width 0.3s ease, min-width 0.3s ease, max-width 0.3s ease !important;
         }
 
+        .agent-header,
+        .agent-main {
+            transition: left 0.3s ease, width 0.3s ease, margin-left 0.3s ease !important;
+        }
 
+        /* Desktop Mini-Sidebar (Collapsed State) */
+        @media (min-width: 993px) {
+            body.sidebar-collapsed .agent-sidebar {
+                width: 78px !important;
+                min-width: 78px !important;
+                max-width: 78px !important;
+            }
+
+            body.sidebar-collapsed .agent-header {
+                left: 78px !important;
+                width: calc(100% - 78px) !important;
+            }
+
+            body.sidebar-collapsed .agent-main {
+                margin-left: 78px !important;
+                width: calc(100% - 78px) !important;
+            }
+
+            body.sidebar-collapsed .agent-sidebar .sidebar-content {
+                padding: 18px 10px !important;
+                align-items: center !important;
+            }
+
+            body.sidebar-collapsed .agent-sidebar .sidebar-brand-box {
+                padding: 8px 4px !important;
+                width: 54px !important;
+                height: 48px !important;
+                margin-bottom: 20px !important;
+                overflow: hidden !important;
+            }
+
+            body.sidebar-collapsed .agent-sidebar .sidebar-brand-box img {
+                height: 24px !important;
+                object-position: left center !important;
+            }
+
+            body.sidebar-collapsed .agent-sidebar .sidebar-nav .nav-link {
+                justify-content: center !important;
+                padding: 12px 0 !important;
+                gap: 0 !important;
+            }
+
+            body.sidebar-collapsed .agent-sidebar .sidebar-nav .nav-link i {
+                font-size: 1.25rem !important;
+                margin: 0 !important;
+            }
+
+            body.sidebar-collapsed .agent-sidebar .sidebar-nav .nav-link span,
+            body.sidebar-collapsed .agent-sidebar .sidebar-nav .nav-link .badge,
+            body.sidebar-collapsed .agent-sidebar .sidebar-nav .nav-link .bi-chevron-down {
+                display: none !important;
+            }
+
+            body.sidebar-collapsed .agent-sidebar .logout-btn {
+                justify-content: center !important;
+                padding: 12px 0 !important;
+            }
+
+            body.sidebar-collapsed .agent-sidebar .logout-btn span {
+                display: none !important;
+            }
+        }
 
         @media (max-width: 992px) {
             .agent-header {
@@ -1045,9 +1112,11 @@
 
         }
 
-        // Toggle sidebar on mobile (offcanvas)
+        // Toggle sidebar on desktop (mini-sidebar collapse/expand) and mobile (offcanvas)
         function toggleAgentSidebar() {
-            if (window.innerWidth < 993) {
+            if (window.innerWidth >= 993) {
+                document.body.classList.toggle('sidebar-collapsed');
+            } else {
                 const offcanvasEl = document.getElementById('agentSidebarOffcanvas');
                 if (offcanvasEl) {
                     const offcanvasInstance = bootstrap.Offcanvas.getOrCreateInstance(offcanvasEl);

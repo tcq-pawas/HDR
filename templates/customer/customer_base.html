@@ -296,6 +296,75 @@
 
 
 
+        /* Smooth Transitions */
+        .customer-dashboard .sidebar {
+            transition: width 0.3s ease, min-width 0.3s ease, max-width 0.3s ease, transform 0.3s ease !important;
+        }
+
+        .customer-header,
+        .customer-dashboard .main-content {
+            transition: left 0.3s ease, width 0.3s ease, margin-left 0.3s ease !important;
+        }
+
+        /* Desktop Mini-Sidebar (Collapsed State) */
+        @media (min-width: 769px) {
+            body.sidebar-collapsed .sidebar {
+                width: 78px !important;
+                min-width: 78px !important;
+                max-width: 78px !important;
+                padding: 18px 10px !important;
+                align-items: center !important;
+            }
+
+            body.sidebar-collapsed .customer-header {
+                left: 78px !important;
+                width: calc(100% - 78px) !important;
+            }
+
+            body.sidebar-collapsed .main-content {
+                margin-left: 78px !important;
+                width: calc(100% - 78px) !important;
+            }
+
+            body.sidebar-collapsed .sidebar-brand-box {
+                padding: 8px 4px !important;
+                width: 54px !important;
+                height: 48px !important;
+                margin-bottom: 20px !important;
+                overflow: hidden !important;
+            }
+
+            body.sidebar-collapsed .sidebar-brand-box img {
+                height: 24px !important;
+                object-position: left center !important;
+            }
+
+            body.sidebar-collapsed .sidebar .nav-link {
+                justify-content: center !important;
+                padding: 12px 0 !important;
+                text-align: center !important;
+            }
+
+            body.sidebar-collapsed .sidebar .nav-link i {
+                font-size: 1.25rem !important;
+                margin-right: 0 !important;
+                margin-left: 0 !important;
+            }
+
+            body.sidebar-collapsed .sidebar .nav-link span {
+                display: none !important;
+            }
+
+            body.sidebar-collapsed .sidebar .mt-auto .nav-link {
+                justify-content: center !important;
+                padding: 12px 0 !important;
+            }
+
+            body.sidebar-collapsed .sidebar .mt-auto .nav-link span {
+                display: none !important;
+            }
+        }
+
         @media (max-width: 768px) {
             .customer-header {
                 left: 0 !important;
@@ -343,6 +412,8 @@
                             Dashboard
                         {% elif request.resolver_match.url_name == 'profile-page' %}
                             Profile
+                        {% elif request.resolver_match.url_name == 'edit-profile-page' %}
+                            Edit Profile
                         {% elif request.resolver_match.url_name == 'inquiries-page' %}
                             Inquiries
                         {% elif request.resolver_match.url_name == 'saved-properties-page' %}
@@ -440,7 +511,7 @@
                     href="{% url 'customer:dashboard' %}">
 
                     <i class="fas fa-tachometer-alt me-2"></i>
-                    Dashboard
+                    <span>Dashboard</span>
 
                 </a>
 
@@ -452,7 +523,7 @@
                     href="{% url 'customer:profile-page' %}">
 
                     <i class="fas fa-user me-2"></i>
-                    Profile
+                    <span>Profile</span>
 
                 </a>
 
@@ -464,7 +535,7 @@
                     href="{% url 'customer:inquiries-page' %}">
 
                     <i class="fas fa-envelope me-2"></i>
-                    Inquiries
+                    <span>Inquiries</span>
 
                 </a>
 
@@ -476,7 +547,7 @@
                     href="{% url 'customer:saved-properties-page' %}">
 
                     <i class="fas fa-heart me-2"></i>
-                    Saved Properties
+                    <span>Saved Properties</span>
 
                 </a>
 
@@ -496,7 +567,7 @@
                     href="{% url 'auth:logout' %}">
 
                     <i class="fas fa-sign-out-alt me-2"></i>
-                    Logout
+                    <span>Logout</span>
 
                 </a>
 
@@ -591,6 +662,8 @@
             if (window.innerWidth <= 768) {
                 const sidebar = document.getElementById('sidebar');
                 if (sidebar) sidebar.classList.toggle('show');
+            } else {
+                document.body.classList.toggle('sidebar-collapsed');
             }
         }
 

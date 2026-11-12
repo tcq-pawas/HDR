@@ -7,245 +7,182 @@
 {% block page_title %}Edit Profile{% endblock %}
 
 {% block extra_css %}
-
 <link rel="stylesheet" href="{% static 'css/customer/customer.css' %}">
-
+<link rel="stylesheet" href="{% static 'css/agent/agent.css' %}">
 {% endblock %}
 
 {% block content %}
-<div style="padding: 0;">
+<div class="settings-container settings-page" style="padding: 0;">
 
-    <!-- Hero Banner -->
-    <div class="edit-hero">
-        <div class="breadcrumb-nav">
-            <a href="{% url 'customer:profile-page' %}"><i class="fas fa-arrow-left me-1"></i> Profile</a>
-            <span>/</span>
-            <span class="current">Edit Profile</span>
+    <!-- Green Header Banner matching Settings -->
+    <div class="settings-page-header">
+        <div class="breadcrumb-nav mb-2" style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.75);">
+            <a href="{% url 'customer:profile-page' %}" style="color: rgba(255, 255, 255, 0.85); text-decoration: none;">
+                <i class="fas fa-arrow-left me-1"></i> Profile
+            </a>
+            <span class="mx-2">/</span>
+            <span style="color: #ffffff; font-weight: 600;">Edit Profile</span>
         </div>
-        <h1>Edit Profile</h1>
-        <p>Update your personal information, profile picture, and account settings.</p>
+        <h1 class="settings-page-title">Edit Profile</h1>
+        <p class="settings-page-subtitle">Update your personal information, profile picture, and account settings.</p>
     </div>
 
-    <!-- Edit Content -->
-    <div class="edit-content">
-        <div class="row g-4">
+    <!-- Main Content Layout (Left: Form, Right: Sidebar Cards) -->
+    <div class="settings-layout">
 
-            <!-- Left Column: Main Form -->
-            <div class="">
+        <!-- Left Column: Main Form -->
+        <div class="settings-card settings-main-card">
+            <h3>Profile Information</h3>
 
-                <!-- Profile Picture Section -->
-                <div class="edit-card">
-                    <div class="edit-card-title">
-                        <div class="title-icon green"><i class="fas fa-camera"></i></div>
-                        Profile Details
-                    </div>
-
-                    <div class="avatar-edit-section">
-                        <div class="avatar-edit-shell">
-                            {% if profile.profile_picture and profile.profile_picture.url %}
-                                <img src="{{ profile.profile_picture.url }}" alt="Profile" id="avatarPreview">
-                            {% else %}
-                                <div class="avatar-fallback" id="avatarFallback">
-                                    {{ profile.user.first_name.0|default:profile.user.username.0|upper }}
-                                </div>
-                            {% endif %}
-                            <label for="profilePictureInput" class="camera-badge" title="Change photo">
-                                <i class="fas fa-camera"></i>
-                            </label>
-                            <input type="file" id="profilePictureInput" accept="image/*" style="display:none;" onchange="previewAvatar(event)">
+            <!-- Profile Picture Section inside main card -->
+            <div class="avatar-edit-section my-3 p-3 rounded" style="background: #f8fafc; border: 1px dashed #cbd5e1; display: flex; align-items: center; gap: 18px;">
+                <div class="avatar-edit-shell">
+                    {% if profile.profile_picture and profile.profile_picture.url %}
+                        <img src="{{ profile.profile_picture.url }}" alt="Profile" id="avatarPreview">
+                    {% else %}
+                        <div class="avatar-fallback" id="avatarFallback">
+                            {{ profile.user.first_name.0|default:profile.user.username.0|upper }}
                         </div>
-                        <div class="avatar-info">
-                            <h4>{{ profile.user.get_full_name|default:profile.user.username }}</h4>
-                            <!-- <p>JPG, PNG or GIF. Max 5MB file size.</p>
-                            <button type="button" class="upload-btn" onclick="document.getElementById('profilePictureInput').click()">
-                                <i class="fas fa-upload"></i> Upload Photo
-                            </button>
-                            {% if profile.profile_picture %}
-                            <button type="button" class="remove-btn" onclick="removeAvatar()">
-                                <i class="fas fa-trash-alt"></i> Remove
-                            </button>
-                            {% endif %} -->
-                        </div>
-                    </div>
+                    {% endif %}
+                    <label for="profilePictureInput" class="camera-badge" title="Change photo">
+                        <i class="fas fa-camera"></i>
+                    </label>
+                    <input type="file" id="profilePictureInput" accept="image/*" style="display:none;" onchange="previewAvatar(event)">
                 </div>
-
-                <!-- Personal Information -->
-                <div class="edit-card">
-                    <div class="edit-card-title">
-                        <div class="title-icon green"><i class="fas fa-user"></i></div>
-                        Personal Information
-                    </div>
-
-                    <form id="editProfileForm">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>First Name <span class="required">*</span></label>
-                                    <input type="text" name="first_name" class="form-input" value="{{ profile.user.first_name|default:'' }}" placeholder="Enter first name">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Last Name</label>
-                                    <input type="text" name="last_name" class="form-input" value="{{ profile.user.last_name|default:'' }}" placeholder="Enter last name">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Email Address</label>
-                                    <input type="email" class="form-input disabled" value="{{ profile.user.email }}" disabled>
-                                    <div class="form-hint">Email cannot be changed. Contact support for assistance.</div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Username</label>
-                                    <input type="text" class="form-input disabled" value="{{ profile.user.username }}" disabled>
-                                    <div class="form-hint">Username cannot be changed.</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Phone Number</label>
-                                    <input type="tel" name="phone" class="form-input" value="{{ profile.phone|default:'' }}" placeholder="Enter phone number">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Preferred Contact Method</label>
-                                    <select name="preferred_contact_method" class="form-input">
-                                        <option value="email" {% if profile.preferred_contact_method == 'email' %}selected{% endif %}>Email</option>
-                                        <option value="phone" {% if profile.preferred_contact_method == 'phone' %}selected{% endif %}>Phone</option>
-                                        <option value="both" {% if profile.preferred_contact_method == 'both' %}selected{% endif %}>Both</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label>Address</label>
-                                    <input type="text" name="address" class="form-input" value="{{ profile.address|default:'' }}" placeholder="Enter your full address">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="action-bar">
-                            <a href="{% url 'customer:profile-page' %}" class="btn-cancel">
-                                <i class="fas fa-times"></i> Cancel
-                            </a>
-                            <button type="submit" class="btn-save-profile" id="saveProfileBtn">
-                                <span class="btn-text"><i class="fas fa-save"></i> Save Changes</span>
-                                <span class="spinner"></span>
-                            </button>
-                        </div>
-                    </form>
+                <div class="avatar-info">
+                    <h4 class="mb-1" style="font-weight: 700; color: #0f172a;">{{ profile.user.get_full_name|default:profile.user.username }}</h4>
+                    <span style="font-size: 12px; color: #64748b;">Click the camera icon to upload a new profile picture.</span>
                 </div>
-
             </div>
 
-            <!-- Right Column: Security + Info -->
-            <!-- <div class="col-lg-4">
-
-                Change Password
-                <div class="edit-card">
-                    <div class="edit-card-title">
-                        <div class="title-icon blue"><i class="fas fa-lock"></i></div>
-                        Security
+            <form id="editProfileForm" class="settings-form">
+                <h4 class="settings-section-title">Basic Details</h4>
+                <div class="settings-form-grid">
+                    <div class="settings-field">
+                        <label class="form-label">First Name <span class="text-danger">*</span></label>
+                        <input type="text" name="first_name" class="form-control" value="{{ profile.user.first_name|default:'' }}" placeholder="Enter first name" required>
                     </div>
-
-                    <div class="password-toggle" id="passwordToggle" onclick="togglePassword()">
-                        <i class="fas fa-key"></i>
-                        <span class="toggle-text">Change Password</span>
-                        <i class="fas fa-chevron-down toggle-arrow"></i>
+                    <div class="settings-field">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" name="last_name" class="form-control" value="{{ profile.user.last_name|default:'' }}" placeholder="Enter last name">
                     </div>
-
-                    <div class="password-fields" id="passwordFields">
-                        <div class="password-fields-inner">
-                            <form id="changePasswordForm">
-                                <div class="form-group">
-                                    <label>Current Password <span class="required">*</span></label>
-                                    <input type="password" name="current_password" class="form-input" placeholder="Enter current password">
-                                </div>
-                                <div class="form-group">
-                                    <label>New Password <span class="required">*</span></label>
-                                    <input type="password" name="new_password" class="form-input" placeholder="Enter new password">
-                                    <div class="form-hint">Must be at least 8 characters long.</div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Confirm New Password <span class="required">*</span></label>
-                                    <input type="password" name="confirm_password" class="form-input" placeholder="Confirm new password">
-                                </div>
-                                <button type="submit" class="btn-save-profile" style="width:100%; justify-content:center;" id="savePasswordBtn">
-                                    <span class="btn-text"><i class="fas fa-shield-alt"></i> Update Password</span>
-                                    <span class="spinner"></span>
-                                </button>
-                            </form>
-                        </div>
+                    <div class="settings-field">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" value="{{ profile.user.email }}" disabled style="background:#f1f5f9; cursor:not-allowed;">
+                        <small class="text-muted" style="font-size: 11px;">Email cannot be changed directly.</small>
+                    </div>
+                    <div class="settings-field">
+                        <label class="form-label">Phone</label>
+                        <input type="tel" name="phone" class="form-control" value="{{ profile.phone|default:'' }}" placeholder="Enter phone number">
+                    </div>
+                    <div class="settings-field">
+                        <label class="form-label">Username</label>
+                        <input type="text" class="form-control" value="{{ profile.user.username }}" disabled style="background:#f1f5f9; cursor:not-allowed;">
+                    </div>
+                    <div class="settings-field">
+                        <label class="form-label">Preferred Contact Method</label>
+                        <select name="preferred_contact_method" class="form-control form-select">
+                            <option value="email" {% if profile.preferred_contact_method == 'email' %}selected{% endif %}>Email</option>
+                            <option value="phone" {% if profile.preferred_contact_method == 'phone' %}selected{% endif %}>Phone</option>
+                            <option value="both" {% if profile.preferred_contact_method == 'both' %}selected{% endif %}>Both</option>
+                        </select>
                     </div>
                 </div>
 
-                <!-- Account Info -->
-                <!-- <div class="edit-card">
-                    <div class="edit-card-title">
-                        <div class="title-icon purple"><i class="fas fa-info-circle"></i></div>
-                        Account Info
+                <h4 class="settings-section-title">Contact & Location</h4>
+                <div class="settings-form-grid">
+                    <div class="settings-field settings-field--full">
+                        <label class="form-label">Address</label>
+                        <input type="text" name="address" class="form-control" value="{{ profile.address|default:'' }}" placeholder="Enter your full address">
                     </div>
-
-                    <div style="display:flex; flex-direction:column; gap:14px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:rgba(0,69,38,0.03); border-radius:12px;">
-                            <span style="font-size:13px; color:rgba(11,18,32,0.55); font-weight:500;">Member Since</span>
-                            <span style="font-size:13px; font-weight:600; color:#0B1220;">{{ profile.created_at|date:'M d, Y' }}</span>
-                        </div>
-                        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:rgba(59,130,246,0.03); border-radius:12px;">
-                            <span style="font-size:13px; color:rgba(11,18,32,0.55); font-weight:500;">Last Login</span>
-                            <span style="font-size:13px; font-weight:600; color:#0B1220;">{% if user.last_login %}{{ user.last_login|naturaltime }}{% else %}N/A{% endif %}</span>
-                        </div>
-                        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:rgba(16,185,129,0.03); border-radius:12px;">
-                            <span style="font-size:13px; color:rgba(11,18,32,0.55); font-weight:500;">Status</span>
-                            <span style="display:inline-flex; align-items:center; gap:5px; font-size:13px; font-weight:600; color:#059669;">
-                                <i class="fas fa-check-circle" style="font-size:11px;"></i>
-                                {% if user.is_active %}Active{% else %}Inactive{% endif %}
-                            </span>
-                        </div>
-                        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:rgba(139,92,246,0.03); border-radius:12px;">
-                            <span style="font-size:13px; color:rgba(11,18,32,0.55); font-weight:500;">Last Updated</span>
-                            <span style="font-size:13px; font-weight:600; color:#0B1220;">{{ profile.updated_at|naturaltime }}</span>
-                        </div>
-                    </div>
-                </div> -->
-
-                <!-- Quick Tips -->
-                <!-- <div class="edit-card" style="border-left: 3px solid #F59E0B;">
-                    <div class="edit-card-title">
-                        <div class="title-icon amber"><i class="fas fa-lightbulb"></i></div>
-                        Quick Tips
-                    </div>
-                    <ul style="margin:0; padding-left:18px; font-size:13px; color:rgba(11,18,32,0.65); line-height:1.8;">
-                        <li>Keep your phone number updated to receive property alerts</li>
-                        <li>Use a clear, professional photo for your profile</li>
-                        <li>Set your preferred contact method for agent communication</li>
-                        <li>Change your password regularly for better security</li>
-                    </ul>
                 </div>
 
-            </div> -->
+                <div class="settings-form-footer">
+                    <a href="{% url 'customer:profile-page' %}" class="btn btn-outline-secondary me-2" style="border-radius: 8px; padding: 9px 20px; font-weight: 500;">
+                        <i class="fas fa-times me-1"></i> Cancel
+                    </a>
+                    <button type="submit" class="settings-btn settings-save-btn" id="saveProfileBtn">
+                        <span class="btn-text"><i class="fas fa-save me-1"></i> Save Changes</span>
+                        <span class="spinner"></span>
+                    </button>
+                </div>
+            </form>
         </div>
+
+        <!-- Right Column / Aside -->
+        <aside class="settings-side">
+
+            <!-- Security & Password Card -->
+            <div class="settings-card mb-3">
+                <h3 style="display:flex;align-items:center;gap:.5rem; font-size:1.1rem; margin-bottom: 1rem;">
+                    <i class="fas fa-shield-alt text-success"></i> Security
+                </h3>
+
+                <div class="password-toggle" id="passwordToggle" onclick="togglePassword()" style="cursor: pointer; padding: 10px 14px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; align-items: center; justify-content: space-between;">
+                    <span style="font-weight: 600; font-size: 13px; color: #1e293b;"><i class="fas fa-key me-2 text-warning"></i> Change Password</span>
+                    <i class="fas fa-chevron-down toggle-arrow"></i>
+                </div>
+
+                <div class="password-fields" id="passwordFields" style="margin-top: 12px;">
+                    <div class="password-fields-inner">
+                        <form id="changePasswordForm">
+                            <div class="mb-3">
+                                <label class="form-label" style="font-size: 12px; font-weight: 600;">Current Password <span class="text-danger">*</span></label>
+                                <input type="password" name="current_password" class="form-control" placeholder="Enter current password" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" style="font-size: 12px; font-weight: 600;">New Password <span class="text-danger">*</span></label>
+                                <input type="password" name="new_password" class="form-control" placeholder="Enter new password" required>
+                                <small class="text-muted" style="font-size: 11px;">Must be at least 8 characters long.</small>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" style="font-size: 12px; font-weight: 600;">Confirm New Password <span class="text-danger">*</span></label>
+                                <input type="password" name="confirm_password" class="form-control" placeholder="Confirm new password" required>
+                            </div>
+                            <button type="submit" class="settings-btn" style="width:100%; justify-content:center; border-radius: 8px;" id="savePasswordBtn">
+                                <span class="btn-text"><i class="fas fa-lock me-1"></i> Update Password</span>
+                                <span class="spinner"></span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Details Card -->
+            <div class="settings-card">
+                <h3 style="display:flex;align-items:center;gap:.5rem; font-size:1.1rem; margin-bottom: 1rem;">
+                    <i class="fas fa-info-circle text-primary"></i> Account Info
+                </h3>
+
+                <div style="display:flex; flex-direction:column; gap:10px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:9px 12px; background:#f8fafc; border-radius:8px; border: 1px solid #f1f5f9;">
+                        <span style="font-size:13px; color:#64748b; font-weight:500;">Member Since</span>
+                        <span style="font-size:13px; font-weight:600; color:#0f172a;">{{ profile.created_at|date:'M d, Y' }}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:9px 12px; background:#f8fafc; border-radius:8px; border: 1px solid #f1f5f9;">
+                        <span style="font-size:13px; color:#64748b; font-weight:500;">Last Login</span>
+                        <span style="font-size:13px; font-weight:600; color:#0f172a;">{% if user.last_login %}{{ user.last_login|naturaltime }}{% else %}N/A{% endif %}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:9px 12px; background:#f8fafc; border-radius:8px; border: 1px solid #f1f5f9;">
+                        <span style="font-size:13px; color:#64748b; font-weight:500;">Status</span>
+                        <span style="display:inline-flex; align-items:center; gap:5px; font-size:13px; font-weight:600; color:#059669;">
+                            <i class="fas fa-check-circle" style="font-size:11px;"></i>
+                            {% if user.is_active %}Active{% else %}Inactive{% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+        </aside>
+
     </div>
 </div>
 
 <!-- Toast Notification -->
-<!-- <div class="toast-notification" id="toastNotification">
+<div class="toast-notification" id="toastNotification">
     <i class="fas fa-check-circle"></i>
     <span id="toastMessage">Success!</span>
-</div> -->
+</div>
 {% endblock %}
 
 {% block extra_js %}
