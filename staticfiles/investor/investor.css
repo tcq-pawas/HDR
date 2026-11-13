@@ -48,28 +48,17 @@ body {
 }
 
 .sidebar {
-<<<<<<<<< Temporary merge branch 1
-    width: 280px;
-    background: linear-gradient(180deg, #005427 0%, #003d1c 100%);
-    min-height: 100vh;
-    height: 100vh;
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 1000;
-    transition: transform 0.3s ease;
-    display: flex;
-    flex-direction: column;
-=========
-  width: 280px;
-  background: linear-gradient(180deg, #005427 0%, #003d1c 100%);
+  width: 220px;
+  background: linear-gradient(180deg, #022C22 0%, #064E3B 50%, #065F46 100%);
   min-height: 100vh;
+  height: 100vh;
   position: fixed;
   left: 0;
   top: 0;
   z-index: 1000;
   transition: transform 0.3s ease;
->>>>>>>>> Temporary merge branch 2
+  display: flex;
+  flex-direction: column;
 }
 
 .main-content {
@@ -260,13 +249,8 @@ body.investor-dashboard {
 
 /* Analytics Cards */
 .analytics-card {
-<<<<<<<<< Temporary merge branch 1
-    height: 400px;
-    padding: 24px !important;
-=========
   min-height: 390px;
   padding: 24px !important;
->>>>>>>>> Temporary merge branch 2
 }
 
 .analytics-header {
@@ -302,25 +286,12 @@ body.investor-dashboard {
 
 /* ROI Card */
 .roi-card {
-<<<<<<<<< Temporary merge branch 1
-    height: 400px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 24px !important;
-    border: none;
-    border-radius: 12px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-    transition: transform 0.2s;
-=========
   min-height: 140px;
   padding: 24px !important;
   border: none;
   border-radius: 12px;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
   transition: transform 0.2s;
->>>>>>>>> Temporary merge branch 2
 }
 
 .roi-card:hover {
@@ -551,7 +522,6 @@ body.investor-dashboard {
   min-width: 0;
 }
 
-<<<<<<< HEAD
 /* Summary cards reuse the dashboard .kpi-card look:
    label top-left, value below, icon circle bottom-right.
    (They no longer use .roi-card, which is the centered dashboard ROI Summary box.) */
@@ -567,7 +537,6 @@ body.investor-dashboard {
     overflow-wrap: anywhere;
 }
 
-=======
 .roi-data-page .roi-summary-cards {
   max-width: none;
   row-gap: 18px;
@@ -607,8 +576,6 @@ body.investor-dashboard {
 .roi-data-page .roi-card i {
   flex: 0 0 auto;
 }
-
->>>>>>> c6f51b16d7d1359e33209f5f2da0fdb5f09677e3
 .roi-data-page .table-responsive {
   border-radius: 8px;
   -webkit-overflow-scrolling: touch;
@@ -650,8 +617,6 @@ body.investor-dashboard {
   overflow-wrap: anywhere;
 }
 
-<<<<<<< HEAD
-=======
 /* ROI Summary Cards - 2x2 grid at medium widths */
 @media (max-width: 1250px) {
   .roi-data-page .roi-summary-cards {
@@ -666,8 +631,6 @@ body.investor-dashboard {
     min-width: 0;
   }
 }
-
->>>>>>> c6f51b16d7d1359e33209f5f2da0fdb5f09677e3
 /* Stack chart and detail columns before the fixed sidebar makes them cramped */
 @media (max-width: 1100px) {
   .roi-data-page > .row:not(.roi-summary-cards) {
@@ -699,11 +662,6 @@ body.investor-dashboard {
     padding: 1rem;
   }
 
-<<<<<<< HEAD
-    .roi-data-page .chart-container {
-        height: 250px;
-    }
-=======
   .roi-data-page .roi-summary-cards {
     gap: 14px;
     margin-bottom: 1.25rem !important;
@@ -716,15 +674,9 @@ body.investor-dashboard {
   .roi-data-page .chart-container {
     height: 250px;
   }
->>>>>>> c6f51b16d7d1359e33209f5f2da0fdb5f09677e3
 }
 
 @media (max-width: 600px) {
-<<<<<<< HEAD
-    .roi-data-page .chart-container {
-        height: 230px;
-    }
-=======
   .roi-data-page .roi-summary-cards {
     grid-template-columns: 1fr;
   }
@@ -732,7 +684,6 @@ body.investor-dashboard {
   .roi-data-page .chart-container {
     height: 230px;
   }
->>>>>>> c6f51b16d7d1359e33209f5f2da0fdb5f09677e3
 
   .roi-data-page .row.mt-4 .d-flex.justify-content-between {
     align-items: flex-start !important;

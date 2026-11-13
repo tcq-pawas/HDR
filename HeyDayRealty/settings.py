@@ -97,7 +97,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'Apps.PublicPage.context_processors.seo_defaults',
-            ],
+                'Apps.Administration.context_processors.admin_notifications_processor',
+                 ],
         },
     },
 ]
