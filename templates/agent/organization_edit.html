@@ -10,108 +10,445 @@
 <span>Edit</span>
 {% endblock %}
 
+{% block extra_css %}
+<style>
+    .edit-org-container {
+        max-width: 860px;
+        margin: 0 auto;
+        padding-bottom: 2.5rem;
+    }
+
+    .edit-org-hero {
+        background: linear-gradient(135deg, #005427 0%, #007033 60%, #059669 100%);
+        border-radius: 16px;
+        padding: 1.5rem 2rem;
+        color: #fff;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 15px rgba(0, 84, 39, 0.15);
+    }
+
+    .edit-org-hero::before {
+        content: '';
+        position: absolute;
+        top: -40px;
+        right: -40px;
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        pointer-events: none;
+    }
+
+    .edit-org-hero h4 {
+        font-weight: 700;
+        font-size: 1.35rem;
+        color: #fff;
+        margin: 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .edit-org-hero p {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 13.5px;
+        margin: 4px 0 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .btn-back-glass {
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        backdrop-filter: blur(6px);
+        transition: all 0.2s ease;
+        position: relative;
+        z-index: 1;
+    }
+
+    .btn-back-glass:hover {
+        background: rgba(255, 255, 255, 0.28);
+        color: #fff;
+        transform: translateY(-1px);
+    }
+
+    .edit-card {
+        background: #ffffff;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+        padding: 2.2rem;
+    }
+
+    .form-section-title {
+        font-size: 0.92rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #005427;
+        margin-bottom: 1.25rem;
+        padding-bottom: 0.6rem;
+        border-bottom: 1.5px solid #f1f5f9;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .form-grid-2 {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        column-gap: 24px !important;
+        row-gap: 16px !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .form-grid-full {
+        grid-column: 1 / -1 !important;
+    }
+
+    @media (max-width: 640px) {
+        .form-grid-2 {
+            grid-template-columns: 1fr !important;
+        }
+    }
+
+    .custom-form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .custom-form-label {
+        font-weight: 600;
+        font-size: 13px;
+        color: #334155;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .custom-input-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .custom-input-icon {
+        position: absolute;
+        left: 14px;
+        color: #94a3b8;
+        font-size: 1rem;
+        pointer-events: none;
+        transition: color 0.2s ease;
+        z-index: 2;
+    }
+
+    .custom-input-wrap .form-control {
+        border-radius: 10px;
+        border: 1.5px solid #cbd5e1;
+        padding: 10px 14px 10px 42px;
+        font-size: 14px;
+        color: #1e293b;
+        background-color: #f8fafc;
+        transition: all 0.2s ease;
+        width: 100%;
+    }
+
+    .custom-input-wrap .form-control:focus {
+        background-color: #ffffff;
+        border-color: #005427;
+        box-shadow: 0 0 0 3.5px rgba(0, 84, 39, 0.12);
+        outline: none;
+    }
+
+    .custom-input-wrap:focus-within .custom-input-icon {
+        color: #005427;
+    }
+
+    .logo-upload-box {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        padding: 14px 18px;
+        border: 1.5px dashed #cbd5e1;
+        border-radius: 12px;
+        background: #f8fafc;
+        transition: border-color 0.2s ease;
+    }
+
+    .logo-upload-box:hover {
+        border-color: #005427;
+    }
+
+    .logo-preview-avatar {
+        width: 58px;
+        height: 58px;
+        min-width: 58px;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        background: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        color: #94a3b8;
+        font-size: 1.5rem;
+    }
+
+    .logo-preview-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .actions-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #f1f5f9;
+    }
+
+    .btn-save-org {
+        background: linear-gradient(135deg, #005427, #007033);
+        color: #fff;
+        border: none;
+        padding: 11px 26px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 14px rgba(0, 84, 39, 0.25);
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+    .btn-save-org:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(0, 84, 39, 0.35);
+        color: #fff;
+        background: linear-gradient(135deg, #004520, #005c2a);
+    }
+
+    .btn-cancel {
+        background: #f1f5f9;
+        color: #475569;
+        border: 1px solid #e2e8f0;
+        padding: 11px 20px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        transition: all 0.2s ease;
+    }
+
+    .btn-cancel:hover {
+        background: #e2e8f0;
+        color: #1e293b;
+    }
+
+    .field-error {
+        color: #dc2626;
+        font-size: 12px;
+        margin-top: 4px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
 
-<div class="edit-org-header d-flex justify-content-between align-items-center flex-wrap gap-2">
-    <div>
-        <h4 class="mb-1 text-white fw-bold"><i class="bi bi-pencil-square me-2"></i>Edit Organization Details</h4>
-        <p class="mb-0 text-white-50 small">Update profile and contact information for {{ organization.organization_name }}</p>
+<div class="edit-org-container">
+    <!-- Header Banner -->
+    <div class="edit-org-hero d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+            <h4><i class="bi bi-pencil-square me-2"></i>Edit Organization Details</h4>
+            <p>Update profile and contact information for <strong>{{ organization.organization_name }}</strong></p>
+        </div>
+        <a href="{% url 'organization:detail' organization.id %}" class="btn-back-glass">
+            <i class="bi bi-arrow-left"></i> Cancel
+        </a>
     </div>
-    <a href="{% url 'organization:detail' organization.id %}" class="btn btn-sm btn-outline-light">
-        <i class="bi bi-arrow-left"></i> Cancel
-    </a>
-</div>
 
-<div class="edit-org-card">
-    <form method="post" enctype="multipart/form-data" novalidate>
-        {% csrf_token %}
+    <!-- Main Form Card -->
+    <div class="edit-card">
+        <form method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
 
-        <!-- Org Name -->
-        <div class="mb-3">
-            <label class="form-label">Organization Name <span class="text-danger">*</span></label>
-            <input type="text" name="organization_name" class="form-control"
-                   value="{{ organization.organization_name }}" required>
-            {% if errors.organization_name %}
-                <div class="text-danger small mt-1">{{ errors.organization_name }}</div>
-            {% endif %}
-        </div>
-
-        <!-- Row: Email & Phone -->
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Email Address <span class="text-danger">*</span></label>
-                <input type="email" name="email" class="form-control"
-                       value="{{ organization.email|default:'' }}">
-                {% if errors.email %}
-                    <div class="text-danger small mt-1">{{ errors.email }}</div>
-                {% endif %}
+            <!-- SECTION 1: General Info -->
+            <div class="form-section-title">
+                <i class="bi bi-building"></i> General Information
             </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Phone Number <span class="text-danger">*</span></label>
-                <input type="text" name="phone" class="form-control"
-                       value="{{ organization.phone|default:'' }}">
-                {% if errors.phone %}
-                    <div class="text-danger small mt-1">{{ errors.phone }}</div>
-                {% endif %}
-            </div>
-        </div>
 
-        <!-- Website -->
-        <div class="mb-3">
-            <label class="form-label">Website URL</label>
-            <input type="url" name="website" class="form-control"
-                   value="{{ organization.website|default:'' }}" placeholder="https://">
-        </div>
+            <div class="form-grid-2">
+                <!-- Org Name -->
+                <div class="custom-form-group">
+                    <label class="custom-form-label" for="id_org_name">
+                        Organization Name <span class="text-danger">*</span>
+                    </label>
+                    <div class="custom-input-wrap">
+                        <i class="bi bi-building custom-input-icon"></i>
+                        <input type="text" id="id_org_name" name="organization_name" class="form-control"
+                               value="{{ organization.organization_name }}" placeholder="e.g. Acme Realty" required>
+                    </div>
+                    {% if errors.organization_name %}
+                        <div class="field-error"><i class="bi bi-exclamation-circle"></i> {{ errors.organization_name }}</div>
+                    {% endif %}
+                </div>
 
-        <!-- Address -->
-        <div class="mb-3">
-            <label class="form-label">Street Address</label>
-            <input type="text" name="address" class="form-control"
-                   value="{{ organization.address|default:'' }}">
-        </div>
+                <!-- Website -->
+                <div class="custom-form-group">
+                    <label class="custom-form-label" for="id_website">
+                        Website URL
+                    </label>
+                    <div class="custom-input-wrap">
+                        <i class="bi bi-globe custom-input-icon"></i>
+                        <input type="url" id="id_website" name="website" class="form-control"
+                               value="{{ organization.website|default:'' }}" placeholder="https://example.com">
+                    </div>
+                </div>
 
-        <!-- Row: City, State, Zip, Country -->
-        <div class="row">
-            <div class="col-md-3 mb-3">
-                <label class="form-label">City</label>
-                <input type="text" name="city" class="form-control"
-                       value="{{ organization.city|default:'' }}">
-            </div>
-            <div class="col-md-3 mb-3">
-                <label class="form-label">State</label>
-                <input type="text" name="state" class="form-control"
-                       value="{{ organization.state|default:'' }}">
-            </div>
-            <div class="col-md-3 mb-3">
-                <label class="form-label">Zip Code</label>
-                <input type="text" name="zip_code" class="form-control"
-                       value="{{ organization.zip_code|default:'' }}">
-            </div>
-            <div class="col-md-3 mb-3">
-                <label class="form-label">Country</label>
-                <input type="text" name="country" class="form-control"
-                       value="{{ organization.country|default:'' }}">
-            </div>
-        </div>
+                <!-- Email -->
+                <div class="custom-form-group">
+                    <label class="custom-form-label" for="id_email">
+                        Email Address <span class="text-danger">*</span>
+                    </label>
+                    <div class="custom-input-wrap">
+                        <i class="bi bi-envelope custom-input-icon"></i>
+                        <input type="email" id="id_email" name="email" class="form-control"
+                               value="{{ organization.email|default:'' }}" placeholder="info@example.com" required>
+                    </div>
+                    {% if errors.email %}
+                        <div class="field-error"><i class="bi bi-exclamation-circle"></i> {{ errors.email }}</div>
+                    {% endif %}
+                </div>
 
-        <!-- Logo Upload -->
-        <div class="mb-4">
-            <label class="form-label">Organization Logo</label>
-            <input type="file" name="logo" class="form-control" accept="image/*">
-            {% if organization.logo and organization.logo.name %}
-                <div class="mt-2 small text-muted">Current Logo: <a href="{{ organization.logo.url }}" target="_blank">View File</a></div>
-            {% endif %}
-        </div>
+                <!-- Phone -->
+                <div class="custom-form-group">
+                    <label class="custom-form-label" for="id_phone">
+                        Phone Number <span class="text-danger">*</span>
+                    </label>
+                    <div class="custom-input-wrap">
+                        <i class="bi bi-telephone custom-input-icon"></i>
+                        <input type="text" id="id_phone" name="phone" class="form-control"
+                               value="{{ organization.phone|default:'' }}" placeholder="10-digit phone number" required>
+                    </div>
+                    {% if errors.phone %}
+                        <div class="field-error"><i class="bi bi-exclamation-circle"></i> {{ errors.phone }}</div>
+                    {% endif %}
+                </div>
+            </div>
 
-        <div class="d-flex gap-2">
-            <button type="submit" class="btn-save-org">
-                <i class="bi bi-check-circle me-1"></i> Save Changes
-            </button>
-            <a href="{% url 'organization:detail' organization.id %}" class="btn btn-outline-secondary px-4">
-                Cancel
-            </a>
-        </div>
-    </form>
+            <!-- SECTION 2: Address Information -->
+            <div class="form-section-title mt-4">
+                <i class="bi bi-geo-alt"></i> Address Information
+            </div>
+
+            <div class="form-grid-2">
+                <!-- Street Address (Full Width in 2-col) -->
+                <div class="custom-form-group form-grid-full">
+                    <label class="custom-form-label" for="id_address">Street Address</label>
+                    <div class="custom-input-wrap">
+                        <i class="bi bi-signpost-2 custom-input-icon"></i>
+                        <input type="text" id="id_address" name="address" class="form-control"
+                               value="{{ organization.address|default:'' }}" placeholder="Street name, suite, floor, etc.">
+                    </div>
+                </div>
+
+                <!-- City -->
+                <div class="custom-form-group">
+                    <label class="custom-form-label" for="id_city">City</label>
+                    <div class="custom-input-wrap">
+                        <i class="bi bi-buildings custom-input-icon"></i>
+                        <input type="text" id="id_city" name="city" class="form-control"
+                               value="{{ organization.city|default:'' }}" placeholder="City">
+                    </div>
+                </div>
+
+                <!-- State -->
+                <div class="custom-form-group">
+                    <label class="custom-form-label" for="id_state">State</label>
+                    <div class="custom-input-wrap">
+                        <i class="bi bi-map custom-input-icon"></i>
+                        <input type="text" id="id_state" name="state" class="form-control"
+                               value="{{ organization.state|default:'' }}" placeholder="State">
+                    </div>
+                </div>
+
+                <!-- Zip Code -->
+                <div class="custom-form-group">
+                    <label class="custom-form-label" for="id_zip_code">Zip / Postal Code</label>
+                    <div class="custom-input-wrap">
+                        <i class="bi bi-pin-map custom-input-icon"></i>
+                        <input type="text" id="id_zip_code" name="zip_code" class="form-control"
+                               value="{{ organization.zip_code|default:'' }}" placeholder="Zip Code">
+                    </div>
+                </div>
+
+                <!-- Country -->
+                <div class="custom-form-group">
+                    <label class="custom-form-label" for="id_country">Country</label>
+                    <div class="custom-input-wrap">
+                        <i class="bi bi-flag custom-input-icon"></i>
+                        <input type="text" id="id_country" name="country" class="form-control"
+                               value="{{ organization.country|default:'' }}" placeholder="Country">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 3: Organization Logo -->
+            <div class="form-section-title mt-4">
+                <i class="bi bi-image"></i> Organization Logo
+            </div>
+
+            <div class="custom-form-group mb-3">
+                <div class="logo-upload-box">
+                    <div class="logo-preview-avatar">
+                        {% if organization.logo and organization.logo.name %}
+                            <img src="{{ organization.logo.url }}" alt="{{ organization.organization_name }}">
+                        {% else %}
+                            <i class="bi bi-building"></i>
+                        {% endif %}
+                    </div>
+                    <div class="flex-grow-1">
+                        <input type="file" name="logo" class="form-control" accept="image/*">
+                        {% if organization.logo and organization.logo.name %}
+                            <div class="mt-1 small text-muted">
+                                Current: <a href="{{ organization.logo.url }}" target="_blank" class="text-success fw-medium">View File</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions Row -->
+            <div class="actions-row">
+                <button type="submit" class="btn-save-org">
+                    <i class="bi bi-check-circle-fill"></i> Save Changes
+                </button>
+                <a href="{% url 'organization:detail' organization.id %}" class="btn-cancel">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
 </div>
 {% endblock %}
