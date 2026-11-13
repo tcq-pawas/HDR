@@ -236,6 +236,106 @@
         transform: scale(1.05);
     }
 
+    .lightbox-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.55);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        color: white;
+        font-size: 1.4rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        transition: background 0.2s ease, transform 0.2s ease;
+        touch-action: manipulation;
+    }
+
+    .lightbox-nav:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateY(-50%) scale(1.08);
+    }
+
+    .lightbox-nav:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+
+    .lightbox-nav.prev {
+        left: 16px;
+    }
+
+    .lightbox-nav.next {
+        right: 16px;
+    }
+
+    .lightbox-counter {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: white;
+        background: rgba(0, 0, 0, 0.55);
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        z-index: 2;
+        pointer-events: none;
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+    }
+
+    .lightbox-image-wrap img {
+        transition: opacity 0.2s ease;
+    }
+
+    @media (max-width: 768px) {
+        .lightbox-overlay {
+            padding: 8px;
+        }
+
+        .lightbox-image-wrap img {
+            max-width: 96vw;
+            max-height: 78vh;
+        }
+
+        .lightbox-nav {
+            width: 44px;
+            height: 44px;
+            font-size: 1.2rem;
+        }
+
+        .lightbox-nav.prev {
+            left: 8px;
+        }
+
+        .lightbox-nav.next {
+            right: 8px;
+        }
+
+        .lightbox-close {
+            top: 12px;
+            right: 12px;
+            width: 40px;
+            height: 40px;
+        }
+
+        .lightbox-counter {
+            bottom: 12px;
+            font-size: 0.78rem;
+            padding: 5px 12px;
+        }
+    }
+
     .posted-badge {
         position: absolute;
         top: 16px;
@@ -1457,25 +1557,75 @@
 
 <!-- Image Lightbox -->
 <div class="lightbox-overlay" id="imageLightbox" role="dialog" aria-modal="true" aria-label="Property image viewer">
-    <button type="button" class="lightbox-close" onclick="closeLightbox()" aria-label="Close image viewer">
+    <button type="button" class="lightbox-close" onclick="closeLightbox()" aria-label="Close image viewer" title="Close (Esc)">
         <i class="bi bi-x-lg"></i>
+    </button>
+    <button type="button" class="lightbox-nav prev" id="lightboxPrev" onclick="lightboxPrev()" aria-label="Previous image" title="Previous image (←)">
+        <i class="bi bi-chevron-left"></i>
     </button>
     <div class="lightbox-image-wrap">
         <img src="" alt="{{ property.title }}" id="lightboxImage">
     </div>
+    <button type="button" class="lightbox-nav next" id="lightboxNext" onclick="lightboxNext()" aria-label="Next image" title="Next image (→)">
+        <i class="bi bi-chevron-right"></i>
+    </button>
+    <div class="lightbox-counter" id="lightboxCounter" aria-live="polite"></div>
 </div>
 
 <script>
     let currentImageIndex = 0;
+    let lightboxImages = [];
+    let lightboxIndex = 0;
 
     const lightbox = document.getElementById('imageLightbox');
     const lightboxImage = document.getElementById('lightboxImage');
+    const lightboxPrevBtn = document.getElementById('lightboxPrev');
+    const lightboxNextBtn = document.getElementById('lightboxNext');
+    const lightboxCounter = document.getElementById('lightboxCounter');
 
-    function openLightbox(src) {
-        if (!lightbox || !lightboxImage || !src) return;
-        lightboxImage.src = src;
+    function getGalleryImages() {
+        return Array.from(document.querySelectorAll('img.thumbnail'))
+            .map(t => t.src)
+            .filter(Boolean);
+    }
+
+    function setLightboxImage() {
+        if (!lightboxImage || !lightboxImages.length) return;
+        const hasMultiple = lightboxImages.length > 1;
+
+        lightboxImage.style.opacity = '0';
+        setTimeout(() => {
+            lightboxImage.src = lightboxImages[lightboxIndex];
+            lightboxImage.style.opacity = '1';
+        }, 120);
+
+        if (lightboxPrevBtn) lightboxPrevBtn.style.display = hasMultiple ? 'flex' : 'none';
+        if (lightboxNextBtn) lightboxNextBtn.style.display = hasMultiple ? 'flex' : 'none';
+        if (lightboxCounter) {
+            lightboxCounter.textContent = hasMultiple
+                ? (lightboxIndex + 1) + ' / ' + lightboxImages.length
+                : '';
+            lightboxCounter.style.display = hasMultiple ? 'block' : 'none';
+        }
+    }
+
+    function openLightbox(src, index) {
+        if (!lightbox || !lightboxImage) return;
+        lightboxImages = getGalleryImages();
+        if (!lightboxImages.length && src) lightboxImages = [src];
+        if (!lightboxImages.length) return;
+
+        let idx = (index !== undefined && index !== null)
+            ? parseInt(index)
+            : lightboxImages.indexOf(src);
+        if (isNaN(idx) || idx < 0 || idx >= lightboxImages.length) idx = 0;
+        lightboxIndex = idx;
+
+        lightboxImage.style.opacity = '1';
+        lightboxImage.src = lightboxImages[lightboxIndex];
         lightbox.classList.add('open');
         document.body.style.overflow = 'hidden';
+        setLightboxImage();
     }
 
     function closeLightbox() {
@@ -1484,10 +1634,39 @@
         document.body.style.overflow = '';
     }
 
+    function lightboxNext() {
+        if (lightboxImages.length > 1) {
+            lightboxIndex = (lightboxIndex + 1) % lightboxImages.length;
+            setLightboxImage();
+        }
+    }
+
+    function lightboxPrev() {
+        if (lightboxImages.length > 1) {
+            lightboxIndex = (lightboxIndex - 1 + lightboxImages.length) % lightboxImages.length;
+            setLightboxImage();
+        }
+    }
+
     if (lightbox) {
         lightbox.addEventListener('click', function(e) {
             if (e.target === lightbox) closeLightbox();
         });
+
+        let touchStartX = 0;
+        let touchStartY = 0;
+        lightbox.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+        }, { passive: true });
+        lightbox.addEventListener('touchend', function(e) {
+            if (e.target.closest('button')) return;
+            const dx = e.changedTouches[0].screenX - touchStartX;
+            const dy = e.changedTouches[0].screenY - touchStartY;
+            if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return;
+            if (dx < 0) lightboxNext();
+            else lightboxPrev();
+        }, { passive: true });
     }
 
     const mainImageContainer = document.querySelector('.main-image-container');
@@ -1495,7 +1674,7 @@
         mainImageContainer.addEventListener('click', function(e) {
             if (e.target.closest('button, a, form')) return;
             const mainImage = document.getElementById('mainImage');
-            if (mainImage && mainImage.src) openLightbox(mainImage.src);
+            if (mainImage && mainImage.src) openLightbox(mainImage.src, currentImageIndex);
         });
     }
 
@@ -1509,7 +1688,8 @@
         if (mainImage) {
             mainImage.src = src;
             if (lightbox && lightbox.classList.contains('open')) {
-                lightboxImage.src = src;
+                lightboxIndex = idx;
+                setLightboxImage();
             }
             currentImageIndex = idx;
             document.querySelectorAll('.thumbnail').forEach((thumb, i) => {
@@ -1535,6 +1715,12 @@
     }
 
     document.addEventListener('keydown', (e) => {
+        if (lightbox && lightbox.classList.contains('open')) {
+            if (e.key === 'ArrowRight') lightboxNext();
+            if (e.key === 'ArrowLeft') lightboxPrev();
+            if (e.key === 'Escape') closeLightbox();
+            return;
+        }
         if (e.key === 'ArrowRight') nextImage();
         if (e.key === 'ArrowLeft') prevImage();
         if (e.key === 'Escape') closeLightbox();
