@@ -2713,12 +2713,28 @@
             filter: none;
         }
 
-        /* Collapsed brand box: compact centered */
+        /* Collapsed brand box: circular centered */
         body.sidebar-collapsed nav.sidebar .sidebar-brand-box {
-            padding: 8px;
-            margin: 10px auto;
-            width: 54px;
-            justify-content: center;
+            padding: 0 !important;
+            margin: 12px auto 16px auto !important;
+            width: 46px !important;
+            height: 46px !important;
+            min-width: 46px !important;
+            min-height: 46px !important;
+            border-radius: 50% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            overflow: hidden !important;
+            box-sizing: border-box !important;
+        }
+
+        body.sidebar-collapsed nav.sidebar .sidebar-brand-box .sidebar-logo-icon {
+            width: 30px !important;
+            height: 30px !important;
+            object-fit: contain !important;
+            margin: 0 !important;
+            display: block !important;
         }
 
 
@@ -3217,27 +3233,9 @@
                 </ul>
 
 
-            </div><!-- Logout Button at Bottom -->
-
-
-
-            <div class="p-3 border-top border-white border-opacity-25">
-
-
-
-                <a href="{% url 'auth:logout' %}" class="nav-link text-white">
-
-
-
-                    <i class="fas fa-sign-out-alt"></i> Logout
-
-
-
-                </a>
-
-
-
             </div>
+
+
 
 
 
