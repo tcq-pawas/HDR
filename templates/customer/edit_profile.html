@@ -9,6 +9,28 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/customer/customer.css' %}">
 <link rel="stylesheet" href="{% static 'css/agent/agent.css' %}">
+<style>
+    /* Match the header and save button to the customer sidebar gradient. */
+    .settings-page .settings-page-header {
+        background: linear-gradient(180deg, #00695C 0%, #004D40 100%) !important;
+        box-shadow: 0 4px 16px rgba(0, 77, 64, 0.18) !important;
+    }
+
+    .settings-page .settings-save-btn,
+    .settings-btn:not(.secondary):not(.danger) {
+        background: linear-gradient(180deg, #00695C 0%, #004D40 100%) !important;
+        box-shadow: 0 4px 14px rgba(0, 77, 64, 0.25) !important;
+        border-color: #004D40 !important;
+        color: #ffffff !important;
+    }
+
+    .settings-page .settings-save-btn:hover,
+    .settings-btn:not(.secondary):not(.danger):hover {
+        background: linear-gradient(180deg, #00695C 0%, #004D40 100%) !important;
+        box-shadow: 0 6px 18px rgba(0, 77, 64, 0.35) !important;
+        color: #ffffff !important;
+    }
+</style>
 {% endblock %}
 
 {% block content %}

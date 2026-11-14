@@ -69,7 +69,7 @@
             justify-content: space-between !important;
             height: 100% !important;
             width: 100% !important;
-            padding: 0 24px 0 20px !important;
+            padding: 0 24px 0 28px !important;
         }
 
         .header-left {
@@ -274,6 +274,155 @@
             color: #005427;
         }
 
+        /* Notifications Dropdown Panel */
+        .agent-header .notifications-dropdown-menu,
+        .notifications-dropdown-menu {
+            width: 380px !important;
+            min-width: 360px !important;
+            max-width: 95vw !important;
+            border-radius: 14px !important;
+            padding: 0 !important;
+            background: #ffffff !important;
+            border: 1px solid #e2e8f0 !important;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.12), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+            margin-top: 12px !important;
+            overflow: hidden !important;
+            right: 0 !important;
+            left: auto !important;
+        }
+
+        .notifications-dropdown-header {
+            padding: 14px 18px !important;
+            background: #f8fafc !important;
+            border-bottom: 1px solid #e2e8f0 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+        }
+
+        .notifications-dropdown-header h6 {
+            margin: 0 !important;
+            font-size: 14px !important;
+            font-weight: 700 !important;
+            color: #0f172a !important;
+        }
+
+        .notifications-dropdown-body {
+            max-height: 380px !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            padding: 4px 0 !important;
+        }
+
+        .notification-dropdown-item {
+            display: flex !important;
+            align-items: flex-start !important;
+            gap: 14px !important;
+            padding: 12px 18px !important;
+            text-decoration: none !important;
+            color: inherit !important;
+            transition: background 0.15s ease !important;
+            border-bottom: 1px solid #f1f5f9 !important;
+            box-sizing: border-box !important;
+            width: 100% !important;
+        }
+
+        .notification-dropdown-item:last-child {
+            border-bottom: none !important;
+        }
+
+        .notification-dropdown-item:hover {
+            background: #f8fafc !important;
+        }
+
+        .notification-item-icon {
+            width: 40px !important;
+            height: 40px !important;
+            min-width: 40px !important;
+            max-width: 40px !important;
+            flex-shrink: 0 !important;
+            border-radius: 10px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 1.15rem !important;
+        }
+
+        .notification-item-icon.leads {
+            background: #e0f2fe !important;
+            color: #0284c7 !important;
+        }
+
+        .notification-item-icon.property {
+            background: #fef3c7 !important;
+            color: #d97706 !important;
+        }
+
+        .notification-item-icon.visits {
+            background: #ede9fe !important;
+            color: #7c3aed !important;
+        }
+
+        .notification-item-icon.general {
+            background: #dcfce7 !important;
+            color: #16a34a !important;
+        }
+
+        .notification-item-content {
+            flex: 1 1 auto !important;
+            min-width: 0 !important;
+        }
+
+        .notification-item-title {
+            font-size: 13.5px !important;
+            font-weight: 600 !important;
+            color: #1e293b !important;
+            line-height: 1.3 !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+        }
+
+        .notification-item-desc {
+            font-size: 12px !important;
+            color: #64748b !important;
+            line-height: 1.4 !important;
+            margin-top: 2px !important;
+            white-space: normal !important;
+            word-break: break-word !important;
+        }
+
+        .notification-item-badge {
+            font-size: 11px !important;
+            font-weight: 600 !important;
+            padding: 3px 8px !important;
+            border-radius: 12px !important;
+            white-space: nowrap !important;
+            flex-shrink: 0 !important;
+            margin-left: 8px !important;
+        }
+
+        .notifications-dropdown-footer {
+            padding: 11px 16px !important;
+            background: #f8fafc !important;
+            border-top: 1px solid #e2e8f0 !important;
+            text-align: center !important;
+        }
+
+        .notifications-dropdown-footer a {
+            font-size: 12.5px !important;
+            font-weight: 600 !important;
+            color: #005427 !important;
+            text-decoration: none !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 4px !important;
+        }
+
+        .notifications-dropdown-footer a:hover {
+            text-decoration: underline !important;
+        }
+
         .header-profile-menu .dropdown-item.text-danger:hover {
             background-color: #fef2f2;
             color: #dc2626 !important;
@@ -319,10 +468,45 @@
         }
 
 
-        /* Adjust main layout spacing */
+        /* Adjust main layout spacing and vertical alignment - EXACT MATCH WITH ADMIN */
         .agent-layout {
             margin-top: 70px !important;
         }
+
+        .agent-main {
+            padding: 24px 30px !important;
+            box-sizing: border-box !important;
+        }
+
+        .agent-main .main-content {
+            padding: 0 !important;
+            margin: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        /* Ensure premium pages (like My Properties) align flush with dashboard content */
+        .agent-main .premium-container {
+            padding: 0 !important;
+            background: transparent !important;
+            min-height: auto !important;
+            max-width: 100% !important;
+        }
+
+        /* Topbar Header Content - clean comfortable spacing from sidebar */
+        .header-content {
+            padding: 0 24px 0 12px !important;
+        }
+
+        .header-left {
+            margin-left: 0 !important;
+            gap: 14px !important;
+        }
+
+        body.sidebar-collapsed .agent-header .header-content {
+            padding: 0 24px 0 12px !important;
+        }
+
 
         /* Smooth Transitions */
         .agent-sidebar {
@@ -362,23 +546,43 @@
                 width: calc(100% - 78px) !important;
             }
 
+            body.sidebar-collapsed .agent-header .header-content {
+                padding: 0 24px 0 28px !important;
+            }
+
+            body.sidebar-collapsed .agent-header .header-left {
+                gap: 16px !important;
+            }
+
             body.sidebar-collapsed .agent-sidebar .sidebar-content {
                 padding: 18px 10px !important;
+                display: flex !important;
+                flex-direction: column !important;
                 align-items: center !important;
                 overflow: hidden !important;
             }
 
             body.sidebar-collapsed .agent-sidebar .sidebar-brand-box {
-                padding: 8px 4px !important;
-                width: 54px !important;
+                padding: 0 !important;
+                width: 48px !important;
                 height: 48px !important;
-                margin-bottom: 20px !important;
+                min-width: 48px !important;
+                min-height: 48px !important;
+                border-radius: 50% !important;
+                margin: 0 auto 20px auto !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
                 overflow: hidden !important;
+                box-sizing: border-box !important;
             }
 
-            body.sidebar-collapsed .agent-sidebar .sidebar-brand-box img {
-                height: 24px !important;
-                object-position: left center !important;
+            body.sidebar-collapsed .agent-sidebar .sidebar-brand-box .sidebar-logo-icon {
+                width: 32px !important;
+                height: 32px !important;
+                object-fit: contain !important;
+                margin: 0 !important;
+                display: block !important;
             }
 
             body.sidebar-collapsed .agent-sidebar .sidebar-nav .nav-list {
@@ -537,13 +741,107 @@
 
             <!-- Right: Notifications & Profile Dropdown -->
             <div class="header-right">
-                <!-- Notifications Icon -->
-                <a href="{% url 'agent:lead_list' %}" class="header-icon-btn" title="Leads & Notifications">
-                    <i class="bi bi-bell"></i>
-                    {% if sidebar_lead_count %}
-                    <span class="header-icon-badge">{{ sidebar_lead_count }}</span>
-                    {% endif %}
-                </a>
+                <!-- Notifications Dropdown Section -->
+                <div class="dropdown">
+                    <button class="header-icon-btn border-0 bg-transparent" data-bs-toggle="dropdown" aria-expanded="false" title="Notifications" id="agentNotificationBtn">
+                        <i class="bi bi-bell"></i>
+                        {% if agent_total_notifications_count and agent_total_notifications_count > 0 %}
+                        <span class="header-icon-badge">{{ agent_total_notifications_count }}</span>
+                        {% elif sidebar_lead_count %}
+                        <span class="header-icon-badge">{{ sidebar_lead_count }}</span>
+                        {% endif %}
+                    </button>
+
+                    <!-- Notifications Dropdown Menu -->
+                    <div class="dropdown-menu dropdown-menu-end notifications-dropdown-menu shadow border-0" aria-labelledby="agentNotificationBtn">
+                        <div class="notifications-dropdown-header">
+                            <div class="d-flex align-items-center gap-2">
+                                <h6>Notifications</h6>
+                                {% if agent_total_notifications_count and agent_total_notifications_count > 0 %}
+                                <span class="badge bg-danger rounded-pill">{{ agent_total_notifications_count }} new</span>
+                                {% endif %}
+                            </div>
+                            <small class="text-muted">Agent Alerts</small>
+                        </div>
+
+                        <div class="notifications-dropdown-body">
+                            <!-- New Leads Alert -->
+                            <a href="{% url 'agent:lead_list' %}" class="notification-dropdown-item">
+                                <div class="notification-item-icon leads">
+                                    <i class="bi bi-person-lines-fill"></i>
+                                </div>
+                                <div class="notification-item-content">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div class="notification-item-title">New Leads</div>
+                                        {% if agent_new_leads_count and agent_new_leads_count > 0 %}
+                                        <span class="notification-item-badge bg-warning text-dark">{{ agent_new_leads_count }} New</span>
+                                        {% else %}
+                                        <span class="notification-item-badge bg-light text-muted">Up to date</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="notification-item-desc">Potential clients waiting for response</div>
+                                </div>
+                            </a>
+
+                            <!-- Pending Properties Alert -->
+                            <a href="{% url 'agent:property_list' %}" class="notification-dropdown-item">
+                                <div class="notification-item-icon property">
+                                    <i class="bi bi-building"></i>
+                                </div>
+                                <div class="notification-item-content">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div class="notification-item-title">Properties Under Review</div>
+                                        {% if agent_pending_props_count and agent_pending_props_count > 0 %}
+                                        <span class="notification-item-badge bg-warning text-dark">{{ agent_pending_props_count }} Pending</span>
+                                        {% else %}
+                                        <span class="notification-item-badge bg-light text-muted">All active</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="notification-item-desc">Your listings pending approval by admin</div>
+                                </div>
+                            </a>
+
+                            <!-- Scheduled Site Visits Alert -->
+                            <a href="{% url 'agent:site_visit_list' %}" class="notification-dropdown-item">
+                                <div class="notification-item-icon visits">
+                                    <i class="bi bi-calendar-check"></i>
+                                </div>
+                                <div class="notification-item-content">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div class="notification-item-title">Upcoming Site Visits</div>
+                                        {% if agent_upcoming_visits_count and agent_upcoming_visits_count > 0 %}
+                                        <span class="notification-item-badge bg-info text-dark">{{ agent_upcoming_visits_count }} Scheduled</span>
+                                        {% else %}
+                                        <span class="notification-item-badge bg-light text-muted">None upcoming</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="notification-item-desc">Client visits scheduled for your properties</div>
+                                </div>
+                            </a>
+
+                            <!-- System Notifications for Agent -->
+                            {% if agent_recent_notifications %}
+                                {% for notif in agent_recent_notifications %}
+                                <div class="notification-dropdown-item">
+                                    <div class="notification-item-icon general">
+                                        <i class="bi bi-info-circle"></i>
+                                    </div>
+                                    <div class="notification-item-content">
+                                        <div class="notification-item-title">{{ notif.title }}</div>
+                                        <div class="notification-item-desc">{{ notif.message|truncatewords:8 }}</div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+
+                        <div class="notifications-dropdown-footer">
+                            <a href="{% url 'agent:lead_list' %}">
+                                View All Leads <i class="bi bi-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Profile Dropdown Section -->
                 <div class="dropdown">
@@ -832,19 +1130,8 @@
                 </nav>
 
 
-                <div class="sidebar-footer mt-auto">
 
-                    <a href="{% url 'auth:logout' %}" class="logout-btn"
 
-                        onclick="closeOffcanvasAndNavigate(event, this.href)">
-
-                        <i class="bi bi-box-arrow-right"></i>
-
-                        <span>Logout</span>
-
-                    </a>
-
-                </div>
 
             </div>
 
@@ -1072,17 +1359,8 @@
 
 
 
-                <div class="sidebar-footer">
 
-                    <a href="{% url 'auth:logout' %}" class="logout-btn">
 
-                        <i class="bi bi-box-arrow-right"></i>
-
-                        <span>Logout</span>
-
-                    </a>
-
-                </div>
 
             </div>
 

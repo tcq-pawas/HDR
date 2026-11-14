@@ -349,16 +349,24 @@
             }
 
             body.sidebar-collapsed .sidebar-brand-box {
-                padding: 8px 4px !important;
-                width: 54px !important;
+                padding: 0 !important;
+                width: 48px !important;
                 height: 48px !important;
-                margin-bottom: 20px !important;
+                min-width: 48px !important;
+                min-height: 48px !important;
+                border-radius: 50% !important;
+                margin: 0 auto 20px auto !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
                 overflow: hidden !important;
             }
 
-            body.sidebar-collapsed .sidebar-brand-box img {
-                height: 24px !important;
-                object-position: left center !important;
+            body.sidebar-collapsed .sidebar-brand-box .sidebar-logo-icon {
+                width: 32px !important;
+                height: 32px !important;
+                object-fit: contain !important;
+                margin: 0 !important;
             }
 
             body.sidebar-collapsed .sidebar .nav-link {
@@ -638,24 +646,8 @@
             </nav>
 
 
-            <!-- =================================================
-                 LOGOUT
-                 ================================================= -->
 
-            <div class="mt-auto">
 
-                <hr class="border-white-50">
-
-                <a
-                    class="nav-link"
-                    href="{% url 'auth:logout' %}">
-
-                    <i class="fas fa-sign-out-alt me-2"></i>
-                    <span>Logout</span>
-
-                </a>
-
-            </div>
 
         </div>
 
