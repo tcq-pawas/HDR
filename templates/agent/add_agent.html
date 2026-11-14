@@ -7,70 +7,391 @@
 <i class="bi bi-chevron-right breadcrumb-separator"></i>
 <a href="{% url 'organization:detail' organization.id %}">{{ organization.organization_name }}</a>
 <i class="bi bi-chevron-right breadcrumb-separator"></i>
+<a href="{% url 'organization:members' organization.id %}">Members</a>
+<i class="bi bi-chevron-right breadcrumb-separator"></i>
 <span>Invite Agent</span>
 {% endblock %}
 
+{% block extra_css %}
+<style>
+    .invite-agent-container {
+        max-width: 720px;
+        margin: 0 auto;
+        padding-bottom: 2rem;
+    }
+
+    .invite-agent-hero {
+        background: linear-gradient(135deg, #005427 0%, #007033 60%, #059669 100%);
+        border-radius: 16px;
+        padding: 1.5rem 2rem;
+        color: #fff;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 15px rgba(0, 84, 39, 0.15);
+    }
+
+    .invite-agent-hero::before {
+        content: '';
+        position: absolute;
+        top: -40px;
+        right: -40px;
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        pointer-events: none;
+    }
+
+    .invite-agent-hero h4 {
+        font-weight: 700;
+        font-size: 1.35rem;
+        color: #fff;
+        margin: 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .invite-agent-hero p {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 13.5px;
+        margin: 4px 0 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .btn-back-glass {
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        backdrop-filter: blur(6px);
+        transition: all 0.2s ease;
+        position: relative;
+        z-index: 1;
+    }
+
+    .btn-back-glass:hover {
+        background: rgba(255, 255, 255, 0.28);
+        color: #fff;
+        transform: translateY(-1px);
+    }
+
+    .invite-card {
+        background: #ffffff;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+        padding: 2.2rem;
+    }
+
+    .invite-card-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 0.35rem;
+    }
+
+    .invite-card-subtitle {
+        font-size: 13px;
+        color: #64748b;
+        margin-bottom: 1.75rem;
+    }
+
+    .invite-form-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        column-gap: 24px !important;
+        row-gap: 6px !important;
+    }
+
+    @media (max-width: 640px) {
+        .invite-form-grid {
+            grid-template-columns: 1fr !important;
+        }
+    }
+
+    .custom-form-group {
+        margin-bottom: 1.25rem;
+    }
+
+    .custom-form-label {
+        font-weight: 600;
+        font-size: 13px;
+        color: #334155;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .custom-input-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .custom-input-icon {
+        position: absolute;
+        left: 14px;
+        color: #94a3b8;
+        font-size: 1rem;
+        pointer-events: none;
+        transition: color 0.2s ease;
+        z-index: 2;
+    }
+
+    .custom-input-wrap .form-control {
+        border-radius: 10px;
+        border: 1.5px solid #cbd5e1;
+        padding: 10px 14px 10px 42px;
+        font-size: 14px;
+        color: #1e293b;
+        background-color: #f8fafc;
+        transition: all 0.2s ease;
+        width: 100%;
+    }
+
+    .custom-input-wrap .form-control:focus {
+        background-color: #ffffff;
+        border-color: #005427;
+        box-shadow: 0 0 0 3.5px rgba(0, 84, 39, 0.12);
+        outline: none;
+    }
+
+    .custom-input-wrap:focus-within .custom-input-icon {
+        color: #005427;
+    }
+
+    .field-hint {
+        font-size: 12px;
+        color: #64748b;
+        margin-top: 5px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .field-error {
+        color: #dc2626;
+        font-size: 12px;
+        margin-top: 4px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .alert-error {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        border-radius: 10px;
+        padding: 0.85rem 1.1rem;
+        color: #b91c1c;
+        font-size: 13.5px;
+        margin-bottom: 1.5rem;
+    }
+
+    .actions-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 1.8rem;
+    }
+
+    .btn-send-invite {
+        background: linear-gradient(135deg, #005427, #007033);
+        color: #fff;
+        border: none;
+        padding: 11px 26px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 14px rgba(0, 84, 39, 0.25);
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+    .btn-send-invite:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(0, 84, 39, 0.35);
+        color: #fff;
+        background: linear-gradient(135deg, #004520, #005c2a);
+    }
+
+    .btn-cancel {
+        background: #f1f5f9;
+        color: #475569;
+        border: 1px solid #e2e8f0;
+        padding: 11px 20px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        transition: all 0.2s ease;
+    }
+
+    .btn-cancel:hover {
+        background: #e2e8f0;
+        color: #1e293b;
+    }
+
+    .security-info-box {
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        border-radius: 12px;
+        padding: 1rem 1.2rem;
+        font-size: 13px;
+        color: #166534;
+        margin-top: 1.75rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        line-height: 1.45;
+    }
+
+    .security-info-box i {
+        font-size: 1.25rem;
+        color: #16a34a;
+        flex-shrink: 0;
+        margin-top: 1px;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
 
-<div class="add-agent-hero d-flex align-items-center justify-content-between flex-wrap gap-3">
-    <div>
-        <h4><i class="bi bi-envelope-plus-fill me-2"></i>Invite Agent</h4>
-        <p>Send an invitation to join <strong>{{ organization.organization_name }}</strong></p>
-    </div>
-    <a href="{% url 'organization:members' organization.id %}" class="btn-back-glass">
-        <i class="bi bi-arrow-left"></i> Back to Members
-    </a>
-</div>
-
-<div class="form-card">
-    {% if form.non_field_errors %}
-        <div class="alert-error">
-            {% for err in form.non_field_errors %}{{ err }}{% endfor %}
-        </div>
-    {% endif %}
-
-    <form method="post" novalidate>
-        {% csrf_token %}
-        <div class="mb-3">
-            <label class="form-label" for="id_email">Email address <span class="text-danger">*</span></label>
-            {{ form.email }}
-            {% if form.email.errors %}<div class="field-error">{{ form.email.errors.0 }}</div>{% endif %}
-            <div class="form-hint">
-                <i class="bi bi-info-circle"></i>
-                Must not already belong to an active user account.
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label class="form-label" for="id_first_name">First name <span class="text-danger">*</span></label>
-                {{ form.first_name }}
-                {% if form.first_name.errors %}<div class="field-error">{{ form.first_name.errors.0 }}</div>{% endif %}
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label" for="id_last_name">Last name <span class="text-danger">*</span></label>
-                {{ form.last_name }}
-                {% if form.last_name.errors %}<div class="field-error">{{ form.last_name.errors.0 }}</div>{% endif %}
-            </div>
-        </div>
-
-        <div class="mb-4">
-            <label class="form-label" for="id_phone">Phone <span class="text-danger">*</span></label>
-            {{ form.phone }}
-            {% if form.phone.errors %}<div class="field-error">{{ form.phone.errors.0 }}</div>{% endif %}
-        </div>
-
-        <button type="submit" class="btn-add-agent">
-            <i class="bi bi-send-fill"></i> Send Invitation
-        </button>
-    </form>
-
-    <div class="info-box">
-        <i class="bi bi-shield-check" style="color:#16a34a; font-size:16px; margin-top:1px;"></i>
+<div class="invite-agent-container">
+    <!-- Hero Header -->
+    <div class="invite-agent-hero d-flex align-items-center justify-content-between flex-wrap gap-3">
         <div>
-            A secure invitation link will be generated. The agent sets their own password on the Create Account page.
-            No password is required from you. The link stays valid until the agent completes onboarding.
+            <h4><i class="bi bi-envelope-plus-fill me-2"></i>Invite Agent</h4>
+            <p>Send an invitation to join <strong>{{ organization.organization_name }}</strong></p>
+        </div>
+        <a href="{% url 'organization:members' organization.id %}" class="btn-back-glass">
+            <i class="bi bi-arrow-left"></i> Back to Members
+        </a>
+    </div>
+
+    <!-- Main Form Card -->
+    <div class="invite-card">
+        <div class="invite-card-title">Agent Details</div>
+        <div class="invite-card-subtitle">Fill in the agent's contact information to generate and send an invitation.</div>
+
+        {% if form.non_field_errors %}
+            <div class="alert-error">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                {% for err in form.non_field_errors %}{{ err }}{% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="post" novalidate>
+            {% csrf_token %}
+
+            <!-- 2-Column CSS Grid -->
+            <div class="invite-form-grid">
+                <!-- Col 1: First Name -->
+                <div class="custom-form-group">
+                    <label class="custom-form-label" for="id_first_name">
+                        First Name <span class="text-danger">*</span>
+                    </label>
+                    <div class="custom-input-wrap">
+                        <i class="bi bi-person custom-input-icon"></i>
+                        {{ form.first_name }}
+                    </div>
+                    {% if form.first_name.errors %}
+                        <div class="field-error">
+                            <i class="bi bi-exclamation-circle"></i> {{ form.first_name.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Col 2: Last Name -->
+                <div class="custom-form-group">
+                    <label class="custom-form-label" for="id_last_name">
+                        Last Name <span class="text-danger">*</span>
+                    </label>
+                    <div class="custom-input-wrap">
+                        <i class="bi bi-person-badge custom-input-icon"></i>
+                        {{ form.last_name }}
+                    </div>
+                    {% if form.last_name.errors %}
+                        <div class="field-error">
+                            <i class="bi bi-exclamation-circle"></i> {{ form.last_name.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Col 1: Email Address -->
+                <div class="custom-form-group">
+                    <label class="custom-form-label" for="id_email">
+                        Email Address <span class="text-danger">*</span>
+                    </label>
+                    <div class="custom-input-wrap">
+                        <i class="bi bi-envelope custom-input-icon"></i>
+                        {{ form.email }}
+                    </div>
+                    {% if form.email.errors %}
+                        <div class="field-error">
+                            <i class="bi bi-exclamation-circle"></i> {{ form.email.errors.0 }}
+                        </div>
+                    {% else %}
+                        <div class="field-hint">
+                            <i class="bi bi-info-circle"></i> Must not belong to an active user.
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Col 2: Phone Number -->
+                <div class="custom-form-group">
+                    <label class="custom-form-label" for="id_phone">
+                        Phone Number <span class="text-danger">*</span>
+                    </label>
+                    <div class="custom-input-wrap">
+                        <i class="bi bi-telephone custom-input-icon"></i>
+                        {{ form.phone }}
+                    </div>
+                    {% if form.phone.errors %}
+                        <div class="field-error">
+                            <i class="bi bi-exclamation-circle"></i> {{ form.phone.errors.0 }}
+                        </div>
+                    {% else %}
+                        <div class="field-hint">
+                            <i class="bi bi-phone"></i> 10-digit mobile number.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Submit Action -->
+            <div class="actions-row">
+                <button type="submit" class="btn-send-invite">
+                    <i class="bi bi-send-fill"></i> Send Invitation
+                </button>
+                <a href="{% url 'organization:members' organization.id %}" class="btn-cancel">
+                    Cancel
+                </a>
+            </div>
+        </form>
+
+        <!-- Security Note -->
+        <div class="security-info-box">
+            <i class="bi bi-shield-check"></i>
+            <div>
+                <strong>Secure Onboarding:</strong> A secure invitation link will be sent to the agent's email. They will set their own password during account activation. No password is required from you.
+            </div>
         </div>
     </div>
 </div>

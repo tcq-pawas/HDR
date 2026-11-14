@@ -392,26 +392,9 @@ def _enforce_agent_property_listing(request, user_role, subscription=SUBSCRIPTIO
 
 def _require_mobile_verified(request, user_role):
     """
-    For agents only: redirect to Settings page if their mobile number
-    has not been OTP-verified yet.
-    Returns an HttpResponse when blocked; otherwise None.
+    Mobile verification check bypassed: allow adding property directly.
     """
-    if user_role not in ('agent', 'owner'):
-        return None
-    try:
-        from Apps.Administration.models import UserVerification
-        verification = request.user.verification
-        if verification.is_mobile_verified:
-            return None
-    except Exception:
-        # No UserVerification record means not verified
-        pass
-    messages.warning(
-        request,
-        "Please verify your mobile number before adding a property. "
-        "Go to Settings and complete OTP verification."
-    )
-    return redirect('agent:settings')
+    return None
 
 
 @login_required
