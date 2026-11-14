@@ -325,7 +325,7 @@
 .location-left {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 .location-badge {
@@ -361,15 +361,25 @@
 }
 
 .location-info {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
 }
 
 .location-info-item {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 16px;
+    min-width: 0;
+}
+
+.location-info-item:first-child {
+    padding-right: 16px;
+    border-right: 1px solid #e5e7eb;
+}
+
+.location-info-item + .location-info-item {
+    padding-left: 16px;
 }
 
 .location-info-icon {
@@ -460,6 +470,21 @@
 @media (max-width: 480px) {
     .contact-form-left {
         padding: 24px;
+    }
+
+    .location-info {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .location-info-item:first-child {
+        padding: 0 0 16px;
+        border-right: 0;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .location-info-item + .location-info-item {
+        padding-left: 0;
     }
 
     .contact-form-card {

@@ -326,8 +326,7 @@
 <!-- Add / Re-upload Document Modal -->
 <div class="modal fade" id="addDocumentModal" tabindex="-1" aria-labelledby="addDocumentModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content doc-modal">
-            <form method="post" enctype="multipart/form-data" id="addDocumentForm" novalidate>
+        <form method="post" enctype="multipart/form-data" id="addDocumentForm" class="modal-content doc-modal" novalidate>
                 {% csrf_token %}
                 <input type="hidden" name="action" id="formAction" value="submit">
                 <input type="hidden" name="reupload_id" id="reuploadId" value="">
@@ -432,8 +431,7 @@
                         Submit for Verification
                     </button>
                 </div>
-            </form>
-        </div>
+        </form>
     </div>
 </div>
 
