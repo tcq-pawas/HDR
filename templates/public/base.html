@@ -8,10 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Premium Real Estate & Property Platform{% endblock %}</title>
 
-    <meta name="description"
-        content="{% block meta_description %}Premium real estate platform offering residential, commercial, luxury, and agricultural properties with verified listings across India.{% endblock %}">
-    <meta name="keywords"
-        content="{% block meta_keywords %}Real Estate, Property, Buy Property, Sell Property, Luxury Property, Plots, Apartments, Commercial Property, Agricultural Land, Investment Property, Property Consultant, Verified Properties, India Real Estate{% endblock %}">
+    <meta name="description" content="{% block meta_description %}Premium real estate platform offering residential, commercial, luxury, and agricultural properties with verified listings across India.{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}Real Estate, Property, Buy Property, Sell Property, Luxury Property, Plots, Apartments, Commercial Property, Agricultural Land, Investment Property, Property Consultant, Verified Properties, India Real Estate{% endblock %}">
     <meta name="author" content="Real Estate Platform">
     <meta name="robots" content="{% block meta_robots %}index, follow{% endblock %}">
 
@@ -19,22 +17,18 @@
 
     <!-- Open Graph -->
     <meta property="og:title" content="{% block og_title %}Premium Real Estate Platform{% endblock %}">
-    <meta property="og:description"
-        content="{% block og_description %}Discover premium residential, commercial, and agricultural properties.{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Discover premium residential, commercial, and agricultural properties.{% endblock %}">
     <meta property="og:site_name" content="Real Estate Platform">
     <meta property="og:type" content="{% block og_type %}website{% endblock %}">
     <meta property="og:url" content="{% block og_url %}{{ request.build_absolute_uri }}{% endblock %}">
-    <meta property="og:image"
-        content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo.png' %}{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo.png' %}{% endblock %}">
     <meta property="og:locale" content="en_IN">
 
     <!-- Twitter Cards -->
     <meta name="twitter:card" content="{% block twitter_card %}summary_large_image{% endblock %}">
     <meta name="twitter:title" content="{% block twitter_title %}Premium Real Estate Platform{% endblock %}">
-    <meta name="twitter:description"
-        content="{% block twitter_description %}Discover premium residential, commercial, and agricultural properties.{% endblock %}">
-    <meta name="twitter:image"
-        content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo.png' %}{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}Discover premium residential, commercial, and agricultural properties.{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'img/logo.png' %}{% endblock %}">
 
     <!-- Favicon & PWA -->
     <link rel="icon" href="{% static 'img/favicon.ico' %}">
@@ -43,23 +37,24 @@
     <meta name="theme-color" content="#1B4332">
     <meta name="application-name" content="Real Estate Platform">
     <style>
-        #login-btn {
-            min-height: 0;
-            padding-bottom: 10px !important;
+        #login-btn{
+          min-height: 0;
+          padding-bottom: 10px !important;
         }
-
+        
         @media (max-width: 768px) {
-            .footer-brand p {
-                padding-left: 0 !important;
+            .footer-brand p{
+              padding-left: 0 !important;
             }
         }
-
+        
         /*Touch devices par navbar */
         @media (hover: none) and (pointer: coarse) and (max-width: 768px) {
             .navbar-collapse {
-                padding: 2rem !important;
+               padding: 2rem !important;
             }
         }
+        
     </style>
     <!-- Schema.org Organization + WebSite -->
     {% block schema_jsonld %}
@@ -105,8 +100,7 @@
     <!-- Bootstrap 5 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
@@ -126,94 +120,86 @@
 </head>
 
 <body class="site-public">
-    <nav class="navbar navbar-expand-lg site-navbar py-2 shadow-sm border-bottom">
-        <div class="container-fluid px-4 px-lg-5">
+<nav class="navbar navbar-expand-lg site-navbar py-2 shadow-sm border-bottom">
+  <div class="container-fluid px-4 px-lg-5">
 
-            <!-- LEFT: Logo -->
-            <a class="navbar-brand p-0" href="{% url 'public:home' %}">
-                <div class="d-flex align-items-center">
-                    <img src="{% static 'img/logo.png' %}" alt="Logo" title="Logo"
-                        style="height:48px; width:auto; display:block;">
-                </div>
-            </a>
+    <!-- LEFT: Logo -->
+    <a class="navbar-brand p-0" href="{% url 'public:home' %}">
+      <div class="d-flex align-items-center">
+        <img src="{% static 'img/logo.png' %}"
+             alt="Logo"
+             title="Logo"
+             style="height:48px; width:auto; display:block;">
+      </div>
+    </a>
 
-            <!-- Toggler (hamburger) -->
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
-                aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+    <!-- Toggler (hamburger) -->
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
+            data-bs-target="#mainNav" aria-controls="mainNav"
+            aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- COLLAPSIBLE MENU (NO d-flex here) -->
+    <div class="collapse navbar-collapse" id="mainNav">
+
+      <!-- MIDDLE: Menu links – centered with mx-auto -->
+      <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-1 gap-lg-2">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{% url 'public:home' %}">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'buy:property_search' %}">Buy</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'sell:sell_page' %}">Sell</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'public:agents' %}">Find Agents</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'public:subscription_plans' %}">Subscription</a>
+        </li>
+         <li class="nav-item">
+          <a class="nav-link" href="{% url 'public:property_management' %}">Property Management</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'public:about' %}">About Us</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'public:contact' %}">Contact</a>
+        </li>
+      </ul>
+
+      <!-- RIGHT: Auth Button – pushed right with ms-lg-auto -->
+      {% if user.is_authenticated %}
+        <div class="d-flex align-items-center gap-2 mt-2 mt-lg-0 ms-lg-2">
+          <div class="dropdown">
+            <button class="btn btn-success d-flex align-items-center gap-2 px-2 py-1 rounded-pill dropdown-toggle" type="button" data-bs-toggle="dropdown" style="background: linear-gradient(135deg, #198754 0%, #034330 100%);border: none;box-shadow: 0 2px 8px rgba(52, 67, 60, 0.3);">
+              {% if user.agent_profile and user.agent_profile.profile_image and user.agent_profile.profile_image.name %}
+                <img src="{{ user.agent_profile.profile_image.url }}" alt="Profile" class="rounded-circle" style="width:27px; height:27px; object-fit:cover; border:3px solid #fff; flex-shrink:0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+              {% else %}
+                <img src="https://ui-avatars.com/api/?name={% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}&background=198754&color=fff&size=44&bold=true" alt="Profile" class="rounded-circle" style="width:27px; height:27px; object-fit:cover; border:3px solid #fff; flex-shrink:0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+              {% endif %}
+              <span class="fw-semibold text-white">{% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}</span>
             </button>
-
-            <!-- COLLAPSIBLE MENU (NO d-flex here) -->
-            <div class="collapse navbar-collapse" id="mainNav">
-
-                <!-- MIDDLE: Menu links – centered with mx-auto -->
-                <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-1 gap-lg-2">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{% url 'public:home' %}">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'buy:property_search' %}">Buy</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'sell:sell_page' %}">Sell</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'public:agents' %}">Find Agents</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'public:subscription_plans' %}">Subscription</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'public:property_management' %}">Property Management</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'public:about' %}">About Us</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'public:contact' %}">Contact</a>
-                    </li>
-                </ul>
-
-                <!-- RIGHT: Auth Button – pushed right with ms-lg-auto -->
-                {% if user.is_authenticated %}
-                <div class="d-flex align-items-center gap-2 mt-2 mt-lg-0 ms-lg-2">
-                    <div class="dropdown">
-                        <button
-                            class="btn btn-success d-flex align-items-center gap-2 px-2 py-1 rounded-pill dropdown-toggle"
-                            type="button" data-bs-toggle="dropdown"
-                            style="background: linear-gradient(135deg, #198754 0%, #034330 100%);border: none;box-shadow: 0 2px 8px rgba(52, 67, 60, 0.3);">
-                            {% if user.agent_profile and user.agent_profile.profile_image and
-                            user.agent_profile.profile_image.name %}
-                            <img src="{{ user.agent_profile.profile_image.url }}" alt="Profile" class="rounded-circle"
-                                style="width:27px; height:27px; object-fit:cover; border:3px solid #fff; flex-shrink:0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                            {% else %}
-                            <img src="https://ui-avatars.com/api/?name={% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}&background=198754&color=fff&size=44&bold=true"
-                                alt="Profile" class="rounded-circle"
-                                style="width:27px; height:27px; object-fit:cover; border:3px solid #fff; flex-shrink:0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                            {% endif %}
-                            <span class="fw-semibold text-white">{% if user.first_name %}{{ user.first_name }}{% else
-                                %}{{ user.username }}{% endif %}</span>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end shadow">
-                            <li><a class="dropdown-item" href="/dashboard/">My Dashboard</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item text-danger" href="{% url 'auth:logout' %}">Logout</a></li>
-                        </ul>
-                    </div>
-                </div>
-                {% else %}
-                <a href="{% url 'auth:login' %}" id="login-btn"
-                    class="btn btn-success fw-bold px-4 py-2 rounded-pill shadow-sm mt-2 mt-lg-0 ms-lg-2">
-                    Login
-                </a>
-                {% endif %}
-
-            </div>
-
+            <ul class="dropdown-menu dropdown-menu-end shadow">
+              <li><a class="dropdown-item" href="/dashboard/">My Dashboard</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-danger" href="{% url 'auth:logout' %}">Logout</a></li>
+            </ul>
+          </div>
         </div>
-    </nav>
+      {% else %}
+        <a href="{% url 'auth:login' %}" id="login-btn" class="btn btn-success fw-bold px-4 py-2 rounded-pill shadow-sm mt-2 mt-lg-0 ms-lg-2">
+          Login
+        </a>
+      {% endif %}
+
+    </div>
+
+  </div>
+</nav>
 
     {% block inner_hero %}
     {% endblock %}
@@ -308,7 +294,7 @@
                                 Property</a></li>
                     </ul>
                 </div> -->
-    <!-- Column 3: Property Types 
+                <!-- Column 3: Property Types 
                 <div class="col-lg-2 col-md-6 mb-4">
 
                     <h5>OUR SERVICES</h5>
@@ -338,7 +324,7 @@
                         <li><a href="#"><i class="bi bi-chevron-right small me-2"></i>Gated Communities</a></li>
                     </ul>
                 </div> -->
-    <!-- Column 4: Contact & Newsletter 
+                <!-- Column 4: Contact & Newsletter 
                 <div class="col-lg-3 col-md-6 mb-4">
 
                     <h5>CONTACT US</h5>
@@ -386,7 +372,7 @@
                         <button class="btn btn-primary" type="button">Subscribe</button>
                     </div>
                 </div> -->
-    <!-----coloumn 5 
+                <!-----coloumn 5 
                 <div class="col-lg-2 col-md-6 mb-4">
 
                     <h5>NEWSLETTER</h5>
@@ -421,25 +407,24 @@
         <div class="footer-container">
             <div class="footer-brand">
                 <a href="{% url 'public:home' %}" class="footer-logo-container">
-                    <img src="{% static 'img/logo.png' %}" alt="Logo" title="Logo" class="footer-logo-img">
+                    <img src="{% static 'img/logo.png' %}"
+                         alt="Logo"
+                         title="Logo"
+                         class="footer-logo-img">
                 </a>
                 <p class="footer-brand-description">Buy • Sell • Invest • Discover</p>
                 <div class="footer-social">
-                    <a href="https://facebook.com" target="_blank" rel="noopener" class="footer-social-link"
-                        title="Facebook">𝗙</a>
-                    <a href="https://instagram.com" target="_blank" rel="noopener" class="footer-social-link"
-                        title="Instagram">◎</a>
-                    <a href="https://linkedin.com" target="_blank" rel="noopener" class="footer-social-link"
-                        title="LinkedIn">in</a>
-                    <a href="https://twitter.com" target="_blank" rel="noopener" class="footer-social-link"
-                        title="Twitter/X">𝗫</a>
+                    <a href="https://facebook.com" target="_blank" rel="noopener" class="footer-social-link" title="Facebook">𝗙</a>
+                    <a href="https://instagram.com" target="_blank" rel="noopener" class="footer-social-link" title="Instagram">◎</a>
+                    <a href="https://linkedin.com" target="_blank" rel="noopener" class="footer-social-link" title="LinkedIn">in</a>
+                    <a href="https://twitter.com" target="_blank" rel="noopener" class="footer-social-link" title="Twitter/X">𝗫</a>
                 </div>
             </div>
 
             <div class="footer-column">
                 <h4>Quick Links</h4>
                 <ul class="footer-links list-unstyled">
-                    <li><a href="{% url 'public:home' %}" class="footer-link">Home</a></li>
+                    <li><a href="{% url 'public:home' %}" class="footer-link" >Home</a></li>
                     <li><a href="{% url 'buy:property_search' %}" class="footer-link">Buy Property</a></li>
                     <li><a href="{% url 'sell:sell_page' %}" class="footer-link">Sell Property</a></li>
                     <li><a href="{% url 'public:agents' %}" class="footer-link">Find Agents</a></li>
@@ -451,13 +436,10 @@
             <div class="footer-column">
                 <h4>Services</h4>
                 <div class="footer-links">
-                    <a href="{% url 'buy:property_search' %}?category=managed_farmland" class="footer-link">Managed
-                        Farmland</a>
-                    <a href="{% url 'buy:property_search' %}?category=agricultural_land"
-                        class="footer-link">Agricultural Land</a>
+                    <a href="{% url 'buy:property_search' %}?category=managed_farmland" class="footer-link">Managed Farmland</a>
+                    <a href="{% url 'buy:property_search' %}?category=agricultural_land" class="footer-link">Agricultural Land</a>
                     <a href="{% url 'buy:property_search' %}?category=farm_plots" class="footer-link">Farm Plots</a>
-                    <a href="{% url 'buy:property_search' %}?category=plantation_projects"
-                        class="footer-link">Plantation Projects</a>
+                    <a href="{% url 'buy:property_search' %}?category=plantation_projects" class="footer-link">Plantation Projects</a>
                     <a href="{% url 'public:contact' %}" class="footer-link">Investment Consulting</a>
                 </div>
             </div>
@@ -476,12 +458,12 @@
     <a href="https://wa.me/919506688688" class="whatsapp-float" target="_blank" style="margin-bottom: 32px !important;">
         <i class="fa-brands fa-whatsapp"></i>
     </a>
-    <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-TWBF5VR8"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-    </script>
+<script async src="https://www.googletagmanager.com/gtm.js?id=GTM-TWBF5VR8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+</script>
     {% block extra_js %}{% endblock %}
 </body>
 
