@@ -1184,12 +1184,17 @@ def save_email_settings(request):
         # We also want to support TLS, but UI doesn't have it explicitly right now, so we default to true or use port
         use_tls = 'true' if str(port) == '587' else 'false'
         
-        SystemSettings.objects.update_or_create(setting_key='EMAIL_HOST', defaults={'setting_value': host})
-        SystemSettings.objects.update_or_create(setting_key='EMAIL_PORT', defaults={'setting_value': port})
-        SystemSettings.objects.update_or_create(setting_key='EMAIL_HOST_USER', defaults={'setting_value': username})
-        SystemSettings.objects.update_or_create(setting_key='EMAIL_HOST_PASSWORD', defaults={'setting_value': password})
+        if host:
+            SystemSettings.objects.update_or_create(setting_key='EMAIL_HOST', defaults={'setting_value': host})
+        if port:
+            SystemSettings.objects.update_or_create(setting_key='EMAIL_PORT', defaults={'setting_value': str(port)})
+        if username:
+            SystemSettings.objects.update_or_create(setting_key='EMAIL_HOST_USER', defaults={'setting_value': username})
+        if password:
+            SystemSettings.objects.update_or_create(setting_key='EMAIL_HOST_PASSWORD', defaults={'setting_value': password})
         SystemSettings.objects.update_or_create(setting_key='EMAIL_USE_TLS', defaults={'setting_value': use_tls})
-        SystemSettings.objects.update_or_create(setting_key='DEFAULT_FROM_EMAIL', defaults={'setting_value': request.data.get('emailFrom', 'noreply@hhectare.com')})
+        email_from = request.data.get('emailFrom') or username or 'noreply@hhectare.com'
+        SystemSettings.objects.update_or_create(setting_key='DEFAULT_FROM_EMAIL', defaults={'setting_value': email_from})
 
         return Response({'success': True, 'message': 'Email settings saved successfully'})
     except Exception as e:
@@ -1200,18 +1205,24 @@ def save_email_settings(request):
 def test_email_settings(request):
     try:
         from django.core.mail import send_mail
+        from django.conf import settings
         from Apps.Administration.models import SystemSettings
         
-        # Ensure latest settings are used by clearing any cached connection
-        # We can just use send_mail, which will instantiate the backend with current DB settings
+        test_email = (request.data.get('testEmail') or '').strip() or request.user.email
+        if not test_email:
+            return Response({'success': False, 'message': 'Please provide an email address to send the test email to.'}, status=400)
+            
+        from_setting = SystemSettings.objects.filter(setting_key='DEFAULT_FROM_EMAIL').first()
+        from_email = (from_setting.setting_value if from_setting and from_setting.setting_value else None) or getattr(settings, 'DEFAULT_FROM_EMAIL', None)
+        
         send_mail(
             subject='Test Email from HHectare Admin',
             message='This is a test email to verify your SMTP settings are configured correctly.',
-            from_email=None,  # Uses DEFAULT_FROM_EMAIL
-            recipient_list=[request.user.email or request.data.get('testEmail', 'noreply@hhectare.com')],
+            from_email=from_email,
+            recipient_list=[test_email],
             fail_silently=False,
         )
-        return Response({'success': True, 'message': 'Test email sent successfully!'})
+        return Response({'success': True, 'message': f'Test email sent successfully to {test_email}!'})
     except Exception as e:
         error_msg = str(e)
         if '535' in error_msg and 'Username and Password not accepted' in error_msg:
