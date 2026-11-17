@@ -1271,7 +1271,7 @@ def save_general_settings(request):
         
         site_name = request.data.get('siteName', 'HHectare')
         site_description = request.data.get('siteDescription', 'Professional real estate investment platform')
-        contact_email = request.data.get('contactEmail', 'info@hhectare.com')
+        contact_email = request.data.get('contactEmail', 'hhectareofficial@gmail.com')
         phone_number = request.data.get('phoneNumber', '+1 (555) 123-4567')
         address = request.data.get('address', '123 Business Ave, Suite 100\nNew York, NY 10001')
         timezone = request.data.get('timezone', 'America/New_York')

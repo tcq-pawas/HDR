@@ -280,7 +280,7 @@ SITE_DESCRIPTION = (
 )
 SITE_CANONICAL_HOST = os.getenv('SITE_CANONICAL_HOST', 'hhectare.com')
 SITE_CANONICAL_ORIGIN = os.getenv('SITE_CANONICAL_ORIGIN', 'https://hhectare.com')
-SITE_CONTACT_EMAIL = os.getenv('SITE_CONTACT_EMAIL', 'info@hhectare.com')
+SITE_CONTACT_EMAIL = os.getenv('SITE_CONTACT_EMAIL', 'hhectareofficial@gmail.com')
 SITE_CONTACT_PHONE = os.getenv('SITE_CONTACT_PHONE', '+919506688688')
 SITE_CONTACT_PHONE_DISPLAY = os.getenv('SITE_CONTACT_PHONE_DISPLAY', '+91 95066 88688')
 # Official social profile URLs only — leave empty until profiles are confirmed
