@@ -393,29 +393,62 @@
     }
 
     .location-info {
-        display: flex;
-        flex-direction: column;
-        gap: 24px;
-        margin-top: 10px;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 28px !important;
+        margin-top: 16px !important;
     }
 
     .location-info-item {
-        display: flex;
-        align-items: center;
-        gap: 16px;
+        display: flex !important;
+        align-items: center !important;
+        gap: 16px !important;
+    }
+
+    .location-info-icon {
+        width: 48px !important;
+        height: 48px !important;
+        min-width: 48px !important;
+        max-width: 48px !important;
+        border-radius: 50% !important;
+        background-color: rgba(15, 106, 60, 0.1) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex-shrink: 0 !important;
+    }
+
+    .location-info-icon i {
+        font-size: 20px !important;
+        color: var(--primary-green) !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        line-height: 1 !important;
+    }
+
+    .location-info-content {
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
     }
 
     .location-info-content h4 {
-        margin-bottom: 3px;
-        font-size: 1.15rem;
+        margin: 0 0 4px 0 !important;
+        font-size: 1.15rem !important;
+        font-weight: 600 !important;
+        line-height: 1.2 !important;
+        color: var(--text-dark) !important;
     }
 
     .location-info-content p,
-    .location-info-content span {
-        font-family: 'Inter', sans-serif;
-        font-size: 13.5px;
-        color: var(--text-gray);
-        white-space: normal;
+    .location-info-content p a {
+        font-family: 'Inter', sans-serif !important;
+        font-size: 13.5px !important;
+        color: var(--text-gray) !important;
+        line-height: 1.4 !important;
+        margin: 0 !important;
+        text-decoration: none !important;
     }
 
     @media (min-width: 1024px) and (max-width: 1439px) {
@@ -1053,25 +1086,25 @@
                     Connect directly with our property advisors to discuss your investment goals, request verified documents, or book an on-site property visit.
                 </p>
                 
-                <div class="location-info">
-                    <div class="location-info-item">
-                        <div class="location-info-icon">
-                            <i class="bi bi-envelope"></i>
-                        </div>
-                        <div class="location-info-content">
-                            <h4>Email Us</h4>
-                            <p><a href="mailto:info@hhectare.com" style="color: inherit; text-decoration: none;">info@hhectare.com</a></p>
-                        </div>
+                <div class="location-info-grid-box" style="display: grid; grid-template-columns: 48px 1fr; row-gap: 24px; column-gap: 16px; align-items: center; margin-top: 16px;">
+                    <!-- Email Icon -->
+                    <div style="width: 48px; height: 48px; border-radius: 50%; background-color: rgba(15, 106, 60, 0.1); display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-envelope" style="font-size: 20px; color: #0F6A3C; line-height: 1;"></i>
+                    </div>
+                    <!-- Email Content -->
+                    <div style="display: flex; flex-direction: column; justify-content: center;">
+                        <h4 style="margin: 0 0 3px 0; font-size: 1.15rem; font-weight: 600; color: #1F1F1F; line-height: 1.2;">Email Us</h4>
+                        <p style="margin: 0; font-family: 'Inter', sans-serif; font-size: 13.5px; color: #666; line-height: 1.4;"><a href="mailto:info@hhectare.com" style="color: inherit; text-decoration: none;">info@hhectare.com</a></p>
                     </div>
 
-                    <div class="location-info-item">
-                        <div class="location-info-icon">
-                            <i class="bi bi-clock"></i>
-                        </div>
-                        <div class="location-info-content">
-                            <h4>Consultation Hours</h4>
-                            <p>Mon – Sat, 9:00 AM – 7:00 PM</p>
-                        </div>
+                    <!-- Clock Icon -->
+                    <div style="width: 48px; height: 48px; border-radius: 50%; background-color: rgba(15, 106, 60, 0.1); display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-clock" style="font-size: 20px; color: #0F6A3C; line-height: 1;"></i>
+                    </div>
+                    <!-- Clock Content -->
+                    <div style="display: flex; flex-direction: column; justify-content: center;">
+                        <h4 style="margin: 0 0 3px 0; font-size: 1.15rem; font-weight: 600; color: #1F1F1F; line-height: 1.2;">Consultation Hours</h4>
+                        <p style="margin: 0; font-family: 'Inter', sans-serif; font-size: 13.5px; color: #666; line-height: 1.4;">Mon – Sat, 9:00 AM – 7:00 PM</p>
                     </div>
                 </div>
             </div>
