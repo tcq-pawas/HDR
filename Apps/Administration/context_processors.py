@@ -40,7 +40,15 @@ def admin_notifications_processor(request):
     except Exception:
         pass
 
-    # 3. Recent Notifications
+    # 3. Pending Inquiries
+    pending_inquiries_count = 0
+    try:
+        from Apps.PublicPage.models import ContactInquiry
+        pending_inquiries_count = ContactInquiry.objects.filter(status='new').count()
+    except Exception:
+        pass
+
+    # 4. Recent Notifications
     try:
         from Apps.Administration.models import Notification
         recent_notifications = list(Notification.objects.filter(
@@ -49,11 +57,12 @@ def admin_notifications_processor(request):
     except Exception:
         pass
 
-    total_notifications = pending_kyc_count + pending_property_count
+    total_notifications = pending_kyc_count + pending_property_count + pending_inquiries_count
 
     return {
         'admin_pending_kyc_count': pending_kyc_count,
         'admin_pending_property_count': pending_property_count,
+        'admin_pending_inquiries_count': pending_inquiries_count,
         'admin_total_notifications_count': total_notifications,
         'admin_recent_notifications': recent_notifications,
     }

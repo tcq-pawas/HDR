@@ -3047,7 +3047,11 @@
                                 <div class="notification-item-content">
                                     <div class="d-flex align-items-center justify-content-between">
                                         <div class="notification-item-title">Inquiries</div>
-                                        <span class="notification-item-badge bg-light text-muted">Check</span>
+                                        {% if admin_pending_inquiries_count and admin_pending_inquiries_count > 0 %}
+                                        <span class="notification-item-badge bg-danger text-white" id="dropdown-inquiries-badge">{{ admin_pending_inquiries_count }} New</span>
+                                        {% else %}
+                                        <span class="notification-item-badge bg-light text-muted" id="dropdown-inquiries-badge">Up to date</span>
+                                        {% endif %}
                                     </div>
                                     <div class="notification-item-desc">Customer messages and investment requests</div>
                                 </div>
@@ -3201,8 +3205,8 @@
                             href="{% url 'admin_dash:inquiry-management-page' %}" id="sidebar-inquiries-link">
                             <i class="fas fa-envelope"></i>
                             <span class="me-2">Inquiries</span>
-                            <span class="badge bg-danger rounded-pill ms-auto d-none"
-                                id="inquiry-notification-badge">0</span>
+                            <span class="badge bg-danger rounded-pill ms-auto {% if not admin_pending_inquiries_count or admin_pending_inquiries_count == 0 %}d-none{% endif %}"
+                                id="inquiry-notification-badge">{{ admin_pending_inquiries_count|default:0 }}</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -3612,22 +3616,16 @@
 
 
 
-                        // Update bell icon badge
-
-                        if (bellBadge) {
-
+                        // Update dropdown item badge
+                        const dropdownBadge = document.getElementById('dropdown-inquiries-badge');
+                        if (dropdownBadge) {
                             if (count > 0) {
-
-                                bellBadge.textContent = count;
-
-                                bellBadge.classList.remove('d-none');
-
+                                dropdownBadge.textContent = count + ' New';
+                                dropdownBadge.className = 'notification-item-badge bg-danger text-white';
                             } else {
-
-                                bellBadge.classList.add('d-none');
-
+                                dropdownBadge.textContent = 'Up to date';
+                                dropdownBadge.className = 'notification-item-badge bg-light text-muted';
                             }
-
                         }
 
 
