@@ -650,6 +650,21 @@
         gap: clamp(16px, 2vw, 24px);
     }
 
+    .contact-cards-grid.contact-cards-grid-two {
+        grid-template-columns: repeat(2, minmax(0, 360px)) !important;
+        justify-content: center !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        max-width: 800px !important;
+    }
+
+    @media (max-width: 640px) {
+        .contact-cards-grid.contact-cards-grid-two {
+            grid-template-columns: 1fr !important;
+            max-width: 420px !important;
+        }
+    }
+
     .contact-card {
         min-height: 0;
         padding: clamp(22px, 4vw, 32px) clamp(16px, 3vw, 24px);
@@ -906,17 +921,7 @@
         </div>
 
         <!-- Contact Cards Grid -->
-        <div class="contact-cards-grid">
-
-            <!-- Phone -->
-            <div class="contact-card">
-                <div class="contact-card-icon">
-                    <i class="bi bi-telephone"></i>
-                </div>
-                <h5 class="contact-card-title">Phone</h5>
-                <p class="contact-card-value">+91 9161 554 321</p>
-                <a href="javascript:void(0)" class="contact-card-link" data-bs-toggle="modal" data-bs-target="#callModal">Call Now</a>
-            </div>
+        <div class="contact-cards-grid contact-cards-grid-two">
 
             <!-- Email -->
             <div class="contact-card">
@@ -936,16 +941,6 @@
                 <h5 class="contact-card-title">Office Hours</h5>
                 <p class="contact-card-value">Mon – Sat<br>9:00 AM – 7:00 PM</p>
                 <a href="javascript:void(0)" class="contact-card-link" data-bs-toggle="modal" data-bs-target="#timingsModal">View Timings</a>
-            </div>
-
-            <!-- Office Location -->
-            <div class="contact-card">
-                <div class="contact-card-icon">
-                    <i class="bi bi-geo-alt"></i>
-                </div>
-                <h5 class="contact-card-title">Office Location</h5>
-                <p class="contact-card-value">HHectare<br>123 Real Estate Blvd.</p>
-                <a href="#" class="contact-card-link">Get Directions</a>
             </div>
 
         </div>
