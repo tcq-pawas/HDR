@@ -200,7 +200,7 @@ class AdminDashboardView(AdminDashboardMixin, TemplateView):
         
         # Count unique customers who made investments after inquiries
         customers_with_investments = User.objects.filter(
-            investment__isnull=False
+            investments__isnull=False
         ).distinct().count()
         
         return round((customers_with_investments / total_inquiries) * 100, 2)
