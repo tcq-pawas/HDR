@@ -260,6 +260,7 @@ EMAIL_BACKEND = os.getenv(
     'EMAIL_BACKEND',
     'Apps.Administration.email_backend.SystemSettingsEmailBackend'
 )
+
 EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
 EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587'))
 EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() in ('true', '1', 't', 'yes')
