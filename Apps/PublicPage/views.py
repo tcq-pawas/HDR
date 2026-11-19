@@ -114,6 +114,19 @@ def property_detail(request, slug):
             )
             if not created:
                 pass
+
+        # Send Email and SMS notification to Agent
+        try:
+            from Apps.Administration.notification_utils import notify_agent_on_inquiry
+            notify_agent_on_inquiry(
+                property_obj=property_obj,
+                customer_name=name,
+                customer_email=email,
+                customer_phone=phone_number,
+                customer_message=message
+            )
+        except Exception:
+            pass
             
         return redirect('public:property_detail', slug=slug)
 
