@@ -21,7 +21,7 @@ def seo_defaults(request):
         "seo_origin": origin,
         "seo_canonical": f"{origin}{path}",
         "seo_logo_url": logo_url,
-        "seo_email": getattr(settings, "SITE_CONTACT_EMAIL", "info@hhectare.com"),
+        "seo_email": getattr(settings, "SITE_CONTACT_EMAIL", "hhectareofficial@gmail.com"),
         "seo_phone": getattr(settings, "SITE_CONTACT_PHONE", "+919506688688"),
         "seo_phone_display": getattr(settings, "SITE_CONTACT_PHONE_DISPLAY", "+91 95066 88688"),
         "seo_same_as": getattr(settings, "SITE_SAME_AS", []),

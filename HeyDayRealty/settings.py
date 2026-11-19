@@ -256,8 +256,19 @@ LOGOUT_REDIRECT_URL = '/auth/login/'
 
 
 # Email settings
-EMAIL_BACKEND = 'Apps.Administration.email_backend.SystemSettingsEmailBackend'
-DEFAULT_FROM_EMAIL = 'noreply@heydayrealty.com'
+EMAIL_BACKEND = os.getenv(
+    'EMAIL_BACKEND',
+    'Apps.Administration.email_backend.SystemSettingsEmailBackend'
+)
+
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587'))
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() in ('true', '1', 't', 'yes')
+EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL', 'False').lower() in ('true', '1', 't', 'yes')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER or 'noreply@hhectare.com')
+SERVER_EMAIL = os.getenv('SERVER_EMAIL', DEFAULT_FROM_EMAIL)
 
 # Site branding / display metadata
 SITE_NAME = 'HHectare'
@@ -269,7 +280,7 @@ SITE_DESCRIPTION = (
 )
 SITE_CANONICAL_HOST = os.getenv('SITE_CANONICAL_HOST', 'hhectare.com')
 SITE_CANONICAL_ORIGIN = os.getenv('SITE_CANONICAL_ORIGIN', 'https://hhectare.com')
-SITE_CONTACT_EMAIL = os.getenv('SITE_CONTACT_EMAIL', 'info@hhectare.com')
+SITE_CONTACT_EMAIL = os.getenv('SITE_CONTACT_EMAIL', 'hhectareofficial@gmail.com')
 SITE_CONTACT_PHONE = os.getenv('SITE_CONTACT_PHONE', '+919506688688')
 SITE_CONTACT_PHONE_DISPLAY = os.getenv('SITE_CONTACT_PHONE_DISPLAY', '+91 95066 88688')
 # Official social profile URLs only — leave empty until profiles are confirmed

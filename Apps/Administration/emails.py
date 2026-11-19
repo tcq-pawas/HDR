@@ -57,6 +57,7 @@ def send_contact_inquiry_email(inquiry, website_config):
         
         # Create email connection with website-specific SMTP settings
         connection = get_connection(
+            backend='django.core.mail.backends.smtp.EmailBackend',
             host=smtp_host,
             port=smtp_port,
             username=smtp_username,

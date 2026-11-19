@@ -242,10 +242,11 @@ HHectare System
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=recipients,
             html_message=html_message,
-            fail_silently=True
+            fail_silently=False
         )
     except Exception as e:
-        pass
+        import logging
+        logging.getLogger(__name__).error(f"Failed to send admin enquiry notification email: {str(e)}", exc_info=True)
 
 
 def contact(request):
