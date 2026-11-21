@@ -97,7 +97,7 @@
                     <img src="{% static 'img/logo.png' %}" alt="Logo" title="Logo" style="height:40px; width:auto;">
                 </a>
 
-                <button type="button" class="btn-close text-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                <button type="button" class="btn-close-white btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 
             </div>
 
@@ -373,7 +373,7 @@
 
                 <!-- Logo -->
 
-                <a class="brand-logo" href="{% url 'agent:dashboard' %}" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
+                <a class="brand-logo" href="{% url 'agent:dashboard' %}" style="display:flex; align-items:center; gap:10px; text-decoration:none; margin:auto;padding-bottom: 12px;">
 
                     <img src="{% static 'img/logo.png' %}" alt="Logo" title="Logo" style="height:40px; width:auto;">
 
@@ -678,7 +678,7 @@
 
                             {{ message }}
 
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            <button type="button" class="btn-close agent-alert-close-btn" data-bs-dismiss="alert" aria-label="Close"></button>
 
                         </div>
 

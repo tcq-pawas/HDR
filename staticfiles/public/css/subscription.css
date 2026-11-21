@@ -676,6 +676,11 @@
         max-width: 200px;
     }
     
+    .subs-alert-msg{
+        width:100%;
+        max-width:340px;
+    }
+
     .billing-toggle {
         flex-wrap: wrap;
         justify-content: center;
@@ -703,6 +708,9 @@
 }
 
 @media (max-width: 480px) {
+    .subs-alert-msg{
+        max-width:280px;
+    }
     .subscription-hero-features {
         flex-direction: column;
         align-items: center;

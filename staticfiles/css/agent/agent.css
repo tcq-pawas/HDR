@@ -1698,6 +1698,7 @@ body {
 .info-row {
     display: flex;
     margin-bottom: 0.75rem;
+    align-items: center !important;
 }
 
 .info-label {
@@ -5038,6 +5039,10 @@ body {
 
 }
 
+.agent-alert-close-btn{
+    margin-top:6px;
+    padding: 1.25rem 1.6rem !important;
+}
 
 
 .analytics-widget {
@@ -6926,6 +6931,13 @@ flex-shrink: 0;
     border: none;
     border-radius: 16px;
     overflow: hidden;
+}
+
+.doc-modal form {
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 3.5rem);
+    min-height: 0;
 }
 
 .doc-modal .modal-header {
@@ -9008,7 +9020,6 @@ tbody tr:hover {
     box-shadow: 0 6px 20px rgba(45,122,79,0.4);
     color: #fff;
 }
-
 /* Org cards */
 .org-card {
     background: #fff;
@@ -9017,6 +9028,8 @@ tbody tr:hover {
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     overflow: hidden;
     transition: all 0.25s ease;
+    width:100%;
+    max-width: 400px;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -10617,6 +10630,13 @@ tbody tr:hover {
     font-weight: 600;
 }
 
+.org-email-phn-row{
+    display: flex;
+    flex-wrap: nowrap;
+    max-width:none;
+    gap:26px;
+}
+
 /* =========================================================
    LARGE DESKTOP
    ========================================================= */
@@ -10835,6 +10855,30 @@ tbody tr:hover {
    ========================================================= */
 
 @media (max-width: 480px) {
+    .org-meta{
+        flex-direction: column;
+    }
+    .info-grid{
+        font-size: 8px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    
+    .card-icon-box{
+        width:34px;
+        height:34px;
+    }
+
+    .detail-card{
+        padding:0.6rem 0.8rem;
+    }
+    .card-meta-val{
+        font-size:11px;
+    }
+    .org-status-pill{
+        max-width: 70px !important;
+        padding-right:1rem ;
+        padding-left:8px !important;
+    }
     .property-type-header {
         padding: 15px 13px;
     }
@@ -10880,6 +10924,13 @@ tbody tr:hover {
    ========================================================= */
 
 @media (max-width: 360px) {
+    .btn-card-sm {
+        justify-content: center;
+    }
+    .org-card-actions{
+        flex-direction: column;
+        gap:15px;
+    }
     .property-type-header {
         padding: 13px 11px;
         border-radius: 12px;
@@ -11456,6 +11507,7 @@ tbody tr:hover {
 .info-row {
     display: flex;
     margin-bottom: 0.75rem;
+    align-items: center;
 }
 
 .info-label {
@@ -11687,8 +11739,40 @@ tbody tr:hover {
     font-size: 0.85rem;
     margin-top: 0.25rem;
 }
+.inv-agent-name-section{
+    flex-wrap: nowrap;
+    gap:23px;
+}
 
 @media (max-width: 768px) {
+    .inv-agent-name-section{
+        --bs-gutter-x: 0;
+        flex-direction: column;
+        gap:1px;
+    }
+    .inv-agt-width{
+        width: 100%;
+    }
+
+    .members-card tbody td i {
+        font-size:12px;
+    }
+    .bi::before,
+    [class*=" bi-"]::before {
+        display: inline; 
+    }
+    .org-email-width{
+        width: 100%;
+    }
+    .org-email-phn-row{
+        gap:0;
+        max-width: none !important;
+        flex-direction: column;
+    }
+    .area-section{
+        gap:0;
+        max-width: none !important;  
+    }
     .form-row {
         grid-template-columns: 1fr;
     }
@@ -12083,6 +12167,10 @@ tbody tr:hover {
     padding: 6px;
     gap: 6px;
     border: 1px solid #e2e8f0;
+}
+
+.agent-billing-toggle{
+    max-width: none !important;
 }
 
 .billing-toggle-btn {
@@ -13119,6 +13207,7 @@ tbody tr:hover {
 .settings-page .settings-field .form-label {
     display: block;
     margin-bottom: 0.4rem;
+    font-size:12px;
 }
 
 .settings-page .settings-field .form-control {
@@ -14087,7 +14176,7 @@ body:has(.premium-container .verification-grid) #addDocumentModal .modal-title {
 }
 
 body:has(.premium-container .verification-grid) #addDocumentModal .btn-close {
-    background: rgba(255, 255, 255, 0.2);
+    /* background: rgba(255, 255, 255, 0.2); */
     color: #ffffff;
     border: none;
     opacity: 1;
@@ -14095,7 +14184,7 @@ body:has(.premium-container .verification-grid) #addDocumentModal .btn-close {
 }
 
 body:has(.premium-container .verification-grid) #addDocumentModal .btn-close:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.3); 
 }
 
 body:has(.premium-container .verification-grid) #addDocumentModal .modal-body {
@@ -14390,6 +14479,10 @@ body:has(.premium-container .verification-grid) #viewDocumentModal .view-img {
     
     .premium-container:has(.verification-grid) .step-line {
         margin-top: 20px;
+    }
+    body:has(.premium-container .verification-grid) #addDocumentModal .upload-sides-grid {
+        grid-template-columns: 1fr;
+        gap:20px;
     }
 }
 
@@ -15155,6 +15248,13 @@ body:has(.premium-container .verification-grid) #viewDocumentModal .view-img {
 
 /* Small Mobile - 320px to 480px */
 @media (max-width: 480px) {
+    .org-cards-margin-right{
+        margin-left: 0;
+    }
+    .row > .org-item-section {
+       padding-left: 0;
+       padding-right: 0;
+    }
     .communication-form-container .communication-form-header {
         padding: 1rem 1.25rem;
     }
@@ -15439,10 +15539,23 @@ body:has(.premium-container .verification-grid) #viewDocumentModal .view-img {
     background: #475569;
 }
 
-/* ==================== Responsive Breakpoints ==================== */
+@media (min-width: 992px) {
+  .col-lg-4.org-item-section {
+    flex: 0 0 auto;
+    width: 53%;
+  }
+}
 
+/* ==================== Responsive Breakpoints ==================== */
 /* Laptop (1024px and below) */
 @media (max-width: 1024px) {
+    .premium-container:has(.verification-grid) .requirements-row {
+       grid-template-columns: 1fr;
+    }
+    .org-card-body {
+        width:100%; 
+        padding:16px;
+    }
     .visit-form-container .page-header {
         padding: 18px 24px;
     }
@@ -15460,8 +15573,21 @@ body:has(.premium-container .verification-grid) #viewDocumentModal .view-img {
     }
 }
 
+@media (min-width: 768px) and (max-width: 1072px) {
+  .table > :not(caption) > * > * {
+    padding: 0;
+  }
+}
+
 /* Tablet (768px and below) */
 @media (max-width: 768px) {
+    .agt-form-action-buttons{
+        flex-direction:column;
+        gap:20px !important;
+    }
+    .agent-alert-close-btn{
+        margin-top:5px;
+    }
     .visit-form-container .page-header {
         padding: 16px 20px;
         border-radius: 12px;
@@ -15533,6 +15659,9 @@ body:has(.premium-container .verification-grid) #viewDocumentModal .view-img {
 
 /* Mobile (480px and below) */
 @media (max-width: 480px) {
+    .agent-alert-close-btn{
+        margin-top:3px;
+    }
     .visit-form-container .page-header {
         padding: 14px 18px;
         border-radius: 10px;
@@ -15854,6 +15983,12 @@ body:has(.premium-container .verification-grid) #viewDocumentModal .view-img {
     .followup-form-container .btn {
         width: 100%;
         justify-content: center;
+    }
+}
+
+@media (max-width:570px){
+    .agent-header{
+       height: 70px !important;
     }
 }
 

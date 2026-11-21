@@ -245,7 +245,7 @@
 {% if messages %}
 <div class="container mt-4 mb-0" style="position: relative; z-index: 1000;">
     {% for message in messages %}
-    <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} alert-dismissible fade show shadow-sm" role="alert">
+    <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} alert-dismissible fade show shadow-sm subs-alert-msg" role="alert">
         {% if message.tags == 'success' %}<i class="bi bi-check-circle-fill me-2 text-success"></i>{% endif %}
         {% if message.tags == 'warning' %}<i class="bi bi-exclamation-triangle-fill me-2 text-warning"></i>{% endif %}
         {% if message.tags == 'error' %}<i class="bi bi-x-circle-fill me-2 text-danger"></i>{% endif %}

@@ -42,13 +42,13 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-6 mb-3">
+        <div class="row inv-agent-name-section">
+            <div class="col-md-6 mb-3 inv-agt-width">
                 <label class="form-label" for="id_first_name">First name <span class="text-danger">*</span></label>
                 {{ form.first_name }}
                 {% if form.first_name.errors %}<div class="field-error">{{ form.first_name.errors.0 }}</div>{% endif %}
             </div>
-            <div class="col-md-6 mb-3">
+            <div class="col-md-6 mb-3 inv-agt-width">
                 <label class="form-label" for="id_last_name">Last name <span class="text-danger">*</span></label>
                 {{ form.last_name }}
                 {% if form.last_name.errors %}<div class="field-error">{{ form.last_name.errors.0 }}</div>{% endif %}
