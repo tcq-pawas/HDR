@@ -119,6 +119,18 @@ def notify_agent_on_inquiry(property_obj, customer_name, customer_email, custome
 
             if html_message:
                 msg.attach_alternative(html_message, "text/html")
+
+                logo_path = os.path.join(settings.BASE_DIR, 'static', 'img', 'hhectare_email_logo.png')
+                if os.path.exists(logo_path):
+                    with open(logo_path, 'rb') as f:
+                        img = MIMEImage(f.read(), _subtype='png')
+                        img.add_header('Content-ID', '<hhectare_email_logo>')
+                        img.add_header(
+                            'Content-Disposition',
+                            'inline',
+                            filename='hhectare-email-logo.png',
+                        )
+                        msg.attach(img)
             msg.send(fail_silently=False)
             print(f"[EMAIL SENT TO AGENT]: {agent_email}")
         except Exception as e:
