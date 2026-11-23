@@ -1,7 +1,7 @@
 import logging
 import os
-import base64
-from django.core.mail import send_mail
+from email.mime.image import MIMEImage
+from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 from django.template.loader import render_to_string
 from Apps.Administration.services.bulksms import send_sms
@@ -43,20 +43,6 @@ def mask_email(email):
         return f"{prefix}{'*' * masked_count}{suffix}@{domain}"
     return f"{masked_user}@{domain}"
 
-def get_logo_data_uri():
-    """
-    Returns base64 data URI of static/img/logo.png for inline email embedding
-    """
-    try:
-        logo_path = os.path.join(settings.BASE_DIR, 'static', 'img', 'logo.png')
-        if os.path.exists(logo_path):
-            with open(logo_path, 'rb') as f:
-                encoded = base64.b64encode(f.read()).decode('utf-8')
-                return f"data:image/png;base64,{encoded}"
-    except Exception as e:
-        print(f"[LOGO LOAD ERROR]: {e}")
-    return None
-
 def notify_agent_on_inquiry(property_obj, customer_name, customer_email, customer_phone, customer_message):
     seller = getattr(property_obj, 'seller', None)
     if not seller:
@@ -95,12 +81,10 @@ def notify_agent_on_inquiry(property_obj, customer_name, customer_email, custome
             f"Regards,\nHhectare Team"
         )
 
-        # Render HTML template
         try:
             domain = getattr(settings, 'SITE_DOMAIN', '127.0.0.1:8000')
             protocol = 'https' if getattr(settings, 'SECURE_SSL_REDIRECT', False) else 'http'
             dashboard_url = f"{protocol}://{domain}/dashboard/"
-            logo_data_uri = get_logo_data_uri()
 
             html_message = render_to_string('emails/inquiry_notification_agent.html', {
                 'agent_name': agent_name,
@@ -110,7 +94,6 @@ def notify_agent_on_inquiry(property_obj, customer_name, customer_email, custome
                 'customer_phone': masked_customer_phone,
                 'customer_message': customer_message,
                 'dashboard_url': dashboard_url,
-                'logo_data_uri': logo_data_uri,
             })
         except Exception as e:
             print(f"[HTML TEMPLATE ERROR]: {e}")
@@ -118,14 +101,26 @@ def notify_agent_on_inquiry(property_obj, customer_name, customer_email, custome
 
         try:
             from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@hhectare.com')
-            send_mail(
-                subject,
-                plain_message,
-                from_email,
-                [agent_email],
-                html_message=html_message,
-                fail_silently=False
+            msg = EmailMultiAlternatives(
+                subject=subject,
+                body=plain_message,
+                from_email=from_email,
+                to=[agent_email]
             )
+
+            if html_message:
+                msg.attach_alternative(html_message, "text/html")
+
+                # Attach logo inline via CID (Content-ID) for 100% email client compatibility
+                logo_path = os.path.join(settings.BASE_DIR, 'static', 'img', 'logo.png')
+                if os.path.exists(logo_path):
+                    with open(logo_path, 'rb') as f:
+                        img = MIMEImage(f.read())
+                        img.add_header('Content-ID', '<logo_image>')
+                        img.add_header('Content-Disposition', 'inline', filename='logo.png')
+                        msg.attach(img)
+
+            msg.send(fail_silently=False)
             print(f"[EMAIL SENT TO AGENT]: {agent_email}")
         except Exception as e:
             print(f"[EMAIL FAILED]: {e}")
