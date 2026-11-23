@@ -43,6 +43,10 @@ def notify_agent_on_inquiry(property_obj, customer_name, customer_email, custome
 
         # Render HTML template
         try:
+            domain = getattr(settings, 'SITE_DOMAIN', '127.0.0.1:8000')
+            protocol = 'https' if getattr(settings, 'SECURE_SSL_REDIRECT', False) else 'http'
+            dashboard_url = f"{protocol}://{domain}/dashboard/"
+
             html_message = render_to_string('emails/inquiry_notification_agent.html', {
                 'agent_name': agent_name,
                 'property_title': property_title,
@@ -50,7 +54,7 @@ def notify_agent_on_inquiry(property_obj, customer_name, customer_email, custome
                 'customer_email': customer_email,
                 'customer_phone': customer_phone,
                 'customer_message': customer_message,
-                'dashboard_url': '#',
+                'dashboard_url': dashboard_url,
             })
         except Exception as e:
             print(f"[HTML TEMPLATE ERROR]: {e}")
