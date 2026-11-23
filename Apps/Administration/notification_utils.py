@@ -1,6 +1,7 @@
 import logging
 from django.core.mail import send_mail
 from django.conf import settings
+from django.template.loader import render_to_string
 from Apps.Administration.services.bulksms import send_sms
 
 logger = logging.getLogger(__name__)
@@ -26,7 +27,9 @@ def notify_agent_on_inquiry(property_obj, customer_name, customer_email, custome
     # 1. Send Email Notification to Agent
     if agent_email:
         subject = f"New Inquiry Received for {property_title}"
-        email_message = (
+
+        # Plain text fallback
+        plain_message = (
             f"Hello {agent_name},\n\n"
             f"You have received a new inquiry on your property listing: '{property_title}'.\n\n"
             f"Inquiry Details:\n"
@@ -37,13 +40,30 @@ def notify_agent_on_inquiry(property_obj, customer_name, customer_email, custome
             f"Please log in to your dashboard to view and manage this lead.\n\n"
             f"Regards,\nHhectare Team"
         )
+
+        # Render HTML template
+        try:
+            html_message = render_to_string('emails/inquiry_notification_agent.html', {
+                'agent_name': agent_name,
+                'property_title': property_title,
+                'customer_name': customer_name,
+                'customer_email': customer_email,
+                'customer_phone': customer_phone,
+                'customer_message': customer_message,
+                'dashboard_url': '#',
+            })
+        except Exception as e:
+            print(f"[HTML TEMPLATE ERROR]: {e}")
+            html_message = None
+
         try:
             from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@hhectare.com')
             send_mail(
                 subject,
-                email_message,
+                plain_message,
                 from_email,
                 [agent_email],
+                html_message=html_message,
                 fail_silently=False
             )
             print(f"[EMAIL SENT TO AGENT]: {agent_email}")
@@ -66,4 +86,3 @@ def notify_agent_on_inquiry(property_obj, customer_name, customer_email, custome
     else:
         print(f"[SMS SKIPPED]: Agent {seller.username} has no phone.")
     print("==================================================")
-
