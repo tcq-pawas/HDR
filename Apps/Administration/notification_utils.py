@@ -86,6 +86,9 @@ def notify_agent_on_inquiry(property_obj, customer_name, customer_email, custome
             protocol = 'https' if getattr(settings, 'SECURE_SSL_REDIRECT', False) else 'http'
             dashboard_url = f"{protocol}://{domain}/dashboard/"
 
+            # Use live domain logo so email clients load it directly without attachments
+            logo_url = "https://hhectare.com/static/img/logo.png"
+
             html_message = render_to_string('emails/inquiry_notification_agent.html', {
                 'agent_name': agent_name,
                 'property_title': property_title,
@@ -94,6 +97,7 @@ def notify_agent_on_inquiry(property_obj, customer_name, customer_email, custome
                 'customer_phone': masked_customer_phone,
                 'customer_message': customer_message,
                 'dashboard_url': dashboard_url,
+                'logo_url': logo_url,
             })
         except Exception as e:
             print(f"[HTML TEMPLATE ERROR]: {e}")
@@ -110,15 +114,6 @@ def notify_agent_on_inquiry(property_obj, customer_name, customer_email, custome
 
             if html_message:
                 msg.attach_alternative(html_message, "text/html")
-
-                # Attach logo inline via CID (Content-ID) for 100% email client compatibility
-                logo_path = os.path.join(settings.BASE_DIR, 'static', 'img', 'logo.png')
-                if os.path.exists(logo_path):
-                    with open(logo_path, 'rb') as f:
-                        img = MIMEImage(f.read())
-                        img.add_header('Content-ID', '<logo_image>')
-                        img.add_header('Content-Disposition', 'inline', filename='logo.png')
-                        msg.attach(img)
 
             msg.send(fail_silently=False)
             print(f"[EMAIL SENT TO AGENT]: {agent_email}")
