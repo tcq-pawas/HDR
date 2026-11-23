@@ -20,12 +20,14 @@
             <a href="{% url 'agent:lead_add_followup' lead.id %}" class="btn lead-action-btn lead-action-btn--followup">
                 <i class="bi bi-plus-lg"></i> Add Follow-up
             </a>
+            {% if lead.phone %}
             <a href="tel:{{ lead.phone }}" class="btn lead-action-btn lead-action-btn--call">
                 <i class="bi bi-telephone"></i> Call
             </a>
             <a href="https://wa.me/{{ lead.phone }}" target="_blank" rel="noopener" class="btn lead-action-btn lead-action-btn--whatsapp">
                 <i class="bi bi-whatsapp"></i> WhatsApp
             </a>
+            {% endif %}
         </div>
     </div>
 
@@ -40,7 +42,7 @@
             </div>
             <div class="info-row">
                 <div class="info-label">Phone:</div>
-                <div class="info-value">{{ lead.phone }}</div>
+                <div class="info-value">{{ lead.phone|default:"N/A" }}</div>
             </div>
             <div class="info-row">
                 <div class="info-label">Email:</div>
@@ -60,7 +62,7 @@
             </div>
             <div class="info-row">
                 <div class="info-label">Budget:</div>
-                <div class="info-value">₹{{ lead.budget|floatformat:0|default:"N/A" }}</div>
+                <div class="info-value">{% if lead.budget %}₹{{ lead.budget|floatformat:0 }}{% else %}N/A{% endif %}</div>
             </div>
             <div class="info-row">
                 <div class="info-label">Property Interest:</div>
@@ -87,14 +89,14 @@
         <!-- Quick Actions -->
         <div class="card">
             <h3>Quick Actions</h3>
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                <a href="{% url 'agent:site_visit_add' %}?lead_id={{ lead.id }}" class="btn btn-primary" style="text-align: center;">
+            <div class="lead-quick-actions">
+                <a href="{% url 'agent:site_visit_add' %}?lead_id={{ lead.id }}" class="lead-quick-btn lead-quick-btn--primary">
                     <i class="bi bi-calendar-event"></i> Schedule Site Visit
                 </a>
-                <a href="{% url 'agent:booking_add' %}?lead_id={{ lead.id }}" class="btn btn-success" style="text-align: center;">
+                <a href="{% url 'agent:booking_add' %}?lead_id={{ lead.id }}" class="lead-quick-btn lead-quick-btn--success">
                     <i class="bi bi-cash-stack"></i> Create Booking
                 </a>
-                <a href="{% url 'agent:communication_send' %}?recipient={{ lead.phone }}" class="btn btn-secondary" style="text-align: center;">
+                <a href="{% url 'agent:communication_send' %}{% if lead.phone %}?recipient={{ lead.phone }}{% endif %}" class="lead-quick-btn lead-quick-btn--outline">
                     <i class="bi bi-chat-dots"></i> Send Message
                 </a>
             </div>

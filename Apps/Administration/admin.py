@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import (
     AdminProfile, SystemSettings, DashboardWidget, UserPermission,
     ActivityLog, SystemBackup, SystemMaintenance, Report, GeneratedReport,
-    Notification, SystemMetrics, WebsiteInquiry
+    Notification, SystemMetrics, WebsiteInquiry, UserVerification
 )
 
 # Django Admin branding
@@ -153,3 +153,13 @@ class WebsiteInquiryAdmin(admin.ModelAdmin):
         queryset.update(is_contacted=False)
         self.message_user(request, f"{queryset.count} inquiry(ies) marked as uncontacted.")
     mark_as_uncontacted.short_description = "Mark selected inquiries as uncontacted"
+
+
+@admin.register(UserVerification)
+class UserVerificationAdmin(admin.ModelAdmin):
+    list_display = ['user', 'phone_number', 'is_email_verified', 'is_mobile_verified', 'otp_created_at']
+    list_filter = ['is_email_verified', 'is_mobile_verified', 'otp_created_at']
+    search_fields = ['user__username', 'user__email', 'phone_number']
+    readonly_fields = ['otp_created_at']
+    date_hierarchy = 'otp_created_at'
+    ordering = ['-otp_created_at']

@@ -25,7 +25,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
-
     <title>{% block title %}Admin Dashboard - HHectare{% endblock %}</title>
     <meta name="robots" content="noindex, nofollow">
     <meta name="description" content="Administration portal.">
@@ -248,17 +247,11 @@
 
 
         .main-content-wrapper {
-
             padding: 32px;
-
             max-width: 100%;
-
-            margin-left: 275px;
-
-            width: calc(100% - 275px);
-
+            margin-left: 0;
+            width: 100%;
             min-width: 0;
-
         }
 
         /* Sidebar width fixes */
@@ -2327,6 +2320,595 @@
           padding: 6px;
         }
 
+        .modal-backdrop {
+            z-index: 2000 !important;
+        }
+
+        .modal {
+            z-index: 2050 !important;
+            padding-left: 0 !important;
+        }
+
+        @media (min-width: 992px) {
+            .modal-dialog {
+                margin-left: calc(275px + (100% - 275px - var(--bs-modal-width, 1140px)) / 2) !important;
+                margin-right: auto !important;
+            }
+        }
+
+        /* Modern Header & Sidebar Styling matching Reference UI */
+        .admin-header {
+            background: #ffffff !important;
+            border-bottom: 1px solid #e2e8f0 !important;
+            height: 70px !important;
+            padding: 0 !important;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03) !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 275px !important;
+            right: 0 !important;
+            width: calc(100% - 275px) !important;
+            z-index: 1000 !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+
+        .admin-header .header-content {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            height: 100% !important;
+            width: 100% !important;
+            padding: 0 24px 0 20px !important;
+        }
+
+        .admin-header .header-left {
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            padding-top: 0 !important;
+            gap: 16px;
+        }
+
+        .admin-header .sidebar-toggle-btn {
+            background: transparent;
+            border: none;
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #0f172a;
+            font-size: 1.4rem;
+            cursor: pointer;
+            padding: 0;
+            transition: color 0.2s ease;
+        }
+
+        .admin-header .sidebar-toggle-btn:hover {
+            color: #005427;
+        }
+
+        .admin-header .header-page-title {
+            font-size: 1.45rem !important;
+            font-weight: 800 !important;
+            color: #0f172a !important;
+            margin: 0 !important;
+            line-height: 1.2 !important;
+            letter-spacing: -0.02em !important;
+            transform: translateY(2px);
+        }
+
+        .admin-header .header-right {
+            display: flex !important;
+            align-items: center !important;
+            gap: 20px !important;
+            padding: 0 !important;
+        }
+
+        .admin-header .header-icon-btn {
+            background: transparent;
+            border: none;
+            width: 36px;
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #1e293b;
+            font-size: 1.35rem;
+            position: relative;
+            text-decoration: none;
+            padding: 0;
+            transition: color 0.2s ease;
+        }
+
+        .admin-header .header-icon-btn:hover {
+            color: #005427;
+        }
+
+        .admin-header .header-icon-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #10b981;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+            padding: 0 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1;
+        }
+
+        /* Profile Trigger */
+        .admin-header .header-profile-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .admin-header .header-profile-avatar {
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: #cbd5e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .admin-header .header-profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .admin-header .header-profile-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2px;
+            text-align: left;
+        }
+
+        .admin-header .header-profile-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #0f172a;
+            white-space: nowrap;
+        }
+
+        .admin-header .header-verified-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #047857;
+            background: #d1fae5;
+            padding: 2px 10px;
+            border-radius: 20px;
+        }
+
+        .admin-header .header-profile-chevron {
+            font-size: 13px;
+            color: #0f172a;
+            font-weight: 700;
+            margin-left: 6px;
+            transition: transform 0.2s ease;
+        }
+
+        .admin-header .dropdown.show .header-profile-chevron {
+            transform: rotate(180deg);
+        }
+
+        /* Notifications Dropdown Panel */
+        .admin-header .notifications-dropdown-menu {
+            width: 340px;
+            max-width: 90vw;
+            border-radius: 14px;
+            padding: 0;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            margin-top: 12px !important;
+            overflow: hidden;
+        }
+
+        .notifications-dropdown-header {
+            padding: 14px 18px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .notifications-dropdown-header h6 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .notifications-dropdown-body {
+            max-height: 360px;
+            overflow-y: auto;
+            padding: 6px 0;
+        }
+
+        .notification-dropdown-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 16px;
+            text-decoration: none;
+            color: inherit;
+            transition: background 0.15s ease;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .notification-dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-dropdown-item:hover {
+            background: #f8fafc;
+        }
+
+        .notification-item-icon {
+            width: 38px;
+            height: 38px;
+            min-width: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .notification-item-icon.kyc {
+            background: #e0f2fe;
+            color: #0284c7;
+        }
+
+        .notification-item-icon.property {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .notification-item-icon.general {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .notification-item-content {
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        .notification-item-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 2px;
+        }
+
+        .notification-item-desc {
+            font-size: 12px;
+            color: #64748b;
+            line-height: 1.35;
+        }
+
+        .notification-item-badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 12px;
+            white-space: nowrap;
+        }
+
+        .notifications-dropdown-footer {
+            padding: 10px 16px;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .notifications-dropdown-footer a {
+            font-size: 12px;
+            font-weight: 600;
+            color: #005427;
+            text-decoration: none;
+        }
+
+        .notifications-dropdown-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .admin-header .header-profile-menu {
+            min-width: 200px;
+            border-radius: 12px;
+            padding: 8px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+            margin-top: 10px !important;
+        }
+
+        .admin-header .header-profile-menu .dropdown-item {
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.15s ease;
+        }
+
+        .admin-header .header-profile-menu .dropdown-item:hover {
+            background-color: #f1f5f9;
+            color: #005427;
+        }
+
+        .admin-header .header-profile-menu .dropdown-item.text-danger:hover {
+            background-color: #fef2f2;
+            color: #dc2626 !important;
+        }
+
+        /* Sidebar Logo in Dedicated Bordered Container */
+        .sidebar-brand-box {
+            background: transparent;
+            border: 1.5px solid rgba(255, 255, 255, 0.4);
+            border-radius: 12px;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 16px;
+            margin-bottom: 20px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-brand-box:hover {
+            border-color: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar-brand-box img {
+            height: 34px;
+            width: auto;
+            max-width: 100%;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+        }
+
+        /* Logo switching: show full logo by default, icon logo when collapsed */
+        .sidebar-logo-icon { display: none; }
+        body.sidebar-collapsed .sidebar-logo-full { display: none; }
+        body.sidebar-collapsed .sidebar-logo-icon {
+            display: block;
+            height: 40px;
+            width: 40px;
+            object-fit: contain;
+            filter: none;
+        }
+
+        /* Collapsed brand box: circular centered */
+        body.sidebar-collapsed nav.sidebar .sidebar-brand-box {
+            padding: 0 !important;
+            margin: 12px auto 16px auto !important;
+            width: 46px !important;
+            height: 46px !important;
+            min-width: 46px !important;
+            min-height: 46px !important;
+            border-radius: 50% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            overflow: hidden !important;
+            box-sizing: border-box !important;
+        }
+
+        body.sidebar-collapsed nav.sidebar .sidebar-brand-box .sidebar-logo-icon {
+            width: 30px !important;
+            height: 30px !important;
+            object-fit: contain !important;
+            margin: 0 !important;
+            display: block !important;
+        }
+
+
+
+
+        /* App container & main content offsets */
+        .app-container {
+            padding-top: 70px !important;
+        }
+
+        .main-content-wrapper {
+            margin-top: 0 !important;
+        }
+
+        /* Smooth Transitions */
+        nav.sidebar {
+            transition: width 0.3s ease, min-width 0.3s ease, max-width 0.3s ease, transform 0.3s ease !important;
+        }
+
+        .admin-header,
+        .main-content,
+        .main-content-wrapper {
+            transition: left 0.3s ease, width 0.3s ease, margin-left 0.3s ease !important;
+        }
+
+        /* Desktop Mini-Sidebar (Collapsed State) */
+        @media (min-width: 992px) {
+            body.sidebar-collapsed nav.sidebar {
+                width: 78px !important;
+                min-width: 78px !important;
+                max-width: 78px !important;
+                overflow: hidden !important;
+                overflow-x: hidden !important;
+                overflow-y: hidden !important;
+                scrollbar-width: none !important;
+            }
+
+            body.sidebar-collapsed nav.sidebar::-webkit-scrollbar {
+                display: none !important;
+                width: 0 !important;
+                height: 0 !important;
+            }
+
+            body.sidebar-collapsed nav.sidebar .p-3 {
+                padding: 16px 8px !important;
+                overflow: hidden !important;
+            }
+
+            body.sidebar-collapsed nav.sidebar .nav {
+                align-items: center !important;
+            }
+
+            body.sidebar-collapsed nav.sidebar .nav-item {
+                display: flex !important;
+                justify-content: center !important;
+                width: 100% !important;
+            }
+
+            body.sidebar-collapsed .admin-header {
+                left: 78px !important;
+                width: calc(100% - 78px) !important;
+            }
+
+            body.sidebar-collapsed .app-container {
+                display: flex !important;
+            }
+
+            body.sidebar-collapsed .main-content {
+                flex: 1 1 auto !important;
+                min-width: 0 !important;
+                margin-left: 78px !important;
+                width: calc(100% - 78px) !important;
+                max-width: calc(100% - 78px) !important;
+                overflow-x: hidden !important;
+            }
+
+            body.sidebar-collapsed .main-content-wrapper {
+                margin: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 24px 30px !important;
+                box-sizing: border-box !important;
+            }
+
+            body.sidebar-collapsed .content-container,
+            body.sidebar-collapsed .main-content-wrapper > .container-fluid,
+            body.sidebar-collapsed .page-header {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            body.sidebar-collapsed .sidebar-brand-box {
+                padding: 8px 4px !important;
+                width: 54px !important;
+                height: 48px !important;
+                margin: 12px auto 20px auto !important;
+                overflow: hidden !important;
+            }
+
+            body.sidebar-collapsed .sidebar-brand-box img {
+                height: 24px !important;
+                object-position: left center !important;
+            }
+
+            body.sidebar-collapsed nav.sidebar .nav-link {
+                width: 44px !important;
+                height: 44px !important;
+                min-width: 44px !important;
+                padding: 0 !important;
+                margin: 4px auto !important;
+                border-radius: 50% !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                text-align: center !important;
+                font-size: 0 !important;
+                gap: 0 !important;
+                transform: none !important;
+                box-sizing: border-box !important;
+            }
+
+            body.sidebar-collapsed nav.sidebar .nav-link:hover {
+                transform: none !important;
+                border-radius: 50% !important;
+                background-color: rgba(255, 255, 255, 0.15) !important;
+                color: #ffffff !important;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15) !important;
+            }
+
+            body.sidebar-collapsed nav.sidebar .nav-link.active {
+                transform: none !important;
+                border-radius: 50% !important;
+                background-color: #ffffff !important;
+                color: #005427 !important;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+            }
+
+            body.sidebar-collapsed nav.sidebar .nav-link > i:first-child,
+            body.sidebar-collapsed nav.sidebar .nav-link > .bi:first-child,
+            body.sidebar-collapsed nav.sidebar .nav-link i {
+                font-size: 1.25rem !important;
+                margin: 0 !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                width: auto !important;
+                min-width: auto !important;
+                height: auto !important;
+                flex: none !important;
+                line-height: 1 !important;
+            }
+
+            body.sidebar-collapsed nav.sidebar .nav-link .fa-chevron-down,
+            body.sidebar-collapsed nav.sidebar .nav-link .badge {
+                display: none !important;
+            }
+
+            /* Submenus: hidden in collapsed state; JS auto-expands sidebar when user clicks a dropdown */
+            body.sidebar-collapsed nav.sidebar .collapse {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 991px) {
+            .admin-header {
+                left: 0 !important;
+                width: 100% !important;
+            }
+            .admin-header .header-content {
+                padding: 0 16px !important;
+            }
+            .app-container {
+                padding-top: 70px !important;
+            }
+        }
 </style>
 
 
@@ -2343,122 +2925,217 @@
 
 
 <body class="admin-dashboard">
+    <script>
+        (function() {
+            try {
+                if (window.innerWidth >= 992 && localStorage.getItem('admin_sidebar_collapsed') === 'true') {
+                    document.body.classList.add('sidebar-collapsed');
+                }
+            } catch (e) {}
+        })();
+    </script>
 
-
-
-    <div class="app-container">
-
-
-
-        <!-- Mobile Menu Toggle -->
-
-
-
-        <button class="mobile-menu-toggle" onclick="toggleSidebar()">
-
-
-
-            <i class="fas fa-bars"></i>
-
-
-
-        </button>
-
-
-
-
-
-
-
-        <!-- Sidebar -->
-
-
-
-        <nav class="sidebar" id="sidebar">
-
-
-
-            <div class="sidebar-brand">
-
-
-
-                <a href="{% url 'admin_dash:dashboard' %}" class="text-decoration-none d-inline-block text-reset">
-                    <img src="{% static 'img/logo.png' %}" alt="Logo" title="Logo" class="d-block mb-1" style="height:40px; width:auto;">
-                </a>
-
-
-
+    <!-- Top Header -->
+    <header class="admin-header">
+        <div class="header-content">
+            <!-- Left: Sidebar toggle + Page Title -->
+            <div class="header-left">
+                <button type="button" class="sidebar-toggle-btn" onclick="toggleSidebar()" aria-label="Toggle Navigation">
+                    <i class="bi bi-list"></i>
+                </button>
+                <h1 class="header-page-title mb-0">
+                    {% block header_page_title %}
+                        {% if request.resolver_match.url_name == 'dashboard' %}
+                            Dashboard
+                        {% elif 'verification' in request.resolver_match.url_name %}
+                            KYC Verifications
+                        {% elif 'customer' in request.resolver_match.url_name %}
+                            Customers
+                        {% elif 'agent' in request.resolver_match.url_name %}
+                            Agents
+                        {% elif 'investor' in request.resolver_match.url_name %}
+                            Investors
+                        {% elif 'property' in request.resolver_match.url_name %}
+                            Properties
+                        {% elif 'inquiry' in request.resolver_match.url_name %}
+                            Inquiries
+                        {% elif 'investment' in request.resolver_match.url_name %}
+                            Investments
+                        {% elif 'communication' in request.resolver_match.url_name %}
+                            Communications
+                        {% elif 'subscription' in request.resolver_match.url_name %}
+                            Subscriptions
+                        {% elif 'report' in request.resolver_match.url_name %}
+                            Reports
+                        {% else %}
+                            Admin Dashboard
+                        {% endif %}
+                    {% endblock %}
+                </h1>
             </div>
 
+            <!-- Right: Notifications & Profile Dropdown -->
+            <div class="header-right">
+                <!-- Notifications Dropdown Section -->
+                <div class="dropdown">
+                    <button class="header-icon-btn border-0 bg-transparent" data-bs-toggle="dropdown" aria-expanded="false" title="Notifications" id="adminNotificationBtn">
+                        <i class="bi bi-bell"></i>
+                        {% if admin_total_notifications_count and admin_total_notifications_count > 0 %}
+                        <span class="header-icon-badge">{{ admin_total_notifications_count }}</span>
+                        {% elif pending_verifications_count %}
+                        <span class="header-icon-badge">{{ pending_verifications_count }}</span>
+                        {% endif %}
+                    </button>
 
-
-
-
-
-
-            <div class="p-3 flex-grow-1" style="overflow-x: visible;">
-
-
-
-                <!-- Profile Section -->
-
-
-
-                <div class="mb-4 p-3 rounded" style="background: rgba(255, 255, 255, 0.1);">
-
-
-
-                    <div class="d-flex align-items-center justify-content-around">
-
-
-
-                        <div class="rounded-circle bg-white d-inline-flex align-items-center justify-content-center me-3"
-
-                            style="width: 48px; height: 48px;">
-
-
-
-                            {% if user.profile.profile_picture %}
-
-
-
-                            <img src="{{ user.profile.profile_picture.url }}" alt="Profile" class="rounded-circle"
-
-                                style="width: 44px; height: 44px; object-fit: cover;">
-
-
-
-                            {% else %}
-
-
-
-                            <i class="fas fa-user-shield fa-lg" style="color: var(--primary);"></i>
-
-
-
-                            {% endif %}
-
-
-
+                    <!-- Notifications Dropdown Menu -->
+                    <div class="dropdown-menu dropdown-menu-end notifications-dropdown-menu shadow border-0" aria-labelledby="adminNotificationBtn">
+                        <div class="notifications-dropdown-header">
+                            <div class="d-flex align-items-center gap-2">
+                                <h6>Notifications</h6>
+                                {% if admin_total_notifications_count and admin_total_notifications_count > 0 %}
+                                <span class="badge bg-danger rounded-pill">{{ admin_total_notifications_count }} new</span>
+                                {% endif %}
+                            </div>
+                            <small class="text-muted">Admin Alerts</small>
                         </div>
 
+                        <div class="notifications-dropdown-body">
+                            <!-- KYC Verification Alert -->
+                            <a href="{% url 'admin_dash:document_verification_list' %}" class="notification-dropdown-item">
+                                <div class="notification-item-icon kyc">
+                                    <i class="bi bi-shield-check"></i>
+                                </div>
+                                <div class="notification-item-content">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div class="notification-item-title">KYC Verifications</div>
+                                        {% if admin_pending_kyc_count and admin_pending_kyc_count > 0 %}
+                                        <span class="notification-item-badge bg-warning text-dark">{{ admin_pending_kyc_count }} Pending</span>
+                                        {% elif pending_verifications_count %}
+                                        <span class="notification-item-badge bg-warning text-dark">{{ pending_verifications_count }} Pending</span>
+                                        {% else %}
+                                        <span class="notification-item-badge bg-light text-muted">Up to date</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="notification-item-desc">Agent documents waiting for admin approval</div>
+                                </div>
+                            </a>
 
+                            <!-- Property Reviews Alert -->
+                            <a href="{% url 'admin_dash:property-review' %}" class="notification-dropdown-item">
+                                <div class="notification-item-icon property">
+                                    <i class="bi bi-building"></i>
+                                </div>
+                                <div class="notification-item-content">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div class="notification-item-title">Property Reviews</div>
+                                        {% if admin_pending_property_count and admin_pending_property_count > 0 %}
+                                        <span class="notification-item-badge bg-warning text-dark">{{ admin_pending_property_count }} Pending</span>
+                                        {% else %}
+                                        <span class="notification-item-badge bg-light text-muted">Up to date</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="notification-item-desc">New properties submitted by agents</div>
+                                </div>
+                            </a>
 
-                        <div>
+                            <!-- Inquiries Management -->
+                            <a href="{% url 'admin_dash:inquiry-management-page' %}" class="notification-dropdown-item">
+                                <div class="notification-item-icon general">
+                                    <i class="bi bi-envelope"></i>
+                                </div>
+                                <div class="notification-item-content">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div class="notification-item-title">Inquiries</div>
+                                        {% if admin_pending_inquiries_count and admin_pending_inquiries_count > 0 %}
+                                        <span class="notification-item-badge bg-danger text-white" id="dropdown-inquiries-badge">{{ admin_pending_inquiries_count }} New</span>
+                                        {% else %}
+                                        <span class="notification-item-badge bg-light text-muted" id="dropdown-inquiries-badge">Up to date</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="notification-item-desc">Customer messages and investment requests</div>
+                                </div>
+                            </a>
 
+                            <!-- Custom Admin Notifications if any -->
+                            {% if admin_recent_notifications %}
+                                {% for notif in admin_recent_notifications %}
+                                <div class="notification-dropdown-item">
+                                    <div class="notification-item-icon general">
+                                        <i class="bi bi-info-circle"></i>
+                                    </div>
+                                    <div class="notification-item-content">
+                                        <div class="notification-item-title">{{ notif.title }}</div>
+                                        <div class="notification-item-desc">{{ notif.message|truncatewords:8 }}</div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
 
-
-                            <div class="fw-bold text-white">{{ user.get_full_name|default:user.username }}</div>
-
-
-
-                            <div class="small text-white-50">Administrator</div>
-                            <a href="{% url 'admin_dash:view_profile' %}" class="btn btn-xs mt-2 w-100 d-flex align-items-center justify-content-center text-center text-white" style="font-size: 0.75rem; padding: 5px 13px; background: rgba(255, 255, 255, 0.15); border: none; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);">
-                                View Profile
+                        <div class="notifications-dropdown-footer">
+                            <a href="{% url 'admin_dash:document_verification_list' %}">
+                                View All Pending Verifications <i class="bi bi-arrow-right ms-1"></i>
                             </a>
                         </div>
                     </div>
                 </div>
+
+                <!-- Profile Dropdown Section -->
+                <div class="dropdown">
+                    <div class="header-profile-btn" data-bs-toggle="dropdown" aria-expanded="false" role="button">
+                        <!-- Profile Avatar -->
+                        <div class="header-profile-avatar">
+                            {% if user.profile and user.profile.profile_picture %}
+                            <img src="{{ user.profile.profile_picture.url }}" alt="Profile">
+                            {% else %}
+                            <span>{{ user.first_name|default:user.username|slice:":1"|upper }}</span>
+                            {% endif %}
+                        </div>
+
+                        <!-- Name & Verification Badge -->
+                        <div class="header-profile-info d-none d-sm-flex">
+                            <span class="header-profile-name">{{ user.get_full_name|default:user.username }}</span>
+                            <span class="header-verified-pill">
+                                <i class="bi bi-patch-check-fill"></i> Admin Verified
+                            </span>
+                        </div>
+
+                        <!-- Dropdown Arrow -->
+                        <i class="bi bi-chevron-down header-profile-chevron ms-1"></i>
+                    </div>
+
+                    <!-- Profile Dropdown Menu -->
+                    <ul class="dropdown-menu dropdown-menu-end header-profile-menu shadow border-0">
+                        <li>
+                            <a class="dropdown-item" href="{% url 'admin_dash:view_profile' %}">
+                                <i class="bi bi-person text-success"></i>
+                                <span>View Profile</span>
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider my-1"></li>
+                        <li>
+                            <a class="dropdown-item text-danger" href="{% url 'auth:logout' %}">
+                                <i class="bi bi-box-arrow-right"></i>
+                                <span>Logout</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="app-container">
+
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+
+            <a class="sidebar-brand-box" href="{% url 'admin_dash:dashboard' %}">
+                <img class="sidebar-logo-full" src="{% static 'img/logo.png' %}" alt="HHectare Logo" title="HHectare">
+                <img class="sidebar-logo-icon" src="{% static 'img/logo-icon.png' %}" alt="HHectare" title="HHectare">
+            </a>
+
+            <div class="p-3 flex-grow-1 pt-0" style="overflow-x: visible;">
 
 
 
@@ -2468,29 +3145,29 @@
 
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'admin_dash:dashboard' %}">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'admin_dash:dashboard' %}">
                             <i class="fas fa-tachometer-alt"></i> Dashboard
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#userManagementCollapse">
+                        <a class="nav-link {% if 'customer' in request.resolver_match.url_name or 'agent' in request.resolver_match.url_name or 'investor' in request.resolver_match.url_name %}active{% endif %}" href="#" data-bs-toggle="collapse" data-bs-target="#userManagementCollapse">
                             <i class="fas fa-users"></i> User Management
                             <i class="fas fa-chevron-down ms-auto"></i>
                         </a>
-                        <div class="collapse" id="userManagementCollapse">
+                        <div class="collapse {% if 'customer' in request.resolver_match.url_name or 'agent' in request.resolver_match.url_name or 'investor' in request.resolver_match.url_name %}show{% endif %}" id="userManagementCollapse">
                             <ul class="nav flex-column ms-3">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'admin_dash:customer-list' %}">
+                                    <a class="nav-link {% if 'customer' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_dash:customer-list' %}">
                                         <i class="fas fa-user"></i> Customers
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'admin_dash:agent-list' %}">
+                                    <a class="nav-link {% if 'agent' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_dash:agent-list' %}">
                                         <i class="fas fa-user-tag"></i> Agents
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'admin_dash:investor-list' %}">
+                                    <a class="nav-link {% if 'investor' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_dash:investor-list' %}">
                                         <i class="fas fa-user-tie"></i> Investors
                                     </a>
                                 </li>
@@ -2498,24 +3175,24 @@
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'admin_dash:document_verification_list' %}">
+                        <a class="nav-link {% if 'verification' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_dash:document_verification_list' %}">
                             <i class="fas fa-id-card"></i> KYC Verifications
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#propertyManagementCollapse">
+                        <a class="nav-link {% if 'property' in request.resolver_match.url_name %}active{% endif %}" href="#" data-bs-toggle="collapse" data-bs-target="#propertyManagementCollapse">
                             <i class="fas fa-building"></i> Property Management
                             <i class="fas fa-chevron-down ms-auto"></i>
                         </a>
-                        <div class="collapse" id="propertyManagementCollapse">
+                        <div class="collapse {% if 'property' in request.resolver_match.url_name %}show{% endif %}" id="propertyManagementCollapse">
                             <ul class="nav flex-column ms-3">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'admin_dash:admin-property-list' %}">
+                                    <a class="nav-link {% if request.resolver_match.url_name == 'admin-property-list' %}active{% endif %}" href="{% url 'admin_dash:admin-property-list' %}">
                                         <i class="bi bi-plus-circle"></i> Property
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'admin_dash:property-review' %}">
+                                    <a class="nav-link {% if request.resolver_match.url_name == 'property-review' %}active{% endif %}" href="{% url 'admin_dash:property-review' %}">
                                         <i class="fas fa-building"></i> Property Review
                                     </a>
                                 </li>
@@ -2523,63 +3200,45 @@
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center"
+                        <a class="nav-link d-flex align-items-center {% if 'inquiry' in request.resolver_match.url_name %}active{% endif %}"
                             href="{% url 'admin_dash:inquiry-management-page' %}" id="sidebar-inquiries-link">
                             <i class="fas fa-envelope"></i>
                             <span class="me-2">Inquiries</span>
-                            <span class="badge bg-danger rounded-pill ms-auto d-none"
-                                id="inquiry-notification-badge">0</span>
+                            <span class="badge bg-danger rounded-pill ms-auto {% if not admin_pending_inquiries_count or admin_pending_inquiries_count == 0 %}d-none{% endif %}"
+                                id="inquiry-notification-badge">{{ admin_pending_inquiries_count|default:0 }}</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'admin_dash:investment-management-page' %}">
+                        <a class="nav-link {% if 'investment' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_dash:investment-management-page' %}">
                             <i class="fas fa-chart-line"></i> Investments
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'admin_dash:communication-list' %}">
+                        <a class="nav-link {% if 'communication' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_dash:communication-list' %}">
                             <i class="fas fa-comments"></i> Communications
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'admin_dash:reports-page' %}">
+                        <a class="nav-link {% if 'report' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'admin_dash:reports-page' %}">
                             <i class="fas fa-file-alt"></i> Reports
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'subscriptions:manage-subscriptions' %}">
+                        <a class="nav-link {% if 'manage-subscriptions' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'subscriptions:manage-subscriptions' %}">
                             <i class="fas fa-credit-card"></i> Manage Subscriptions
                         </a>
                     </li>
                      <li class="nav-item">
-                        <a class="nav-link" href="{% url 'subscriptions:manage-master-features' %}">
+                        <a class="nav-link {% if 'manage-master-features' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'subscriptions:manage-master-features' %}">
                             <i class="fas fa-list-check"></i> Manage Features
                         </a>
                     </li>
                 </ul>
 
 
-            </div><!-- Logout Button at Bottom -->
-
-
-
-            <div class="p-3 border-top border-white border-opacity-25">
-
-
-
-                <a href="{% url 'auth:logout' %}" class="nav-link text-white">
-
-
-
-                    <i class="fas fa-sign-out-alt"></i> Logout
-
-
-
-                </a>
-
-
-
             </div>
+
+
 
 
 
@@ -2709,11 +3368,8 @@
 
     </div>
 
-
-
-
-
-
+    {% block modals %}
+    {% endblock %}
 
     <!-- Scripts -->
 
@@ -2728,24 +3384,42 @@
 
 
         function toggleSidebar() {
-
-            const sidebar = document.getElementById('sidebar');
-            const toggle = document.querySelector('.mobile-menu-toggle');
-
-            sidebar.classList.toggle('show');
-
-            // Hide hamburger while sidebar is open.
-            // Show it again when the sidebar is closed.
-            if (toggle) {
-                toggle.classList.toggle(
-                    'sidebar-open',
-                    sidebar.classList.contains('show')
-                );
+            if (window.innerWidth < 992) {
+                const sidebar = document.getElementById('sidebar');
+                if (sidebar) sidebar.classList.toggle('show');
+            } else {
+                document.body.classList.toggle('sidebar-collapsed');
+                try {
+                    localStorage.setItem('admin_sidebar_collapsed', document.body.classList.contains('sidebar-collapsed'));
+                } catch (e) {}
             }
-
         }
 
-
+        // Auto-expand sidebar when clicking dropdown icons in collapsed state
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('nav.sidebar [data-bs-toggle="collapse"]').forEach(function (link) {
+                link.addEventListener('click', function (e) {
+                    if (document.body.classList.contains('sidebar-collapsed') && window.innerWidth >= 992) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        // Expand sidebar first
+                        document.body.classList.remove('sidebar-collapsed');
+                        try { localStorage.setItem('admin_sidebar_collapsed', 'false'); } catch(ex) {}
+                        // Open the target collapse after sidebar transition
+                        const targetId = link.getAttribute('data-bs-target');
+                        if (targetId) {
+                            const collapseEl = document.querySelector(targetId);
+                            if (collapseEl) {
+                                setTimeout(function () {
+                                    const bsCollapse = new bootstrap.Collapse(collapseEl, { toggle: false });
+                                    bsCollapse.show();
+                                }, 50);
+                            }
+                        }
+                    }
+                });
+            });
+        });
 
         // Close sidebar when clicking outside on mobile
 
@@ -2877,8 +3551,6 @@
 
         });
 
-
-
     </script>
 
 
@@ -2943,22 +3615,16 @@
 
 
 
-                        // Update bell icon badge
-
-                        if (bellBadge) {
-
+                        // Update dropdown item badge
+                        const dropdownBadge = document.getElementById('dropdown-inquiries-badge');
+                        if (dropdownBadge) {
                             if (count > 0) {
-
-                                bellBadge.textContent = count;
-
-                                bellBadge.classList.remove('d-none');
-
+                                dropdownBadge.textContent = count + ' New';
+                                dropdownBadge.className = 'notification-item-badge bg-danger text-white';
                             } else {
-
-                                bellBadge.classList.add('d-none');
-
+                                dropdownBadge.textContent = 'Up to date';
+                                dropdownBadge.className = 'notification-item-badge bg-light text-muted';
                             }
-
                         }
 
 

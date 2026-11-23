@@ -1,0 +1,55 @@
+{% load static %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@graph": [
+        {
+            "@type": ["Organization", "RealEstateAgent"],
+            "@id": "{{ seo_origin }}/#organization",
+            "name": "HHectare",
+            "alternateName": ["H Hectare", "Hhectare", "HHECTARE"],
+            "legalName": "The Codiq Global Private Limited",
+            "url": "{{ seo_origin }}/",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "{{ seo_logo_url }}"
+            },
+            "image": "{{ seo_logo_url }}",
+            "description": "{{ site_description }}",
+            "email": "{{ seo_email }}",
+            "telephone": "{{ seo_phone }}",
+            "areaServed": {
+                "@type": "Country",
+                "name": "India"
+            },
+            "priceRange": "$$",
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "contactType": "customer service",
+                "telephone": "{{ seo_phone }}",
+                "email": "{{ seo_email }}",
+                "availableLanguage": ["English", "Hindi"]
+            }{% if seo_same_as %},
+            "sameAs": {{ seo_same_as|safe }}{% endif %}
+        },
+        {
+            "@type": "WebSite",
+            "@id": "{{ seo_origin }}/#website",
+            "name": "HHectare",
+            "alternateName": ["H Hectare", "Hhectare"],
+            "url": "{{ seo_origin }}/",
+            "description": "{{ site_description }}",
+            "inLanguage": "en-IN",
+            "publisher": { "@id": "{{ seo_origin }}/#organization" },
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": {
+                    "@type": "EntryPoint",
+                    "urlTemplate": "{{ seo_origin }}/buy/?q={search_term_string}"
+                },
+                "query-input": "required name=search_term_string"
+            }
+        }
+    ]
+}
+</script>

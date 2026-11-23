@@ -89,13 +89,16 @@ ROOT_URLCONF = 'HeyDayRealty.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates'],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'Apps.PublicPage.context_processors.seo_defaults',
+                'Apps.Administration.context_processors.admin_notifications_processor',
+                'Apps.Administration.context_processors.agent_notifications_processor',
                  ],
         },
     },
@@ -253,13 +256,55 @@ LOGOUT_REDIRECT_URL = '/auth/login/'
 
 
 # Email settings
-EMAIL_BACKEND = 'Apps.Administration.email_backend.SystemSettingsEmailBackend'
-DEFAULT_FROM_EMAIL = 'noreply@heydayrealty.com'
+EMAIL_BACKEND = os.getenv(
+    'EMAIL_BACKEND',
+    'Apps.Administration.email_backend.SystemSettingsEmailBackend'
+)
+
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587'))
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() in ('true', '1', 't', 'yes')
+EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL', 'False').lower() in ('true', '1', 't', 'yes')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER or 'noreply@hhectare.com')
+SERVER_EMAIL = os.getenv('SERVER_EMAIL', DEFAULT_FROM_EMAIL)
 
 # Site branding / display metadata
 SITE_NAME = 'HHectare'
 SITE_SLOGAN = 'Invest Green. Grow Strong.'
-SITE_DESCRIPTION = 'HHectare — Invest Green. Grow Strong. Premium real estate platform offering residential, commercial, luxury, and agricultural properties with verified listings across India.'
+SITE_DESCRIPTION = (
+    'HHectare helps you discover legally verified farmland, agricultural land '
+    'and premium property investment opportunities across India. Invest with '
+    'confidence and expert guidance.'
+)
+SITE_CANONICAL_HOST = os.getenv('SITE_CANONICAL_HOST', 'hhectare.com')
+SITE_CANONICAL_ORIGIN = os.getenv('SITE_CANONICAL_ORIGIN', 'https://hhectare.com')
+SITE_CONTACT_EMAIL = os.getenv('SITE_CONTACT_EMAIL', 'hhectareofficial@gmail.com')
+SITE_CONTACT_PHONE = os.getenv('SITE_CONTACT_PHONE', '+919506688688')
+SITE_CONTACT_PHONE_DISPLAY = os.getenv('SITE_CONTACT_PHONE_DISPLAY', '+91 95066 88688')
+# Official social profile URLs only — leave empty until profiles are confirmed
+SITE_SAME_AS = [
+    url.strip()
+    for url in os.getenv('SITE_SAME_AS', '').split(',')
+    if url.strip()
+]
+
+# Prefer the canonical host (non-www). Nginx/production should also 301 www → apex.
+PREPEND_WWW = False
+APPEND_SLASH = True
+
+# Production HTTPS / cookie hardening (safe no-ops in DEBUG)
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = os.getenv('SECURE_SSL_REDIRECT', 'True') == 'True'
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = int(os.getenv('SECURE_HSTS_SECONDS', '31536000'))
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
 
 # Upload limits (aligned with nginx client_max_body_size 50M)
 DATA_UPLOAD_MAX_MEMORY_SIZE = 50 * 1024 * 1024  # 50 MB
@@ -340,6 +385,15 @@ BULKSMS_TOKEN_ID = os.getenv('BULKSMS_TOKEN_ID', '')
 BULKSMS_TOKEN_SECRET = os.getenv('BULKSMS_TOKEN_SECRET', '')
 BULKSMS_SENDER = os.getenv('BULKSMS_SENDER', 'HECTRE')
 
+# Pre-signed URL settings (Storj buckets are private; unsigned links give 403)
+# Set AWS_QUERYSTRING_AUTH=False only if the buckets are shared publicly.
+AWS_QUERYSTRING_AUTH = os.getenv('AWS_QUERYSTRING_AUTH', 'True') == 'True'
+AWS_QUERYSTRING_EXPIRE = int(os.getenv('AWS_QUERYSTRING_EXPIRE', 3600 * 24 * 7))  # 7 days (S3v4 max)
+
 # Set default storage to General for everything else not explicitly set
-DEFAULT_FILE_STORAGE = 'HeyDayRealty.storage_backends.GeneralMediaStorage'
+# NOTE: DEFAULT_FILE_STORAGE was removed in Django 5.1 — use STORAGES instead.
+STORAGES = {
+    "default": {"BACKEND": "HeyDayRealty.storage_backends.GeneralMediaStorage"},
+    "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+}
 

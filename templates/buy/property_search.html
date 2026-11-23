@@ -26,6 +26,25 @@
     .property-card:hover img {
         transform: scale(1.05);
     }
+
+    /* Property card image area */
+    .property-card-media {
+        position: relative;
+        width: 100%;
+        height: 220px;
+        overflow: hidden;
+        background: #e2e8f0;
+        flex-shrink: 0;
+    }
+
+    .property-card-media > img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+        transition: transform 0.3s;
+    }
     
     /* Input focus states */
     input:focus, select:focus {
@@ -239,23 +258,88 @@
 
     .formland-agr-listing-meta{
              display: flex;
-             flex-wrap: wrap;
              align-items: center;
+             justify-content: space-between;
              gap: 12px;
+             width: 100%;
+             flex-wrap: nowrap;
              padding: 10px 20px;
     }
 
     .result-container {
-         text-align: center;
+         display: inline-flex;
+         align-items: center;
          background: #0F6A3C;
          color: white;
-         padding: 10px 16px;
-         border-radius: 20px;
+         padding: 8px 16px;
+         border-radius: 999px;
          font-size: 12px;
-         font-weight: 600;
+         font-weight: 700;
+         white-space: nowrap;
      }
 
+    .sort-form {
+        display: inline-flex;
+    }
+
+    .sort-select-wrapper {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .sort-select {
+        appearance: none;
+        -webkit-appearance: none;
+        height: 40px;
+        min-width: 160px;
+        padding: 0 36px 0 16px;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        background: #fff;
+        font-size: 14px;
+        font-weight: 500;
+        color: #1a2e2a;
+        cursor: pointer;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .sort-select:hover,
+    .sort-select:focus {
+        border-color: #0F6A3C;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(15, 106, 60, 0.08);
+    }
+
+    .sort-select-icon {
+        position: absolute;
+        right: 14px;
+        color: #6b7a7a;
+        font-size: 0.75rem;
+        pointer-events: none;
+    }
+
     /* Responsive Design */
+
+    @media (min-width: 1024px) and (max-width: 1439px) {
+        .form-agri-land-for-sale {
+            width: 100%;
+            max-width: 710px;
+        }
+    }
+
+    @media (min-width: 1440px) and (max-width: 2558px) {
+        .form-agri-land-for-sale {
+            max-width: 830px;
+        }
+    }
+
+    @media (min-width: 2559px) and (max-width: 2560px) {
+        .form-agri-land-for-sale {
+            max-width: 1520px;
+        }
+    }
+
     @media (max-width: 1200px) {
         .properties-grid {
             grid-template-columns: repeat(2, 1fr) !important;
@@ -289,6 +373,10 @@
     }
     
     @media (max-width: 768px) {
+        .property-card-media {
+            height: 200px;
+        }
+
         #property-filter-box {
            margin-top: 37px;
         }
@@ -414,24 +502,20 @@
         .formland-agr-listing-meta{
             padding: 10px 0;
             gap: 10px;
-            justify-content: space-between;
         }
-        .map-header-container{
-           display: flex;
-           flex-direction:column;
-           gap:6px; 
+        .sort-select{
+           min-width: 140px;
         }
 
     }    
     
     @media (max-width: 480px) {
+        .property-card-media {
+            height: 180px;
+        }
+
         .properties-grid {
             grid-template-columns: 1fr !important;
-        }
-        .map-header-container{
-           flex-direction:row;
-           width: 100%;
-           justify-content: space-between;
         }
         .property-grid-main-container {
             padding:54px 16px;
@@ -455,22 +539,55 @@
             max-width: 280px !important;
         }
         
-        #area-price-filter-container{
-        margin-left: 0;
-        }
         .form-agri-land-headline{
             padding:50px 4px;
             text-align: center;
         }
     }
-</style>
+
+    /* Shared page typography: keep headings and supporting copy consistent. */
+    body.site-public :is(h1, h2, h3, h4) {
+        font-family: var(--font-heading, Inter, Arial, sans-serif) !important;
+        line-height: 1.2 !important;
+        letter-spacing: -0.02em;
+    }
+    body.site-public h1 {
+        font-size: clamp(30px, 2.3vw, 38px) !important;
+        font-weight: 700 !important;
+    }
+    body.site-public h2 {
+        font-size: clamp(24px, 1.8vw, 29px) !important;
+        font-weight: 700 !important;
+    }
+    body.site-public h3 {
+        font-size: clamp(18px, 1.3vw, 21px) !important;
+        font-weight: 600 !important;
+    }
+    body.site-public h4 {
+        font-size: 17px !important;
+        font-weight: 600 !important;
+    }
+    body.site-public p {
+        font-size: 15px !important;
+        line-height: 1.6 !important;
+    }
+    body.site-public :is(.ih__sub, .hero-subtitle, .section-subtitle) {
+        font-size: 16px !important;
+        font-weight: 400 !important;
+    }
+    @media (max-width: 767.98px) {
+        body.site-public h1 { font-size: clamp(28px, 7vw, 34px) !important; }
+        body.site-public h2 { font-size: clamp(23px, 5.5vw, 27px) !important; }
+        body.site-public p { font-size: 14px !important; }
+        body.site-public :is(.ih__sub, .hero-subtitle, .section-subtitle) { font-size: 15px !important; }
+    }</style>
 {% endblock %}
 
 {% block inner_hero %}
-<section class="hero-banner" style="background: url('{% static 'images/hero-img-all.png' %}') center/cover no-repeat; height: 400px; display: flex; align-items: center; justify-content: center; position: relative;">
-    <div class="hero-content text-center" style="color: white; z-index: 2;">
-        <h1 style="font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; text-shadow: 0 2px 8px rgba(0,0,0,0.3); color: white;">Buy Farmland & Agricultural Land</h1>
-        <p style="font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 700;">Invest in your future with the perfect property 🌿</p>
+<section class="ih" style="--ih-bg: url('{% static 'images/hero-img-all.png' %}')">
+    <div class="ih__content">
+        <h1 class="ih__title">Buy Farmland &amp; Agricultural Land</h1>
+        <p class="ih__sub">Invest in your future with the perfect property 🌿</p>
     </div>
 </section>
 {% endblock %}
@@ -595,28 +712,24 @@
             <div style="margin-bottom: 24px;">
                 <h1 class="form-agri-land-headline" style="font-family: 'Playfair Display', serif; font-size: 1.5rem; padding-bottom:20px; font-weight: 700; color: #1a2e2a; margin-bottom: 8px; padding-top: 40px;">Farmland and Agriculture Land for Sale</h1>
                 <div class="formland-agr-listing-meta">
-                    <div class="map-header-container"> 
-                        <div style="font-size: 12px; color: #6b7a7a;">
-                            <a href="{% url 'public:home' %}" style="color: #0F6A3C; text-decoration: none; font-size: 17px; font-weight: 500;">Home</a> &gt; <span style="color: #6b7a7a; font-size: 17px;">Map</span>
-                        </div>
-                         <div class="result-container">{{ total_results }} Results</div> 
-                    </div> 
-                    <div id="area-price-filter-container">
-                        <form method="get" style="display: inline;">
+                    <div class="result-container">{{ total_results }} Results</div>
+                    <form method="get" class="sort-form">
                             {% for key, value in filters.items %}
                                 {% if key != 'sort_by' %}
                                     <input type="hidden" name="{{ key }}" value="{{ value }}">
                                 {% endif %}
                             {% endfor %}
-                            <select name="sort_by" onchange="this.form.submit()" style="height: 40px; border: 1px solid #e2e8f0; border-radius: 10px; padding: 0 16px; font-size: 16px; font-weight: 500; background: white; color: #1a2e2a; cursor: pointer;">
-                                <option value="-created_at" {% if filters.sort_by == '-created_at' %}selected{% endif %}>Latest</option>
-                                <option value="price" {% if filters.sort_by == 'price' %}selected{% endif %}>Price: Low to High</option>
-                                <option value="-price" {% if filters.sort_by == '-price' %}selected{% endif %}>Price: High to Low</option>
-                                <option value="area_sqft" {% if filters.sort_by == 'area_sqft' %}selected{% endif %}>Area: Low to High</option>
-                                <option value="-area_sqft" {% if filters.sort_by == '-area_sqft' %}selected{% endif %}>Area: High to Low</option>
-                            </select>
+                            <div class="sort-select-wrapper">
+                                <select name="sort_by" class="sort-select" onchange="this.form.submit()" aria-label="Sort properties">
+                                    <option value="-created_at" {% if filters.sort_by == '-created_at' %}selected{% endif %}>Latest</option>
+                                    <option value="price" {% if filters.sort_by == 'price' %}selected{% endif %}>Price: Low to High</option>
+                                    <option value="-price" {% if filters.sort_by == '-price' %}selected{% endif %}>Price: High to Low</option>
+                                    <option value="area_sqft" {% if filters.sort_by == 'area_sqft' %}selected{% endif %}>Area: Low to High</option>
+                                    <option value="-area_sqft" {% if filters.sort_by == '-area_sqft' %}selected{% endif %}>Area: High to Low</option>
+                                </select>
+                                <i class="bi bi-chevron-down sort-select-icon"></i>
+                            </div>
                         </form>
-                    </div>
                 </div>
             </div>
 
@@ -626,11 +739,11 @@
                     {% for property in properties %}
                         <div class="property-card property-listing-card" data-property-id="{{ property.id }}" style="background: white; border-radius: 18px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); transition: all 0.3s; display: flex; flex-direction: column;">
                             <!-- Image Slider -->
-                            <div style="position: relative; height: 200px; overflow: hidden; background: #e2e8f0; display: flex; align-items: center; justify-content: center;">
+                            <div class="property-card-media">
                                 {% if property.featured_image %}
-                                    <img src="{{ property.featured_image.url }}" alt="{{ property.title }}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; display: block;">
+                                    <img src="{{ property.featured_image.url }}" alt="{{ property.title }}" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='{% static 'images/house_image.png' %}';">
                                 {% elif property.images.all %}
-                                    <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; display: block;">
+                                    <img src="{{ property.images.first.image.url }}" alt="{{ property.title }}" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='{% static 'images/house_image.png' %}';">
                                     {% if property.images.count > 1 %}
                                         <div style="position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 5;">
                                             {% for image in property.images.all %}
@@ -639,9 +752,7 @@
                                         </div>
                                     {% endif %}
                                 {% else %}
-                                    <div style="display: flex; align-items: center; justify-content: center; height: 100%; width: 100%; background: #f8fafc; color: #94a3b8;">
-                                        <i class="bi bi-image" style="font-size: 2.5rem;"></i>
-                                    </div>
+                                    <img src="{% static 'images/house_image.png' %}" alt="{{ property.title }}" loading="lazy" decoding="async">
                                 {% endif %}
                                 <!-- Posted Badge -->
                                 <div style="position: absolute; top: 12px; left: 12px; background: rgba(0,0,0,0.6); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; backdrop-filter: blur(4px); z-index: 5;">1 day ago</div>
@@ -665,7 +776,7 @@
                                 <div style="flex-grow: 1;">
                                     <div style="font-size: 12px; color: #6b7a7a; margin-bottom: 4px;">{{ property.location }}</div>
                                     <div style="font-size: 12px; color: #0F6A3C; font-weight: 600; margin-bottom: 8px;">{{ property.get_property_type_display }}</div>
-                                    <h3 style="font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 600; color: #1a2e2a; margin-bottom: 8px; line-height: 1.4;">{{ property.title }}</h3>
+                                    <h3 style="font-family: 'Playfair Display', serif font-weight: 600; color: #1a2e2a; margin-bottom: 8px; line-height: 1.4">{{ property.title }}</h3>
                                     <div style="font-size: 14px; color: #6b7a7a; margin-bottom: 12px;">{{ property.area_sqft }} sqft</div>
                                     <div style="font-size: 18px; font-weight: 700; color: #0F6A3C; margin-bottom: 16px;">₹{{ property.price }}</div>
                                 </div>
@@ -681,7 +792,7 @@
                 </div>
 
                 <!-- View More Button -->
-                <div class="view-more-properties-wrapper">
+                <div class="view-more-properties-wrapper" style="margin-top: 7px;">
                     <button type="button" class="view-more-properties-btn" aria-expanded="false" aria-label="Show more properties">
                         <span>View More</span>
                         <i class="bi bi-chevron-down"></i>
@@ -709,7 +820,7 @@
                     </div>
                 {% endif %}
             {% else %}
-                <div style="text-align: center; padding: 60px 20px; background: white; border-radius: 18px;>
+                <div style="text-align: center; padding: 60px 20px; background: white; border-radius: 18px;">
                     <h3 style="font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: #1a2e2a; margin-bottom: 12px;">No Properties Found</h3>
                     <p style="color: #6b7a7a; margin-bottom: 24px; font-size: 17px;">Try adjusting your filters or search terms to find properties.</p>
                     <a href="{% url 'buy:property_search' %}" style="display: inline-block; padding: 12px 32px; background: #F4B400; color: white; border: none; border-radius: 12px; font-weight: 600; text-decoration: none; transition: 0.2s;">Clear All Filters</a>

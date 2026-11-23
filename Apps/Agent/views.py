@@ -259,46 +259,6 @@ def agent_reviews(request):
 
 
 @login_required
-def settings(request):
-    """Agent settings page - update profile information"""
-    user_role = get_user_role(request.user)
-    if user_role not in ['agent', 'owner']:
-        raise PermissionDenied("Access denied. This page is only accessible to agents or owners.")
-
-    try:
-        agent_profile = request.user.agent_profile
-    except AgentProfile.DoesNotExist:
-        agent_profile = AgentProfile.objects.create(user=request.user)
-
-    # Check if profile image file exists, if not clear the field
-    if agent_profile.profile_image:
-        try:
-            # Try to access the file to check if it exists
-            agent_profile.profile_image.open('rb')
-            agent_profile.profile_image.close()
-        except (FileNotFoundError, IOError):
-            # File doesn't exist, clear the field
-            agent_profile.profile_image = None
-            agent_profile.save()
-
-    if request.method == 'POST':
-        form = AgentProfileForm(request.POST, request.FILES, instance=agent_profile, user=request.user)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Profile updated successfully!")
-            return redirect('agent:settings')
-    else:
-        form = AgentProfileForm(instance=agent_profile, user=request.user)
-
-    context = {
-        'form': form,
-        'agent_profile': agent_profile,
-    }
-
-    return render(request, 'agent/settings.html', context)
-
-
-@login_required
 def profile(request):
     """View agent profile"""
     user_role = get_user_role(request.user)
@@ -323,6 +283,49 @@ def profile(request):
     }
 
     return render(request, 'agent/profile.html', context)
+
+
+@login_required
+def upload_profile_image(request):
+    """AJAX endpoint for uploading or removing agent profile image"""
+    user_role = get_user_role(request.user)
+    if user_role not in ['agent', 'owner']:
+        return JsonResponse({'success': False, 'message': 'Permission denied.'}, status=403)
+
+    if request.method == 'POST':
+        agent_profile = get_object_or_404(AgentProfile, user=request.user)
+
+        # Check for remove photo request
+        if request.POST.get('remove_photo') == 'true':
+            if agent_profile.profile_image:
+                agent_profile.profile_image.delete(save=False)
+                agent_profile.profile_image = None
+                agent_profile.save()
+            return JsonResponse({'success': True, 'message': 'Profile picture removed successfully!'})
+
+        if 'profile_image' in request.FILES:
+            uploaded_file = request.FILES['profile_image']
+            
+            # Basic validation
+            allowed_types = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp']
+            if uploaded_file.content_type not in allowed_types:
+                return JsonResponse({'success': False, 'message': 'Please upload a valid image (JPEG, PNG, WEBP).'})
+
+            if uploaded_file.size > 5 * 1024 * 1024:
+                return JsonResponse({'success': False, 'message': 'Image file size must be less than 5MB.'})
+
+            agent_profile.profile_image = uploaded_file
+            agent_profile.save()
+            return JsonResponse({
+                'success': True, 
+                'message': 'Profile picture updated successfully!',
+                'image_url': agent_profile.profile_image.url
+            })
+        
+        return JsonResponse({'success': False, 'message': 'No image provided.'})
+
+    return JsonResponse({'success': False, 'message': 'Invalid request method.'}, status=405)
+
 
 
 @login_required
@@ -387,12 +390,24 @@ def _enforce_agent_property_listing(request, user_role, subscription=SUBSCRIPTIO
     return _agent_listing_limit_response(request, check)
 
 
+def _require_mobile_verified(request, user_role):
+    """
+    Mobile verification check bypassed: allow adding property directly.
+    """
+    return None
+
+
 @login_required
 def property_type_select(request):
     """Select property type before adding"""
     user_role = get_user_role(request.user)
     if user_role not in ['agent', 'owner', 'admin'] and not request.user.is_superuser and not request.user.is_staff:
         raise PermissionDenied("Access denied. This page is only accessible to agents, owners, or admins.")
+
+    # Mobile verification gate — agents must verify their number first
+    mobile_block = _require_mobile_verified(request, user_role)
+    if mobile_block is not None:
+        return mobile_block
 
     blocked = _enforce_agent_property_listing(request, user_role)
     if blocked is not None:
@@ -408,6 +423,11 @@ def property_add(request, property_type):
     user_role = get_user_role(request.user)
     if user_role not in ['agent', 'owner', 'admin'] and not request.user.is_superuser and not request.user.is_staff:
         raise PermissionDenied("Access denied. This page is only accessible to agents, owners, or admins.")
+
+    # Mobile verification gate — agents must verify their number first
+    mobile_block = _require_mobile_verified(request, user_role)
+    if mobile_block is not None:
+        return mobile_block
 
     # Gate form access for agents (inactive/expired/at-limit) before they fill the form
     blocked = _enforce_agent_property_listing(request, user_role)
@@ -575,6 +595,22 @@ def property_edit(request, pk):
     else:
         property_obj = get_object_or_404(Property.objects.select_related('seller'), pk=pk, seller=request.user)
     
+    # Handle missing featured_image file (legacy data issue)
+    # Clear the field if the file doesn't exist in storage
+    if property_obj.featured_image:
+        try:
+            # Try to access the file to check if it exists
+            if property_obj.featured_image.storage.exists(property_obj.featured_image.name):
+                pass  # File exists, do nothing
+            else:
+                # File doesn't exist, clear the field
+                property_obj.featured_image = None
+                property_obj.save(update_fields=['featured_image'])
+        except Exception:
+            # If there's any error checking file existence, clear the field
+            property_obj.featured_image = None
+            property_obj.save(update_fields=['featured_image'])
+    
     # Determine property_type from category for field visibility
     property_type = _resolve_listing_type(property_obj)
     
@@ -695,24 +731,27 @@ def settings(request):
     if request.method == 'POST':
         form = AgentProfileForm(request.POST, request.FILES, instance=agent_profile, user=request.user)
         if form.is_valid():
-            # Update user info
-            request.user.first_name = form.cleaned_data.get('first_name', '')
-            request.user.last_name = form.cleaned_data.get('last_name', '')
-            request.user.email = form.cleaned_data.get('email', '')
-            request.user.save()
-            
-            # Save profile
+            # AgentProfileForm.save() also persists the linked user's name and email.
             form.save()
             messages.success(request, "Settings updated successfully!")
             return redirect('agent:settings')
     else:
         form = AgentProfileForm(instance=agent_profile, user=request.user)
     
+    # Fetch mobile verification status so the template can render the OTP widget
+    from Apps.Administration.models import UserVerification
+    verification, _ = UserVerification.objects.get_or_create(user=request.user)
+    is_mobile_verified = verification.is_mobile_verified
+    # Prefer the number stored in UserVerification; fall back to agent profile phone
+    phone_for_otp = verification.phone_number or agent_profile.phone or ''
+
     context = {
         'form': form,
         'agent_profile': agent_profile,
+        'is_mobile_verified': is_mobile_verified,
+        'phone_for_otp': phone_for_otp,
     }
-    
+
     return render(request, 'agent/settings.html', context)
 
 

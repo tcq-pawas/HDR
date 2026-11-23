@@ -1,0 +1,84 @@
+<div class="comment-node" style="display: flex; gap: 8px; margin-bottom: 8px;">
+    <!-- Avatar -->
+    <div style="flex-shrink: 0;">
+        <div style="width: {% if is_child %}24px{% else %}28px{% endif %}; height: {% if is_child %}24px{% else %}28px{% endif %}; border-radius: 50%; background: {% if item.is_team %}#0F766E{% else %}#475569{% endif %}; color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: {% if is_child %}0.68rem{% else %}0.75rem{% endif %}; box-shadow: 0 1px 2px rgba(0,0,0,0.06);">
+            {{ item.author_name|first|upper }}
+        </div>
+    </div>
+
+    <!-- Content & Sub-tree -->
+    <div style="flex-grow: 1; min-width: 0;">
+        <!-- Compact Small Bubble (Click to Delete) -->
+        <div onclick="triggerCommentDelete('{{ item.id }}', '{{ item.author_name|escapejs }}')" 
+             title="Click to delete this comment"
+             class="comment-bubble"
+             style="background: {% if item.is_team %}#F0FDF4{% else %}#F1F5F9{% endif %}; border: 1px solid {% if item.is_team %}#BBF7D0{% else %}#E2E8F0{% endif %}; border-radius: 10px; padding: 4px 10px; display: inline-block; min-width: 60px; max-width: 85%; cursor: pointer; transition: background 0.15s ease, border-color 0.15s ease;">
+            <div style="display: flex; align-items: center; gap: 4px; margin-bottom: 1px;">
+                <span style="font-weight: 700; color: #0F172A; font-size: 0.78rem;">
+                    {{ item.author_name }}
+                </span>
+                {% if item.is_team %}
+                    <span style="background: #0F766E; color: #ffffff; font-size: 0.58rem; padding: 0 4px; border-radius: 4px; font-weight: 600;">Team</span>
+                {% endif %}
+            </div>
+            <p style="color: #334155; font-size: 0.8rem; line-height: 1.35; margin: 0; word-break: break-word; white-space: pre-wrap;">{{ item.content }}</p>
+        </div>
+
+        <!-- Hidden Delete Form -->
+        <form id="delete-form-{{ item.id }}" method="POST" action="{% url 'public:blog_detail' slug=blog.slug %}" style="display: none;">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="delete">
+            <input type="hidden" name="comment_id" value="{{ item.id }}">
+        </form>
+
+        <!-- Action row: Date & Reply button -->
+        <div style="display: flex; align-items: center; gap: 8px; margin-top: 1px; margin-left: 4px; font-size: 0.68rem; color: #64748B;">
+            <span>{{ item.created_at }}</span>
+            <button type="button" onclick="toggleInlineReply('{{ item.id }}')" style="background: none; border: none; padding: 0; color: #0F766E; font-weight: 600; cursor: pointer; font-size: 0.68rem;">
+                <i class="bi bi-reply-fill"></i> Reply
+            </button>
+        </div>
+
+        <!-- Inline Reply Form (Compact with Name, Email and Content) -->
+        <div id="inline-reply-{{ item.id }}" style="display: none; margin-top: 6px; max-width: 460px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 8px 10px;">
+            <form method="POST" action="{% url 'public:blog_detail' slug=blog.slug %}" style="margin: 0;">
+                {% csrf_token %}
+                <input type="hidden" name="parent_id" value="{{ item.id }}">
+                
+                <div style="display: flex; gap: 6px; margin-bottom: 5px;">
+                    <input type="text" name="author_name" required placeholder="Your Name *" style="flex: 1; min-width: 0; padding: 4px 8px; border: 1px solid #CBD5E1; border-radius: 6px; font-size: 0.74rem; outline: none; background: #ffffff; color: #1E293B;">
+                    <input type="email" name="author_email" placeholder="Email (optional)" style="flex: 1; min-width: 0; padding: 4px 8px; border: 1px solid #CBD5E1; border-radius: 6px; font-size: 0.74rem; outline: none; background: #ffffff; color: #1E293B;">
+                </div>
+
+                <div style="display: flex; gap: 6px; align-items: center;">
+                    <input type="text" name="content" required placeholder="Write a reply to {{ item.author_name }}..." style="flex-grow: 1; min-width: 0; padding: 5px 8px; border: 1px solid #CBD5E1; border-radius: 6px; font-size: 0.75rem; outline: none; background: #ffffff; color: #1E293B;">
+                    <button type="submit" style="background: #0F766E; color: #ffffff; border: none; padding: 5px 10px; border-radius: 6px; font-size: 0.72rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0;">
+                        <i class="bi bi-send-fill" style="font-size: 0.62rem;"></i> Send
+                    </button>
+                    <button type="button" onclick="toggleInlineReply('{{ item.id }}')" title="Cancel" style="background: none; border: none; color: #94A3B8; font-size: 0.8rem; cursor: pointer; padding: 0 3px; flex-shrink: 0;">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Nested Sub-Replies Tree (Recursive branch) -->
+        {% if item.replies %}
+            <!-- Toggle Button -->
+            <div style="margin-top: 3px; margin-left: 4px;">
+                <button type="button" onclick="toggleReplies('{{ item.id }}')" id="toggle-btn-{{ item.id }}" style="background: none; border: none; padding: 0; color: #475569; font-size: 0.68rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 3px;">
+                    <i class="bi bi-arrow-return-right"></i>
+                    <span id="toggle-text-{{ item.id }}">Hide replies ({{ item.replies|length }})</span>
+                </button>
+            </div>
+
+            <!-- Sub-tree Container with Connecting Left Border Line -->
+            <div id="replies-container-{{ item.id }}" style="margin-top: 6px; margin-left: 2px; padding-left: 10px; border-left: 1.5px solid #E2E8F0; display: flex; flex-direction: column; gap: 6px;">
+                {% for child in item.replies %}
+                    {% include "public/comment_item.html" with item=child is_child=True %}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+    </div>
+</div>

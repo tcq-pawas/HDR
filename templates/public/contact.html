@@ -7,7 +7,7 @@
 {% block twitter_title %}Contact HHectare | Buy, Sell & Invest{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/contact.css' %}">
+<link rel="stylesheet" href="{% static 'css/contact.css' %}?v=3">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 <style>
     /* ---- Hero Section ---- */
@@ -170,13 +170,13 @@
     .office-stats-row {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        padding: 32px 28px;
+        padding: 24px 16px;
         gap: 0;
     }
 
     .office-stat-item {
         text-align: center;
-        padding: 0 16px;
+        padding: 0 10px;
         position: relative;
     }
 
@@ -184,49 +184,50 @@
         content: '';
         position: absolute;
         right: 0;
-        top: 8px;
-        bottom: 8px;
+        top: 6px;
+        bottom: 6px;
         width: 1px;
         background: rgba(0, 0, 0, 0.08);
     }
 
     .office-stat-icon {
-        width: 56px;
-        height: 56px;
+        width: 44px;
+        height: 44px;
         background: #F3F5F0;
-        border-radius: 14px;
+        border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 0 auto 14px;
-        font-size: 24px;
+        margin: 0 auto 10px;
+        font-size: 20px;
         color: #0F6A3C;
     }
 
     .office-stat-number {
         font-family: var(--font-body);
-        font-size: 28px;
+        font-size: 24px;
         font-weight: 700;
         color: #0F6A3C;
-        margin-bottom: 8px;
+        margin-bottom: 4px;
+        line-height: 1.1;
     }
 
     .office-stat-label {
-        font-size: 13px;
+        font-size: 11.5px;
         color: #666;
-        line-height: 1.4;
+        line-height: 1.35;
     }
 
     /* Section Titles */
     .office-section-title {
         font-family: var(--font-body);
-        font-size: 1.3rem;
+        font-size: 1.15rem;
         font-weight: 700;
         color: #1F1F1F;
-        margin-bottom: 6px;
+        margin-bottom: 4px;
         position: relative;
         display: inline-block;
-        padding-bottom: 10px;
+        padding-bottom: 8px;
     }
 
     .office-section-title::after {
@@ -234,7 +235,7 @@
         position: absolute;
         left: 0;
         bottom: 0;
-        width: 40px;
+        width: 36px;
         height: 3px;
         background: #0F6A3C;
         border-radius: 2px;
@@ -242,7 +243,7 @@
 
     /* Why Visit Section */
     .office-why-section {
-        padding: 28px;
+        padding: 20px 16px 24px;
         border-top: 1px solid rgba(0, 0, 0, 0.06);
     }
 
@@ -250,12 +251,11 @@
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         gap: 0;
-        margin-top: 22px;
+        margin-top: 16px;
     }
 
     .office-why-item {
-        padding: 0 16px;
-        text-align:center;
+        padding: 0 10px;
         position: relative;
     }
 
@@ -270,23 +270,23 @@
     }
 
     .office-why-icon {
-        font-size: 26px;
+        font-size: 22px;
         color: #0F6A3C;
-        margin-bottom: 14px;
+        margin-bottom: 10px;
     }
 
     .office-why-title {
-        font-size: 15px;
+        font-size: 13.5px;
         font-weight: 700;
         color: #1F1F1F;
-        margin-bottom: 8px;
-        line-height: 1.3;
+        margin-bottom: 6px;
+        line-height: 1.25;
     }
 
     .office-why-desc {
-        font-size: 13px;
+        font-size: 11.5px;
         color: #666;
-        line-height: 1.5;
+        line-height: 1.4;
         margin: 0;
     }
 
@@ -371,35 +371,87 @@
 
     .office-location-section{
         width: 100% ;
-        gap:38px;
-        max-width: 1310px !important;
-        /* max-width: 1100px !important; */
-    }
-
-    .contact-cards-grid{
-        width: 100%;
-        max-width: 1310px !important;
+        gap: 56px;
+        max-width: 1320px !important;
     }
 
     @media (min-width:1441px){
         .location-wrapper{
-            gap:10px;
+            gap: 60px;
         }
     }
 
     @media (min-width: 1440px) {
         .office-location-section{
             width: 100% ;
-            gap:8px;
-            max-width: 1310px;
-            /* max-width: 1200px !important; */
+            gap: 60px;
+            max-width: 1360px !important;
         }
     }     
  
-    @media (min-width: 1439px) {
+    @media (min-width: 1200px) {
         .office-location-section {
-            grid-template-columns: 4fr 5fr;
+            grid-template-columns: 500px 1fr;
         }
+    }
+
+    .location-info {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 28px !important;
+        margin-top: 16px !important;
+    }
+
+    .location-info-item {
+        display: flex !important;
+        align-items: center !important;
+        gap: 16px !important;
+    }
+
+    .location-info-icon {
+        width: 48px !important;
+        height: 48px !important;
+        min-width: 48px !important;
+        max-width: 48px !important;
+        border-radius: 50% !important;
+        background-color: rgba(15, 106, 60, 0.1) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex-shrink: 0 !important;
+    }
+
+    .location-info-icon i {
+        font-size: 20px !important;
+        color: var(--primary-green) !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        line-height: 1 !important;
+    }
+
+    .location-info-content {
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+    }
+
+    .location-info-content h4 {
+        margin: 0 0 4px 0 !important;
+        font-size: 1.15rem !important;
+        font-weight: 600 !important;
+        line-height: 1.2 !important;
+        color: var(--text-dark) !important;
+    }
+
+    .location-info-content p,
+    .location-info-content p a {
+        font-family: 'Inter', sans-serif !important;
+        font-size: 13.5px !important;
+        color: var(--text-gray) !important;
+        line-height: 1.4 !important;
+        margin: 0 !important;
+        text-decoration: none !important;
     }
 
     @media (min-width: 1024px) and (max-width: 1439px) {
@@ -613,15 +665,33 @@
         gap: clamp(16px, 2vw, 24px);
     }
 
+    .contact-cards-grid.contact-cards-grid-two {
+        grid-template-columns: repeat(2, minmax(0, 360px)) !important;
+        justify-content: center !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        max-width: 800px !important;
+    }
+
+    @media (max-width: 640px) {
+        .contact-cards-grid.contact-cards-grid-two {
+            grid-template-columns: 1fr !important;
+            max-width: 420px !important;
+        }
+    }
+
     .contact-card {
         min-height: 0;
         padding: clamp(22px, 4vw, 32px) clamp(16px, 3vw, 24px);
     }
 
-    .contact-form-wrapper,
-    .location-wrapper {
+    .contact-form-wrapper {
         grid-template-columns: minmax(0, 40%) minmax(0, 60%);
         gap: clamp(22px, 4vw, 48px);
+        align-items: stretch;
+    }
+
+    .location-wrapper {
         align-items: stretch;
     }
 
@@ -829,7 +899,43 @@
             flex-direction: column;
         }
     }
-</style>
+
+    /* Shared page typography: keep headings and supporting copy consistent. */
+    body.site-public :is(h1, h2, h3, h4) {
+        font-family: var(--font-heading, Inter, Arial, sans-serif) !important;
+        line-height: 1.2 !important;
+        letter-spacing: -0.02em;
+    }
+    body.site-public h1 {
+        font-size: clamp(30px, 2.3vw, 38px) !important;
+        font-weight: 700 !important;
+    }
+    body.site-public h2 {
+        font-size: clamp(24px, 1.8vw, 29px) !important;
+        font-weight: 700 !important;
+    }
+    body.site-public h3 {
+        font-size: clamp(18px, 1.3vw, 21px) !important;
+        font-weight: 600 !important;
+    }
+    body.site-public h4 {
+        font-size: 17px !important;
+        font-weight: 600 !important;
+    }
+    body.site-public p {
+        font-size: 15px !important;
+        line-height: 1.6 !important;
+    }
+    body.site-public :is(.ih__sub, .hero-subtitle, .section-subtitle) {
+        font-size: 16px !important;
+        font-weight: 400 !important;
+    }
+    @media (max-width: 767.98px) {
+        body.site-public h1 { font-size: clamp(28px, 7vw, 34px) !important; }
+        body.site-public h2 { font-size: clamp(23px, 5.5vw, 27px) !important; }
+        body.site-public p { font-size: 14px !important; }
+        body.site-public :is(.ih__sub, .hero-subtitle, .section-subtitle) { font-size: 15px !important; }
+    }</style>
 {% endblock %}
 
 {% block inner_hero %}
@@ -861,24 +967,14 @@
         <!-- Header -->
         <div class="text-center mb-5">
             <span class="contact-badge">GET IN TOUCH</span>
-            <h2 class="contact-heading" style="font-size: 1.5rem;">Let's discuss your farmland investment goals</h2>
-            <p class="contact-subtitle" style="font-size: 15px;">
+            <h2 class="contact-heading">Let's discuss your farmland investment goals</h2>
+            <p class="contact-subtitle">
                 Our team is here to help you explore verified farmland investment opportunities.
             </p>
         </div>
 
         <!-- Contact Cards Grid -->
-        <div class="contact-cards-grid">
-
-            <!-- Phone -->
-            <div class="contact-card">
-                <div class="contact-card-icon">
-                    <i class="bi bi-telephone"></i>
-                </div>
-                <h5 class="contact-card-title">Phone</h5>
-                <p class="contact-card-value">+91-888-999-7777</p>
-                <a href="javascript:void(0)" class="contact-card-link" data-bs-toggle="modal" data-bs-target="#callModal">Call Now</a>
-            </div>
+        <div class="contact-cards-grid contact-cards-grid-two">
 
             <!-- Email -->
             <div class="contact-card">
@@ -900,16 +996,6 @@
                 <a href="javascript:void(0)" class="contact-card-link" data-bs-toggle="modal" data-bs-target="#timingsModal">View Timings</a>
             </div>
 
-            <!-- Office Location -->
-            <div class="contact-card">
-                <div class="contact-card-icon">
-                    <i class="bi bi-geo-alt"></i>
-                </div>
-                <h5 class="contact-card-title">Office Location</h5>
-                <p class="contact-card-value">HHectare<br>123 Real Estate Blvd.</p>
-                <a href="#" class="contact-card-link">Get Directions</a>
-            </div>
-
         </div>
 
     </div>
@@ -919,28 +1005,28 @@
         <div class="why-header">
             <div class="section-label">Get In Touch</div>
             <h2 class="section-title">Let's discuss your farmland investment goals</h2>
-            <p class="section-sub" style="max-width: 700px;">Our team is here to help you explore verified farmland investment opportunities.</p>
+            <p class="section-sub" style="max-width: 700px">Our team is here to help you explore verified farmland investment opportunities.</p>
         </div>
         <div class="invest-grid" style="grid-template-columns: repeat(4, 1fr);">
             <div class="invest-card" style="text-align: center;">
                 <div class="invest-icon" style="margin: 0 auto 16px; background: var(--mint);">📞</div>
                 <h3>Phone</h3>
-                <p style="color: var(--text-mid);">+91 9506 688 688</p>
+                <p style="color: var(--text-mid)">+91 9506 688 688</p>
             </div>
             <div class="invest-card" style="text-align: center;">
                 <div class="invest-icon" style="margin: 0 auto 16px; background: var(--mint);">✉</div>
                 <h3>Email</h3>
-                <p style="color: var(--text-mid);">info@hhectare.com</p>
+                <p style="color: var(--text-mid)">hhectareofficial@gmail.com</p>
             </div>
             <div class="invest-card" style="text-align: center;">
                 <div class="invest-icon" style="margin: 0 auto 16px; background: var(--mint);">🕐</div>
                 <h3>Office Hours</h3>
-                <p style="color: var(--text-mid);">Mon - Sat<br>9:00 AM – 7:00 PM</p>
+                <p style="color: var(--text-mid)">Mon - Sat<br>9:00 AM – 7:00 PM</p>
             </div>
             <div class="invest-card" style="text-align: center;">
                 <div class="invest-icon" style="margin: 0 auto 16px; background: var(--mint);">📍</div>
                 <h3>Office Location</h3>
-                <p style="color: var(--text-mid);">123 Real Estate Blvd.<br>City, Country</p>
+                <p style="color: var(--text-mid)">123 Real Estate Blvd.<br>City, Country</p>
             </div>
         </div>
     </div>
@@ -954,8 +1040,8 @@
             <!-- Left Panel (40%) -->
             <div class="contact-form-left">
                 <span class="contact-form-badge" style="color:#ffffff; text-align: center;">REQUEST A CALL BACK</span>
-                <h2 class="contact-form-heading" style="color:#ffffff; font-size: 1.8rem;">Tell us about your investment requirements</h2>
-                <p class="contact-form-description" style="font-size: 15px;">
+                <h2 class="contact-form-heading" style="color:#ffffff">Tell us about your investment requirements</h2>
+                <p class="contact-form-description">
                     Our team of farmland investment experts is ready to help you find the perfect opportunity that matches your goals and budget.
                 </p>
                 
@@ -1037,56 +1123,36 @@
 
 <!-- Location Section -->
 <section class="location-section" style="background-color: #FAFAF7; padding: 80px 0;">
-    <div class="container" style="max-width: 1800px;">
+    <div class="container" style="max-width: 1400px;">
         <div class="location-wrapper office-location-section">
             
             <!-- Left Panel -->
-            <div class="location-left" style="padding: 0 20px;">
-                <span class="location-badge" style="text-align: center;">VISIT OUR OFFICE</span>
+            <div class="location-left">
+                <span class="location-badge" style="text-align: center;">CONNECT WITH US</span>
                 <h2 class="location-heading">Schedule a meeting or site visit</h2>
-                <p class="location-description" style="font-size: 14px;">
-                    Visit our office to discuss your farmland investment goals in person or schedule a site visit to explore available properties.
+                <p class="location-description">
+                    Connect directly with our property advisors to discuss your investment goals, request verified documents, or book an on-site property visit.
                 </p>
                 
-                <div class="location-info">
-                    <div class="location-info-item">
-                        <div class="location-info-icon">
-                            <i class="bi bi-geo-alt"></i>
-                        </div>
-                        <div class="location-info-content">
-                            <h4>Address</h4>
-                            <p>HHectare<br>123 Real Estate Blvd<br>City, Country</p>
-                        </div>
+                <div class="location-info-grid-box" style="display: grid; grid-template-columns: 48px 1fr; row-gap: 24px; column-gap: 16px; align-items: center; margin-top: 16px;">
+                    <!-- Email Icon -->
+                    <div style="width: 48px; height: 48px; border-radius: 50%; background-color: rgba(15, 106, 60, 0.1); display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-envelope" style="font-size: 20px; color: #0F6A3C; line-height: 1;"></i>
                     </div>
-                    
-                    <div class="location-info-item">
-                        <div class="location-info-icon">
-                            <i class="bi bi-telephone"></i>
-                        </div>
-                        <div class="location-info-content">
-                            <h4>Phone</h4>
-                            <p>+91-888-999-7777</p>
-                        </div>
+                    <!-- Email Content -->
+                    <div style="display: flex; flex-direction: column; justify-content: center;">
+                        <h4 style="margin: 0 0 3px 0; font-size: 1.15rem; font-weight: 600; color: #1F1F1F; line-height: 1.2;">Email Us</h4>
+                        <p style="margin: 0; font-family: 'Inter', sans-serif; font-size: 13.5px; color: #666; line-height: 1.4;"><a href="mailto:hhectareofficial@gmail.com" style="color: inherit; text-decoration: none;">hhectareofficial@gmail.com</a></p>
                     </div>
-                    
-                    <div class="location-info-item">
-                        <div class="location-info-icon">
-                            <i class="bi bi-envelope"></i>
-                        </div>
-                        <div class="location-info-content">
-                            <h4>Email</h4>
-                            <p>info@hhectare.com</p>
-                        </div>
+
+                    <!-- Clock Icon -->
+                    <div style="width: 48px; height: 48px; border-radius: 50%; background-color: rgba(15, 106, 60, 0.1); display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-clock" style="font-size: 20px; color: #0F6A3C; line-height: 1;"></i>
                     </div>
-                    
-                    <div class="location-info-item">
-                        <div class="location-info-icon">
-                            <i class="bi bi-clock"></i>
-                        </div>
-                        <div class="location-info-content">
-                            <h4>Office Hours</h4>
-                            <p>Mon – Sat<br>9:00 AM – 7:00 PM</p>
-                        </div>
+                    <!-- Clock Content -->
+                    <div style="display: flex; flex-direction: column; justify-content: center;">
+                        <h4 style="margin: 0 0 3px 0; font-size: 1.15rem; font-weight: 600; color: #1F1F1F; line-height: 1.2;">Consultation Hours</h4>
+                        <p style="margin: 0; font-family: 'Inter', sans-serif; font-size: 13.5px; color: #666; line-height: 1.4;">Mon – Sat, 9:00 AM – 7:00 PM</p>
                     </div>
                 </div>
             </div>
@@ -1121,7 +1187,7 @@
 
                     <!-- Why Visit Section -->
                     <div class="office-why-section">
-                        <h3 class="office-section-title">Why visit our office?</h3>
+                        <h3 class="office-section-title">Why connect with us?</h3>
                         <div class="office-why-grid">
                             <div class="office-why-item">
                                 <div class="office-why-icon office-stat-icon"><i class="bi bi-chat-square-text"></i></div>

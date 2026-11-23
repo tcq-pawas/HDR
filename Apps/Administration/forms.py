@@ -1,10 +1,11 @@
 from django import forms
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from Apps.Agent.models import AgentProfile
 from Apps.Investor.models import InvestorProfile, Investment, InvestmentListing
 from Apps.PublicPage.models import Property
 from django.core.validators import RegexValidator
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordResetForm
 
 
 class CustomAuthenticationForm(AuthenticationForm):
@@ -53,6 +54,39 @@ class CustomAuthenticationForm(AuthenticationForm):
             self.confirm_login_allowed(self.user_cache)
 
         return self.cleaned_data
+
+
+class CustomPasswordResetForm(PasswordResetForm):
+    """
+    Password reset form that validates the email address and displays an explicit
+    error if the user is not found in the database or is inactive.
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['email'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Enter your registered email address',
+            'autocomplete': 'email',
+            'autofocus': True,
+        })
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if not email:
+            raise forms.ValidationError("Please enter your email address.")
+
+        email = email.strip()
+        UserModel = get_user_model()
+        matching_users = UserModel.objects.filter(email__iexact=email)
+
+        if not matching_users.exists():
+            raise forms.ValidationError("This user does not exist. Please check the email address or register.")
+
+        if not matching_users.filter(is_active=True).exists():
+            raise forms.ValidationError("This account is currently inactive. Please contact support.")
+
+        return email
+
 
 class PartnerRegistrationForm(UserCreationForm):
     ROLE_CHOICES = [

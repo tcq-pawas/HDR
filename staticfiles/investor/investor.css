@@ -48,14 +48,17 @@ body {
 }
 
 .sidebar {
-  width: 280px;
-  background: linear-gradient(180deg, #005427 0%, #003d1c 100%);
+  width: 220px;
+  background: linear-gradient(180deg, #022C22 0%, #064E3B 50%, #065F46 100%);
   min-height: 100vh;
+  height: 100vh;
   position: fixed;
   left: 0;
   top: 0;
   z-index: 1000;
   transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
 }
 
 .main-content {
@@ -519,6 +522,21 @@ body.investor-dashboard {
   min-width: 0;
 }
 
+/* Summary cards reuse the dashboard .kpi-card look:
+   label top-left, value below, icon circle bottom-right.
+   (They no longer use .roi-card, which is the centered dashboard ROI Summary box.) */
+.roi-data-page .kpi-row > [class*="col-"] {
+    min-width: 0;
+}
+
+.roi-data-page .kpi-card {
+    min-height: 130px;
+}
+
+.roi-data-page .kpi-card h2 {
+    overflow-wrap: anywhere;
+}
+
 .roi-data-page .roi-summary-cards {
   max-width: none;
   row-gap: 18px;
@@ -558,7 +576,6 @@ body.investor-dashboard {
 .roi-data-page .roi-card i {
   flex: 0 0 auto;
 }
-
 .roi-data-page .table-responsive {
   border-radius: 8px;
   -webkit-overflow-scrolling: touch;
@@ -614,7 +631,6 @@ body.investor-dashboard {
     min-width: 0;
   }
 }
-
 /* Stack chart and detail columns before the fixed sidebar makes them cramped */
 @media (max-width: 1100px) {
   .roi-data-page > .row:not(.roi-summary-cards) {
@@ -660,7 +676,6 @@ body.investor-dashboard {
   }
 }
 
-/* ROI Summary Cards - single column at mobile */
 @media (max-width: 600px) {
   .roi-data-page .roi-summary-cards {
     grid-template-columns: 1fr;

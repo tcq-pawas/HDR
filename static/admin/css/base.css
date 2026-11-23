@@ -2,6 +2,9 @@
     DJANGO Admin styles
 */
 
+/* Import global typography system */
+@import url('../css/typography.css');
+
 /* VARIABLE DEFINITIONS */
 html[data-theme="light"],
 :root {
@@ -56,17 +59,7 @@ html[data-theme="light"],
     --object-tools-bg: var(--close-button-bg);
     --object-tools-hover-bg: var(--close-button-hover-bg);
 
-    --font-family-primary:
-        "Segoe UI",
-        system-ui,
-        Roboto,
-        "Helvetica Neue",
-        Arial,
-        sans-serif,
-        "Apple Color Emoji",
-        "Segoe UI Emoji",
-        "Segoe UI Symbol",
-        "Noto Color Emoji";
+    --font-family-primary: var(--font-body);
     --font-family-monospace:
         ui-monospace,
         Menlo,
@@ -96,8 +89,8 @@ html, body {
 body {
     margin: 0;
     padding: 0;
-    font-size: 0.875rem;
-    font-family: var(--font-family-primary);
+    font-size: var(--font-body-size);
+    font-family: var(--font-body);
     color: var(--body-fg);
     background: var(--body-bg);
 }
@@ -139,21 +132,21 @@ p, ol, ul, dl {
 
 p {
     padding: 0;
-    line-height: 140%;
+    line-height: var(--line-height-body);
 }
 
 h1,h2,h3,h4,h5 {
-    font-weight: bold;
+    font-weight: var(--font-weight-bold);
 }
 
 h1 {
     margin: 0 0 20px;
-    font-weight: 300;
-    font-size: 1.25rem;
+    font-weight: var(--font-weight-regular);
+    font-size: var(--font-h2);
 }
 
 h2 {
-    font-size: 1rem;
+    font-size: var(--font-h3);
     margin: 1em 0 .5em 0;
 }
 
@@ -163,21 +156,21 @@ h2.subhead {
 }
 
 h3 {
-    font-size: 0.875rem;
+    font-size: var(--font-body-size);
     margin: .8em 0 .3em 0;
     color: var(--body-medium-color);
-    font-weight: bold;
+    font-weight: var(--font-weight-bold);
 }
 
 h4 {
-    font-size: 0.75rem;
+    font-size: var(--font-small);
     margin: 1em 0 .8em 0;
     padding-bottom: 3px;
     color: var(--body-medium-color);
 }
 
 h5 {
-    font-size: 0.625rem;
+    font-size: var(--font-small);
     margin: 1.5em 0 .5em 0;
     color: var(--body-quiet-color);
     text-transform: uppercase;
@@ -194,12 +187,12 @@ li ul {
 }
 
 li, dt, dd {
-    font-size: 0.8125rem;
-    line-height: 1.25rem;
+    font-size: var(--font-body-size);
+    line-height: var(--line-height-body);
 }
 
 dt {
-    font-weight: bold;
+    font-weight: var(--font-weight-bold);
     margin-top: 4px;
 }
 
@@ -225,7 +218,7 @@ details summary {
 }
 
 blockquote {
-    font-size: 0.6875rem;
+    font-size: var(--font-small);
     color: #777;
     margin-left: 2px;
     padding-left: 10px;
@@ -235,7 +228,7 @@ blockquote {
 code, pre {
     font-family: var(--font-family-monospace);
     color: var(--body-quiet-color);
-    font-size: 0.75rem;
+    font-size: var(--font-small);
     overflow-x: auto;
 }
 
@@ -263,15 +256,15 @@ hr {
 /* TEXT STYLES & MODIFIERS */
 
 .small {
-    font-size: 0.6875rem;
+    font-size: var(--font-small);
 }
 
 .mini {
-    font-size: 0.625rem;
+    font-size: var(--font-small);
 }
 
 .help, p.help, form p.help, div.help, form div.help, div.help li {
-    font-size: 0.6875rem;
+    font-size: var(--font-small);
     color: var(--body-quiet-color);
 }
 
@@ -312,15 +305,15 @@ table {
 }
 
 td, th {
-    font-size: 0.8125rem;
-    line-height: 1rem;
+    font-size: var(--font-body-size);
+    line-height: var(--line-height-body);
     border-bottom: 1px solid var(--hairline-color);
     vertical-align: top;
     padding: 8px;
 }
 
 th {
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
     text-align: left;
 }
 
@@ -328,7 +321,7 @@ thead th,
 tfoot td {
     color: var(--body-quiet-color);
     padding: 5px 10px;
-    font-size: 0.6875rem;
+    font-size: var(--font-small);
     background: var(--body-bg);
     border: none;
     border-top: 1px solid var(--hairline-color);
@@ -341,7 +334,7 @@ tfoot td {
 }
 
 thead th.required {
-    font-weight: bold;
+    font-weight: var(--font-weight-bold);
 }
 
 tr.alt {
@@ -411,7 +404,7 @@ table thead th.sorted .sortoptions {
 }
 
 table thead th.sorted .sortpriority {
-    font-size: .8em;
+    font-size: var(--font-small);
     min-width: 12px;
     text-align: center;
     vertical-align: 3px;
@@ -437,8 +430,8 @@ table thead th.sorted .sortoptions a.sortremove:after {
     position: absolute;
     top: -6px;
     left: 3px;
-    font-weight: 200;
-    font-size: 1.125rem;
+    font-weight: var(--font-weight-regular);
+    font-size: var(--font-h4);
     color: var(--body-quiet-color);
 }
 
@@ -477,9 +470,9 @@ input, textarea, select, .form-row p, form .button {
     margin: 2px 0;
     padding: 2px 3px;
     vertical-align: middle;
-    font-family: var(--font-family-primary);
-    font-weight: normal;
-    font-size: 0.8125rem;
+    font-family: var(--font-body);
+    font-weight: var(--font-weight-regular);
+    font-size: var(--font-body-size);
 }
 .form-row div.help {
     padding: 2px 3px;
@@ -552,7 +545,7 @@ a.button {
 
 .button.default, input[type=submit].default, .submit-row input.default {
     border: none;
-    font-weight: 400;
+    font-weight: var(--font-weight-regular);
     background: var(--default-button-bg);
 }
 
@@ -597,8 +590,8 @@ input[type=button][disabled].default {
 .module h2, .module caption, .inline-group h2 {
     margin: 0;
     padding: 8px;
-    font-weight: 400;
-    font-size: 0.8125rem;
+    font-weight: var(--font-weight-regular);
+    font-size: var(--font-body-size);
     text-align: left;
     background: var(--header-bg);
     color: var(--header-link-color);
@@ -606,7 +599,7 @@ input[type=button][disabled].default {
 
 .module caption,
 .inline-group h2 {
-    font-size: 0.75rem;
+    font-size: var(--font-small);
     letter-spacing: 0.5px;
     text-transform: uppercase;
 }
@@ -624,8 +617,8 @@ ul.messagelist {
 
 ul.messagelist li {
     display: block;
-    font-weight: 400;
-    font-size: 0.8125rem;
+    font-weight: var(--font-weight-regular);
+    font-size: var(--font-body-size);
     padding: 10px 10px 10px 65px;
     margin: 0 0 10px 0;
     background: var(--message-success-bg) url(../img/icon-yes.svg) 40px 12px no-repeat;
@@ -645,8 +638,8 @@ ul.messagelist li.error {
 }
 
 .errornote {
-    font-size: 0.875rem;
-    font-weight: 700;
+    font-size: var(--font-body-size);
+    font-weight: var(--font-weight-bold);
     display: block;
     padding: 10px 12px;
     margin: 0 0 10px 0;
@@ -666,7 +659,7 @@ ul.errorlist {
 }
 
 ul.errorlist li {
-    font-size: 0.8125rem;
+    font-size: var(--font-body-size);
     display: block;
     margin-bottom: 4px;
     overflow-wrap: break-word;
@@ -707,7 +700,7 @@ td ul.errorlist + input, td ul.errorlist + select, td ul.errorlist + textarea {
 }
 
 .description {
-    font-size: 0.75rem;
+    font-size: var(--font-small);
     padding: 5px 0 0 12px;
 }
 
@@ -768,8 +761,8 @@ a.deletelink:focus, a.deletelink:hover {
 /* OBJECT TOOLS */
 
 .object-tools {
-    font-size: 0.625rem;
-    font-weight: bold;
+    font-size: var(--font-small);
+    font-weight: var(--font-weight-bold);
     padding-left: 0;
     float: right;
     position: relative;
@@ -793,8 +786,8 @@ a.deletelink:focus, a.deletelink:hover {
     padding: 3px 12px;
     background: var(--object-tools-bg);
     color: var(--object-tools-fg);
-    font-weight: 400;
-    font-size: 0.6875rem;
+    font-weight: var(--font-weight-regular);
+    font-size: var(--font-small);
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }

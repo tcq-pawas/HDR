@@ -5,7 +5,8 @@ from .dashboard_views import (
     InvestmentManagementView, SystemSettingsView, ReportsView,
     UserProfileView, PropertyReviewCenterView, PropertyReviewDetailPageView, InquiryDetailPageView,
     InquiryBulkActionView, InquiryExportCSVView, InquiryExportExcelView, InquiryDeleteView,
-    AdminPropertyListView, AdminFinancialsView, CustomerListView, AgentListView
+    AdminPropertyListView, AdminFinancialsView, CustomerListView, AgentListView,
+    InquiryUnreadCountAPIView
 )
 from . import investor_views
 from . import communication_views
@@ -51,6 +52,7 @@ urlpatterns = [
     path('inquiries/bulk-action/', InquiryBulkActionView.as_view(), name='inquiry-bulk-action'),
     path('inquiries/export/csv/', InquiryExportCSVView.as_view(), name='inquiry-export-csv'),
     path('inquiries/export/excel/', InquiryExportExcelView.as_view(), name='inquiry-export-excel'),
+    path('api/inquiries/unread-count/', InquiryUnreadCountAPIView.as_view(), name='inquiry-unread-count-api'),
     # Communication
     path('communications/', communication_views.AdminCommunicationListView.as_view(), name='communication-list'),
     path('communications/send/', communication_views.AdminCommunicationSendView.as_view(), name='communication-send'),

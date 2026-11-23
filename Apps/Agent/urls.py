@@ -8,6 +8,7 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
     path('settings/', views.settings, name='settings'),
     path('profile/', views.profile, name='profile'),
+    path('profile/upload-image/', views.upload_profile_image, name='upload_profile_image'),
     path('change-password/', views.change_password, name='change_password'),
     path('delete-account/', views.delete_account, name='delete_account'),
     path('document-verification/', views.document_verification, name='document_verification'),

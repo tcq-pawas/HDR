@@ -11,28 +11,20 @@ Management{% endblock %} {% block extra_css %}
 {% endblock %} {% block content %}
 <!-- Page Banner -->
 <div class="coming-soon is-soon">
-  <div
+  <section
     id="prop-management-subscription-banner"
-    class="prop-management-subscription-banner banner-box"
-    style="
-      background: url(&quot;{% static 'images/hero-img-all.png' %}&quot;)
-        center/cover no-repeat;
-      height: 400px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    "
+    class="ih"
+    style="--ih-bg: url('{% static 'images/hero-img-all.png' %}')"
   >
-    <div class="prop-management-content banner-box-1">
-      <h1 class="prop-management-title">Property Management</h1>
-      <p class="prop-management-quote">Let Us Take Care of Your Property</p>
-      <div class="prop-management-divider">
-        <span class="divider-line"></span>
-        <span class="divider-icon" aria-hidden="true">🏡</span>
+    <div class="ih__content">
+      <h1 class="ih__title">Property Management</h1>
+      <p class="ih__sub">Let Us Take Care of Your Property</p>
+      <div class="ih__divider">
+        <span class="ih__divider-line"></span>
+        <span class="ih__divider-icon" aria-hidden="true">🏡</span>
       </div>
     </div>
-  </div>
+  </section>
 
   <!-- Coming Soon Ribbon -->
   <div

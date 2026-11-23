@@ -10,6 +10,12 @@
    
     
 
+    /* Font Families - single system for the whole public site.
+       Inter is loaded from Google Fonts in public/base.html and the stack
+       falls back to the OS UI font, so text never renders in a random font. */
+    --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-heading: var(--font-body);
+
     /* Typography Scale - Fluid with clamp() */
     --font-h1: clamp(32px, 4.2vw, 58px);
     --font-h2: clamp(26px, 3vw, 42px);
@@ -208,4 +214,26 @@ label,
     font-family: var(--font-body);
     font-size: var(--font-small);
     font-weight: var(--font-weight-medium);
+}
+
+/* =========================================================
+   PUBLIC SITE: ONE FONT FAMILY EVERYWHERE
+   <body class="site-public"> is set in public/base.html.
+   Pages used to hard-code Playfair Display / Inter / system fonts
+   in their own <style> blocks; this makes every text element use
+   --font-body. Icon elements (<i>, .fa*, .bi) are excluded on purpose
+   so Font Awesome / Bootstrap Icons keep working.
+   ========================================================= */
+
+body.site-public {
+    font-family: var(--font-body);
+}
+
+body.site-public :where(
+    h1, h2, h3, h4, h5, h6,
+    p, a, li, span, div, small, strong, em, b, blockquote,
+    label, legend, input, button, select, option, textarea,
+    th, td, dt, dd, figcaption
+):not(.fa):not(.fas):not(.far):not(.fab):not(.fa-solid):not(.fa-regular):not(.fa-brands):not(.bi) {
+    font-family: var(--font-body) !important;
 }

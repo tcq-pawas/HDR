@@ -280,7 +280,7 @@ class Property(models.Model):
     
     # ==================== Agricultural Land-Specific Fields ====================
     # Land Information
-    land_code = models.CharField(max_length=50, null=True, blank=True, unique=True, help_text="Auto-generated Land Code")
+    land_code = models.CharField(max_length=100, null=True, blank=True, unique=True, help_text="Auto-generated Land Code")
     agri_land_category = models.CharField(max_length=30, choices=AGRI_LAND_CATEGORY_CHOICES, null=True, blank=True, help_text="Agricultural Land Category")
     land_status = models.CharField(max_length=20, choices=LAND_STATUS_CHOICES, default='available', help_text="Land Status")
     

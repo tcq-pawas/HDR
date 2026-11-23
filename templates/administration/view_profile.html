@@ -2,6 +2,39 @@
 {% load static %}
 
 {% block title %}Admin Profile | HHectare{% endblock %}
+ 
+{% block extra_css %}
+<style>
+    .profile-avatar-container {
+        position: relative;
+        display: inline-block;
+    }
+    .avatar-camera-badge {
+        position: absolute;
+        bottom: 2px;
+        right: 2px;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #ffffff;
+        color: #005427;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        z-index: 6;
+        border: 2px solid #ffffff;
+        transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+    .profile-avatar-container:hover .avatar-camera-badge,
+    .avatar-camera-badge:hover {
+        transform: scale(1.1);
+        background-color: #f0fdf4;
+        color: #005427;
+    }
+</style>
+{% endblock %}
 
 {% block page_title %}
 <div class="profile-breadcrumb d-flex align-items-center flex-wrap gap-2">
@@ -37,13 +70,10 @@
             <div class="d-flex align-items-center position-relative z-1 gap-4">
 
                 <!-- Avatar -->
-                <div class="dropdown" title="Profile Photo Options">
+                <div class="profile-avatar-container position-relative d-inline-block" style="cursor:pointer;" onclick="document.getElementById('avatarInput').click();" title="Click to upload profile photo">
 
                     <div class="profile-avatar-large d-flex align-items-center justify-content-center"
-                         id="avatarWrapper"
-                         data-bs-toggle="dropdown"
-                         aria-expanded="false"
-                         style="cursor:pointer;">
+                         id="avatarWrapper">
 
                         {% if admin_profile.profile_picture %}
 
@@ -64,44 +94,20 @@
 
                     </div>
 
-                    <ul class="dropdown-menu mt-2">
-
-                        <li>
-                            <a class="dropdown-item"
-                               href="#"
-                               onclick="event.preventDefault(); document.getElementById('avatarInput').click();">
-                                <i class="fas fa-camera me-2"></i>
-                                Change Photo
-                            </a>
-                        </li>
-
-                        <li>
-                            <a class="dropdown-item text-danger"
-                               href="#"
-                               onclick="event.preventDefault(); removeProfilePhoto();">
-                                <i class="fas fa-trash me-2"></i>
-                                Remove Photo
-                            </a>
-                        </li>
-
-                        <li>
-                            <a class="dropdown-item"
-                               href="#"
-                               onclick="event.preventDefault(); document.body.click();">
-                                <i class="fas fa-times me-2"></i>
-                                Cancel
-                            </a>
-                        </li>
-
-                    </ul>
+                    <!-- Camera badge button at bottom-right of avatar -->
+                    <div class="avatar-camera-badge" title="Click to upload profile photo">
+                        <i class="fas fa-camera" style="font-size: 0.95rem;"></i>
+                    </div>
 
                     <input type="file"
                            id="avatarInput"
                            accept="image/*"
                            style="display:none;"
+                           onclick="event.stopPropagation();"
                            onchange="previewAvatar(this)">
 
                 </div>
+
 
 
                 <!-- Profile Text -->

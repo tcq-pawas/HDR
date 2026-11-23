@@ -67,7 +67,7 @@
         </div>
 
         <!-- 2. Bottom Card: Dynamic CMS Body Content -->
-        <div style="background: #ffffff; border-radius: 16px; border: 1px solid #E2E8F0; padding: 44px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+        <div style="background: #ffffff; border-radius: 16px; border: 1px solid #E2E8F0; padding: 44px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
             <div class="cms-dynamic-content" style="font-size: 1.05rem; line-height: 1.85; color: #334155; font-family: 'Inter', -apple-system, sans-serif;">
                 {% if blog.body_html %}
                     {{ blog.body_html|safe }}
@@ -77,10 +77,124 @@
             </div>
         </div>
 
+        <!-- 3. Comments Section (Live Synchronized with InsightCMS) -->
+        {% if allow_comments %}
+        <div id="comments" style="background: #ffffff; border-radius: 16px; border: 1px solid #E2E8F0; padding: 40px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+            
+            {% if messages %}
+                {% for message in messages %}
+                    <div style="padding: 14px 18px; border-radius: 10px; margin-bottom: 24px; font-size: 0.95rem; display: flex; align-items: center; gap: 10px; {% if message.tags == 'error' %}background: #FEF2F2; color: #991B1B; border: 1px solid #F87171;{% else %}background: #F0FDF4; color: #166534; border: 1px solid #86EFAC;{% endif %}">
+                        <i class="bi {% if message.tags == 'error' %}bi-exclamation-circle{% else %}bi-check-circle{% endif %}"></i>
+                        <span>{{ message }}</span>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; border-bottom: 1px solid #E2E8F0; padding-bottom: 16px;">
+                <h3 style="font-size: 1.4rem; font-weight: 700; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 10px;">
+                    <i class="bi bi-chat-dots" style="color: #0F766E;"></i>
+                    Comments ({{ comments_count|default:0 }})
+                </h3>
+            </div>
+
+            <!-- Comments List (Facebook Style Recursive Chain) -->
+            {% if comments %}
+                <div style="display: flex; flex-direction: column; gap: 20px; margin-bottom: 36px;">
+                    {% for comment in comments %}
+                        {% include "public/comment_item.html" with item=comment is_child=False %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div style="text-align: center; padding: 28px 16px; color: #94A3B8; margin-bottom: 32px;">
+                    <i class="bi bi-chat-left-dots" style="font-size: 2.2rem; color: #CBD5E1; display: block; margin-bottom: 8px;"></i>
+                    <p style="margin: 0; font-size: 0.95rem;">No comments yet. Be the first to share your thoughts!</p>
+                </div>
+            {% endif %}
+
+            <!-- Leave a Comment Section (Open to All) -->
+            <div id="comment-form-wrapper" style="background: #FAFBFD; border: 1px solid #E2E8F0; border-radius: 14px; padding: 28px;">
+                <h4 style="font-size: 1.15rem; font-weight: 700; color: #0F172A; margin: 0 0 18px 0;">
+                    Leave a Comment
+                </h4>
+                
+                <form method="POST" action="{% url 'public:blog_detail' slug=blog.slug %}">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label style="font-size: 0.88rem; font-weight: 600; color: #475569; margin-bottom: 6px; display: block;">Your Name <span style="color: #EF4444;">*</span></label>
+                            <input type="text" id="main_author_name" name="author_name" required placeholder="John Doe" value="{% if request.user.is_authenticated %}{{ request.user.get_full_name|default:request.user.username }}{% endif %}" style="width: 100%; padding: 10px 14px; border: 1px solid #D1D5DB; border-radius: 8px; font-size: 0.92rem; outline: none;">
+                        </div>
+                        <div class="col-md-6">
+                            <label style="font-size: 0.88rem; font-weight: 600; color: #475569; margin-bottom: 6px; display: block;">Email Address <span style="color: #94A3B8; font-weight: 400;">(optional)</span></label>
+                            <input type="email" id="main_author_email" name="author_email" placeholder="john@example.com" value="{% if request.user.is_authenticated %}{{ request.user.email }}{% endif %}" style="width: 100%; padding: 10px 14px; border: 1px solid #D1D5DB; border-radius: 8px; font-size: 0.92rem; outline: none;">
+                        </div>
+                        <div class="col-12">
+                            <label style="font-size: 0.88rem; font-weight: 600; color: #475569; margin-bottom: 6px; display: block;">Your Comment <span style="color: #EF4444;">*</span></label>
+                            <textarea name="content" required rows="3" placeholder="Write your thoughts here..." style="width: 100%; padding: 12px 14px; border: 1px solid #D1D5DB; border-radius: 8px; font-size: 0.92rem; outline: none;"></textarea>
+                        </div>
+                        <div class="col-12" style="text-align: right;">
+                            <button type="submit" style="background: #0F766E; color: #ffffff; border: none; padding: 11px 26px; border-radius: 20px; font-weight: 600; font-size: 0.92rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 2px 4px rgba(15, 118, 110, 0.2);">
+                                <i class="bi bi-send"></i> Post Comment
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+        {% endif %}
+
     </div>
 </section>
 
+<script>
+// Clear any previously saved commenter details
+try {
+    localStorage.removeItem('commenter_name');
+    localStorage.removeItem('commenter_email');
+} catch (e) {}
+
+function toggleReplies(commentId) {
+    const container = document.getElementById('replies-container-' + commentId);
+    const textSpan = document.getElementById('toggle-text-' + commentId);
+    if (!container) return;
+    
+    if (container.style.display === 'none') {
+        container.style.display = 'flex';
+        textSpan.innerText = 'Hide replies';
+    } else {
+        container.style.display = 'none';
+        textSpan.innerText = 'View replies';
+    }
+}
+
+function toggleInlineReply(commentId) {
+    const box = document.getElementById('inline-reply-' + commentId);
+    if (!box) return;
+    if (box.style.display === 'none' || box.style.display === '') {
+        box.style.display = 'block';
+        const input = box.querySelector('input[name="author_name"]') || box.querySelector('input[name="content"]');
+        if (input) input.focus();
+    } else {
+        box.style.display = 'none';
+    }
+}
+
+function triggerCommentDelete(commentId, authorName) {
+    if (confirm('Delete this comment by ' + authorName + '?')) {
+        const form = document.getElementById('delete-form-' + commentId);
+        if (form) {
+            form.submit();
+        }
+    }
+}
+</script>
+
 <style>
+.comment-bubble:hover {
+    background: #FEE2E2 !important;
+    border-color: #FCA5A5 !important;
+}
 .cms-dynamic-content img {
     max-width: 100%;
     height: auto;
@@ -98,3 +212,4 @@
 }
 </style>
 {% endblock %}
+

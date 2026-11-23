@@ -3,71 +3,379 @@
 
 {% block title %}{{ title }} | HHectare{% endblock %}
 
+{% block breadcrumb_items %}
+<a href="{% url 'agent:dashboard' %}">Dashboard</a>
+<i class="bi bi-chevron-right breadcrumb-separator"></i>
+<a href="{% url 'agent:communication_list' %}">Communications</a>
+<i class="bi bi-chevron-right breadcrumb-separator"></i>
+<span>Send Message</span>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .comm-form-container {
+        max-width: 820px;
+        margin: 0 auto;
+        padding-bottom: 2.5rem;
+    }
+
+    .comm-hero {
+        background: linear-gradient(135deg, #005427 0%, #007033 60%, #059669 100%);
+        border-radius: 16px;
+        padding: 1.5rem 2rem;
+        color: #fff;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 15px rgba(0, 84, 39, 0.15);
+    }
+
+    .comm-hero::before {
+        content: '';
+        position: absolute;
+        top: -40px;
+        right: -40px;
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        pointer-events: none;
+    }
+
+    .comm-hero h4 {
+        font-weight: 700;
+        font-size: 1.35rem;
+        color: #fff;
+        margin: 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .comm-hero p {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 13.5px;
+        margin: 4px 0 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .btn-back-glass {
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        backdrop-filter: blur(6px);
+        transition: all 0.2s ease;
+        position: relative;
+        z-index: 1;
+    }
+
+    .btn-back-glass:hover {
+        background: rgba(255, 255, 255, 0.28);
+        color: #fff;
+        transform: translateY(-1px);
+    }
+
+    .comm-card {
+        background: #ffffff;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+        padding: 2.2rem;
+    }
+
+    .comm-card-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 0.35rem;
+    }
+
+    .comm-card-subtitle {
+        font-size: 13px;
+        color: #64748b;
+        margin-bottom: 1.75rem;
+    }
+
+    .comm-form-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        column-gap: 24px !important;
+        row-gap: 16px !important;
+        margin-bottom: 1.25rem !important;
+    }
+
+    .comm-grid-full {
+        grid-column: 1 / -1 !important;
+    }
+
+    @media (max-width: 640px) {
+        .comm-form-grid {
+            grid-template-columns: 1fr !important;
+        }
+    }
+
+    .custom-form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .custom-form-label {
+        font-weight: 600;
+        font-size: 13px;
+        color: #334155;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .custom-input-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .custom-input-icon {
+        position: absolute;
+        left: 14px;
+        color: #94a3b8;
+        font-size: 1rem;
+        pointer-events: none;
+        transition: color 0.2s ease;
+        z-index: 2;
+    }
+
+    .custom-input-wrap .form-control,
+    .custom-input-wrap .form-select {
+        border-radius: 10px;
+        border: 1.5px solid #cbd5e1;
+        padding: 10px 14px 10px 42px;
+        font-size: 14px;
+        color: #1e293b;
+        background-color: #f8fafc;
+        transition: all 0.2s ease;
+        width: 100%;
+    }
+
+    .custom-textarea-wrap {
+        position: relative;
+    }
+
+    .custom-textarea-wrap textarea.form-control {
+        border-radius: 10px;
+        border: 1.5px solid #cbd5e1;
+        padding: 12px 14px;
+        font-size: 14px;
+        color: #1e293b;
+        background-color: #f8fafc;
+        transition: all 0.2s ease;
+        width: 100%;
+        line-height: 1.5;
+        min-height: 130px;
+    }
+
+    .custom-input-wrap .form-control:focus,
+    .custom-input-wrap .form-select:focus,
+    .custom-textarea-wrap textarea.form-control:focus {
+        background-color: #ffffff;
+        border-color: #005427;
+        box-shadow: 0 0 0 3.5px rgba(0, 84, 39, 0.12);
+        outline: none;
+    }
+
+    .custom-input-wrap:focus-within .custom-input-icon {
+        color: #005427;
+    }
+
+    .field-error {
+        color: #dc2626;
+        font-size: 12px;
+        margin-top: 4px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .actions-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #f1f5f9;
+    }
+
+    .btn-send-msg {
+        background: linear-gradient(135deg, #005427, #007033);
+        color: #fff;
+        border: none;
+        padding: 11px 26px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 14px rgba(0, 84, 39, 0.25);
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+    .btn-send-msg:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(0, 84, 39, 0.35);
+        color: #fff;
+        background: linear-gradient(135deg, #004520, #005c2a);
+    }
+
+    .btn-cancel {
+        background: #f1f5f9;
+        color: #475569;
+        border: 1px solid #e2e8f0;
+        padding: 11px 20px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        transition: all 0.2s ease;
+    }
+
+    .btn-cancel:hover {
+        background: #e2e8f0;
+        color: #1e293b;
+    }
+
+    .email-tip-box {
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        border-radius: 12px;
+        padding: 1rem 1.2rem;
+        font-size: 13px;
+        color: #166534;
+        margin-top: 1.75rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        line-height: 1.45;
+    }
+
+    .email-tip-box i {
+        font-size: 1.25rem;
+        color: #16a34a;
+        flex-shrink: 0;
+        margin-top: 1px;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="communication-form-container">
-    <!-- Header -->
-    <div class="page-header">
-        <h1>{{ title }}</h1>
+<div class="comm-form-container">
+    <!-- Hero Banner -->
+    <div class="comm-hero d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+            <h4><i class="bi bi-send-check me-2"></i>{{ title }}</h4>
+            <p>Send an email message directly to your lead, client, or customer</p>
+        </div>
+        <a href="{% url 'agent:communication_list' %}" class="btn-back-glass">
+            <i class="bi bi-arrow-left"></i> Back to List
+        </a>
     </div>
 
-    <!-- Form -->
-    <div class="card communication-form-card">
-        <form method="post">
+    <!-- Main Card -->
+    <div class="comm-card">
+        <div class="comm-card-title">Message Details</div>
+        <div class="comm-card-subtitle">Fill in the recipient and message contents below.</div>
+
+        <form method="post" novalidate>
             {% csrf_token %}
-            
-            <!-- Introduction Section -->
-            <div class="communication-form-intro">
-                <div class="intro-icon-wrapper">
-                    <i class="bi bi-envelope"></i>
+
+            <div class="comm-form-grid">
+                <!-- Col 1: Communication Type -->
+                <div class="custom-form-group">
+                    <label class="custom-form-label" for="{{ form.communication_type.id_for_label }}">
+                        Communication Type <span class="text-danger">*</span>
+                    </label>
+                    <div class="custom-input-wrap">
+                        <i class="bi bi-broadcast custom-input-icon"></i>
+                        {{ form.communication_type }}
+                    </div>
+                    {% if form.communication_type.errors %}
+                        <div class="field-error"><i class="bi bi-exclamation-circle"></i> {{ form.communication_type.errors.0 }}</div>
+                    {% endif %}
                 </div>
-                <div class="intro-content">
-                    <h3>Communication Details</h3>
-                    <p>Fill in the information below to send your message</p>
+
+                <!-- Col 2: Recipient Email -->
+                <div class="custom-form-group">
+                    <label class="custom-form-label" for="{{ form.recipient.id_for_label }}">
+                        Recipient Email Address <span class="text-danger">*</span>
+                    </label>
+                    <div class="custom-input-wrap">
+                        <i class="bi bi-envelope custom-input-icon"></i>
+                        {{ form.recipient }}
+                    </div>
+                    {% if form.recipient.errors %}
+                        <div class="field-error"><i class="bi bi-exclamation-circle"></i> {{ form.recipient.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Full Width: Subject -->
+                <div class="custom-form-group comm-grid-full">
+                    <label class="custom-form-label" for="{{ form.subject.id_for_label }}">
+                        Subject (for Email) <span class="text-danger">*</span>
+                    </label>
+                    <div class="custom-input-wrap">
+                        <i class="bi bi-chat-left-text custom-input-icon"></i>
+                        {{ form.subject }}
+                    </div>
+                    {% if form.subject.errors %}
+                        <div class="field-error"><i class="bi bi-exclamation-circle"></i> {{ form.subject.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Full Width: Message -->
+                <div class="custom-form-group comm-grid-full">
+                    <label class="custom-form-label" for="{{ form.message.id_for_label }}">
+                        Message Body <span class="text-danger">*</span>
+                    </label>
+                    <div class="custom-textarea-wrap">
+                        {{ form.message }}
+                    </div>
+                    {% if form.message.errors %}
+                        <div class="field-error"><i class="bi bi-exclamation-circle"></i> {{ form.message.errors.0 }}</div>
+                    {% endif %}
                 </div>
             </div>
-            
-            <div class="form-group mb-3">
-                <label for="{{ form.communication_type.id_for_label }}">Communication Type <span class="text-danger">*</span></label>
-                {{ form.communication_type }}
-                {% if form.communication_type.errors %}
-                    <div class="error-message">{{ form.communication_type.errors }}</div>
-                {% endif %}
-            </div>
 
-            <div class="form-group mb-3">
-                <label for="{{ form.recipient.id_for_label }}">Recipient Email Address <span class="text-danger">*</span></label>
-                {{ form.recipient }}
-                {% if form.recipient.errors %}
-                    <div class="error-message">{{ form.recipient.errors }}</div>
-                {% endif %}
-            </div>
-
-            <div class="form-group">
-                <label for="{{ form.subject.id_for_label }}">Subject (for Email)</label>
-                {{ form.subject }}
-                {% if form.subject.errors %}
-                    <div class="error-message">{{ form.subject.errors }}</div>
-                {% endif %}
-            </div>
-
-            <div class="form-group">
-                <label for="{{ form.message.id_for_label }}">Message <span class="text-danger">*</span></label>
-                {{ form.message }}
-                {% if form.message.errors %}
-                    <div class="error-message">{{ form.message.errors }}</div>
-                {% endif %}
-            </div>
-
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-send"></i> Send Message
+            <!-- Action Buttons -->
+            <div class="actions-row">
+                <button type="submit" class="btn-send-msg">
+                    <i class="bi bi-send-fill"></i> Send Message
                 </button>
-                <a href="{% url 'agent:communication_list' %}" class="btn btn-secondary">
-                    <i class="bi bi-x-lg"></i> Cancel
+                <a href="{% url 'agent:communication_list' %}" class="btn-cancel">
+                    Cancel
                 </a>
             </div>
         </form>
+
+        <!-- Help Info Box -->
+        <div class="email-tip-box">
+            <i class="bi bi-info-circle-fill"></i>
+            <div>
+                <strong>Direct Delivery:</strong> The message will be dispatched directly to the recipient's email address and logged in your Communications History for future reference.
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
+

@@ -13,19 +13,22 @@
  
 {% block content %}
 
-<div class="edit-org-header d-flex justify-content-between align-items-center flex-wrap gap-2">
-    <div>
-        <h4 class="mb-1 text-white fw-bold"><i class="bi bi-pencil-square me-2"></i>Edit Organization Details</h4>
-        <p class="mb-0 text-white-50 small">Update profile and contact information for {{ organization.organization_name }}</p>
+<div class="edit-org-container">
+    <!-- Header Banner -->
+    <div class="edit-org-hero d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+            <h4><i class="bi bi-pencil-square me-2"></i>Edit Organization Details</h4>
+            <p>Update profile and contact information for <strong>{{ organization.organization_name }}</strong></p>
+        </div>
+        <a href="{% url 'organization:detail' organization.id %}" class="btn-back-glass">
+            <i class="bi bi-arrow-left"></i> Cancel
+        </a>
     </div>
-    <a href="{% url 'organization:detail' organization.id %}" class="btn btn-sm btn-outline-light">
-        <i class="bi bi-arrow-left"></i> Cancel
-    </a>
-</div>
 
-<div class="edit-org-card">
-    <form method="post" enctype="multipart/form-data" novalidate>
-        {% csrf_token %}
+    <!-- Main Form Card -->
+    <div class="edit-card">
+        <form method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
 
         <!-- Org Name -->
         <div class="mb-3">
@@ -57,19 +60,33 @@
             </div>
         </div>
 
-        <!-- Website -->
-        <div class="mb-3">
-            <label class="form-label">Website URL</label>
-            <input type="url" name="website" class="form-control"
-                   value="{{ organization.website|default:'' }}" placeholder="https://">
-        </div>
+            <div class="form-grid-2">
+                <!-- Org Name -->
+                <div class="custom-form-group">
+                    <label class="custom-form-label" for="id_org_name">
+                        Organization Name <span class="text-danger">*</span>
+                    </label>
+                    <div class="custom-input-wrap">
+                        <i class="bi bi-building custom-input-icon"></i>
+                        <input type="text" id="id_org_name" name="organization_name" class="form-control"
+                               value="{{ organization.organization_name }}" placeholder="e.g. Acme Realty" required>
+                    </div>
+                    {% if errors.organization_name %}
+                        <div class="field-error"><i class="bi bi-exclamation-circle"></i> {{ errors.organization_name }}</div>
+                    {% endif %}
+                </div>
 
-        <!-- Address -->
-        <div class="mb-3">
-            <label class="form-label">Street Address</label>
-            <input type="text" name="address" class="form-control"
-                   value="{{ organization.address|default:'' }}">
-        </div>
+                <!-- Website -->
+                <div class="custom-form-group">
+                    <label class="custom-form-label" for="id_website">
+                        Website URL
+                    </label>
+                    <div class="custom-input-wrap">
+                        <i class="bi bi-globe custom-input-icon"></i>
+                        <input type="url" id="id_website" name="website" class="form-control"
+                               value="{{ organization.website|default:'' }}" placeholder="https://example.com">
+                    </div>
+                </div>
 
         <!-- Row: City, State, Zip, Country -->
         <div class="row area-section">
@@ -95,14 +112,21 @@
             </div>
         </div>
 
-        <!-- Logo Upload -->
-        <div class="mb-4">
-            <label class="form-label">Organization Logo</label>
-            <input type="file" name="logo" class="form-control" accept="image/*">
-            {% if organization.logo and organization.logo.name %}
-                <div class="mt-2 small text-muted">Current Logo: <a href="{{ organization.logo.url }}" target="_blank">View File</a></div>
-            {% endif %}
-        </div>
+                <!-- Phone -->
+                <div class="custom-form-group">
+                    <label class="custom-form-label" for="id_phone">
+                        Phone Number <span class="text-danger">*</span>
+                    </label>
+                    <div class="custom-input-wrap">
+                        <i class="bi bi-telephone custom-input-icon"></i>
+                        <input type="text" id="id_phone" name="phone" class="form-control"
+                               value="{{ organization.phone|default:'' }}" placeholder="10-digit phone number" required>
+                    </div>
+                    {% if errors.phone %}
+                        <div class="field-error"><i class="bi bi-exclamation-circle"></i> {{ errors.phone }}</div>
+                    {% endif %}
+                </div>
+            </div>
 
         <div class="d-flex gap-2 agt-form-action-buttons">
             <button type="submit" class="btn-save-org">

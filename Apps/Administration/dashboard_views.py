@@ -200,7 +200,7 @@ class AdminDashboardView(AdminDashboardMixin, TemplateView):
         
         # Count unique customers who made investments after inquiries
         customers_with_investments = User.objects.filter(
-            investment__isnull=False
+            investments__isnull=False
         ).distinct().count()
         
         return round((customers_with_investments / total_inquiries) * 100, 2)
@@ -312,7 +312,7 @@ class InquiryManagementView(AdminDashboardMixin, TemplateView):
         if search:
             enquiries = enquiries.filter(
                 Q(full_name__icontains=search) |
-                Q(phone_number__icontains=search) |
+                Q(phone__icontains=search) |
                 Q(email__icontains=search) |
                 Q(enquiry_id__icontains=search)
             )
@@ -940,3 +940,30 @@ class AdminFinancialsView(AdminDashboardMixin, TemplateView):
         context['transactions'] = PaymentTransaction.objects.select_related('user', 'subscription__plan').order_by('-created_at')
         context['subscriptions'] = UserSubscription.objects.select_related('user', 'plan', 'pricing').prefetch_related('transactions').order_by('-start_date')
         return context
+
+
+from django.http import JsonResponse
+from django.views import View
+
+class InquiryUnreadCountAPIView(AdminDashboardMixin, View):
+    """API view to fetch unread/new inquiries count and recent new inquiries for real-time notifications"""
+    def get(self, request, *args, **kwargs):
+        unread_inquiries = ContactInquiry.objects.filter(status='new').order_by('-created_at')
+        unread_count = unread_inquiries.count()
+        latest = []
+        for inq in unread_inquiries[:5]:
+            latest.append({
+                'id': inq.id,
+                'enquiry_id': inq.enquiry_id or str(inq.id),
+                'full_name': inq.full_name or 'Anonymous',
+                'phone_number': inq.phone or '',
+                'email': inq.email or '',
+                'investment_budget': inq.budget or 'N/A',
+                'message': inq.message or '',
+                'created_at': inq.created_at.strftime('%b %d, %Y %I:%M %p') if inq.created_at else '',
+            })
+        return JsonResponse({
+            'unread_count': unread_count,
+            'latest_inquiries': latest,
+        })
+

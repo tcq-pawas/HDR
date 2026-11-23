@@ -1,0 +1,139 @@
+/* =========================================================
+   ADMIN TYPOGRAPHY - single source for all admin-logged-in pages
+   Loaded LAST in templates/administration/admin_base.html
+
+   REVERT: delete the <link> to this file in admin_base.html
+   (everything here is scoped to body.admin-dashboard, so
+   no other portal is affected).
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap');
+
+body.admin-dashboard {
+    --admin-font-body: 'Inter', -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+    --admin-font-heading: 'Poppins', 'Inter', -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+
+    /* typography.css reads these two, but they were never defined */
+    --font-body: var(--admin-font-body);
+    --font-heading: var(--admin-font-heading);
+
+    font-family: var(--admin-font-body);
+    line-height: 1.6;
+}
+
+/* ---------- Form controls / buttons must use the page font ---------- */
+body.admin-dashboard button,
+body.admin-dashboard input,
+body.admin-dashboard select,
+body.admin-dashboard textarea,
+body.admin-dashboard .btn,
+body.admin-dashboard .form-control,
+body.admin-dashboard .form-select,
+body.admin-dashboard .table,
+body.admin-dashboard .badge,
+body.admin-dashboard label {
+    font-family: var(--admin-font-body);
+}
+
+/* ---------- Headings: one font, one scale ---------- */
+.main-content-wrapper :is(h1, h2, h3, h4, h5, h6):not(.page-title) {
+    font-family: var(--admin-font-heading);
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: 0;
+}
+
+.main-content-wrapper h1:not(.page-title) { font-size: 1.75rem; }
+.main-content-wrapper h2:not(.page-title) { font-size: 1.5rem; }
+.main-content-wrapper h3:not(.page-title) { font-size: 1.25rem; }
+.main-content-wrapper h4:not(.page-title) { font-size: 1.125rem; }
+.main-content-wrapper h5:not(.page-title) { font-size: 1rem; }
+.main-content-wrapper h6:not(.page-title) { font-size: 0.875rem; }
+
+/* Title of normal cards (stat-card numbers keep their own size) */
+.main-content-wrapper .card:not(.stat-card) .card-title {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+/* Page header title/subtitle font (sizes stay in admin_base.html) */
+.page-title {
+    font-family: var(--admin-font-heading);
+}
+
+.page-subtitle {
+    font-family: var(--admin-font-body);
+}
+
+/* ---------- Plain paragraphs (zero specificity: components can still override) ---------- */
+:where(.main-content-wrapper) p {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+}
+
+/* ---------- Desktop / laptop sizes (mobile keeps admin_base.html responsive rules) ---------- */
+@media (min-width: 968px) {
+    body.admin-dashboard {
+        font-size: 15px;
+    }
+
+    .main-content-wrapper .btn {
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    .main-content-wrapper .btn-sm {
+        font-size: 0.8125rem;
+    }
+
+    .main-content-wrapper .table {
+        font-size: 0.875rem;
+    }
+
+    .main-content-wrapper .table thead th {
+        font-family: var(--admin-font-body);
+        font-size: 0.8125rem;
+        font-weight: 600;
+    }
+
+    .main-content-wrapper .table tbody td:not(.small) {
+        font-size: 0.875rem;
+    }
+
+    .main-content-wrapper .badge {
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    .main-content-wrapper .card-header {
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    .main-content-wrapper label,
+    .main-content-wrapper .form-label {
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    .main-content-wrapper :is(
+        input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+        select,
+        textarea,
+        .form-control,
+        .form-select
+    ) {
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+}
+
+/* ---------- Mobile heading scale ---------- */
+@media (max-width: 967.98px) {
+    .main-content-wrapper h1:not(.page-title) { font-size: 1.4rem; }
+    .main-content-wrapper h2:not(.page-title) { font-size: 1.25rem; }
+    .main-content-wrapper h3:not(.page-title) { font-size: 1.1rem; }
+    .main-content-wrapper h4:not(.page-title) { font-size: 1rem; }
+    .main-content-wrapper h5:not(.page-title) { font-size: 0.95rem; }
+    .main-content-wrapper h6:not(.page-title) { font-size: 0.85rem; }
+}
