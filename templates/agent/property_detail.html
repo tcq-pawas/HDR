@@ -20,7 +20,7 @@
             <p class="text-white mb-0">Property ID: #{{ property.id }} | Submitted by: {{ property.seller.username|default:"Agent" }}</p>
         </div>
         <div class="col-md-4 text-md-end mt-3 mt-md-0">
-            <div class="d-flex gap-2 justify-content-md-end">
+            <div class="d-flex gap-2 justify-content-md-end property-action-buttons">
                 <a href="{% url 'agent:property_edit' property.id %}" class="btn btn-light  fw-semibold" style="color: #000;">
                     <i class="bi bi-pencil-square me-2"></i>Edit Property
                 </a>
