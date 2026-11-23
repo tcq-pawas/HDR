@@ -273,9 +273,61 @@
 
 {% block content %}
 
-<div class="invite-agent-container">
-    <!-- Hero Header -->
-    <div class="invite-agent-hero d-flex align-items-center justify-content-between flex-wrap gap-3">
+<div class="add-agent-hero d-flex align-items-center justify-content-between flex-wrap gap-3">
+    <div>
+        <h4><i class="bi bi-envelope-plus-fill me-2"></i>Invite Agent</h4>
+        <p>Send an invitation to join <strong>{{ organization.organization_name }}</strong></p>
+    </div>
+    <a href="{% url 'organization:members' organization.id %}" class="btn-back-glass">
+        <i class="bi bi-arrow-left"></i> Back to Members
+    </a>
+</div>
+
+<div class="form-card">
+    {% if form.non_field_errors %}
+        <div class="alert-error">
+            {% for err in form.non_field_errors %}{{ err }}{% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="form-label" for="id_email">Email address <span class="text-danger">*</span></label>
+            {{ form.email }}
+            {% if form.email.errors %}<div class="field-error">{{ form.email.errors.0 }}</div>{% endif %}
+            <div class="form-hint">
+                <i class="bi bi-info-circle"></i>
+                Must not already belong to an active user account.
+            </div>
+        </div>
+
+        <div class="row inv-agent-name-section">
+            <div class="col-md-6 mb-3 inv-agt-width">
+                <label class="form-label" for="id_first_name">First name <span class="text-danger">*</span></label>
+                {{ form.first_name }}
+                {% if form.first_name.errors %}<div class="field-error">{{ form.first_name.errors.0 }}</div>{% endif %}
+            </div>
+            <div class="col-md-6 mb-3 inv-agt-width">
+                <label class="form-label" for="id_last_name">Last name <span class="text-danger">*</span></label>
+                {{ form.last_name }}
+                {% if form.last_name.errors %}<div class="field-error">{{ form.last_name.errors.0 }}</div>{% endif %}
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <label class="form-label" for="id_phone">Phone <span class="text-danger">*</span></label>
+            {{ form.phone }}
+            {% if form.phone.errors %}<div class="field-error">{{ form.phone.errors.0 }}</div>{% endif %}
+        </div>
+
+        <button type="submit" class="btn-add-agent">
+            <i class="bi bi-send-fill"></i> Send Invitation
+        </button>
+    </form>
+
+    <div class="info-box">
+        <i class="bi bi-shield-check" style="color:#16a34a; font-size:16px; margin-top:1px;"></i>
         <div>
             <h4><i class="bi bi-envelope-plus-fill me-2"></i>Invite Agent</h4>
             <p>Send an invitation to join <strong>{{ organization.organization_name }}</strong></p>
