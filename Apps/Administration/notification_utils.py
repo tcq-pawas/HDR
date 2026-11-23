@@ -97,7 +97,6 @@ def notify_agent_on_inquiry(property_obj, customer_name, customer_email, custome
                 'customer_phone': masked_customer_phone,
                 'customer_message': customer_message,
                 'dashboard_url': dashboard_url,
-                'logo_url': logo_url,
             })
         except Exception as e:
             print(f"[HTML TEMPLATE ERROR]: {e}")
@@ -114,6 +113,17 @@ def notify_agent_on_inquiry(property_obj, customer_name, customer_email, custome
 
             if html_message:
                 msg.attach_alternative(html_message, "text/html")
+                # Crucial: set mixed_subtype to 'related' so mail clients embed images inline
+                # instead of showing them as downloadable file attachments
+                msg.mixed_subtype = 'related'
+
+                logo_path = os.path.join(settings.BASE_DIR, 'static', 'img', 'email_logo.png')
+                if os.path.exists(logo_path):
+                    with open(logo_path, 'rb') as f:
+                        img = MIMEImage(f.read())
+                        img.add_header('Content-ID', '<email_logo>')
+                        img.add_header('Content-Disposition', 'inline', filename='email_logo.png')
+                        msg.attach(img)
 
             msg.send(fail_silently=False)
             print(f"[EMAIL SENT TO AGENT]: {agent_email}")
