@@ -207,3 +207,125 @@ def send_otp_sms(phone_number: str, otp: str) -> dict[str, Any]:
         "message": message,
         "status_code": status_code,
     }
+
+
+def send_sms(phone_number: str, message_text: str) -> dict[str, Any]:
+    """
+    Send a general SMS message via BulkSMS.com (e.g. for property inquiries, notifications).
+    """
+    token_id = getattr(settings, "BULKSMS_TOKEN_ID", None) or ""
+    token_secret = getattr(settings, "BULKSMS_TOKEN_SECRET", None) or ""
+    sender = getattr(settings, "BULKSMS_SENDER", None) or "HECTRE"
+
+    if not token_id or not token_secret:
+        logger.error("BulkSMS credentials are not configured (BULKSMS_TOKEN_ID / BULKSMS_TOKEN_SECRET).")
+        return {
+            "success": False,
+            "error_code": "missing_credentials",
+            "message": "SMS provider is not configured.",
+            "status_code": None,
+        }
+
+    formatted_phone = format_phone_for_bulksms(phone_number)
+    if not formatted_phone:
+        logger.warning("Invalid phone number for BulkSMS send.")
+        return {
+            "success": False,
+            "error_code": "invalid_phone",
+            "message": "Invalid phone number.",
+            "status_code": None,
+        }
+
+    if not message_text:
+        return {
+            "success": False,
+            "error_code": "empty_message",
+            "message": "Message content is required.",
+            "status_code": None,
+        }
+
+    payload = [
+        {
+            "to": formatted_phone,
+            "body": message_text,
+            "from": sender,
+        }
+    ]
+
+    try:
+        response = requests.post(
+            BULKSMS_API_URL,
+            json=payload,
+            auth=HTTPBasicAuth(token_id, token_secret),
+            timeout=15,
+            headers={"Content-Type": "application/json"},
+        )
+    except requests.exceptions.Timeout:
+        logger.error("BulkSMS request timed out.")
+        return {
+            "success": False,
+            "error_code": "timeout",
+            "message": "SMS provider timed out.",
+            "status_code": None,
+        }
+    except requests.exceptions.ConnectionError:
+        logger.error("BulkSMS connection error.")
+        return {
+            "success": False,
+            "error_code": "connection_error",
+            "message": "Unable to reach SMS provider.",
+            "status_code": None,
+        }
+    except requests.exceptions.RequestException as exc:
+        logger.error("BulkSMS request failed: %s", type(exc).__name__)
+        return {
+            "success": False,
+            "error_code": "request_error",
+            "message": "SMS provider request failed.",
+            "status_code": None,
+        }
+
+    status_code = response.status_code
+    body_preview = _safe_response_body(response)
+
+    if status_code in (200, 201):
+        logger.info("BulkSMS message accepted (status=%s).", status_code)
+        return {
+            "success": True,
+            "error_code": None,
+            "message": "SMS sent successfully.",
+            "status_code": status_code,
+        }
+
+    if status_code in (401, 403):
+        error_code = "auth_failed"
+        message = "SMS provider authentication failed."
+    elif status_code == 400:
+        error_code = "bad_request"
+        message = "SMS provider rejected the request."
+        lower = body_preview.lower()
+        if any(token in lower for token in ("credit", "balance", "insufficient", "quota")):
+            error_code = "insufficient_credits"
+            message = "SMS provider reported insufficient credits."
+    elif status_code == 429:
+        error_code = "rate_limited"
+        message = "SMS provider rate limit exceeded."
+    elif 500 <= status_code < 600:
+        error_code = "provider_error"
+        message = "SMS provider is temporarily unavailable."
+    else:
+        error_code = f"http_{status_code}"
+        message = "SMS provider returned an unexpected error."
+
+    logger.error(
+        "BulkSMS send failed (status=%s, error_code=%s, body=%s).",
+        status_code,
+        error_code,
+        body_preview,
+    )
+    return {
+        "success": False,
+        "error_code": error_code,
+        "message": message,
+        "status_code": status_code,
+    }

@@ -75,4 +75,4 @@ class BuyAppTests(TestCase):
             'message': 'Is this listing still available?'
         })
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(PropertyInquiry.objects.filter(property=self.approved_prop, email='john@example.com').exists())
+        self.assertTrue(PropertyInquiry.objects.filter(related_property=self.approved_prop, email='john@example.com').exists())
