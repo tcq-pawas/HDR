@@ -151,4 +151,23 @@ def notify_agent_on_inquiry(property_obj, customer_name, customer_email, custome
             print(f"[SMS FAILED]: {e}")
     else:
         print(f"[SMS SKIPPED]: Agent {seller.username} has no phone.")
+
+    # 3. In-App Dashboard Notification for Agent (Facebook-style notification)
+    try:
+        from Apps.Administration.models import Notification
+        c_name = customer_name.strip() if customer_name else "A customer"
+        simple_message = f"{c_name} sent an inquiry on your property '{property_title}'."
+        
+        notification = Notification.objects.create(
+            title=simple_message,
+            message=simple_message,
+            notification_type='info',
+            is_active=True,
+            created_by=seller
+        )
+        notification.target_users.add(seller)
+        print(f"[IN-APP NOTIFICATION CREATED FOR AGENT {seller.username}]: {simple_message}")
+    except Exception as e:
+        print(f"[IN-APP NOTIFICATION FAILED]: {e}")
+
     print("==================================================")

@@ -104,7 +104,7 @@ def property_detail(request, slug):
             lead, created = Lead.objects.get_or_create(
                 agent=property_obj.seller,
                 phone=phone_number,
-                default={
+                defaults={
                     'name': name or 'Website Visitor',
                     'email': email,
                     'property': property_obj,

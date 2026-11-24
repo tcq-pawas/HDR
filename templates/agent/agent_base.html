@@ -377,10 +377,9 @@
             font-size: 13.5px !important;
             font-weight: 600 !important;
             color: #1e293b !important;
-            line-height: 1.3 !important;
-            white-space: nowrap !important;
-            overflow: hidden !important;
-            text-overflow: ellipsis !important;
+            line-height: 1.35 !important;
+            white-space: normal !important;
+            word-break: break-word !important;
         }
 
         .notification-item-desc {
@@ -822,15 +821,28 @@
                             <!-- System Notifications for Agent -->
                             {% if agent_recent_notifications %}
                                 {% for notif in agent_recent_notifications %}
+                                {% if "sent an inquiry" in notif.title %}
+                                <a href="{% url 'agent:lead_list' %}" class="notification-dropdown-item text-decoration-none">
+                                {% elif "Property Approved" in notif.title %}
+                                <a href="{% url 'agent:property_list' %}" class="notification-dropdown-item text-decoration-none">
+                                {% else %}
                                 <div class="notification-dropdown-item">
+                                {% endif %}
                                     <div class="notification-item-icon general">
                                         <i class="bi bi-info-circle"></i>
                                     </div>
                                     <div class="notification-item-content">
                                         <div class="notification-item-title">{{ notif.title }}</div>
-                                        <div class="notification-item-desc">{{ notif.message|truncatewords:8 }}</div>
+                                        {% if notif.message and notif.message != notif.title %}
+                                        <div class="notification-item-desc">{{ notif.message|truncatewords:10 }}</div>
+                                        {% endif %}
+                                        <div class="notification-item-desc text-muted" style="font-size: 11px !important;">{{ notif.created_at|timesince }} ago</div>
                                     </div>
+                                {% if "sent an inquiry" in notif.title or "Property Approved" in notif.title %}
+                                </a>
+                                {% else %}
                                 </div>
+                                {% endif %}
                                 {% endfor %}
                             {% endif %}
                         </div>
