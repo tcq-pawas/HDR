@@ -1,0 +1,9 @@
+SECRET_KEY=django-insecure-*dx3&4x^a6_n6)p+qtrh7gg41f(qkegjf7im6@h44nb@w)sh7z
+DEBUG=True
+
+DB_ENGINE=django.db.backends.postgresql
+DB_NAME=emm
+DB_USER=postgres
+DB_PASSWORD=winslate
+DB_HOST=localhost
+DB_PORT=5432
