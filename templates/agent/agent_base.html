@@ -910,7 +910,9 @@
                     onclick="closeOffcanvasAndNavigate(event, this.href)">
                     <img src="{% static 'img/logo.png' %}" alt="HHectare Logo" title="HHectare">
                 </a>
-                <button type="button" class="btn-close text-white ms-2" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+
+                <button type="button" class="btn-close-white btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+
             </div>
 
             <div class="offcanvas-body sidebar-content pt-2">
@@ -1348,32 +1350,17 @@
                                 <i class="bi bi-star-fill"></i>
 
                                 <span>Reviews</span>
-
                             </a>
-
                         </li>
-
                     </ul>
-
                 </nav>
-
-
-
-
-
-
             </div>
-
         </aside>
-
-
 
         <!-- Main Content -->
 
         <main class="agent-main" id="agentMain">
-
             <div class="main-content">
-
                 {% block breadcrumb %}
                 <div class="breadcrumb">
                     <a href="{% url 'agent:dashboard' %}">Dashboard</a>
@@ -1382,11 +1369,7 @@
                 </div>
                 {% endblock %}
 
-
-
                 {% block header_title %}{% endblock %}
-
-
 
                 {% if messages %}
                     <div class="mb-4" style="position: relative; z-index: 1000;">
@@ -1411,7 +1394,7 @@
 
                             {{ message }}
 
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            <button type="button" class="btn-close agent-alert-close-btn" data-bs-dismiss="alert" aria-label="Close"></button>
 
                         </div>
 
@@ -1421,7 +1404,6 @@
                     
                     {% endif %}
 
-
                 {% block content %}{% endblock %}
 
             </div>
@@ -1429,8 +1411,6 @@
         </main>
 
     </div>
-
-
 
     <!-- Mobile Menu Toggle Button -->
 
@@ -1441,8 +1421,6 @@
         <i class="bi bi-list"></i>
 
     </button>
-
-
 
     <!-- Bootstrap JS -->
 
@@ -1455,27 +1433,17 @@
     <script>
 
         // Function to close offcanvas and navigate
-
         function closeOffcanvasAndNavigate(event, url) {
-
             event.preventDefault();
-
             const offcanvasElement = document.getElementById('agentSidebarOffcanvas');
-
             const offcanvasInstance = bootstrap.Offcanvas.getInstance(offcanvasElement);
-
             if (offcanvasInstance) {
-
                 offcanvasInstance.hide();
-
             }
 
             setTimeout(() => {
-
                 window.location.href = url;
-
             }, 300);
-
         }
 
         // Toggle sidebar on desktop (mini-sidebar collapse/expand) and mobile (offcanvas)
@@ -1541,7 +1509,5 @@
     {% block extra_js %}{% endblock %}
 
 </body>
-
-
 
 </html>

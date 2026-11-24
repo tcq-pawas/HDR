@@ -251,6 +251,20 @@ def send_inquiry(request, pk):
                         notes=f"Inquiry for '{property_obj.title}': {message_value}",
                         scheduled_date=timezone.now(),
                     )
+
+            # Send Email and SMS notification to Agent
+            try:
+                from Apps.Administration.notification_utils import notify_agent_on_inquiry
+                notify_agent_on_inquiry(
+                    property_obj=property_obj,
+                    customer_name=getattr(inquiry, 'name', None) or request.POST.get('name'),
+                    customer_email=getattr(inquiry, 'email', None) or request.POST.get('email'),
+                    customer_phone=phone_value,
+                    customer_message=message_value
+                )
+            except Exception:
+                pass
+
             messages.success(request, "Your inquiry has been sent to the seller successfully!")
             return redirect('buy:property_detail', pk=pk)
             

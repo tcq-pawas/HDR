@@ -5102,6 +5102,27 @@ footer:not(.site-footer) {
     flex: 0.85;
 }
 
+.menu-padding{
+    padding-left:4px;
+    padding-right:4px;
+}
+
+.site-navbar .avatar-initial {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: rgba(255, 255, 255, 0.2);
+  color:black;
+  font-weight: 700;
+  font-size: .85rem;     
+  letter-spacing: .5px;
+  line-height: 1;
+  text-transform: uppercase;
+  user-select: none;
+}
+
 /* 2 cards between 768px and 1200px */
 @media (max-width: 1200px) {
     .carousel-slide {
@@ -5112,6 +5133,29 @@ footer:not(.site-footer) {
 
     .carousel-viewport .property-card-image {
         height: 220px;
+    }
+}
+
+/* User Profile / Login (Mobile Only)  */
+@media (min-width: 992px) {
+    .site-navbar .nav-profile-link { 
+      display: none !important;  
+    }
+}
+
+@media (max-width:988px){
+    .navbar .container-fluid .nav-header{
+        width:100% !important;
+    }
+    .site-navbar .dropdown-menu .dropdown-item i {
+       margin-right: 8px ;
+    }
+    .site-navbar .dropdown-menu .dropdown-item {
+      padding:8px 18px;
+      font-size:14px;
+    }
+    .site-navbar .avatar-initial , .site-navbar .user-menu-toggle i {
+        color : white;
     }
 }
 
@@ -5147,6 +5191,17 @@ footer:not(.site-footer) {
 }
 
 @media (max-width: 420px) {
+    .site-navbar .navbar-toggler {
+        padding:0;
+    }
+    .menu-padding{
+       padding-left:2px;
+       padding-right:2px;
+    }
+    .site-navbar .dropdown-menu .dropdown-item {
+      padding:6px 12px;
+      font-size:12px;
+    }
     .carousel-viewport .property-card {
         max-width: 100%;
         border-radius: 16px;
