@@ -1665,3 +1665,42 @@ def reject_kyc(request, profile_id):
             return redirect('admin_dash:document_verification_list')
             
     return redirect('admin_dash:document_verification_list')
+
+import json
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST, require_GET
+from django.http import JsonResponse
+from Apps.Administration.models import WebPushSubscription
+
+@require_GET
+def vapid_public_key(request):
+    return JsonResponse({'publicKey': settings.VAPID_PUBLIC_KEY})
+
+@csrf_exempt
+@require_POST
+def save_webpush_subscription(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Authentication required'}, status=401)
+    
+    try:
+        data = json.loads(request.body.decode('utf-8'))
+        endpoint = data.get('endpoint')
+        keys = data.get('keys', {})
+        p256dh = keys.get('p256dh')
+        auth = keys.get('auth')
+
+        if not endpoint or not p256dh or not auth:
+            return JsonResponse({'error': 'Invalid subscription data'}, status=400)
+
+        sub, created = WebPushSubscription.objects.update_or_create(
+            endpoint=endpoint,
+            defaults={
+                'user': request.user,
+                'p256dh': p256dh,
+                'auth': auth,
+                'user_agent': request.META.get('HTTP_USER_AGENT', ''),
+            }
+        )
+        return JsonResponse({'success': True, 'created': created})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)

@@ -58,6 +58,57 @@ def notify_agent_on_inquiry(property_obj, customer_name, customer_email, custome
     masked_customer_phone = mask_phone(customer_phone)
     masked_customer_email = mask_email(customer_email)
 
+
+    # Pre-build the simple message used in both webpush and in-app notification
+    _c_name = customer_name.strip() if customer_name else "A customer"
+    simple_message = f"{_c_name} sent an inquiry on your property '{property_title}'."
+
+    # 4. Web Push Notification to Agent's Mobile / Browser
+    try:
+        from pywebpush import webpush, WebPushException
+        from Apps.Administration.models import WebPushSubscription
+        import json
+
+        subscriptions = WebPushSubscription.objects.filter(user=seller)
+        if subscriptions.exists():
+            payload = json.dumps({
+                'title': f"New Inquiry: {property_title}",
+                'body': simple_message,
+                'icon': 'https://hhectare.com/static/img/logo.png',
+                'url': '/agent/leads/',
+                'tag': f"inquiry-{property_obj.id}"
+            })
+
+            vapid_claims = {
+                'sub': f"mailto:{getattr(settings, 'VAPID_ADMIN_EMAIL', 'admin@hhectare.com')}"
+            }
+            vapid_priv = getattr(settings, 'VAPID_PRIVATE_KEY', None)
+
+            for sub in subscriptions:
+                try:
+                    sub_info = {
+                        'endpoint': sub.endpoint,
+                        'keys': {
+                            'p256dh': sub.p256dh,
+                            'auth': sub.auth
+                        }
+                    }
+                    webpush(
+                        subscription_info=sub_info,
+                        data=payload,
+                        vapid_private_key=vapid_priv,
+                        vapid_claims=vapid_claims
+                    )
+                    print(f"[WEBPUSH SENT TO AGENT DEVICE]: {sub.endpoint[:40]}...")
+                except WebPushException as ex:
+                    print(f"[WEBPUSH FAILED FOR DEVICE]: {ex}")
+                    if ex.response and ex.response.status_code in (404, 410):
+                        sub.delete()
+        else:
+            print(f"[WEBPUSH SKIPPED]: No mobile/browser push subscription registered for agent {seller.username}.")
+    except Exception as e:
+        print(f"[WEBPUSH ERROR]: {e}")
+
     print("==================================================")
     print("[AGENT NOTIFICATION TRIGGERED]")
     print(f"Property: {property_title} (ID: {property_obj.id})")
@@ -155,8 +206,7 @@ def notify_agent_on_inquiry(property_obj, customer_name, customer_email, custome
     # 3. In-App Dashboard Notification for Agent (Facebook-style notification)
     try:
         from Apps.Administration.models import Notification
-        c_name = customer_name.strip() if customer_name else "A customer"
-        simple_message = f"{c_name} sent an inquiry on your property '{property_title}'."
+        # simple_message already defined above
         
         notification = Notification.objects.create(
             title=simple_message,

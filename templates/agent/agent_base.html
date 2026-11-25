@@ -680,6 +680,36 @@
                 padding: 16px !important;
             }
         }
+
+        @keyframes pulseBlink {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.96); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .pulse-blink {
+            animation: pulseBlink 0.8s infinite ease-in-out !important;
+        }
+
+        .btn-allow-push {
+            background-color: #004526 !important;
+            color: #ffffff !important;
+            border: none !important;
+            transition: all 0.25s ease-in-out !important;
+            cursor: pointer !important;
+        }
+
+        .btn-allow-push:hover {
+            background-color: #10B981 !important; /* Premium Light Green */
+            color: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4) !important;
+            transform: translateY(-1px) scale(1.03) !important;
+        }
+
+        .btn-allow-push:active {
+            transform: scale(0.96) !important;
+            opacity: 0.8 !important;
+        }
     </style>
 
     {% block extra_css %}{% endblock %}
@@ -698,6 +728,28 @@
             } catch (e) {}
         })();
     </script>
+
+    <!-- Professional Slide-in Push Notification Prompt Modal / Card -->
+    <div id="pushPromptModal" class="shadow-lg border-0" style="display: none; position: fixed; top: 25px; right: 25px; z-index: 9999999; width: 340px; max-width: 90vw; background: #ffffff; border-radius: 16px; padding: 18px; box-shadow: 0 15px 35px rgba(0,0,0,0.2) !important; border: 1px solid rgba(0,0,0,0.08) !important;">
+        <div class="d-flex align-items-start gap-3">
+            <div style="width: 42px; height: 42px; min-width: 42px; background: #E8F5E9; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #004526; font-size: 20px;">
+                <i class="bi bi-bell-fill"></i>
+            </div>
+            <div class="flex-grow-1">
+                <h6 class="mb-1 fw-bold text-dark" style="font-size: 14px;">Turn on Notifications?</h6>
+                <p class="text-muted mb-3" style="font-size: 12px; line-height: 1.4;">Get instant alerts on your phone screen when customers inquire about properties.</p>
+                <div class="d-flex align-items-center gap-2">
+                    <button id="btnAllowPush" type="button" class="btn btn-sm btn-allow-push px-3 fw-semibold rounded-pill" style="font-size: 12px;" onclick="requestPushPermissionDirectly(this)">
+                        Allow
+                    </button>
+                    <button type="button" class="btn btn-sm btn-light text-muted px-3 fw-semibold rounded-pill" style="font-size: 12px;" onclick="dismissPushPrompt()">
+                        Later
+                    </button>
+                </div>
+            </div>
+            <button type="button" class="btn-close ms-auto" style="font-size: 10px;" onclick="dismissPushPrompt()" aria-label="Close"></button>
+        </div>
+    </div>
 
     <!-- Top Header -->
     <header class="agent-header">
@@ -761,6 +813,16 @@
                                 {% endif %}
                             </div>
                             <small class="text-muted">Agent Alerts</small>
+                        </div>
+
+                        <!-- Mobile Push Enable Banner -->
+                        <div id="pushPromptBanner" class="p-2 border-bottom bg-light" style="display: none;">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div style="font-size: 11px; line-height: 1.2;">
+                                    <strong class="text-success"><i class="bi bi-bell-fill me-1"></i>Get Alerts:</strong> Receive inquiry pop-ups on mobile.
+                                </div>
+                                <button type="button" class="btn btn-sm btn-success ms-2 py-0 px-2" style="font-size: 11px; font-weight: 600;" onclick="requestPushPermissionDirectly()">Enable</button>
+                            </div>
                         </div>
 
                         <div class="notifications-dropdown-body">
@@ -895,7 +957,7 @@
                         </li>
                         <li><hr class="dropdown-divider my-1"></li>
                         <li>
-                            <a class="dropdown-item text-danger" href="{% url 'auth:logout' %}">
+                            <a class="dropdown-item text-danger" href="{% url 'auth:logout' %}" onclick="localStorage.removeItem('push_prompt_dismissed'); sessionStorage.removeItem('push_prompt_shown_this_session');">
                                 <i class="bi bi-box-arrow-right"></i>
                                 <span>Logout</span>
                             </a>
@@ -1546,6 +1608,129 @@
                     mobileToggle.classList.remove('hidden');
                 });
             }
+        });
+
+        // --- Web Push Notification Registration (Mobile Chrome & Desktop) ---
+        function urlBase64ToUint8Array(base64String) {
+            const padding = '='.repeat((4 - base64String.length % 4) % 4);
+            const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+            const rawData = window.atob(base64);
+            const outputArray = new Uint8Array(rawData.length);
+            for (let i = 0; i < rawData.length; ++i) {
+                outputArray[i] = rawData.charCodeAt(i);
+            }
+            return outputArray;
+        }
+
+        async function initWebPushNotifications() {
+            if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+                return; // Browser does not support push
+            }
+
+            try {
+                // Register Service Worker
+                const reg = await navigator.serviceWorker.register('/sw.js');
+                
+                // Check current permission
+                if (Notification.permission === 'denied') {
+                    return;
+                }
+
+                // If permission is default, ask for it
+                let permission = Notification.permission;
+                if (permission === 'default') {
+                    permission = await Notification.requestPermission();
+                }
+
+                if (permission !== 'granted') {
+                    return;
+                }
+
+                // Fetch VAPID public key
+                const response = await fetch('/admin-dashboard/api/webpush/vapid-key/');
+                if (!response.ok) return;
+                const keyData = await response.json();
+                const applicationServerKey = urlBase64ToUint8Array(keyData.publicKey);
+
+                // Get or create push subscription
+                let subscription = await reg.pushManager.getSubscription();
+                if (!subscription) {
+                    subscription = await reg.pushManager.subscribe({
+                        userVisibleOnly: true,
+                        applicationServerKey: applicationServerKey
+                    });
+                }
+
+                // Send subscription to server
+                await fetch('/admin-dashboard/api/webpush/subscribe/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(subscription)
+                });
+                console.log('[WebPush] Device registered successfully for mobile push notifications.');
+            } catch (err) {
+                console.warn('[WebPush] Registration failed:', err);
+            }
+        }
+
+        async function requestPushPermissionDirectly(btn) {
+            if (btn) {
+                btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true" style="width: 12px; height: 12px;"></span> Enabling...';
+                btn.style.opacity = '0.7';
+                btn.classList.add('pulse-blink');
+            }
+
+            // Remember that user has interacted so it doesn't show again
+            try {
+                localStorage.setItem('push_prompt_dismissed', 'true');
+            } catch (e) {}
+
+            if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+                alert('Your browser does not support push notifications.');
+                const modal = document.getElementById('pushPromptModal');
+                if (modal) modal.style.display = 'none';
+                return;
+            }
+            try {
+                const permission = await Notification.requestPermission();
+                if (permission === 'granted') {
+                    await initWebPushNotifications();
+                    const modal = document.getElementById('pushPromptModal');
+                    if (modal) modal.style.display = 'none';
+                } else {
+                    const modal = document.getElementById('pushPromptModal');
+                    if (modal) modal.style.display = 'none';
+                }
+            } catch (e) {
+                console.error(e);
+                const modal = document.getElementById('pushPromptModal');
+                if (modal) modal.style.display = 'none';
+            }
+        }
+
+        function dismissPushPrompt() {
+            const modal = document.getElementById('pushPromptModal');
+            if (modal) modal.style.display = 'none';
+            try {
+                localStorage.setItem('push_prompt_dismissed', 'true');
+            } catch (e) {}
+        }
+
+        // Initialize Web Push after page loads
+        window.addEventListener('load', function() {
+            if ('Notification' in window) {
+                // If already granted, don't show; but on new login/session if not granted, show prompt!
+                if (Notification.permission === 'default' && sessionStorage.getItem('push_prompt_shown_this_session') !== 'true') {
+                    sessionStorage.setItem('push_prompt_shown_this_session', 'true');
+                    setTimeout(function() {
+                        const modal = document.getElementById('pushPromptModal');
+                        if (modal) modal.style.display = 'block';
+                    }, 1200);
+                }
+            }
+            setTimeout(initWebPushNotifications, 1000);
         });
 
     </script>

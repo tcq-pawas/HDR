@@ -29,7 +29,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
+ALLOWED_HOSTS = ['*']
 
 # CSRF trusted origins for HTTPS
 csrf_origins = os.getenv('CSRF_TRUSTED_ORIGINS', '')
@@ -37,6 +37,10 @@ CSRF_TRUSTED_ORIGINS = [
     origin.strip() 
     for origin in csrf_origins.split(',') 
     if origin.strip() and origin.strip().startswith(('http://', 'https://'))
+]
+CSRF_TRUSTED_ORIGINS += [
+    'https://*.trycloudflare.com',
+    'https://appeared-human-indicate-window.trycloudflare.com',
 ]
 
 # Application definition
@@ -353,4 +357,9 @@ STORAGES = {
     "default": {"BACKEND": "HeyDayRealty.storage_backends.GeneralMediaStorage"},
     "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
 }
+
+# Web Push Notification Settings (VAPID)
+VAPID_PUBLIC_KEY = os.getenv('VAPID_PUBLIC_KEY', 'BLZigepeiaFJjFTN_sPS4EMBxTheS09wvloibQkvQU4u2I5ZPfCISb1XPH8C23fcWvjAMUCRgsuiZL87QGksJP0')
+VAPID_PRIVATE_KEY = os.getenv('VAPID_PRIVATE_KEY', 'TBPQIM7Vx35wnzFoe_pyH1fBFcaNNQj8wFSVvrSn2As')
+VAPID_ADMIN_EMAIL = os.getenv('VAPID_ADMIN_EMAIL', 'admin@hhectare.com')
 
