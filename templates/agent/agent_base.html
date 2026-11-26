@@ -76,7 +76,7 @@
             display: flex !important;
             flex-direction: row !important;
             align-items: center !important;
-            padding-top: 0 !important;
+            padding-top: 17px !important;
             gap: 16px;
         }
 
@@ -665,9 +665,12 @@
             body.sidebar-collapsed .agent-sidebar .logout-btn span {
                 display: none !important;
             }
-        }
+        } 
 
         @media (max-width: 992px) {
+            .agent-mobile-toggle{
+                display:none !important;
+            } 
             .agent-header {
                 left: 0 !important;
                 width: 100% !important;
@@ -679,6 +682,18 @@
                 margin-left: 0 !important;
                 width: 100% !important;
                 padding: 16px !important;
+            }
+        }
+
+        @media (max-width:768px){
+            .agent-mobile-toggle{
+                display:block !important;
+            } 
+            .header-left{
+                display:none !important;
+            }
+            .agt-header-content{
+                flex-direction: row-reverse
             }
         }
     </style>
@@ -702,7 +717,7 @@
 
     <!-- Top Header -->
     <header class="agent-header">
-        <div class="header-content">
+        <div class="header-content agt-header-content">
             <!-- Left: Sidebar toggle + Page Title -->
             <div class="header-left">
                 <button type="button" class="sidebar-toggle-btn" onclick="toggleAgentSidebar()" aria-label="Toggle Navigation">
@@ -911,7 +926,7 @@
                     <img src="{% static 'img/logo.png' %}" alt="HHectare Logo" title="HHectare">
                 </a>
 
-                <button type="button" class="btn-close-white btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                <!-- <button type="button" class="btn-close-white btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button> -->
 
             </div>
 
@@ -1414,9 +1429,7 @@
 
     <!-- Mobile Menu Toggle Button -->
 
-    <button class="agent-mobile-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#agentSidebarOffcanvas"
-
-        aria-controls="agentSidebarOffcanvas">
+    <button class="agent-mobile-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#agentSidebarOffcanvas" aria-controls="agentSidebarOffcanvas">
 
         <i class="bi bi-list"></i>
 

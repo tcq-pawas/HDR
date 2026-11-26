@@ -556,6 +556,9 @@
 }
 
 @media (max-width: 480px) {
+    .customer-detail-header{
+        padding: 1.5rem 1.25rem;
+    }
     .customer-detail-header .customer-detail-actions {
         flex-wrap: wrap;
     }

@@ -84,7 +84,7 @@
 <div class="container-fluid py-4">
     <!-- Profile Hero Section -->
     <div class="profile-hero">
-        <div class="row align-items-center">
+        <div class="row align-items-center profile-hero-row">
             <div class="col-md-8">
                 <div class="d-flex align-items-center gap-4">
                     <div class="profile-avatar-container" title="Click to upload profile photo" onclick="document.getElementById('avatarInput').click();">
@@ -114,7 +114,7 @@
                                onclick="event.stopPropagation();"
                                onchange="uploadAvatar(this)">
                     </div>
-                    <div class="text-white">
+                    <div class="text-white profile-hero-info">
                         <h1 class="h3 mb-2 fw-bold">{% if user.get_full_name %}{{ user.get_full_name }}{% else %}{{ user.username }}{% endif %}</h1>
                         <p class="mb-2 text-white-80">
                             {% if 'owner' in request.user.groups.all|stringformat:"s" %}Property Owner{% else %}Real Estate Agent{% endif %}
@@ -130,7 +130,7 @@
                                 </span>
                             {% endif %}
                             {% if request.user.user_subscription and request.user.user_subscription.status == 'active' %}
-                                <span class="badge bg-white text-success fw-semibold px-3 py-2 rounded-pill">
+                                <span class="badge bg-white text-success fw-semibold px-3 py-2 rounded-pill plan-badge">
                                     {{ request.user.user_subscription.plan.name }} Plan
                                 </span>
                             {% endif %}
@@ -232,7 +232,7 @@
                 </div>
 
                 <!-- Contact Information Card -->
-                <div class="info-card">
+                <div class="info-card contact-info-card">
                     <div class="info-card-header">
                         <h5><i class="bi bi-geo-alt me-2 text-success"></i>Contact Information</h5>
                     </div>
@@ -262,7 +262,7 @@
                 <div class="info-card-header">
                     <h5><i class="bi bi-lightning me-2 text-success"></i>Quick Actions</h5>
                 </div>
-                <div class="p-3">
+                <div class="p-3 quick-action-cards">
                     <a href="{% url 'agent:property_type_select' %}" class="btn btn-outline-success w-100 mb-2 py-3 rounded-3 d-flex align-items-center justify-content-center gap-2">
                         <i class="bi bi-plus-circle"></i> Add New Property
                     </a>
@@ -276,7 +276,7 @@
             </div>
 
             <!-- Account Status Card -->
-            <div class="info-card">
+            <div class="info-card account-status-card">
                 <div class="info-card-header">
                     <h5><i class="bi bi-shield-check me-2 text-success"></i>Account Status</h5>
                 </div>

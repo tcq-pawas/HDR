@@ -233,7 +233,7 @@
         background: #f1f5f9;
         color: #475569;
         border: 1px solid #e2e8f0;
-        padding: 11px 20px;
+        padding: 8px 20px;
         border-radius: 10px;
         font-size: 14px;
         font-weight: 600;
@@ -267,6 +267,26 @@
         color: #16a34a;
         flex-shrink: 0;
         margin-top: 1px;
+    }
+    @media (max-width:768px){
+        .btn-send-invite{
+            width:100%;
+            justify-content:center;
+        }
+    }
+    @media (max-width:480px){
+        .invite-card {
+            padding:0.9rem;
+        }
+        .actions-row{
+          flex-direction: column;
+          gap:22px;
+        }
+        .btn-cancel{
+            padding:8px 20px;
+            width:100%;
+            justify-content:center;
+        }
     }
 </style>
 {% endblock %}
@@ -326,7 +346,7 @@
         </button>
     </form>
 
-    <div class="info-box">
+    <!-- <div class="info-box">
         <i class="bi bi-shield-check" style="color:#16a34a; font-size:16px; margin-top:1px;"></i>
         <div>
             <h4><i class="bi bi-envelope-plus-fill me-2"></i>Invite Agent</h4>
@@ -335,7 +355,7 @@
         <a href="{% url 'organization:members' organization.id %}" class="btn-back-glass">
             <i class="bi bi-arrow-left"></i> Back to Members
         </a>
-    </div>
+    </div> -->
 
     <!-- Main Form Card -->
     <div class="invite-card">
