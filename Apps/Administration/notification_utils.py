@@ -138,13 +138,6 @@ def notify_agent_on_inquiry(property_obj, customer_name, customer_email, custome
             protocol = 'https' if getattr(settings, 'SECURE_SSL_REDIRECT', False) else 'http'
             dashboard_url = f"{protocol}://{domain}/dashboard/"
 
-            brand_logo_data_uri = None
-            logo_path = os.path.join(settings.BASE_DIR, 'static', 'img', 'brand_logo.png')
-            if os.path.exists(logo_path):
-                with open(logo_path, 'rb') as f:
-                    encoded = base64.b64encode(f.read()).decode('utf-8')
-                    brand_logo_data_uri = f"data:image/png;base64,{encoded}"
-
             html_message = render_to_string('emails/inquiry_notification_agent.html', {
                 'agent_name': agent_name,
                 'property_title': property_title,
@@ -153,7 +146,6 @@ def notify_agent_on_inquiry(property_obj, customer_name, customer_email, custome
                 'customer_phone': masked_customer_phone,
                 'customer_message': customer_message,
                 'dashboard_url': dashboard_url,
-                'brand_logo_data_uri': brand_logo_data_uri,
             })
         except Exception as e:
             print(f"[HTML TEMPLATE ERROR]: {e}")
@@ -171,17 +163,6 @@ def notify_agent_on_inquiry(property_obj, customer_name, customer_email, custome
             if html_message:
                 msg.attach_alternative(html_message, "text/html")
 
-                logo_path = os.path.join(settings.BASE_DIR, 'static', 'img', 'hhectare_email_logo.png')
-                if os.path.exists(logo_path):
-                    with open(logo_path, 'rb') as f:
-                        img = MIMEImage(f.read(), _subtype='png')
-                        img.add_header('Content-ID', '<hhectare_email_logo>')
-                        img.add_header(
-                            'Content-Disposition',
-                            'inline',
-                            filename='hhectare-email-logo.png',
-                        )
-                        msg.attach(img)
             msg.send(fail_silently=False)
             print(f"[EMAIL SENT TO AGENT]: {agent_email}")
         except Exception as e:
