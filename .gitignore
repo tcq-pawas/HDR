@@ -20,3 +20,5 @@ docker/nginx/ssl/
 
 backups
 docker/env
+cloudflared
+ngrok

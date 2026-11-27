@@ -742,8 +742,8 @@ def activate_user(request, user_id):
         
         html_message = f"""
         <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-            <div style="background: linear-gradient(135deg, #0F766E 0%, #115E59 100%); padding: 30px 20px; text-align: center;">
-                <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700; letter-spacing: 1px;">🌱 HHectare</h1>
+            <div style="background-color: #004526; padding: 25px 20px; text-align: center;">
+                <img src="https://hhectare.com/static/img/logo.png" alt="HHectare" style="height: 46px; width: auto; display: inline-block; vertical-align: middle; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));">
             </div>
             <div style="padding: 40px 30px; background-color: #ffffff;">
                 <h2 style="color: #1F2937; margin-top: 0; font-size: 22px;">Account Approved! 🎉</h2>
@@ -1676,3 +1676,42 @@ def reject_kyc(request, profile_id):
             return redirect('admin_dash:document_verification_list')
             
     return redirect('admin_dash:document_verification_list')
+
+import json
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST, require_GET
+from django.http import JsonResponse
+from Apps.Administration.models import WebPushSubscription
+
+@require_GET
+def vapid_public_key(request):
+    return JsonResponse({'publicKey': settings.VAPID_PUBLIC_KEY})
+
+@csrf_exempt
+@require_POST
+def save_webpush_subscription(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Authentication required'}, status=401)
+    
+    try:
+        data = json.loads(request.body.decode('utf-8'))
+        endpoint = data.get('endpoint')
+        keys = data.get('keys', {})
+        p256dh = keys.get('p256dh')
+        auth = keys.get('auth')
+
+        if not endpoint or not p256dh or not auth:
+            return JsonResponse({'error': 'Invalid subscription data'}, status=400)
+
+        sub, created = WebPushSubscription.objects.update_or_create(
+            endpoint=endpoint,
+            defaults={
+                'user': request.user,
+                'p256dh': p256dh,
+                'auth': auth,
+                'user_agent': request.META.get('HTTP_USER_AGENT', ''),
+            }
+        )
+        return JsonResponse({'success': True, 'created': created})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)

@@ -334,4 +334,21 @@ class UserVerification(models.Model):
     otp_created_at = models.DateTimeField(blank=True, null=True)
     
     def __str__(self):
-        return f"{self.user.username} Verification"
+        return f"{self.user.username} Verification"
+
+class WebPushSubscription(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='web_push_subscriptions')
+    endpoint = models.URLField(max_length=500, unique=True)
+    p256dh = models.CharField(max_length=255)
+    auth = models.CharField(max_length=255)
+    user_agent = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'web_push_subscriptions'
+        verbose_name = 'Web Push Subscription'
+        verbose_name_plural = 'Web Push Subscriptions'
+
+    def __str__(self):
+        return f'{self.user.username} - {self.endpoint[:30]}...'

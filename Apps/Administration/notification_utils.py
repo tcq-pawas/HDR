@@ -1,7 +1,8 @@
 import logging
 import os
 import base64
-from django.core.mail import send_mail
+from email.mime.image import MIMEImage
+from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 from django.template.loader import render_to_string
 from Apps.Administration.services.bulksms import send_sms
@@ -43,20 +44,6 @@ def mask_email(email):
         return f"{prefix}{'*' * masked_count}{suffix}@{domain}"
     return f"{masked_user}@{domain}"
 
-def get_logo_data_uri():
-    """
-    Returns base64 data URI of static/img/logo.png for inline email embedding
-    """
-    try:
-        logo_path = os.path.join(settings.BASE_DIR, 'static', 'img', 'logo.png')
-        if os.path.exists(logo_path):
-            with open(logo_path, 'rb') as f:
-                encoded = base64.b64encode(f.read()).decode('utf-8')
-                return f"data:image/png;base64,{encoded}"
-    except Exception as e:
-        print(f"[LOGO LOAD ERROR]: {e}")
-    return None
-
 def notify_agent_on_inquiry(property_obj, customer_name, customer_email, customer_phone, customer_message):
     seller = getattr(property_obj, 'seller', None)
     if not seller:
@@ -70,6 +57,57 @@ def notify_agent_on_inquiry(property_obj, customer_name, customer_email, custome
 
     masked_customer_phone = mask_phone(customer_phone)
     masked_customer_email = mask_email(customer_email)
+
+
+    # Pre-build the simple message used in both webpush and in-app notification
+    _c_name = customer_name.strip() if customer_name else "A customer"
+    simple_message = f"{_c_name} sent an inquiry on your property '{property_title}'."
+
+    # 4. Web Push Notification to Agent's Mobile / Browser
+    try:
+        from pywebpush import webpush, WebPushException
+        from Apps.Administration.models import WebPushSubscription
+        import json
+
+        subscriptions = WebPushSubscription.objects.filter(user=seller)
+        if subscriptions.exists():
+            payload = json.dumps({
+                'title': f"New Inquiry: {property_title}",
+                'body': simple_message,
+                'icon': 'https://hhectare.com/static/img/logo.png',
+                'url': '/agent/leads/',
+                'tag': f"inquiry-{property_obj.id}"
+            })
+
+            vapid_claims = {
+                'sub': f"mailto:{getattr(settings, 'VAPID_ADMIN_EMAIL', 'admin@hhectare.com')}"
+            }
+            vapid_priv = getattr(settings, 'VAPID_PRIVATE_KEY', None)
+
+            for sub in subscriptions:
+                try:
+                    sub_info = {
+                        'endpoint': sub.endpoint,
+                        'keys': {
+                            'p256dh': sub.p256dh,
+                            'auth': sub.auth
+                        }
+                    }
+                    webpush(
+                        subscription_info=sub_info,
+                        data=payload,
+                        vapid_private_key=vapid_priv,
+                        vapid_claims=vapid_claims
+                    )
+                    print(f"[WEBPUSH SENT TO AGENT DEVICE]: {sub.endpoint[:40]}...")
+                except WebPushException as ex:
+                    print(f"[WEBPUSH FAILED FOR DEVICE]: {ex}")
+                    if ex.response and ex.response.status_code in (404, 410):
+                        sub.delete()
+        else:
+            print(f"[WEBPUSH SKIPPED]: No mobile/browser push subscription registered for agent {seller.username}.")
+    except Exception as e:
+        print(f"[WEBPUSH ERROR]: {e}")
 
     print("==================================================")
     print("[AGENT NOTIFICATION TRIGGERED]")
@@ -95,12 +133,17 @@ def notify_agent_on_inquiry(property_obj, customer_name, customer_email, custome
             f"Regards,\nHhectare Team"
         )
 
-        # Render HTML template
         try:
             domain = getattr(settings, 'SITE_DOMAIN', '127.0.0.1:8000')
             protocol = 'https' if getattr(settings, 'SECURE_SSL_REDIRECT', False) else 'http'
             dashboard_url = f"{protocol}://{domain}/dashboard/"
-            logo_data_uri = get_logo_data_uri()
+
+            brand_logo_data_uri = None
+            logo_path = os.path.join(settings.BASE_DIR, 'static', 'img', 'brand_logo.png')
+            if os.path.exists(logo_path):
+                with open(logo_path, 'rb') as f:
+                    encoded = base64.b64encode(f.read()).decode('utf-8')
+                    brand_logo_data_uri = f"data:image/png;base64,{encoded}"
 
             html_message = render_to_string('emails/inquiry_notification_agent.html', {
                 'agent_name': agent_name,
@@ -110,7 +153,7 @@ def notify_agent_on_inquiry(property_obj, customer_name, customer_email, custome
                 'customer_phone': masked_customer_phone,
                 'customer_message': customer_message,
                 'dashboard_url': dashboard_url,
-                'logo_data_uri': logo_data_uri,
+                'brand_logo_data_uri': brand_logo_data_uri,
             })
         except Exception as e:
             print(f"[HTML TEMPLATE ERROR]: {e}")
@@ -118,14 +161,28 @@ def notify_agent_on_inquiry(property_obj, customer_name, customer_email, custome
 
         try:
             from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@hhectare.com')
-            send_mail(
-                subject,
-                plain_message,
-                from_email,
-                [agent_email],
-                html_message=html_message,
-                fail_silently=False
+            msg = EmailMultiAlternatives(
+                subject=subject,
+                body=plain_message,
+                from_email=from_email,
+                to=[agent_email]
             )
+
+            if html_message:
+                msg.attach_alternative(html_message, "text/html")
+
+                logo_path = os.path.join(settings.BASE_DIR, 'static', 'img', 'hhectare_email_logo.png')
+                if os.path.exists(logo_path):
+                    with open(logo_path, 'rb') as f:
+                        img = MIMEImage(f.read(), _subtype='png')
+                        img.add_header('Content-ID', '<hhectare_email_logo>')
+                        img.add_header(
+                            'Content-Disposition',
+                            'inline',
+                            filename='hhectare-email-logo.png',
+                        )
+                        msg.attach(img)
+            msg.send(fail_silently=False)
             print(f"[EMAIL SENT TO AGENT]: {agent_email}")
         except Exception as e:
             print(f"[EMAIL FAILED]: {e}")
@@ -145,4 +202,22 @@ def notify_agent_on_inquiry(property_obj, customer_name, customer_email, custome
             print(f"[SMS FAILED]: {e}")
     else:
         print(f"[SMS SKIPPED]: Agent {seller.username} has no phone.")
+
+    # 3. In-App Dashboard Notification for Agent (Facebook-style notification)
+    try:
+        from Apps.Administration.models import Notification
+        # simple_message already defined above
+        
+        notification = Notification.objects.create(
+            title=simple_message,
+            message=simple_message,
+            notification_type='info',
+            is_active=True,
+            created_by=seller
+        )
+        notification.target_users.add(seller)
+        print(f"[IN-APP NOTIFICATION CREATED FOR AGENT {seller.username}]: {simple_message}")
+    except Exception as e:
+        print(f"[IN-APP NOTIFICATION FAILED]: {e}")
+
     print("==================================================")

@@ -20,7 +20,8 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
+import os
 from Apps.PublicPage.sitemaps import PropertySitemap, StaticViewSitemap, AgentProfileSitemap
 from Apps.Organization.views import create_account as create_account_from_invitation
 
@@ -28,6 +29,12 @@ from Apps.Organization.views import create_account as create_account_from_invita
 admin.site.site_header = "HHectare Administration"
 admin.site.site_title = "HHectare Admin Portal"
 admin.site.index_title = "Welcome to HHectare Dashboard"
+
+
+def service_worker(request):
+    sw_path = os.path.join(settings.BASE_DIR, 'static', 'sw.js')
+    with open(sw_path, 'r') as f:
+        return HttpResponse(f.read(), content_type='application/javascript')
 
 def health_check(request):
     """Health check endpoint for Docker healthcheck"""
@@ -43,6 +50,7 @@ sitemaps = {
 urlpatterns = [
     # Health check endpoint for Docker healthcheck
     path('health/', health_check),
+    path('sw.js', service_worker, name='service-worker'),
     
     # Sitemap
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
