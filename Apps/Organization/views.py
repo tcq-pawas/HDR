@@ -8,6 +8,7 @@ from django.views.decorators.http import require_POST
 
 from Apps.Administration.backends import AUTH_BACKEND_PATH
 from Apps.Administration.models import ActivityLog
+from Apps.PublicPage.models import LocationData
 
 from .forms import InviteAgentForm, CreateAccountFromInvitationForm
 from .invitation_utils import (
@@ -187,8 +188,10 @@ def create_organization(request):
             )
             return redirect("organization:detail", organization_id=organization.id)
 
+    states = LocationData.objects.values_list('state', flat=True).distinct().order_by('state')
+
     return render(
-        request, "agent/organization_create.html", {"errors": errors, "data": data}
+        request, "agent/organization_create.html", {"errors": errors, "data": data, "states": states}
     )
 
 
@@ -242,8 +245,14 @@ def edit_organization(request, organization_id):
             messages.success(request, f'Organization "{organization.organization_name}" updated successfully.')
             return redirect("organization:detail", organization_id=organization.id)
 
+    states = LocationData.objects.values_list('state', flat=True).distinct().order_by('state')
+
     return render(
-        request, "agent/organization_edit.html", {"organization": organization, "errors": errors}
+        request, "agent/organization_edit.html", {
+            "organization": organization,
+            "errors": errors,
+            "states": states,
+        }
     )
 
 

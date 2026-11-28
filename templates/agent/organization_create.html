@@ -318,26 +318,30 @@
                     <input type="url" name="website" class="org-create-form__input" value="{{ data.website|default:'' }}" placeholder="https://example.com">
                 </div>
 
+                <!-- State -->
+                <div>
+                    <label class="org-create-form__label">State</label>
+                    <select name="state" id="create_org_state" class="org-create-form__input">
+                        <option value="">Select State</option>
+                        {% for state in states %}
+                            <option value="{{ state }}" {% if data.state == state %}selected{% endif %}>{{ state }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
                 <!-- City -->
                 <div>
                     <label class="org-create-form__label">City</label>
-                    <input type="text" name="city" class="org-create-form__input" value="{{ data.city|default:'' }}" placeholder="City">
-                </div>
-
-                <!-- State -->
-                <div class="org-create-form__field--third">
-                    <label class="org-create-form__label">State</label>
-                    <input type="text" name="state" class="org-create-form__input" value="{{ data.state|default:'' }}" placeholder="State / Province">
-                </div>
-
-                <!-- Country -->
-                <div class="org-create-form__field--third">
-                    <label class="org-create-form__label">Country</label>
-                    <input type="text" name="country" class="org-create-form__input" value="{{ data.country|default:'' }}" placeholder="Country">
+                    <select name="city" id="create_org_city" class="org-create-form__input">
+                        <option value="">Select City</option>
+                        {% if data.city %}
+                            <option value="{{ data.city }}" selected>{{ data.city }}</option>
+                        {% endif %}
+                    </select>
                 </div>
 
                 <!-- Zip Code -->
-                <div class="org-create-form__field--third">
+                <div>
                     <label class="org-create-form__label">Zip Code</label>
                     <input type="text" name="zip_code" class="org-create-form__input" value="{{ data.zip_code|default:'' }}" placeholder="Zip / Postal code">
                 </div>
@@ -366,4 +370,62 @@
         </form>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const stateSelect = document.getElementById('create_org_state');
+    const citySelect = document.getElementById('create_org_city');
+    const savedCityValue = "{{ data.city|default:'' }}";
+
+    function loadCities(state, selectCity) {
+        if (!state) {
+            citySelect.innerHTML = '<option value="">Select City</option>';
+            return;
+        }
+
+        citySelect.innerHTML = '<option value="">Loading...</option>';
+
+        fetch(`/agent/ajax/get-cities/?state=${encodeURIComponent(state)}`)
+            .then(res => res.json())
+            .then(data => {
+                citySelect.innerHTML = '<option value="">Select City</option>';
+                let found = false;
+                if (data.cities && Array.isArray(data.cities)) {
+                    data.cities.forEach(city => {
+                        const opt = document.createElement('option');
+                        opt.value = city;
+                        opt.textContent = city;
+                        if (selectCity && city === selectCity) {
+                            opt.selected = true;
+                            found = true;
+                        }
+                        citySelect.appendChild(opt);
+                    });
+                }
+                if (selectCity && !found) {
+                    const opt = document.createElement('option');
+                    opt.value = selectCity;
+                    opt.textContent = selectCity;
+                    opt.selected = true;
+                    citySelect.appendChild(opt);
+                }
+            })
+            .catch(err => {
+                console.error('Error fetching cities:', err);
+                citySelect.innerHTML = '<option value="">Error loading cities</option>';
+            });
+    }
+
+    if (stateSelect && citySelect) {
+        stateSelect.addEventListener('change', function() {
+            loadCities(this.value, null);
+        });
+
+        const initialState = stateSelect.value;
+        if (initialState) {
+            loadCities(initialState, savedCityValue);
+        }
+    }
+});
+</script>
 {% endblock %}

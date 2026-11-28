@@ -125,8 +125,8 @@
         <div>
             <div class="card-meta-label">Address / Location</div>
             <div class="card-meta-val">
-                {% if organization.address or organization.city or organization.country %}
-                    {{ organization.address|default:"" }}{% if organization.city %}, {{ organization.city }}{% endif %}{% if organization.state %}, {{ organization.state }}{% endif %}{% if organization.country %}, {{ organization.country }}{% endif %}{% if organization.zip_code %} — {{ organization.zip_code }}{% endif %}
+                {% if organization.address or organization.city or organization.state or organization.zip_code %}
+                    {{ organization.address|default:"" }}{% if organization.city %}{% if organization.address %}, {% endif %}{{ organization.city }}{% endif %}{% if organization.state %}, {{ organization.state }}{% endif %}{% if organization.zip_code %} — {{ organization.zip_code }}{% endif %}
                 {% else %}
                     <span class="text-muted">Not provided</span>
                 {% endif %}

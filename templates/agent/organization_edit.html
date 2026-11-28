@@ -373,43 +373,41 @@
                     </div>
                 </div>
 
-                <!-- City -->
-                <div class="custom-form-group">
-                    <label class="custom-form-label" for="id_city">City</label>
-                    <div class="custom-input-wrap">
-                        <i class="bi bi-buildings custom-input-icon"></i>
-                        <input type="text" id="id_city" name="city" class="form-control"
-                               value="{{ organization.city|default:'' }}" placeholder="City">
-                    </div>
-                </div>
-
                 <!-- State -->
                 <div class="custom-form-group">
                     <label class="custom-form-label" for="id_state">State</label>
                     <div class="custom-input-wrap">
                         <i class="bi bi-map custom-input-icon"></i>
-                        <input type="text" id="id_state" name="state" class="form-control"
-                               value="{{ organization.state|default:'' }}" placeholder="State">
+                        <select id="id_state" name="state" class="form-control">
+                            <option value="">Select State</option>
+                            {% for state in states %}
+                                <option value="{{ state }}" {% if organization.state == state %}selected{% endif %}>{{ state }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- City -->
+                <div class="custom-form-group">
+                    <label class="custom-form-label" for="id_city">City</label>
+                    <div class="custom-input-wrap">
+                        <i class="bi bi-buildings custom-input-icon"></i>
+                        <select id="id_city" name="city" class="form-control">
+                            <option value="">Select City</option>
+                            {% if organization.city %}
+                                <option value="{{ organization.city }}" selected>{{ organization.city }}</option>
+                            {% endif %}
+                        </select>
                     </div>
                 </div>
 
                 <!-- Zip Code -->
-                <div class="custom-form-group">
+                <div class="custom-form-group form-grid-full">
                     <label class="custom-form-label" for="id_zip_code">Zip / Postal Code</label>
                     <div class="custom-input-wrap">
                         <i class="bi bi-pin-map custom-input-icon"></i>
                         <input type="text" id="id_zip_code" name="zip_code" class="form-control"
                                value="{{ organization.zip_code|default:'' }}" placeholder="Zip Code">
-                    </div>
-                </div>
-
-                <!-- Country -->
-                <div class="custom-form-group">
-                    <label class="custom-form-label" for="id_country">Country</label>
-                    <div class="custom-input-wrap">
-                        <i class="bi bi-flag custom-input-icon"></i>
-                        <input type="text" id="id_country" name="country" class="form-control"
-                               value="{{ organization.country|default:'' }}" placeholder="Country">
                     </div>
                 </div>
             </div>
@@ -451,4 +449,62 @@
         </form>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const stateSelect = document.getElementById('id_state');
+    const citySelect = document.getElementById('id_city');
+    const savedCityValue = "{{ organization.city|default:'' }}";
+
+    function loadCities(state, selectCity) {
+        if (!state) {
+            citySelect.innerHTML = '<option value="">Select City</option>';
+            return;
+        }
+
+        citySelect.innerHTML = '<option value="">Loading...</option>';
+
+        fetch(`/agent/ajax/get-cities/?state=${encodeURIComponent(state)}`)
+            .then(res => res.json())
+            .then(data => {
+                citySelect.innerHTML = '<option value="">Select City</option>';
+                let found = false;
+                if (data.cities && Array.isArray(data.cities)) {
+                    data.cities.forEach(city => {
+                        const opt = document.createElement('option');
+                        opt.value = city;
+                        opt.textContent = city;
+                        if (selectCity && city === selectCity) {
+                            opt.selected = true;
+                            found = true;
+                        }
+                        citySelect.appendChild(opt);
+                    });
+                }
+                if (selectCity && !found) {
+                    const opt = document.createElement('option');
+                    opt.value = selectCity;
+                    opt.textContent = selectCity;
+                    opt.selected = true;
+                    citySelect.appendChild(opt);
+                }
+            })
+            .catch(err => {
+                console.error('Error fetching cities:', err);
+                citySelect.innerHTML = '<option value="">Error loading cities</option>';
+            });
+    }
+
+    if (stateSelect && citySelect) {
+        stateSelect.addEventListener('change', function() {
+            loadCities(this.value, null);
+        });
+
+        const initialState = stateSelect.value;
+        if (initialState) {
+            loadCities(initialState, savedCityValue);
+        }
+    }
+});
+</script>
 {% endblock %}
