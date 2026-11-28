@@ -1832,8 +1832,13 @@ def customer_list(request):
             
    
     
+    paginator = Paginator(customers, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     context = {
-        'customers': customers,
+        'page_obj': page_obj,
+        'customers': page_obj.object_list,
     }
     
     return render(request, 'agent/customer_list.html', context)

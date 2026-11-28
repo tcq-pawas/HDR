@@ -1035,6 +1035,22 @@
 
                         <li class="nav-item">
 
+                            <a href="{% url 'organization:my-organizations' %}" class="nav-link {% if request.resolver_match.namespace == 'organization' %}active{% endif %}"
+
+                                onclick="closeOffcanvasAndNavigate(event, this.href)">
+
+                                <i class="bi bi-buildings"></i>
+
+                                <span>Organizations</span>
+
+                            </a>
+
+                        </li>
+
+
+
+                        <li class="nav-item">
+
                             <a href="{% url 'agent:lead_list' %}"
 
                                 class="nav-link {% if request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'lead_list' or request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'lead_detail' or request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'lead_edit' %}active{% endif %}"
@@ -1137,7 +1153,7 @@
 
                             <a href="{% url 'agent:customer_list' %}"
 
-                                class="nav-link {% if request.resolver_match.url_name in 'customer_list customer_detail' %}active{% endif %}"
+                                class="nav-link {% if request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'customer_list' or request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'customer_detail' %}active{% endif %}"
 
                                 onclick="closeOffcanvasAndNavigate(event, this.href)">
 
@@ -1369,7 +1385,7 @@
 
                             <a href="{% url 'agent:customer_list' %}"
 
-                                class="nav-link {% if request.resolver_match.url_name in 'customer_list customer_detail' %}active{% endif %}">
+                                class="nav-link {% if request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'customer_list' or request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'customer_detail' %}active{% endif %}">
 
                                 <i class="bi bi-person-lines-fill"></i>
 
