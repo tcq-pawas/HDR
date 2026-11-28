@@ -1,15 +1,40 @@
 from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
 from .models import Property, PropertyImage, PropertyInquiry
-from .models import ContactInquiry
+from .models import ContactInquiry, Inquiry
 from .models import WebsiteEnquiry, LocationData
 from .resources import LocationDataResource
+
+
 class PropertyImageInline(admin.TabularInline):
     model = PropertyImage
     extra = 1
 
 
-admin.site.register(ContactInquiry)
+@admin.register(PropertyImage)
+class PropertyImageAdmin(admin.ModelAdmin):
+    list_display = ('property', 'category', 'image')
+    list_filter = ('category',)
+    search_fields = ('property__title',)
+    autocomplete_fields = ('property',)
+
+
+@admin.register(ContactInquiry)
+class ContactInquiryAdmin(admin.ModelAdmin):
+    list_display = ('enquiry_id', 'full_name', 'phone', 'email', 'status', 'created_at')
+    list_filter = ('status', 'created_at')
+    search_fields = ('full_name', 'phone', 'email', 'enquiry_id')
+    readonly_fields = ('enquiry_id', 'created_at')
+    date_hierarchy = 'created_at'
+
+
+@admin.register(Inquiry)
+class PublicInquiryAdmin(admin.ModelAdmin):
+    list_display = ('enquiry_id', 'full_name', 'email', 'phone_number', 'status', 'source', 'created_at')
+    list_filter = ('status', 'source', 'created_at')
+    search_fields = ('enquiry_id', 'full_name', 'email', 'phone_number', 'message', 'admin_notes')
+    readonly_fields = ('enquiry_id', 'created_at', 'updated_at')
+    date_hierarchy = 'created_at'
 
 @admin.register(Property)
 class PropertyAdmin(admin.ModelAdmin):
