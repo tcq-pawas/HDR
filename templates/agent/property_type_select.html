@@ -25,9 +25,6 @@
         min-width: 0;
     }
 
-    .property-type-eyebrow{
-        padding-bottom: 10px;
-    }
     .property-type-card {
         position: relative;
         width: 100%;
@@ -144,6 +141,12 @@
         }
     }
 
+    @media (max-width:1024px){
+        .property-type-eyebrow {
+            font-size: 12px;
+        }
+    }
+
     @media (min-width: 992px) and (max-width: 1399.98px) {
         .property-type-card {
             min-height: 300px;
@@ -218,6 +221,9 @@
     }
 
     @media (max-width: 480px) {
+        .property-type-eyebrow {
+            font-size: 10px;
+        }
         .property-type-main-container .property-type-card .property-type-btn{
              padding:0.5rem;
              font-size:0.9rem;

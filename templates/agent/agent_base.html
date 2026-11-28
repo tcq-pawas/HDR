@@ -76,7 +76,7 @@
             display: flex !important;
             flex-direction: row !important;
             align-items: center !important;
-            padding-top: 0 !important;
+            padding-top: 17px !important;
             gap: 16px;
         }
 
@@ -664,9 +664,12 @@
             body.sidebar-collapsed .agent-sidebar .logout-btn span {
                 display: none !important;
             }
-        }
+        } 
 
         @media (max-width: 992px) {
+            .agent-mobile-toggle{
+                display:none !important;
+            } 
             .agent-header {
                 left: 0 !important;
                 width: 100% !important;
@@ -681,34 +684,16 @@
             }
         }
 
-        @keyframes pulseBlink {
-            0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(0.96); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-
-        .pulse-blink {
-            animation: pulseBlink 0.8s infinite ease-in-out !important;
-        }
-
-        .btn-allow-push {
-            background-color: #004526 !important;
-            color: #ffffff !important;
-            border: none !important;
-            transition: all 0.25s ease-in-out !important;
-            cursor: pointer !important;
-        }
-
-        .btn-allow-push:hover {
-            background-color: #10B981 !important; /* Premium Light Green */
-            color: #ffffff !important;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4) !important;
-            transform: translateY(-1px) scale(1.03) !important;
-        }
-
-        .btn-allow-push:active {
-            transform: scale(0.96) !important;
-            opacity: 0.8 !important;
+        @media (max-width:768px){
+            .agent-mobile-toggle{
+                display:block !important;
+            } 
+            .header-left{
+                display:none !important;
+            }
+            .agt-header-content{
+                flex-direction: row-reverse
+            }
         }
     </style>
 
@@ -753,7 +738,7 @@
 
     <!-- Top Header -->
     <header class="agent-header">
-        <div class="header-content">
+        <div class="header-content agt-header-content">
             <!-- Left: Sidebar toggle + Page Title -->
             <div class="header-left">
                 <button type="button" class="sidebar-toggle-btn" onclick="toggleAgentSidebar()" aria-label="Toggle Navigation">
@@ -985,7 +970,7 @@
                     <img src="{% static 'img/logo.png' %}" alt="HHectare Logo" title="HHectare">
                 </a>
 
-                <button type="button" class="btn-close-white btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                <!-- <button type="button" class="btn-close-white btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button> -->
 
             </div>
 
@@ -1504,9 +1489,7 @@
 
     <!-- Mobile Menu Toggle Button -->
 
-    <button class="agent-mobile-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#agentSidebarOffcanvas"
-
-        aria-controls="agentSidebarOffcanvas">
+    <button class="agent-mobile-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#agentSidebarOffcanvas" aria-controls="agentSidebarOffcanvas">
 
         <i class="bi bi-list"></i>
 
