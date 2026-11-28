@@ -138,6 +138,7 @@
         </div>
     </div>
 
+    {% if communications %}
     <!-- Premium Table -->
     <div class="premium-table-wrapper">
         <div class="premium-table">
@@ -154,7 +155,6 @@
                 </tr>
             </thead>
             <tbody>
-                {% if communications %}
                 {% for communication in communications %}
                 <tr class="comm-row" data-comm-id="{{ communication.id }}"
                     data-customer-name="{{ communication.recipient_name|default:communication.recipient }}"
@@ -215,19 +215,6 @@
                     </td>
                 </tr>
                 {% endfor %}
-                {% else %}
-                <tr>
-                    <td colspan="7">
-                        <div class="premium-empty-state">
-                            <div class="empty-icon">
-                                <i class="bi bi-inbox"></i>
-                            </div>
-                            <h2>No Emails Found</h2>
-                            <p>There are no email communications matching your filters.</p>
-                        </div>
-                    </td>
-                </tr>
-                {% endif %}
             </tbody>
         </table>
     </div>
@@ -253,6 +240,17 @@
                         class="bi bi-chevron-right"></i></a>
                 {% endif %}
         </div>
+    </div>
+    {% endif %}
+
+    {% else %}
+    <!-- Premium Empty State -->
+    <div class="premium-empty-state">
+        <div class="empty-icon">
+            <i class="bi bi-inbox"></i>
+        </div>
+        <h2>No Emails Found</h2>
+        <p>There are no email communications matching your filters.</p>
     </div>
     {% endif %}
 </div>
