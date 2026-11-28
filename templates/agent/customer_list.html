@@ -20,6 +20,7 @@
         </div>
     </div>
 
+    {% if customers %}
     <!-- Premium Table -->
     <div class="premium-table-wrapper">
         <div class="premium-table">
@@ -39,54 +40,40 @@
                 </tr>
             </thead>
             <tbody>
-                {% if customers %}
-                    {% for customer in customers %}
-                        <tr>
-                            <td>{{ customer.enquiry_id }}</td>
-                            <td>{{ customer.property_title|default:"-" }}</td>
-                            <td>{{ customer.property_price|default:"-" }}</td>
-                            <td><strong>{{ customer.name }}</strong></td>
-                            <td>{{ customer.phone }}</td>
-                            <td>{{ customer.email|default:"N/A" }}</td>
-                            <td>{{ customer.agent_name|default:"-" }}</td>
-                            <td><span class="source-badge source-{{ customer.source|lower }}">{{ customer.source }}</span></td>
-                             <td>
-                                {% if customer.status != '-' %}
-                                    <span class="status-badge status-{{ customer.status|lower }}">{{ customer.status|title }}</span>
-                                {% else %}
-                                    -
-                                {% endif %}
-                            </td>
-                            <td>
-                                <div class="d-flex gap-2">
-                                    {% if customer.phone %}
-                                        <a href="{% url 'agent:customer_detail' customer.phone %}" class="btn btn-sm btn-outline-primary" title="View Details">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-                                    {% endif %}
-                                    <a href="tel:{{ customer.phone }}" class="btn btn-sm btn-outline-success" title="Call">
-                                        <i class="bi bi-telephone"></i>
-                                    </a>
-                                    <a href="https://wa.me/{{ customer.phone }}" target="_blank" class="btn btn-sm btn-outline-success" title="WhatsApp">
-                                        <i class="bi bi-whatsapp"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                {% else %}
+                {% for customer in customers %}
                     <tr>
-                        <td colspan="10">
-                            <div class="premium-empty-state">
-                                <div class="empty-icon">
-                                    <i class="bi bi-people"></i>
-                                </div>
-                                <h2>No Customers Yet</h2>
-                                <p>Customers will appear here when you create bookings or add leads.</p>
+                        <td>{{ customer.enquiry_id }}</td>
+                        <td>{{ customer.property_title|default:"-" }}</td>
+                        <td>{{ customer.property_price|default:"-" }}</td>
+                        <td><strong>{{ customer.name }}</strong></td>
+                        <td>{{ customer.phone }}</td>
+                        <td>{{ customer.email|default:"N/A" }}</td>
+                        <td>{{ customer.agent_name|default:"-" }}</td>
+                        <td><span class="source-badge source-{{ customer.source|lower }}">{{ customer.source }}</span></td>
+                         <td>
+                            {% if customer.status != '-' %}
+                                <span class="status-badge status-{{ customer.status|lower }}">{{ customer.status|title }}</span>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                {% if customer.phone %}
+                                    <a href="{% url 'agent:customer_detail' customer.phone %}" class="btn btn-sm btn-outline-primary" title="View Details">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                {% endif %}
+                                <a href="tel:{{ customer.phone }}" class="btn btn-sm btn-outline-success" title="Call">
+                                    <i class="bi bi-telephone"></i>
+                                </a>
+                                <a href="https://wa.me/{{ customer.phone }}" target="_blank" class="btn btn-sm btn-outline-success" title="WhatsApp">
+                                    <i class="bi bi-whatsapp"></i>
+                                </a>
                             </div>
                         </td>
                     </tr>
-                {% endif %}
+                {% endfor %}
             </tbody>
             </table>
         </div>
@@ -120,6 +107,17 @@
             </a>
             {% endif %}
         </div>
+    </div>
+    {% endif %}
+
+    {% else %}
+    <!-- Premium Empty State -->
+    <div class="premium-empty-state">
+        <div class="empty-icon">
+            <i class="bi bi-people"></i>
+        </div>
+        <h2>No Customers Yet</h2>
+        <p>Customers will appear here when you create bookings or add leads.</p>
     </div>
     {% endif %}
 </div>
