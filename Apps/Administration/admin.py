@@ -2,7 +2,8 @@ from django.contrib import admin
 from .models import (
     AdminProfile, SystemSettings, DashboardWidget, UserPermission,
     ActivityLog, SystemBackup, SystemMaintenance, Report, GeneratedReport,
-    Notification, SystemMetrics, WebsiteInquiry, UserVerification
+    Notification, SystemMetrics, WebsiteInquiry, UserVerification,
+    PropertyReview, WebPushSubscription
 )
 
 # Django Admin branding
@@ -163,3 +164,22 @@ class UserVerificationAdmin(admin.ModelAdmin):
     readonly_fields = ['otp_created_at']
     date_hierarchy = 'otp_created_at'
     ordering = ['-otp_created_at']
+
+
+@admin.register(PropertyReview)
+class PropertyReviewAdmin(admin.ModelAdmin):
+    list_display = ['property', 'status', 'reviewed_by', 'reviewed_at', 'updated_at']
+    list_filter = ['status', 'reviewed_at']
+    search_fields = ['property__title', 'review_notes', 'rejection_reason', 'reviewed_by__username']
+    readonly_fields = ['reviewed_at', 'updated_at']
+    date_hierarchy = 'reviewed_at'
+    autocomplete_fields = ['property', 'reviewed_by', 'previous_review']
+
+
+@admin.register(WebPushSubscription)
+class WebPushSubscriptionAdmin(admin.ModelAdmin):
+    list_display = ['user', 'endpoint', 'user_agent', 'created_at']
+    list_filter = ['created_at']
+    search_fields = ['user__username', 'user__email', 'endpoint']
+    readonly_fields = ['created_at', 'updated_at']
+    date_hierarchy = 'created_at'

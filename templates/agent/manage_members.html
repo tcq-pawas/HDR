@@ -13,12 +13,12 @@
 
 {% block content %}
 
-<div class="members-hero d-flex align-items-center justify-content-between flex-wrap gap-3">
+<div class="members-hero d-flex align-items-center justify-content-between flex-wrap gap-3 agent-member-hero">
     <div>
         <h4><i class="bi bi-people-fill me-2"></i>Agent Management — {{ organization.organization_name }}</h4>
         <p class="mb-0 text-white-50 small">Invite agents, track invitation status, and manage access</p>
     </div>
-    <div class="d-flex gap-2">
+    <div class="d-flex gap-2 org-profile-quick-actions">
         {% if is_owner %}
             <a href="{% url 'organization:add-agent' organization.id %}" class="btn-hero-add">
                 <i class="bi bi-person-plus-fill"></i> Invite Agent

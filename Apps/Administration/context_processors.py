@@ -127,7 +127,7 @@ def agent_notifications_processor(request):
     except Exception:
         pass
 
-    agent_total_notifications_count = new_leads_count + pending_props_count + upcoming_visits_count
+    agent_total_notifications_count = new_leads_count + pending_props_count + upcoming_visits_count + len(recent_agent_notifications)
 
     return {
         'agent_new_leads_count': new_leads_count,

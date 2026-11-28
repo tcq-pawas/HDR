@@ -218,7 +218,7 @@
         background: linear-gradient(135deg, #005427, #007033);
         color: #fff;
         border: none;
-        padding: 11px 26px;
+        padding: 13px 26px;
         border-radius: 10px;
         font-size: 14px;
         font-weight: 600;
@@ -275,6 +275,12 @@
         color: #16a34a;
         flex-shrink: 0;
         margin-top: 1px;
+    }
+    @media (max-width:480px){
+        .actions-row{
+           flex-direction: column;
+           gap:16px;
+        }
     }
 </style>
 {% endblock %}

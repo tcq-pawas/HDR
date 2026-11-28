@@ -124,6 +124,10 @@ urlpatterns = [
     # Contact API Documentation
     path('api/contact/docs/', contact_docs_view, name='contact-api-docs'),
     
+    # Web Push Notification Endpoints
+    path('api/webpush/vapid-key/', views.vapid_public_key, name='vapid-public-key'),
+    path('api/webpush/subscribe/', views.save_webpush_subscription, name='webpush-subscribe'),
+
     #Swagger
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(

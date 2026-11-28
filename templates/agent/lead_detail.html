@@ -46,7 +46,7 @@
             </div>
             <div class="info-row">
                 <div class="info-label">Email:</div>
-                <div class="info-value">{{ lead.email|default:"N/A" }}</div>
+                <div class="info-value overflow-auto">{{ lead.email|default:"N/A" }}</div>
             </div>
             <div class="info-row">
                 <div class="info-label">Status:</div>
@@ -87,7 +87,7 @@
         </div>
 
         <!-- Quick Actions -->
-        <div class="card">
+        <div class="card quick-actions-card">
             <h3>Quick Actions</h3>
             <div class="lead-quick-actions">
                 <a href="{% url 'agent:site_visit_add' %}?lead_id={{ lead.id }}" class="lead-quick-btn lead-quick-btn--primary">

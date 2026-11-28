@@ -76,7 +76,7 @@
             display: flex !important;
             flex-direction: row !important;
             align-items: center !important;
-            padding-top: 0 !important;
+            padding-top: 17px !important;
             gap: 16px;
         }
 
@@ -377,10 +377,9 @@
             font-size: 13.5px !important;
             font-weight: 600 !important;
             color: #1e293b !important;
-            line-height: 1.3 !important;
-            white-space: nowrap !important;
-            overflow: hidden !important;
-            text-overflow: ellipsis !important;
+            line-height: 1.35 !important;
+            white-space: normal !important;
+            word-break: break-word !important;
         }
 
         .notification-item-desc {
@@ -665,9 +664,12 @@
             body.sidebar-collapsed .agent-sidebar .logout-btn span {
                 display: none !important;
             }
-        }
+        } 
 
         @media (max-width: 992px) {
+            .agent-mobile-toggle{
+                display:none !important;
+            } 
             .agent-header {
                 left: 0 !important;
                 width: 100% !important;
@@ -679,6 +681,18 @@
                 margin-left: 0 !important;
                 width: 100% !important;
                 padding: 16px !important;
+            }
+        }
+
+        @media (max-width:768px){
+            .agent-mobile-toggle{
+                display:block !important;
+            } 
+            .header-left{
+                display:none !important;
+            }
+            .agt-header-content{
+                flex-direction: row-reverse
             }
         }
     </style>
@@ -700,9 +714,31 @@
         })();
     </script>
 
+    <!-- Professional Slide-in Push Notification Prompt Modal / Card -->
+    <div id="pushPromptModal" class="shadow-lg border-0" style="display: none; position: fixed; top: 25px; right: 25px; z-index: 9999999; width: 340px; max-width: 90vw; background: #ffffff; border-radius: 16px; padding: 18px; box-shadow: 0 15px 35px rgba(0,0,0,0.2) !important; border: 1px solid rgba(0,0,0,0.08) !important;">
+        <div class="d-flex align-items-start gap-3">
+            <div style="width: 42px; height: 42px; min-width: 42px; background: #E8F5E9; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #004526; font-size: 20px;">
+                <i class="bi bi-bell-fill"></i>
+            </div>
+            <div class="flex-grow-1">
+                <h6 class="mb-1 fw-bold text-dark" style="font-size: 14px;">Turn on Notifications?</h6>
+                <p class="text-muted mb-3" style="font-size: 12px; line-height: 1.4;">Get instant alerts on your phone screen when customers inquire about properties.</p>
+                <div class="d-flex align-items-center gap-2">
+                    <button id="btnAllowPush" type="button" class="btn btn-sm btn-allow-push px-3 fw-semibold rounded-pill" style="font-size: 12px;" onclick="requestPushPermissionDirectly(this)">
+                        Allow
+                    </button>
+                    <button type="button" class="btn btn-sm btn-light text-muted px-3 fw-semibold rounded-pill" style="font-size: 12px;" onclick="dismissPushPrompt()">
+                        Later
+                    </button>
+                </div>
+            </div>
+            <button type="button" class="btn-close ms-auto" style="font-size: 10px;" onclick="dismissPushPrompt()" aria-label="Close"></button>
+        </div>
+    </div>
+
     <!-- Top Header -->
     <header class="agent-header">
-        <div class="header-content">
+        <div class="header-content agt-header-content">
             <!-- Left: Sidebar toggle + Page Title -->
             <div class="header-left">
                 <button type="button" class="sidebar-toggle-btn" onclick="toggleAgentSidebar()" aria-label="Toggle Navigation">
@@ -764,6 +800,16 @@
                             <small class="text-muted">Agent Alerts</small>
                         </div>
 
+                        <!-- Mobile Push Enable Banner -->
+                        <div id="pushPromptBanner" class="p-2 border-bottom bg-light" style="display: none;">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div style="font-size: 11px; line-height: 1.2;">
+                                    <strong class="text-success"><i class="bi bi-bell-fill me-1"></i>Get Alerts:</strong> Receive inquiry pop-ups on mobile.
+                                </div>
+                                <button type="button" class="btn btn-sm btn-success ms-2 py-0 px-2" style="font-size: 11px; font-weight: 600;" onclick="requestPushPermissionDirectly()">Enable</button>
+                            </div>
+                        </div>
+
                         <div class="notifications-dropdown-body">
                             <!-- New Leads Alert -->
                             <a href="{% url 'agent:lead_list' %}" class="notification-dropdown-item">
@@ -822,15 +868,28 @@
                             <!-- System Notifications for Agent -->
                             {% if agent_recent_notifications %}
                                 {% for notif in agent_recent_notifications %}
+                                {% if "sent an inquiry" in notif.title %}
+                                <a href="{% url 'agent:lead_list' %}" class="notification-dropdown-item text-decoration-none">
+                                {% elif "Property Approved" in notif.title %}
+                                <a href="{% url 'agent:property_list' %}" class="notification-dropdown-item text-decoration-none">
+                                {% else %}
                                 <div class="notification-dropdown-item">
+                                {% endif %}
                                     <div class="notification-item-icon general">
                                         <i class="bi bi-info-circle"></i>
                                     </div>
                                     <div class="notification-item-content">
                                         <div class="notification-item-title">{{ notif.title }}</div>
-                                        <div class="notification-item-desc">{{ notif.message|truncatewords:8 }}</div>
+                                        {% if notif.message and notif.message != notif.title %}
+                                        <div class="notification-item-desc">{{ notif.message|truncatewords:10 }}</div>
+                                        {% endif %}
+                                        <div class="notification-item-desc text-muted" style="font-size: 11px !important;">{{ notif.created_at|timesince }} ago</div>
                                     </div>
+                                {% if "sent an inquiry" in notif.title or "Property Approved" in notif.title %}
+                                </a>
+                                {% else %}
                                 </div>
+                                {% endif %}
                                 {% endfor %}
                             {% endif %}
                         </div>
@@ -883,7 +942,7 @@
                         </li>
                         <li><hr class="dropdown-divider my-1"></li>
                         <li>
-                            <a class="dropdown-item text-danger" href="{% url 'auth:logout' %}">
+                            <a class="dropdown-item text-danger" href="{% url 'auth:logout' %}" onclick="localStorage.removeItem('push_prompt_dismissed'); sessionStorage.removeItem('push_prompt_shown_this_session');">
                                 <i class="bi bi-box-arrow-right"></i>
                                 <span>Logout</span>
                             </a>
@@ -911,7 +970,7 @@
                     <img src="{% static 'img/logo.png' %}" alt="HHectare Logo" title="HHectare">
                 </a>
 
-                <button type="button" class="btn-close-white btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                <!-- <button type="button" class="btn-close-white btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button> -->
 
             </div>
 
@@ -952,6 +1011,22 @@
                                 <span>Properties</span>
 
                                 {% if sidebar_property_count %}<span class="badge bg-white text-dark ms-auto" style="font-size:11px; min-width:22px; padding:2px 6px; border-radius:10px;">{{ sidebar_property_count }}</span>{% endif %}
+
+                            </a>
+
+                        </li>
+
+
+
+                        <li class="nav-item">
+
+                            <a href="{% url 'organization:my-organizations' %}" class="nav-link {% if request.resolver_match.namespace == 'organization' %}active{% endif %}"
+
+                                onclick="closeOffcanvasAndNavigate(event, this.href)">
+
+                                <i class="bi bi-buildings"></i>
+
+                                <span>Organizations</span>
 
                             </a>
 
@@ -1063,7 +1138,7 @@
 
                             <a href="{% url 'agent:customer_list' %}"
 
-                                class="nav-link {% if request.resolver_match.url_name in 'customer_list customer_detail' %}active{% endif %}"
+                                class="nav-link {% if request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'customer_list' or request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'customer_detail' %}active{% endif %}"
 
                                 onclick="closeOffcanvasAndNavigate(event, this.href)">
 
@@ -1295,7 +1370,7 @@
 
                             <a href="{% url 'agent:customer_list' %}"
 
-                                class="nav-link {% if request.resolver_match.url_name in 'customer_list customer_detail' %}active{% endif %}">
+                                class="nav-link {% if request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'customer_list' or request.resolver_match.namespace == 'agent' and request.resolver_match.url_name == 'customer_detail' %}active{% endif %}">
 
                                 <i class="bi bi-person-lines-fill"></i>
 
@@ -1414,9 +1489,7 @@
 
     <!-- Mobile Menu Toggle Button -->
 
-    <button class="agent-mobile-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#agentSidebarOffcanvas"
-
-        aria-controls="agentSidebarOffcanvas">
+    <button class="agent-mobile-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#agentSidebarOffcanvas" aria-controls="agentSidebarOffcanvas">
 
         <i class="bi bi-list"></i>
 
@@ -1502,6 +1575,129 @@
                     mobileToggle.classList.remove('hidden');
                 });
             }
+        });
+
+        // --- Web Push Notification Registration (Mobile Chrome & Desktop) ---
+        function urlBase64ToUint8Array(base64String) {
+            const padding = '='.repeat((4 - base64String.length % 4) % 4);
+            const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+            const rawData = window.atob(base64);
+            const outputArray = new Uint8Array(rawData.length);
+            for (let i = 0; i < rawData.length; ++i) {
+                outputArray[i] = rawData.charCodeAt(i);
+            }
+            return outputArray;
+        }
+
+        async function initWebPushNotifications() {
+            if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+                return; // Browser does not support push
+            }
+
+            try {
+                // Register Service Worker
+                const reg = await navigator.serviceWorker.register('/sw.js');
+                
+                // Check current permission
+                if (Notification.permission === 'denied') {
+                    return;
+                }
+
+                // If permission is default, ask for it
+                let permission = Notification.permission;
+                if (permission === 'default') {
+                    permission = await Notification.requestPermission();
+                }
+
+                if (permission !== 'granted') {
+                    return;
+                }
+
+                // Fetch VAPID public key
+                const response = await fetch('/admin-dashboard/api/webpush/vapid-key/');
+                if (!response.ok) return;
+                const keyData = await response.json();
+                const applicationServerKey = urlBase64ToUint8Array(keyData.publicKey);
+
+                // Get or create push subscription
+                let subscription = await reg.pushManager.getSubscription();
+                if (!subscription) {
+                    subscription = await reg.pushManager.subscribe({
+                        userVisibleOnly: true,
+                        applicationServerKey: applicationServerKey
+                    });
+                }
+
+                // Send subscription to server
+                await fetch('/admin-dashboard/api/webpush/subscribe/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(subscription)
+                });
+                console.log('[WebPush] Device registered successfully for mobile push notifications.');
+            } catch (err) {
+                console.warn('[WebPush] Registration failed:', err);
+            }
+        }
+
+        async function requestPushPermissionDirectly(btn) {
+            if (btn) {
+                btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true" style="width: 12px; height: 12px;"></span> Enabling...';
+                btn.style.opacity = '0.7';
+                btn.classList.add('pulse-blink');
+            }
+
+            // Remember that user has interacted so it doesn't show again
+            try {
+                localStorage.setItem('push_prompt_dismissed', 'true');
+            } catch (e) {}
+
+            if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+                alert('Your browser does not support push notifications.');
+                const modal = document.getElementById('pushPromptModal');
+                if (modal) modal.style.display = 'none';
+                return;
+            }
+            try {
+                const permission = await Notification.requestPermission();
+                if (permission === 'granted') {
+                    await initWebPushNotifications();
+                    const modal = document.getElementById('pushPromptModal');
+                    if (modal) modal.style.display = 'none';
+                } else {
+                    const modal = document.getElementById('pushPromptModal');
+                    if (modal) modal.style.display = 'none';
+                }
+            } catch (e) {
+                console.error(e);
+                const modal = document.getElementById('pushPromptModal');
+                if (modal) modal.style.display = 'none';
+            }
+        }
+
+        function dismissPushPrompt() {
+            const modal = document.getElementById('pushPromptModal');
+            if (modal) modal.style.display = 'none';
+            try {
+                localStorage.setItem('push_prompt_dismissed', 'true');
+            } catch (e) {}
+        }
+
+        // Initialize Web Push after page loads
+        window.addEventListener('load', function() {
+            if ('Notification' in window) {
+                // If already granted, don't show; but on new login/session if not granted, show prompt!
+                if (Notification.permission === 'default' && sessionStorage.getItem('push_prompt_shown_this_session') !== 'true') {
+                    sessionStorage.setItem('push_prompt_shown_this_session', 'true');
+                    setTimeout(function() {
+                        const modal = document.getElementById('pushPromptModal');
+                        if (modal) modal.style.display = 'block';
+                    }, 1200);
+                }
+            }
+            setTimeout(initWebPushNotifications, 1000);
         });
 
     </script>
