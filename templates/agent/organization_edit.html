@@ -363,13 +363,23 @@
             </div>
 
             <div class="form-grid-2">
-                <!-- Street Address (Full Width in 2-col) -->
-                <div class="custom-form-group form-grid-full">
+                <!-- Street Address -->
+                <div class="custom-form-group">
                     <label class="custom-form-label" for="id_address">Street Address</label>
                     <div class="custom-input-wrap">
                         <i class="bi bi-signpost-2 custom-input-icon"></i>
                         <input type="text" id="id_address" name="address" class="form-control"
                                value="{{ organization.address|default:'' }}" placeholder="Street name, suite, floor, etc.">
+                    </div>
+                </div>
+
+                <!-- Zip Code -->
+                <div class="custom-form-group">
+                    <label class="custom-form-label" for="id_zip_code">Zip / Postal Code</label>
+                    <div class="custom-input-wrap">
+                        <i class="bi bi-pin-map custom-input-icon"></i>
+                        <input type="text" id="id_zip_code" name="zip_code" class="form-control"
+                               value="{{ organization.zip_code|default:'' }}" placeholder="Zip Code">
                     </div>
                 </div>
 
@@ -398,16 +408,6 @@
                                 <option value="{{ organization.city }}" selected>{{ organization.city }}</option>
                             {% endif %}
                         </select>
-                    </div>
-                </div>
-
-                <!-- Zip Code -->
-                <div class="custom-form-group form-grid-full">
-                    <label class="custom-form-label" for="id_zip_code">Zip / Postal Code</label>
-                    <div class="custom-input-wrap">
-                        <i class="bi bi-pin-map custom-input-icon"></i>
-                        <input type="text" id="id_zip_code" name="zip_code" class="form-control"
-                               value="{{ organization.zip_code|default:'' }}" placeholder="Zip Code">
                     </div>
                 </div>
             </div>
