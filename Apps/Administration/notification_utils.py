@@ -79,13 +79,17 @@ def notify_agent_on_inquiry(property_obj, customer_name, customer_email, custome
                 'tag': f"inquiry-{property_obj.id}"
             })
 
-            vapid_claims = {
-                'sub': f"mailto:{getattr(settings, 'VAPID_ADMIN_EMAIL', 'admin@hhectare.com')}"
-            }
+            from urllib.parse import urlparse
+
             vapid_priv = getattr(settings, 'VAPID_PRIVATE_KEY', None)
 
             for sub in subscriptions:
                 try:
+                    parsed_endpoint = urlparse(sub.endpoint)
+                    device_claims = {
+                        'sub': f"mailto:{getattr(settings, 'VAPID_ADMIN_EMAIL', 'admin@hhectare.com')}",
+                        'aud': f"{parsed_endpoint.scheme}://{parsed_endpoint.netloc}"
+                    }
                     sub_info = {
                         'endpoint': sub.endpoint,
                         'keys': {
@@ -97,7 +101,7 @@ def notify_agent_on_inquiry(property_obj, customer_name, customer_email, custome
                         subscription_info=sub_info,
                         data=payload,
                         vapid_private_key=vapid_priv,
-                        vapid_claims=vapid_claims
+                        vapid_claims=device_claims
                     )
                     print(f"[WEBPUSH SENT TO AGENT DEVICE]: {sub.endpoint[:40]}...")
                 except WebPushException as ex:
